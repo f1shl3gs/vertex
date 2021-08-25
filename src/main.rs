@@ -77,18 +77,19 @@ fn main() {
     slog_scope::scope(&slog_scope::logger().new(o!()), || {
         info!("start vertex"; "workers" => workers, "config" => opts.config);
 
-        rt.block_on(async move{
-            let (mut signal_handler, signal_rx) = signal::SignalHandler::new();
+        rt.block_on(async move {
+            let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
             signal_handler.forever(signal::os_signals());
 
             let config = config::load_from_paths_with_provider(&config_paths_with_formats(), &mut signal_handler)
                 .await
-                .map_err(handle_config_errors)?;
+                .map_err(handle_config_errors)
+                .unwrap();
 
             let diff = config::ConfigDiff::initial(&config);
-            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new()).await.ok_or(exitcode::CONFIG)?;
+            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new()).await.ok_or(exitcode::CONFIG).unwrap();
             let result = topology::start_validate(config, diff, pieces).await;
-            let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG)?;
+            let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
             // run
             let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
@@ -126,8 +127,6 @@ fn main() {
 
                 _ => unreachable!(),
             }
-
-            Ok(())
         });
 
         /*

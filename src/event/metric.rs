@@ -14,18 +14,6 @@ pub enum Kind {
     Summary,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
-pub struct DataPoint<T> {
-    // The set of labels that uniquely identify this timeseries
-    pub labels: Labels,
-
-    pub start_time_unix_nano: u64,
-
-    pub time_unix_nano: u64,
-
-    pub value: T,
-}
-
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
@@ -55,17 +43,21 @@ pub enum MetricValue {
     },
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
+pub struct DataPoint {
+    pub tags: BTreeMap<String, String>,
+    pub timestamp: u64,
+    pub value: MetricValue,
+}
+
 #[derive(Clone, Debug, Deserialize, Getters, MutGetters, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
     pub name: String,
 
     pub description: Option<String>,
 
-    pub timestamp: u64,
+    pub unit: Option<String>,
 
-    pub tags: BTreeMap<String, String>,
-
-    pub kind: Kind,
-
-    pub fields: BTreeMap<String, Value>,
+    pub points: Vec<DataPoint>,
 }
+

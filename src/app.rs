@@ -7,7 +7,7 @@ use tokio::{
 
 pub struct ApplicationConfig {
     pub config_paths: Vec<config::ConfigPath>,
-    pub topology: topology,
+    pub topology: topology::Topology,
     pub graceful_crash: mpsc::UnboundedReceiver<()>,
     pub signal_handler: signal::SignalHandler,
     pub signal_rx: signal::SignalRx,

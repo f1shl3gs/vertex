@@ -9,6 +9,8 @@ use crate::buffers::bytes::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
 
+use opentelemetry_otlp::proto::metrics::v1;
+
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),
@@ -18,6 +20,7 @@ pub enum Event {
 impl Event {
     /// This function panics if self is anything other than an `Event::Metric`
     pub fn as_mut_metric(&mut self) -> &mut Metric {
+
         match self {
             Event::Metric(metric) => metric,
             _ => panic!("Failed type coercion, {:?} is not a metric", self)

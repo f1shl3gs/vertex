@@ -6,7 +6,7 @@ use crate::config::{deserialize_duration, serialize_duration, SourceConfig, Sour
 use crate::sources::Source;
 
 use tokio_stream::wrappers::IntervalStream;
-use crate::event::{Event, DataPoint, Metric, Kind};
+use crate::event::{Event, DataPoint, Metric, Kind, MetricValue};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use std::collections::BTreeMap;
@@ -32,21 +32,18 @@ impl GeneratorConfig {
             let now = chrono::Utc::now();
             let points = vec![
                 DataPoint {
-                    labels: Default::default(),
-                    start_time_unix_nano: 0,
-                    time_unix_nano: now.timestamp_nanos() as u64,
-                    value: 1.0,
+                    tags: Default::default(),
+                    timestamp: 0,
+                    value: MetricValue::Gauge(0.0),
                 }
             ];
 
             let event = Event::Metric(
                 Metric {
-                    kind: Kind::Gauge,
                     name: "ge".into(),
-                    timestamp: 0,
-                    tags: BTreeMap::new(),
-                    fields: BTreeMap::new(),
                     description: None,
+                    unit: None,
+                    points,
                 }
             );
 
