@@ -1,0 +1,25 @@
+sources:
+  node:
+    type: node_metrics
+
+transforms:
+  relabel:
+    type: relabel
+
+sink:
+  prom:
+    type: prometheus
+    listen: :3080
+  stdout:
+    type: stdout
+
+service:
+  extensions:
+  pipelines:
+    - sources:
+        - node
+      transforms:
+        - relabel
+      sink:
+        - prom
+        - stdout

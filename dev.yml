@@ -1,0 +1,24 @@
+global:
+  runtime:
+    worker: 4
+
+sources:
+  - name: node
+    type: node
+    scrapers:
+      cpu: {}
+      memory: {}
+
+transforms:
+  - name: add_extra_tags
+    type: add_tags
+    inputs:
+      - node
+    tags:
+      hostname: ${HOSTNAME}
+
+sinks:
+  - name: console
+    type: console
+    inputs:
+      - add_extra_tags

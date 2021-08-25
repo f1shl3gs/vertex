@@ -1,0 +1,91 @@
+[package]
+name = "vertex"
+version = "0.1.0"
+authors = ["f1shl3gs"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = [
+    "metrics",
+    "disk-buffer"
+]
+
+metrics = [
+    "sources-metrics"
+]
+
+sources-metrics = [
+    "sources-node_metrics",
+    "sources-generator"
+]
+
+disk-buffer = []
+sources-generator = []
+sources-node_metrics = []
+
+[dev-dependencies]
+tokio = { version = "1.8.1", features = ["macros", "rt"] }
+criterion = "0.3"
+
+[[bench]]
+name = "duration"
+harness = false
+
+[dependencies]
+# process
+mimalloc = { version = "0.1.26", deafult-features = false }
+
+# futrures & tokio
+tokio = { version = "1.8.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util"] }
+tokio-stream = { version = "0.1.7", features = ["time"] }
+tokio-util = { version = "0.6.7" }
+bytes = { version = "1.0.1" }
+futures = { version = "0.3.16" }
+async-trait = { version = "0.1.50" }
+pin-project = { version = "1.0.8" }
+stream-cancel = { version = "0.8.1" }
+async-stream = { version = "0.3.2" }
+
+# http
+hyper = { version = "0.14.11", features = ["server", "http1", "tcp"] }
+
+# Serde
+serde = { version = "1.0.127", features = ["derive", "std"] }
+serde_yaml = { version = "0.8.17" }
+serde_json = { version = "1.0.64", default-features = false, features = ["raw_value", "alloc"] }
+
+# log
+slog = { version = "2.7.0" }
+slog-async = { version = "2.6.0" }
+slog-scope = { version = "4.4.0" }
+slog-term = { version = "2.8.0" }
+
+# netlink
+netlink-packet-sock-diag = "0.1.0"
+netlink-sys = { version = "0.7.0", features = ["tokio_socket"] }
+
+# protobuf
+prost = { version = "0.8.0", default-features = false, features = ["std"] }
+
+# TLS
+tokio-rustls = { version = "0.22.0" }
+
+# misc
+num_cpus = { version = "1.13.0" }
+getset = { version = "0.1.1" }
+chrono = { version = "0.4.19" }
+chrono-tz = { version = "0.5.3", features = ["serde"] }
+dyn-clone = { version = "1.0.4" }
+lazy_static = { version = "1.4.0" }
+derivative = { version = "2.2.0" }
+typetag = { version = "0.1.7" }
+indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
+regex = { version = "1.5.4" }
+hostname = { version = "0.3.1" }
+bloom = { version = "0.3.2" }
+exitcode = { version = "1.1.2" }
+clap = { version = "3.0.0-beta.4" }
+url = { version = "2.2.2", features = ["serde"] }
+glob = { version = "0.3.0" }

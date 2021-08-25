@@ -1,0 +1,12 @@
+sources:
+  node_metrics:
+    foo: bar
+
+pipelines:
+  metrics:
+    sources:
+      - node
+    transformers:
+      - xxx
+    sink:
+      - prometheus
