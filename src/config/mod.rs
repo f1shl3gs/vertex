@@ -159,6 +159,22 @@ impl SinkOuter {
     }
 }
 
+#[derive(Debug, Clone, Ord, PartialOrd, PartialEq, Eq)]
+pub enum ConfigPath {
+    File(PathBuf, FormatHint),
+    Dir(PathBuf),
+}
+
+impl<'a> From<&'a ConfigPath> for &'a PathBuf {
+    fn from(path: &'a ConfigPath) -> Self {
+        match path {
+            ConfigPath::File(path, _) => path,
+            ConfigPath::Dir(path) => path,
+        }
+    }
+}
+
+
 #[derive(Debug, Default, Deserialize)]
 pub struct Config {
     pub global: GlobalOptions,

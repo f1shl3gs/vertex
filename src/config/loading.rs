@@ -2,24 +2,9 @@ use std::collections::HashMap;
 use regex::{Captures, Regex};
 use std::fs::File;
 
-use crate::config::{FormatHint, Config, Builder, Format, format};
+use crate::config::{FormatHint, Config, Builder, Format, format, ConfigPath};
 use crate::signal;
 use std::path::{PathBuf, Path};
-
-#[derive(Debug, Clone, Ord, PartialOrd, PartialEq, Eq)]
-pub enum ConfigPath {
-    File(PathBuf, FormatHint),
-    Dir(PathBuf),
-}
-
-impl<'a> From<&'a ConfigPath> for &'a PathBuf {
-    fn from(path: &'a ConfigPath) -> Self {
-        match path {
-            ConfigPath::File(path, _) => path,
-            ConfigPath::Dir(path) => path,
-        }
-    }
-}
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider

@@ -1,3 +1,3 @@
 mod settings;
 
-pub use settings::{TLSConfig, TLSOptions};
+pub use settings::{TLSConfig};

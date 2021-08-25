@@ -27,6 +27,11 @@ use vertex::{
     config,
     topology,
 };
+use std::collections::HashMap;
+use tokio_stream::wrappers::UnboundedReceiverStream;
+use vertex::signal::SignalTo;
+use vertex::config::{ConfigPath, FormatHint};
+use tokio_stream::StreamExt;
 
 
 async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
@@ -72,20 +77,60 @@ fn main() {
     slog_scope::scope(&slog_scope::logger().new(o!()), || {
         info!("start vertex"; "workers" => workers, "config" => opts.config);
 
-        rt.block_on(async move {
+        rt.block_on(async move{
             let (mut signal_handler, signal_rx) = signal::SignalHandler::new();
             signal_handler.forever(signal::os_signals());
 
-            let config = config::load_from_paths_with_provider(&[opts.config.into()], &mut signal_handler)
+            let config = config::load_from_paths_with_provider(&config_paths_with_formats(), &mut signal_handler)
                 .await
                 .map_err(handle_config_errors)?;
 
             let diff = config::ConfigDiff::initial(&config);
-            let pieces = topology::start_validate(config, diff, pieces);
+            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new()).await.ok_or(exitcode::CONFIG)?;
+            let result = topology::start_validate(config, diff, pieces).await;
+            let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG)?;
 
+            // run
+            let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
+            let mut sources_finished = topology.sources_finished();
 
+            let signal = loop {
+                tokio::select! {
+                    Some(signal) = signal_rx.recv() => {
+
+                    },
+                    // Trigger graceful shutdown if a component crashed, or all sources have ended
+                    _ = graceful_crash.next() => break SignalTo::Shutdown,
+                    _ = &mut sources_finished => break SignalTo::Shutdown,
+                    else => unreachable!("Signal streams never end"),
+                }
+            };
+
+            match signal {
+                SignalTo::Shutdown => {
+                    tokio::select! {
+                        // graceful shutdown finished
+                        _ = topology.stop() => (),
+                        _ = signal_rx.recv() => {
+                            // it is highly unlikely that this event will exit from topology
+
+                            // Dropping the shutdown future will immediately shut the server down
+                        }
+                    }
+                }
+
+                SignalTo::Quit => {
+                    // It is highly unlikely that this event will exit from topology
+                    drop(topology);
+                }
+
+                _ => unreachable!(),
+            }
+
+            Ok(())
         });
 
+        /*
         rt.block_on(async {
             let addr = "127.0.0.1:3080".parse().expect("listen addr");
 
@@ -100,15 +145,21 @@ fn main() {
                 eprintln!("server error: {}", e)
             }
         });
+        */
 
         rt.shutdown_timeout(Duration::from_secs(5))
     });
 }
 
 pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
-    for error in errors {
-        error!(message = "Configuration error.", %error);
+    for err in errors {
+        error!("configuration error"; "err" => err);
     }
 
     exitcode::CONFIG
+}
+
+// TODO: implement it
+fn config_paths_with_formats() -> Vec<config::ConfigPath> {
+    vec![ConfigPath::File("dev.yml".into(), FormatHint::from(config::Format::YAML))]
 }

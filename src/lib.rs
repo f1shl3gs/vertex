@@ -13,6 +13,7 @@ mod buffers;
 pub mod signal;
 mod tls;
 mod trigger;
+mod app;
 
 pub use signal::{SignalHandler};
 
