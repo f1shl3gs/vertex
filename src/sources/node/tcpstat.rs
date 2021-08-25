@@ -1,3 +1,4 @@
+use std::path::{Path, PathBuf};
 use netlink_packet_sock_diag::{
     NetlinkMessage,
     NetlinkHeader,
@@ -14,6 +15,7 @@ use netlink_packet_sock_diag::{
     constants::*,
 };
 use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
+use crate::event::Event;
 
 #[derive(Default, Debug)]
 struct Statistics {
@@ -28,6 +30,10 @@ struct Statistics {
     pub last_ack: usize,
     pub listen: usize,
     pub closing: usize,
+}
+
+pub async fn gather(root: PathBuf) -> Result<Vec<Event>, ()> {
+    todo!()
 }
 
 async fn fetch_tcp_stats(family: u8) -> Statistics {

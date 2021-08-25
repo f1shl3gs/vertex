@@ -9,8 +9,6 @@ use crate::buffers::bytes::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
 
-use opentelemetry_otlp::proto::metrics::v1;
-
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),

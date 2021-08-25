@@ -59,15 +59,15 @@ struct Opts {
 
 fn main() {
     let opts: Opts = Opts::parse();
-    println!("{:?}", opts);
 
     let workers = num_cpus::get();
 
     let rt = runtime::Builder::new_multi_thread()
         .worker_threads(workers)
         .thread_name("vertex-worker")
-        .thread_stack_size(4 * 1024 * 1023)
+        .thread_stack_size(4 * 1024 * 1024)
         .enable_io()
+        .enable_time()
         .build()
         .unwrap();
 
@@ -87,7 +87,10 @@ fn main() {
                 .unwrap();
 
             let diff = config::ConfigDiff::initial(&config);
-            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new()).await.ok_or(exitcode::CONFIG).unwrap();
+            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
+                .await
+                .ok_or(exitcode::CONFIG)
+                .unwrap();
             let result = topology::start_validate(config, diff, pieces).await;
             let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 

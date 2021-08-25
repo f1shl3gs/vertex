@@ -6,6 +6,7 @@ use crate::{
     config::{SinkConfig, SinkContext, DataType, Resource},
     tls::TLSConfig,
 };
+use crate::config::HealthCheck;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -51,7 +52,7 @@ fn default_telemetry_path() -> String {
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for PrometheusExporterConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<Sink> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
         todo!()
     }
 

@@ -45,6 +45,9 @@ pub use helper::{
 pub use loading::{
     load_from_paths_with_provider,
 };
+use futures::future::BoxFuture;
+
+pub type HealthCheck = BoxFuture<'static, crate::Result<()>>;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 #[serde(default)]
@@ -104,10 +107,15 @@ pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]
     pub data_dir: Option<PathBuf>,
 
+    #[serde(default = "default_timezone")]
     pub timezone: timezone::TimeZone,
 }
 
-pub fn default_data_dir() -> Option<PathBuf> {
+fn default_timezone() -> timezone::TimeZone {
+    Default::default()
+}
+
+fn default_data_dir() -> Option<PathBuf> {
     Some(PathBuf::from("/var/lib/vertex"))
 }
 
@@ -176,6 +184,7 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
 
 
 #[derive(Debug, Default, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Config {
     pub global: GlobalOptions,
 
@@ -185,7 +194,8 @@ pub struct Config {
 
     pub sinks: IndexMap<String, SinkOuter>,
 
-    pub healthchecks: HealthcheckOptions,
+    #[serde(rename = "health_checks")]
+    pub health_checks: HealthcheckOptions,
 }
 
 impl Config {}
@@ -240,7 +250,7 @@ pub struct SinkContext {
 #[async_trait]
 #[typetag::serde(tag = "type")]
 pub trait SinkConfig: core::fmt::Debug + Send + Sync {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<sinks::Sink>;
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(sinks::Sink, HealthCheck)>;
 
     fn input_type(&self) -> DataType;
 

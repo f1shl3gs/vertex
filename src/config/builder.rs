@@ -18,7 +18,8 @@ pub struct Builder {
 
     pub provider: Option<Box<dyn ProviderConfig>>,
 
-    pub healthchecks: HealthcheckOptions,
+    #[serde(rename = "health_checks")]
+    pub health_checks: HealthcheckOptions,
 }
 
 impl Builder {
@@ -131,7 +132,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
         Ok((
             Config {
                 global: builder.global,
-                healthchecks: builder.healthchecks,
+                health_checks: builder.health_checks,
                 sources: builder.sources,
                 sinks: builder.sinks,
                 transforms: builder.transforms,

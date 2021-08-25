@@ -195,7 +195,7 @@ impl Topology {
 
         // Now let's actually build the new pieces.
         if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await {
-            if self.run_healthchecks(&diff, &mut new_pieces, new_config.healthchecks).await {
+            if self.run_healthchecks(&diff, &mut new_pieces, new_config.health_checks).await {
                 self.connect_diff(&diff, &mut new_pieces).await;
                 self.spawn_diff(&diff, new_pieces);
                 self.config = new_config;
@@ -208,7 +208,7 @@ impl Topology {
         info!("rebuilding old configuration");
         let diff = diff.flip();
         if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
-            if self.run_healthchecks(&diff, &mut new_pieces, new_config.healthchecks).await {
+            if self.run_healthchecks(&diff, &mut new_pieces, new_config.health_checks).await {
                 self.connect_diff(&diff, &mut new_pieces).await;
                 self.spawn_diff(&diff, new_pieces);
                 // We have successfully returned to old config
@@ -472,24 +472,24 @@ impl Topology {
         }
 
         for id in &diff.sources.to_add {
-            info!("starting source"; "id" => id);
+            info!("Starting source"; "id" => id);
             self.spawn_source(id, &mut new_pieces);
         }
 
         // Transforms
         for id in &diff.transforms.to_change {
-            info!("rebuilding transform"; "id" => id);
+            info!("Rebuilding transform"; "id" => id);
             self.spawn_transform(id, &mut new_pieces);
         }
 
         for id in &diff.transforms.to_add {
-            info!("staring transform"; "id" => id);
+            info!("Staring transform"; "id" => id);
             self.spawn_transform(id, &mut new_pieces);
         }
 
         // Sinks
         for id in &diff.sinks.to_change {
-            info!("rebuilding sink"; "id" => id);
+            info!("Rebuilding sink"; "id" => id);
             self.spawn_sink(id, &mut new_pieces);
         }
     }
@@ -679,7 +679,7 @@ pub async fn start_validate(
     let (abort_tx, abort_rx) = mpsc::unbounded_channel();
     let mut topology = Topology::new(config, abort_tx);
 
-    if !topology.run_healthchecks(&diff, &mut pieces, topology.config.healthchecks).await {
+    if !topology.run_healthchecks(&diff, &mut pieces, topology.config.health_checks).await {
         return None;
     }
 
@@ -705,7 +705,7 @@ pub fn take_healthchecks(diff: &ConfigDiff, pieces: &mut Pieces) -> Vec<(String,
     (&diff.sinks.to_change | &diff.sinks.to_add)
         .into_iter()
         .filter_map(|id|
-            pieces.healthchecks
+            pieces.health_checks
                 .remove(&id)
                 .map(move |task| (id, task))
         )
@@ -742,4 +742,11 @@ pub async fn build_or_log_errors(
         }
         Ok(pieces) => Some(pieces)
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+
 }

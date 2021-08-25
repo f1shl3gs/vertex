@@ -31,7 +31,7 @@ pub struct Pieces {
     pub outputs: HashMap<String, ControlChannel>,
     pub tasks: HashMap<String, Task>,
     pub source_tasks: HashMap<String, Task>,
-    pub healthchecks: HashMap<String, Task>,
+    pub health_checks: HashMap<String, Task>,
     pub shutdown_coordinator: ShutdownCoordinator,
     pub detach_triggers: HashMap<String, Trigger>,
 }
@@ -48,7 +48,7 @@ pub async fn build_pieces(
     let mut tasks = HashMap::new();
     let mut source_tasks = HashMap::new();
     let mut shutdown_coordinator = ShutdownCoordinator::default();
-    // let mut healthchecks = HashMap::new();
+    let mut health_checks = HashMap::new();
     let mut errors = vec![];
 
     // Build sources
@@ -191,13 +191,14 @@ pub async fn build_pieces(
             globals: config.global.clone(),
         };
 
-        let sink = match sink.inner.build(ctx).await {
+        let (sink, health_check) = match sink.inner.build(ctx).await {
             Ok(s) => s,
             Err(err) => {
                 errors.push(format!("Sink {}: {}", name, err));
                 continue;
             }
         };
+
         let (trigger, tripwire) = Tripwire::new();
         let sink = async move {
             // Why is this Arc<Mutex<Option<_>>> needed you may ask.
@@ -225,10 +226,50 @@ pub async fn build_pieces(
         };
 
         let task = Task::new(name, typetag, sink);
+        let health_check_task = async move {
+            if config.health_checks.enabled {
+                // TODO: make the duration configurable
+                let duration = std::time::Duration::from_secs(10);
+                tokio::time::timeout(duration, health_check)
+                    .map(|result| {
+                        match result {
+                            Ok(Ok(_)) => {
+                                info!("Health check passed");
+                                Ok(TaskOutput::HealthCheck)
+                            }
 
+                            Ok(Err(err)) => {
+                                error!(
+                                "Health check failed";
+                                // "err" => err.to_string(),
+                                "type" => typetag,
+                                "id" => name,
+                            );
+                                Err(())
+                            }
+
+                            Err(_) => {
+                                error!(
+                                "Health check timeout";
+                                "id" => name,
+                                "type" => typetag,
+                            );
+                                Err(())
+                            }
+                        }
+                    })
+                    .await
+            } else {
+                info!("Health check disabled");
+                Ok(TaskOutput::HealthCheck)
+            }
+        };
+
+        // let health_check_task = Task::new(name.clone(), typetag, health_check_task);
 
         inputs.insert(name.clone(), (tx, sink_inputs.clone()));
         tasks.insert(name.clone(), task);
+        // health_checks.insert(name.clone(), health_check_task);
         detach_triggers.insert(name.clone(), trigger);
     }
 
@@ -237,10 +278,10 @@ pub async fn build_pieces(
             tasks,
             source_tasks,
             shutdown_coordinator,
-            inputs: Default::default(),
-            outputs: Default::default(),
-            healthchecks: Default::default(),
-            detach_triggers: Default::default(),
+            health_checks,
+            inputs,
+            outputs,
+            detach_triggers,
         })
     } else {
         Err(errors)

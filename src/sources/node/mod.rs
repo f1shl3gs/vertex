@@ -75,11 +75,11 @@ impl SourceConfig for NodeMetrics {
     }
 
     fn output_type(&self) -> DataType {
-        todo!()
+        DataType::Metric
     }
 
     fn source_type(&self) -> &'static str {
-        todo!()
+        "node_metrics"
     }
 }
 

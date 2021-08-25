@@ -1,4 +1,4 @@
-use crate::config::{SinkConfig, SinkContext, DataType};
+use crate::config::{SinkConfig, SinkContext, DataType, HealthCheck};
 use crate::sinks::Sink;
 use async_trait::async_trait;
 use crate::event::Event;
@@ -9,13 +9,13 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct BlackholeConfig {
-    pub rate: Option<usize>
+    pub rate: Option<usize>,
 }
 
 #[async_trait]
 #[typetag::serde(name = "blackhole")]
 impl SinkConfig for BlackholeConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<Sink> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
         todo!()
     }
 

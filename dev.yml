@@ -2,15 +2,15 @@ global:
   runtime:
     worker: 4
 
+health_checks:
+  enabled: false
+
 sources:
-  - name: node
-    type: node
-    scrapers:
-      cpu: {}
-      memory: {}
+  node:
+    type: generator
 
 transforms:
-  - name: add_extra_tags
+  add_extra_tags:
     type: add_tags
     inputs:
       - node
@@ -18,7 +18,7 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
-  - name: console
-    type: console
+  stdout:
+    type: stdout
     inputs:
       - add_extra_tags

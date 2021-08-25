@@ -31,16 +31,12 @@ sources-node_metrics = []
 tokio = { version = "1.8.1", features = ["macros", "rt"] }
 criterion = "0.3"
 
-[build-dependencies]
-prost-build = { version = "0.8", optional = true }
-tonic-build = { version = "0.5", optional = true }
-
 [[bench]]
 name = "duration"
 harness = false
 
 [dependencies]
-# process
+# allocation
 mimalloc = { version = "0.1.26", deafult-features = false }
 
 # futrures & tokio
@@ -54,8 +50,9 @@ pin-project = { version = "1.0.8" }
 stream-cancel = { version = "0.8.1" }
 async-stream = { version = "0.3.2" }
 
-# http
-hyper = { version = "0.14.11", features = ["server", "http1", "tcp"] }
+# HTTP
+hyper = { version = "0.14.12", features = ["server", "http1", "tcp"] }
+hyper-rustls = { version = "0.22.1" }
 
 # Serde
 serde = { version = "1.0.127", features = ["derive", "std"] }
@@ -74,14 +71,14 @@ netlink-sys = { version = "0.7.0", features = ["tokio_socket"] }
 
 # protobuf
 prost = { version = "0.8.0", default-features = false, features = ["std"] }
+tonic = { version = "0.5.2" }
 
 # TLS
 rustls = { version = "0.19.1" }
 tokio-rustls = { version = "0.22.0" }
-hyper-rustls = { version = "0.22.1" }
 
 # OpenTelemetry
-opentelemetry-otlp = { version = "0.9.0", features = ["integration-testing", "tonic"] }
+opentelemetry-otlp = { version = "0.9.0" }
 
 # misc
 num_cpus = { version = "1.13.0" }
@@ -101,3 +98,7 @@ clap = { version = "3.0.0-beta.4" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
+
+[build-dependencies]
+prost-build = { version = "0.8" }
+tonic-build = { version = "0.5.2" }
