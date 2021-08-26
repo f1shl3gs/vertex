@@ -50,14 +50,24 @@ pub struct DataPoint {
     pub value: MetricValue,
 }
 
+impl DataPoint {
+    pub fn insert(&mut self, k: String, v: String) {
+        self.tags.insert(k, v);
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Getters, MutGetters, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
     pub name: String,
 
     pub description: Option<String>,
 
+    pub tags: BTreeMap<String, String>,
+
     pub unit: Option<String>,
 
-    pub points: Vec<DataPoint>,
+    pub timestamp: u64,
+
+    pub value: MetricValue,
 }
 

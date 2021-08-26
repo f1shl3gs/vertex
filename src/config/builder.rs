@@ -255,7 +255,7 @@ mod tests {
     use super::*;
     use serde::{Deserialize, Serialize};
     use async_trait::async_trait;
-    use crate::config::{SourceContext, DataType, SinkContext};
+    use crate::config::{SourceContext, DataType, SinkContext, HealthCheck};
     use crate::sources::Source;
     use crate::transforms::Transform;
     use crate::sinks::Sink;
@@ -308,7 +308,7 @@ mod tests {
     #[async_trait]
     #[typetag::serde(name = "mock")]
     impl SinkConfig for MockSinkConfig {
-        async fn build(&self, ctx: SinkContext) -> crate::Result<Sink> {
+        async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
             unimplemented!()
         }
 

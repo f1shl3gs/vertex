@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::{PathBuf};
 use netlink_packet_sock_diag::{
     NetlinkMessage,
     NetlinkHeader,

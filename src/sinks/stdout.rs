@@ -44,7 +44,7 @@ impl StreamSink for StdoutSink {
         while let Some(event) = input.next().await {
             self.acker.ack(1);
             let metric = event.as_metric();
-            println!("{:?}", metric);
+            println!("STDOUT {:?}", metric);
         }
 
         Ok(())

@@ -4,7 +4,7 @@ use std::fs::File;
 
 use crate::config::{FormatHint, Config, Builder, Format, format, ConfigPath};
 use crate::signal;
-use std::path::{PathBuf, Path};
+use std::path::{Path};
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider

@@ -1,5 +1,6 @@
 use tokio::sync::{broadcast, mpsc};
 use tokio_stream::{Stream, StreamExt};
+use crate::config::Builder;
 
 pub type ShutdownTx = broadcast::Sender<()>;
 pub type SignalTx = mpsc::Sender<SignalTo>;
@@ -9,7 +10,7 @@ pub type SignalRx = mpsc::Receiver<SignalTo>;
 #[derive(Debug)]
 pub enum SignalTo {
     /// Signal to reload config from a string.
-    ReloadFromConfigBuilder,
+    ReloadFromConfigBuilder(Builder),
     /// Signal to reload config from the filesystem
     ReloadFromDisk,
     /// Signal to shutdown process

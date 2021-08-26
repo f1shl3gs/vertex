@@ -38,9 +38,11 @@ impl FunctionTransform for AddTags {
         }
 
         let metric = event.as_mut_metric();
-        for (name, value) in &self.tags {
-
+        for (k, v) in self.tags.iter() {
+            metric.tags.insert(k.clone(), v.clone());
         }
+
+        output.push(event);
     }
 }
 

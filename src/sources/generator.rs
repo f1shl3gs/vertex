@@ -28,22 +28,17 @@ impl GeneratorConfig {
         let mut ticker = IntervalStream::new(interval)
             .take_until(shutdown);
 
-        while ticker.next().await.is_some() {
-            let now = chrono::Utc::now();
-            let points = vec![
-                DataPoint {
-                    tags: Default::default(),
-                    timestamp: 0,
-                    value: MetricValue::Gauge(0.0),
-                }
-            ];
+        while let Some(now) = ticker.next().await {
+            println!("generate metrics");
 
             let event = Event::Metric(
                 Metric {
                     name: "ge".into(),
                     description: None,
+                    tags: Default::default(),
                     unit: None,
-                    points,
+                    timestamp: now.elapsed().as_secs(),
+                    value: MetricValue::Gauge(6.0),
                 }
             );
 
@@ -51,6 +46,8 @@ impl GeneratorConfig {
                 error!("error: {:?}", err)
             })?;
         }
+
+        println!("stop ticking");
 
         Ok(())
     }

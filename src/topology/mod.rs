@@ -150,7 +150,7 @@ impl Topology {
                     .join(", ");
 
                 info!(
-                    "Shutting down... Waiting on running components";
+                    "Waiting on running components";
                     "remaining" => remaining_components,
                 );
             }
@@ -460,7 +460,6 @@ impl Topology {
             self.setup_inputs(id, new_pieces).await;
         }
 
-        // Broadcast changes to subscribers!?
     }
 
     /// Starts new and changed pieces of topology
@@ -490,6 +489,11 @@ impl Topology {
         // Sinks
         for id in &diff.sinks.to_change {
             info!("Rebuilding sink"; "id" => id);
+            self.spawn_sink(id, &mut new_pieces);
+        }
+
+        for id in &diff.sinks.to_add {
+            info!("Starting sink"; "id" => id);
             self.spawn_sink(id, &mut new_pieces);
         }
     }

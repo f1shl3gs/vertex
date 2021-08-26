@@ -21,7 +21,6 @@ extern crate slog_term;
 use clap::{AppSettings, Clap};
 
 use slog::Drain;
-use std::path::PathBuf;
 use vertex::{
     signal,
     config,
@@ -35,6 +34,15 @@ use tokio_stream::StreamExt;
 
 
 async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    let guard = pprof::ProfilerGuard::new(100).unwrap();
+
+    tokio::time::sleep(std::time::Duration::from_secs(30)).await;
+
+    if let Ok(report) = guard.report().build() {
+        let file = std::fs::File::create("flamegraph.svg").unwrap();
+        report.flamegraph(file).unwrap();
+    };
+
     info!("handle request"; "log-key" => true);
     Ok(Response::new(Body::from(vec![])))
 }
@@ -71,6 +79,21 @@ fn main() {
         .build()
         .unwrap();
 
+    rt.spawn(async {
+        let addr = "127.0.0.1:3080".parse().expect("listen addr");
+
+        let make_service = make_service_fn(|_conn| async {
+            Ok::<_, Infallible>(service_fn(handle))
+        });
+
+        let svr = Server::bind(&addr)
+            .serve(make_service);
+
+        if let Err(e) = svr.await {
+            eprintln!("server error: {}", e)
+        }
+    });
+
     let logger = setup_logger();
     // Make sure to save the guard, see documentation for more information
     let _guard = slog_scope::set_global_logger(logger);
@@ -101,8 +124,64 @@ fn main() {
             let signal = loop {
                 tokio::select! {
                     Some(signal) = signal_rx.recv() => {
+                        match signal {
+                            SignalTo::ReloadFromConfigBuilder(builder) => {
+                                match builder.build().map_err(handle_config_errors) {
+                                    Ok(mut new_config) => {
+                                        new_config.health_checks.set_require_healthy(true);
+                                        match topology.reload_config_and_respawn(new_config).await {
+                                            Ok(true) => {
+                                                info!("Vertex reloaded");
+                                            },
+                                            Ok(false) => {
+                                                info!("Vertex reload failed");
+                                            },
+                                            // Trigger graceful shutdown for what remains of the topology
+                                            Err(()) => {
+                                                break SignalTo::Shutdown;
+                                            }
+                                        }
 
+                                        sources_finished = topology.sources_finished();
+                                    },
+
+                                    Err(_) => {
+                                        warn!("Vertex config reload failed");
+                                    }
+                                }
+                            }
+
+                            SignalTo::ReloadFromDisk => {
+                                // Reload paths
+                                let config_paths = config_paths_with_formats();
+                                let new_config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler).await
+                                    .map_err(handle_config_errors)
+                                    .ok();
+
+                                if let Some(mut new_config) = new_config {
+                                    new_config.health_checks.set_require_healthy(true);
+                                    match topology.reload_config_and_respawn(new_config).await {
+                                        Ok(true) => {
+                                            info!("Reload config successes");
+                                        },
+                                        Ok(false) => {
+                                            warn!("Reload config failed");
+                                        },
+                                        Err(()) => {
+                                            break SignalTo::Shutdown;
+                                        }
+                                    }
+
+                                    sources_finished = topology.sources_finished();
+                                } else {
+                                    warn!("Reload config failed");
+                                }
+                            }
+
+                            _ => break signal,
+                        }
                     },
+
                     // Trigger graceful shutdown if a component crashed, or all sources have ended
                     _ = graceful_crash.next() => break SignalTo::Shutdown,
                     _ = &mut sources_finished => break SignalTo::Shutdown,
@@ -112,6 +191,8 @@ fn main() {
 
             match signal {
                 SignalTo::Shutdown => {
+                    info!("Shutdown signal received");
+
                     tokio::select! {
                         // graceful shutdown finished
                         _ = topology.stop() => (),
@@ -124,6 +205,8 @@ fn main() {
                 }
 
                 SignalTo::Quit => {
+                    info!("Quit signal received");
+
                     // It is highly unlikely that this event will exit from topology
                     drop(topology);
                 }
@@ -132,23 +215,7 @@ fn main() {
             }
         });
 
-        /*
-        rt.block_on(async {
-            let addr = "127.0.0.1:3080".parse().expect("listen addr");
-
-            let make_service = make_service_fn(|_conn| async {
-                Ok::<_, Infallible>(service_fn(handle))
-            });
-
-            let svr = Server::bind(&addr)
-                .serve(make_service);
-
-            if let Err(e) = svr.await {
-                eprintln!("server error: {}", e)
-            }
-        });
-        */
-
+        info!("Trying to shutdown Tokio runtime");
         rt.shutdown_timeout(Duration::from_secs(5))
     });
 }

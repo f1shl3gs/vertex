@@ -27,20 +27,25 @@ disk-buffer = []
 sources-generator = []
 sources-node_metrics = []
 
-[dev-dependencies]
-tokio = { version = "1.8.1", features = ["macros", "rt"] }
-criterion = "0.3"
 
 [[bench]]
 name = "duration"
 harness = false
+
+[dev-dependencies]
+tokio = { version = "1.10.1", features = ["macros", "rt"] }
+criterion = "0.3"
+
+[build-dependencies]
+prost-build = { version = "0.8" }
+tonic-build = { version = "0.5.2" }
 
 [dependencies]
 # allocation
 mimalloc = { version = "0.1.26", deafult-features = false }
 
 # futrures & tokio
-tokio = { version = "1.8.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util"] }
+tokio = { version = "1.10.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util"] }
 tokio-stream = { version = "0.1.7", features = ["time"] }
 tokio-util = { version = "0.6.7" }
 bytes = { version = "1.0.1" }
@@ -80,6 +85,9 @@ tokio-rustls = { version = "0.22.0" }
 # OpenTelemetry
 opentelemetry-otlp = { version = "0.9.0" }
 
+# Profile
+pprof = { version = "0.5.0", features = ["flamegraph"] }
+
 # misc
 num_cpus = { version = "1.13.0" }
 getset = { version = "0.1.1" }
@@ -98,7 +106,3 @@ clap = { version = "3.0.0-beta.4" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
-
-[build-dependencies]
-prost-build = { version = "0.8" }
-tonic-build = { version = "0.5.2" }

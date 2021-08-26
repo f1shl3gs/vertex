@@ -57,7 +57,7 @@ pub async fn build_pieces(
         .iter()
         .filter(|(name, _)| diff.sources.contains_new(name))
     {
-        let (tx, rx) = tokio::sync::mpsc::channel(DEFAULT_CHANNEL_BUFFER_SIZE);
+        let (tx, rx) = futures::channel::mpsc::channel::<Event>(DEFAULT_CHANNEL_BUFFER_SIZE);
         let pipeline = Pipeline::from_sender(tx, vec![]);
         let typetag = source.source_type();
         let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_source(name);
@@ -79,7 +79,7 @@ pub async fn build_pieces(
         };
 
         let (output, control) = Fanout::new();
-        let pump = ReceiverStream::new(rx)
+        let pump = rx
             .map(Ok)
             .forward(output)
             .map_ok(|_| TaskOutput::Source);
