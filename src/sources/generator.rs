@@ -29,8 +29,6 @@ impl GeneratorConfig {
             .take_until(shutdown);
 
         while let Some(now) = ticker.next().await {
-            println!("generate metrics");
-
             let event = Event::Metric(
                 Metric {
                     name: "ge".into(),
@@ -46,8 +44,6 @@ impl GeneratorConfig {
                 error!("error: {:?}", err)
             })?;
         }
-
-        println!("stop ticking");
 
         Ok(())
     }
