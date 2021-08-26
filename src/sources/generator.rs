@@ -6,10 +6,9 @@ use crate::config::{deserialize_duration, serialize_duration, SourceConfig, Sour
 use crate::sources::Source;
 
 use tokio_stream::wrappers::IntervalStream;
-use crate::event::{Event, DataPoint, Metric, Kind, MetricValue};
+use crate::event::{Event, Metric, MetricValue};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
-use std::collections::BTreeMap;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 pub struct GeneratorConfig {
@@ -35,7 +34,7 @@ impl GeneratorConfig {
                     description: None,
                     tags: Default::default(),
                     unit: None,
-                    timestamp: now.elapsed().as_secs(),
+                    timestamp: now.elapsed().as_secs() as i64,
                     value: MetricValue::Gauge(6.0),
                 }
             );

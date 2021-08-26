@@ -7,7 +7,6 @@ use futures::{Sink, stream, channel::mpsc, Stream, StreamExt, future};
 
 use crate::event::Event;
 use std::task::{Context, Poll};
-use std::fmt::Formatter;
 
 pub type RouterSink = Box<dyn Sink<Event, Error=()> + 'static + Send>;
 

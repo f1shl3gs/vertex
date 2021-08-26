@@ -19,4 +19,5 @@ mod libvirt;
 mod ntp;
 mod chrony;
 mod blackbox;
+mod kubelet;
 

@@ -2,7 +2,6 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 use getset::{Getters, MutGetters};
-use crate::event::value::Value;
 
 pub type Labels = BTreeMap<String, String>;
 
@@ -66,8 +65,7 @@ pub struct Metric {
 
     pub unit: Option<String>,
 
-    pub timestamp: u64,
+    pub timestamp: i64,
 
     pub value: MetricValue,
 }
-

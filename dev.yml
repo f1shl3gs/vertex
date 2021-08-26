@@ -22,3 +22,7 @@ sinks:
     type: stdout
     inputs:
       - add_extra_tags
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - add_extra_tags

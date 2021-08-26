@@ -6,7 +6,6 @@ use std::{
     task::{Context, Poll},
 };
 use crate::transforms::FunctionTransform;
-use tokio_util::sync::PollSender;
 use futures::channel::mpsc;
 
 #[derive(Debug)]

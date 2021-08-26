@@ -1,5 +1,3 @@
-use chrono;
-
 #[cfg(test)]
 mod tests {
     use super::*;

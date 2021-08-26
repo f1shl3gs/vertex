@@ -31,6 +31,13 @@ impl Event {
             _ => panic!("Failed type coercion, {:?} is not a metric", self)
         }
     }
+
+    pub fn into_metric(self) -> Metric {
+        match self {
+            Event::Metric(m) => m,
+            _ => panic!("Failed type coercion, {:?} is not a metric", self)
+        }
+    }
 }
 
 impl From<Metric> for Event {

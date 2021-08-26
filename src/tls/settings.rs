@@ -1,21 +1,8 @@
 use serde::{Deserialize, Serialize};
 use std::{
     path::PathBuf,
-    fs::File,
-    io::{
-        self,
-        BufReader,
-    },
+    io,
 };
-use hyper::{
-    client::{
-        Client, HttpConnector,
-        connect::dns::GaiResolver,
-    }
-};
-use hyper_rustls::HttpsConnector;
-use hyper::client::connect::Connect;
-use hyper::body::HttpBody;
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
