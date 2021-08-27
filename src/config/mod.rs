@@ -271,7 +271,7 @@ pub struct ExtensionContext {
 #[async_trait]
 #[typetag::serde(tag = "type")]
 pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
-    async fn build(&self, ctx: ExtensionConfig) -> crate::Result<Extension>;
+    async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension>;
 
     fn resource(&self) -> Vec<Resource> { Vec::new() }
 }
