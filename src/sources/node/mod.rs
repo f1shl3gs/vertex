@@ -84,7 +84,9 @@ impl SourceConfig for NodeMetrics {
 }
 
 impl NodeMetrics {
-
+    async fn run(self) -> Result<(), ()> {
+        Ok(())
+    }
 }
 
 #[cfg(test)]

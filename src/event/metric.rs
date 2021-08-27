@@ -42,6 +42,12 @@ pub enum MetricValue {
     },
 }
 
+impl MetricValue {
+    pub fn gauge<V: Into<f64>>(v: V) -> MetricValue {
+        MetricValue::Gauge(v.into())
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
 pub struct DataPoint {
     pub tags: BTreeMap<String, String>,

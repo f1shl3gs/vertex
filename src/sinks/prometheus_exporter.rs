@@ -40,9 +40,6 @@ pub struct PrometheusExporterConfig {
     #[serde(default = "default_telemetry_path")]
     pub telemetry_path: String,
 
-    #[serde(default = "default_flush_period", deserialize_with = "crate::config::deserialize_duration", serialize_with = "crate::config::serialize_duration")]
-    pub flush_period: chrono::Duration,
-
     pub compression: Option<bool>,
 }
 
@@ -51,16 +48,11 @@ impl Default for PrometheusExporterConfig {
         Self {
             namespace: None,
             tls: None,
-            flush_period: default_flush_period(),
             listen: default_listen_address(),
             telemetry_path: default_telemetry_path(),
             compression: None,
         }
     }
-}
-
-fn default_flush_period() -> chrono::Duration {
-    chrono::Duration::seconds(60)
 }
 
 fn default_listen_address() -> SocketAddr {
@@ -167,7 +159,7 @@ fn handle(
                                        .collect::<Vec<String>>()
                                        .join(", "),
                                    v);
-                        },
+                        }
                         _ => unreachable!()
                     }
 
@@ -269,10 +261,51 @@ impl StreamSink for PrometheusExporter {
                 }
             };
 
-            metrics.insert(entry);
+            metrics.replace(entry);
             self.acker.ack(1);
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Timelike;
+
+    #[test]
+    fn test_metrics_insert() {
+        let mut set = IndexSet::new();
+        let m1 = Metric {
+            name: "foo".into(),
+            description: None,
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge(0.1),
+        };
+        let mut m2 = m1.clone();
+        m2.value = MetricValue::Gauge(0.2);
+
+        let now = Utc::now().timestamp();
+        let ent = ExpiringEntry {
+            metric: m1,
+            expired_at: now + 60,
+        };
+
+        set.insert(ent);
+
+        assert_eq!(set.len(), 1);
+
+        let ent = ExpiringEntry {
+            metric: m2,
+            expired_at: now + 120,
+        };
+
+        set.insert(ent);
+
+        assert_eq!(set.len(), 1);
+        assert_eq!(set.iter().enumerate().nth(0).unwrap().1.expired_at, now + 60);
     }
 }

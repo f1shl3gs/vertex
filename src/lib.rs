@@ -14,6 +14,7 @@ pub mod signal;
 mod tls;
 mod trigger;
 mod app;
+mod extensions;
 
 pub use signal::{SignalHandler};
 

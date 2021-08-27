@@ -634,7 +634,7 @@ mod tests {
                 description: None,
                 tags: Default::default(),
                 unit: None,
-                timestamp: i as u64,
+                timestamp: i as i64,
                 value: Gauge(i as f64),
             }))
             .collect()

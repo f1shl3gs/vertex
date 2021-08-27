@@ -46,6 +46,7 @@ pub use loading::{
     load_from_paths_with_provider,
 };
 use futures::future::BoxFuture;
+use crate::extensions::Extension;
 
 pub type HealthCheck = BoxFuture<'static, crate::Result<()>>;
 
@@ -259,6 +260,21 @@ pub trait SinkConfig: core::fmt::Debug + Send + Sync {
     fn resources(&self) -> Vec<Resource> {
         Vec::new()
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct ExtensionContext {
+    pub global: GlobalOptions,
+}
+
+#[async_trait]
+#[typetag::serde(tag = "type")]
+pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
+    async fn build(&self, ctx: ExtensionConfig) -> crate::Result<Extension>;
+
+
+
+    fn resource(&self) -> Vec<Resource> { Vec::new() }
 }
 
 #[cfg(test)]
