@@ -265,14 +265,13 @@ pub trait SinkConfig: core::fmt::Debug + Send + Sync {
 #[derive(Debug, Clone)]
 pub struct ExtensionContext {
     pub global: GlobalOptions,
+    pub shutdown: ShutdownSignal,
 }
 
 #[async_trait]
 #[typetag::serde(tag = "type")]
 pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
     async fn build(&self, ctx: ExtensionConfig) -> crate::Result<Extension>;
-
-
 
     fn resource(&self) -> Vec<Resource> { Vec::new() }
 }

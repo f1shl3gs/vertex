@@ -105,12 +105,6 @@ impl DerefMut for ExpiringEntry {
     }
 }
 
-// impl AsRef<Metric> for ExpiringEntry {
-//     fn as_ref(&self) -> &Metric {
-//         self.metric.as_ref()
-//     }
-// }
-
 impl std::hash::Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
         let metric = &self.metric;
