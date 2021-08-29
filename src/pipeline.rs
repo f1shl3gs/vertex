@@ -21,6 +21,7 @@ impl std::error::Error for ClosedError {}
 
 const MAX_ENQUEUED: usize = 1024;
 
+#[derive(Clone)]
 pub struct Pipeline {
     inner: mpsc::Sender<Event>,
     enqueued: VecDeque<Event>,

@@ -22,6 +22,14 @@ pub fn serialize_regex<S: Serializer>(re: &Regex, s: S) -> Result<S::Ok, S::Erro
     s.serialize_str(re.as_str())
 }
 
+pub fn default_true() -> bool {
+    true
+}
+
+pub fn default_false() -> bool {
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

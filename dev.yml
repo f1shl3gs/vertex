@@ -6,6 +6,10 @@ health_checks:
   enabled: false
 
 sources:
+  node:
+    type: node_metrics
+    interval: 15s
+
   generator:
     type: generator
   ntp:
@@ -35,8 +39,10 @@ sinks:
     type: stdout
     inputs:
       - add_extra_tags
+      - node
   prom:
     type: prometheus_exporter
     inputs:
       - add_extra_tags
+      - node
     listen: 127.0.0.1:9101

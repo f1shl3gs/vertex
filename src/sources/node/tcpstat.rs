@@ -1,4 +1,9 @@
-use std::path::{PathBuf};
+use std::collections::BTreeMap;
+use crate::{
+    tags,
+    event::{Metric, MetricValue}
+};
+use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
 use netlink_packet_sock_diag::{
     NetlinkMessage,
     NetlinkHeader,
@@ -14,8 +19,6 @@ use netlink_packet_sock_diag::{
     },
     constants::*,
 };
-use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
-use crate::event::Event;
 
 #[derive(Default, Debug)]
 struct Statistics {
@@ -32,8 +35,54 @@ struct Statistics {
     pub closing: usize,
 }
 
-pub async fn gather(root: PathBuf) -> Result<Vec<Event>, ()> {
-    todo!()
+macro_rules! state_metric {
+    ($name: expr, $value: expr) => {
+        Metric{
+            name: "node_tcp_connection_states".into(),
+            description: None,
+            tags: tags! (
+                "state" => $name
+            ),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge($value as f64)
+        }
+    };
+}
+
+pub async fn gather() -> Result<Vec<Metric>, ()> {
+    let (v4, v6) = tokio::join!(
+        fetch_tcp_stats(AF_INET),
+        fetch_tcp_stats(AF_INET6),
+    );
+
+    let stats = Statistics {
+        established: v4.established + v6.established,
+        syn_sent: v4.syn_sent + v6.syn_sent,
+        syn_recv: v4.syn_recv + v6.syn_recv,
+        fin_wait1: v4.fin_wait1 + v6.fin_wait1,
+        fin_wait2: v4.fin_wait2 + v6.fin_wait2,
+        time_wait: v4.time_wait + v6.time_wait,
+        close: v4.close + v6.close,
+        close_wait: v4.close_wait + v6.close_wait,
+        last_ack: v4.last_ack + v6.last_ack,
+        listen: v4.listen + v6.listen,
+        closing: v4.closing + v6.closing,
+    };
+
+    Ok(vec![
+        state_metric!("established", stats.established),
+        state_metric!("syn_sent", stats.syn_sent),
+        state_metric!("syn_recv", stats.syn_recv),
+        state_metric!("fin_wait1", stats.fin_wait1),
+        state_metric!("fin_wait2", stats.fin_wait2),
+        state_metric!("time_wait", stats.time_wait),
+        state_metric!("close", stats.close),
+        state_metric!("close_wait", stats.close_wait),
+        state_metric!("last_ack", stats.last_ack),
+        state_metric!("listen", stats.listen),
+        state_metric!("closing", stats.closing),
+    ])
 }
 
 async fn fetch_tcp_stats(family: u8) -> Statistics {

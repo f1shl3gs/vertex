@@ -144,15 +144,26 @@ fn handle(
                 .filter(|ent| ent.expired_at > now)
                 .fold(String::new(), |mut result, ent| {
                     match ent.metric.value {
-                        MetricValue::Gauge(v) => {
-                            write!(&mut result, "{}{{{}}} {}\n",
-                                   ent.name,
-                                   ent.tags
-                                       .iter()
-                                       .map(|(k, v)| format!("\"{}\"=\"{}\"", k, v))
-                                       .collect::<Vec<String>>()
-                                       .join(", "),
-                                   v);
+                        MetricValue::Gauge(v) | MetricValue::Sum(v) => {
+                            if ent.tags.len() == 0 {
+                                write!(
+                                    &mut result,
+                                    "{} {}\n",
+                                    ent.name,
+                                    v
+                                );
+                            } else {
+                                write!(
+                                    &mut result,
+                                    "{}{{{}}} {}\n",
+                                    ent.name,
+                                    ent.tags
+                                        .iter()
+                                        .map(|(k, v)| format!("\"{}\"=\"{}\"", k, v))
+                                        .collect::<Vec<String>>()
+                                        .join(","),
+                                    v);
+                            }
                         }
                         _ => unreachable!()
                     }

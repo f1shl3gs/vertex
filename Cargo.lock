@@ -2517,6 +2517,7 @@ dependencies = [
  "hyper-rustls",
  "indexmap",
  "lazy_static",
+ "libc",
  "mimalloc",
  "netlink-packet-sock-diag",
  "netlink-sys",

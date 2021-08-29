@@ -9,6 +9,85 @@ use crate::buffers::bytes::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
 
+#[macro_export]
+macro_rules! tags {
+    ( $b:expr; $($x:expr => $y:expr),* ) => ({
+        let mut temp_map = BTreeMap::with_b($b);
+        $(
+            temp_map.insert($x.into(), $y.into());
+        )*
+        temp_map
+    });
+    ( $($x:expr => $y:expr),* ) => ({
+        let mut temp_map = BTreeMap::new();
+        $(
+            temp_map.insert($x.into(), $y.into());
+        )*
+        temp_map
+    });
+    ( $b:expr; $($x:expr => $y:expr,)* ) => (
+        tags!{$b; $($x => $y),*}
+    );
+    ( $($x:expr => $y:expr,)* ) => (
+        tags!{$($x => $y),*}
+    );
+}
+
+
+#[macro_export]
+macro_rules! gauge_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge($value)
+        }
+    };
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge($value)
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! sum_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Sum($value)
+        }
+    };
+
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Sum($value)
+        }
+    };
+}
+
+
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),

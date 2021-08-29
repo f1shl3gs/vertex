@@ -6,12 +6,16 @@ edition = "2018"
 
 build = "build.rs"
 
+exclude = [
+    "testdata"
+]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
 default = [
     "metrics",
-    "disk-buffer"
+    "disk-buffer",
 ]
 
 metrics = [
@@ -27,6 +31,13 @@ disk-buffer = []
 sources-generator = []
 sources-node_metrics = []
 
+# sub collectors of node_metrics
+sources-node_metrics-arp = [
+    "sources-node_metrics"
+]
+sources-node_metrics-tcpstat = [
+    "sources-node_metrics"
+]
 
 [[bench]]
 name = "duration"
@@ -60,7 +71,7 @@ hyper = { version = "0.14.12", features = ["server", "http1", "tcp"] }
 hyper-rustls = { version = "0.22.1" }
 
 # Serde
-serde = { version = "1.0.127", features = ["derive", "std"] }
+serde = { version = "1.0.127", features = ["derive", "std", "rc"] }
 serde_yaml = { version = "0.8.17" }
 serde_json = { version = "1.0.64", default-features = false, features = ["raw_value", "alloc"] }
 
@@ -107,3 +118,4 @@ url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
 rsntp = { version = "2.0.0", features = ["tokio"] }
+libc = { version = "0.2.101" }

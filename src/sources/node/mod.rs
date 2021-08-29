@@ -1,4 +1,3 @@
-mod boot_time;
 mod btrfs;
 mod cpufreq;
 mod diskstats;
@@ -38,40 +37,246 @@ mod uname;
 mod vmstat;
 mod xfs;
 mod zfs;
+mod cpu;
+mod conntrack;
+mod errors;
 
 use typetag;
 use serde::{Deserialize, Serialize};
-
 use crate::sources::Source;
-use crate::config::{SourceConfig, SourceContext, DataType};
+use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
+use tokio_stream::wrappers::IntervalStream;
+use futures::{
+    StreamExt,
+    SinkExt,
+};
+use crate::shutdown::ShutdownSignal;
+use crate::pipeline::Pipeline;
+use crate::event::{Metric, Event};
+use std::sync::Arc;
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "lowercase")]
-enum Collector {
-    Cpu,
-    Disk,
-    Filesystem,
-    Load,
-    Memory,
-    Network,
-}
+use cpu::CPUConfig;
+use diskstats::DiskStatsConfig;
+use std::time::{SystemTime, UNIX_EPOCH};
+use crate::sources::node::filesystem::FileSystemConfig;
+use std::path::PathBuf;
+use tokio::io::AsyncReadExt;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct Config {
-    interval_sec: u64,
+struct Collectors {
+    #[serde(default = "default_true")]
+    pub arp: bool,
 
-    collectors: Option<Vec<Collector>>,
+    #[serde(default = "default_true")]
+    pub btrfs: bool,
+
+    #[serde(default = "default_true")]
+    pub bonding: bool,
+
+    pub cpu: Option<Arc<CPUConfig>>,
+
+    #[serde(default = "default_true")]
+    pub cpu_freq: bool,
+
+    #[serde(default)]
+    pub disk_stats: Option<Arc<DiskStatsConfig>>,
+
+    #[serde(default)]
+    pub filesystem: Option<Arc<FileSystemConfig>>,
+
+    #[serde(default = "default_true")]
+    pub loadavg: bool,
+
+    #[serde(default = "default_true")]
+    pub memory: bool,
+
+    #[serde(default = "default_true")]
+    pub tcpstat: bool,
+}
+
+impl Default for Collectors {
+    fn default() -> Self {
+        Self {
+            arp: default_true(),
+            btrfs: default_true(),
+            bonding: default_true(),
+            cpu: Some(Arc::new(CPUConfig::default())),
+            cpu_freq: true,
+            disk_stats: Some(Arc::new(DiskStatsConfig::default())),
+            filesystem: Some(Arc::new(FileSystemConfig::default())),
+            loadavg: default_true(),
+            memory: default_true(),
+            tcpstat: default_true(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct NodeMetricsConfig {
+    #[serde(default = "default_interval", deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    interval: chrono::Duration,
+
+    #[serde(default = "default_proc_path")]
+    proc_path: String,
+
+    #[serde(default = "default_sys_path")]
+    sys_path: String,
+
+    #[serde(default = "default_collectors")]
+    collectors: Collectors,
+}
+
+fn default_interval() -> chrono::Duration {
+    chrono::Duration::seconds(15)
+}
+
+fn default_proc_path() -> String {
+    "/proc".into()
+}
+
+fn default_sys_path() -> String {
+    "/sys".into()
+}
+
+fn default_collectors() -> Collectors {
+    Collectors::default()
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
-pub struct NodeMetrics {}
+pub struct NodeMetrics {
+    interval: std::time::Duration,
+    proc_path: String,
+    sys_path: String,
+
+    collectors: Collectors,
+}
+
+pub async fn read_to_string(path: PathBuf) -> Result<String, std::io::Error> {
+    let mut f = tokio::fs::File::open(path).await?;
+    let mut content = String::new();
+
+    f.read_to_string(&mut content).await?;
+
+    Ok(content)
+}
+
+impl NodeMetrics {
+    async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
+        let interval = tokio::time::interval(self.interval);
+        let mut ticker = IntervalStream::new(interval)
+            .take_until(shutdown);
+
+        let proc_path = Arc::new(self.proc_path.clone());
+
+        while let Some(_) = ticker.next().await {
+            let mut tasks = Vec::with_capacity(16);
+
+            if self.collectors.arp {
+                let proc_path = proc_path.clone();
+                tasks.push(tokio::spawn(async {
+                    arp::gather(proc_path).await
+                }));
+            }
+
+            if self.collectors.bonding {
+                let sys_path = proc_path.clone();
+
+                tasks.push(tokio::spawn(async {
+                    bonding::gather(sys_path).await
+                }));
+            }
+
+            if let Some(ref conf) = self.collectors.cpu {
+                let proc_path = proc_path.clone();
+                let conf = conf.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conf.gather(proc_path).await
+                }));
+            }
+
+            if let Some(ref conf) = self.collectors.filesystem {
+                let proc_path = proc_path.clone();
+                let conf = conf.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conf.gather(proc_path).await
+                }))
+            }
+
+            if self.collectors.loadavg {
+                let proc_path = proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    loadavg::gather(proc_path).await
+                }))
+            }
+
+            if self.collectors.tcpstat {
+                tasks.push(tokio::spawn(async {
+                    tcpstat::gather().await
+                }));
+            }
+
+            if let Some(ref conf) = self.collectors.disk_stats {
+                let conf = conf.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conf.gather().await
+                }))
+            }
+
+            if self.collectors.memory {
+                let proc_path = proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    meminfo::gather(proc_path).await
+                }))
+            }
+
+            let metrics = futures::future::join_all(tasks).await
+                .iter()
+                .flatten()
+                .fold(Vec::new(), |mut metrics, result| {
+                    match result {
+                        Ok(ms) => {
+                            metrics.extend_from_slice(ms)
+                        }
+                        _ => {}
+                    }
+
+                    metrics
+                });
+
+            let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+            let now = now.as_millis() as i64;
+
+            let mut stream = futures::stream::iter(metrics)
+                .map(|mut m| {
+                    m.timestamp = now;
+                    Event::Metric(m)
+                })
+                .map(Ok);
+            out.send_all(&mut stream).await;
+        }
+
+        Ok(())
+    }
+}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "node_metrics")]
-impl SourceConfig for NodeMetrics {
+impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        todo!()
+        let nm = NodeMetrics {
+            interval: self.interval.to_std().unwrap(),
+            proc_path: default_proc_path().into(),
+            sys_path: default_sys_path().into(),
+            collectors: self.collectors.clone(),
+        };
+
+        Ok(Box::pin(nm.run(ctx.shutdown, ctx.out)))
     }
 
     fn output_type(&self) -> DataType {
@@ -83,74 +288,25 @@ impl SourceConfig for NodeMetrics {
     }
 }
 
-impl NodeMetrics {
-    async fn run(self) -> Result<(), ()> {
-        Ok(())
-    }
-}
-
 #[cfg(test)]
 mod tests {
+    use super::*;
     use tokio_stream::{StreamExt};
     use tokio::sync::oneshot;
     use tokio_stream::wrappers::IntervalStream;
 
-    #[tokio::test]
-    async fn test_tokio_select() {
-        println!("start");
+    #[test]
+    fn test_deserialize() {
+        let cs: Collectors = serde_yaml::from_str(r#"
+        arp: true
+        "#).unwrap();
 
-        let (tx, rx) = oneshot::channel();
-
-        let _h = tokio::spawn(async {
-            let sleep = tokio::time::sleep(tokio::time::Duration::from_secs(5));
-            sleep.await;
-
-            tx.send(true).unwrap();
-        });
-
-        let sleep = tokio::time::sleep(tokio::time::Duration::from_secs(6));
-
-        tokio::select! {
-            val = rx => {
-                assert_eq!(val.unwrap(), true);
-                println!("rx");
-            },
-            _ = sleep => {
-                assert_eq!(true, false);
-                println!("sleep done");
-            }
-        }
-
-        println!("done")
+        println!("{:?}", cs);
     }
 
-    #[tokio::test]
-    async fn tick_till_done() {
-        let (tx, rx) = oneshot::channel();
-
-        tokio::spawn(async {
-            let sleep = tokio::time::sleep(tokio::time::Duration::from_secs(5));
-            sleep.await;
-
-            tx.send(true).unwrap();
-        });
-
-        tokio::select!{
-            _ = async {
-                let d = tokio::time::Duration::from_secs(1);
-                let interval = tokio::time::interval(d);
-                let mut stream = IntervalStream::new(interval);
-
-                while let Some(ts) = stream.next().await {
-                    println!("{:?}", ts);
-                }
-
-                println!("tick done")
-            } => {},
-
-            _ = rx => {
-                println!("done")
-            }
-        }
+    #[test]
+    fn test_pwd() {
+        let pwd = std::env::current_dir().unwrap();
+        println!("{:?}", pwd);
     }
 }

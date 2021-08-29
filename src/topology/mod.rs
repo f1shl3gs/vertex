@@ -726,7 +726,7 @@ async fn handle_errors(
         .map_err(|_| ())
         .and_then(|r| r)
         .map_err(|_| {
-            error!("an error occurred that vector couldn't handle");
+            error!("an error occurred that vertex couldn't handle");
             let _ = abort_tx.send(());
         })
 }
