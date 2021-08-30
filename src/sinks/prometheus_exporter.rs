@@ -277,7 +277,6 @@ impl StreamSink for PrometheusExporter {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::Timelike;
 
     #[test]
     fn test_metrics_insert() {

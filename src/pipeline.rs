@@ -154,7 +154,6 @@ mod tests {
     use crate::event::MetricValue;
     use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
-    use tokio_stream::wrappers::ReceiverStream;
 
     #[derive(Clone)]
     struct AddTag {

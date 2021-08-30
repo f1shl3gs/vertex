@@ -5,7 +5,6 @@ use crate::{
 use std::{
     sync::Arc,
     path::PathBuf,
-    collections::BTreeMap,
 };
 use crate::sources::node::read_to_string;
 

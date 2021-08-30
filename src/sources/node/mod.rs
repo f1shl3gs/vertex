@@ -52,7 +52,7 @@ use futures::{
 };
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
-use crate::event::{Metric, Event};
+use crate::event::{Event};
 use std::sync::Arc;
 
 use cpu::CPUConfig;
@@ -92,6 +92,9 @@ struct Collectors {
     pub memory: bool,
 
     #[serde(default = "default_true")]
+    pub nvme: bool,
+
+    #[serde(default = "default_true")]
     pub tcpstat: bool,
 }
 
@@ -107,6 +110,7 @@ impl Default for Collectors {
             filesystem: Some(Arc::new(FileSystemConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
+            nvme: default_true(),
             tcpstat: default_true(),
         }
     }
@@ -147,8 +151,8 @@ fn default_collectors() -> Collectors {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct NodeMetrics {
     interval: std::time::Duration,
-    proc_path: String,
-    sys_path: String,
+    proc_path: Arc<String>,
+    sys_path: Arc<String>,
 
     collectors: Collectors,
 }
@@ -168,20 +172,18 @@ impl NodeMetrics {
         let mut ticker = IntervalStream::new(interval)
             .take_until(shutdown);
 
-        let proc_path = Arc::new(self.proc_path.clone());
-
         while let Some(_) = ticker.next().await {
             let mut tasks = Vec::with_capacity(16);
 
             if self.collectors.arp {
-                let proc_path = proc_path.clone();
+                let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async {
                     arp::gather(proc_path).await
                 }));
             }
 
             if self.collectors.bonding {
-                let sys_path = proc_path.clone();
+                let sys_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async {
                     bonding::gather(sys_path).await
@@ -189,7 +191,7 @@ impl NodeMetrics {
             }
 
             if let Some(ref conf) = self.collectors.cpu {
-                let proc_path = proc_path.clone();
+                let proc_path = self.proc_path.clone();
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
@@ -198,7 +200,7 @@ impl NodeMetrics {
             }
 
             if let Some(ref conf) = self.collectors.filesystem {
-                let proc_path = proc_path.clone();
+                let proc_path = self.proc_path.clone();
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
@@ -207,7 +209,8 @@ impl NodeMetrics {
             }
 
             if self.collectors.loadavg {
-                let proc_path = proc_path.clone();
+                let proc_path = self.proc_path.clone();
+
                 tasks.push(tokio::spawn(async move {
                     loadavg::gather(proc_path).await
                 }))
@@ -228,10 +231,18 @@ impl NodeMetrics {
             }
 
             if self.collectors.memory {
-                let proc_path = proc_path.clone();
+                let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
                     meminfo::gather(proc_path).await
+                }))
+            }
+
+            if self.collectors.nvme {
+                let sys_path = self.sys_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    nvme::gather(sys_path).await
                 }))
             }
 
@@ -291,9 +302,6 @@ impl SourceConfig for NodeMetricsConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tokio_stream::{StreamExt};
-    use tokio::sync::oneshot;
-    use tokio_stream::wrappers::IntervalStream;
 
     #[test]
     fn test_deserialize() {
