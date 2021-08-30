@@ -6,3 +6,6 @@ build-musl:
 
 update_testdata:
 	./ttar  -c -f testdata.ttar testdata
+
+extract_testdata:
+	./ttar -x -f testdata.ttar
