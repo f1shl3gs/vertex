@@ -5,6 +5,11 @@ use mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
+// use dhat::{Dhat, DhatAlloc};
+//
+// #[global_allocator]
+// static ALLOCATOR: DhatAlloc = DhatAlloc;
+
 use tokio::runtime;
 use num_cpus;
 use hyper::{Body, Request, Response, Server};
@@ -66,6 +71,8 @@ struct Opts {
 }
 
 fn main() {
+    let _dhat = Dhat::start_heap_profiling();
+
     let opts: Opts = Opts::parse();
 
     let workers = num_cpus::get();

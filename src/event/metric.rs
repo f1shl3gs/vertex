@@ -61,7 +61,7 @@ impl DataPoint {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Getters, MutGetters, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
     pub name: String,
 

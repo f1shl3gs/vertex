@@ -35,11 +35,11 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
-  stdout:
-    type: stdout
-    inputs:
-      - add_extra_tags
-      - node
+  # stdout:
+  #   type: stdout
+  #   inputs:
+  #     - add_extra_tags
+  #     - node
   prom:
     type: prometheus_exporter
     inputs:
