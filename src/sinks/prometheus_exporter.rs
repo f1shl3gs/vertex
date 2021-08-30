@@ -26,6 +26,7 @@ use std::convert::Infallible;
 use hyper::{Request, Body, Method, Response, StatusCode, Server};
 use futures::{StreamExt, FutureExt};
 use crate::event::MetricValue;
+use hyper::http::HeaderValue;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -159,7 +160,7 @@ fn handle(
                                     ent.name,
                                     ent.tags
                                         .iter()
-                                        .map(|(k, v)| format!("\"{}\"=\"{}\"", k, v))
+                                        .map(|(k, v)| format!("{}=\"{}\"", k, v))
                                         .collect::<Vec<String>>()
                                         .join(","),
                                     v);
@@ -170,6 +171,8 @@ fn handle(
 
                     result
                 });
+
+            resp.headers_mut().insert("Content-Type", HeaderValue::from_static("text/plain; charset=utf-8"));
 
             *resp.body_mut() = Body::from(s);
         }

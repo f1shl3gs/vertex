@@ -20,4 +20,5 @@ mod ntp;
 mod chrony;
 mod blackbox;
 mod kubelet;
+mod selfstat;
 

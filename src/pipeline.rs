@@ -1,4 +1,4 @@
-use crate::event::Event;
+use crate::event::{Event, Metric};
 use std::collections::VecDeque;
 use std::pin::Pin;
 use std::{
@@ -7,6 +7,7 @@ use std::{
 };
 use crate::transforms::FunctionTransform;
 use futures::channel::mpsc;
+use futures::{FutureExt, SinkExt};
 
 #[derive(Debug)]
 pub struct ClosedError;
@@ -54,8 +55,8 @@ impl Pipeline {
                 }
 
                 Poll::Ready(Err(_err)) => {
-                    return Poll::Ready(Err(ClosedError))
-                },
+                    return Poll::Ready(Err(ClosedError));
+                }
             }
 
             match self.inner.start_send(event) {
@@ -198,7 +199,7 @@ mod tests {
     async fn multiple_transforms() -> Result<(), crate::Error> {
         let t1 = AddTag {
             k: "k1".into(),
-            v: "k2".into()
+            v: "k2".into(),
         };
 
         let t2 = AddTag {

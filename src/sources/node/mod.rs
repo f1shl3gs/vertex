@@ -59,7 +59,7 @@ use cpu::CPUConfig;
 use diskstats::DiskStatsConfig;
 use std::time::{SystemTime, UNIX_EPOCH};
 use crate::sources::node::filesystem::FileSystemConfig;
-use std::path::PathBuf;
+use std::path::{PathBuf, Path};
 use tokio::io::AsyncReadExt;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -157,8 +157,8 @@ pub struct NodeMetrics {
     collectors: Collectors,
 }
 
-pub async fn read_to_string(path: PathBuf) -> Result<String, std::io::Error> {
-    let mut f = tokio::fs::File::open(path).await?;
+pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
+    let mut f = tokio::fs::File::open(path.as_ref()).await?;
     let mut content = String::new();
 
     f.read_to_string(&mut content).await?;

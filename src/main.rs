@@ -1,14 +1,9 @@
 extern crate vertex;
 
-use mimalloc::MiMalloc;
-
-#[global_allocator]
-static GLOBAL: MiMalloc = MiMalloc;
-
-// use dhat::{Dhat, DhatAlloc};
+// use mimalloc::MiMalloc;
 //
 // #[global_allocator]
-// static ALLOCATOR: DhatAlloc = DhatAlloc;
+// static GLOBAL: MiMalloc = MiMalloc;
 
 use tokio::runtime;
 use num_cpus;
@@ -71,8 +66,6 @@ struct Opts {
 }
 
 fn main() {
-    let _dhat = Dhat::start_heap_profiling();
-
     let opts: Opts = Opts::parse();
 
     let workers = num_cpus::get();

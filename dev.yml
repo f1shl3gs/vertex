@@ -9,7 +9,8 @@ sources:
   node:
     type: node_metrics
     interval: 15s
-
+  selfstat:
+    type: selfstat
   generator:
     type: generator
   ntp:
@@ -45,4 +46,5 @@ sinks:
     inputs:
       - add_extra_tags
       - node
+      - selfstat
     listen: 127.0.0.1:9101
