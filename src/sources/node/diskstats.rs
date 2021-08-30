@@ -12,6 +12,7 @@ use crate::{
 };
 use crate::event::{Metric, MetricValue};
 use tokio::io::{AsyncBufReadExt};
+use std::sync::Arc;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -35,9 +36,13 @@ pub fn default_ignored() -> regex::Regex {
 }
 
 impl DiskStatsConfig {
-    pub async fn gather(&self) -> Result<Vec<Metric>, ()> {
+    pub async fn gather(&self, root: Arc<String>) -> Result<Vec<Metric>, ()> {
         let mut metrics = Vec::new();
-        let f = tokio::fs::File::open("/proc/diskstats").await.map_err(|_| ())?;
+        let path = &format!("{}/diskstats", root.as_ref());
+        let f = tokio::fs::File::open(path).await.map_err(|e| {
+            println!("open {} failed, {}", path, e);
+            ()
+        })?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 
@@ -171,11 +176,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
+        let proc_path = Arc::new("testdata/proc".to_string());
         let collector = DiskStatsConfig {
             ignored: default_ignored()
         };
 
-        let result = collector.gather().await.unwrap();
+        let result = collector.gather(proc_path).await.unwrap();
         assert_ne!(result.len(), 0);
     }
 }

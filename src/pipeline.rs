@@ -1,13 +1,14 @@
-use crate::event::{Event, Metric};
-use std::collections::VecDeque;
-use std::pin::Pin;
+use crate::{
+    event::Event,
+    transforms::FunctionTransform,
+};
 use std::{
+    collections::VecDeque,
     fmt,
+    pin::Pin,
     task::{Context, Poll},
 };
-use crate::transforms::FunctionTransform;
 use futures::channel::mpsc;
-use futures::{FutureExt, SinkExt};
 
 #[derive(Debug)]
 pub struct ClosedError;

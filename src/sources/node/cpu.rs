@@ -182,7 +182,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_cpu_stats() {
-        let proc_path = PathBuf::from("testdata/node_metrics/fixtures/proc");
+        let proc_path = PathBuf::from("testdata/proc");
         let stats = get_cpu_stat(proc_path).await.unwrap();
 
         assert_eq!(stats.len(), 8);

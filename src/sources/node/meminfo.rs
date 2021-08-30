@@ -87,7 +87,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_mem_info() {
-        let root = PathBuf::from("testdata/node_metrics/fixtures/proc");
+        let root = PathBuf::from("testdata/proc");
         let infos = get_mem_info(root).await.unwrap();
 
         assert_eq!(infos.get("MemTotal_bytes").unwrap(), &(15666184.0 * 1024.0));

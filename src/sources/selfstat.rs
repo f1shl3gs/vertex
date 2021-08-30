@@ -1,25 +1,30 @@
-use serde::{Deserialize, Serialize};
 use crate::{
     tags,
     gauge_metric,
     sum_metric,
-    config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration},
-    sources::Source,
+    config::{
+        SourceConfig, SourceContext, DataType,
+        deserialize_duration, serialize_duration,
+    },
+    sources::{
+        Source,
+        node::read_to_string,
+    },
     event::{Metric, MetricValue},
     shutdown::ShutdownSignal,
     pipeline::Pipeline,
     event::Event,
 };
 use std::{
-    fmt::{Debug, Formatter},
+    fmt::Debug,
     io::Read,
     collections::BTreeMap,
     time::{SystemTime, UNIX_EPOCH},
 };
+use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
 use tokio::sync::RwLock;
-use crate::sources::node::read_to_string;
 
 const USER_HZ: f64 = 100.0;
 

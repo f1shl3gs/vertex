@@ -59,7 +59,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = Arc::new("/proc/net/arp".to_string());
+        let proc_path = Arc::new("testdata/proc".to_string());
         gather(proc_path).await.unwrap();
     }
 }

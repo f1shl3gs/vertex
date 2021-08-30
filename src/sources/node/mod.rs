@@ -53,13 +53,15 @@ use futures::{
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use crate::event::{Event};
-use std::sync::Arc;
+use std::{
+    sync::Arc,
+    time::{SystemTime, UNIX_EPOCH},
+    path::Path
+};
 
 use cpu::CPUConfig;
 use diskstats::DiskStatsConfig;
-use std::time::{SystemTime, UNIX_EPOCH};
 use crate::sources::node::filesystem::FileSystemConfig;
-use std::path::{PathBuf, Path};
 use tokio::io::AsyncReadExt;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -224,9 +226,10 @@ impl NodeMetrics {
 
             if let Some(ref conf) = self.collectors.disk_stats {
                 let conf = conf.clone();
+                let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather().await
+                    conf.gather(proc_path).await
                 }))
             }
 

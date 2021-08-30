@@ -265,7 +265,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_stats() {
-        let path = PathBuf::from("/proc");
+        let path = PathBuf::from("testdata/proc");
         let conf = FileSystemConfig::default();
         let stats = conf.get_stats(path).await.unwrap();
 

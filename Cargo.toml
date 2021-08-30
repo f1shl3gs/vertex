@@ -52,8 +52,7 @@ prost-build = { version = "0.8" }
 tonic-build = { version = "0.5.2" }
 
 [dependencies]
-# allocation
-mimalloc = { version = "0.1.26", deafult-features = false }
+# Allocation TODO
 
 # profile
 dhat = { version = "0.2.2" }

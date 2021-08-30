@@ -1,9 +1,5 @@
 use std::collections::BTreeMap;
-
 use serde::{Deserialize, Serialize};
-use getset::{Getters, MutGetters};
-
-pub type Labels = BTreeMap<String, String>;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {

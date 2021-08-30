@@ -57,7 +57,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_load() {
-        let root = PathBuf::from("testdata/node_metrics/fixtures/proc");
+        let root = PathBuf::from("testdata/proc");
         let loads = get_load(root).await.unwrap();
 
         assert_eq!(loads[0], 0.02);
