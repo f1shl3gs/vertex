@@ -1,7 +1,7 @@
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
 /// Maybe we can fetch conntrack statistics from netlink api
-/// https://cgit.freedesktop.org/drm-intel/tree/net/netfilter/nf_conntrack_netlink.c?id=948769a5ba304ed3329a2f42ee3561f04a0b5692
+/// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 
 use std::{
     sync::Arc,
