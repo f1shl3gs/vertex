@@ -167,7 +167,7 @@ pub struct NodeMetrics {
 
 pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
     let mut f = tokio::fs::File::open(path.as_ref()).await?;
-    let mut content = String::with_capacity(4 * 1024);
+    let mut content = String::new();
 
     f.read_to_string(&mut content).await?;
 

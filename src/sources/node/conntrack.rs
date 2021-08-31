@@ -126,6 +126,7 @@ struct ConntrackStatEntry {
     search_restart: u64,
 }
 
+#[inline]
 fn hex_u64(input: &[u8]) -> Result<u64, Error> {
     let res = input.iter().rev().enumerate().map(|(k, &v)| {
         let digit = v as char;
