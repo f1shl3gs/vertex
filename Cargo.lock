@@ -1067,6 +1067,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 
 [[package]]
+name = "netlink-packet-conntrack"
+version = "0.1.0"
+
+[[package]]
 name = "netlink-packet-core"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

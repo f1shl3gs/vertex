@@ -28,13 +28,17 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
     let count = read_to_f64(path).await.map_err(|err| {
-        warn!("read conntrack count failed"; "err" => err);
+        if !err.is_not_found() {
+            warn!("read conntrack count failed"; "err" => err);
+        }
     })?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
     let max = read_to_f64(path).await.map_err(|err| {
-        warn!("read conntrack max failed"; "err" => err);
+        if !err.is_not_found() {
+            warn!("read conntrack max failed"; "err" => err);
+        }
     })?;
 
     let stats = get_conntrack_statistics(&proc_path).await.

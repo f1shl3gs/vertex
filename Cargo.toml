@@ -12,6 +12,11 @@ exclude = [
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[workspace]
+members = [
+    "lib/netlink-packet-conntrack"
+]
+
 [features]
 default = [
     "metrics",
@@ -84,9 +89,9 @@ slog-scope = { version = "4.4.0" }
 slog-term = { version = "2.8.0" }
 
 # netlink
-netlink-packet-sock-diag = "0.1.0"
 netlink-sys = { version = "0.7.0", features = ["tokio_socket"] }
 rtnetlink = { version = "0.8.0", features = ["tokio_socket"] }
+netlink-packet-sock-diag = "0.1.0"
 
 # protobuf
 prost = { version = "0.8.0", default-features = false, features = ["std"] }

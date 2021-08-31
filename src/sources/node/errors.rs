@@ -49,6 +49,10 @@ impl Error {
 
         self
     }
+
+    pub fn is_not_found(&self) -> bool {
+        self.source.kind() == io::ErrorKind::NotFound
+    }
 }
 
 impl fmt::Display for Error {
