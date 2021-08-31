@@ -56,13 +56,15 @@ use crate::event::{Event};
 use std::{
     sync::Arc,
     time::{SystemTime, UNIX_EPOCH},
-    path::Path
+    path::Path,
 };
 
 use cpu::CPUConfig;
 use diskstats::DiskStatsConfig;
 use crate::sources::node::filesystem::FileSystemConfig;
 use tokio::io::AsyncReadExt;
+use crate::sources::node::errors::Error;
+use std::str::FromStr;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -75,6 +77,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub bonding: bool,
+
+    #[serde(default = "default_true")]
+    pub conntrack: bool,
 
     pub cpu: Option<Arc<CPUConfig>>,
 
@@ -106,6 +111,7 @@ impl Default for Collectors {
             arp: default_true(),
             btrfs: default_true(),
             bonding: default_true(),
+            conntrack: default_true(),
             cpu: Some(Arc::new(CPUConfig::default())),
             cpu_freq: true,
             disk_stats: Some(Arc::new(DiskStatsConfig::default())),
@@ -161,11 +167,34 @@ pub struct NodeMetrics {
 
 pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
     let mut f = tokio::fs::File::open(path.as_ref()).await?;
-    let mut content = String::new();
+    let mut content = String::with_capacity(4 * 1024);
 
     f.read_to_string(&mut content).await?;
 
     Ok(content)
+}
+
+pub async fn read_to_f64<P: AsRef<Path>>(path: P) -> Result<f64, Error> {
+    let mut f = tokio::fs::File::open(path.as_ref()).await.
+        map_err(|err| Error::from(err))?;
+    let mut content = String::new();
+    f.read_to_string(&mut content).await?;
+
+    let content = content.trim_end();
+    let v = content.parse()
+        .map_err(|err| Error::from(err))?;
+
+    Ok(v)
+}
+
+pub async fn read_into<P, R, E>(path: P) -> Result<R, E>
+    where
+        P: AsRef<Path> + Send + 'static,
+        R: FromStr + Send + 'static,
+        E: From<std::io::Error> + From<<R as FromStr>::Err> + Send + 'static,
+{
+    let content = read_to_string(path).await?;
+    R::from_str(&content).map_err(Into::into)
 }
 
 impl NodeMetrics {
@@ -199,6 +228,14 @@ impl NodeMetrics {
                 tasks.push(tokio::spawn(async move {
                     conf.gather(proc_path).await
                 }));
+            }
+
+            if self.collectors.conntrack {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conntrack::gather(proc_path.as_ref()).await
+                }))
             }
 
             if let Some(ref conf) = self.collectors.filesystem {
