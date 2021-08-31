@@ -29,7 +29,7 @@ pub async fn gather(proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
         let dev = line.split_ascii_whitespace().nth(5).unwrap();
 
         match devices.get_mut(dev) {
-            Some(v) => *v = *v + 1i64,
+            Some(v) => *v += 1i64,
             _ => {
                 devices.insert(dev.into(), 1i64);
             }

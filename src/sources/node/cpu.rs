@@ -149,7 +149,7 @@ async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, ()> {
             continue;
         }
 
-        let mut parts = line.split_ascii_whitespace();
+        let parts = line.split_ascii_whitespace();
         let mut stat = CPUStat::default();
 
         for (index, part) in parts.enumerate().skip(1) {

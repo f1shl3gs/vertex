@@ -20,11 +20,11 @@ impl SinkConfig for BlackholeConfig {
     }
 
     fn input_type(&self) -> DataType {
-        todo!()
+        DataType::Any
     }
 
     fn sink_type(&self) -> &'static str {
-        todo!()
+        "blackhole"
     }
 }
 

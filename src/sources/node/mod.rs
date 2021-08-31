@@ -174,7 +174,7 @@ impl NodeMetrics {
         let mut ticker = IntervalStream::new(interval)
             .take_until(shutdown);
 
-        while let Some(_) = ticker.next().await {
+        while ticker.next().await.is_some() {
             let mut tasks = Vec::with_capacity(16);
 
             if self.collectors.arp {
@@ -253,11 +253,8 @@ impl NodeMetrics {
                 .iter()
                 .flatten()
                 .fold(Vec::new(), |mut metrics, result| {
-                    match result {
-                        Ok(ms) => {
-                            metrics.extend_from_slice(ms)
-                        }
-                        _ => {}
+                    if let Ok(ms) = result {
+                        metrics.extend_from_slice(ms)
                     }
 
                     metrics

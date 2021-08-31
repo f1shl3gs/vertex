@@ -123,13 +123,16 @@ impl Topology {
                 !handles.is_empty()
             });
 
-            let remaining_components = ch2
+            let remaining = ch2
                 .keys()
                 .map(|item| item.to_string())
                 .collect::<Vec<_>>()
                 .join(", ");
 
-            error!("Failed to gracefully shut down in time. Killing components");
+            error!(
+                "Failed to gracefully shut down in time. Killing components";
+                "component" => remaining
+            );
         };
 
         // Reports in intervals which components are still running

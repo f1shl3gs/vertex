@@ -91,8 +91,11 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
     let _port = socket.bind_auto().unwrap().port_number();
     socket.connect(&SocketAddr::new(0, 0)).unwrap();
 
-    let mut header = NetlinkHeader::default();
-    header.flags = NLM_F_REQUEST | NLM_F_DUMP;
+    let mut header = NetlinkHeader {
+        flags: NLM_F_REQUEST | NLM_F_DUMP,
+        ..Default::default()
+    };
+
     let socket_id = match family {
         AF_INET => SocketId::new_v4(),
         AF_INET6 => SocketId::new_v6(),
@@ -103,7 +106,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
         header,
         payload: SockDiagMessage::InetRequest(InetRequest {
             family,
-            protocol: IPPROTO_TCP.into(),
+            protocol: IPPROTO_TCP,
             extensions: ExtensionFlags::empty(),
             states: StateFlags::all(),
             socket_id,

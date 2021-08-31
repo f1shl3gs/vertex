@@ -141,7 +141,7 @@ pub fn load(
     format::deserialize(&with_vars, format).map(|builder| (builder, warnings))
 }
 
-fn load_from_str(mut content: String) -> Result<(Config, Vec<String>), Vec<String>> {
+fn load_from_str(content: String) -> Result<(Config, Vec<String>), Vec<String>> {
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
     if !vars.contains_key("HOSTNAME") {
         if let Ok(hostname) = get_hostname() {

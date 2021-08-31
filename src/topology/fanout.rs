@@ -59,7 +59,7 @@ impl Fanout {
         self.sinks.push((id, Some(sink.into())));
     }
 
-    fn remove(&mut self, id: &String) {
+    fn remove(&mut self, id: &str) {
         let i = self.sinks.iter().position(|(n, _)| n == id);
         let i = i.expect("Didn't find output in fanout");
 

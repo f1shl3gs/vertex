@@ -197,6 +197,8 @@ pub struct Config {
 
     #[serde(rename = "health_checks")]
     pub health_checks: HealthcheckOptions,
+
+    expansions: IndexMap<String, Vec<String>>
 }
 
 impl Config {}

@@ -41,7 +41,6 @@ impl DiskStatsConfig {
         let path = &format!("{}/diskstats", root.as_ref());
         let f = tokio::fs::File::open(path).await.map_err(|e| {
             println!("open {} failed, {}", path, e);
-            ()
         })?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();

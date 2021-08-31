@@ -146,24 +146,25 @@ fn handle(
                 .fold(String::new(), |mut result, ent| {
                     match ent.metric.value {
                         MetricValue::Gauge(v) | MetricValue::Sum(v) => {
-                            if ent.tags.len() == 0 {
-                                write!(
+                            if ent.tags.is_empty() {
+                                writeln!(
                                     &mut result,
-                                    "{} {}\n",
+                                    "{} {}",
                                     ent.name,
                                     v
-                                );
+                                ).unwrap();
                             } else {
-                                write!(
+                                writeln!(
                                     &mut result,
-                                    "{}{{{}}} {}\n",
+                                    "{}{{{}}} {}",
                                     ent.name,
                                     ent.tags
                                         .iter()
                                         .map(|(k, v)| format!("{}=\"{}\"", k, v))
                                         .collect::<Vec<String>>()
                                         .join(","),
-                                    v);
+                                    v
+                                ).unwrap();
                             }
                         }
                         _ => unreachable!()
@@ -231,7 +232,7 @@ impl PrometheusExporter {
         });
 
         let (trigger, tripwire) = Tripwire::new();
-        let address = self.config.listen.clone();
+        let address = self.config.listen;
         tokio::spawn(async move {
             // TODO: handle error
             Server::bind(&address)
@@ -263,7 +264,7 @@ impl StreamSink for PrometheusExporter {
                         expired_at: now + expiration,
                     }
                 }
-                ts @ _ => ExpiringEntry {
+                ts => ExpiringEntry {
                     metric,
                     expired_at: ts + expiration,
                 }

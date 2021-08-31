@@ -15,8 +15,12 @@ pub async fn gather(root: Arc<String>) -> Result<Vec<Metric>, ()> {
     path.push("class/nvme");
 
     let mut metrics = Vec::new();
-    let mut readdir = tokio::fs::read_dir(path).await.map_err(|e| ())?;
-    while let Some(dir) = readdir.next_entry().await.map_err(|e| ())? {
+    let mut readdir = tokio::fs::read_dir(path).await.map_err(|err| {
+        warn!("read nvme root dir failed"; "err" => err);
+    })?;
+    while let Some(dir) = readdir.next_entry().await.map_err(|err| {
+        warn!("readdir nvme dir entries failed"; "err" => err);
+    })? {
         let infos = read_nvme_device(dir.path()).await.map_err(|_| ())?;
 
         metrics.push(gauge_metric!(

@@ -106,7 +106,7 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         return Err(ParseDurationError::InvalidDuration);
     }
 
-    while s.len() != 0 {
+    while !s.is_empty() {
         let mut v = 0;
         let mut f = 0;
         let mut scale = 1.0;
@@ -144,7 +144,7 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         let mut i = 0;
         while i < s.len() {
             let c = s[i];
-            if c == b'.' || b'0' <= c && c <= b'9' {
+            if c == b'.' || (b'0'..=b'9').contains(&c) {
                 break;
             }
 

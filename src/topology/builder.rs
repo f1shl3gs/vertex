@@ -21,6 +21,7 @@ use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
+use chrono::Duration;
 
 
 const DEFAULT_CHANNEL_BUFFER_SIZE: usize = 1024;
@@ -48,6 +49,7 @@ pub async fn build_pieces(
     let mut source_tasks = HashMap::new();
     let mut shutdown_coordinator = ShutdownCoordinator::default();
     let mut health_checks = HashMap::new();
+    let health_checks_enabled = config.health_checks.enabled;
     let mut errors = vec![];
 
     // Build sources
@@ -225,50 +227,50 @@ pub async fn build_pieces(
         };
 
         let task = Task::new(name, typetag, sink);
+        let id = name.clone();
         let health_check_task = async move {
-            if config.health_checks.enabled {
-                // TODO: make the duration configurable
+            if health_checks_enabled {
                 let duration = std::time::Duration::from_secs(10);
                 tokio::time::timeout(duration, health_check)
-                    .map(|result| {
-                        match result {
-                            Ok(Ok(_)) => {
-                                info!("Health check passed");
-                                Ok(TaskOutput::HealthCheck)
-                            }
-
-                            Ok(Err(err)) => {
-                                error!(
-                                "Health check failed";
-                                // "err" => err.to_string(),
-                                "type" => typetag,
-                                "id" => name,
-                            );
-                                Err(())
-                            }
-
-                            Err(_) => {
-                                error!(
-                                "Health check timeout";
-                                "id" => name,
-                                "type" => typetag,
-                            );
-                                Err(())
-                            }
+                    .map(|result| match result {
+                        Ok(Ok(_)) => {
+                            info!("Healthcheck: Passed");
+                            Ok(TaskOutput::HealthCheck)
                         }
-                    })
-                    .await
+
+                        Ok(Err(err)) => {
+                            error!(
+                                "Health check failed";
+                                "err" => err.to_string(),
+                                "kind" => "sink",
+                                "type" => typetag,
+                                "name" => id,
+                            );
+
+                            Err(())
+                        }
+
+                        Err(_) => {
+                            error!(
+                                "Health check timeout";
+                                "kind" => "sink",
+                                "type" => typetag,
+                                "name" => id,
+                            );
+
+                            Err(())
+                        }
+                    }).await
             } else {
-                info!("Health check disabled");
+                info!("Healthcheck disabled");
                 Ok(TaskOutput::HealthCheck)
             }
         };
-
-        // let health_check_task = Task::new(name.clone(), typetag, health_check_task);
+        let health_check_task = Task::new(name.clone(), typetag, health_check_task);
 
         inputs.insert(name.clone(), (tx, sink_inputs.clone()));
         tasks.insert(name.clone(), task);
-        // health_checks.insert(name.clone(), health_check_task);
+        health_checks.insert(name.clone(), health_check_task);
         detach_triggers.insert(name.clone(), trigger);
     }
 

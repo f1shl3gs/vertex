@@ -13,10 +13,9 @@ use crate::{
 };
 
 pub async fn gather(root: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let mut root = PathBuf::from(root.as_ref());
+    let root = PathBuf::from(root.as_ref());
     let infos = get_mem_info(root).await.map_err(|err| {
         warn!("get mem info failed"; "err" => err);
-        ()
     })?;
 
     let mut metrics = Vec::new();
@@ -40,7 +39,8 @@ pub async fn gather(root: Arc<String>) -> Result<Vec<Metric>, ()> {
     Ok(metrics)
 }
 
-async fn get_mem_info(mut root: PathBuf) -> Result<HashMap<String, f64>, std::io::Error> {
+async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Error> {
+    // TODO: Clone might happened here?
     let mut path = root;
     path.push("meminfo");
 
@@ -54,7 +54,7 @@ async fn get_mem_info(mut root: PathBuf) -> Result<HashMap<String, f64>, std::io
             .collect::<Vec<_>>();
 
         let mut fv = parts[1].parse::<f64>()
-            .map_err(|e| std::io::ErrorKind::from(std::io::ErrorKind::InvalidInput))?;
+            .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
 
         let mut key = parts[0]
             .replace(":", "")
@@ -66,10 +66,10 @@ async fn get_mem_info(mut root: PathBuf) -> Result<HashMap<String, f64>, std::io
             3 => {
                 // with unit, we presume kB
                 fv *= 1024.0;
-                if key.ends_with("_") {
-                    key = key + "byte"
+                if key.ends_with('_') {
+                    key += "byte"
                 } else {
-                    key = key + "_bytes";
+                    key += "_bytes";
                 }
             }
             _ => unreachable!()

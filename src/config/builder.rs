@@ -136,7 +136,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
                 sources: builder.sources,
                 sinks: builder.sinks,
                 transforms: builder.transforms,
-
+                expansions,
             },
             warnings,
         ))

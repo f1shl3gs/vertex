@@ -12,11 +12,9 @@ use tokio::io::AsyncReadExt;
 use std::sync::Arc;
 
 pub async fn gather(sys_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let mut path = PathBuf::from(sys_path.as_ref());
-
-    let mut metrics = Vec::new();
-
+    let path = PathBuf::from(sys_path.as_ref());
     let stats = read_bonding_stats(path).await?;
+    let mut metrics = Vec::new();
 
     for (master, status) in stats {
         metrics.push(gauge_metric!(
@@ -83,7 +81,7 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
                 ));
 
                 if let Ok(state) = read_to_string(path).await {
-                    sstat[0] = sstat[0] + 1f64;
+                    sstat[0] += 1f64;
                     if state.trim() == "up" {
                         sstat[1] = sstat[1] + 1f64;
                     }

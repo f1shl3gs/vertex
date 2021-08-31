@@ -11,13 +11,6 @@ use prost::{DecodeError, EncodeError};
 
 #[macro_export]
 macro_rules! tags {
-    ( $b:expr; $($x:expr => $y:expr),* ) => ({
-        let mut temp_map = BTreeMap::with_b($b);
-        $(
-            temp_map.insert($x.into(), $y.into());
-        )*
-        temp_map
-    });
     ( $($x:expr => $y:expr),* ) => ({
         let mut temp_map = BTreeMap::new();
         $(
@@ -25,14 +18,10 @@ macro_rules! tags {
         )*
         temp_map
     });
-    ( $b:expr; $($x:expr => $y:expr,)* ) => (
-        tags!{$b; $($x => $y),*}
-    );
     ( $($x:expr => $y:expr,)* ) => (
         tags!{$($x => $y),*}
     );
 }
-
 
 #[macro_export]
 macro_rules! gauge_metric {
@@ -97,7 +86,6 @@ pub enum Event {
 impl Event {
     /// This function panics if self is anything other than an `Event::Metric`
     pub fn as_mut_metric(&mut self) -> &mut Metric {
-
         match self {
             Event::Metric(metric) => metric,
             _ => panic!("Failed type coercion, {:?} is not a metric", self)

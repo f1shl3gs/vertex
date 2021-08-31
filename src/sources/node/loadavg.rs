@@ -10,7 +10,7 @@ use crate::sources::node::read_to_string;
 
 
 pub async fn gather(proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let mut root = PathBuf::from(proc_path.as_ref());
+    let root = PathBuf::from(proc_path.as_ref());
 
     match get_load(root).await {
         Ok(loads) => {
@@ -34,7 +34,7 @@ pub async fn gather(proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
         },
 
         Err(err) => {
-            warn!("read loadavg failed");
+            warn!("read loadavg failed {}", err);
             Err(())
         }
     }

@@ -148,7 +148,7 @@ impl FileSystemConfig {
                 continue;
             }
 
-            let ro = options.split(",")
+            let ro = options.split(',')
                 .find(|&flag| flag == "ro")
                 .map_or(0u64, |_| 1u64);
 
@@ -235,27 +235,27 @@ struct Usage(libc::statvfs);
 impl Usage {
     #[inline]
     pub fn size(&self) -> u64 {
-        u64::from(self.0.f_blocks) * u64::from(self.0.f_frsize)
+        self.0.f_blocks * self.0.f_frsize
     }
 
     #[inline]
     fn free(&self) -> u64 {
-        u64::from(self.0.f_bfree) * u64::from(self.0.f_bsize)
+        self.0.f_bfree * self.0.f_bsize
     }
 
     #[inline]
     fn avail(&self) -> u64 {
-        u64::from(self.0.f_bavail) * u64::from(self.0.f_bsize)
+        self.0.f_bavail * self.0.f_bsize
     }
 
     #[inline]
     fn files(&self) -> u64 {
-        u64::from(self.0.f_files)
+        self.0.f_files
     }
 
     #[inline]
     fn files_free(&self) -> u64 {
-        u64::from(self.0.f_ffree)
+        self.0.f_ffree
     }
 }
 

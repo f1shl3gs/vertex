@@ -79,7 +79,7 @@ impl SelfStat {
         let mut ticker = IntervalStream::new(interval)
             .take_until(shutdown);
 
-        while let Some(_) = ticker.next().await {
+        while ticker.next().await.is_some() {
             match gather().await {
                 Ok(metrics) => {
                     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
@@ -194,7 +194,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
 async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
     let content = read_to_string(&path).await?;
-    let mut parts = content.split_ascii_whitespace()
+    let parts = content.split_ascii_whitespace()
         .collect::<Vec<_>>();
 
     let utime = parts[13].parse().unwrap_or(0f64);
