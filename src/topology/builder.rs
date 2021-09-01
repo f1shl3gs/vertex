@@ -21,7 +21,6 @@ use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
-use chrono::Duration;
 
 
 const DEFAULT_CHANNEL_BUFFER_SIZE: usize = 1024;

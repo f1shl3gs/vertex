@@ -4,11 +4,6 @@
 /// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 /// https://github.com/ti-mo/conntrack/blob/5b022d74eb6f79d2ddbddd0100e93b3aeeadfff8/conn.go#L465
 
-use std::{
-    sync::Arc,
-    io,
-};
-
 use crate::{
     tags,
     gauge_metric,
@@ -19,10 +14,10 @@ use crate::{
     },
 };
 use std::{
+    io,
     path::PathBuf,
     collections::BTreeMap,
 };
-use std::option::Option::Some;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
     let mut path = PathBuf::from(proc_path);

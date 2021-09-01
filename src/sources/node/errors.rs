@@ -4,8 +4,8 @@ use std::{
     fmt::{self, Formatter},
     borrow::Cow,
     num,
-    convert,
     path::{PathBuf},
+    string::ParseError,
 };
 use slog::{Record, Key, Serializer};
 
@@ -106,3 +106,15 @@ impl From<num::ParseFloatError> for Error {
         Self::from(inner)
     }
 }
+
+impl From<std::string::ParseError> for Error {
+    fn from(err: ParseError) -> Self {
+        let err = io::Error::new(io::ErrorKind::InvalidInput, err);
+
+        Self {
+            source: err,
+            context: None,
+        }
+    }
+}
+

@@ -37,12 +37,15 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     tokio::time::sleep(std::time::Duration::from_secs(30)).await;
 
-    if let Ok(report) = guard.report().build() {
-        let file = std::fs::File::create("flamegraph.svg").unwrap();
-        report.flamegraph(file).unwrap();
-    };
+    match guard.report().build() {
+        Ok(report) => {
+            let file = std::fs::File::create("flamegraph.svg").unwrap();
+            report.flamegraph(file).unwrap();
+        }
 
-    info!("handle request"; "log-key" => true);
+        Err(_) => {}
+    }
+
     Ok(Response::new(Body::from(vec![])))
 }
 

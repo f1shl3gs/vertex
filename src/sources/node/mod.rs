@@ -187,14 +187,14 @@ pub async fn read_to_f64<P: AsRef<Path>>(path: P) -> Result<f64, Error> {
     Ok(v)
 }
 
-pub async fn read_into<P, R, E>(path: P) -> Result<R, E>
+pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
     where
-        P: AsRef<Path> + Send + 'static,
-        R: FromStr + Send + 'static,
-        E: From<std::io::Error> + From<<R as FromStr>::Err> + Send + 'static,
+        P: AsRef<Path>,
+        T: FromStr<Err=E>,
+        Error: From<E>
 {
     let content = read_to_string(path).await?;
-    R::from_str(&content).map_err(Into::into)
+    Ok(<T as FromStr>::from_str(&content)?)
 }
 
 impl NodeMetrics {
@@ -228,6 +228,14 @@ impl NodeMetrics {
                 tasks.push(tokio::spawn(async move {
                     conf.gather(proc_path).await
                 }));
+            }
+
+            if self.collectors.cpu_freq {
+                let sys_path = self.sys_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    cpufreq::gather(sys_path.as_ref()).await
+                }))
             }
 
             if self.collectors.conntrack {
