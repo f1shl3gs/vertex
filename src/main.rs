@@ -68,12 +68,7 @@ struct Opts {
 fn main() {
     let opts: Opts = Opts::parse();
 
-    let workers = num_cpus::get();
-
     let rt = runtime::Builder::new_multi_thread()
-        .worker_threads(workers)
-        .thread_name("vertex-worker")
-        .thread_stack_size(4 * 1024 * 1024)
         .enable_io()
         .enable_time()
         .build()
