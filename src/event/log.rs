@@ -1,11 +1,9 @@
 use serde::{Deserialize};
 
-use getset::{Getters, MutGetters};
 use crate::event::value::Value;
 use std::collections::BTreeMap;
 
-
-#[derive(Clone, Debug, Getters, MutGetters, PartialEq, PartialOrd, Deserialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize)]
 pub struct LogRecord {
     // time_unix_nano is the time when the event occurred
     pub time_unix_nano: u64,

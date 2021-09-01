@@ -6,7 +6,6 @@ extern crate vertex;
 // static GLOBAL: MiMalloc = MiMalloc;
 
 use tokio::runtime;
-use num_cpus;
 use hyper::{Body, Request, Response, Server};
 use hyper::service::{make_service_fn, service_fn};
 use std::convert::Infallible;
@@ -93,7 +92,7 @@ fn main() {
     // Make sure to save the guard, see documentation for more information
     let _guard = slog_scope::set_global_logger(logger);
     slog_scope::scope(&slog_scope::logger().new(o!()), || {
-        info!("start vertex"; "workers" => workers, "config" => opts.config);
+        info!("start vertex"; "config" => opts.config);
 
         rt.block_on(async move {
             let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();

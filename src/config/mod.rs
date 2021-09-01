@@ -93,16 +93,6 @@ pub enum ExpandType {
     Serial,
 }
 
-#[derive(Debug, Default, Deserialize, Serialize)]
-pub struct RuntimeConfig {
-    #[serde(default = "default_worker")]
-    pub worker: usize,
-}
-
-pub fn default_worker() -> usize {
-    num_cpus::get()
-}
-
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]

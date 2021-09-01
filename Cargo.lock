@@ -658,18 +658,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "getset"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24b328c01a4d71d2d8173daa93562a73ab0fe85616876f02500f53d82948c504"
-dependencies = [
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "ghost"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2589,7 +2577,6 @@ dependencies = [
  "dyn-clone",
  "exitcode",
  "futures",
- "getset",
  "glob",
  "hostname",
  "hyper",
@@ -2599,7 +2586,6 @@ dependencies = [
  "libc",
  "netlink-packet-sock-diag",
  "netlink-sys",
- "num_cpus",
  "opentelemetry-otlp",
  "pin-project",
  "pprof",
