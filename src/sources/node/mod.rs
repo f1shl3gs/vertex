@@ -96,6 +96,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub entropy: bool,
 
+    #[serde(default = "default_true")]
+    pub filefd: bool,
+
     #[serde(default)]
     pub filesystem: Option<Arc<FileSystemConfig>>,
 
@@ -130,6 +133,7 @@ impl Default for Collectors {
             disk_stats: Some(Arc::new(DiskStatsConfig::default())),
             edac: default_true(),
             entropy: default_true(),
+            filefd: default_true(),
             filesystem: Some(Arc::new(FileSystemConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
@@ -286,6 +290,14 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     entropy::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.filefd {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    filefd::gather(proc_path.as_ref()).await
                 }))
             }
 
