@@ -91,7 +91,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
     let _port = socket.bind_auto().unwrap().port_number();
     socket.connect(&SocketAddr::new(0, 0)).unwrap();
 
-    let mut header = NetlinkHeader {
+    let header = NetlinkHeader {
         flags: NLM_F_REQUEST | NLM_F_DUMP,
         ..Default::default()
     };

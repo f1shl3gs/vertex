@@ -60,7 +60,7 @@ macro_rules! sum_metric {
             ),
             unit: None,
             timestamp: 0,
-            value: MetricValue::Sum($value)
+            value: MetricValue::Sum($value.into())
         }
     };
 

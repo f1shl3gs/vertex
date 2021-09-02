@@ -1,5 +1,7 @@
 extern crate vertex;
 
+// mimalloc do not help for reducing memory usage,
+//
 // use mimalloc::MiMalloc;
 //
 // #[global_allocator]

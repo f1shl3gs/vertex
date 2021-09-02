@@ -53,6 +53,16 @@ impl Error {
     pub fn is_not_found(&self) -> bool {
         self.source.kind() == io::ErrorKind::NotFound
     }
+
+    pub fn new_invalid_with_message<T>(msg: T) -> Self
+        where
+            T: Into<Cow<'static, str>>
+    {
+        Self {
+            source: io::Error::from(io::ErrorKind::InvalidData),
+            context: Some(Context::Message { text: msg.into() }),
+        }
+    }
 }
 
 impl fmt::Display for Error {
@@ -73,7 +83,7 @@ impl fmt::Display for Error {
 }
 
 impl slog::Value for Error {
-    fn serialize(&self, record: &Record, key: Key, serializer: &mut Serializer) -> slog::Result {
+    fn serialize(&self, _record: &Record, key: Key, serializer: &mut dyn Serializer) -> slog::Result {
         serializer.emit_str(key, &self.to_string())
     }
 }

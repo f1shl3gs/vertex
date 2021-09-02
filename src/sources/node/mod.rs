@@ -89,6 +89,12 @@ struct Collectors {
     #[serde(default)]
     pub disk_stats: Option<Arc<DiskStatsConfig>>,
 
+    #[serde(default = "default_true")]
+    pub edac: bool,
+
+    #[serde(default = "default_true")]
+    pub entropy: bool,
+
     #[serde(default)]
     pub filesystem: Option<Arc<FileSystemConfig>>,
 
@@ -103,6 +109,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub tcpstat: bool,
+
+    #[serde(default = "default_true")]
+    pub xfs: bool,
 }
 
 impl Default for Collectors {
@@ -115,11 +124,14 @@ impl Default for Collectors {
             cpu: Some(Arc::new(CPUConfig::default())),
             cpu_freq: true,
             disk_stats: Some(Arc::new(DiskStatsConfig::default())),
+            edac: default_true(),
+            entropy: default_true(),
             filesystem: Some(Arc::new(FileSystemConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
             nvme: default_true(),
             tcpstat: default_true(),
+            xfs: default_true(),
         }
     }
 }
@@ -221,6 +233,14 @@ impl NodeMetrics {
                 }));
             }
 
+            if self.collectors.conntrack {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conntrack::gather(proc_path.as_ref()).await
+                }))
+            }
+
             if let Some(ref conf) = self.collectors.cpu {
                 let proc_path = self.proc_path.clone();
                 let conf = conf.clone();
@@ -238,11 +258,28 @@ impl NodeMetrics {
                 }))
             }
 
-            if self.collectors.conntrack {
+            if let Some(ref conf) = self.collectors.disk_stats {
+                let conf = conf.clone();
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conntrack::gather(proc_path.as_ref()).await
+                    conf.gather(proc_path).await
+                }))
+            }
+
+            if self.collectors.edac {
+                let sys_path = self.sys_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    edac::gather(sys_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.entropy {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    entropy::gather(proc_path.as_ref()).await
                 }))
             }
 
@@ -269,15 +306,6 @@ impl NodeMetrics {
                 }));
             }
 
-            if let Some(ref conf) = self.collectors.disk_stats {
-                let conf = conf.clone();
-                let proc_path = self.proc_path.clone();
-
-                tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path).await
-                }))
-            }
-
             if self.collectors.memory {
                 let proc_path = self.proc_path.clone();
 
@@ -291,6 +319,15 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     nvme::gather(sys_path).await
+                }))
+            }
+
+            if self.collectors.xfs {
+                let sys_path = self.sys_path.clone();
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    xfs::gather(proc_path.as_ref(), sys_path.as_ref()).await
                 }))
             }
 
