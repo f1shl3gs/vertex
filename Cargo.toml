@@ -75,9 +75,9 @@ hyper = { version = "0.14.12", features = ["server", "http1", "tcp"] }
 hyper-rustls = { version = "0.22.1" }
 
 # Serde
-serde = { version = "1.0.127", features = ["derive", "std", "rc"] }
-serde_yaml = { version = "0.8.17" }
-serde_json = { version = "1.0.64", default-features = false, features = ["raw_value", "alloc"] }
+serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
+serde_yaml = { version = "0.8.20" }
+serde_json = { version = "1.0.67", default-features = false, features = ["raw_value", "alloc"] }
 
 # log
 slog = { version = "2.7.0" }
