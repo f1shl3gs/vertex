@@ -59,9 +59,6 @@ tonic-build = { version = "0.5.2" }
 [dependencies]
 # Allocation TODO
 
-# profile
-dhat = { version = "0.2.2" }
-
 # futrures & tokio
 tokio = { version = "1.10.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util"] }
 tokio-stream = { version = "0.1.7", features = ["time"] }
