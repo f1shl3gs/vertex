@@ -3411,6 +3411,14 @@ Mode: 644
 Directory: testdata/proc/sys
 Mode: 775
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/proc/sys/fs
+Mode: 775
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/proc/sys/fs/file-nr
+Lines: 1
+1024	0	1631329
+Mode: 664
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: testdata/proc/sys/kernel
 Mode: 775
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -4763,6 +4771,74 @@ Mode: 644
 Path: testdata/sys/class/fc_host/host0/symbolic_name
 Lines: 1
 Emulex SN1100E2P FV12.4.270.3 DV12.4.0.0. HN:gotest. OS:Linux
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/class/hwmon
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon0
+SymlinkTo: ../../devices/platform/coretemp.0/hwmon/hwmon0
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon1
+SymlinkTo: ../../devices/platform/coretemp.1/hwmon/hwmon1
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon2
+SymlinkTo: ../../devices/platform/applesmc.768/hwmon/hwmon2
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon3
+SymlinkTo: ../../devices/platform/nct6775.656/hwmon/hwmon3
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/class/hwmon/hwmon4
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp1_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp1_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp1_input
+Lines: 1
+55000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp1_label
+Lines: 1
+foosensor
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp1_max
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp2_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp2_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp2_input
+Lines: 1
+54000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp2_label
+Lines: 1
+foosensor
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/class/hwmon/hwmon4/temp2_max
+Lines: 1
+100000
 Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: testdata/sys/class/infiniband
@@ -7244,6 +7320,632 @@ Path: testdata/sys/devices/pci0000:00/0000:00:1f.6/vendor
 Lines: 1
 0x8086
 Mode: 444
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/applesmc.768
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_input
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_label
+Lines: 1
+Left side  
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_manual
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_max
+Lines: 1
+6156
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_min
+Lines: 1
+2160
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_output
+Lines: 1
+2160
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan1_safe
+Lines: 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_input
+Lines: 1
+1998
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_label
+Lines: 1
+Right side 
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_manual
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_max
+Lines: 1
+5700
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_min
+Lines: 1
+2000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_output
+Lines: 1
+2000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/fan2_safe
+Lines: 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/applesmc.768/hwmon
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/applesmc.768/hwmon/hwmon2
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/hwmon/hwmon2/device
+SymlinkTo: ../../../applesmc.768
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/applesmc.768/name
+Lines: 1
+applesmc
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.0
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.0/hwmon
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/device
+SymlinkTo: ../../../coretemp.0
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/name
+Lines: 1
+coretemp
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input
+Lines: 1
+55000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_label
+Lines: 1
+Physical id 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_input
+Lines: 1
+54000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_label
+Lines: 1
+Core 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp3_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp3_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp3_input
+Lines: 1
+52000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp3_label
+Lines: 1
+Core 1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp3_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp4_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp4_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp4_input
+Lines: 1
+53000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp4_label
+Lines: 1
+Core 2
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp4_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp5_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp5_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp5_input
+Lines: 1
+50000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp5_label
+Lines: 1
+Core 3
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp5_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.1
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.1/hwmon
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/device
+SymlinkTo: ../../../coretemp.1
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/name
+Lines: 1
+coretemp
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp1_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp1_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp1_input
+Lines: 1
+55000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp1_label
+Lines: 1
+Physical id 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp1_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp2_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp2_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp2_input
+Lines: 1
+54000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp2_label
+Lines: 1
+Core 0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp2_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp3_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp3_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp3_input
+Lines: 1
+52000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp3_label
+Lines: 1
+Core 1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp3_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp4_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp4_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp4_input
+Lines: 1
+53000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp4_label
+Lines: 1
+Core 2
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp4_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp5_crit
+Lines: 1
+100000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp5_crit_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp5_input
+Lines: 1
+50000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp5_label
+Lines: 1
+Core 3
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/coretemp.1/hwmon/hwmon1/temp5_max
+Lines: 1
+84000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/nct6775.656
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/nct6775.656/hwmon
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Directory: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3
+Mode: 755
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_beep
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_input
+Lines: 1
+1098
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_min
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_pulses
+Lines: 1
+2
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_target
+Lines: 1
+27000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/fan2_tolerance
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in0_alarm
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in0_beep
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in0_input
+Lines: 1
+792
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in0_max
+Lines: 1
+1744
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in0_min
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in1_alarm
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in1_beep
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in1_input
+Lines: 1
+1024
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in1_max
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/in1_min
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/intrusion0_alarm
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/intrusion0_beep
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/intrusion1_alarm
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/intrusion1_beep
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/name
+Lines: 1
+nct6779
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point1_pwm
+Lines: 1
+153
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point1_temp
+Lines: 1
+30000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point2_pwm
+Lines: 1
+255
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point2_temp
+Lines: 1
+70000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point3_pwm
+Lines: 1
+255
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point3_temp
+Lines: 1
+70000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point4_pwm
+Lines: 1
+255
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point4_temp
+Lines: 1
+70000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point5_pwm
+Lines: 1
+255
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_auto_point5_temp
+Lines: 1
+75000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_crit_temp_tolerance
+Lines: 1
+2000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_enable
+Lines: 1
+5
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_floor
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_mode
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_start
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_step_down_time
+Lines: 1
+100
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_step_up_time
+Lines: 1
+100
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_stop_time
+Lines: 1
+6000
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_target_temp
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_temp_sel
+Lines: 1
+7
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_temp_tolerance
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_duty_base
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_duty_step
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_temp_sel
+Lines: 1
+1
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_temp_step
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_temp_step_base
+Lines: 1
+0
+Mode: 644
+# ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Path: testdata/sys/devices/platform/nct6775.656/hwmon/hwmon3/pwm1_weight_temp_step_tol
+Lines: 1
+0
+Mode: 644
 # ttar - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Directory: testdata/sys/devices/rbd
 Mode: 755
