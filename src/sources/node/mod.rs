@@ -194,7 +194,7 @@ pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
         Error: From<E>
 {
     let content = read_to_string(path).await?;
-    Ok(<T as FromStr>::from_str(&content)?)
+    Ok(<T as FromStr>::from_str(content.trim())?)
 }
 
 impl NodeMetrics {
