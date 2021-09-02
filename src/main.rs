@@ -21,14 +21,12 @@ use clap::{AppSettings, Clap};
 
 use slog::Drain;
 use vertex::{
-    signal,
-    config,
+    signal::{self, SignalTo},
+    config::{self, ConfigPath, FormatHint},
     topology,
 };
 use std::collections::HashMap;
 use tokio_stream::wrappers::UnboundedReceiverStream;
-use vertex::signal::SignalTo;
-use vertex::config::{ConfigPath, FormatHint};
 use tokio_stream::StreamExt;
 
 
