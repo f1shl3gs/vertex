@@ -3,7 +3,6 @@
 use std::{
     path::PathBuf,
     collections::HashMap,
-    sync::Arc,
 };
 use crate::{
     event::{Metric, MetricValue},
@@ -12,8 +11,8 @@ use crate::{
     sources::node::read_to_string,
 };
 
-pub async fn gather(root: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let root = PathBuf::from(root.as_ref());
+pub async fn gather(root: &str) -> Result<Vec<Metric>, ()> {
+    let root = PathBuf::from(root);
     let infos = get_mem_info(root).await.map_err(|err| {
         warn!("get mem info failed"; "err" => err);
     })?;

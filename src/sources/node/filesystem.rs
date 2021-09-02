@@ -1,6 +1,5 @@
 use std::{
     path::PathBuf,
-    sync::Arc,
     ffi::CString,
     collections::BTreeMap,
 };
@@ -47,8 +46,8 @@ fn default_fs_type_exclude() -> regex::Regex {
 }
 
 impl FileSystemConfig {
-    pub async fn gather(&self, proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-        let path = PathBuf::from(proc_path.as_ref());
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
+        let path = PathBuf::from(proc_path);
 
         let stats = self.get_stats(path).await?;
         let mut metrics = Vec::new();

@@ -11,10 +11,9 @@ use tokio::io::{
 use std::collections::{
     HashMap, BTreeMap
 };
-use std::sync::Arc;
 
-pub async fn gather(proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let mut path = PathBuf::from(proc_path.as_ref());
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+    let mut path = PathBuf::from(proc_path);
     path.push("net/arp");
 
     let f = tokio::fs::File::open(path).await.unwrap();
@@ -59,7 +58,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = Arc::new("testdata/proc".to_string());
+        let proc_path = "testdata/proc";
         gather(proc_path).await.unwrap();
     }
 }

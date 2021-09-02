@@ -12,7 +12,6 @@ use crate::{
     },
 };
 use std::{
-    sync::Arc,
     path::PathBuf,
     collections::BTreeMap,
 };
@@ -75,8 +74,8 @@ fn default_bugs_include() -> regex::Regex {
 }
 
 impl CPUConfig {
-    pub async fn gather(&self, proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-        let proc_path = PathBuf::from(proc_path.as_ref());
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
+        let proc_path = PathBuf::from(proc_path);
         let stats = get_cpu_stat(proc_path).await?;
         let mut metrics = Vec::with_capacity(stats.len() * 10);
 

@@ -8,11 +8,10 @@ use crate::{
     tags,
     sum_metric,
     gauge_metric,
+    event::{Metric, MetricValue},
     config::{deserialize_regex, serialize_regex},
 };
-use crate::event::{Metric, MetricValue};
 use tokio::io::{AsyncBufReadExt};
-use std::sync::Arc;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -36,9 +35,9 @@ pub fn default_ignored() -> regex::Regex {
 }
 
 impl DiskStatsConfig {
-    pub async fn gather(&self, root: Arc<String>) -> Result<Vec<Metric>, ()> {
+    pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, ()> {
         let mut metrics = Vec::new();
-        let path = &format!("{}/diskstats", root.as_ref());
+        let path = &format!("{}/diskstats", root);
         let f = tokio::fs::File::open(path).await.map_err(|e| {
             println!("open {} failed, {}", path, e);
         })?;
@@ -175,7 +174,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = Arc::new("testdata/proc".to_string());
+        let proc_path = "testdata/proc";
         let collector = DiskStatsConfig {
             ignored: default_ignored()
         };

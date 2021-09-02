@@ -65,6 +65,7 @@ use crate::sources::node::filesystem::FileSystemConfig;
 use tokio::io::AsyncReadExt;
 use crate::sources::node::errors::Error;
 use std::str::FromStr;
+use crate::sources::node::netdev::NetdevConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -104,6 +105,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub memory: bool,
 
+    #[serde(default)]
+    pub netdev: Option<Arc<netdev::NetdevConfig>>,
+
     #[serde(default = "default_true")]
     pub nvme: bool,
 
@@ -129,6 +133,7 @@ impl Default for Collectors {
             filesystem: Some(Arc::new(FileSystemConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
+            netdev: Some(Arc::new(NetdevConfig::default())),
             nvme: default_true(),
             tcpstat: default_true(),
             xfs: default_true(),
@@ -220,16 +225,17 @@ impl NodeMetrics {
 
             if self.collectors.arp {
                 let proc_path = self.proc_path.clone();
-                tasks.push(tokio::spawn(async {
-                    arp::gather(proc_path).await
+
+                tasks.push(tokio::spawn(async move {
+                    arp::gather(proc_path.as_ref()).await
                 }));
             }
 
             if self.collectors.bonding {
                 let sys_path = self.proc_path.clone();
 
-                tasks.push(tokio::spawn(async {
-                    bonding::gather(sys_path).await
+                tasks.push(tokio::spawn(async move {
+                    bonding::gather(sys_path.as_ref()).await
                 }));
             }
 
@@ -246,7 +252,7 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path).await
+                    conf.gather(proc_path.as_ref()).await
                 }));
             }
 
@@ -263,7 +269,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path).await
+                    conf.gather(proc_path.as_ref()).await
                 }))
             }
 
@@ -288,7 +294,7 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path).await
+                    conf.gather(proc_path.as_ref()).await
                 }))
             }
 
@@ -296,7 +302,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    loadavg::gather(proc_path).await
+                    loadavg::gather(proc_path.as_ref()).await
                 }))
             }
 
@@ -310,7 +316,16 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    meminfo::gather(proc_path).await
+                    meminfo::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.netdev {
+                let conf = conf.clone();
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conf.gather(proc_path.as_ref()).await
                 }))
             }
 
@@ -318,7 +333,7 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    nvme::gather(sys_path).await
+                    nvme::gather(sys_path.as_ref()).await
                 }))
             }
 

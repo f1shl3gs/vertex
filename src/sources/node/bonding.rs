@@ -1,7 +1,7 @@
 use crate::{
     tags,
     gauge_metric,
-    event::{Metric, MetricValue}
+    event::{Metric, MetricValue},
 };
 use std::path::PathBuf;
 use std::collections::{
@@ -9,10 +9,9 @@ use std::collections::{
     HashMap,
 };
 use tokio::io::AsyncReadExt;
-use std::sync::Arc;
 
-pub async fn gather(sys_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let path = PathBuf::from(sys_path.as_ref());
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
+    let path = PathBuf::from(sys_path);
     let stats = read_bonding_stats(path).await?;
     let mut metrics = Vec::new();
 

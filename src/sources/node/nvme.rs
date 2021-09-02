@@ -1,5 +1,4 @@
 use std::{
-    sync::Arc,
     path::PathBuf,
     collections::BTreeMap,
 };
@@ -10,8 +9,8 @@ use crate::{
     sources::node::read_to_string,
 };
 
-pub async fn gather(root: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let mut path = PathBuf::from(root.as_ref());
+pub async fn gather(root: &str) -> Result<Vec<Metric>, ()> {
+    let mut path = PathBuf::from(root);
     path.push("class/nvme");
 
     let mut metrics = Vec::new();

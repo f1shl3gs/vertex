@@ -1,15 +1,14 @@
 use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
+    sources::node::read_to_string,
 };
 use std::{
-    sync::Arc,
     path::PathBuf,
 };
-use crate::sources::node::read_to_string;
 
-pub async fn gather(proc_path: Arc<String>) -> Result<Vec<Metric>, ()> {
-    let root = PathBuf::from(proc_path.as_ref());
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+    let root = PathBuf::from(proc_path);
 
     match get_load(root).await {
         Ok(loads) => {
