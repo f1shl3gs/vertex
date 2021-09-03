@@ -122,3 +122,5 @@ glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
 rsntp = { version = "2.0.0", features = ["tokio"] }
 libc = { version = "0.2.101" }
+
+# 1.9%   5.3% 306.6KiB clap

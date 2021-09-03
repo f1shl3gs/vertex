@@ -40,6 +40,7 @@ mod zfs;
 mod cpu;
 mod conntrack;
 mod errors;
+mod os_release;
 
 use typetag;
 use serde::{Deserialize, Serialize};
@@ -66,6 +67,7 @@ use tokio::io::AsyncReadExt;
 use crate::sources::node::errors::Error;
 use std::str::FromStr;
 use crate::sources::node::netdev::NetdevConfig;
+use crate::sources::node::vmstat::VMStatConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -117,6 +119,8 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub tcpstat: bool,
 
+    pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
+
     #[serde(default = "default_true")]
     pub xfs: bool,
 }
@@ -140,6 +144,7 @@ impl Default for Collectors {
             netdev: Some(Arc::new(NetdevConfig::default())),
             nvme: default_true(),
             tcpstat: default_true(),
+            vmstat: Some(Arc::new(VMStatConfig::default())),
             xfs: default_true(),
         }
     }
@@ -346,6 +351,15 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     nvme::gather(sys_path.as_ref()).await
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.vmstat {
+                let conf = conf.clone();
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    conf.gather(proc_path.as_ref()).await
                 }))
             }
 

@@ -1,2 +1,85 @@
 /// Exposes statistics from `/proc/vmstat`
-pub fn vmstat() {}
+
+use serde::{Deserialize, Serialize};
+use crate::{
+    tags,
+    gauge_metric,
+    config::{deserialize_regex, serialize_regex},
+    event::{Metric, MetricValue},
+    sources::node::{
+        errors::Error,
+    },
+};
+use tokio::io::AsyncBufReadExt;
+use std::collections::BTreeMap;
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct VMStatConfig {
+    #[serde(default = "default_fields")]
+    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    pub fields: regex::Regex,
+}
+
+impl Default for VMStatConfig {
+    fn default() -> Self {
+        Self {
+            fields: default_fields()
+        }
+    }
+}
+
+fn default_fields() -> regex::Regex {
+    const DEFAULT_PATTERN: &str = "^(oom_kill|pgpg|pswp|pg.*fault).*";
+    regex::Regex::new(DEFAULT_PATTERN).unwrap()
+}
+
+impl VMStatConfig {
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
+        let path = format!("{}/vmstat", proc_path);
+        let f = tokio::fs::File::open(path).await.map_err(|err| {
+            warn!("open vmstat failed"; "err" => err);
+        })?;
+
+        let r = tokio::io::BufReader::new(f);
+        let mut lines = r.lines();
+        let mut metrics = Vec::new();
+
+        while let Some(line) = lines.next_line().await.map_err(|err| { warn!("next failed"; "err" => err) })? {
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+            if parts.len() != 2 {
+                continue;
+            }
+
+            if !self.fields.is_match(parts[0]) {
+                continue;
+            }
+
+            match parts[1].parse::<f64>() {
+                Ok(v) => {
+                    metrics.push(gauge_metric!(
+                        format ! ("node_vmstat_{}", parts[0]),
+                        format !("/proc/vmstat information field {}", parts[0]),
+                        v
+                    ))
+                }
+                _ => continue
+            }
+        }
+
+        Ok(metrics)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_gather() {
+        let conf = VMStatConfig::default();
+        let proc = "testdata/proc";
+
+        let ms = conf.gather(proc).await.unwrap();
+        assert_ne!(ms.len(), 0);
+    }
+}
