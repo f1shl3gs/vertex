@@ -7,5 +7,6 @@ build-musl:
 update_testdata:
 	./ttar  -c -f testdata.ttar testdata
 
-extract_testdata:
+testdata:
+	rm -rf testdata
 	./ttar -x -f testdata.ttar
