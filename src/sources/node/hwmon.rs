@@ -140,7 +140,7 @@ async fn human_readable_chip_name(dir: PathBuf) -> Result<String, Error> {
     read_to_string(path).await.map_err(Error::from)
 }
 
-fn hwmon_name(path: &str) -> Result<String, ()> {
+fn hwmon_name(path: &str) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -155,7 +155,27 @@ fn hwmon_name(path: &str) -> Result<String, ()> {
 
     // preference 1: construct a name based on device name, always unique
 
-    todo!()
+    let dev_path = format!("{}/device", path);
+    match tokio::fs::read_link(path).await {
+        Ok(path) => {
+            path.ancestors()
+        }
+        Err(err) => debug!("read device link failed"; "err" => err)
+    }
+
+    // preference 2: is there a name file
+    let name_path = format!("{}/name", path);
+    match read_to_string(name_path) {
+        Ok(content) => return Ok(content),
+        Err(err) => debug!("read device name failed"; "err" => err)
+    }
+
+    // it looks bad, name and device don't provide enough information
+    // return a hwmon[0-9]* name
+    let path = PathBuf::from(path);
+    let name = path.file_name().unwrap().to_str().unwrap();
+
+    Ok(name.to_string())
 }
 
 fn is_hwmon_sensor(s: &str) -> bool {
