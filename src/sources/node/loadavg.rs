@@ -1,10 +1,11 @@
+use std::{
+    path::PathBuf,
+};
+
 use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
     sources::node::read_to_string,
-};
-use std::{
-    path::PathBuf,
 };
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
@@ -47,18 +48,6 @@ async fn get_load(mut path: PathBuf) -> Result<Vec<f64>, std::io::Error> {
         .collect::<Vec<f64>>();
 
     Ok(loads)
-}
-
-// todo: handle it
-fn getloadavg() -> (f64, f64, f64) {
-    let mut data: [libc::c_double; 3] = [0.0, 0.0, 0.0];
-    let result = unsafe { libc::getloadavg(data.as_mut_ptr(), 3) };
-
-    if result == 3 {
-        (data[0], data[1], data[2])
-    } else {
-        (0.0, 0.0, 0.0)
-    }
 }
 
 #[cfg(test)]
