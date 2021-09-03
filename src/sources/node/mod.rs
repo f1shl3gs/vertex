@@ -117,6 +117,9 @@ struct Collectors {
     pub nvme: bool,
 
     #[serde(default = "default_true")]
+    pub stat: bool,
+
+    #[serde(default = "default_true")]
     pub tcpstat: bool,
 
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
@@ -143,6 +146,7 @@ impl Default for Collectors {
             memory: default_true(),
             netdev: Some(Arc::new(NetdevConfig::default())),
             nvme: default_true(),
+            stat: default_true(),
             tcpstat: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
             xfs: default_true(),
@@ -351,6 +355,14 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     nvme::gather(sys_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.stat {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    stat::gather(proc_path.as_ref()).await
                 }))
             }
 
