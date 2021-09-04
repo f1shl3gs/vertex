@@ -41,6 +41,9 @@ mod cpu;
 mod conntrack;
 mod errors;
 mod os_release;
+mod drm;
+mod lnstat;
+mod protocols;
 
 use typetag;
 use serde::{Deserialize, Serialize};
@@ -92,6 +95,9 @@ struct Collectors {
     #[serde(default)]
     pub disk_stats: Option<Arc<DiskStatsConfig>>,
 
+    #[serde(default)]
+    pub drm: bool,
+
     #[serde(default = "default_true")]
     pub edac: bool,
 
@@ -103,6 +109,9 @@ struct Collectors {
 
     #[serde(default)]
     pub filesystem: Option<Arc<FileSystemConfig>>,
+
+    #[serde(default = "default_true")]
+    pub hwmon: bool,
 
     #[serde(default = "default_true")]
     pub loadavg: bool,
@@ -117,10 +126,16 @@ struct Collectors {
     pub nvme: bool,
 
     #[serde(default = "default_true")]
+    pub softnet: bool,
+
+    #[serde(default = "default_true")]
     pub stat: bool,
 
     #[serde(default = "default_true")]
     pub tcpstat: bool,
+
+    #[serde(default = "default_true")]
+    pub uname: bool,
 
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
 
@@ -138,16 +153,20 @@ impl Default for Collectors {
             cpu: Some(Arc::new(CPUConfig::default())),
             cpu_freq: true,
             disk_stats: Some(Arc::new(DiskStatsConfig::default())),
+            drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
             filefd: default_true(),
             filesystem: Some(Arc::new(FileSystemConfig::default())),
+            hwmon: default_true(),
             loadavg: default_true(),
             memory: default_true(),
             netdev: Some(Arc::new(NetdevConfig::default())),
             nvme: default_true(),
+            softnet: default_true(),
             stat: default_true(),
             tcpstat: default_true(),
+            uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
             xfs: default_true(),
         }
@@ -286,6 +305,13 @@ impl NodeMetrics {
                 }))
             }
 
+            if self.collectors.drm {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    drm::gather(sys_path.as_ref()).await
+                }))
+            }
+
             if self.collectors.edac {
                 let sys_path = self.sys_path.clone();
 
@@ -316,6 +342,13 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     conf.gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.hwmon {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    hwmon::gather(sys_path.as_ref()).await
                 }))
             }
 
@@ -358,11 +391,24 @@ impl NodeMetrics {
                 }))
             }
 
+            if self.collectors.softnet {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    softnet::gather(proc_path.as_ref()).await
+                }))
+            }
+
             if self.collectors.stat {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
                     stat::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.uname {
+                tasks.push(tokio::spawn(async {
+                    uname::gather().await
                 }))
             }
 

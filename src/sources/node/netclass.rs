@@ -11,16 +11,20 @@ use std::os::unix::fs::MetadataExt;
 pub struct NetClassConfig {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_with")]
+    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
     pub ignores: regex::Regex,
 }
 
 impl Default for NetClassConfig {
     fn default() -> Self {
         Self {
-            ignores: regex::Regex::new("^$").unwrap()
+            ignores: default_ignores()
         }
     }
+}
+
+fn default_ignores() -> regex::Regex {
+    regex::Regex::new("^$").unwrap()
 }
 
 pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, ()> {
@@ -120,9 +124,8 @@ impl NetClassInterface {
             };
 
             let mode = meta.mode();
-            if mode &
         }
 
-        Ok(())
+        todo!()
     }
 }
