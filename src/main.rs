@@ -19,6 +19,9 @@ extern crate slog;
 extern crate slog_scope;
 extern crate slog_term;
 
+extern crate chrono;
+extern crate chrono_tz;
+
 use clap::{AppSettings, Clap};
 
 use slog::Drain;

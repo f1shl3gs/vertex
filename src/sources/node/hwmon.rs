@@ -487,7 +487,7 @@ async fn hwmon_name(path: &str) -> Result<String, Error> {
                 return Ok(clean_dev_name);
             }
         }
-        Err(err) => debug!("read device link failed"; "err" => err)
+        Err(err) => {}
     }
 
     // preference 2: is there a name file

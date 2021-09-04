@@ -69,3 +69,27 @@ pub mod ser_de {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde::{Deserialize, Serialize};
+    use chrono_tz::{Tz};
+
+    #[test]
+    fn deserialize() {
+        #[derive(Deserialize, Serialize)]
+        struct TzWrapper {
+            tz: Tz,
+        }
+
+        let input = r#"
+tz: CET
+        "#;
+
+        let w: TzWrapper = serde_yaml::from_str(input).unwrap();
+
+        let tz = w.tz;
+        println!("{:?}", w.tz.name());
+    }
+}

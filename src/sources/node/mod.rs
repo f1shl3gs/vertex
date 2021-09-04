@@ -71,6 +71,7 @@ use crate::sources::node::errors::Error;
 use std::str::FromStr;
 use crate::sources::node::netdev::NetdevConfig;
 use crate::sources::node::vmstat::VMStatConfig;
+use crate::sources::node::netclass::NetClassConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -120,6 +121,9 @@ struct Collectors {
     pub memory: bool,
 
     #[serde(default)]
+    pub netclass: Option<Arc<netclass::NetClassConfig>>,
+
+    #[serde(default)]
     pub netdev: Option<Arc<netdev::NetdevConfig>>,
 
     #[serde(default = "default_true")]
@@ -133,6 +137,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub tcpstat: bool,
+
+    #[serde(default = "default_true")]
+    pub time: bool,
 
     #[serde(default = "default_true")]
     pub uname: bool,
@@ -161,10 +168,12 @@ impl Default for Collectors {
             hwmon: default_true(),
             loadavg: default_true(),
             memory: default_true(),
+            netclass: Some(Arc::new(NetClassConfig::default())),
             netdev: Some(Arc::new(NetdevConfig::default())),
             nvme: default_true(),
             softnet: default_true(),
             stat: default_true(),
+            time: default_true(),
             tcpstat: default_true(),
             uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
@@ -360,17 +369,20 @@ impl NodeMetrics {
                 }))
             }
 
-            if self.collectors.tcpstat {
-                tasks.push(tokio::spawn(async {
-                    tcpstat::gather().await
-                }));
-            }
-
             if self.collectors.memory {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
                     meminfo::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.netclass {
+                let conf = conf.clone();
+                let sys_path = self.sys_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    netclass::gather(conf.as_ref(), sys_path.as_ref()).await
                 }))
             }
 
@@ -403,6 +415,18 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     stat::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.tcpstat {
+                tasks.push(tokio::spawn(async {
+                    tcpstat::gather().await
+                }));
+            }
+
+            if self.collectors.time {
+                tasks.push(tokio::spawn(async {
+                    time::gather().await
                 }))
             }
 
