@@ -4,13 +4,13 @@ use crate::{
     sum_metric,
     gauge_metric,
     config::{deserialize_regex, serialize_regex},
-    event::{Metric, MetricValue}
+    event::{Metric, MetricValue},
 };
 use crate::sources::node::errors::Error;
 use tokio::fs;
 use std::{
     collections::BTreeMap,
-    os::unix::fs::MetadataExt
+    os::unix::fs::MetadataExt,
 };
 use crate::sources::node::{read_into, read_to_string};
 
@@ -96,7 +96,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
         if let Some(v) = nci.carrier_changes {
             metrics.push(sum_metric!(
-                "node_carrier_changes_total",
+                "node_network_carrier_changes_total",
                 "carrier_changes value of /sys/class/net/<iface>",
                 v as f64,
                 "device" => device
@@ -105,7 +105,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
         if let Some(v) = nci.carrier_up_count {
             metrics.push(sum_metric!(
-                "node_carrier_up_changes_total",
+                "node_network_carrier_up_changes_total",
                 "carrier_up_count value of /sys/class/net/<iface>",
                 v as f64,
                 "device" => device
@@ -114,7 +114,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
         if let Some(v) = nci.carrier_down_count {
             metrics.push(sum_metric!(
-                "node_carrier_down_changes_total",
+                "node_network_carrier_down_changes_total",
                 "carrier_down_count value of /sys/class/net/<iface>",
                 v as f64,
                 "device" => device
@@ -248,7 +248,7 @@ async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
     Ok(devices)
 }
 
-#[derive(Default)]
+#[derive(Default, Debug)]
 struct NetClassInterface {
     name: String,
 
@@ -363,13 +363,13 @@ impl NetClassInterface {
 
                 "carrier_down_count" => nci.carrier_down_count = value.parse().ok(),
 
-                "dev_id" => nci.dev_id = value.parse().ok(),
+                "dev_id" => nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok(),
 
                 "dormant" => nci.dormant = value.parse().ok(),
 
                 "duplex" => nci.duplex = value,
 
-                "flags" => nci.flags = value.parse().ok(),
+                "flags" => nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok(),
 
                 "ifalias" => nci.ifalias = value,
 
@@ -411,5 +411,36 @@ impl NetClassInterface {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn test_netcalss_interface() {
+        let path = "testdata/sys/class/net/eth0";
+        let nci = NetClassInterface::from(path).await.unwrap();
 
+        assert_eq!(nci.addr_assign_type, Some(3));
+        assert_eq!(nci.address, "01:01:01:01:01:01");
+        assert_eq!(nci.addr_len, Some(6));
+        assert_eq!(nci.broadcast, "ff:ff:ff:ff:ff:ff");
+        assert_eq!(nci.carrier, Some(1));
+        assert_eq!(nci.carrier_changes, Some(2));
+        assert_eq!(nci.carrier_down_count, Some(1));
+        assert_eq!(nci.carrier_up_count, Some(1));
+        assert_eq!(nci.dev_id, Some(0x20));
+        assert_eq!(nci.dormant, Some(1));
+        assert_eq!(nci.duplex, "full");
+        assert_eq!(nci.flags, Some(0x1303));
+        assert_eq!(nci.ifalias, "");
+        assert_eq!(nci.ifindex, Some(2));
+        assert_eq!(nci.iflink, Some(2));
+        assert_eq!(nci.link_mode, Some(1));
+        assert_eq!(nci.mtu, Some(1500));
+        assert_eq!(nci.name_assign_type, Some(2));
+        assert_eq!(nci.netdev_group, Some(0));
+        assert_eq!(nci.operstate, "up");
+        assert_eq!(nci.phys_port_id, "");
+        assert_eq!(nci.phys_port_name, "");
+        assert_eq!(nci.phys_switch_id, "");
+        assert_eq!(nci.speed, Some(1000));
+        assert_eq!(nci.tx_queue_len, Some(1000));
+        assert_eq!(nci.typ, Some(1));
+    }
 }
