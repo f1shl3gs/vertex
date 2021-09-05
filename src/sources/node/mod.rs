@@ -72,6 +72,7 @@ use std::str::FromStr;
 use crate::sources::node::netdev::NetdevConfig;
 use crate::sources::node::vmstat::VMStatConfig;
 use crate::sources::node::netclass::NetClassConfig;
+use crate::sources::node::netstat::NetstatConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -126,6 +127,9 @@ struct Collectors {
     #[serde(default)]
     pub netdev: Option<Arc<netdev::NetdevConfig>>,
 
+    #[serde(default)]
+    pub netstat: Option<Arc<netstat::NetstatConfig>>,
+
     #[serde(default = "default_true")]
     pub nvme: bool,
 
@@ -173,6 +177,7 @@ impl Default for Collectors {
             memory: default_true(),
             netclass: Some(Arc::new(NetClassConfig::default())),
             netdev: Some(Arc::new(NetdevConfig::default())),
+            netstat: Some(Arc::new(NetstatConfig::default())),
             nvme: default_true(),
             softnet: default_true(),
             stat: default_true(),
@@ -396,6 +401,15 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     conf.gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.netstat {
+                let conf = conf.clone();
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    netstat::gather(conf.as_ref(), proc_path.as_ref()).await
                 }))
             }
 
