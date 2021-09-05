@@ -203,15 +203,14 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
         }
 
         if let Some(v) = nci.speed {
-            if v >= 0 {
-                let speed_bytes = v as f64 * 1000.0 * 1000.0 / 8.0;
-                metrics.push(gauge_metric!(
+            // Some devices return -1 if the speed is unknown
+            let speed_bytes = v as f64 * 1000.0 * 1000.0 / 8.0;
+            metrics.push(gauge_metric!(
                     "node_network_speed_bytes",
                     "speed value of /sys/class/net/<iface>",
                     speed_bytes,
                     "device" => device
                 ));
-            }
         }
 
         if let Some(v) = nci.tx_queue_len {
