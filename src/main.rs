@@ -74,6 +74,8 @@ fn main() {
     let opts: Opts = Opts::parse();
 
     let rt = runtime::Builder::new_multi_thread()
+        .worker_threads(4)
+        .thread_name("vertex-worker")
         .enable_io()
         .enable_time()
         .build()

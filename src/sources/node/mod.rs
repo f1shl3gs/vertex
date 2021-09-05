@@ -142,6 +142,9 @@ struct Collectors {
     pub time: bool,
 
     #[serde(default = "default_true")]
+    pub timex: bool,
+
+    #[serde(default = "default_true")]
     pub uname: bool,
 
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
@@ -174,6 +177,7 @@ impl Default for Collectors {
             softnet: default_true(),
             stat: default_true(),
             time: default_true(),
+            timex: default_true(),
             tcpstat: default_true(),
             uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
@@ -427,6 +431,12 @@ impl NodeMetrics {
             if self.collectors.time {
                 tasks.push(tokio::spawn(async {
                     time::gather().await
+                }))
+            }
+
+            if self.collectors.timex {
+                tasks.push(tokio::spawn(async {
+                    timex::gather().await
                 }))
             }
 
