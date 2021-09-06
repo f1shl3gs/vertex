@@ -45,7 +45,7 @@ fn libc_timezone() -> String {
             panic!("syscall localtime_r failed, {}", std::io::Error::last_os_error());
         }
 
-        let tz: &CStr = CStr::from_ptr(out.tm_zone) ;
+        let tz: &CStr = CStr::from_ptr(out.tm_zone);
 
         tz.to_str().unwrap().to_string()
     }
@@ -96,7 +96,7 @@ mod tests {
 
             println!("{:?}", out);
 
-            let tz: &CStr = unsafe { CStr::from_ptr(out.tm_zone) };
+            let tz: &CStr = CStr::from_ptr(out.tm_zone);
             let tz = tz.to_str().unwrap();
             println!("{}", tz);
         }

@@ -49,7 +49,7 @@ impl FunctionTransform for AddTags {
 #[async_trait]
 #[typetag::serde(name = "add_tags")]
 impl TransformConfig for AddTagsConfig {
-    async fn build(&self, globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _: &GlobalOptions) -> crate::Result<Transform> {
         Ok(Transform::function(AddTags::new(
             self.tags.clone(),
             self.overwrite,

@@ -29,6 +29,11 @@ impl Builder {
 
     pub fn build(self) -> Result<Config, Vec<String>> {
         let (config, warnings) = self.build_with_warnings()?;
+
+        for warning in warnings {
+            warn!("{}", warning);
+        }
+
         Ok(config)
     }
 
@@ -238,7 +243,7 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &[String])
         let matcher = glob::Pattern::new(&raw_input.to_string())
             .map(InputMatcher::Pattern)
             .unwrap_or_else(|err| {
-                warn!("invalid glob pattern for input"; "id" => id);
+                warn!("invalid glob pattern for input"; "id" => id, "err" => %err);
                 InputMatcher::String(raw_input.to_string())
             });
 
