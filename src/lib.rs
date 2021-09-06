@@ -1,7 +1,6 @@
 pub mod config;
 pub mod transforms;
 pub mod sources;
-pub mod vertex_core;
 pub mod topology;
 mod event;
 mod shutdown;
@@ -25,7 +24,9 @@ extern crate slog;
 extern crate slog_scope;
 extern crate slog_term;
 
-pub use vertex_core::{Result, Error};
+pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[cfg(test)]
 mod tests {
