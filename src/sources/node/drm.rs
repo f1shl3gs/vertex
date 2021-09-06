@@ -9,11 +9,13 @@ use crate::{
     tags,
     gauge_metric,
     event::{Metric, MetricValue},
+    sources::node::{
+        errors::Error,
+        read_to_string,
+        read_into
+    }
 };
-use crate::sources::node::errors::Error;
-use crate::sources::node::{read_to_string, read_into};
 use std::{
-    path::PathBuf,
     collections::BTreeMap,
 };
 

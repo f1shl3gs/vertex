@@ -2,16 +2,11 @@
 
 use serde::{Deserialize, Serialize};
 use crate::{
-    tags,
     gauge_metric,
     config::{deserialize_regex, serialize_regex},
     event::{Metric, MetricValue},
-    sources::node::{
-        errors::Error,
-    },
 };
 use tokio::io::AsyncBufReadExt;
-use std::collections::BTreeMap;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
@@ -45,12 +40,12 @@ impl VMStatConfig {
         let mut metrics = Vec::new();
 
         while let Some(line) = lines.next_line().await.map_err(|err| { warn!("next failed"; "err" => err) })? {
-            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
-            if parts.len() != 2 {
+            if !self.fields.is_match(&line) {
                 continue;
             }
 
-            if !self.fields.is_match(parts[0]) {
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+            if parts.len() != 2 {
                 continue;
             }
 

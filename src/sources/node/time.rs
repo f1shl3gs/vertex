@@ -5,9 +5,6 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-
-use chrono::{Local};
-use chrono_tz::Tz;
 use std::{
     ffi::CStr,
     collections::BTreeMap,

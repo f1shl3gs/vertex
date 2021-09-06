@@ -5,14 +5,12 @@ use crate::{
     gauge_metric,
     config::{deserialize_regex, serialize_regex},
     event::{Metric, MetricValue},
+    sources::node::{read_to_string, errors::Error},
 };
-use crate::sources::node::errors::Error;
 use tokio::fs;
 use std::{
     collections::BTreeMap,
-    os::unix::fs::MetadataExt,
 };
-use crate::sources::node::{read_into, read_to_string};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {

@@ -245,19 +245,6 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
     Ok(content)
 }
 
-pub async fn read_to_f64<P: AsRef<Path>>(path: P) -> Result<f64, Error> {
-    let mut f = tokio::fs::File::open(path.as_ref()).await.
-        map_err(|err| Error::from(err))?;
-    let mut content = String::new();
-    f.read_to_string(&mut content).await?;
-
-    let content = content.trim_end();
-    let v = content.parse()
-        .map_err(|err| Error::from(err))?;
-
-    Ok(v)
-}
-
 pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
     where
         P: AsRef<Path>,

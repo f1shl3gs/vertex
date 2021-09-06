@@ -4,14 +4,12 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use std::os::unix::fs::MetadataExt;
-use std::path::{Path, PathBuf};
+use std::path::{PathBuf};
 use crate::sources::node::errors::Error;
-use crate::sources::node::{read_to_string, read_into};
+use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
 use lazy_static::lazy_static;
 use regex::Regex;
-use std::fs::read_link;
 
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {

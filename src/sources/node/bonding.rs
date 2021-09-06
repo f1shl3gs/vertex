@@ -2,13 +2,13 @@ use crate::{
     tags,
     gauge_metric,
     event::{Metric, MetricValue},
+    sources::node::read_to_string,
 };
 use std::path::PathBuf;
 use std::collections::{
     BTreeMap,
     HashMap,
 };
-use tokio::io::AsyncReadExt;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
     let path = PathBuf::from(sys_path);
@@ -32,15 +32,6 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
     }
 
     Ok(metrics)
-}
-
-async fn read_to_string(path: PathBuf) -> Result<String, std::io::Error> {
-    let mut f = tokio::fs::File::open(path).await?;
-    let mut content = String::new();
-
-    f.read_to_string(&mut content).await?;
-
-    Ok(content)
 }
 
 async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, ()> {

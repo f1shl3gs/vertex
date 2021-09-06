@@ -10,7 +10,7 @@ use crate::{
     event::{Metric, MetricValue},
     sources::node::{
         errors::Error,
-        read_to_string, read_to_f64,
+        read_into,
     },
 };
 use std::{
@@ -18,11 +18,12 @@ use std::{
     path::PathBuf,
     collections::BTreeMap,
 };
+use tokio::io::AsyncBufReadExt;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_to_f64(path).await.map_err(|err| {
+    let count = read_into(path).await.map_err(|err| {
         if !err.is_not_found() {
             warn!("read conntrack count failed"; "err" => err);
         }
@@ -30,7 +31,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
-    let max = read_to_f64(path).await.map_err(|err| {
+    let max = read_into(path).await.map_err(|err| {
         if !err.is_not_found() {
             warn!("read conntrack max failed"; "err" => err);
         }
@@ -169,16 +170,21 @@ impl ConntrackStatEntry {
 }
 
 async fn get_conntrack_statistics(proc_path: &str) -> Result<Vec<ConntrackStatEntry>, Error> {
-    let mut path = PathBuf::from(proc_path);
-    path.push("net/stat/nf_conntrack");
+    let path = format!("{}/net/stat/nf_conntrack", proc_path);
+    let f = tokio::fs::File::open(path).await.map_err(Error::from)?;
+    let r = tokio::io::BufReader::new(f);
+    let mut lines = r.lines();
 
-    let content = read_to_string(path).await
-        .map_err(|err| Error::from(err))?;
-
+    let mut first = true;
     let mut stats = Vec::new();
-    let mut lines = content.lines().skip(1);
-    while let Some(line) = lines.next() {
-        if let Ok(ent) = ConntrackStatEntry::new(line) {
+
+    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+        if first {
+            first = false;
+            continue;
+        }
+
+        if let Ok(ent) = ConntrackStatEntry::new(&line) {
             stats.push(ent);
         }
     }
