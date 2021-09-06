@@ -552,6 +552,8 @@ impl SourceConfig for NodeMetricsConfig {
 mod tests {
     use super::*;
 
+    // TODO: add more test for default values
+
     #[test]
     fn test_deserialize() {
         let cs: Collectors = serde_yaml::from_str(r#"
