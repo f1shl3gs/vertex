@@ -214,7 +214,7 @@ impl PrometheusExporter {
         }
 
         let metrics = Arc::clone(&self.metrics);
-        let namespace = self.config.namespace.clone();
+        // let namespace = self.config.namespace.clone();
 
         let new_service = make_service_fn(move |_| {
             let metrics = Arc::clone(&metrics);
@@ -234,11 +234,13 @@ impl PrometheusExporter {
         let (trigger, tripwire) = Tripwire::new();
         let address = self.config.listen;
         tokio::spawn(async move {
-            // TODO: handle error
             Server::bind(&address)
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
-                .await;
+                .await
+                .map_err(|err| eprintln!("Server error: {}", err))?;
+
+            Ok::<(), ()>(())
         });
 
         self.shutdown_trigger = Some(trigger);
