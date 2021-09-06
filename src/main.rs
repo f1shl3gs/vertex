@@ -36,9 +36,24 @@ use tokio_stream::StreamExt;
 
 
 async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    let params: HashMap<String, String> = _req
+        .uri()
+        .query()
+        .map(|v| {
+            url::form_urlencoded::parse(v.as_bytes())
+                .into_owned()
+                .collect()
+        })
+        .unwrap_or_else(HashMap::new);
+
+    let seconds = match params.get("seconds") {
+        Some(value) => value.parse().unwrap_or(30u64),
+        _ => 30
+    };
+
     let guard = pprof::ProfilerGuard::new(100).unwrap();
 
-    tokio::time::sleep(std::time::Duration::from_secs(30)).await;
+    tokio::time::sleep(std::time::Duration::from_secs(seconds)).await;
 
     match guard.report().build() {
         Ok(report) => {
