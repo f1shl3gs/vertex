@@ -16,7 +16,6 @@ use crate::{
 use std::{
     io,
     path::PathBuf,
-    collections::BTreeMap,
 };
 use tokio::io::AsyncBufReadExt;
 

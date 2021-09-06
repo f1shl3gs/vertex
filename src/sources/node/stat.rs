@@ -1,6 +1,5 @@
 /// Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
-use std::collections::BTreeMap;
 use crate::{
     tags,
     gauge_metric,

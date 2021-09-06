@@ -137,6 +137,9 @@ struct Collectors {
     pub schedstat: bool,
 
     #[serde(default = "default_true")]
+    pub sockstat: bool,
+
+    #[serde(default = "default_true")]
     pub softnet: bool,
 
     #[serde(default = "default_true")]
@@ -183,6 +186,7 @@ impl Default for Collectors {
             netstat: Some(Arc::new(NetstatConfig::default())),
             nvme: default_true(),
             schedstat: default_true(),
+            sockstat: default_true(),
             softnet: default_true(),
             stat: default_true(),
             time: default_true(),
@@ -416,6 +420,13 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
                     schedstat::gather(proc_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.sockstat {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    sockstat::gather(proc_path.as_ref()).await
                 }))
             }
 

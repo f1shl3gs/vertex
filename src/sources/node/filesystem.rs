@@ -1,7 +1,6 @@
 use std::{
     path::PathBuf,
     ffi::CString,
-    collections::BTreeMap,
 };
 
 use crate::{

@@ -1,7 +1,5 @@
 /// Exposes available entropy
 
-use std::collections::BTreeMap;
-
 use crate::{
     tags,
     gauge_metric,

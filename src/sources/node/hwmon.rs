@@ -523,7 +523,6 @@ fn sanitized(s: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::option::Option::Some;
 
     #[tokio::test]
     async fn test_gather() {

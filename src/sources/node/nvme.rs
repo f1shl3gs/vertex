@@ -1,6 +1,5 @@
 use std::{
     path::PathBuf,
-    collections::BTreeMap,
 };
 use crate::{
     event::{Metric, MetricValue},

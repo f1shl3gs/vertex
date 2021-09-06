@@ -18,7 +18,6 @@ use crate::{
 use std::{
     fmt::Debug,
     io::Read,
-    collections::BTreeMap,
     time::{SystemTime, UNIX_EPOCH},
 };
 use serde::{Deserialize, Serialize};

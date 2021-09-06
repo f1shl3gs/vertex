@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use crate::{
     tags,
     event::{Metric, MetricValue}

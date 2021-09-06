@@ -12,11 +12,11 @@ use prost::{DecodeError, EncodeError};
 #[macro_export]
 macro_rules! tags {
     ( $($x:expr => $y:expr),* ) => ({
-        let mut temp_map = BTreeMap::new();
+        let mut _map = std::collections::BTreeMap::new();
         $(
-            temp_map.insert($x.into(), $y.into());
+            _map.insert($x.into(), $y.into());
         )*
-        temp_map
+        _map
     });
     ( $($x:expr => $y:expr,)* ) => (
         tags!{$($x => $y),*}

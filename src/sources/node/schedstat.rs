@@ -7,7 +7,6 @@ use crate::{
     sources::node::errors::Error,
 };
 use tokio::io::AsyncBufReadExt;
-use std::collections::BTreeMap;
 
 #[derive(Debug, Default)]
 struct Schedstat {

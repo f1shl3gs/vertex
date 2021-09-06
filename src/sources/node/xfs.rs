@@ -6,7 +6,6 @@ use crate::{
 use crate::sources::node::errors::Error;
 use std::{
     path::PathBuf,
-    collections::BTreeMap,
 };
 use crate::sources::node::read_to_string;
 use std::num::ParseIntError;

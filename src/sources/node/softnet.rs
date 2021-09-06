@@ -16,7 +16,6 @@ use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
-use std::collections::BTreeMap;
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {

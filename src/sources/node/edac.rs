@@ -9,9 +9,6 @@ use crate::{
         errors::Error,
     }
 };
-use std::{
-    collections::BTreeMap,
-};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);

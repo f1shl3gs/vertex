@@ -7,7 +7,6 @@ use crate::{
 };
 use std::{
     ffi::CStr,
-    collections::BTreeMap,
 };
 
 pub async fn gather() -> Result<Vec<Metric>, ()> {
@@ -55,9 +54,8 @@ fn libc_timezone() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{Utc, TimeZone, Local};
+    use chrono::{Local};
     use chrono_tz::{
-        Tz,
         CET,
     };
 

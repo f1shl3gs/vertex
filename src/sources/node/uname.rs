@@ -6,7 +6,6 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use std::collections::BTreeMap;
 
 pub async fn gather() -> Result<Vec<Metric>, ()> {
     let mut u = libc::utsname {
@@ -63,7 +62,6 @@ fn to_string(cs: [libc::c_char; 65]) -> String {
 mod tests {
     use super::*;
     use libc::c_char;
-    use std::ffi::CStr;
 
     #[test]
     fn test_uname() {

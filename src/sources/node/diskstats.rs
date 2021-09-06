@@ -2,7 +2,6 @@
 ///
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
-use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use crate::{
     tags,

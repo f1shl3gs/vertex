@@ -10,7 +10,6 @@ use crate::{
 
 use std::{
     io,
-    collections::BTreeMap,
 };
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {

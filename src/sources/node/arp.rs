@@ -9,7 +9,7 @@ use tokio::io::{
     AsyncBufReadExt
 };
 use std::collections::{
-    HashMap, BTreeMap
+    HashMap
 };
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
