@@ -14,7 +14,9 @@ exclude = [
 
 [workspace]
 members = [
-    "lib/netlink-packet-conntrack"
+    "lib/netlink-packet-conntrack",
+    "lib/buffers",
+    "lib/event"
 ]
 
 [features]
