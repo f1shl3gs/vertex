@@ -5,7 +5,7 @@ mod value;
 
 pub use metric::*;
 pub use log::LogRecord;
-use crate::buffers::bytes::{EncodeBytes, DecodeBytes};
+use buffers::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
 

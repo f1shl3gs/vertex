@@ -5,6 +5,20 @@ mod value;
 pub use metric::{Metric, MetricValue};
 pub use log::LogRecord;
 
+#[macro_export]
+macro_rules! tags {
+    ( $($x:expr => $y:expr),* ) => ({
+        let mut _map = std::collections::BTreeMap::new();
+        $(
+            _map.insert($x.into(), $y.into());
+        )*
+        _map
+    });
+    ( $($x:expr => $y:expr,)* ) => (
+        tags!{$($x => $y),*}
+    );
+}
+
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),

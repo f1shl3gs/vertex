@@ -12,13 +12,9 @@ use futures::{
 use pin_project::pin_project;
 use serde::{Deserialize, Serialize};
 
-pub use acker::Acker;
-
-use crate::buffers::bytes::{DecodeBytes, EncodeBytes};
+pub use buffers::{Acker, DecodeBytes, EncodeBytes};
 use crate::event::Event;
 
-pub mod acker;
-pub mod bytes;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -149,7 +145,7 @@ impl Default for BufferConfig {
     }
 }
 
-pub(crate) type EventStream = Box<dyn Stream<Item = Event> + Unpin + Send>;
+pub(crate) type EventStream = Box<dyn Stream<Item=Event> + Unpin + Send>;
 
 impl BufferConfig {
     #[inline]

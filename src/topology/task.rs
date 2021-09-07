@@ -12,7 +12,7 @@ use std::{
     task::{Context, Poll},
 };
 use crate::buffers::EventStream;
-use crate::buffers::acker::Acker;
+use buffers::Acker;
 
 pub enum TaskOutput {
     Source,

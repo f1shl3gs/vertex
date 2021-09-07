@@ -1,6 +1,60 @@
 use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
+#[macro_export]
+macro_rules! gauge_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge($value)
+        }
+    };
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Gauge($value)
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! sum_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Sum($value.into())
+        }
+    };
+
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: MetricValue::Sum($value)
+        }
+    };
+}
+
+
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
     Gauge,

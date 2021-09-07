@@ -10,7 +10,6 @@ pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 
 use crate::{
-    buffers::acker::Acker,
     pipeline::Pipeline,
     sinks,
     sources,
@@ -47,6 +46,7 @@ pub use loading::{
 };
 use futures::future::BoxFuture;
 use crate::extensions::Extension;
+use buffers::Acker;
 
 pub type HealthCheck = BoxFuture<'static, crate::Result<()>>;
 
