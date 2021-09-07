@@ -130,7 +130,7 @@ fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
         .collect::<Vec<_>>();
 
     if parts.len() != 5 {
-        return Err(Error::new_invalid_with_message("malformed psi stat line"));
+        return Err(Error::new_invalid("malformed psi stat line"));
     }
 
     let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse().map_err(Error::from)?;

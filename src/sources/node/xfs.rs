@@ -401,7 +401,7 @@ async fn xfs_sys_stats(proc_path: &str, sys_path: &str) -> Result<Vec<Stats>, Er
     let paths = glob::glob(&format!("{}/fs/xfs/*/stats/stats", sys_path))
         .map_err(|err| {
             let msg = format!("glob xfs stats failed, {}", err);
-            Error::new_invalid_with_message(msg)
+            Error::new_invalid(msg)
         })?;
 
     let mut stats = Vec::new();
@@ -448,7 +448,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             let us = parse_u64s(&parts[1..]).map_err(|err| Error::from(err))?;
 
             if us.len() != 3 {
-                return Err(Error::new_invalid_with_message("incorrect number of values for XFS extended precision stats"));
+                return Err(Error::new_invalid("incorrect number of values for XFS extended precision stats"));
             }
 
             stat.extended_precision.flush_bytes = us[0];
@@ -464,7 +464,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
         match label {
             "extent_alloc" => {
                 if us.len() != 4 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS extent allocation stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS extent allocation stats"));
                 }
 
                 stat.extent_allocation.extents_allocated = us[0];
@@ -474,7 +474,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             }
             "abt" => {
                 if us.len() != 4 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS btree stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS btree stats"));
                 }
 
                 stat.allocation_btree.lookups = us[0];
@@ -484,7 +484,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             }
             "blk_map" => {
                 if us.len() != 7 {
-                    return Err(Error::new_invalid_with_message("invalid number of values for XFS block mapping stats"));
+                    return Err(Error::new_invalid("invalid number of values for XFS block mapping stats"));
                 }
 
                 stat.block_mapping.reads = us[0];
@@ -497,7 +497,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             }
             "bmbt" => {
                 if us.len() != 4 {
-                    return Err(Error::new_invalid_with_message("invalid number of values for XFS BlockMapBTree stats"));
+                    return Err(Error::new_invalid("invalid number of values for XFS BlockMapBTree stats"));
                 }
 
                 stat.block_map_btree.lookups = us[0];
@@ -507,7 +507,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             }
             "dir" => {
                 if us.len() != 4 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS directory operation stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS directory operation stats"));
                 }
 
                 stat.directory_operation.lookups = us[0];
@@ -518,7 +518,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             "trans" => {}
             "ig" => {
                 if us.len() != 7 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS inode operation stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS inode operation stats"));
                 }
 
                 stat.inode_operation.attempts = us[0];
@@ -534,7 +534,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
             "xstrat" => {}
             "rw" => {
                 if us.len() != 2 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS read write stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS read write stats"));
                 }
 
                 stat.read_write.read = us[0];
@@ -547,7 +547,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
                 // stats versions. Therefore, 7 or 8 elements may appear in this slice
                 let length = us.len();
                 if length != 7 && length != 8 {
-                    return Err(Error::new_invalid_with_message("incorrect number of values for XFS vnode stats"));
+                    return Err(Error::new_invalid("incorrect number of values for XFS vnode stats"));
                 }
 
                 stat.vnode.active = us[0];

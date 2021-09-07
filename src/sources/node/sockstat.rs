@@ -151,7 +151,7 @@ fn parse_sockstat(content: &str) -> Result<NetSockstat, Error> {
         let size = fields.len();
 
         if size < 3 || size % 2 != 1 {
-            return Err(Error::new_invalid_with_message("malformed sockstat line"));
+            return Err(Error::new_invalid("malformed sockstat line"));
         }
 
         let proto = fields[0].strip_suffix(':').unwrap();

@@ -54,7 +54,7 @@ impl Error {
         self.source.kind() == io::ErrorKind::NotFound
     }
 
-    pub fn new_invalid_with_message<T>(msg: T) -> Self
+    pub fn new_invalid<T>(msg: T) -> Self
         where
             T: Into<Cow<'static, str>>
     {

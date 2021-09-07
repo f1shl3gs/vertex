@@ -82,7 +82,7 @@ fn parse_softnet(s: &str) -> Result<SoftnetStat, Error> {
         .collect::<Vec<_>>();
 
     if parts.len() < MIN_COLUMNS {
-        return Err(Error::new_invalid_with_message(format!(
+        return Err(Error::new_invalid(format!(
             "{} columns were detected, but at least {} were expected",
             parts.len(),
             MIN_COLUMNS,

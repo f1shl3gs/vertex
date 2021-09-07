@@ -44,6 +44,7 @@ mod os_release;
 mod drm;
 mod lnstat;
 mod protocols;
+mod network_route;
 
 use typetag;
 use serde::{Deserialize, Serialize};

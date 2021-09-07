@@ -108,7 +108,7 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
             println!("names: {} {:?}", names.len(), names);
             println!("values: {} {:?}", values.len(), values);
 
-            return Err(Error::new_invalid_with_message("mismatch field count"));
+            return Err(Error::new_invalid("mismatch field count"));
         }
 
         for i in 0..names.len() {

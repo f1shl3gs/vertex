@@ -92,7 +92,7 @@ async fn class_drm_card_amdgpu_stats(sys_path: &str) -> Result<Vec<ClassDRMCardA
     let pattern = format!("{}/class/drm/card[0-9]", sys_path);
     let paths = glob::glob(&pattern).map_err(|err| {
         // warn!("glob drm cards failed, {}"; err);
-        Error::new_invalid_with_message("glob drm failed")
+        Error::new_invalid("glob drm failed")
     })?;
 
     let mut stats = Vec::new();
@@ -162,7 +162,7 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
     let uevent = read_to_string(path).await?;
 
     if !uevent.contains("DRIVER=amdgpu") {
-        return Err(Error::new_invalid_with_message("the device is not an amdgpu"));
+        return Err(Error::new_invalid("the device is not an amdgpu"));
     }
 
     let name = &card[card.len() - 5..];
