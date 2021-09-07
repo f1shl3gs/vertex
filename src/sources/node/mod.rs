@@ -74,6 +74,7 @@ use crate::sources::node::netdev::NetdevConfig;
 use crate::sources::node::vmstat::VMStatConfig;
 use crate::sources::node::netclass::NetClassConfig;
 use crate::sources::node::netstat::NetstatConfig;
+use crate::sources::node::ipvs::IPVSConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -115,6 +116,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub hwmon: bool,
+
+    #[serde(default)]
+    pub ipvs: Option<Arc<IPVSConfig>>,
 
     #[serde(default = "default_true")]
     pub loadavg: bool,
@@ -183,6 +187,7 @@ impl Default for Collectors {
             filefd: default_true(),
             filesystem: Some(Arc::new(FileSystemConfig::default())),
             hwmon: default_true(),
+            ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
             netclass: Some(Arc::new(NetClassConfig::default())),
@@ -367,6 +372,14 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     hwmon::gather(sys_path.as_ref()).await
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.ipvs {
+                let conf = conf.clone();
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    ipvs::gather(conf.as_ref(), proc_path.as_ref()).await
                 }))
             }
 

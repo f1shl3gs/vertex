@@ -3,11 +3,20 @@ use crate::event::Metric;
 use crate::sources::node::errors::Error;
 use crate::sources::node::read_to_string;
 use tokio::io::AsyncBufReadExt;
+use std::collections::BTreeMap;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
     #[serde(default = "default_labels")]
     labels: Vec<String>,
+}
+
+impl Default for IPVSConfig {
+    fn default() -> Self {
+        Self {
+            labels: default_labels()
+        }
+    }
 }
 
 fn default_labels() -> Vec<String> {
@@ -21,9 +30,12 @@ fn default_labels() -> Vec<String> {
     ]
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+// TODO: this implement is dummy, too many to_string() and clone()
+pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, ()> {
     let stats = parse_ipvs_stats(proc_path).await.map_err(|err| {
-        warn!("read ip_vs_stat failed"; "err" => err );
+        if !err.is_not_found() {
+            warn!("read ip_vs_stat failed"; "err" => err );
+        }
     })?;
 
     let mut metrics = vec![
@@ -33,6 +45,75 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
         Metric::sum("node_ipvs_incoming_bytes_total", "The total amount of incoming data.", stats.incoming_bytes as f64),
         Metric::sum("node_ipvs_outgoing_bytes_total", "The total amount of outgoing data.", stats.outgoing_bytes as f64),
     ];
+
+    let backends = parse_ipvs_backend_status(proc_path).await.map_err(|err| {
+        warn!("parse ipvs backend status failed"; "err" => err);
+    })?;
+    let mut sums = BTreeMap::new();
+    let mut label_values = BTreeMap::new();
+    for backend in &backends {
+        let mut local_address = "";
+        if backend.local_address != "" {
+            local_address = &backend.local_address;
+        }
+
+        let mut kv = Vec::with_capacity(conf.labels.len());
+        for (i, label) in conf.labels.iter().enumerate() {
+            let lv = match label.as_str() {
+                "local_address" => local_address.to_string(),
+                "local_port" => backend.local_port.to_string(),
+                "remote_address" => backend.remote_address.clone(),
+                "remote_port" => backend.remote_port.to_string(),
+                "proto" => backend.proto.clone(),
+                "local_mark" => backend.local_mark.clone(),
+                _ => "".to_string()
+            };
+
+            kv[i] = lv;
+        }
+
+        let key = kv.join("-");
+        let mut status = sums.entry(key.clone())
+            .or_insert(IPVSBackendStatus::default());
+
+        status.active_conn += backend.active_conn;
+        status.inact_conn += backend.inact_conn;
+        status.weight += backend.weight;
+        label_values.insert(key, kv);
+    }
+
+    for (k, status) in &sums {
+        let kv = match label_values.get(k) {
+            Some(kv) => kv,
+            None => continue
+        };
+
+        let mut tags = BTreeMap::new();
+        for (i, key) in conf.labels.iter().enumerate() {
+            tags.insert(key.to_string(), kv[i].clone());
+        }
+
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "node_ipvs_backend_connections_active",
+                "The current active connections by local and remote address.",
+                status.active_conn as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_ipvs_backend_connections_inactive",
+                "The current inactive connections by local and remote address.",
+                status.inact_conn as f64,
+                tags.clone(),
+            ),
+            Metric::gauge_with_tags(
+                "node_ipvs_backend_weight",
+                "The current backend weight by local and remote address.",
+                status.weight as f64,
+                tags.clone(),
+            ),
+        ])
+    }
 
     Ok(metrics)
 }
@@ -84,6 +165,7 @@ async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
 }
 
 /// IPVSBackendStatus holds current metrics of one virtual / real address pair
+#[derive(Default)]
 struct IPVSBackendStatus {
     // The local (virtual) IP address
     local_address: String,
