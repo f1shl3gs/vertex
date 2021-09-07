@@ -1,7 +1,6 @@
 mod fanout;
 mod builder;
 mod task;
-mod buffer;
 
 use std::{
     collections::{HashMap, HashSet},
