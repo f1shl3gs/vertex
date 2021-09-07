@@ -19,7 +19,9 @@ use crate::{
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
     let path = format!("{}/pressure/cpu", proc_path);
     let cpu = psi_stats(&path).await.map_err(|err| {
-        warn!("read cpu pressure failed"; "err" => err);
+        if !err.is_not_found() {
+            warn!("read cpu pressure failed"; "err" => err);
+        }
     })?;
 
     let path = format!("{}/pressure/io", proc_path);

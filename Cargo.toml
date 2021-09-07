@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["f1shl3gs"]
 edition = "2018"
 
-build = "build.rs"
+# build = "build.rs"
 
 exclude = [
     "testdata"
@@ -52,10 +52,6 @@ harness = false
 tokio = { version = "1.10.1", features = ["macros", "rt"] }
 criterion = "0.3"
 
-[build-dependencies]
-prost-build = { version = "0.8" }
-tonic-build = { version = "0.5.2" }
-
 [dependencies]
 # Allocation TODO
 
@@ -92,14 +88,11 @@ netlink-packet-sock-diag = "0.1.0"
 
 # protobuf
 prost = { version = "0.8.0", default-features = false, features = ["std"] }
-tonic = { version = "0.5.2" }
+# tonic = { version = "0.5.2" }
 
 # TLS
 rustls = { version = "0.19.1" }
 tokio-rustls = { version = "0.22.0" }
-
-# OpenTelemetry
-opentelemetry-otlp = { version = "0.9.0", optional = true }
 
 # Profile
 pprof = { version = "0.5.0", features = ["flamegraph"] }

@@ -10,3 +10,12 @@ update_testdata:
 testdata:
 	rm -rf testdata
 	./ttar -x -f testdata.ttar
+
+build-timing:
+	cargo +nightly build -p vertex --bin vertex -Z timings --release
+
+bloat:
+	cargo bloat --release --crates
+
+lines:
+	@find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l
