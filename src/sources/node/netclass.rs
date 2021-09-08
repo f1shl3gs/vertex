@@ -232,10 +232,10 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
 async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
     let path = format!("{}/class/net", sys_path);
-    let mut dirs = tokio::fs::read_dir(path).await.map_err(Error::from)?;
+    let mut dirs = tokio::fs::read_dir(path).await?;
     let mut devices = Vec::new();
 
-    while let Some(ent) = dirs.next_entry().await.map_err(Error::from)? {
+    while let Some(ent) = dirs.next_entry().await? {
         devices.push(ent.file_name().into_string().unwrap());
     }
 
@@ -327,11 +327,11 @@ struct NetClassInterface {
 
 impl NetClassInterface {
     pub async fn from(device_path: &str) -> Result<NetClassInterface, Error> {
-        let mut dirs = fs::read_dir(device_path).await.map_err(Error::from)?;
+        let mut dirs = fs::read_dir(device_path).await?;
 
         let mut nci = NetClassInterface::default();
 
-        while let Some(entry) = dirs.next_entry().await.map_err(Error::from)? {
+        while let Some(entry) = dirs.next_entry().await? {
             let file = entry.file_name();
             let file = file.to_str().unwrap();
 

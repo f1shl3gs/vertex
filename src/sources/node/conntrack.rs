@@ -170,14 +170,14 @@ impl ConntrackStatEntry {
 
 async fn get_conntrack_statistics(proc_path: &str) -> Result<Vec<ConntrackStatEntry>, Error> {
     let path = format!("{}/net/stat/nf_conntrack", proc_path);
-    let f = tokio::fs::File::open(path).await.map_err(Error::from)?;
+    let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 
     let mut first = true;
     let mut stats = Vec::new();
 
-    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+    while let Some(line) = lines.next_line().await? {
         if first {
             first = false;
             continue;

@@ -1,8 +1,8 @@
+mod arp;
+mod bonding;
 mod btrfs;
 mod cpufreq;
 mod diskstats;
-mod arp;
-mod bonding;
 mod edac;
 mod entropy;
 mod fibre_channel;

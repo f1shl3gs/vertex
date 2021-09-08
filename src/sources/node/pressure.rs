@@ -133,10 +133,10 @@ fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
         return Err(Error::new_invalid("malformed psi stat line"));
     }
 
-    let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse().map_err(Error::from)?;
-    let avg60 = parts[2].strip_prefix("avg60=").unwrap().parse().map_err(Error::from)?;
-    let avg300 = parts[3].strip_prefix("avg300=").unwrap().parse().map_err(Error::from)?;
-    let total = parts[4].strip_prefix("total=").unwrap().parse().map_err(Error::from)?;
+    let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse()?;
+    let avg60 = parts[2].strip_prefix("avg60=").unwrap().parse()?;
+    let avg300 = parts[3].strip_prefix("avg300=").unwrap().parse()?;
+    let total = parts[4].strip_prefix("total=").unwrap().parse()?;
 
     Ok(PSIStat {
         avg10,

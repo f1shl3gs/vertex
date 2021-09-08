@@ -371,10 +371,10 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 }
 
 async fn collect_sensor_data(dir: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let mut dirs = tokio::fs::read_dir(dir).await.map_err(Error::from)?;
+    let mut dirs = tokio::fs::read_dir(dir).await?;
 
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
-    while let Some(entry) = dirs.next_entry().await.map_err(Error::from)? {
+    while let Some(entry) = dirs.next_entry().await? {
         let path = entry.path().clone();
         let filename = path.file_name().unwrap().to_str().unwrap();
 
@@ -448,7 +448,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 // human_readable_name is similar to the methods in
 async fn human_readable_chip_name(dir: &str) -> Result<String, Error> {
     let path = format!("{}/name", dir);
-    let content = read_to_string(path).await.map_err(Error::from)?;
+    let content = read_to_string(path).await?;
     Ok(content.trim().to_string())
 }
 

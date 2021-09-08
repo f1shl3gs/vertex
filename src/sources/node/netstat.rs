@@ -83,17 +83,16 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
 }
 
 async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let f = tokio::fs::File::open(path).await
-        .map_err(Error::from)?;
+    let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
 
-    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+    while let Some(line) = lines.next_line().await? {
         let names = line.split_ascii_whitespace()
             .collect::<Vec<_>>();
 
-        let line = match lines.next_line().await.map_err(Error::from)? {
+        let line = match lines.next_line().await? {
             Some(line) => line,
             None => break
         };
@@ -122,13 +121,12 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
 }
 
 async fn get_snmp6_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let f = tokio::fs::File::open(path).await
-        .map_err(Error::from)?;
+    let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
 
-    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+    while let Some(line) = lines.next_line().await? {
         let stat = line.split_ascii_whitespace()
             .collect::<Vec<_>>();
         if stat.len() < 2 {

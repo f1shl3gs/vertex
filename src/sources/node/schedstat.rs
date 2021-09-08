@@ -54,12 +54,12 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
 
 async fn schedstat(proc_path: &str) -> Result<Vec<Schedstat>, Error> {
     let path = format!("{}/schedstat", proc_path);
-    let f = tokio::fs::File::open(path).await.map_err(Error::from)?;
+    let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 
     let mut stats = Vec::new();
-    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+    while let Some(line) = lines.next_line().await? {
         if !line.starts_with("cpu") {
             continue;
         }
@@ -112,7 +112,7 @@ mod tests {
 
         assert_eq!(stat.cpu, "0");
         assert_eq!(stat.running_nanoseconds, 2045936778163039);
-        assert_eq!(stat.waiting_nanoseconds, 343796328169361 );
+        assert_eq!(stat.waiting_nanoseconds, 343796328169361);
         assert_eq!(stat.run_time_slices, 4767485306)
     }
 }

@@ -20,7 +20,7 @@ pub trait Context<T, E>: Sealed {
             F: FnOnce() -> C;
 }
 
-pub type Error = Box<dyn core::error::Error + Send + Sync + 'static>;
+pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 mod ext {
     use super::*;

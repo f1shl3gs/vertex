@@ -166,7 +166,7 @@ impl NetdevConfig {
         let lines = content.lines();
         let mut stats = Vec::new();
         for line in lines.skip(2) {
-            let stat = DeviceStatus::from_str(line).map_err(Error::from)?;
+            let stat = DeviceStatus::from_str(line)?;
             stats.push(stat);
         }
 

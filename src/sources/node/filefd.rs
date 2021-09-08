@@ -36,8 +36,8 @@ async fn read_file_nr(proc_path: &str) -> Result<(u64, u64), Error> {
     let parts = content.split_ascii_whitespace()
         .collect::<Vec<_>>();
 
-    let allocated = parts[0].parse().map_err(Error::from)?;
-    let maximum = parts[2].parse().map_err(Error::from)?;
+    let allocated = parts[0].parse()?;
+    let maximum = parts[2].parse()?;
 
     Ok((allocated, maximum))
 }

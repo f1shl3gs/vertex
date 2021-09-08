@@ -149,11 +149,11 @@ async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
         return Err(Error::new_invalid("ip_vs_stats corrupt: unexpected number of fields"));
     }
 
-    let connections = u64::from_str_radix(stat_fields[0], 16).map_err(Error::from)?;
-    let incoming_packets = u64::from_str_radix(stat_fields[1], 16).map_err(Error::from)?;
-    let outgoing_packets = u64::from_str_radix(stat_fields[2], 16).map_err(Error::from)?;
-    let incoming_bytes = u64::from_str_radix(stat_fields[3], 16).map_err(Error::from)?;
-    let outgoing_bytes = u64::from_str_radix(stat_fields[4], 16).map_err(Error::from)?;
+    let connections = u64::from_str_radix(stat_fields[0], 16)?;
+    let incoming_packets = u64::from_str_radix(stat_fields[1], 16)?;
+    let outgoing_packets = u64::from_str_radix(stat_fields[2], 16)?;
+    let incoming_bytes = u64::from_str_radix(stat_fields[3], 16)?;
+    let outgoing_bytes = u64::from_str_radix(stat_fields[4], 16)?;
 
     Ok(IPVSStats {
         connections,
@@ -197,7 +197,7 @@ struct IPVSBackendStatus {
 
 async fn parse_ipvs_backend_status(root: &str) -> Result<Vec<IPVSBackendStatus>, Error> {
     let path = &format!("{}/net/ip_vs", root);
-    let f = tokio::fs::File::open(path).await.map_err(Error::from)?;
+    let f = tokio::fs::File::open(path).await?;
     let r = tokio::io::BufReader::new(f);
     let mut lines = r.lines();
 
@@ -207,7 +207,7 @@ async fn parse_ipvs_backend_status(root: &str) -> Result<Vec<IPVSBackendStatus>,
     let mut local_address = String::new();
     let mut local_port = 0u16;
 
-    while let Some(line) = lines.next_line().await.map_err(Error::from)? {
+    while let Some(line) = lines.next_line().await? {
         let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
         if fields.len() == 0 {
             continue;
@@ -274,24 +274,24 @@ fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
     let ip = {
         match s.len() {
             13 => {
-                let p1 = u8::from_str_radix(&s[0..2], 16).map_err(Error::from)?;
-                let p2 = u8::from_str_radix(&s[2..4], 16).map_err(Error::from)?;
-                let p3 = u8::from_str_radix(&s[4..6], 16).map_err(Error::from)?;
-                let p4 = u8::from_str_radix(&s[6..8], 16).map_err(Error::from)?;
+                let p1 = u8::from_str_radix(&s[0..2], 16)?;
+                let p2 = u8::from_str_radix(&s[2..4], 16)?;
+                let p3 = u8::from_str_radix(&s[4..6], 16)?;
+                let p4 = u8::from_str_radix(&s[6..8], 16)?;
 
                 std::net::Ipv4Addr::new(p1, p2, p3, p4).to_string()
             }
 
             46 => {
                 // ipv6
-                let p1 = u16::from_str_radix(&s[1..5], 16).map_err(Error::from)?;
-                let p2 = u16::from_str_radix(&s[6..10], 16).map_err(Error::from)?;
-                let p3 = u16::from_str_radix(&s[11..15], 16).map_err(Error::from)?;
-                let p4 = u16::from_str_radix(&s[16..20], 16).map_err(Error::from)?;
-                let p5 = u16::from_str_radix(&s[21..25], 16).map_err(Error::from)?;
-                let p6 = u16::from_str_radix(&s[26..30], 16).map_err(Error::from)?;
-                let p7 = u16::from_str_radix(&s[31..35], 16).map_err(Error::from)?;
-                let p8 = u16::from_str_radix(&s[36..40], 16).map_err(Error::from)?;
+                let p1 = u16::from_str_radix(&s[1..5], 16)?;
+                let p2 = u16::from_str_radix(&s[6..10], 16)?;
+                let p3 = u16::from_str_radix(&s[11..15], 16)?;
+                let p4 = u16::from_str_radix(&s[16..20], 16)?;
+                let p5 = u16::from_str_radix(&s[21..25], 16)?;
+                let p6 = u16::from_str_radix(&s[26..30], 16)?;
+                let p7 = u16::from_str_radix(&s[31..35], 16)?;
+                let p8 = u16::from_str_radix(&s[36..40], 16)?;
 
                 std::net::Ipv6Addr::new(p1, p2, p3, p4, p5, p6, p7, p8).to_string()
             }
@@ -300,7 +300,7 @@ fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
     };
 
     let port = &s[s.len() - 4..];
-    let port = u16::from_str_radix(port, 16).map_err(Error::from)?;
+    let port = u16::from_str_radix(port, 16)?;
 
     Ok((ip, port))
 }
