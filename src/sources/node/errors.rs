@@ -1,7 +1,7 @@
 use std::{
     error,
     io,
-    fmt::{self, Formatter},
+    fmt::{self, Formatter, Display},
     borrow::Cow,
     num,
     path::{PathBuf},
@@ -10,7 +10,7 @@ use std::{
 use slog::{Record, Key, Serializer};
 
 /// A specialized Result type for `gathering` functions.
-pub type Result<T> = std::result::Result<T, Error>;
+// pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug)]
 pub enum Context {
@@ -61,6 +61,19 @@ impl Error {
         Self {
             source: io::Error::from(io::ErrorKind::InvalidData),
             context: Some(Context::Message { text: msg.into() }),
+        }
+    }
+
+    /// Returns error representing last OS error that occurred.
+    ///
+    /// This method is considered to be an internal API
+    /// and should not be used by external parties.
+    pub fn last_os_error() -> Self {
+        Self {
+            source: io::Error::last_os_error(),
+            #[cfg(feature = "backtrace")]
+            backtrace: Some(Backtrace::new()),
+            context: None,
         }
     }
 }
@@ -128,3 +141,35 @@ impl From<std::string::ParseError> for Error {
     }
 }
 
+pub trait Sealed {}
+
+impl<T, E> Sealed for Result<T, E> where E: std::error::Error {}
+
+impl<T> Sealed for Option<T> {}
+
+pub trait ErrContext<T, E>: Sealed {
+    /// Wrap the error value with additional context
+    fn message<C>(self, ctx: C) -> Result<T, Error>
+        where
+            C: Display + Send + Sync + 'static;
+
+    /// Wrap the error value with additional context that is evaluated
+    /// lazily only once an error does occur.
+    fn with_message<C, F>(self, f: F) -> Result<T, Error>
+        where
+            C: Display + Send + Sync + 'static,
+            F: FnOnce() -> C;
+}
+
+impl<T, E> ErrContext<T, E> for Result<T, E>
+    where
+        E: std::error::Error + Send + Sync + 'static,
+{
+    fn message<C>(self, ctx: C) -> Result<T, Error> where C: Display + Send + Sync + 'static {
+        self.map_err(|err| err.with_message(ctx))
+    }
+
+    fn with_message<C, F>(self, f: F) -> Result<T, Error> where C: Display + Send + Sync + 'static, F: FnOnce() -> C {
+        self.map_err(|err| err.with_message(f()))
+    }
+}

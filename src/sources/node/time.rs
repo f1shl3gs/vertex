@@ -8,8 +8,9 @@ use crate::{
 use std::{
     ffi::CStr,
 };
+use crate::sources::node::errors::Error;
 
-pub async fn gather() -> Result<Vec<Metric>, ()> {
+pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
     let offset = local_now.offset()
         .local_minus_utc() as f64;

@@ -5,7 +5,7 @@ use crate::{
     sum_metric,
     event::{Metric, MetricValue},
 };
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrContext};
 
 // The system clock is not synchronized to a reliable
 // server (TIME_ERROR)
@@ -19,11 +19,9 @@ const STA_NANO: i32 = 0x2000;
 const NANOSECONDS: f64 = 1000000000.0;
 const MICROSECONDS: f64 = 1000000.0;
 
-pub async fn gather() -> Result<Vec<Metric>, ()> {
+pub async fn gather() -> Result<Vec<Metric>, Error> {
     let (tx, status) = adjtimex()
-        .map_err(|err| {
-            warn!("syscall adjtimex failed, {}", err);
-        })?;
+        .message("syscall adjtimex failed")?;
 
     let sync_status = match status {
         TIME_ERROR => 0,

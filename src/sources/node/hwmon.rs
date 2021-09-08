@@ -5,27 +5,24 @@ use crate::{
     event::{Metric, MetricValue},
 };
 use std::path::{PathBuf};
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrContext};
 use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
 use lazy_static::lazy_static;
 use regex::Regex;
 
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/class/hwmon", sys_path);
     let mut dirs = tokio::fs::read_dir(path).await
-        .map_err(|err| {
-            warn!("read hwmon dir failed"; "err" => err);
-        })?;
+        .message("read hwmon dir failed")?;
 
     let mut metrics = Vec::new();
-    while let Some(entry) = dirs.next_entry().await.map_err(|err| {
-        warn!("read next entry of hwmon dirs failed"; "err" => err);
-    })? {
-        let meta = entry.metadata().await.map_err(|err| {
-            warn!("read metadata failed"; "err" => err);
-        })?;
+    while let Some(entry) = dirs.next_entry().await
+        .message("read next entry of hwmon dirs failed")?
+    {
+        let meta = entry.metadata().await
+            .message("read hwmon entry metadata failed")?;
 
         let file_type = meta.file_type();
         if file_type.is_symlink() {
@@ -478,7 +475,7 @@ async fn hwmon_name(path: &str) -> Result<String, Error> {
             let clean_dev_typ = sanitized(dev_type);
 
             if clean_dev_typ != "" && clean_dev_name != "" {
-                return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name))
+                return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name));
             }
 
             if clean_dev_name != "" {

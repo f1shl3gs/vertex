@@ -10,12 +10,11 @@ use crate::{
         read_to_string,
     },
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await
-        .map_err(|err| {
-            warn!("read stat failed"; "err" => err);
-        })?;
+        .message("read stat failed")?;
 
     Ok(vec![
         sum_metric!(

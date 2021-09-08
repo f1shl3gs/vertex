@@ -11,21 +11,24 @@ use tokio::io::{
 use std::collections::{
     HashMap
 };
+use crate::sources::node::errors::Error;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("net/arp");
 
-    let f = tokio::fs::File::open(path).await.unwrap();
+    let f = tokio::fs::File::open(path).await?;
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
     let mut devices = HashMap::<String, i64>::new();
 
     // skip the first line
-    lines.next_line().await.unwrap();
+    lines.next_line().await?;
 
-    while let Some(line) = lines.next_line().await.unwrap() {
-        let dev = line.split_ascii_whitespace().nth(5).unwrap();
+    while let Some(line) = lines.next_line().await? {
+        let dev = line.split_ascii_whitespace()
+            .nth(5)
+            .unwrap();
 
         match devices.get_mut(dev) {
             Some(v) => *v += 1i64,

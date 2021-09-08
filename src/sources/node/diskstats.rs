@@ -11,6 +11,7 @@ use crate::{
     config::{deserialize_regex, serialize_regex},
 };
 use tokio::io::{AsyncBufReadExt};
+use crate::sources::node::errors::{Error, ErrContext};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -34,16 +35,15 @@ pub fn default_ignored() -> regex::Regex {
 }
 
 impl DiskStatsConfig {
-    pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, ()> {
+    pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, Error> {
         let mut metrics = Vec::new();
         let path = &format!("{}/diskstats", root);
-        let f = tokio::fs::File::open(path).await.map_err(|e| {
-            println!("open {} failed, {}", path, e);
-        })?;
+        let f = tokio::fs::File::open(path).await
+            .message("open diskstats failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 
-        while let Some(line) = lines.next_line().await.map_err(|_| ())? {
+        while let Some(line) = lines.next_line().await? {
             let mut parts = line.split_ascii_whitespace();
 
             let device = parts.nth(2).unwrap();

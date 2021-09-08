@@ -9,7 +9,9 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
     sources::node::{
-        errors::Error,
+        errors::{
+            Error, ErrContext,
+        },
         read_into,
     },
 };
@@ -19,27 +21,18 @@ use std::{
 };
 use tokio::io::AsyncBufReadExt;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_into(path).await.map_err(|err| {
-        if !err.is_not_found() {
-            warn!("read conntrack count failed"; "err" => err);
-        }
-    })?;
+    let count = read_into(path).await
+        .message("read conntrack count failed")?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
-    let max = read_into(path).await.map_err(|err| {
-        if !err.is_not_found() {
-            warn!("read conntrack max failed"; "err" => err);
-        }
-    })?;
+    let max = read_into(path).await?;
 
-    let stats = get_conntrack_statistics(&proc_path).await.
-        map_err(|err| {
-            warn!("get conntrack statistics failed"; "err" => err);
-        })?;
+    let stats = get_conntrack_statistics(&proc_path).await
+        .message("get conntrack statistics failed")?;
 
     let statistic = stats
         .iter()

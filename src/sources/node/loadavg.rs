@@ -7,8 +7,9 @@ use crate::{
     event::{Metric, MetricValue},
     sources::node::read_to_string,
 };
+use crate::sources::node::errors::Error;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(proc_path);
 
     match get_load(root).await {
@@ -33,8 +34,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
         }
 
         Err(err) => {
-            warn!("read loadavg failed {}", err);
-            Err(())
+            return Err(Error::from(err));
         }
     }
 }

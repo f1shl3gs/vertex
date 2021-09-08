@@ -12,6 +12,7 @@ use crate::{
 
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
+use crate::sources::node::errors::{Error, ErrContext};
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -45,7 +46,7 @@ fn default_fs_type_exclude() -> regex::Regex {
 }
 
 impl FileSystemConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = PathBuf::from(proc_path);
 
         let stats = self.get_stats(path).await?;
@@ -113,16 +114,17 @@ impl FileSystemConfig {
         Ok(metrics)
     }
 
-    async fn get_stats(&self, proc_path: PathBuf) -> Result<Vec<Stat>, ()> {
+    async fn get_stats(&self, proc_path: PathBuf) -> Result<Vec<Stat>, Error> {
         let mut path = proc_path.clone();
         path.push("mounts");
 
         let mut stats = Vec::new();
-        let f = tokio::fs::File::open(path).await.map_err(|_| ())?;
+        let f = tokio::fs::File::open(path).await
+            .message("open mounts failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 
-        while let Some(line) = lines.next_line().await.map_err(|_| ())? {
+        while let Some(line) = lines.next_line().await? {
             let parts = line
                 .split_ascii_whitespace()
                 .collect::<Vec<_>>();

@@ -7,14 +7,16 @@ use crate::{
     sources::node::{
         read_into,
         errors::Error,
-    }
+    },
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
-    let paths = glob::glob(&pattern).map_err(|err| {
-        error!("find mc paths failed, {}", err);
-    })?;
+    let paths = glob::glob(&pattern)
+        .map_err(|err| {
+            Error::new_invalid(format!("find mc paths failed, {}", err))
+        })?;
 
     let mut metrics = Vec::new();
     for entry in paths {
@@ -23,9 +25,8 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
                 let controller = path.file_name().unwrap().to_str().unwrap().strip_prefix("mc").unwrap();
                 let path = path.as_os_str().to_str().unwrap();
 
-                let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await.map_err(|err| {
-                    warn!("read edac stats failed, {}", err);
-                })?;
+                let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await
+                    .message("read edac stats failed")?;
 
                 metrics.push(sum_metric!(
                     "node_edac_correctable_errors_total",
@@ -55,9 +56,10 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
                 ));
 
                 // for each controller, walk the csrow directories
-                let csrows = glob::glob(&format!("{}/csrow[0-9]*", path)).map_err(|err| {
-                    warn!("walk csrow directories failed, {}", err);
-                })?;
+                let csrows = glob::glob(&format!("{}/csrow[0-9]*", path))
+                    .map_err(|err| {
+                        Error::new_invalid(format!("walk csrow directories failed, {}", err))
+                    })?;
 
                 for csrow in csrows {
                     match csrow {
@@ -97,7 +99,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
         }
     }
 
-    Err(())
+    Ok(metrics)
 }
 
 async fn read_edac_stats(path: &str) -> Result<(u64, u64, u64, u64), Error> {

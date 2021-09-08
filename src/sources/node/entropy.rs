@@ -7,11 +7,11 @@ use crate::{
     sources::node::errors::Error,
     sources::node::read_into,
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
-    let (avail, pool_size) = read_random(proc_path).await.map_err(|err| {
-        warn!("read random stat failed, {}", err);
-    })?;
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+    let (avail, pool_size) = read_random(proc_path).await
+        .message("read random stat failed")?;
 
     Ok(vec![
         gauge_metric!(

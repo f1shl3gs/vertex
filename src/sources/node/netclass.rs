@@ -8,6 +8,7 @@ use crate::{
     sources::node::{read_to_string, errors::Error},
 };
 use tokio::fs;
+use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
@@ -29,10 +30,9 @@ fn default_ignores() -> regex::Regex {
     regex::Regex::new("^$").unwrap()
 }
 
-pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, ()> {
-    let devices = net_class_devices(sys_path).await.map_err(|err| {
-        warn!("read net class devices failed, {}", err);
-    })?;
+pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
+    let devices = net_class_devices(sys_path).await
+        .message("read net class devices failed")?;
 
     let mut metrics = Vec::new();
     for device in devices {

@@ -12,14 +12,14 @@ use crate::{
     sources::node::{
         errors::Error,
         read_to_string,
-        read_into
-    }
+        read_into,
+    },
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
-    let stats = class_drm_card_amdgpu_stats(sys_path).await.map_err(|err| {
-        warn!("read drm amdgpu stats failed, {}", err);
-    })?;
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+    let stats = class_drm_card_amdgpu_stats(sys_path).await
+        .message("read drm amdgpu stats failed")?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {

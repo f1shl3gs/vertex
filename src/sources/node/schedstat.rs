@@ -7,6 +7,7 @@ use crate::{
     sources::node::errors::Error,
 };
 use tokio::io::AsyncBufReadExt;
+use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Default)]
 struct Schedstat {
@@ -17,11 +18,9 @@ struct Schedstat {
     run_time_slices: u64,
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = schedstat(proc_path).await
-        .map_err(|err| {
-            warn!("read schedstat failed, {}", err);
-        })?;
+        .message("read schedstat failed")?;
 
     let mut metrics = Vec::with_capacity(3 * stats.len());
     for stat in stats {

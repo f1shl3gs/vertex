@@ -18,6 +18,7 @@ use netlink_packet_sock_diag::{
     },
     constants::*,
 };
+use crate::sources::node::errors::Error;
 
 #[derive(Default, Debug)]
 struct Statistics {
@@ -49,7 +50,7 @@ macro_rules! state_metric {
     };
 }
 
-pub async fn gather() -> Result<Vec<Metric>, ()> {
+pub async fn gather() -> Result<Vec<Metric>, Error> {
     let (v4, v6) = tokio::join!(
         fetch_tcp_stats(AF_INET),
         fetch_tcp_stats(AF_INET6),

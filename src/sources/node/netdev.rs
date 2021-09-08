@@ -13,6 +13,7 @@ use crate::{
 use std::{
     num::ParseIntError,
 };
+use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -33,10 +34,9 @@ impl Default for NetdevConfig {
 }
 
 impl NetdevConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
-        let stats = self.get_net_dev_stats(proc_path).await.map_err(|err| {
-            warn!("get net dev stats failed"; "err" => err);
-        })?;
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
+        let stats = self.get_net_dev_stats(proc_path).await
+            .message("get netdev stats failed")?;
 
         let mut metrics = Vec::new();
         for stat in stats {

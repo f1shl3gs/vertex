@@ -9,6 +9,7 @@ use crate::{
 use tokio::io::AsyncBufReadExt;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
@@ -29,24 +30,18 @@ fn default_fields() -> Regex {
     Regex::new("^(.*_(InErrors|InErrs)|Ip_Forwarding|Ip(6|Ext)_(InOctets|OutOctets)|Icmp6?_(InMsgs|OutMsgs)|TcpExt_(Listen.*|Syncookies.*|TCPSynRetrans)|Tcp_(ActiveOpens|InSegs|OutSegs|OutRsts|PassiveOpens|RetransSegs|CurrEstab)|Udp6?_(InDatagrams|OutDatagrams|NoPorts|RcvbufErrors|SndbufErrors))$").unwrap()
 }
 
-pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/netstat", proc_path);
     let mut net_stats = get_net_stats(&path).await
-        .map_err(|err| {
-            warn!("read netstat failed, {}", err);
-        })?;
+        .message("read netstat failed")?;
 
     let path = format!("{}/net/snmp", proc_path);
     let snmp_stats = get_net_stats(&path).await
-        .map_err(|err| {
-            warn!("read snmp failed, {}", err);
-        })?;
+        .message("read snmp stats failed")?;
 
     let path = format!("{}/net/snmp6", proc_path);
     let snmp6_stats = get_snmp6_stats(&path).await
-        .map_err(|err| {
-            warn!("read snmp6 failed, {}", err);
-        })?;
+        .message("read snmp6 stats failed")?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.
@@ -69,7 +64,6 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
             if !conf.fields.is_match(&key) {
                 continue;
             }
-
 
             metrics.push(gauge_metric!(
                 format!("node_netstat_{}", key),

@@ -12,8 +12,8 @@ use std::{
     io,
 };
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
-    let stats = get_cpu_freq_stat(sys_path).await.map_err(|_| ())?;
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+    let stats = get_cpu_freq_stat(sys_path).await?;
     let mut metrics = Vec::with_capacity(stats.len() * 6);
 
     for stat in stats {

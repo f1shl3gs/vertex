@@ -3,7 +3,7 @@ use crate::{
     sum_metric,
     event::{Metric, MetricValue},
 };
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrContext};
 use std::{
     path::PathBuf,
 };
@@ -15,11 +15,9 @@ use std::num::ParseIntError;
 ///
 /// Linux (kernel 4.4+)
 
-pub async fn gather(proc_path: &str, sys_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str, sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = xfs_sys_stats(proc_path, sys_path).await
-        .map_err(|err| {
-            warn!("read xfs stats failed"; "err" => err);
-        })?;
+        .message("read xfs stats failed")?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 39);
     for stat in stats {

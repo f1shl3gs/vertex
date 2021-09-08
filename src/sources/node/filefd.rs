@@ -8,11 +8,11 @@ use crate::{
         errors::Error,
     },
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
-    let (allocated, maximum) = read_file_nr(proc_path).await.map_err(|err| {
-        warn!("read file-nr failed"; "err" => err);
-    })?;
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+    let (allocated, maximum) = read_file_nr(proc_path).await
+        .message("read file-nr failed")?;
 
     Ok(vec![
         gauge_metric!(

@@ -16,6 +16,7 @@ use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
+use crate::sources::node::errors::ErrContext;
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {
@@ -29,19 +30,18 @@ struct SoftnetStat {
     time_squeezed: u32,
 }
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/softnet_stat", proc_path);
-    let f = fs::File::open(path).await.map_err(|err| {
-        warn!("open softnet_stat failed"; "err" => err);
-    })?;
+    let f = fs::File::open(path).await
+        .message("open softnet_stat failed")?;
     let r = io::BufReader::new(f);
     let mut lines = r.lines();
 
     let mut metrics = Vec::new();
     let mut n = 0;
-    while let Some(line) = lines.next_line().await.map_err(|err| {
-        warn!("read softnet_stat line failed"; "err" => err);
-    })? {
+    while let Some(line) = lines.next_line().await
+        .message("read softnet_stat lines failed")?
+    {
         match parse_softnet(&line) {
             Ok(stat) => {
                 let cpu = &n.to_string();

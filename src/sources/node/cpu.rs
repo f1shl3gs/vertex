@@ -16,6 +16,7 @@ use std::{
 };
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
+use crate::sources::node::errors::Error;
 
 const USER_HZ: f64 = 100.0;
 
@@ -73,7 +74,7 @@ fn default_bugs_include() -> regex::Regex {
 }
 
 impl CPUConfig {
-    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, ()> {
+    pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let proc_path = PathBuf::from(proc_path);
         let stats = get_cpu_stat(proc_path).await?;
         let mut metrics = Vec::with_capacity(stats.len() * 10);
@@ -129,16 +130,16 @@ struct CPUStat {
     guest_nice: f64,
 }
 
-async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, ()> {
+async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
     let mut path = proc_path.clone();
     path.push("stat");
 
-    let f = tokio::fs::File::open(path).await.map_err(|_| ())?;
+    let f = tokio::fs::File::open(path).await?;
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
     let mut stats = Vec::new();
 
-    while let Some(line) = lines.next_line().await.map_err(|_| ())? {
+    while let Some(line) = lines.next_line().await? {
         if !line.starts_with("cpu") {
             continue;
         }

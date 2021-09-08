@@ -5,17 +5,15 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrContext};
 use crate::sources::node::read_to_string;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
-    let stat4 = sockstat4(&proc_path).await.map_err(|err| {
-        warn!("read sockstat failed, {}", err);
-    })?;
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+    let stat4 = sockstat4(&proc_path).await
+        .message("read sockstat failed")?;
 
-    let stat6 = sockstat6(&proc_path).await.map_err(|err| {
-        warn!("read socketstat6 failed, {}", err);
-    })?;
+    let stat6 = sockstat6(&proc_path).await
+        .message("read sockstat6 failed")?;
 
     let mut metrics = stat4.metrics(false);
     metrics.extend(stat6.metrics(true));

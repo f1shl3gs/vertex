@@ -15,24 +15,21 @@ use crate::{
         errors::Error,
     },
 };
+use crate::sources::node::errors::ErrContext;
 
-pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/pressure/cpu", proc_path);
-    let cpu = psi_stats(&path).await.map_err(|err| {
-        if !err.is_not_found() {
-            warn!("read cpu pressure failed"; "err" => err);
-        }
-    })?;
+    let cpu = psi_stats(&path).await
+        .message("read cpu pressure failed")?;
 
     let path = format!("{}/pressure/io", proc_path);
-    let io = psi_stats(&path).await.map_err(|err| {
-        warn!("read io pressure failed"; "err" => err);
-    })?;
+    let io = psi_stats(&path).await
+        .message("read io pressure failed")
+        ?;
 
     let path = format!("{}/pressure/memory", proc_path);
-    let memory = psi_stats(&path).await.map_err(|err| {
-        warn!("read memory pressure failed"; "err" => err);
-    })?;
+    let memory = psi_stats(&path).await
+        .message("read memory pressure failed")?;
 
     let mut metrics = Vec::new();
     if let Some(some) = cpu.some {

@@ -6,8 +6,9 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
+use crate::sources::node::errors::Error;
 
-pub async fn gather() -> Result<Vec<Metric>, ()> {
+pub async fn gather() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {
         sysname: [0 as c_char; 65],
         nodename: [0 as c_char; 65],
@@ -20,7 +21,7 @@ pub async fn gather() -> Result<Vec<Metric>, ()> {
     let v = unsafe { libc::uname(&mut u) };
     if v != 0 {
         warn!("call libc::uname failed, code {}", v as i8);
-        return Err(());
+        return Err(Error::last_os_error());
     }
 
     let sysname = &to_string(u.sysname);

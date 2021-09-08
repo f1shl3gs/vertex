@@ -8,8 +8,9 @@ use std::path::PathBuf;
 use std::collections::{
     HashMap,
 };
+use crate::sources::node::errors::Error;
 
-pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = PathBuf::from(sys_path);
     let stats = read_bonding_stats(path).await?;
     let mut metrics = Vec::new();
@@ -33,13 +34,13 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, ()> {
     Ok(metrics)
 }
 
-async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, ()> {
+async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64>>, Error> {
     let mut path = sys_path.clone();
     path.push("class/net/bonding_masters");
 
     let mut status = HashMap::new();
 
-    let masters = read_to_string(path).await.map_err(|_| ())?;
+    let masters = read_to_string(path).await?;
 
     let parts = masters.split_ascii_whitespace();
     for master in parts {
