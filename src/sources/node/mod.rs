@@ -45,6 +45,7 @@ mod drm;
 mod lnstat;
 mod protocols;
 mod network_route;
+mod wifi;
 
 use typetag;
 use serde::{Deserialize, Serialize};
@@ -75,6 +76,7 @@ use crate::sources::node::vmstat::VMStatConfig;
 use crate::sources::node::netclass::NetClassConfig;
 use crate::sources::node::netstat::NetstatConfig;
 use crate::sources::node::ipvs::IPVSConfig;
+use std::io::Read;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -139,6 +141,9 @@ struct Collectors {
     pub nvme: bool,
 
     #[serde(default = "default_true")]
+    pub os_release: bool,
+
+    #[serde(default = "default_true")]
     pub pressure: bool,
 
     #[serde(default = "default_true")]
@@ -194,6 +199,7 @@ impl Default for Collectors {
             netdev: Some(Arc::new(NetdevConfig::default())),
             netstat: Some(Arc::new(NetstatConfig::default())),
             nvme: default_true(),
+            os_release: default_true(),
             pressure: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
@@ -250,11 +256,19 @@ pub struct NodeMetrics {
     collectors: Collectors,
 }
 
+/// `read_to_string` should be a async function, but the implement do sync calls from
+/// std, which will not call spawn_blocking and create extra threads for IO reading. It
+/// actually reduce cpu usage an memory. The `tokio-uring` should be introduce once it's
+/// ready.
 pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
-    let mut f = tokio::fs::File::open(path.as_ref()).await?;
-    let mut content = String::new();
+    // let mut f = tokio::fs::File::open(path.as_ref()).await?;
+    // let mut content = String::new();
+    // f.read_to_string(&mut content).await?;
+    // Ok(content)
 
-    f.read_to_string(&mut content).await?;
+    let mut file = std::fs::File::open(path)?;
+    let mut content = String::with_capacity(16);
+    file.read_to_string(&mut content)?;
 
     Ok(content)
 }
@@ -431,6 +445,12 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     nvme::gather(sys_path.as_ref()).await
+                }))
+            }
+
+            if self.collectors.os_release {
+                tasks.push(tokio::spawn(async {
+                    os_release::gather().await
                 }))
             }
 
