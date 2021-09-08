@@ -598,3 +598,21 @@ fn parse_u32s(ss: &[&str]) -> Result<Vec<u32>, ParseIntError> {
 
     Ok(us)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_xfs_sys_stats() {
+        let sys_path = "testdata/sys";
+        let stats = xfs_sys_stats("", sys_path).await.unwrap();
+        assert_eq!(stats.len(), 2);
+
+        assert_eq!(stats[0].name, "sda1");
+        assert_eq!(stats[0].extent_allocation.extents_allocated, 1);
+
+        assert_eq!(stats[1].name, "sdb1");
+        assert_eq!(stats[1].extent_allocation.extents_allocated, 2);
+    }
+}
