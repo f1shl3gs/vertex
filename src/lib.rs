@@ -14,6 +14,7 @@ mod tls;
 mod trigger;
 mod app;
 mod extensions;
+mod error;
 
 pub use signal::{SignalHandler};
 
@@ -24,7 +25,7 @@ extern crate slog;
 extern crate slog_scope;
 extern crate slog_term;
 
-pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+pub(crate) use error::Error;
 
 pub type Result<T> = std::result::Result<T, Error>;
 

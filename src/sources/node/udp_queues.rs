@@ -1,4 +1,5 @@
 use crate::event::Metric;
+use crate::sources::node::errors::Error;
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/netudp6`
@@ -26,4 +27,23 @@ async fn net_udp_summary(root: &str) {}
 
 async fn net_udp6_summary() {}
 
-async fn udp_summary() {}
+/// NetIPSocketLine represents the fields parsed from a single line
+/// in /proc/net/{t,u}dp{,6}. Fields which are not used by IPSocket are skipped.
+/// For the proc file format details, see https://linux.die.net/man/5/proc.
+struct NetIPSocketLine {
+    sl: u64,
+    local_addr: String,
+    local_port: u64,
+    remote_addr: String,
+    remote_port: u64,
+    st: u64,
+    tx_queue: u64,
+    rx_queue: u64,
+    uid: u64,
+    inode: u64
+}
+
+async fn udp_summary(path: &str) -> Result<NetIPSocketSummary, Error> {
+    let f = tokio::fs::File::open(path).await;
+
+}

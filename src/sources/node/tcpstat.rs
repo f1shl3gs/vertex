@@ -166,33 +166,6 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
     stats
 }
 
-/*
-#[tokio::main]
-async fn main() {
-    // the expressions are able to run concurrently but not in parallel
-    let (v4, v6) = tokio::join!(
-        fetch_tcp_stats(AF_INET),
-        fetch_tcp_stats(AF_INET6),
-    );
-
-    let stats = Statistics {
-        established: v4.established + v6.established,
-        syn_sent: v4.syn_sent + v6.syn_sent,
-        syn_recv: v4.syn_recv + v6.syn_recv,
-        fin_wait1: v4.fin_wait1 + v6.fin_wait1,
-        fin_wait2: v4.fin_wait2 + v6.fin_wait2,
-        time_wait: v4.time_wait + v6.time_wait,
-        close: v4.close + v6.close,
-        close_wait: v4.close_wait + v6.close_wait,
-        last_ack: v4.last_ack + v6.last_ack,
-        listen: v4.listen + v6.listen,
-        closing: v4.closing + v6.closing,
-    };
-
-    println!("{:#?}", stats)
-}
-*/
-
 #[cfg(test)]
 mod tests {
     use super::*;
