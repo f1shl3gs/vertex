@@ -260,6 +260,10 @@ pub struct NodeMetrics {
 /// std, which will not call spawn_blocking and create extra threads for IO reading. It
 /// actually reduce cpu usage an memory. The `tokio-uring` should be introduce once it's
 /// ready.
+///
+/// The files this function will(should) be reading is under `/sys` and `/proc` which is
+/// relative small and the filesystem is kind of `tmpfs`, so the performance should never
+/// be a problem.
 pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
     // let mut f = tokio::fs::File::open(path.as_ref()).await?;
     // let mut content = String::new();
@@ -267,7 +271,7 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
     // Ok(content)
 
     let mut file = std::fs::File::open(path)?;
-    let mut content = String::with_capacity(16);
+    let mut content = String::new();
     file.read_to_string(&mut content)?;
 
     Ok(content)
