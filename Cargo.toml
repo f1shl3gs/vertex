@@ -16,7 +16,8 @@ exclude = [
 members = [
     "lib/netlink-packet-conntrack",
     "lib/buffers",
-    "lib/event"
+    "lib/event",
+    "lib/procfs"
 ]
 
 [features]
