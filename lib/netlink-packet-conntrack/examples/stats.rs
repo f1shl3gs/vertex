@@ -1,69 +1,20 @@
-use netlink_packet_core::{
-    NetlinkHeader, NLM_F_REQUEST, NetlinkMessage,
-    NetlinkPayload, NetlinkDeserializable,
-    DecodeError, NetlinkSerializable,
-};
-use netlink_sys::{
-    SocketAddr, Socket,
-    protocols::NETLINK_SOCK_DIAG,
-};
-use netlink_packet_utils::{traits::Emitable};
+use netlink_packet_conntrack::{IPCTNL_MSG_CT_GET_STATS_CPU, IPCTNL_MSG_CT_GET_STATS, NetfilterRequest};
+use netlink_sys::{Socket, SocketAddr};
+use netlink_sys::constants::{NETLINK_SOCK_DIAG, NETLINK_NETFILTER};
+use netlink_packet_core::{NetlinkHeader, NLM_F_REQUEST, NetlinkMessage, NetlinkPayload, NLM_F_DUMP};
 
-use netlink_packet_conntrack::IPCTNL_MSG_CT_GET_STATS_CPU;
-
-#[derive(Debug, PartialEq, Eq, Clone)]
-struct NetfilterMessage {}
-
-impl Emitable for NetfilterMessage {
-    fn buffer_len(&self) -> usize {
-        0
-    }
-
-    fn emit(&self, buffer: &mut [u8]) {}
-}
-
-impl From<NetfilterMessage> for NetlinkPayload<NetfilterMessage> {
-    fn from(msg: NetfilterMessage) -> Self {
-        NetlinkPayload::InnerMessage(msg)
-    }
-}
-
-impl NetlinkDeserializable<NetfilterMessage> for NetfilterMessage {
-    type Error = DecodeError;
-
-    fn deserialize(header: &NetlinkHeader, payload: &[u8]) -> Result<NetfilterMessage, Self::Error> {
-        println!("{:?}", header);
-
-        todo!()
-    }
-}
-
-impl NetlinkSerializable<NetfilterMessage> for NetfilterMessage {
-    fn message_type(&self) -> u16 {
-        // IPCTNL_MSG_CT_GET_STATS
-        5u16
-    }
-
-    fn buffer_len(&self) -> usize {
-        0
-    }
-
-    fn serialize(&self, buffer: &mut [u8]) {
-        self.emit(buffer)
-    }
-}
 
 fn main() {
-    let mut socket = Socket::new(NETLINK_SOCK_DIAG).unwrap();
+    let mut socket = Socket::new(NETLINK_NETFILTER).unwrap();
     let _port = socket.bind_auto().unwrap().port_number();
     socket.connect(&SocketAddr::new(0, 0)).unwrap();
 
     let mut header = NetlinkHeader::default();
-    header.flags = NLM_F_REQUEST | IPCTNL_MSG_CT_GET_STATS_CPU;
+    header.flags = NLM_F_REQUEST | NLM_F_DUMP;
 
     let mut packet = NetlinkMessage {
         header,
-        payload: NetfilterMessage {}.into(),
+        payload: NetfilterRequest::default().into(),
     };
 
     packet.finalize();
@@ -86,7 +37,7 @@ fn main() {
         loop {
             let bytes = &recv_buf[offset..];
 
-            let rxp = <NetlinkMessage<NetfilterMessage>>::deserialize(bytes).unwrap();
+            let rxp = <NetlinkMessage<NetfilterRequest>>::deserialize(bytes).unwrap();
             match rxp.payload {
                 NetlinkPayload::Noop | NetlinkPayload::Ack(_) => {}
                 NetlinkPayload::Done => {
@@ -96,6 +47,7 @@ fn main() {
 
                 NetlinkPayload::Error(err) => {
                     println!("err {}", err);
+                    break;
                 }
 
                 NetlinkPayload::Overrun(or) => {

@@ -1087,6 +1087,7 @@ dependencies = [
 name = "netlink-packet-conntrack"
 version = "0.1.0"
 dependencies = [
+ "bitflags",
  "netlink-packet-core",
  "netlink-packet-utils 0.4.1",
  "netlink-sys",
