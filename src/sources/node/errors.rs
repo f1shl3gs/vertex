@@ -9,8 +9,6 @@ use std::{
 };
 use slog::{Record, Key, Serializer};
 
-/// A specialized Result type for `gathering` functions.
-// pub type Result<T> = std::result::Result<T, Error>;
 #[derive(Debug)]
 pub enum Context {
     File {

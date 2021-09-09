@@ -8,11 +8,13 @@ use std::path::PathBuf;
 use std::collections::{
     HashMap,
 };
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = PathBuf::from(sys_path);
-    let stats = read_bonding_stats(path).await?;
+    let stats = read_bonding_stats(path).await
+        .context("read bonding stats failed")?;
+
     let mut metrics = Vec::new();
 
     for (master, status) in stats {

@@ -15,10 +15,7 @@ use crate::{
         read_into,
     },
 };
-use std::{
-    io,
-    path::PathBuf,
-};
+use std::path::PathBuf;
 use tokio::io::AsyncBufReadExt;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {

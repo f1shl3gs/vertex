@@ -90,10 +90,8 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
 async fn class_drm_card_amdgpu_stats(sys_path: &str) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
     let pattern = format!("{}/class/drm/card[0-9]", sys_path);
-    let paths = glob::glob(&pattern).map_err(|err| {
-        // warn!("glob drm cards failed, {}"; err);
-        Error::new_invalid("glob drm failed")
-    })?;
+    let paths = glob::glob(&pattern)
+        .context("glob drm failed")?;
 
     let mut stats = Vec::new();
     for path in paths {

@@ -11,13 +11,12 @@ use std::{
 use tokio::io::{
     AsyncBufReadExt
 };
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let mut path = PathBuf::from(proc_path);
-    path.push("net/arp");
-
-    let f = tokio::fs::File::open(path).await?;
+    let path = format!("{}/net/arp", proc_path);
+    let f = tokio::fs::File::open(&path).await
+        .context("open arp file failed")?;
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
     let mut devices = HashMap::<String, i64>::new();

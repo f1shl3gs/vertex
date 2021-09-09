@@ -13,6 +13,7 @@ use crate::{
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
 use crate::sources::node::errors::{Error, ErrorContext};
+use std::path::Path;
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -47,9 +48,10 @@ fn default_fs_type_exclude() -> regex::Regex {
 
 impl FileSystemConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let path = PathBuf::from(proc_path);
+        let path = format!("{}/mounts", proc_path);
+        let stats = self.get_stats(path).await
+            .context("read fs stats failed")?;
 
-        let stats = self.get_stats(path).await?;
         let mut metrics = Vec::new();
 
         for stat in stats {
@@ -114,10 +116,7 @@ impl FileSystemConfig {
         Ok(metrics)
     }
 
-    async fn get_stats(&self, proc_path: PathBuf) -> Result<Vec<Stat>, Error> {
-        let mut path = proc_path.clone();
-        path.push("mounts");
-
+    async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
         let mut stats = Vec::new();
         let f = tokio::fs::File::open(path).await
             .context("open mounts failed")?;
@@ -265,7 +264,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_stats() {
-        let path = PathBuf::from("testdata/proc");
+        let path = PathBuf::from("testdata/proc/mounts");
         let conf = FileSystemConfig::default();
         let stats = conf.get_stats(path).await.unwrap();
 

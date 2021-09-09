@@ -542,8 +542,8 @@ impl NodeMetrics {
                 .fold(Vec::new(), |mut metrics, result| {
                     match result {
                         Ok(ms) => metrics.extend_from_slice(ms),
-                        Err(err) =>  {
-                            warn!("collect failed {}", err);
+                        Err(err) => {
+                            debug!("collect failed {}", err);
                         }
                     }
 

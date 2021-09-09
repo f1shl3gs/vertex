@@ -13,9 +13,7 @@ use crate::{
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
     let paths = glob::glob(&pattern)
-        .map_err(|err| {
-            Error::new_invalid(format!("find mc paths failed, {}", err))
-        })?;
+        .context("find mc paths failed")?;
 
     let mut metrics = Vec::new();
     for entry in paths {
@@ -56,9 +54,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
                 // for each controller, walk the csrow directories
                 let csrows = glob::glob(&format!("{}/csrow[0-9]*", path))
-                    .map_err(|err| {
-                        Error::new_invalid(format!("walk csrow directories failed, {}", err))
-                    })?;
+                    .context("walk csrow directories failed")?;
 
                 for csrow in csrows {
                     match csrow {
