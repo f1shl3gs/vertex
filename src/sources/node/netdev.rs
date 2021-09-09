@@ -6,14 +6,13 @@ use crate::{
     event::{Metric, MetricValue},
     config::{deserialize_regex, serialize_regex},
     sources::node::{
-        errors::Error,
+        errors::{Error, ErrorContext},
         read_to_string,
     },
 };
 use std::{
     num::ParseIntError,
 };
-use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -36,7 +35,7 @@ impl Default for NetdevConfig {
 impl NetdevConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let stats = self.get_net_dev_stats(proc_path).await
-            .message("get netdev stats failed")?;
+            .context("get netdev stats failed")?;
 
         let mut metrics = Vec::new();
         for stat in stats {

@@ -540,8 +540,11 @@ impl NodeMetrics {
                 .iter()
                 .flatten()
                 .fold(Vec::new(), |mut metrics, result| {
-                    if let Ok(ms) = result {
-                        metrics.extend_from_slice(ms)
+                    match result {
+                        Ok(ms) => metrics.extend_from_slice(ms),
+                        Err(err) =>  {
+                            warn!("collect failed {}", err);
+                        }
                     }
 
                     metrics

@@ -10,16 +10,16 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
     sources::node::{
-        errors::Error,
+        errors::{Error, ErrorContext},
         read_to_string,
         read_into,
     },
 };
-use crate::sources::node::errors::ErrContext;
+use crate::sources::node::errors;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await
-        .message("read drm amdgpu stats failed")?;
+        .context("read drm amdgpu stats failed")?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {

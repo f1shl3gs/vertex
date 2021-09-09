@@ -4,12 +4,12 @@ use crate::{
     event::{Metric, MetricValue},
     tags,
 };
-use std::path::PathBuf;
+use std::{
+    path::PathBuf,
+    collections::HashMap,
+};
 use tokio::io::{
     AsyncBufReadExt
-};
-use std::collections::{
-    HashMap
 };
 use crate::sources::node::errors::Error;
 

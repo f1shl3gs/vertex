@@ -3,7 +3,9 @@ use crate::{
     gauge_metric,
     sources::node::{
         read_into,
-        errors::Error,
+        errors::{
+            Error, ErrorContext
+        },
     },
     event::{Metric, MetricValue},
 };
@@ -93,9 +95,9 @@ struct Stat {
 async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
     let cpus = glob::glob(&format!("{}/devices/system/cpu/cpu[0-9]*", sys_path))
         .map_err(|err| {
-            let inner = io::Error::new(io::ErrorKind::InvalidInput, err);
-            Error::from(inner).with_message("No cpu files were found")
-        })?;
+            Error::from(io::Error::new(io::ErrorKind::InvalidData, err))
+        })
+        .context("no cpu files were found")?;
 
     let mut stats = Vec::new();
 

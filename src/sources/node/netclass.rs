@@ -5,10 +5,9 @@ use crate::{
     gauge_metric,
     config::{deserialize_regex, serialize_regex},
     event::{Metric, MetricValue},
-    sources::node::{read_to_string, errors::Error},
+    sources::node::{read_to_string, errors::{Error, ErrorContext}},
 };
 use tokio::fs;
-use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
@@ -32,7 +31,7 @@ fn default_ignores() -> regex::Regex {
 
 pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
     let devices = net_class_devices(sys_path).await
-        .message("read net class devices failed")?;
+        .context("read net class devices failed")?;
 
     let mut metrics = Vec::new();
     for device in devices {

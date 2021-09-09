@@ -11,7 +11,7 @@ use crate::{
     config::{deserialize_regex, serialize_regex},
 };
 use tokio::io::{AsyncBufReadExt};
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -39,7 +39,7 @@ impl DiskStatsConfig {
         let mut metrics = Vec::new();
         let path = &format!("{}/diskstats", root);
         let f = tokio::fs::File::open(path).await
-            .message("open diskstats failed")?;
+            .context("open diskstats failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 

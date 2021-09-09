@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::event::Metric;
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 use crate::sources::node::read_to_string;
 use tokio::io::AsyncBufReadExt;
 use std::collections::BTreeMap;
@@ -32,7 +32,8 @@ fn default_labels() -> Vec<String> {
 
 // TODO: this implement is dummy, too many to_string() and clone()
 pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(proc_path).await?;
+    let stats = parse_ipvs_stats(proc_path).await
+        .context("parse ipvs stats failed")?;
 
     let mut metrics = vec![
         Metric::sum("node_ipvs_connections_total", "The total number of connections made.", stats.connections as f64),
@@ -43,7 +44,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
     ];
 
     let backends = parse_ipvs_backend_status(proc_path).await
-        .message("parse ipvs backend status failed")?;
+        .context("parse ipvs backend status failed")?;
 
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();

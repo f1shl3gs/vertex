@@ -10,7 +10,7 @@ use crate::{
     event::{Metric, MetricValue},
     sources::node::{
         errors::{
-            Error, ErrContext,
+            Error, ErrorContext
         },
         read_into,
     },
@@ -25,14 +25,14 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
     let count = read_into(path).await
-        .message("read conntrack count failed")?;
+        .context("read conntrack count failed")?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
     let max = read_into(path).await?;
 
     let stats = get_conntrack_statistics(&proc_path).await
-        .message("get conntrack statistics failed")?;
+        .context("get conntrack statistics failed")?;
 
     let statistic = stats
         .iter()
@@ -133,8 +133,7 @@ impl ConntrackStatEntry {
     fn new(line: &str) -> Result<Self, Error> {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() != 17 {
-            let inner = io::Error::from(io::ErrorKind::InvalidData);
-            return Err(Error::from(inner).with_message("No processors were found"));
+            return Err(Error::new_invalid("No processor were found"));
         }
 
         let entries = hex_u64(parts[0].as_bytes())?;

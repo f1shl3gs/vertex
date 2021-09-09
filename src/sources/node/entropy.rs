@@ -4,14 +4,13 @@ use crate::{
     tags,
     gauge_metric,
     event::{Metric, MetricValue},
-    sources::node::errors::Error,
+    sources::node::errors::{Error, ErrorContext},
     sources::node::read_into,
 };
-use crate::sources::node::errors::ErrContext;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (avail, pool_size) = read_random(proc_path).await
-        .message("read random stat failed")?;
+        .context("read random stat failed")?;
 
     Ok(vec![
         gauge_metric!(

@@ -6,15 +6,14 @@ use crate::{
     sum_metric,
     event::{Metric, MetricValue},
     sources::node::{
-        errors::Error,
+        errors::{Error, ErrorContext},
         read_to_string,
     },
 };
-use crate::sources::node::errors::ErrContext;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await
-        .message("read stat failed")?;
+        .context("read stat failed")?;
 
     Ok(vec![
         sum_metric!(

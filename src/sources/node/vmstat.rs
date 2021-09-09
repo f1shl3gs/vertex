@@ -7,7 +7,7 @@ use crate::{
     event::{Metric, MetricValue},
 };
 use tokio::io::AsyncBufReadExt;
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
@@ -33,14 +33,14 @@ impl VMStatConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = format!("{}/vmstat", proc_path);
         let f = tokio::fs::File::open(path).await
-            .message("open vmstat failed")?;
+            .context("open vmstat failed")?;
 
         let r = tokio::io::BufReader::new(f);
         let mut lines = r.lines();
         let mut metrics = Vec::new();
 
         while let Some(line) = lines.next_line().await
-            .message("read next line failed")?
+            .context("read next line failed")?
         {
             if !self.fields.is_match(&line) {
                 continue;

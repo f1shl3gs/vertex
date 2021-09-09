@@ -12,7 +12,7 @@ use crate::{
 
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -120,7 +120,7 @@ impl FileSystemConfig {
 
         let mut stats = Vec::new();
         let f = tokio::fs::File::open(path).await
-            .message("open mounts failed")?;
+            .context("open mounts failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 

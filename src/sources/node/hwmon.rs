@@ -5,7 +5,7 @@ use crate::{
     event::{Metric, MetricValue},
 };
 use std::path::{PathBuf};
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
 use lazy_static::lazy_static;
@@ -15,14 +15,14 @@ use regex::Regex;
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/class/hwmon", sys_path);
     let mut dirs = tokio::fs::read_dir(path).await
-        .message("read hwmon dir failed")?;
+        .context("read hwmon dir failed")?;
 
     let mut metrics = Vec::new();
     while let Some(entry) = dirs.next_entry().await
-        .message("read next entry of hwmon dirs failed")?
+        .context("read next entry of hwmon dirs failed")?
     {
         let meta = entry.metadata().await
-            .message("read hwmon entry metadata failed")?;
+            .context("read hwmon entry metadata failed")?;
 
         let file_type = meta.file_type();
         if file_type.is_symlink() {

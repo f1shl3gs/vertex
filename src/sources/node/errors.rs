@@ -11,7 +11,6 @@ use slog::{Record, Key, Serializer};
 
 /// A specialized Result type for `gathering` functions.
 // pub type Result<T> = std::result::Result<T, Error>;
-
 #[derive(Debug)]
 pub enum Context {
     File {
@@ -22,6 +21,20 @@ pub enum Context {
     },
 }
 
+impl From<PathBuf> for Context {
+    fn from(path: PathBuf) -> Self {
+        Self::File { path }
+    }
+}
+
+/// Error type for data fetching operations
+///
+/// Errors are originated from the underlying OS, data parsing
+/// or FFI call errors, and it should be assumed that this error
+/// is unrecoverable and data can't be fetched at all.
+///
+/// Note: users **should not** rely on any internal API of this struct,
+/// as it is a subject of change in any moment.
 #[derive(Debug)]
 pub struct Error {
     source: io::Error,
@@ -38,16 +51,6 @@ impl Error {
             source,
             context: Some(context),
         }
-    }
-
-    /// Replace error context with `Context::Message` instance
-    pub fn with_message<T>(mut self, text: T) -> Self
-        where
-            T: Into<Cow<'static, str>>
-    {
-        self.context = Some(Context::Message { text: text.into() });
-
-        self
     }
 
     pub fn is_not_found(&self) -> bool {
@@ -76,6 +79,17 @@ impl Error {
             context: None,
         }
     }
+
+    // pub fn from_context<C, E>(ctx: C, err: E) -> Self
+    //     where
+    //         C: Display + Send + Sync + 'static,
+    //         E: ext::StdError + Send + Sync + 'static,
+    // {
+    //     Self {
+    //         source: err,
+    //         context: Some(ctx),
+    //     }
+    // }
 }
 
 impl fmt::Display for Error {
@@ -141,35 +155,34 @@ impl From<std::string::ParseError> for Error {
     }
 }
 
-pub trait Sealed {}
+impl From<glob::PatternError> for Error {
+    fn from(err: glob::PatternError) -> Self {
+        let err = io::Error::new(io::ErrorKind::InvalidData, err);
 
-impl<T, E> Sealed for Result<T, E> where E: std::error::Error {}
-
-impl<T> Sealed for Option<T> {}
-
-pub trait ErrContext<T, E>: Sealed {
-    /// Wrap the error value with additional context
-    fn message<C>(self, ctx: C) -> Result<T, Error>
-        where
-            C: Display + Send + Sync + 'static;
-
-    /// Wrap the error value with additional context that is evaluated
-    /// lazily only once an error does occur.
-    fn with_message<C, F>(self, f: F) -> Result<T, Error>
-        where
-            C: Display + Send + Sync + 'static,
-            F: FnOnce() -> C;
+        Self {
+            source: err,
+            context: None,
+        }
+    }
 }
 
-impl<T, E> ErrContext<T, E> for Result<T, E>
+pub trait ErrorContext<T, E>
     where
-        E: std::error::Error + Send + Sync + 'static,
+        E: Into<Error>
 {
-    fn message<C>(self, ctx: C) -> Result<T, Error> where C: Display + Send + Sync + 'static {
-        self.map_err(|err| err.with_message(ctx))
-    }
+    fn context<C: ToString>(self, ctx: C) -> Result<T, Error>;
+}
 
-    fn with_message<C, F>(self, f: F) -> Result<T, Error> where C: Display + Send + Sync + 'static, F: FnOnce() -> C {
-        self.map_err(|err| err.with_message(f()))
+impl<T, E> ErrorContext<T, E> for Result<T, E>
+    where
+        E: Into<Error>
+{
+    fn context<C: ToString>(self, ctx: C) -> Result<T, Error> {
+        self.map_err(|err| {
+            let mut err = err.into();
+            err.context = Some(Context::Message { text: ctx.to_string().into() });
+
+            err
+        })
     }
 }

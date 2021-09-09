@@ -7,7 +7,7 @@ use crate::{
     tags,
     sources::node::read_to_string,
 };
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);
@@ -15,10 +15,10 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::new();
     let mut readdir = tokio::fs::read_dir(path).await
-        .message("read nvme root dir failed")?;
+        .context("read nvme root dir failed")?;
 
     while let Some(dir) = readdir.next_entry().await
-        .message("readdir nvme dir entries failed")?
+        .context("readdir nvme dir entries failed")?
     {
         let infos = read_nvme_device(dir.path()).await?;
 

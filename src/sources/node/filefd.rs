@@ -5,14 +5,13 @@ use crate::{
     },
     sources::node::{
         read_to_string,
-        errors::Error,
+        errors::{Error, ErrorContext},
     },
 };
-use crate::sources::node::errors::ErrContext;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await
-        .message("read file-nr failed")?;
+        .context("read file-nr failed")?;
 
     Ok(vec![
         gauge_metric!(

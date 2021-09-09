@@ -4,7 +4,7 @@ use crate::{
 };
 use crate::sources::node::read_to_string;
 use std::collections::BTreeMap;
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
@@ -12,7 +12,7 @@ const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let path = ETC_OS_RELEASE;
     let infos = parse_os_release(path).await
-        .message("parse os release failed")?;
+        .context("parse os release failed")?;
 
     let dv = &"".to_string();
 

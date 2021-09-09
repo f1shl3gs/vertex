@@ -6,10 +6,9 @@ use crate::{
     event::{Metric, MetricValue},
     sources::node::{
         read_into,
-        errors::Error,
+        errors::{Error, ErrorContext},
     },
 };
-use crate::sources::node::errors::ErrContext;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
@@ -26,7 +25,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 let path = path.as_os_str().to_str().unwrap();
 
                 let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await
-                    .message("read edac stats failed")?;
+                    .context("read edac stats failed")?;
 
                 metrics.push(sum_metric!(
                     "node_edac_correctable_errors_total",

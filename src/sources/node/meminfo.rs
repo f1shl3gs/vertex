@@ -10,12 +10,12 @@ use crate::{
     sum_metric,
     sources::node::read_to_string,
 };
-use crate::sources::node::errors::{Error, ErrContext};
+use crate::sources::node::errors::{Error, ErrorContext};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);
     let infos = get_mem_info(root).await
-        .message("get meminfo failed")?;
+        .context("get meminfo failed")?;
 
     let mut metrics = Vec::new();
     for (k, v) in infos {

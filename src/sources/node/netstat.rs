@@ -2,14 +2,13 @@ use std::collections::BTreeMap;
 use crate::{
     gauge_metric,
     config::{deserialize_regex, serialize_regex},
-    sources::node::errors::Error,
+    sources::node::errors::{Error, ErrorContext},
     event::{Metric, MetricValue},
 };
 
 use tokio::io::AsyncBufReadExt;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use crate::sources::node::errors::ErrContext;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
@@ -33,15 +32,15 @@ fn default_fields() -> Regex {
 pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/netstat", proc_path);
     let mut net_stats = get_net_stats(&path).await
-        .message("read netstat failed")?;
+        .context("read netstat failed")?;
 
     let path = format!("{}/net/snmp", proc_path);
     let snmp_stats = get_net_stats(&path).await
-        .message("read snmp stats failed")?;
+        .context("read snmp stats failed")?;
 
     let path = format!("{}/net/snmp6", proc_path);
     let snmp6_stats = get_snmp6_stats(&path).await
-        .message("read snmp6 stats failed")?;
+        .context("read snmp6 stats failed")?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.
