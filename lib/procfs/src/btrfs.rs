@@ -1,4 +1,5 @@
-use crate::ProcFS;
+use crate::{ProcFS, SysFS};
+
 use std::collections::BTreeMap;
 
 
@@ -36,7 +37,10 @@ pub struct AllocationStats {
 pub struct Allocation {
     global_rsv_reserved: u64,
     global_rsv_size: u64,
-    data:,
+    data: Option<AllocationStats>,
+    metadata: Option<AllocationStats>,
+    system: Option<AllocationStats>,
+
 }
 
 /// Device contains information about a device that is part of
