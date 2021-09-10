@@ -100,7 +100,7 @@ struct Collectors {
     pub cpu_freq: bool,
 
     #[serde(default)]
-    pub disk_stats: Option<Arc<DiskStatsConfig>>,
+    pub diskstats: Option<Arc<DiskStatsConfig>>,
 
     #[serde(default)]
     pub drm: bool,
@@ -186,7 +186,7 @@ impl Default for Collectors {
             conntrack: default_true(),
             cpu: Some(Arc::new(CPUConfig::default())),
             cpu_freq: true,
-            disk_stats: Some(Arc::new(DiskStatsConfig::default())),
+            diskstats: Some(Arc::new(DiskStatsConfig::default())),
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
@@ -355,6 +355,13 @@ impl NodeMetrics {
                 }));
             }
 
+            if self.collectors.btrfs {
+                let sys_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("btrfs", btrfs::gather(sys_path.as_ref()))
+                }))
+            }
+
             if self.collectors.conntrack {
                 let proc_path = self.proc_path.clone();
 
@@ -380,7 +387,7 @@ impl NodeMetrics {
                 }))
             }
 
-            if let Some(ref conf) = self.collectors.disk_stats {
+            if let Some(ref conf) = self.collectors.diskstats {
                 let conf = conf.clone();
                 let proc_path = self.proc_path.clone();
 
