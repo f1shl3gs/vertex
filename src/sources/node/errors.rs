@@ -168,7 +168,12 @@ pub trait ErrorContext<T, E>
     where
         E: Into<Error>
 {
+    /// Adds some context to the error
     fn context<C: ToString>(self, ctx: C) -> Result<T, Error>;
+
+    /// Adds context to the error, evaluating the context function only if there
+    /// is an Err
+    fn with_context<S: ToString, F: FnOnce() -> S>(self, f: F) -> Result<T, Error>;
 }
 
 impl<T, E> ErrorContext<T, E> for Result<T, E>
@@ -179,6 +184,17 @@ impl<T, E> ErrorContext<T, E> for Result<T, E>
         self.map_err(|err| {
             let mut err = err.into();
             err.context = Some(Context::Message { text: ctx.to_string().into() });
+
+            err
+        })
+    }
+
+    fn with_context<S: ToString, F: FnOnce() -> S>(self, f: F) -> Result<T, Error> {
+        self.map_err(|err| {
+            let mut err = err.into();
+            let ctx = f().to_string();
+
+            err.context = Some(Context::Message { text: ctx.into() });
 
             err
         })

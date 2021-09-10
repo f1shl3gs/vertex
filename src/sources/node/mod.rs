@@ -52,10 +52,7 @@ use serde::{Deserialize, Serialize};
 use crate::sources::Source;
 use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
 use tokio_stream::wrappers::IntervalStream;
-use futures::{
-    StreamExt,
-    SinkExt,
-};
+use futures::{StreamExt, SinkExt, Future};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use crate::event::{Event};
@@ -77,6 +74,10 @@ use crate::sources::node::netclass::NetClassConfig;
 use crate::sources::node::netstat::NetstatConfig;
 use crate::sources::node::ipvs::IPVSConfig;
 use std::io::Read;
+use crate::{
+    tags,
+    event::Metric,
+};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -287,6 +288,44 @@ pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
     Ok(<T as FromStr>::from_str(content.trim())?)
 }
 
+macro_rules! record_gather {
+    ($name: expr, $future: expr) => ({
+        let start = std::time::SystemTime::now();
+        let r = $future.await;
+        let duration = std::time::SystemTime::now()
+            .duration_since(start)
+            .unwrap()
+            .as_secs_f64();
+        let (mut metrics, success) = match r {
+            Ok(ms) => (ms, 1.0),
+            Err(err) => {
+                debug!("gather metrics failed, {}: {}", $name, err);
+
+                (vec![], 0.0)
+            },
+        };
+
+        metrics.push(Metric::gauge_with_tags(
+            "node_scrape_collector_duration_seconds",
+            "Duration of a collector scrape.",
+            duration as f64,
+            tags! (
+                "collector" => $name
+            )
+        ));
+        metrics.push(Metric::gauge_with_tags(
+            "node_scrape_collector_success",
+            "Whether a collector succeeded.",
+            success,
+            tags! (
+                "collector" => $name
+            )
+        ));
+
+        metrics
+    })
+}
+
 impl NodeMetrics {
     async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
         let interval = tokio::time::interval(self.interval);
@@ -294,13 +333,17 @@ impl NodeMetrics {
             .take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            let mut tasks = Vec::with_capacity(16);
+            let mut tasks = Vec::new();
+
+            let start = std::time::SystemTime::now();
+            let end = std::time::SystemTime::now();
+            let duration = end.duration_since(start).unwrap().as_secs();
 
             if self.collectors.arp {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    arp::gather(proc_path.as_ref()).await
+                    record_gather!("arp", arp::gather(proc_path.as_ref()))
                 }));
             }
 
@@ -308,7 +351,7 @@ impl NodeMetrics {
                 let sys_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    bonding::gather(sys_path.as_ref()).await
+                    record_gather!("bonding", bonding::gather(sys_path.as_ref()))
                 }));
             }
 
@@ -316,7 +359,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conntrack::gather(proc_path.as_ref()).await
+                    record_gather!("conntrack", conntrack::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -325,7 +368,7 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path.as_ref()).await
+                    record_gather!("cpu", conf.gather(proc_path.as_ref()))
                 }));
             }
 
@@ -333,7 +376,7 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    cpufreq::gather(sys_path.as_ref()).await
+                    record_gather!("cpu_freq", cpufreq::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -342,14 +385,14 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path.as_ref()).await
+                    record_gather!("diskstats", conf.gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.drm {
                 let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    drm::gather(sys_path.as_ref()).await
+                    record_gather!("drm", drm::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -357,7 +400,7 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    edac::gather(sys_path.as_ref()).await
+                    record_gather!("edac", edac::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -365,7 +408,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    entropy::gather(proc_path.as_ref()).await
+                    record_gather!("entropy", entropy::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -373,7 +416,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    filefd::gather(proc_path.as_ref()).await
+                    record_gather!("filefd", filefd::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -382,14 +425,14 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path.as_ref()).await
+                    record_gather!("filesystem", conf.gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.hwmon {
                 let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    hwmon::gather(sys_path.as_ref()).await
+                    record_gather!("hwmon", hwmon::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -397,7 +440,7 @@ impl NodeMetrics {
                 let conf = conf.clone();
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    ipvs::gather(conf.as_ref(), proc_path.as_ref()).await
+                    record_gather!("ipvs", ipvs::gather(conf.as_ref(), proc_path.as_ref()))
                 }))
             }
 
@@ -405,7 +448,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    loadavg::gather(proc_path.as_ref()).await
+                    record_gather!("loadavg", loadavg::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -413,7 +456,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    meminfo::gather(proc_path.as_ref()).await
+                    record_gather!("memory", meminfo::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -422,7 +465,7 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    netclass::gather(conf.as_ref(), sys_path.as_ref()).await
+                    record_gather!("netclass", netclass::gather(conf.as_ref(), sys_path.as_ref()))
                 }))
             }
 
@@ -431,7 +474,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path.as_ref()).await
+                    record_gather!("netdev", conf.gather(proc_path.as_ref()))
                 }))
             }
 
@@ -440,7 +483,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    netstat::gather(conf.as_ref(), proc_path.as_ref()).await
+                    record_gather!("netstat", netstat::gather(conf.as_ref(), proc_path.as_ref()))
                 }))
             }
 
@@ -448,41 +491,41 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    nvme::gather(sys_path.as_ref()).await
+                    record_gather!("gather", nvme::gather(sys_path.as_ref()))
                 }))
             }
 
             if self.collectors.os_release {
                 tasks.push(tokio::spawn(async {
-                    os_release::gather().await
+                    record_gather!("os_release", os_release::gather())
                 }))
             }
 
             if self.collectors.pressure {
                 let proc_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    pressure::gather(proc_path.as_ref()).await
+                    record_gather!("pressure", pressure::gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.schedstat {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    schedstat::gather(proc_path.as_ref()).await
+                    record_gather!("schedstat", schedstat::gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.sockstat {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    sockstat::gather(proc_path.as_ref()).await
+                    record_gather!("sockstat", sockstat::gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.softnet {
                 let proc_path = self.proc_path.clone();
                 tasks.push(tokio::spawn(async move {
-                    softnet::gather(proc_path.as_ref()).await
+                    record_gather!("softnet", softnet::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -490,31 +533,31 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    stat::gather(proc_path.as_ref()).await
+                    record_gather!("stat", stat::gather(proc_path.as_ref()))
                 }))
             }
 
             if self.collectors.tcpstat {
                 tasks.push(tokio::spawn(async {
-                    tcpstat::gather().await
+                    record_gather!("tcpstat", tcpstat::gather())
                 }));
             }
 
             if self.collectors.time {
                 tasks.push(tokio::spawn(async {
-                    time::gather().await
+                    record_gather!("time", time::gather())
                 }))
             }
 
             if self.collectors.timex {
                 tasks.push(tokio::spawn(async {
-                    timex::gather().await
+                    record_gather!("timex", timex::gather())
                 }))
             }
 
             if self.collectors.uname {
                 tasks.push(tokio::spawn(async {
-                    uname::gather().await
+                    record_gather!("uname", uname::gather())
                 }))
             }
 
@@ -523,7 +566,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    conf.gather(proc_path.as_ref()).await
+                    record_gather!("vmstat", conf.gather(proc_path.as_ref()))
                 }))
             }
 
@@ -532,21 +575,15 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    xfs::gather(proc_path.as_ref(), sys_path.as_ref()).await
+                    record_gather!("xfs", xfs::gather(proc_path.as_ref(), sys_path.as_ref()))
                 }))
             }
 
             let metrics = futures::future::join_all(tasks).await
                 .iter()
                 .flatten()
-                .fold(Vec::new(), |mut metrics, result| {
-                    match result {
-                        Ok(ms) => metrics.extend_from_slice(ms),
-                        Err(err) => {
-                            debug!("collect failed {}", err);
-                        }
-                    }
-
+                .fold(Vec::new(), |mut metrics, ms| {
+                    metrics.extend_from_slice(ms);
                     metrics
                 });
 
