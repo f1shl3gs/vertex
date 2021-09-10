@@ -1,6 +1,7 @@
 mod btrfs;
 mod error;
 mod read;
+mod fibre_channel;
 
 pub(crate) use read::*;
 
