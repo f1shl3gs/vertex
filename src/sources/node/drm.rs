@@ -15,7 +15,6 @@ use crate::{
         read_into,
     },
 };
-use crate::sources::node::errors;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await

@@ -1,5 +1,5 @@
 use std::{
-    path::PathBuf,
+    path::Path,
     ffi::CString,
 };
 
@@ -13,7 +13,6 @@ use crate::{
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
 use crate::sources::node::errors::{Error, ErrorContext};
-use std::path::Path;
 
 
 #[derive(Debug, Deserialize, Serialize)]

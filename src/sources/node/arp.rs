@@ -5,7 +5,6 @@ use crate::{
     tags,
 };
 use std::{
-    path::PathBuf,
     collections::HashMap,
 };
 use tokio::io::{

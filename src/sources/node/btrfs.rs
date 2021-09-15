@@ -390,7 +390,7 @@ async fn read_layouts(root: PathBuf, devices: usize) -> Result<BTreeMap<String, 
 
 // read_layout reads the Btrfs layout statistics for an allocation layout.
 async fn read_layout(root: &PathBuf, devices: usize) -> Result<LayoutUsage, Error> {
-    let mut root = root.clone();
+    let root = root.clone();
     let path = root.join("total_bytes");
     let total_bytes = read_into(path).await?;
 

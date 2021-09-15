@@ -7,7 +7,6 @@ use std::{
     path::{PathBuf},
     string::ParseError,
 };
-use slog::{Record, Key, Serializer};
 
 #[derive(Debug)]
 pub enum Context {

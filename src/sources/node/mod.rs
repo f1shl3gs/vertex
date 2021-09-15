@@ -52,7 +52,7 @@ use serde::{Deserialize, Serialize};
 use crate::sources::Source;
 use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
 use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt, Future};
+use futures::{StreamExt, SinkExt};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use crate::event::{Event};
@@ -64,8 +64,6 @@ use std::{
 
 use cpu::CPUConfig;
 use diskstats::DiskStatsConfig;
-use crate::sources::node::filesystem::FileSystemConfig;
-use tokio::io::AsyncReadExt;
 use crate::sources::node::errors::Error;
 use std::str::FromStr;
 use crate::sources::node::netdev::NetdevConfig;
@@ -115,7 +113,7 @@ struct Collectors {
     pub filefd: bool,
 
     #[serde(default)]
-    pub filesystem: Option<Arc<FileSystemConfig>>,
+    pub filesystem: Option<Arc<filesystem::FileSystemConfig>>,
 
     #[serde(default = "default_true")]
     pub hwmon: bool,
@@ -191,7 +189,7 @@ impl Default for Collectors {
             edac: default_true(),
             entropy: default_true(),
             filefd: default_true(),
-            filesystem: Some(Arc::new(FileSystemConfig::default())),
+            filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
             hwmon: default_true(),
             ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
             loadavg: default_true(),

@@ -98,7 +98,7 @@ impl NetSockstat {
                 ));
             }
 
-            if let Some(mut v) = nsp.mem {
+            if let Some(v) = nsp.mem {
                 let v = v as f64 * PAGESIZE;
                 let name = &format!("node_sockstat_{}_mem_bytes", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat mem", nsp.protocol);

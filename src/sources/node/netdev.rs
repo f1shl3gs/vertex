@@ -203,7 +203,7 @@ impl DeviceStatus {
     //     lo: 14748809    4780    0    0    0     0          0         0 14748809    4780    0    0    0     0       0          0
     /// ```
     fn from_str(s: &str) -> Result<Self, ParseIntError> {
-        let mut parts = s
+        let parts = s
             .trim()
             .split_ascii_whitespace()
             .collect::<Vec<_>>();

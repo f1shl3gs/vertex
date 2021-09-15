@@ -1,7 +1,7 @@
 use std::{
     error,
     io,
-    fmt::{self, Formatter, Display},
+    fmt::{self, Formatter},
     borrow::Cow,
     num,
     path::{PathBuf},

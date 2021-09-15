@@ -1,6 +1,7 @@
-use crate::sources::node::errors::{Error, ErrorContext};
-use std::collections::BTreeMap;
-use crate::sources::node::{read_to_string, read_into};
+use crate::sources::node::{
+    read_to_string,
+    errors::{Error, ErrorContext}
+};
 use std::path::PathBuf;
 
 #[derive(Debug, Default)]
