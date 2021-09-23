@@ -6,10 +6,10 @@ use tokio::io::AsyncBufReadExt;
 use std::collections::BTreeMap;
 
 macro_rules! parse_subsystem_metrics {
-    ($root: expr, $subsystem: expr, $path: expr) => {
+    ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
         let path = format!("{}/{}", $root, $subsystem);
         for (k, v) in parse_procfs_file(&path).await? {
-            metrics.push(Metric::gauge(
+            $metrics.push(Metric::gauge(
                 format!("node_zfs_{}", k),
                 "todo",
                 v as f64,
@@ -21,19 +21,19 @@ macro_rules! parse_subsystem_metrics {
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
 
-    parse_subsystem_metrics!(proc_path, "zfs_abd", "abdstats");
-    parse_subsystem_metrics!(proc_path, "zfs_arc", "arcstats");
-    parse_subsystem_metrics!(proc_path, "zfs_dbuf", "dbuf_stats");
-    parse_subsystem_metrics!(proc_path, "zfs_dmu_tx", "dmu_tx");
-    parse_subsystem_metrics!(proc_path, "zfs_dnode", "dnodestats");
-    parse_subsystem_metrics!(proc_path, "zfs_fm", "fm");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_abd", "abdstats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_arc", "arcstats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_dbuf", "dbuf_stats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_dmu_tx", "dmu_tx");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_dnode", "dnodestats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_fm", "fm");
     // vdev_cache is deprecated
-    parse_subsystem_metrics!(proc_path, "zfs_vdev_cache", "vdev_cache_stats");
-    parse_subsystem_metrics!(proc_path, "zfs_vdev_mirror", "vdev_mirror_stats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_vdev_cache", "vdev_cache_stats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_vdev_mirror", "vdev_mirror_stats");
     // no known consumers of the XUIO interface on Linux exist
-    parse_subsystem_metrics!(proc_path, "zfs_xuio", "xuio_stats");
-    parse_subsystem_metrics!(proc_path, "zfs_zfetch", "zfetchstats");
-    parse_subsystem_metrics!(proc_path, "zfs_zil", "zil");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_xuio", "xuio_stats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_zfetch", "zfetchstats");
+    parse_subsystem_metrics!(metrics, proc_path, "zfs_zil", "zil");
 
     // pool stats
     let pattern = format!("{}/*/io", proc_path);
