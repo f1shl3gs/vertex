@@ -123,8 +123,47 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     Ok(kvs)
 }
 
-async fn parse_pool_object_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    todo!()
+async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
+    let mut kvs = BTreeMap::new();
+    let f = tokio::fs::File::open(path).await?;
+    let reader = tokio::io::BufReader::new(f);
+    let mut lines = reader.lines();
+
+    let mut parse = false;
+    let mut pool_name = "";
+    let mut dataset_name = "";
+    while let Some(line) = lines.next_line().await? {
+        let parts = line
+            .trim()
+            .split_ascii_whitespace()
+            .collect::<Vec<_>>();
+
+        if !parse && parts.len() == 3 && parts[0] == "name" && parts[1] == "type" && parts[2] == "data" {
+            parse = true;
+            continue;
+        }
+
+        if !parse || parts.len() < 3 {
+            continue;
+        }
+
+        if parts[0] == "dataset_name" {
+            let elmts = path.split("/").collect::<Vec<_>>();
+            let length = elmts.len();
+            pool_name = elmts[length - 2].clone();
+            dataset_name = parts[2].clone();
+            continue;
+        }
+
+        if parts[1] == "4" {
+            let key = format!("kstat.zfs.misc.objset.{}", parts[0]);
+            let value = parts[2].parse::<u64>()?;
+
+            kvs.insert(key, value);
+        }
+    }
+
+    Ok(kvs)
 }
 
 async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
@@ -163,12 +202,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_parse_pool_object_file() {
-
-    }
+    async fn test_parse_pool_objset_file() {}
 
     #[tokio::test]
-    async fn test_parse_state_file() {
-
-    }
+    async fn test_parse_state_file() {}
 }
