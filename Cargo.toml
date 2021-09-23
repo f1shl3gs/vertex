@@ -17,7 +17,8 @@ members = [
     "lib/netlink-packet-conntrack",
     "lib/buffers",
     "lib/event",
-    "lib/procfs"
+    "lib/procfs",
+    "lib/file-source"
 ]
 
 [features]
