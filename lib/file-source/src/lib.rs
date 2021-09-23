@@ -1,7 +1,18 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+mod buffer;
+mod checkpointer;
+mod server;
+mod fingerprinter;
+
+pub type FilePosition = u64;
+
+pub enum ReadFrom {
+    Beginning,
+    End,
+    Checkpoint(FilePosition),
+}
+
+impl Default for ReadFrom {
+    fn default() -> Self {
+        ReadFrom::Beginning
     }
 }
