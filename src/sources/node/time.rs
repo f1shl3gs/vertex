@@ -54,7 +54,6 @@ fn libc_timezone() -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use chrono::{Local};
     use chrono_tz::{
         CET,
