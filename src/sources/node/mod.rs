@@ -167,6 +167,9 @@ struct Collectors {
     pub timex: bool,
 
     #[serde(default = "default_true")]
+    pub udp_queues: bool,
+
+    #[serde(default = "default_true")]
     pub uname: bool,
 
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
@@ -207,6 +210,7 @@ impl Default for Collectors {
             time: default_true(),
             timex: default_true(),
             tcpstat: default_true(),
+            udp_queues: default_true(),
             uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
             xfs: default_true(),
@@ -557,6 +561,14 @@ impl NodeMetrics {
             if self.collectors.timex {
                 tasks.push(tokio::spawn(async {
                     record_gather!("timex", timex::gather())
+                }))
+            }
+
+            if self.collectors.udp_queues {
+                let proc_path = self.proc_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("udp_queues", udp_queues::gather(proc_path.as_ref()))
                 }))
             }
 
