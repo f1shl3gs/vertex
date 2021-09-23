@@ -496,7 +496,7 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("gather", nvme::gather(sys_path.as_ref()))
+                    record_gather!("nvme", nvme::gather(sys_path.as_ref()))
                 }))
             }
 
