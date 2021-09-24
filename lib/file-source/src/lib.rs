@@ -2,6 +2,7 @@ mod buffer;
 mod checkpointer;
 mod server;
 mod fingerprinter;
+mod events;
 
 pub type FilePosition = u64;
 
