@@ -1,17 +1,22 @@
 /// Exposes ZFS performance statistics
 
-use crate::event::Metric;
+use crate::{
+    event::Metric,
+    tags,
+};
 use crate::sources::node::errors::Error;
 use tokio::io::AsyncBufReadExt;
 use std::collections::BTreeMap;
+use crate::sources::node::read_to_string;
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
-        let path = format!("{}/{}", $root, $subsystem);
+        let path = format!("{}/spl/kstat/zfs/{}", $root, $path);
         for (k, v) in parse_procfs_file(&path).await? {
+            let k = k.replace("-", "_");
             $metrics.push(Metric::gauge(
-                format!("node_zfs_{}", k),
-                "todo",
+                format!("node_{}_{}", $subsystem, k),
+                k.clone(),
                 v as f64,
             ))
         }
@@ -36,11 +41,72 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     parse_subsystem_metrics!(metrics, proc_path, "zfs_zil", "zil");
 
     // pool stats
-    let pattern = format!("{}/*/io", proc_path);
+    let pattern = format!("{}/spl/kstat/zfs/*/io", proc_path);
     let paths = glob::glob(&pattern)?;
-    for result in paths {
-        if let Ok(e) = result {}
+    for path in paths.filter_map(Result::ok) {
+        let path = path.to_str().unwrap();
+        let pool_name = parse_pool_name(path)?;
+        let kvs = parse_pool_procfs_file(path).await?;
+        for (k, v) in kvs {
+            metrics.push(Metric::gauge_with_tags(
+                "node_zfs_zpool_".to_owned() + &k,
+                k.clone(),
+                v as f64,
+                tags! {
+                    "zpool" => pool_name.clone()
+                },
+            ))
+        }
     }
+
+    let pattern = format!("{}/spl/kstat/zfs/*/objset-*", proc_path);
+    let paths = glob::glob(&pattern)?;
+    for path in paths.filter_map(Result::ok) {
+        let path = path.to_str().unwrap();
+        let kvs = parse_pool_objset_file(path).await?;
+        for (k, v) in kvs {
+            let fields = k.split(".")
+                .collect::<Vec<_>>();
+            let k = fields[0];
+            let pool_name = fields[1];
+            let dataset = fields[2];
+
+            metrics.push(Metric::gauge_with_tags(
+                "node_zfs_zpool_dataset_".to_owned() + &k,
+                k,
+                v as f64,
+                tags!(
+                    "zpool" => pool_name.clone(),
+                    "dataset" => dataset.clone()
+                ),
+            ));
+        }
+    }
+
+    let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path);
+    let paths = glob::glob(&pattern)?;
+    for path in paths.filter_map(Result::ok) {
+        let path = path.to_str().unwrap();
+        let pool_name = parse_pool_name(path)?;
+        let kvs = parse_pool_state_file(path).await?;
+        for (k, v) in kvs {
+            let v = match v {
+                true => 1f64,
+                false => 0f64,
+            };
+
+            metrics.push(Metric::gauge_with_tags(
+                "node_zfs_zpool_state",
+                "kstat.zfs.misc.state",
+                v,
+                tags!(
+                    "zpool" => pool_name.to_string(),
+                    "state" => k
+                ),
+            ))
+        }
+    }
+
 
     Ok(metrics)
 }
@@ -67,7 +133,7 @@ async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
         // kstat data type (column 2) should be KSTAT_DATA_UINT64, otherwise ignore
         // TODO: when other KSTAT_DATA_* types arrive, much of this will need to be restructured
         if fields[1] == "4" {
-            let key = format!("kstat.zfs.misc.{}.{}", "ext", fields[0]);
+            let key = fields[0].to_string();
             let value = fields[2].parse().unwrap_or(0u64);
             kvs.insert(key, value);
         }
@@ -114,7 +180,7 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         }
 
         for (i, header) in headers.iter().enumerate() {
-            let key = format!("kstat.zfs.misc.{}.{}", zpool_file, header);
+            let key = header.clone();
             let value = fields[i].parse().unwrap_or(0u64);
             kvs.insert(key, value);
         }
@@ -130,8 +196,8 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let mut lines = reader.lines();
 
     let mut parse = false;
-    let mut pool_name = "";
-    let mut dataset_name = "";
+    let mut pool_name = String::new();
+    let mut dataset_name = String::new();
     while let Some(line) = lines.next_line().await? {
         let parts = line
             .trim()
@@ -150,13 +216,13 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         if parts[0] == "dataset_name" {
             let elmts = path.split("/").collect::<Vec<_>>();
             let length = elmts.len();
-            pool_name = elmts[length - 2].clone();
-            dataset_name = parts[2].clone();
+            pool_name = elmts[length - 2].to_string();
+            dataset_name = parts[2].to_string();
             continue;
         }
 
         if parts[1] == "4" {
-            let key = format!("kstat.zfs.misc.objset.{}", parts[0]);
+            let key = format!("{}.{}.{}", parts[0], pool_name, dataset_name);
             let value = parts[2].parse::<u64>()?;
 
             kvs.insert(key, value);
@@ -166,14 +232,41 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     Ok(kvs)
 }
 
-async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
-    todo!()
+async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Error> {
+    let stats = ["online", "degraded", "faulted", "offline", "removed", "unavail"];
+    let actual_state = read_to_string(path).await?
+        .trim()
+        .to_lowercase();
+
+    let mut kvs = BTreeMap::new();
+
+    for s in stats {
+        let active = actual_state == s;
+        let key = s.to_string();
+
+        kvs.insert(key, active);
+    }
+
+    Ok(kvs)
+}
+
+fn parse_pool_name(path: &str) -> Result<String, Error> {
+    let elements = path.split("/")
+        .collect::<Vec<_>>();
+    let length = elements.len();
+    if length < 2 {
+        return Err(Error::new_invalid("zpool path did not return at least two elements"));
+    }
+
+    let name = elements[length - 2];
+    return Ok(name.to_string());
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use glob::glob;
+    use futures::FutureExt;
 
     #[tokio::test]
     async fn test_parse_pool_procfs_file() {
@@ -202,8 +295,64 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_parse_pool_objset_file() {}
+    async fn test_parse_pool_objset_file() {
+        let paths = glob("testdata/proc/spl/kstat/zfs/*/objset-*").unwrap();
+        for path in paths.filter_map(Result::ok) {
+            let kvs = parse_pool_objset_file(path.to_str().unwrap()).await.unwrap();
+
+            assert_ne!(kvs.len(), 0);
+            for (k, v) in kvs {
+                if k != "kstat.zfs.misc.objset.writes" {
+                    continue;
+                }
+
+                if v != 0u64 && v != 4u64 && v != 10u64 {
+                    panic!("incorrect value parsed from procfs data")
+                }
+            }
+        }
+    }
 
     #[tokio::test]
-    async fn test_parse_state_file() {}
+    async fn test_parse_pool_state_file() {
+        let paths = glob("testdata/proc/spl/kstat/zfs/*/state").unwrap();
+        let mut handled = 0;
+        for path in paths.filter_map(Result::ok) {
+            handled += 1;
+            let path: &str = path.to_str().unwrap();
+            let pool_name = parse_pool_name(path).unwrap();
+            let kvs = parse_pool_state_file(path).await.unwrap();
+            assert_ne!(kvs.len(), 0);
+
+            println!("{}", pool_name);
+            for (state, active) in kvs {
+                println!("{}: {}", state, active);
+
+                // TODO: we remove this prefix, which we don't need it
+                let state = state.strip_prefix("kstat.zfs.misc.state.").unwrap();
+
+                if pool_name == "pool1" {
+                    if !active && state == "online" {
+                        panic!("incorrect parsed value for online state")
+                    }
+
+                    if active && state != "online" {
+                        panic!("incorrect parsed value for online state")
+                    }
+                }
+
+                if pool_name == "poolz1" {
+                    if !active && state == "degraded" {
+                        panic!("incorrect parsed value for degraded state")
+                    }
+
+                    if active && state != "degraded" {
+                        panic!("incorrect parsed value for degraded state")
+                    }
+                }
+            }
+        }
+
+        assert_eq!(handled, 2);
+    }
 }

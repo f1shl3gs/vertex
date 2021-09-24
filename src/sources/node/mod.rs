@@ -176,6 +176,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub xfs: bool,
+
+    #[serde(default = "default_true")]
+    pub zfs: bool,
 }
 
 impl Default for Collectors {
@@ -214,6 +217,7 @@ impl Default for Collectors {
             uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
             xfs: default_true(),
+            zfs: default_true(),
         }
     }
 }
@@ -593,6 +597,13 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     record_gather!("xfs", xfs::gather(proc_path.as_ref(), sys_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.zfs {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("zfs", zfs::gather(proc_path.as_ref()))
                 }))
             }
 
