@@ -25,6 +25,14 @@ impl From<PathBuf> for Context {
     }
 }
 
+#[macro_export]
+macro_rules! invalid_error {
+    ($($arg:tt)*) => {{
+        let msg = std::fmt::format(format_args!($($arg)*));
+        Err(Error::new_invalid(msg))
+    }}
+}
+
 /// Error type for data fetching operations
 ///
 /// Errors are originated from the underlying OS, data parsing
