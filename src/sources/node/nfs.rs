@@ -1,15 +1,14 @@
 use crate::{
     event::Metric,
-    invalid_error
+    invalid_error,
+    sources::node::errors::{Error},
 };
-use crate::sources::node::errors::{
-    Error,
+use std::{
+    convert::TryFrom,
+    path::Path,
+    convert::TryInto,
 };
 use tokio::io::AsyncBufReadExt;
-use std::convert::TryFrom;
-use std::path::Path;
-use std::convert::TryInto;
-
 
 /// Network models the "net" line.
 #[derive(Debug, Default, PartialEq)]
@@ -395,7 +394,7 @@ mod tests {
                 name: "invalid file".to_string(),
                 content: "invalid".to_string(),
                 invalid: true,
-                stats: ClientRPCStats::default()
+                stats: ClientRPCStats::default(),
             },
             Case {
                 name: "good old kernel version file".to_string(),
@@ -411,12 +410,12 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         net_count: 70,
                         udp_count: 70,
                         tcp_count: 69,
-                        tcp_connect: 45
+                        tcp_connect: 45,
                     },
                     client_rpc: ClientRPC {
                         rpc_count: 1218785755,
                         retransmissions: 374636,
-                        auth_refreshes: 1218815394
+                        auth_refreshes: 1218815394,
                     },
                     v2_stats: V2Stats {
                         null: 16,
@@ -522,8 +521,8 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         deallocate: 0,
                         layout_stats: 0,
                         clone: 0,
-                    }
-                }
+                    },
+                },
             },
             Case {
                 name: "good file".to_string(),
@@ -535,7 +534,7 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ".to_string(),
                 invalid: false,
                 stats: ClientRPCStats {
-                    network: Network{
+                    network: Network {
                         net_count: 18628,
                         udp_count: 0,
                         tcp_count: 18628,
@@ -566,7 +565,7 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         read_dir: 99,
                         fs_stat: 2,
                     },
-                    v3_stats: V3Stats{
+                    v3_stats: V3Stats {
                         null: 1,
                         get_attr: 4084749,
                         set_attr: 29200,
@@ -650,9 +649,9 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         deallocate: 0,
                         layout_stats: 0,
                         clone: 0,
-                    }
-                }
-            }
+                    },
+                },
+            },
         ];
 
         for case in cases {
