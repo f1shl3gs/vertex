@@ -266,7 +266,6 @@ fn parse_pool_name(path: &str) -> Result<String, Error> {
 mod tests {
     use super::*;
     use glob::glob;
-    use futures::FutureExt;
 
     #[tokio::test]
     async fn test_parse_pool_procfs_file() {
