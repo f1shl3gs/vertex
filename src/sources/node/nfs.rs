@@ -1,6 +1,7 @@
 use crate::{
     event::Metric,
-    invalid_error
+    invalid_error,
+    tags,
 };
 use crate::sources::node::errors::{
     Error,
@@ -14,10 +15,10 @@ use std::convert::TryInto;
 /// Network models the "net" line.
 #[derive(Debug, Default, PartialEq)]
 pub struct Network {
-    net_count: u64,
-    udp_count: u64,
-    tcp_count: u64,
-    tcp_connect: u64,
+    pub net_count: u64,
+    pub udp_count: u64,
+    pub tcp_count: u64,
+    pub tcp_connect: u64,
 }
 
 impl TryFrom<Vec<u64>> for Network {
@@ -40,28 +41,30 @@ impl TryFrom<Vec<u64>> for Network {
 /// V2Stats models the "proc2" line.
 #[derive(Debug, Default, PartialEq)]
 pub struct V2Stats {
-    null: u64,
-    get_attr: u64,
-    set_attr: u64,
-    root: u64,
-    lookup: u64,
-    read_link: u64,
-    read: u64,
-    wr_cache: u64,
-    write: u64,
-    create: u64,
-    remove: u64,
-    rename: u64,
-    link: u64,
-    sym_link: u64,
-    mkdir: u64,
-    rmdir: u64,
-    read_dir: u64,
-    fs_stat: u64,
+    pub null: u64,
+    pub get_attr: u64,
+    pub set_attr: u64,
+    pub root: u64,
+    pub lookup: u64,
+    pub read_link: u64,
+    pub read: u64,
+    pub wr_cache: u64,
+    pub write: u64,
+    pub create: u64,
+    pub remove: u64,
+    pub rename: u64,
+    pub link: u64,
+    pub sym_link: u64,
+    pub mkdir: u64,
+    pub rmdir: u64,
+    pub read_dir: u64,
+    pub fs_stat: u64,
 }
 
-impl V2Stats {
-    fn new(values: Vec<u64>) -> Result<Self, Error> {
+impl TryFrom<Vec<u64>> for V2Stats {
+    type Error = Error;
+
+    fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 18 {
             return Err(Error::new_invalid("invalid V2Stats line"));
@@ -93,32 +96,34 @@ impl V2Stats {
 /// V3Stats models the "proc3" line.
 #[derive(Debug, Default, PartialEq)]
 pub struct V3Stats {
-    null: u64,
-    get_attr: u64,
-    set_attr: u64,
-    lookup: u64,
-    access: u64,
-    read_link: u64,
-    read: u64,
-    write: u64,
-    create: u64,
-    mkdir: u64,
-    sym_link: u64,
-    mknod: u64,
-    remove: u64,
-    rmdir: u64,
-    rename: u64,
-    link: u64,
-    read_dir: u64,
-    read_dir_plus: u64,
-    fs_stat: u64,
-    fs_info: u64,
-    path_conf: u64,
-    commit: u64,
+    pub null: u64,
+    pub get_attr: u64,
+    pub set_attr: u64,
+    pub lookup: u64,
+    pub access: u64,
+    pub read_link: u64,
+    pub read: u64,
+    pub write: u64,
+    pub create: u64,
+    pub mkdir: u64,
+    pub sym_link: u64,
+    pub mknod: u64,
+    pub remove: u64,
+    pub rmdir: u64,
+    pub rename: u64,
+    pub link: u64,
+    pub read_dir: u64,
+    pub read_dir_plus: u64,
+    pub fs_stat: u64,
+    pub fs_info: u64,
+    pub path_conf: u64,
+    pub commit: u64,
 }
 
-impl V3Stats {
-    fn new(values: Vec<u64>) -> Result<Self, Error> {
+impl TryFrom<Vec<u64>> for V3Stats {
+    type Error = Error;
+
+    fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 22 {
             return Err(Error::new_invalid("invalid V3Stats line"));
@@ -328,6 +333,7 @@ pub struct ClientRPCStats {
     client_v4_stats: ClientV4Stats,
 }
 
+/// client_rpc_stats retrieves NFS client RPC statistics from file
 pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats, Error> {
     let f = tokio::fs::File::open(&path).await?;
     let reader = tokio::io::BufReader::new(f);
@@ -341,7 +347,6 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
             .collect::<Vec<_>>();
 
         if parts.len() < 2 {
-            println!("{}", line);
             return invalid_error!("invalid NFS metric line, {}", line);
         }
 
@@ -357,9 +362,9 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
 
             "rpc" => stats.client_rpc = ClientRPC::new(values)?,
 
-            "proc2" => stats.v2_stats = V2Stats::new(values)?,
+            "proc2" => stats.v2_stats = values.try_into()?,
 
-            "proc3" => stats.v3_stats = V3Stats::new(values)?,
+            "proc3" => stats.v3_stats = values.try_into()?,
 
             "proc4" => stats.client_v4_stats = values.try_into()?,
 
@@ -372,14 +377,187 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
     Ok(stats)
 }
 
-async fn gather() -> Result<Vec<Metric>, Error> {
-    todo!()
+macro_rules! procedure_metric {
+    ($proto: expr, $name: expr, $value: expr) => {
+        Metric::sum_with_tags(
+            "node_nfs_requests_total",
+            "Number of NFS procedures invoked.",
+            $value as f64,
+            tags! {
+                "proto" => $proto.to_string(),
+                "method" => $name.to_string()
+            }
+        )
+    };
+}
+
+pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+    let path = format!("{}/net/rpc/nfs", proc_path);
+    let stats = client_rpc_stats(path).await?;
+
+    let mut metrics = Vec::new();
+
+    // collect statistics for network packets/connections
+    metrics.extend_from_slice(&[
+        Metric::sum_with_tags(
+            "node_nfs_packets_total",
+            "Total NFSd network packets (sent+received) by protocol type.",
+            stats.network.udp_count as f64,
+            tags! {
+                "protocol" => "udp"
+            },
+        ),
+        Metric::sum_with_tags(
+            "node_nfs_packets_total",
+            "Total NFSd network packets (sent+received) by protocol type.",
+            stats.network.tcp_count as f64,
+            tags! {
+                "protocol" => "tcp"
+            },
+        ),
+        Metric::sum(
+            "node_nfs_connections_total",
+            "Total number of NFSd TCP connections.",
+            stats.network.net_count as f64,
+        )
+    ]);
+
+    // collect statistics for kernel server RPCs
+    metrics.extend_from_slice(&[
+        Metric::sum(
+            "node_nfs_rpcs_total",
+            "Total number of RPCs performed.",
+            stats.client_rpc.rpc_count as f64,
+        ),
+        Metric::sum(
+            "node_nfs_rpc_retransmissions_total",
+            "Number of RPC transmissions performed.",
+            stats.client_rpc.retransmissions as f64,
+        ),
+        Metric::sum(
+            "node_nfs_rpc_authentication_refreshes_total",
+            "Number of RPC authentication refreshes performed.",
+            stats.client_rpc.auth_refreshes as f64,
+        ),
+    ]);
+
+    // collects statistics for NFSv2 requests
+    metrics.extend_from_slice(&[
+        procedure_metric!("2", "Null", stats.v2_stats.null),
+        procedure_metric!("2", "GetAttr", stats.v2_stats.get_attr),
+        procedure_metric!("2", "SetAttr", stats.v2_stats.set_attr),
+        procedure_metric!("2", "Root", stats.v2_stats.root),
+        procedure_metric!("2", "Lookup", stats.v2_stats.lookup),
+        procedure_metric!("2", "ReadLink", stats.v2_stats.read_link),
+        procedure_metric!("2", "Read", stats.v2_stats.read),
+        procedure_metric!("2", "WrCache", stats.v2_stats.wr_cache),
+        procedure_metric!("2", "Write", stats.v2_stats.write),
+        procedure_metric!("2", "Create", stats.v2_stats.create),
+        procedure_metric!("2", "Remove", stats.v2_stats.remove),
+        procedure_metric!("2", "Rename", stats.v2_stats.rename),
+        procedure_metric!("2", "Link", stats.v2_stats.link),
+        procedure_metric!("2", "SymLink", stats.v2_stats.sym_link),
+        procedure_metric!("2", "MkDir", stats.v2_stats.mkdir),
+        procedure_metric!("2", "RmDir", stats.v2_stats.rmdir),
+        procedure_metric!("2", "ReadDir", stats.v2_stats.read_dir),
+        procedure_metric!("2", "FsStat", stats.v2_stats.fs_stat),
+    ]);
+
+    // collects statistics for NFSv3 requests
+    metrics.extend_from_slice(&[
+        procedure_metric!("3", "Null", stats.v3_stats.null),
+        procedure_metric!("3", "GetAttr", stats.v3_stats.get_attr),
+        procedure_metric!("3", "SetAttr", stats.v3_stats.set_attr),
+        procedure_metric!("3", "Lookup", stats.v3_stats.lookup),
+        procedure_metric!("3", "Access", stats.v3_stats.access),
+        procedure_metric!("3", "ReadLink", stats.v3_stats.read_link),
+        procedure_metric!("3", "Read", stats.v3_stats.read),
+        procedure_metric!("3", "Write", stats.v3_stats.write),
+        procedure_metric!("3", "Create", stats.v3_stats.create),
+        procedure_metric!("3", "MkDir", stats.v3_stats.mkdir),
+        procedure_metric!("3", "SymLink", stats.v3_stats.sym_link),
+        procedure_metric!("3", "MkNod", stats.v3_stats.mknod),
+        procedure_metric!("3", "Remove", stats.v3_stats.remove),
+        procedure_metric!("3", "RmDir", stats.v3_stats.rmdir),
+        procedure_metric!("3", "Rename", stats.v3_stats.rename),
+        procedure_metric!("3", "Link", stats.v3_stats.link),
+        procedure_metric!("3", "ReadDir", stats.v3_stats.read_dir),
+        procedure_metric!("3", "ReadDirPlus", stats.v3_stats.read_dir_plus),
+        procedure_metric!("3", "FsStat", stats.v3_stats.fs_stat),
+        procedure_metric!("3", "FsInfo", stats.v3_stats.fs_info),
+        procedure_metric!("3", "PathConf", stats.v3_stats.path_conf),
+        procedure_metric!("3", "Commit", stats.v3_stats.commit),
+    ]);
+
+    // collects statistics for NFSv4 requests
+    metrics.extend_from_slice(&[
+        procedure_metric!("4", "Null", stats.client_v4_stats.null),
+        procedure_metric!("4", "Read", stats.client_v4_stats.read),
+        procedure_metric!("4", "Write", stats.client_v4_stats.write),
+        procedure_metric!("4", "Commit", stats.client_v4_stats.commit),
+        procedure_metric!("4", "Open", stats.client_v4_stats.open),
+        procedure_metric!("4", "OpenConfirm", stats.client_v4_stats.open_confirm),
+        procedure_metric!("4", "OpenNoattr", stats.client_v4_stats.open_noattr),
+        procedure_metric!("4", "OpenDowngrade", stats.client_v4_stats.open_downgrade),
+        procedure_metric!("4", "Close", stats.client_v4_stats.close),
+        procedure_metric!("4", "Setattr", stats.client_v4_stats.setattr),
+        procedure_metric!("4", "FsInfo", stats.client_v4_stats.fs_info),
+        procedure_metric!("4", "Renew", stats.client_v4_stats.renew),
+        procedure_metric!("4", "SetClientID", stats.client_v4_stats.set_client_id),
+        procedure_metric!("4", "SetClientIDConfirm", stats.client_v4_stats.set_client_id_confirm),
+        procedure_metric!("4", "Lock", stats.client_v4_stats.lock),
+        procedure_metric!("4", "Lockt", stats.client_v4_stats.lockt),
+        procedure_metric!("4", "Locku", stats.client_v4_stats.locku),
+        procedure_metric!("4", "Access", stats.client_v4_stats.access),
+        procedure_metric!("4", "Getattr", stats.client_v4_stats.getattr),
+        procedure_metric!("4", "Lookup", stats.client_v4_stats.lookup),
+        procedure_metric!("4", "LookupRoot", stats.client_v4_stats.lookup_root),
+        procedure_metric!("4", "Remove", stats.client_v4_stats.remove),
+        procedure_metric!("4", "Rename", stats.client_v4_stats.rename),
+        procedure_metric!("4", "Link", stats.client_v4_stats.link),
+        procedure_metric!("4", "Symlink", stats.client_v4_stats.sym_link),
+        procedure_metric!("4", "Create", stats.client_v4_stats.create),
+        procedure_metric!("4", "Pathconf", stats.client_v4_stats.pathconf),
+        procedure_metric!("4", "StatFs", stats.client_v4_stats.stat_fs),
+        procedure_metric!("4", "ReadLink", stats.client_v4_stats.read_link),
+        procedure_metric!("4", "ReadDir", stats.client_v4_stats.read_dir),
+        procedure_metric!("4", "ServerCaps", stats.client_v4_stats.server_caps),
+        procedure_metric!("4", "DelegReturn", stats.client_v4_stats.deleg_return),
+        procedure_metric!("4", "GetACL", stats.client_v4_stats.get_acl),
+        procedure_metric!("4", "SetACL", stats.client_v4_stats.set_acl),
+        procedure_metric!("4", "FsLocations", stats.client_v4_stats.fs_locations),
+        procedure_metric!("4", "ReleaseLockowner", stats.client_v4_stats.release_lockowner),
+        procedure_metric!("4", "Secinfo", stats.client_v4_stats.secinfo),
+        procedure_metric!("4", "FsidPresent", stats.client_v4_stats.fsid_present),
+        procedure_metric!("4", "ExchangeID", stats.client_v4_stats.exchange_id),
+        procedure_metric!("4", "CreateSession", stats.client_v4_stats.create_session),
+        procedure_metric!("4", "DestroySession", stats.client_v4_stats.destroy_session),
+        procedure_metric!("4", "Sequence", stats.client_v4_stats.sequence),
+        procedure_metric!("4", "GetLeaseTime", stats.client_v4_stats.get_lease_time),
+        procedure_metric!("4", "ReclaimComplete", stats.client_v4_stats.reclaim_complete),
+        procedure_metric!("4", "LayoutGet", stats.client_v4_stats.layout_get),
+        procedure_metric!("4", "GetDeviceInfo", stats.client_v4_stats.get_device_info),
+        procedure_metric!("4", "LayoutCommit", stats.client_v4_stats.layout_commit),
+        procedure_metric!("4", "LayoutReturn", stats.client_v4_stats.layout_return),
+        procedure_metric!("4", "SecinfoNoName", stats.client_v4_stats.secinfo_no_name),
+        procedure_metric!("4", "TestStateID", stats.client_v4_stats.test_state_id),
+        procedure_metric!("4", "FreeStateID", stats.client_v4_stats.free_state_id),
+        procedure_metric!("4", "GetDeviceList", stats.client_v4_stats.get_device_list),
+        procedure_metric!("4", "BindConnToSession", stats.client_v4_stats.bind_conn_to_session),
+        procedure_metric!("4", "DestroyClientID", stats.client_v4_stats.destroy_client_id),
+        procedure_metric!("4", "Seek", stats.client_v4_stats.seek),
+        procedure_metric!("4", "Allocate", stats.client_v4_stats.allocate),
+        procedure_metric!("4", "DeAllocate", stats.client_v4_stats.deallocate),
+        procedure_metric!("4", "LayoutStats", stats.client_v4_stats.layout_stats),
+        procedure_metric!("4", "Clone", stats.client_v4_stats.clone),
+    ]);
+
+    Ok(metrics)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
 
     #[tokio::test]
     async fn test_client_rpc_stats() {
@@ -395,7 +573,7 @@ mod tests {
                 name: "invalid file".to_string(),
                 content: "invalid".to_string(),
                 invalid: true,
-                stats: ClientRPCStats::default()
+                stats: ClientRPCStats::default(),
             },
             Case {
                 name: "good old kernel version file".to_string(),
@@ -411,12 +589,12 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         net_count: 70,
                         udp_count: 70,
                         tcp_count: 69,
-                        tcp_connect: 45
+                        tcp_connect: 45,
                     },
                     client_rpc: ClientRPC {
                         rpc_count: 1218785755,
                         retransmissions: 374636,
-                        auth_refreshes: 1218815394
+                        auth_refreshes: 1218815394,
                     },
                     v2_stats: V2Stats {
                         null: 16,
@@ -522,8 +700,8 @@ proc4 48 98 51 54 83 85 23 24 1 28 73 68 83 12 84 39 68 59 58 88 29 74 69 96 21 
                         deallocate: 0,
                         layout_stats: 0,
                         clone: 0,
-                    }
-                }
+                    },
+                },
             },
             Case {
                 name: "good file".to_string(),
@@ -535,7 +713,7 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 ".to_string(),
                 invalid: false,
                 stats: ClientRPCStats {
-                    network: Network{
+                    network: Network {
                         net_count: 18628,
                         udp_count: 0,
                         tcp_count: 18628,
@@ -566,7 +744,7 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         read_dir: 99,
                         fs_stat: 2,
                     },
-                    v3_stats: V3Stats{
+                    v3_stats: V3Stats {
                         null: 1,
                         get_attr: 4084749,
                         set_attr: 29200,
@@ -650,9 +828,9 @@ proc4 61 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0
                         deallocate: 0,
                         layout_stats: 0,
                         clone: 0,
-                    }
-                }
-            }
+                    },
+                },
+            },
         ];
 
         for case in cases {

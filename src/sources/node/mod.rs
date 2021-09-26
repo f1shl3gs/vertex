@@ -137,6 +137,12 @@ struct Collectors {
     pub netstat: Option<Arc<netstat::NetstatConfig>>,
 
     #[serde(default = "default_true")]
+    pub nfs: bool,
+
+    #[serde(default = "default_true")]
+    pub nfsd: bool,
+
+    #[serde(default = "default_true")]
     pub nvme: bool,
 
     #[serde(default = "default_true")]
@@ -203,6 +209,8 @@ impl Default for Collectors {
             netclass: Some(Arc::new(NetClassConfig::default())),
             netdev: Some(Arc::new(NetdevConfig::default())),
             netstat: Some(Arc::new(NetstatConfig::default())),
+            nfs: default_true(),
+            nfsd: default_true(),
             nvme: default_true(),
             os_release: default_true(),
             pressure: default_true(),
@@ -497,6 +505,20 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     record_gather!("netstat", netstat::gather(conf.as_ref(), proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.nfs {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("nfs", nfs::gather(proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.nfsd {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("nfsd", nfsd::gather(proc_path.as_ref()))
                 }))
             }
 
