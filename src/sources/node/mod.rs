@@ -118,6 +118,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub hwmon: bool,
 
+    #[serde(default = "default_true")]
+    pub infiniband: bool,
+
     #[serde(default)]
     pub ipvs: Option<Arc<IPVSConfig>>,
 
@@ -203,6 +206,7 @@ impl Default for Collectors {
             filefd: default_true(),
             filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
             hwmon: default_true(),
+            infiniband: default_true(),
             ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
@@ -454,6 +458,13 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("hwmon", hwmon::gather(sys_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.infiniband {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("infiniband", infiniband::gather(sys_path.as_ref()))
                 }))
             }
 
