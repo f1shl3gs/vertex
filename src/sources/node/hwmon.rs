@@ -4,7 +4,7 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use std::path::{PathBuf, Path};
+use std::path::{Path, PathBuf};
 use crate::sources::node::errors::{Error, ErrorContext};
 use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
@@ -462,10 +462,11 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
     // preference 1: construct a name based on device name, always unique
 
-    let dev_path = path.as_ref().clone().join("device");
-    match tokio::fs::read_link(dev_path).await {
+    let ap = path.as_ref().clone().join("device");
+    match tokio::fs::read_link(&ap).await {
         Ok(dev_path) => {
-            let dev_path = tokio::fs::canonicalize(dev_path).await?;
+            let dev_path = tokio::fs::canonicalize(ap).await
+                .context("canonicalize failed")?;
             let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
             let dev_prefix = dev_path.parent().unwrap();
             let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
@@ -481,11 +482,13 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
                 return Ok(clean_dev_name);
             }
         }
-        Err(err) => {}
+        Err(err) => {
+
+        }
     }
 
     // preference 2: is there a name file
-    let name_path = path.as_ref().clone().join("name");
+    let name_path = format!("{:?}/name", path.as_ref());
     match read_to_string(name_path).await {
         Ok(content) => return Ok(content.trim().to_string()),
         Err(err) => debug!("read device name failed"; "err" => err)
@@ -493,7 +496,8 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
     // it looks bad, name and device don't provide enough information
     // return a hwmon[0-9]* name
-    let name = path.as_ref().file_name().unwrap().to_str().unwrap();
+    let path = PathBuf::from(path.as_ref());
+    let name = path.file_name().unwrap().to_str().unwrap();
 
     Ok(name.trim().to_string())
 }
@@ -561,8 +565,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_hwmon_name() {
-        let path = "/sys/class/hwmon/hwmon2";
+        let path = "testdata/sys/class/hwmon/hwmon2";
         let name = hwmon_name(path).await.unwrap();
-        assert_eq!(name, "platform_eeepc_wmi")
+        assert_eq!(name, "platform_applesmc_768")
     }
 }
