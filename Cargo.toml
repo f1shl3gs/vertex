@@ -109,7 +109,7 @@ rustls = { version = "0.19.1" }
 tokio-rustls = { version = "0.22.0" }
 
 # Profile
-pprof = { version = "0.5.0", features = ["flamegraph"] }
+pprof = { version = "0.5.0", features = ["flamegraph", "criterion"] }
 
 # misc
 chrono = { version = "0.4.19" }

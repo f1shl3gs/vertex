@@ -2,10 +2,10 @@ use criterion::{
     Criterion,
     criterion_group,
     criterion_main,
-    measurement::WallTime,
-    BenchmarkId
+    measurement::WallTime
 };
 use vertex::sources::node::hwmon::gather;
+use pprof::criterion::{Output, PProfProfiler};
 
 pub fn hwmon_gather(c: &mut Criterion) -> &mut Criterion<WallTime> {
     let path = "testdata/sys";
@@ -18,5 +18,9 @@ pub fn hwmon_gather(c: &mut Criterion) -> &mut Criterion<WallTime> {
     })
 }
 
-criterion_group!(benches, hwmon_gather);
+criterion_group!(
+    name = benches;
+    config = Criterion::default().with_profiler(PProfProfiler::new(100, Output::Flamegraph(None)));
+    targets = hwmon_gather
+);
 criterion_main!(benches);
