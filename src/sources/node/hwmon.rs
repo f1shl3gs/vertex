@@ -4,7 +4,7 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use std::path::{PathBuf};
+use std::path::{PathBuf, Path};
 use crate::sources::node::errors::{Error, ErrorContext};
 use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
@@ -25,12 +25,25 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             .context("read hwmon entry metadata failed")?;
 
         let file_type = meta.file_type();
-        let dir = match file_type.is_symlink() {
-            false => entry.path(),
-            true => std::fs::read_link(entry.path())?
-        };
+        if file_type.is_symlink() {
+            match tokio::fs::read_link(entry.path()).await {
+                Ok(path) => {
+                    let ep = entry.path();
+                    let dir = ep.to_str().unwrap();
+                    match hwmon_metrics(dir).await {
+                        Ok(mut ms) => metrics.append(&mut ms),
+                        Err(_) => {}
+                    }
+                }
 
-        let dir = dir.to_str().unwrap();
+                Err(err) => {}
+            }
+
+            continue;
+        }
+
+        let ep = entry.path();
+        let dir = ep.to_str().unwrap();
         match hwmon_metrics(dir).await {
             Ok(mut ms) => metrics.append(&mut ms),
             Err(err) => {
@@ -367,8 +380,6 @@ async fn collect_sensor_data(dir: &str) -> Result<BTreeMap<String, BTreeMap<Stri
                 continue;
             }
 
-            let v = read_to_string(entry.path()).await;
-
             match read_to_string(entry.path()).await {
                 Ok(v) => {
                     let sensor = format!("{}{}", sensor, num);
@@ -436,7 +447,7 @@ async fn human_readable_chip_name(dir: &str) -> Result<String, Error> {
     Ok(content.trim().to_string())
 }
 
-async fn hwmon_name(path: &str) -> Result<String, Error> {
+async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -451,9 +462,10 @@ async fn hwmon_name(path: &str) -> Result<String, Error> {
 
     // preference 1: construct a name based on device name, always unique
 
-    match tokio::fs::read_link(format!("{}/device", path)).await {
+    let dev_path = path.as_ref().clone().join("device");
+    match tokio::fs::read_link(dev_path).await {
         Ok(dev_path) => {
-            let dev_path = tokio::fs::canonicalize(format!("{}/device", path)).await?;
+            let dev_path = tokio::fs::canonicalize(dev_path).await?;
             let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
             let dev_prefix = dev_path.parent().unwrap();
             let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
@@ -473,7 +485,7 @@ async fn hwmon_name(path: &str) -> Result<String, Error> {
     }
 
     // preference 2: is there a name file
-    let name_path = format!("{}/name", path);
+    let name_path = path.as_ref().clone().join("name");
     match read_to_string(name_path).await {
         Ok(content) => return Ok(content.trim().to_string()),
         Err(err) => debug!("read device name failed"; "err" => err)
@@ -481,8 +493,7 @@ async fn hwmon_name(path: &str) -> Result<String, Error> {
 
     // it looks bad, name and device don't provide enough information
     // return a hwmon[0-9]* name
-    let path = PathBuf::from(path);
-    let name = path.file_name().unwrap().to_str().unwrap();
+    let name = path.as_ref().file_name().unwrap().to_str().unwrap();
 
     Ok(name.trim().to_string())
 }
