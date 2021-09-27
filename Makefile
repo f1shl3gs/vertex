@@ -20,3 +20,7 @@ bloat:
 
 lines:
 	@find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l
+
+
+# profile when bench
+# cargo bench --bench hwmon_gather -- --profile-time=30

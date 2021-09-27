@@ -8,7 +8,7 @@ mod entropy;
 mod fibre_channel;
 mod filefd;
 mod filesystem;
-mod hwmon;
+pub mod hwmon;
 mod infiniband;
 mod ipvs;
 mod loadavg;
@@ -95,7 +95,7 @@ struct Collectors {
     pub cpu: Option<Arc<CPUConfig>>,
 
     #[serde(default = "default_true")]
-    pub cpu_freq: bool,
+    pub cpufreq: bool,
 
     #[serde(default)]
     pub diskstats: Option<Arc<DiskStatsConfig>>,
@@ -117,6 +117,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub hwmon: bool,
+
+    #[serde(default = "default_true")]
+    pub infiniband: bool,
 
     #[serde(default)]
     pub ipvs: Option<Arc<IPVSConfig>>,
@@ -195,7 +198,7 @@ impl Default for Collectors {
             bonding: default_true(),
             conntrack: default_true(),
             cpu: Some(Arc::new(CPUConfig::default())),
-            cpu_freq: true,
+            cpufreq: true,
             diskstats: Some(Arc::new(DiskStatsConfig::default())),
             drm: default_true(),
             edac: default_true(),
@@ -203,6 +206,7 @@ impl Default for Collectors {
             filefd: default_true(),
             filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
             hwmon: default_true(),
+            infiniband: default_true(),
             ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
             loadavg: default_true(),
             memory: default_true(),
@@ -393,11 +397,11 @@ impl NodeMetrics {
                 }));
             }
 
-            if self.collectors.cpu_freq {
+            if self.collectors.cpufreq {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("cpu_freq", cpufreq::gather(sys_path.as_ref()))
+                    record_gather!("cpufreq", cpufreq::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -454,6 +458,13 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("hwmon", hwmon::gather(sys_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.infiniband {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("infiniband", infiniband::gather(sys_path.as_ref()))
                 }))
             }
 

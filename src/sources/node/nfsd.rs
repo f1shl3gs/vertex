@@ -313,24 +313,23 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
         }
 
         let label = parts[0];
-        let mut values = vec![];
-        if label == "th" {
-            if parts.len() < 3 {
-                return invalid_error!("invalid NFSd th metric line {}", line);
-            }
+        let values = match label {
+            "th" => {
+                if parts.len() < 3 {
+                    return invalid_error!("invalid NFSd th metric line {}", line);
+                }
 
-            // TODO: handle the parse error
-            values = parts[1..3]
+                // TODO: handle the parse error
+                parts[1..3]
+                    .iter()
+                    .map(|p| (*p).parse::<u64>().unwrap_or(0))
+                    .collect::<Vec<_>>()
+            }
+            _ => parts[1..]
                 .iter()
                 .map(|p| (*p).parse::<u64>().unwrap_or(0))
-                .collect::<Vec<_>>();
-        } else {
-            // TODO: handle the parse error
-            values = parts[1..]
-                .iter()
-                .map(|p| (*p).parse::<u64>().unwrap_or(0))
-                .collect::<Vec<_>>();
-        }
+                .collect::<Vec<_>>()
+        };
 
         let metric_line = parts[0];
         match metric_line {
@@ -369,7 +368,7 @@ macro_rules! rpc_metric {
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/rpc/nfsd", proc_path);
     let stats = server_rpc_stats(path).await?;
-    let mut metrics = vec![
+    let metrics = vec![
         // collects statistics for the reply cache
         Metric::sum(
             "node_nfsd_reply_cache_hits_total",
