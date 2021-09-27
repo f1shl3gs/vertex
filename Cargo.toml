@@ -51,10 +51,16 @@ sources-node_metrics-tcpstat = [
 [[bench]]
 name = "duration"
 harness = false
+path = "benches/duration.rs"
+
+[[bench]]
+name = "hwmon_gather"
+harness = false
+path = "benches/node_source_hwmon.rs"
 
 [dev-dependencies]
 tokio = { version = "1.10.1", features = ["macros", "rt"] }
-criterion = "0.3"
+criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
 
 [dependencies]
 # workspaces
