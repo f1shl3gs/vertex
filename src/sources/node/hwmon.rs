@@ -4,7 +4,7 @@ use crate::{
     gauge_metric,
     event::{Metric, MetricValue},
 };
-use std::path::{Path, PathBuf};
+use std::path::{Path};
 use crate::sources::node::errors::{Error, ErrorContext};
 use crate::sources::node::{read_to_string};
 use std::collections::BTreeMap;
@@ -21,24 +21,18 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     while let Some(entry) = dirs.next_entry().await
         .context("read next entry of hwmon dirs failed")?
     {
-        let meta = entry.metadata().await
-            .context("read hwmon entry metadata failed")?;
-
-        let file_type = meta.file_type();
-        if file_type.is_symlink() {
-            match tokio::fs::read_link(entry.path()).await {
-                Ok(path) => {
-                    let ep = entry.path();
-                    let dir = ep.to_str().unwrap();
-                    match hwmon_metrics(dir).await {
-                        Ok(mut ms) => metrics.append(&mut ms),
-                        Err(_) => {}
-                    }
+        let meta = entry.metadata().await?;
+        let meta = match meta.file_type().is_symlink() {
+            true => {
+                match tokio::fs::canonicalize(entry.path()).await {
+                    Ok(p) => p.metadata()?,
+                    _ => continue
                 }
-
-                Err(err) => {}
             }
+            false => meta
+        };
 
+        if !meta.is_dir() {
             continue;
         }
 
@@ -56,7 +50,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 }
 
 async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
-    let chip = hwmon_name(dir).await?;
+    let chip = &hwmon_name(dir).await?;
 
     let data = {
         let result = collect_sensor_data(dir).await;
@@ -69,23 +63,17 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
     };
 
     let mut metrics = Vec::new();
-    if let Ok(n) = human_readable_chip_name(dir).await {
-        // TODO: might we don't need to clone this
-        let chip = &chip.clone();
-        let chip_name = &n.clone();
-
-        metrics.push(
-            gauge_metric!(
-                    "node_hwmon_chip_names",
-                    "Annotation metric for human-readable chip names",
-                    1f64,
-                    "chip" => chip,
-                    "chip_name" => chip_name
-                )
-        );
+    if let Ok(chip_name) = human_readable_chip_name(dir).await {
+        metrics.push(gauge_metric!(
+            "node_hwmon_chip_names",
+            "Annotation metric for human-readable chip names",
+            1f64,
+            "chip" => chip,
+            "chip_name" => chip_name
+        ));
     }
 
-    let chip = &chip.clone();
+    // let chip = &chip.clone();
     for (sensor, props) in data {
         let sensor = &sensor;
         let sensor_type = match explode_sensor_filename(sensor) {
@@ -367,15 +355,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn collect_sensor_data(dir: &str) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let mut dirs = tokio::fs::read_dir(dir).await?;
 
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
     while let Some(entry) = dirs.next_entry().await? {
-        let path = entry.path().clone();
-        let filename = path.file_name().unwrap().to_str().unwrap();
+        let filename = entry.file_name();
 
-        if let Ok((sensor, num, property)) = explode_sensor_filename(filename) {
+        if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
             if !is_hwmon_sensor(sensor) {
                 continue;
             }
@@ -441,8 +428,8 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 }
 
 // human_readable_name is similar to the methods in
-async fn human_readable_chip_name(dir: &str) -> Result<String, Error> {
-    let path = format!("{}/name", dir);
+async fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
+    let path = dir.as_ref().join("name");
     let content = read_to_string(path).await?;
     Ok(content.trim().to_string())
 }
@@ -482,13 +469,11 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
                 return Ok(clean_dev_name);
             }
         }
-        Err(err) => {
-
-        }
+        Err(err) => {}
     }
 
     // preference 2: is there a name file
-    let name_path = format!("{:?}/name", path.as_ref());
+    let name_path = path.as_ref().clone().join("name");
     match read_to_string(name_path).await {
         Ok(content) => return Ok(content.trim().to_string()),
         Err(err) => debug!("read device name failed"; "err" => err)
@@ -496,8 +481,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
     // it looks bad, name and device don't provide enough information
     // return a hwmon[0-9]* name
-    let path = PathBuf::from(path.as_ref());
-    let name = path.file_name().unwrap().to_str().unwrap();
+    let name = path.as_ref().file_name().unwrap().to_str().unwrap();
 
     Ok(name.trim().to_string())
 }
