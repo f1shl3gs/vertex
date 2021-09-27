@@ -25,25 +25,12 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             .context("read hwmon entry metadata failed")?;
 
         let file_type = meta.file_type();
-        if file_type.is_symlink() {
-            match tokio::fs::read_link(entry.path()).await {
-                Ok(path) => {
-                    let ep = entry.path();
-                    let dir = ep.to_str().unwrap();
-                    match hwmon_metrics(dir).await {
-                        Ok(mut ms) => metrics.append(&mut ms),
-                        Err(_) => {}
-                    }
-                }
+        let dir = match file_type.is_symlink() {
+            false => entry.path(),
+            true => std::fs::read_link(entry.path())?
+        };
 
-                Err(err) => {}
-            }
-
-            continue;
-        }
-
-        let ep = entry.path();
-        let dir = ep.to_str().unwrap();
+        let dir = dir.to_str().unwrap();
         match hwmon_metrics(dir).await {
             Ok(mut ms) => metrics.append(&mut ms),
             Err(err) => {
