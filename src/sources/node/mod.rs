@@ -567,7 +567,7 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("power_supply", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
+                    record_gather!("powersupplyclass", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
                 }))
             }
 
