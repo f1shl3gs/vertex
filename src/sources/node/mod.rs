@@ -492,7 +492,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("memory", meminfo::gather(proc_path.as_ref()))
+                    record_gather!("meminfo", meminfo::gather(proc_path.as_ref()))
                 }))
             }
 
