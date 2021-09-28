@@ -5,7 +5,7 @@ mod cpufreq;
 mod diskstats;
 mod edac;
 mod entropy;
-mod fibre_channel;
+mod fibrechannel;
 mod filefd;
 mod filesystem;
 pub mod hwmon;
@@ -110,6 +110,9 @@ struct Collectors {
     pub entropy: bool,
 
     #[serde(default = "default_true")]
+    pub fibrechannel: bool,
+
+    #[serde(default = "default_true")]
     pub filefd: bool,
 
     #[serde(default)]
@@ -206,6 +209,7 @@ impl Default for Collectors {
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
+            fibrechannel: default_true(),
             filefd: default_true(),
             filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
             hwmon: default_true(),
@@ -438,6 +442,13 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     record_gather!("entropy", entropy::gather(proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.fibrechannel {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("fibrechannel", fibrechannel::gather(sys_path.as_ref()))
                 }))
             }
 
