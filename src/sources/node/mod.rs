@@ -558,7 +558,7 @@ impl NodeMetrics {
 
             if self.collectors.os_release {
                 tasks.push(tokio::spawn(async {
-                    record_gather!("os_release", os_release::gather())
+                    record_gather!("os", os_release::gather())
                 }))
             }
 
