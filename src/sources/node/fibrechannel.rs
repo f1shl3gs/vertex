@@ -1,8 +1,12 @@
 use crate::sources::node::{
     read_to_string,
-    errors::{Error, ErrorContext}
+    errors::{Error, ErrorContext},
 };
 use std::path::PathBuf;
+use crate::{
+    event::Metric,
+    tags,
+};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {
@@ -194,6 +198,153 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
     }
 
     Ok(counters)
+}
+
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+    let hosts = fibre_channel_class(sys_path).await?;
+
+    let mut metrics = vec![];
+    for host in hosts {
+        let name = &host.name;
+
+        metrics.extend_from_slice(&[
+            // first the Host values
+            Metric::gauge_with_tags(
+                "node_fibrechannel_info",
+                "Non-numeric data from /sys/class/fc_host/<host>, value is always 1.",
+                1,
+                tags!(
+                    "fc_host" => name,
+                    "speed" => host.speed,
+                    "port_state" => host.port_state,
+                    "port_type" => host.port_type,
+                    "port_id" => host.port_id,
+                    "port_name" => host.port_name,
+                    "fabric_name" => host.fabric_name,
+                    "symbolic_name" => host.symbolic_name,
+                    "supported_classes" => host.supported_classes,
+                    "supported_speeds" => host.supported_speeds,
+                    "dev_loss_tmo" => host.dev_loss_tmo
+                ),
+            ),
+
+            // the counters
+            Metric::sum_with_tags(
+                "node_fibrechannel_dumped_frames_total",
+                "Number of dumped frames",
+                host.counters.dumped_frames as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_error_frames_total",
+                "Number of errors in frames",
+                host.counters.error_frames as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_invalid_crc_total",
+                "Invalid Cyclic Redundancy Check count",
+                host.counters.invalid_crc_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_rx_frames_total",
+                "Number of frames received",
+                host.counters.rx_frames as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_rx_words_total",
+                "Number of words received by host port",
+                host.counters.rx_words as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_tx_frames_total",
+                "Number of frames transmitted by host port",
+                host.counters.tx_frames as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_tx_words_total",
+                "Number of words transmitted by host port",
+                host.counters.tx_frames as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_seconds_since_last_reset_total",
+                "Number of seconds since last host port reset",
+                host.counters.seconds_since_last_reset as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_invalid_tx_words_total",
+                "Number of invalid words transmitted by host port",
+                host.counters.invalid_tx_word_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_link_failure_total",
+                "Number of times the host port link has failed",
+                host.counters.link_failure_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_loss_of_sync_total",
+                "Number of failures on either bit or transmission word boundaries",
+                host.counters.loss_of_sync_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_loss_of_signal_total",
+                "Number of times signal has been lost",
+                host.counters.loss_of_signal_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_nos_total",
+                "Number Not_Operational Primitive Sequence received by host port",
+                host.counters.nos_count as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            ),
+            Metric::sum_with_tags(
+                "node_fibrechannel_fcp_packet_aborts_total",
+                "Number of aborted packets",
+                host.counters.fcp_packet_aborts as f64,
+                tags!(
+                    "fc_host" => name
+                ),
+            )
+        ]);
+    }
+
+    Ok(metrics)
 }
 
 #[cfg(test)]

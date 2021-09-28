@@ -5,7 +5,7 @@ mod cpufreq;
 mod diskstats;
 mod edac;
 mod entropy;
-mod fibre_channel;
+mod fibrechannel;
 mod filefd;
 mod filesystem;
 pub mod hwmon;
@@ -110,6 +110,9 @@ struct Collectors {
     pub entropy: bool,
 
     #[serde(default = "default_true")]
+    pub fibrechannel: bool,
+
+    #[serde(default = "default_true")]
     pub filefd: bool,
 
     #[serde(default)]
@@ -150,6 +153,9 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub os_release: bool,
+
+    #[serde(default)]
+    pub power_supply: Option<Arc<powersupplyclass::PowerSupplyConfig>>,
 
     #[serde(default = "default_true")]
     pub pressure: bool,
@@ -203,6 +209,7 @@ impl Default for Collectors {
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
+            fibrechannel: default_true(),
             filefd: default_true(),
             filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
             hwmon: default_true(),
@@ -217,6 +224,7 @@ impl Default for Collectors {
             nfsd: default_true(),
             nvme: default_true(),
             os_release: default_true(),
+            power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
             pressure: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
@@ -437,6 +445,13 @@ impl NodeMetrics {
                 }))
             }
 
+            if self.collectors.fibrechannel {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("fibrechannel", fibrechannel::gather(sys_path.as_ref()))
+                }))
+            }
+
             if self.collectors.filefd {
                 let proc_path = self.proc_path.clone();
 
@@ -488,7 +503,7 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("memory", meminfo::gather(proc_path.as_ref()))
+                    record_gather!("meminfo", meminfo::gather(proc_path.as_ref()))
                 }))
             }
 
@@ -543,7 +558,16 @@ impl NodeMetrics {
 
             if self.collectors.os_release {
                 tasks.push(tokio::spawn(async {
-                    record_gather!("os_release", os_release::gather())
+                    record_gather!("os", os_release::gather())
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.power_supply {
+                let sys_path = self.sys_path.clone();
+                let conf = conf.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("powersupplyclass", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
                 }))
             }
 
