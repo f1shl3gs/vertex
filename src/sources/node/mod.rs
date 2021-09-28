@@ -151,6 +151,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub os_release: bool,
 
+    #[serde(default)]
+    pub power_supply: Option<Arc<powersupplyclass::PowerSupplyConfig>>,
+
     #[serde(default = "default_true")]
     pub pressure: bool,
 
@@ -217,6 +220,7 @@ impl Default for Collectors {
             nfsd: default_true(),
             nvme: default_true(),
             os_release: default_true(),
+            power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
             pressure: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
@@ -544,6 +548,15 @@ impl NodeMetrics {
             if self.collectors.os_release {
                 tasks.push(tokio::spawn(async {
                     record_gather!("os_release", os_release::gather())
+                }))
+            }
+
+            if let Some(ref conf) = self.collectors.power_supply {
+                let sys_path = self.sys_path.clone();
+                let conf = conf.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("power_supply", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
                 }))
             }
 
