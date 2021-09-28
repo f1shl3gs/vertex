@@ -130,3 +130,4 @@ rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "
 rsntp = { version = "2.0.0", features = ["tokio"] }
 libc = { version = "0.2.101" }
 dotenv-parser = "0.1.3"
+nom = { version = "7.0.0" }
