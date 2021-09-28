@@ -1,13 +1,21 @@
+/// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
+
 use std::path::Path;
 use tokio::io::AsyncBufReadExt;
-use crate::sources::node::errors::{Error, ErrorContext};
+use crate::{
+    tags,
+    sources::node::errors::{Error, ErrorContext},
+};
 use crate::sources::node::read_to_string;
 
 use lazy_static::lazy_static;
+use nom::bytes::complete::{tag, take_while};
+use nom::character::complete::{digit1, multispace0};
+use nom::combinator::{map_res, recognize};
+use nom::IResult;
+use nom::number::complete::double;
 use regex::Regex;
-
-/// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
-pub async fn gather() {}
+use crate::event::Metric;
 
 /// MDStat holds info parsed from /proc/mdstat
 struct MDStat {
@@ -30,9 +38,12 @@ struct MDStat {
     disk_down: i64,
 
     // spare disks in the device
-    disk_spare: i64,
+    disks_spare: i64,
 
     // number of blocks the device holds
+    blocks_total: i64,
+
+    // Number of blocks on the device that are in sync.
     blocks_synced: i64,
 
     // progress percentage of current sync
@@ -73,7 +84,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         }
 
         let name = parts[0];
-        let state = parts[2]; // active of inactive
+        let mut state = parts[2]; // active or inactive
 
         if line_count <= i + 3 {
             let msg = format!("error parsing: {}, too few lines for md device", name);
@@ -103,7 +114,6 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         let checking = lines[sync_line_index].contains("checking");
 
         // Append recovery and resyncing state info
-        let mut state = "";
         if recovering || resyncing || checking {
             if recovering {
                 state = "recovery";
@@ -117,9 +127,9 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
             if lines[sync_line_index].contains("PENDING") {
                 synced_blocks = 0;
             } else {
-                let (_sb, _pct, _finish, _speed) = eval_recovery_line(lines[sync_line_index])
-                    .context("parsing sync line in md device failed")?;
-                synced_blocks = _sb;
+                let (_, (_pct, _synced_blocks, _finish, _speed)) = recovery_line(line)
+                    .map_err(|_| Error::new_invalid("parse recovery line failed"))?;
+                synced_blocks = _synced_blocks;
                 pct = _pct;
                 finish = _finish;
                 speed = _speed;
@@ -133,7 +143,9 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
             disks_total: total,
             disks_failed: fail,
             disk_down: down,
-            disk_spare: spare,
+            disks_spare: spare,
+            // TODO: fix blocks_total
+            blocks_total: 0,
             blocks_synced: synced_blocks,
             blocks_synced_pct: pct,
             blocks_synced_finish_time: finish,
@@ -194,35 +206,142 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 }
 
 // the line looks like
-//       [=>...................]  check =  5.7% (114176/1993728) finish=0.2min speed=114176K/sec
-fn eval_recovery_line(line: &str) -> Result<(i64, f64, f64, f64), Error> {
-    /*let caps = match recovery_line_blocks_re.captures(line) {
-        Some(caps) => {
-            caps.iter()
-                .map(|m| m.unwrap().as_str())
-                .collect::<Vec<_>>()
-        }
-        None => return Err(Error::new_invalid("unexpected recovery line"))
-    };
+// [=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec
+fn recovery_line(input: &str) -> IResult<&str, (f64, i64, f64, f64)> {
+    let (input, _) = take_while(|c| c == '[' || c == '=' || c == '>' || c == '.' || c == ']')(input)?;
+    let (input, _) = multispace0(input)?;
+    let (input, _) = tag("recovery = ")(input)?;
+    let (input, _) = multispace0(input)?;
+    let (input, pct) = double(input)?;
+    let (input, _) = take_while(|c: char| c == ' ' || c == '%' || c == '(')(input)?;
+    let (input, synced_blocks) = map_res(recognize(digit1), str::parse)(input)?;
+    let (input, _) = take_while(|c: char| c.is_digit(10) || c == '/')(input)?;
+    let (input, _) = tag(") finish=")(input)?;
+    let (input, finish) = double(input)?;
+    let (input, _) = tag("min speed=")(input)?;
+    let (input, speed) = double(input)?;
 
-    let synced_blocks = caps[1].parse()?;
+    Ok((input, (pct, synced_blocks, finish, speed)))
+}
 
-    // get percentage complete
-    let caps = match recovery_line_pct_re.captures(line) {
-        Some(caps) => {
-            caps.iter()
-                .map(|m| m.unwrap().as_str())
-                .collect::<Vec<_>>()
-        }
-        None => return Err(Error::new_invalid("unexpected recovery line"))
-    };
+fn state_metric_value(key: &str, state: &str) -> f64 {
+    if key == state {
+        return 1.0;
+    }
 
-    let pct = caps[1].parse()?;
+    return 0.0;
+}
 
-    // get time expected left to complete
+async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
+    let path = Path::new(proc_path).join("mdstat");
+    let stats = parse_mdstat(path).await?;
 
-*/
-    todo!()
+    let mut metrics = vec![];
+    for stat in stats {
+        let device = &stat.name;
+        let state = &stat.activity_state;
+
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "node_md_disks_required",
+                "Total number of disks of device.",
+                stat.disks_total as f64,
+                tags!(
+                    "device" => device,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_active as f64,
+                tags!(
+                    "device" => device,
+                    "state" => "active"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_failed as f64,
+                tags!(
+                    "device" => device,
+                    "state" => "failed"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_disks",
+                "Number of active/failed/spare disks of device.",
+                stat.disks_spare as f64,
+                tags!(
+                    "device" => device,
+                    "state" => "spare"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("active", state),
+                tags!(
+                    "device" => device,
+                    "state" => "active"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("inactive", state),
+                tags!(
+                    "device" => device,
+                    "state" => "inactive"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("recovering", state),
+                tags!(
+                    "device" => device,
+                    "state" => "recovering"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("resyncing", state),
+                tags!(
+                    "device" => device,
+                    "state" => "resyncing"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_state",
+                "Indicates the state of md-device.",
+                state_metric_value("checking", state),
+                tags!(
+                    "device" => device,
+                    "state" => "checking"
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_blocks",
+                "Total number of blocks on device.",
+                stat.blocks_total as f64,
+                tags!(
+                    "device" => device
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "node_md_blocks_synced",
+                "Number of blocks synced on device.",
+                stat.blocks_synced as f64,
+                tags!(
+                    "device" => device
+                ),
+            )
+        ]);
+    }
+
+    Ok(metrics)
 }
 
 #[cfg(test)]
@@ -230,36 +349,30 @@ mod tests {
     use std::str::FromStr;
     use nom::branch::alt;
     use nom::bytes::streaming::take_while;
-    use nom::character::complete::{alpha1, digit1};
-    use nom::combinator::{map, map_res, opt, recognize};
+    use nom::character::complete::{alpha1, digit1, multispace0};
+    use nom::combinator::{complete, map, map_res, opt, recognize};
     use nom::bytes::complete::tag;
     use nom::error::context;
-    use nom::IResult;
+    use nom::{AsChar, IResult};
+    use nom::number::complete::{float, self, double};
     use nom::sequence::{delimited, pair, tuple};
     use super::*;
 
     #[test]
-    fn test_captures_iter() {
-        let cs = recovery_line_blocks_re.captures("xxdfadfasd");
-        println!("{:?}", cs);
-    }
-
-    fn process_bar(input: &str) -> IResult<&str, &str> {
-        take_while(|c| c != '[')(input)
-    }
-
-    #[test]
     fn test_parse_recovering_line() {
-        let line = r#"      [=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec"#;
+        let line = r#"[=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec"#;
 
-        use nom::{Err, error::ErrorKind};
-        use nom::sequence::tuple;
-        use nom::character::complete::{alpha1, digit1};
-        let mut parser = tuple((alpha1, digit1, alpha1));
-        assert_eq!(parser("abc123def"), Ok(("", ("abc", "123", "def"))));
-        assert_eq!(parser("123def"), Err(Err::Error(("123def", ErrorKind::Alpha))));
+        let (_, (pct, synced_blocks, finish, speed)) = recovery_line(line).unwrap();
+        assert_eq!(pct, 8.5);
+        assert_eq!(synced_blocks, 16775552);
+        assert_eq!(finish, 17.0);
+        assert_eq!(speed, 259783.0);
+    }
 
-
-        let rp = tuple((process_bar));
+    #[tokio::test]
+    async fn test_parse_mdstat() {
+        let path = Path::new("testdata/proc/mdstat");
+        let stats = parse_mdstat(path).await.unwrap();
+        assert_ne!(stats.len(), 0);
     }
 }
