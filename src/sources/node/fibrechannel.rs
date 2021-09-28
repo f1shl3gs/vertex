@@ -200,12 +200,6 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
     Ok(counters)
 }
 
-macro_rules! counter_metric {
-    ($name: expr, $desc: expr, $value: expr, $host: expr) => {
-
-    };
-}
-
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let hosts = fibre_channel_class(sys_path).await?;
 
