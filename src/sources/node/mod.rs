@@ -179,6 +179,9 @@ struct Collectors {
     pub tcpstat: bool,
 
     #[serde(default = "default_true")]
+    pub thermal_zone: bool,
+
+    #[serde(default = "default_true")]
     pub time: bool,
 
     #[serde(default = "default_true")]
@@ -237,6 +240,7 @@ impl Default for Collectors {
             time: default_true(),
             timex: default_true(),
             tcpstat: default_true(),
+            thermal_zone: default_true(),
             udp_queues: default_true(),
             uname: default_true(),
             vmstat: Some(Arc::new(VMStatConfig::default())),
@@ -622,6 +626,14 @@ impl NodeMetrics {
                 tasks.push(tokio::spawn(async {
                     record_gather!("tcpstat", tcpstat::gather())
                 }));
+            }
+
+            if self.collectors.thermal_zone {
+                let sys_path = self.sys_path.clone();
+
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("thermal_zone", thermal_zone::gather(sys_path.as_ref()))
+                }))
             }
 
             if self.collectors.time {
