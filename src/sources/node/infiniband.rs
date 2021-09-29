@@ -582,7 +582,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
     for sub in ["board_id", "fw_ver", "hca_type"] {
         let sp = path.clone().join(sub);
         let content = match read_to_string(sp).await {
-            Ok(c) => c.trim().to_string(),
+            Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
                     continue;
@@ -690,7 +690,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
         let name = name.to_str().unwrap();
 
         let content = match read_to_string(path).await {
-            Ok(c) => c.trim().to_string(),
+            Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
                     continue;
@@ -752,7 +752,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                 let name = name.to_str().unwrap();
 
                 let content = match read_to_string(path).await {
-                    Ok(c) => c.trim().to_string(),
+                    Ok(c) => c,
                     Err(err) => {
                         if err.kind() == std::io::ErrorKind::NotFound {
                             continue;

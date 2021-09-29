@@ -1,6 +1,3 @@
-use crate::sources::node::errors::Error;
-use crate::sources::node::read_into;
-
 /// Expose various statistics from /sys/class/powercap
 ///
 /// http://web.eece.maine.edu/~vweaver/projects/rapl/
@@ -11,6 +8,10 @@ use crate::sources::node::read_into;
 /// - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
 /// - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
 /// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
+
+use crate::event::Metric;
+use crate::sources::node::errors::Error;
+use crate::sources::node::read_into;
 
 // RaplZone stores the information for one RAPL power zone
 struct RaplZone {
@@ -43,4 +44,6 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, ()> {
     todo!()
 }
 
-pub fn rapl() {}
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+    todo!()
+}

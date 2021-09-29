@@ -1,6 +1,6 @@
 /// Exposes thermal zone & cooling device statistics from /sys/class/thermal
 
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use crate::{
     event::Metric,
     tags,
@@ -56,16 +56,16 @@ async fn parse_thermal_zone(root: &PathBuf) -> Result<ThermalZoneStats, Error> {
 
     // required attributes
     let path = root.join("type");
-    let typ = read_to_string(path).await?.trim().to_string();
+    let typ = read_to_string(path).await?;
     let path = root.join("policy");
-    let policy = read_to_string(path).await?.trim().to_string();
+    let policy = read_to_string(path).await?;
     let path = root.join("temp");
     let temp = read_into(path).await?;
 
     // optional attributes
     let path = root.join("mode");
     let mode = match read_to_string(path).await {
-        Ok(content) => match content.trim() {
+        Ok(content) => match content.as_str() {
             "enabled" => Some(true),
             "disabled" => Some(false),
             _ => None
@@ -130,7 +130,7 @@ async fn parse_cooling_device_stats(root: &PathBuf) -> Result<CoolingDeviceStats
         .to_string();
 
     let path = root.join("type");
-    let typ = read_to_string(path).await?.trim().to_string();
+    let typ = read_to_string(path).await?;
 
     let path = root.join("max_state");
     let max_state = read_into(path).await?;

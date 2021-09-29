@@ -309,6 +309,10 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
     let mut content = String::new();
     file.read_to_string(&mut content)?;
 
+    while content.ends_with('\n') || content.ends_with('\t') || content.ends_with(' ') {
+        content.pop();
+    }
+
     Ok(content)
 }
 
@@ -319,7 +323,7 @@ pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
         Error: From<E>
 {
     let content = read_to_string(path).await?;
-    Ok(<T as FromStr>::from_str(content.trim())?)
+    Ok(<T as FromStr>::from_str(content.as_str())?)
 }
 
 macro_rules! record_gather {

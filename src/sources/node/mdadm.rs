@@ -767,6 +767,6 @@ mod tests {
             "sda2[0]",
         ]);
 
-        assert_eq!(devices, vec!["sdb2", "sda2"])
+        assert_eq!(devices, vec!["sdb2", "sdc", "sda2"])
     }
 }

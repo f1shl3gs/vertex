@@ -181,7 +181,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
         }
 
         let content = match read_to_string(entry.path()).await {
-            Ok(c) => c.trim().to_string(),
+            Ok(c) => c,
             Err(err) => {
                 if err.kind() == std::io::ErrorKind::NotFound {
                     continue;

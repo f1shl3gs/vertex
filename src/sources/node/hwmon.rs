@@ -375,7 +375,7 @@ async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, 
                     }
 
                     let props = stats.get_mut(&sensor).unwrap();
-                    props.insert(property.to_string(), v.trim().to_string());
+                    props.insert(property.to_string(), v);
                 }
                 _ => continue
             }
@@ -431,7 +431,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
 async fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Error> {
     let path = dir.as_ref().join("name");
     let content = read_to_string(path).await?;
-    Ok(content.trim().to_string())
+    Ok(content)
 }
 
 async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
@@ -475,7 +475,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     // preference 2: is there a name file
     let name_path = path.as_ref().clone().join("name");
     match read_to_string(name_path).await {
-        Ok(content) => return Ok(content.trim().to_string()),
+        Ok(content) => return Ok(content),
         Err(err) => debug!("read device name failed"; "err" => err)
     }
 
@@ -483,7 +483,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     // return a hwmon[0-9]* name
     let name = path.as_ref().file_name().unwrap().to_str().unwrap();
 
-    Ok(name.trim().to_string())
+    Ok(name.into())
 }
 
 fn is_hwmon_sensor(s: &str) -> bool {

@@ -335,7 +335,7 @@ impl NetClassInterface {
             let file = file.to_str().unwrap();
 
             let value = match read_to_string(entry.path()).await {
-                Ok(v) => v.trim().to_string(),
+                Ok(v) => v,
                 _ => continue
             };
 
