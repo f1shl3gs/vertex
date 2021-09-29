@@ -164,6 +164,9 @@ struct Collectors {
     pub pressure: bool,
 
     #[serde(default = "default_true")]
+    pub rapl: bool,
+
+    #[serde(default = "default_true")]
     pub schedstat: bool,
 
     #[serde(default = "default_true")]
@@ -233,6 +236,7 @@ impl Default for Collectors {
             os_release: default_true(),
             power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
             pressure: default_true(),
+            rapl: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
             softnet: default_true(),
@@ -594,6 +598,13 @@ impl NodeMetrics {
                 let proc_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("pressure", pressure::gather(proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.rapl {
+                let sys_path = self.sys_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("rapl", rapl::gather(sys_path.as_ref()))
                 }))
             }
 
