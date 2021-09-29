@@ -325,11 +325,6 @@ mod tests {
 
             println!("{}", pool_name);
             for (state, active) in kvs {
-                println!("{}: {}", state, active);
-
-                // TODO: we remove this prefix, which we don't need it
-                let state = state.strip_prefix("kstat.zfs.misc.state.").unwrap();
-
                 if pool_name == "pool1" {
                     if !active && state == "online" {
                         panic!("incorrect parsed value for online state")
