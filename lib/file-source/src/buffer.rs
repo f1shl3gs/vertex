@@ -2,7 +2,7 @@ use std::io::{self, BufRead};
 use bytes::BytesMut;
 use bstr::Finder;
 use tracing::warn;
-use crate::FilePosition;
+use crate::Position;
 
 /// Read up to `max_size` bytes from `reader`, splitting by `delim`
 ///
@@ -29,7 +29,7 @@ use crate::FilePosition;
 /// the overhead of setup dominates our benchmarks
 pub fn read_until_with_max_size<R: BufRead + ?Sized>(
     reader: &mut R,
-    position: &mut FilePosition,
+    position: &mut Position,
     delim: &[u8],
     buf: &mut BytesMut,
     max_size: usize,

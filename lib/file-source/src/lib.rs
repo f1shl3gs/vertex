@@ -4,12 +4,14 @@ mod server;
 mod fingerprinter;
 mod events;
 
-pub type FilePosition = u64;
+#[macro_use] extern crate scan_fmt;
+
+pub type Position = u64;
 
 pub enum ReadFrom {
     Beginning,
     End,
-    Checkpoint(FilePosition),
+    Checkpoint(Position),
 }
 
 impl Default for ReadFrom {
