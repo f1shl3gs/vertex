@@ -131,6 +131,9 @@ struct Collectors {
     pub loadavg: bool,
 
     #[serde(default = "default_true")]
+    pub mdadm: bool,
+
+    #[serde(default = "default_true")]
     pub memory: bool,
 
     #[serde(default)]
@@ -216,6 +219,7 @@ impl Default for Collectors {
             infiniband: default_true(),
             ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
             loadavg: default_true(),
+            mdadm: default_true(),
             memory: default_true(),
             netclass: Some(Arc::new(NetClassConfig::default())),
             netdev: Some(Arc::new(NetdevConfig::default())),
@@ -496,6 +500,13 @@ impl NodeMetrics {
 
                 tasks.push(tokio::spawn(async move {
                     record_gather!("loadavg", loadavg::gather(proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.mdadm {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("mdadm", mdadm::gather(proc_path.as_ref()))
                 }))
             }
 
