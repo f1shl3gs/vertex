@@ -3,6 +3,7 @@ mod checkpointer;
 mod server;
 mod fingerprinter;
 mod events;
+mod metadata_ext;
 
 #[macro_use] extern crate scan_fmt;
 

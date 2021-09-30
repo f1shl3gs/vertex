@@ -6,6 +6,7 @@ use std::fs::{File, metadata};
 use std::collections::HashSet;
 use crate::events::InternalEvents;
 use serde::{Deserialize, Serialize};
+use crate::metadata_ext::PortableFileExt;
 
 
 const FINGERPRINT_CRC: Crc<u64> = Crc::<u64>::new(&crc::CRC_64_ECMA_182);
@@ -34,6 +35,7 @@ pub enum FingerprintStrategy {
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy, Serialize, Deserialize, Ord, PartialOrd)]
+#[serde(rename_all = "snake_case")]
 pub enum Fingerprint {
     #[serde(rename = "checksum")]
     BytesChecksum(u64),
@@ -75,9 +77,9 @@ impl Fingerprinter {
 
         match self.strategy {
             FingerprintStrategy::DevInode => {
-                let file_handle = File::open(path)?;
-                let dev = file_handle.portable_dev()?;
-                let ino = file_handle.portable_ino()?;
+                let f = File::open(path)?;
+                let dev = f.portable_dev()?;
+                let ino = f.portable_ino()?;
 
                 Ok(DevInode(dev, ino))
             }
@@ -181,6 +183,8 @@ impl Fingerprinter {
                 let fp = LEGACY_FINGERPRINT_CRC.checksum(&buffer[..]);
                 Ok(Some(Fingerprint::FirstLinesChecksum(fp)))
             }
+
+            _ => Ok(None)
         }
     }
 }
