@@ -46,6 +46,7 @@ mod lnstat;
 mod protocols;
 mod network_route;
 mod wifi;
+mod bcache;
 
 use typetag;
 use serde::{Deserialize, Serialize};
