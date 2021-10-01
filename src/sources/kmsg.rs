@@ -29,7 +29,6 @@ impl SourceConfig for KmsgConfig {
         let mut output = ctx.out;
         let boot = boot_time("/proc/uptime")?;
 
-
         Ok(Box::pin(async move {
             let f = tokio::fs::File::open("/dev/kmsg").await.unwrap();
             let mut reader = tokio::io::BufReader::new(f);
