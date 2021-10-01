@@ -70,8 +70,6 @@ impl SourceConfig for KmsgConfig {
                                 };
 
                                 output.send(record.into()).await.unwrap();
-
-                                // println!("{},{},{},{}", priority, seq, ts, msg);
                             }
 
                             _ => {}
