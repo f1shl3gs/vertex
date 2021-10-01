@@ -3,11 +3,13 @@ mod metric;
 mod trace;
 mod value;
 
+use std::collections::BTreeMap;
 pub use metric::*;
 pub use log::LogRecord;
 use buffers::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
+pub use crate::event::value::Value;
 
 #[macro_export]
 macro_rules! tags {
@@ -22,6 +24,22 @@ macro_rules! tags {
         tags!{$($x => $y),*}
     );
 }
+
+
+#[macro_export]
+macro_rules! fields {
+    ( $($x:expr => $y:expr),* ) => ({
+        let mut _map: std::collections::BTreeMap<String, crate::event::Value> = std::collections::BTreeMap::new();
+        $(
+            _map.insert($x.into(), $y.into());
+        )*
+        _map
+    });
+    ( $($x:expr => $y:expr,)* ) => (
+        tags!{$($x => $y),*}
+    );
+}
+
 
 #[macro_export]
 macro_rules! gauge_metric {
@@ -128,5 +146,17 @@ impl DecodeBytes<Event> for Event {
     fn decode<B>(buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
         todo!()
         // proto::EventWrapper::decode(buffer).map(|wrp| wrp.into())
+    }
+}
+
+impl From<LogRecord> for Event {
+    fn from(r: LogRecord) -> Self {
+        Self::Log(r)
+    }
+}
+
+impl From<BTreeMap<String, Value>> for Event {
+    fn from(_: BTreeMap<String, Value>) -> Self {
+        todo!()
     }
 }
