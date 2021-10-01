@@ -19,6 +19,7 @@ use crate::{
 };
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 struct KmsgConfig {}
 
 #[async_trait::async_trait]
