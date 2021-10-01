@@ -14,7 +14,7 @@ use tokio::io::AsyncReadExt;
 use crate::{
     fields,
     sources::Source,
-    event::{Event, LogRecord},
+    event::LogRecord,
     config::{DataType, SourceConfig, SourceContext},
 };
 
@@ -71,6 +71,8 @@ impl SourceConfig for KmsgConfig {
                                 };
 
                                 output.send(record.into()).await.unwrap();
+
+                                // println!("{},{},{},{}", priority, seq, ts, msg);
                             }
 
                             _ => {}
@@ -183,6 +185,7 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
     }
 
     let now = time::SystemTime::now();
+    let elapsed = time::Duration::from_micros(ms + sec * 1000 * 1000);
     match now.checked_sub(elapsed) {
         Some(boot) => boot.duration_since(time::SystemTime::UNIX_EPOCH)
             .map_err(|_| io::Error::from(io::ErrorKind::InvalidData))
