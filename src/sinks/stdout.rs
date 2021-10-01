@@ -43,8 +43,16 @@ impl StreamSink for StdoutSink {
     async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         while let Some(event) = input.next().await {
             self.acker.ack(1);
-            let metric = event.as_metric();
-            println!("STDOUT {:?}", metric);
+
+            match event {
+                Event::Metric(m) => {
+                    println!("{:?}", m)
+                },
+
+                Event::Log(l) => {
+                    println!("{:?}", l)
+                }
+            }
         }
 
         Ok(())
