@@ -21,4 +21,5 @@ mod chrony;
 mod blackbox;
 mod kubelet;
 mod selfstat;
+mod kmsg;
 
