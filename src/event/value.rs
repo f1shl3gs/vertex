@@ -6,7 +6,7 @@ pub enum Value {
     String(String),
     // Bytes(Bytes),
     Float(f64),
-    Map(BTreeMap<String, Value>),
+    Uint64(u64),
 }
 
 /*
@@ -22,8 +22,20 @@ impl From<f64> for Value {
     }
 }
 
-impl From<BTreeMap<String, Value>> for Value {
-    fn from(m: BTreeMap<String, Value>) -> Self {
-        Value::Map(m)
+impl From<u8> for Value {
+    fn from(u: u8) -> Self {
+        Self::Uint64(u as u64)
+    }
+}
+
+impl From<u64> for Value {
+    fn from(u: u64) -> Self {
+        Self::Uint64(u)
+    }
+}
+
+impl From<String> for Value {
+    fn from(s: String) -> Self {
+        Self::String(s)
     }
 }
