@@ -3,7 +3,7 @@ use crate::event::Metric;
 use crate::sources::node::errors::Error;
 
 #[derive(Default, Deserialize, Serialize)]
-struct BCacheConfig {
+pub struct BCacheConfig {
     priority_stats: bool,
 }
 
