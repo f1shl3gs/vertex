@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize, Serialize)]
@@ -9,13 +8,6 @@ pub enum Value {
     Uint64(u64),
 }
 
-/*
-impl From<Bytes> for Value {
-    fn from(bytes: Bytes) -> Self {
-        Value::Bytes(bytes)
-    }
-}
-*/
 impl From<f64> for Value {
     fn from(f: f64) -> Self {
         Value::Float(f)
