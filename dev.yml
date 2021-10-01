@@ -6,6 +6,8 @@ health_checks:
   enabled: false
 
 sources:
+  kmsg:
+    type: kmsg
   node:
     type: node_metrics
     interval: 15s
@@ -36,11 +38,10 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
-  # stdout:
-  #   type: stdout
-  #   inputs:
-  #     - add_extra_tags
-  #     - node
+  stdout:
+    type: stdout
+    inputs:
+      - kmsg
   prom:
     type: prometheus_exporter
     inputs:
