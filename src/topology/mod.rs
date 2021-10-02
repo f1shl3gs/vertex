@@ -129,8 +129,8 @@ impl Topology {
                 .join(", ");
 
             error!(
-                "Failed to gracefully shut down in time. Killing components";
-                "component" => remaining
+                message = "Failed to gracefully shut down in time. Killing components",
+                component = ?remaining
             );
         };
 
@@ -152,8 +152,8 @@ impl Topology {
                     .join(", ");
 
                 info!(
-                    "Waiting on running components";
-                    "remaining" => remaining_components,
+                    message = "Waiting on running components",
+                    remaining = ?remaining_components,
                 );
             }
         };
@@ -272,12 +272,18 @@ impl Topology {
         // Only log that we are waiting for shutdown if we are actually
         // removing sources.
         if !diff.sources.to_remove.is_empty() {
-            info!("Waiting for sources to finish shutting down"; "timeout" => timeout.as_secs());
+            info!(
+                message = "Waiting for sources to finish shutting down",
+                timeout = timeout.as_secs()
+            );
         }
 
         let deadline = Instant::now() + timeout;
         for id in &diff.sources.to_remove {
-            info!("Removing source"; "id" => id);
+            info!(
+                message = "Removing source",
+                ?id
+            );
 
             let previous = self.tasks.remove(id).unwrap();
             drop(previous); // detach and forget
@@ -299,8 +305,8 @@ impl Topology {
         // Only log message if there are actual futures to check
         if !source_shutdown_complete_futures.is_empty() {
             info!(
-                "waiting sources to finish shutting down";
-                "sec" => timeout.as_secs()
+                message = "waiting sources to finish shutting down",
+                timeout = timeout.as_secs()
             );
         }
 
@@ -315,7 +321,10 @@ impl Topology {
 
         // Transforms
         for id in &diff.transforms.to_remove {
-            info!("Removing transform"; "id" => id);
+            info!(
+                message = "Removing transform",
+                ?id
+            );
 
             let previous = self.tasks.remove(id).unwrap();
             drop(previous); // detach and forget
@@ -378,7 +387,10 @@ impl Topology {
         // First pass
         // Detach removed sinks
         for id in &diff.sinks.to_remove {
-            info!("removing sink"; "id" => id);
+            info!(
+                message = "removing sink",
+                ?id,
+            );
             self.remove_inputs(id).await;
         }
 
@@ -401,7 +413,10 @@ impl Topology {
         for id in &diff.sinks.to_remove {
             let prev = self.tasks.remove(id).unwrap();
             if wait_for_sinks.contains(id) {
-                debug!("waiting for sink to shutdown"; "id" => id);
+                debug!(
+                    message = "waiting for sink to shutdown",
+                    ?id,
+                );
                 prev.await.unwrap().unwrap();
             } else {
                 drop(prev); // detach and forget
@@ -413,7 +428,10 @@ impl Topology {
         for id in &diff.sinks.to_change {
             if wait_for_sinks.contains(id) {
                 let prev = self.tasks.remove(id).unwrap();
-                debug!("waiting for sink to shutdown"; "id" => id);
+                debug!(
+                    message = "waiting for sink to shutdown",
+                    ?id
+                );
                 let buffer = prev.await.unwrap().unwrap();
 
                 if reuse_buffers.contains(id) {
@@ -461,41 +479,58 @@ impl Topology {
         for id in &diff.sinks.to_add {
             self.setup_inputs(id, new_pieces).await;
         }
-
     }
 
     /// Starts new and changed pieces of topology
     pub fn spawn_diff(&mut self, diff: &ConfigDiff, mut new_pieces: Pieces) {
         // Sources
         for id in &diff.sources.to_change {
-            info!("rebuilding source"; "id" => id);
+            info!(
+                message = "rebuilding source",
+                ?id
+            );
             self.spawn_source(id, &mut new_pieces);
         }
 
         for id in &diff.sources.to_add {
-            info!("Starting source"; "id" => id);
+            info!(
+                message = "Starting source",
+                ?id,
+            );
             self.spawn_source(id, &mut new_pieces);
         }
 
         // Transforms
         for id in &diff.transforms.to_change {
-            info!("Rebuilding transform"; "id" => id);
+            info!(
+                message = "Rebuilding transform",
+                ?id
+            );
             self.spawn_transform(id, &mut new_pieces);
         }
 
         for id in &diff.transforms.to_add {
-            info!("Staring transform"; "id" => id);
+            info!(
+                message = "Staring transform",
+                ?id
+            );
             self.spawn_transform(id, &mut new_pieces);
         }
 
         // Sinks
         for id in &diff.sinks.to_change {
-            info!("Rebuilding sink"; "id" => id);
+            info!(
+                message = "Rebuilding sink",
+                ?id,
+            );
             self.spawn_sink(id, &mut new_pieces);
         }
 
         for id in &diff.sinks.to_add {
-            info!("Starting sink"; "id" => id);
+            info!(
+                message = "Starting sink",
+                ?id
+            );
             self.spawn_sink(id, &mut new_pieces);
         }
     }
@@ -741,7 +776,10 @@ pub async fn build_or_log_errors(
     match builder::build_pieces(config, diff, buffers).await {
         Err(errors) => {
             for err in errors {
-                error!("configuration error"; "err" => err);
+                error!(
+                    message = "configuration error",
+                    %err
+                );
             }
 
             None
@@ -753,6 +791,4 @@ pub async fn build_or_log_errors(
 #[cfg(test)]
 mod tests {
     use super::*;
-
-
 }

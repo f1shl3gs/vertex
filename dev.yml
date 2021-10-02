@@ -39,7 +39,7 @@ transforms:
 
 sinks:
   stdout:
-    type: stdout
+    type: blackhole
     inputs:
       - kmsg
   prom:

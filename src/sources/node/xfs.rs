@@ -414,7 +414,10 @@ async fn xfs_sys_stats(proc_path: &str, sys_path: &str) -> Result<Vec<Stats>, Er
                         stats.push(stat)
                     }
                     Err(err) => {
-                        warn!("parse xfs stat failed"; "err" => err);
+                        warn!(
+                            message = "parse xfs stat failed",
+                            %err
+                        );
                     }
                 }
             }

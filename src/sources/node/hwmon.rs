@@ -476,7 +476,10 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     let name_path = path.as_ref().clone().join("name");
     match read_to_string(name_path).await {
         Ok(content) => return Ok(content),
-        Err(err) => debug!("read device name failed"; "err" => err)
+        Err(err) => debug!(
+            message = "read device name failed",
+            %err
+        )
     }
 
     // it looks bad, name and device don't provide enough information

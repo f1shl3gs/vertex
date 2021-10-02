@@ -7,7 +7,6 @@ use std::{
     path::{PathBuf},
     string::ParseError,
 };
-use slog::{Record, Key, Serializer};
 
 #[derive(Debug)]
 pub enum Context {
@@ -112,12 +111,6 @@ impl fmt::Display for Error {
 
         f.write_str(": ")?;
         fmt::Display::fmt(&self.source, f)
-    }
-}
-
-impl slog::Value for Error {
-    fn serialize(&self, _record: &Record, key: Key, serializer: &mut dyn Serializer) -> slog::Result {
-        serializer.emit_str(key, &self.to_string())
     }
 }
 

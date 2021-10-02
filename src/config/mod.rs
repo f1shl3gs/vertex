@@ -13,7 +13,6 @@ use crate::{
     pipeline::Pipeline,
     sinks,
     sources,
-    timezone,
     transforms,
 };
 use crate::shutdown::ShutdownSignal;
@@ -27,6 +26,7 @@ mod provider;
 mod builder;
 mod resource;
 mod validation;
+mod global;
 
 pub use resource::{
     Protocol,
@@ -47,6 +47,7 @@ pub use loading::{
 use futures::future::BoxFuture;
 use crate::extensions::Extension;
 use buffers::Acker;
+pub use crate::config::global::GlobalOptions;
 
 pub type HealthCheck = BoxFuture<'static, crate::Result<()>>;
 
@@ -91,23 +92,6 @@ pub enum DataType {
 pub enum ExpandType {
     Parallel,
     Serial,
-}
-
-#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
-pub struct GlobalOptions {
-    #[serde(default = "default_data_dir")]
-    pub data_dir: Option<PathBuf>,
-
-    #[serde(default = "default_timezone")]
-    pub timezone: timezone::TimeZone,
-}
-
-fn default_timezone() -> timezone::TimeZone {
-    Default::default()
-}
-
-fn default_data_dir() -> Option<PathBuf> {
-    Some(PathBuf::from("/var/lib/vertex"))
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]

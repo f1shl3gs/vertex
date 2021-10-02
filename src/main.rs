@@ -13,26 +13,23 @@ use hyper::service::{make_service_fn, service_fn};
 use std::convert::Infallible;
 use tokio::time::Duration;
 
-#[macro_use]
-extern crate slog;
-#[macro_use]
-extern crate slog_scope;
-extern crate slog_term;
-
 extern crate chrono;
 extern crate chrono_tz;
 
 use clap::{AppSettings, Clap};
 
-use slog::Drain;
 use vertex::{
     signal::{self, SignalTo},
     config::{self, ConfigPath, FormatHint},
     topology,
 };
 use std::collections::HashMap;
+use nom::combinator::not;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
+use tracing::{info, warn, error, Level, dispatcher::{set_global_default}, Dispatch};
+use tracing_log::LogTracer;
+use tracing_subscriber::layer::SubscriberExt;
 
 
 async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
@@ -67,14 +64,6 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::new(Body::from(vec![])))
 }
 
-fn setup_logger() -> slog::Logger {
-    let plain = slog_term::PlainSyncDecorator::new(std::io::stdout());
-    let drain = slog_term::FullFormat::new(plain).build().fuse();
-    let drain = slog_async::Async::new(drain).build().fuse();
-
-    slog::Logger::root(drain, o!())
-}
-
 #[derive(Clap, Debug)]
 #[clap(version = "0.1.0")]
 #[clap(setting = AppSettings::ColoredHelp)]
@@ -83,6 +72,67 @@ struct Opts {
     pub config: String,
 
     // todo sub commands
+}
+
+fn init(color: bool, json: bool, levels: &str) {
+    // An escape hatch to disable injecting a metrics layer into tracing.
+    // May be used for performance reasons. This is a hidden and undocumented functionality.
+    let metrics_layer_enabled = !matches!(
+        std::env::var("DISABLE_INTERNAL_METRICS_TRACING_INTEGRATION"),
+        Ok(x) if x == "true"
+    );
+
+    #[cfg(feature = "tokio-console")]
+        let subscriber = {
+        let (tasks_layer, tasks_server) = console_subscriber::TasksLayer::new();
+        tokio::spawn(tasks_server.serve());
+
+        tracing_subscriber::registry::Registry::default()
+            .with(tasks_layer)
+            .with(tracing_subscriber::filter::EnvFilter::from(levels))
+    };
+    #[cfg(not(feature = "tokio-console"))]
+        let subscriber = tracing_subscriber::registry::Registry::default()
+            .with(tracing_subscriber::filter::EnvFilter::from(levels));
+
+    // dev note: we attempted to refactor to reduce duplication but it was starting to seem like
+    // the refactored code would be introducting more complexity than it was worth to remove this
+    // bit of duplication as we started to create a generic struct to wrap the formatters that
+    // also implement `Layer`
+    let dispatch = if json {
+        #[cfg(not(test))]
+            let formatter = tracing_subscriber::fmt::Layer::default()
+            .json()
+            .flatten_event(true);
+
+        #[cfg(test)]
+            let formatter = tracing_subscriber::fmt::Layer::default()
+            .json()
+            .flatten_event(true)
+            .with_test_writer(); // ensures output is captured
+
+        // TODO: rate limit
+        let s = subscriber.with(formatter);
+        Dispatch::new(s)
+    } else {
+        #[cfg(not(test))]
+            let formatter = tracing_subscriber::fmt::Layer::default()
+            .with_ansi(color)
+            .with_writer(std::io::stderr);
+
+        #[cfg(test)]
+            let formatter = tracing_subscriber::fmt::Layer::default()
+            .with_ansi(color)
+            .with_test_writer(); // ensures output is captured
+
+        // TODO: rate limit
+
+        let s = subscriber.with(formatter);
+        Dispatch::new(s)
+    };
+
+    let _ = LogTracer::init().expect("init log tracer failed");
+    let _ = set_global_default(dispatch);
 }
 
 fn main() {
@@ -111,35 +161,39 @@ fn main() {
         }
     });
 
-    let logger = setup_logger();
-    // Make sure to save the guard, see documentation for more information
-    let _guard = slog_scope::set_global_logger(logger);
-    slog_scope::scope(&slog_scope::logger().new(o!()), || {
-        info!("start vertex"; "config" => opts.config);
+    info!(
+        message = "start vertex",
+        config = ?opts.config
+    );
 
-        rt.block_on(async move {
-            let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
-            signal_handler.forever(signal::os_signals());
+    rt.block_on(async move {
+        #[cfg(test)]
+            init(true, false, "debug");
+        #[cfg(not(test))]
+            init(true, false, "info");
 
-            let config = config::load_from_paths_with_provider(&config_paths_with_formats(), &mut signal_handler)
-                .await
-                .map_err(handle_config_errors)
-                .unwrap();
+        let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
+        signal_handler.forever(signal::os_signals());
 
-            let diff = config::ConfigDiff::initial(&config);
-            let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
-                .await
-                .ok_or(exitcode::CONFIG)
-                .unwrap();
-            let result = topology::start_validate(config, diff, pieces).await;
-            let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
+        let config = config::load_from_paths_with_provider(&config_paths_with_formats(), &mut signal_handler)
+            .await
+            .map_err(handle_config_errors)
+            .unwrap();
 
-            // run
-            let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
-            let mut sources_finished = topology.sources_finished();
+        let diff = config::ConfigDiff::initial(&config);
+        let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
+            .await
+            .ok_or(exitcode::CONFIG)
+            .unwrap();
+        let result = topology::start_validate(config, diff, pieces).await;
+        let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
-            let signal = loop {
-                tokio::select! {
+        // run
+        let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
+        let mut sources_finished = topology.sources_finished();
+
+        let signal = loop {
+            tokio::select! {
                     Some(signal) = signal_rx.recv() => {
                         match signal {
                             SignalTo::ReloadFromConfigBuilder(builder) => {
@@ -204,13 +258,13 @@ fn main() {
                     _ = &mut sources_finished => break SignalTo::Shutdown,
                     else => unreachable!("Signal streams never end"),
                 }
-            };
+        };
 
-            match signal {
-                SignalTo::Shutdown => {
-                    info!("Shutdown signal received");
+        match signal {
+            SignalTo::Shutdown => {
+                info!("Shutdown signal received");
 
-                    tokio::select! {
+                tokio::select! {
                         // graceful shutdown finished
                         _ = topology.stop() => (),
                         _ = signal_rx.recv() => {
@@ -219,27 +273,29 @@ fn main() {
                             // Dropping the shutdown future will immediately shut the server down
                         }
                     }
-                }
-
-                SignalTo::Quit => {
-                    info!("Quit signal received");
-
-                    // It is highly unlikely that this event will exit from topology
-                    drop(topology);
-                }
-
-                _ => unreachable!(),
             }
-        });
 
-        info!("Trying to shutdown Tokio runtime");
-        rt.shutdown_timeout(Duration::from_secs(5))
+            SignalTo::Quit => {
+                info!("Quit signal received");
+
+                // It is highly unlikely that this event will exit from topology
+                drop(topology);
+            }
+
+            _ => unreachable!(),
+        }
     });
+
+    info!("Trying to shutdown Tokio runtime");
+    rt.shutdown_timeout(Duration::from_secs(5))
 }
 
 pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
     for err in errors {
-        error!("configuration error"; "err" => err);
+        error!(
+            message = "configuration error",
+            ?err
+        );
     }
 
     exitcode::CONFIG

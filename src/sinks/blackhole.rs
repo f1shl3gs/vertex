@@ -1,10 +1,12 @@
 use crate::config::{SinkConfig, SinkContext, DataType, HealthCheck};
-use crate::sinks::Sink;
+use crate::sinks::{Sink, StreamSink};
 use async_trait::async_trait;
 use crate::event::Event;
-use std::pin::Pin;
-use std::task::{Context, Poll};
+use futures::FutureExt;
+use futures::prelude::stream::BoxStream;
 use serde::{Deserialize, Serialize};
+use tokio_stream::StreamExt;
+use buffers::Acker;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -16,7 +18,10 @@ pub struct BlackholeConfig {
 #[typetag::serde(name = "blackhole")]
 impl SinkConfig for BlackholeConfig {
     async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        todo!()
+        let sink = BlackholeSink::new(ctx.acker);
+        let health_check = futures::future::ok(()).boxed();
+
+        Ok((Sink::Stream(Box::new(sink)), health_check))
     }
 
     fn input_type(&self) -> DataType {
@@ -28,24 +33,25 @@ impl SinkConfig for BlackholeConfig {
     }
 }
 
-struct Blackhole {}
+struct BlackholeSink {
+    acker: Acker,
+}
 
-impl futures::Sink<Event> for Blackhole {
-    type Error = ();
-
-    fn poll_ready(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        todo!()
+impl BlackholeSink {
+    pub fn new(acker: Acker) -> Self {
+        Self {
+            acker
+        }
     }
+}
 
-    fn start_send(self: Pin<&mut Self>, item: Event) -> Result<(), Self::Error> {
-        todo!()
-    }
+#[async_trait]
+impl StreamSink for BlackholeSink {
+    async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
+        while let Some(_) = input.next().await {
+            self.acker.ack(1);
+        }
 
-    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        todo!()
-    }
-
-    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        todo!()
+        Ok(())
     }
 }

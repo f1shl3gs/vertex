@@ -169,9 +169,9 @@ impl FileSystemConfig {
 
                 Err(err) => {
                     warn!(
-                        "read mount point usage failed";
-                        "err" => err,
-                        "mount_point" => mount_point.clone(),
+                        message = "read mount point usage failed",
+                        %err,
+                        %mount_point,
                     );
 
                     // let mount_point = mount_point.clone();

@@ -20,10 +20,8 @@ pub use signal::{SignalHandler};
 
 extern crate bloom;
 
-extern crate slog;
 #[macro_use]
-extern crate slog_scope;
-extern crate slog_term;
+extern crate tracing;
 
 pub(crate) use error::Error;
 

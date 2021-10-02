@@ -126,7 +126,10 @@ pub async fn build_pieces(
             }
         };
 
-        let (input_tx, input_rx, _) = crate::buffers::BufferConfig::default().build(&None, "").unwrap();
+
+        let (input_tx, input_rx, _) = crate::buffers::BufferConfig::default()
+            .build(&config.global.data_dir, "")
+            .unwrap();
         let (output, control) = Fanout::new();
         let transform = match transform {
             Transform::Function(mut t) => input_rx
@@ -233,17 +236,20 @@ pub async fn build_pieces(
                 tokio::time::timeout(duration, health_check)
                     .map(|result| match result {
                         Ok(Ok(_)) => {
-                            info!("Healthcheck: Passed");
+                            info!(
+                                message = "Health check passed",
+                                ?id,
+                            );
                             Ok(TaskOutput::HealthCheck)
                         }
 
                         Ok(Err(err)) => {
                             error!(
-                                "Health check failed";
-                                "err" => err.to_string(),
-                                "kind" => "sink",
-                                "type" => typetag,
-                                "name" => id,
+                                message = "Health check failed",
+                                %err,
+                                kind = "sink",
+                                typetag,
+                                name = ?id,
                             );
 
                             Err(())
@@ -251,10 +257,10 @@ pub async fn build_pieces(
 
                         Err(_) => {
                             error!(
-                                "Health check timeout";
-                                "kind" => "sink",
-                                "type" => typetag,
-                                "name" => id,
+                                message = "Health check timeout",
+                                kind = "sink",
+                                typetag,
+                                ?id,
                             );
 
                             Err(())

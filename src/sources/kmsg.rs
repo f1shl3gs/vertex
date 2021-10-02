@@ -50,8 +50,8 @@ impl SourceConfig for KmsgConfig {
                                 }
 
                                 error!(
-                                    "read /dev/kmsg failed";
-                                    "err" => err
+                                    message = "read /dev/kmsg failed",
+                                    %err
                                 );
 
                                 return Err(())

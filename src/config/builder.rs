@@ -1,9 +1,10 @@
 use serde::{Deserialize, Serialize};
-use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, SinkConfig, TransformConfig, default_data_dir, HealthcheckOptions, ExpandType};
+use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, SinkConfig, TransformConfig, HealthcheckOptions, ExpandType};
 use indexmap::IndexMap;
 use crate::config::provider::ProviderConfig;
 use super::validation;
 use glob;
+use crate::config::global::default_data_dir;
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -76,7 +77,7 @@ impl Builder {
 
         self.provider = with.provider;
 
-        if self.global.data_dir.is_none() || self.global.data_dir == default_data_dir() {
+        if self.global.data_dir.is_dir() || self.global.data_dir == default_data_dir() {
             self.global.data_dir = with.global.data_dir;
         } else if with.global.data_dir != default_data_dir() && self.global.data_dir != with.global.data_dir {
             // if two configs both set 'data_dir' and have conflicting values,
@@ -243,7 +244,11 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &[String])
         let matcher = glob::Pattern::new(&raw_input.to_string())
             .map(InputMatcher::Pattern)
             .unwrap_or_else(|err| {
-                warn!("invalid glob pattern for input"; "id" => id, "err" => %err);
+                warn!(
+                    message = "invalid glob pattern for input",
+                    id,
+                    %err
+                );
                 InputMatcher::String(raw_input.to_string())
             });
 
@@ -367,7 +372,7 @@ mod tests {
                 "foo1",
                 "foo2",
                 "bar",
-                "foos"
+                "foos",
             ]
         );
 
@@ -380,7 +385,7 @@ mod tests {
             vec![
                 "foo1",
                 "foo2",
-                "foos"
+                "foos",
             ]
         )
     }

@@ -94,7 +94,10 @@ impl SelfStat {
                     out.send_all(&mut stream).await;
                 }
                 Err(err) => {
-                    warn!("gather selfstat failed"; "err" => err);
+                    warn!(
+                        message = "gather selfstat failed",
+                        %err
+                    );
                 }
             }
         }

@@ -155,7 +155,7 @@ impl BufferConfig {
 
     pub fn build(
         &self,
-        data_dir: &Option<PathBuf>,
+        data_dir: &PathBuf,
         name: &str,
     ) -> Result<(BufferInputCloner<Event>, EventStream, Acker), String> {
         match self {
