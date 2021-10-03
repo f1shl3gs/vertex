@@ -19,7 +19,8 @@ members = [
     "lib/event",
     "lib/procfs",
     "lib/file-source",
-    "lib/tail"
+    "lib/tail",
+    "lib/internal"
 ]
 
 [features]
