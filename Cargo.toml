@@ -19,7 +19,7 @@ members = [
     "lib/event",
     "lib/procfs",
     "lib/file-source",
-    "lib/tail",
+    "lib/sources/tail",
     "lib/internal"
 ]
 
