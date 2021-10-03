@@ -77,7 +77,7 @@ impl Builder {
 
         self.provider = with.provider;
 
-        if self.global.data_dir.is_dir() || self.global.data_dir == default_data_dir() {
+        if self.global.data_dir.as_os_str().len() == 0 || self.global.data_dir == default_data_dir() {
             self.global.data_dir = with.global.data_dir;
         } else if with.global.data_dir != default_data_dir() && self.global.data_dir != with.global.data_dir {
             // if two configs both set 'data_dir' and have conflicting values,

@@ -105,10 +105,12 @@ fn load_from_inputs(
     let mut warnings = Vec::new();
 
     for (input, format) in inputs {
-        if let Err(errs) = load(input, format).and_then(|(n, mut load_warnings)| {
-            warnings.append(&mut load_warnings);
-            builder.append(n)
-        }) {
+        if let Err(errs) = load(input, format)
+            .and_then(|(n, mut load_warnings)| {
+                warnings.append(&mut load_warnings);
+                builder.append(n)
+            })
+        {
             // TODO; add back paths
             errors.extend(errs.iter().map(|e| e.to_string()));
         }

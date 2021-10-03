@@ -1,6 +1,5 @@
 global:
-  runtime:
-    worker: 4
+  data_dir: ./temp
 
 health_checks:
   enabled: false
@@ -15,29 +14,37 @@ sources:
     type: selfstat
   generator:
     type: generator
-  ntp:
-    type: ntp
-    interval: 15s
-    timeout: 10s
-    pools:
-      - time1.aliyun.com
-      - time2.aliyun.com
-      - time3.aliyun.com
-      - time4.aliyun.com
-      - time5.aliyun.com
-      - time6.aliyun.com
-      - time7.aliyun.com
+#  ntp:
+#    type: ntp
+#    interval: 15s
+#    timeout: 10s
+#    pools:
+#      - time1.aliyun.com
+#      - time2.aliyun.com
+#      - time3.aliyun.com
+#      - time4.aliyun.com
+#      - time5.aliyun.com
+#      - time6.aliyun.com
+#      - time7.aliyun.com
+  journald:
+    type: journald
+    units: []
+    excludes: []
 
 transforms:
   add_extra_tags:
     type: add_tags
     inputs:
       - generator
-      - ntp
+      # - ntp
     tags:
       hostname: ${HOSTNAME}
 
 sinks:
+  blackhole:
+    type: blackhole
+    inputs:
+      - journald
   stdout:
     type: blackhole
     inputs:

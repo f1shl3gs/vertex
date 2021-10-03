@@ -70,7 +70,7 @@ pub struct JournaldConfig {
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.global.make_subdir(ctx.name.as_str())
+        let data_dir = ctx.global.make_subdir(&ctx.name)
             .map_err(|err| {
                 warn!("create sub dir failed {:?}", err);
                 err
@@ -85,7 +85,7 @@ impl SourceConfig for JournaldConfig {
             .map(|s| fixup_unit(s))
             .collect::<HashSet<_>>();
 
-        let checkpointer = Checkpointer::new(data_dir).await?;
+        let checkpointer = Checkpointer::new(data_dir.join(CHECKPOINT_FILENAME)).await?;
         let journalctl_path = self.journalctl_path
             .clone()
             .unwrap_or_else(|| JOURNALCTL.clone());
@@ -95,7 +95,7 @@ impl SourceConfig for JournaldConfig {
         let src = JournaldSource {
             includes,
             excludes,
-            batch_size: self.batch_size.unwrap_or(0),
+            batch_size: self.batch_size.unwrap_or(DEFAULT_BATCH_SIZE),
             output: ctx.out,
         };
 
@@ -165,7 +165,9 @@ impl JournaldSource {
             start,
         ));
 
+        info!("start selecting");
         futures::future::select(run, shutdown).await;
+        info!("stopping journal");
         if let Some(stop) = on_stop {
             stop();
         }

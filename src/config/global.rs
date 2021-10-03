@@ -30,6 +30,7 @@ pub enum DataDirError {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+#[serde(default, deny_unknown_fields)]
 pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]
     pub data_dir: PathBuf,
@@ -37,7 +38,6 @@ pub struct GlobalOptions {
     #[serde(default = "default_timezone")]
     pub timezone: timezone::TimeZone,
 }
-
 
 pub fn default_data_dir() -> PathBuf {
     PathBuf::from("/var/lib/vertex")
@@ -83,15 +83,35 @@ impl GlobalOptions {
         &self,
         subdir: &str,
     ) -> Result<PathBuf, DataDirError> {
-        let data_dir = self.validate_data_dir()?;
-
-        let mut data_subdir = data_dir.clone();
-        data_subdir.push(subdir);
+        let root = self.validate_data_dir()?;
+        let subdir = root.clone().join(subdir);
+        let rt = subdir.clone();
 
         DirBuilder::new()
             .recursive(true)
             .create(&subdir)
-            .with_context(|| CouldNotCreate { subdir, data_dir })?;
-        Ok(data_subdir)
+            .with_context(|| CouldNotCreate { subdir, data_dir: root })?;
+
+        Ok(rt)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn deserialize() {
+        let input = r#"
+data_dir: foo
+"#;
+        let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
+        assert_eq!(global.data_dir, PathBuf::from("foo"));
+
+        let input = "
+timezone: CET
+";
+        let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
+        assert_eq!(global.data_dir, default_data_dir())
     }
 }

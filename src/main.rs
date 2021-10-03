@@ -286,7 +286,6 @@ fn main() {
         }
     });
 
-    info!("Trying to shutdown Tokio runtime");
     rt.shutdown_timeout(Duration::from_secs(5))
 }
 
