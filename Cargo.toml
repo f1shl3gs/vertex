@@ -26,7 +26,6 @@ members = [
 default = [
     "metrics",
     "disk-buffer",
-    "tokio-console"
 ]
 
 metrics = [
@@ -69,7 +68,7 @@ atty = "0.2.14"
 nix = "0.22.2"
 
 [dev-dependencies]
-tokio = { version = "1.10.1", features = ["macros", "rt"] }
+tokio = { version = "1.12.0", features = ["test-util"] }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
 tempfile = { version = "3.2.0" }
 
@@ -84,7 +83,7 @@ buffers = { path = "lib/buffers" }
 tokio = { version = "1.12.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.7", features = ["time"] }
 tokio-util = { version = "0.6.7", features = ["codec"] }
-bytes = { version = "1.1.0" }
+bytes = { version = "1.1.0", features = ["serde"] }
 futures = { version = "0.3.16" }
 async-trait = { version = "0.1.50" }
 pin-project = { version = "1.0.8" }
@@ -124,7 +123,7 @@ tokio-rustls = { version = "0.22.0" }
 pprof = { version = "0.5.0", features = ["flamegraph", "criterion"] }
 
 # misc
-chrono = { version = "0.4.19" }
+chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.5.3", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }

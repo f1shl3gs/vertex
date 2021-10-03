@@ -238,6 +238,8 @@ pub async fn build_pieces(
                         Ok(Ok(_)) => {
                             info!(
                                 message = "Health check passed",
+                                kind = "sink",
+                                typetag,
                                 ?id,
                             );
                             Ok(TaskOutput::HealthCheck)
@@ -249,7 +251,7 @@ pub async fn build_pieces(
                                 %err,
                                 kind = "sink",
                                 typetag,
-                                name = ?id,
+                                ?id,
                             );
 
                             Err(())
@@ -267,7 +269,7 @@ pub async fn build_pieces(
                         }
                     }).await
             } else {
-                info!("Healthcheck disabled");
+                info!("Health check disabled");
                 Ok(TaskOutput::HealthCheck)
             }
         };

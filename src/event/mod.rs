@@ -123,6 +123,13 @@ impl Event {
             _ => panic!("Failed type coercion, {:?} is not a metric", self)
         }
     }
+
+    pub fn as_log(&self) -> &LogRecord {
+        match self {
+            Event::Log(l) => l,
+            _ => panic!("Failed type coercion, {:?} is not a log", self)
+        }
+    }
 }
 
 impl From<Metric> for Event {
@@ -156,7 +163,24 @@ impl From<LogRecord> for Event {
 }
 
 impl From<BTreeMap<String, Value>> for Event {
-    fn from(_: BTreeMap<String, Value>) -> Self {
-        todo!()
+    fn from(m: BTreeMap<String, Value>) -> Self {
+        Self::Log(LogRecord {
+            time_unix_nano: 0,
+            tags: Default::default(),
+            fields: m,
+        })
+    }
+}
+
+impl From<String> for Event {
+    fn from(s: String) -> Self {
+        let mut fields: BTreeMap<String, Value> = BTreeMap::new();
+        fields.insert("message".to_string(), Value::String(s));
+
+        Self::Log(LogRecord {
+            time_unix_nano: 0,
+            tags: Default::default(),
+            fields,
+        })
     }
 }

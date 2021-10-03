@@ -3,38 +3,9 @@
 /// The format is simple enough to write a parser for it. Without
 /// Deserialize(vertex) or Serialize(journalctl) we should get a better
 /// performance.
-///
-/// ```text
-/// __CURSOR=s=927da5db44c94c348d4974923a29eadb;i=443072;b=092dc5604f20408d8569c10fb41a5107;m=17b2cd25c0;t=5cd4d312cb1bd;x=bfc589b9a9802207
-/// __REALTIME_TIMESTAMP=1633106304741821
-/// __MONOTONIC_TIMESTAMP=101784036800
-/// _BOOT_ID=092dc5604f20408d8569c10fb41a5107
-/// _TRANSPORT=kernel
-/// PRIORITY=4
-/// SYSLOG_FACILITY=0
-/// SYSLOG_IDENTIFIER=kernel
-/// _MACHINE_ID=ba51360e6b1e423e84e59950b031f7b1
-/// _HOSTNAME=localhost.localdomain
-/// _SOURCE_MONOTONIC_TIMESTAMP=101784144369
-/// MESSAGE=RDX: 0000000000000080 RSI: 000000c000130b80 RDI: 0000000000000009
-///
-/// __CURSOR=s=927da5db44c94c348d4974923a29eadb;i=443073;b=092dc5604f20408d8569c10fb41a5107;m=17b2cd25cd;t=5cd4d312cb1ca;x=1cb7fa29f9706fad
-/// __REALTIME_TIMESTAMP=1633106304741834
-/// __MONOTONIC_TIMESTAMP=101784036813
-/// _BOOT_ID=092dc5604f20408d8569c10fb41a5107
-/// _TRANSPORT=kernel
-/// PRIORITY=4
-/// SYSLOG_FACILITY=0
-/// SYSLOG_IDENTIFIER=kernel
-/// _MACHINE_ID=ba51360e6b1e423e84e59950b031f7b1
-/// _HOSTNAME=localhost.localdomain
-/// MESSAGE=RBP: 000000c00027d7a8 R08: 0000000000b17b20 R09: 0000000000000000
-/// _SOURCE_MONOTONIC_TIMESTAMP=101784144369
-/// ```
-
 use std::collections::{BTreeMap, HashSet};
-use std::{io, fs::File, path::PathBuf, cmp, time::Duration};
-use std::os::unix::raw::pid_t;
+use std::{io, path::PathBuf, cmp, time::Duration};
+use std::io::SeekFrom;
 use std::path::Path;
 use std::process::Stdio;
 use serde::{Deserialize, Serialize};
@@ -42,7 +13,6 @@ use crate::config::{DataType, SourceConfig, SourceContext};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use tracing::{error, info};
 use tokio::{
     process::Command,
     time::sleep,
@@ -62,7 +32,10 @@ use nix::{
     sys::signal::{kill, Signal},
     unistd::Pid,
 };
+use tokio::fs::OpenOptions;
+use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 
+const DEFAULT_BATCH_SIZE: usize = 16;
 const CHECKPOINT_FILENAME: &str = "checkpoint.txt";
 const CURSOR: &str = "__CURSOR";
 const HOSTNAME: &str = "_HOSTNAME";
@@ -248,6 +221,7 @@ impl JournaldSource {
     ) -> bool {
         loop {
             let mut saw_record = false;
+
             for _ in 0..self.batch_size {
                 let mut entry = match stream.next().await {
                     None => {
@@ -292,6 +266,7 @@ impl JournaldSource {
                             %err
                         );
 
+                        // output channel is closed, don't restart journalctl
                         return false;
                     }
                 }
@@ -306,6 +281,10 @@ impl JournaldSource {
     fn filter(&self, unit: &str) -> bool {
         if self.excludes.contains(unit) {
             return true;
+        }
+
+        if self.includes.len() == 0 {
+            return false;
         }
 
         !self.includes.contains(unit)
@@ -384,7 +363,7 @@ fn start_journalctl(
         EntryCodec::new(),
     ).boxed();
 
-    let pid = Pid::from_raw(child.id().unwrap() as i32 as pid_t);
+    let pid = Pid::from_raw(child.id().unwrap() as _);
     let stop = Box::new(move || {
         let _ = kill(pid, Signal::SIGTERM);
     });
@@ -393,21 +372,43 @@ fn start_journalctl(
 }
 
 struct Checkpointer {
-    file: File,
+    file: tokio::fs::File,
     path: PathBuf,
 }
 
 impl Checkpointer {
     async fn new(path: PathBuf) -> Result<Self, io::Error> {
-        todo!()
+        let file = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create(true)
+            .open(&path)
+            .await?;
+
+        Ok(Self {
+            file,
+            path,
+        })
     }
 
     async fn set(&mut self, token: &str) -> Result<(), io::Error> {
-        todo!()
+        self.file.seek(SeekFrom::Start(0)).await?;
+        self.file.write_all(token.as_bytes())
+            .await?;
+        Ok(())
     }
 
     async fn get(&mut self) -> Result<Option<String>, io::Error> {
-        todo!()
+        let mut buf = Vec::<u8>::new();
+        self.file.seek(SeekFrom::Start(0)).await?;
+        self.file.read_to_end(&mut buf).await?;
+        match buf.len() {
+            0 => Ok(None),
+            _ => {
+                let text = String::from_utf8_lossy(&buf);
+                Ok(Some(String::from(text)))
+            }
+        }
     }
 }
 
@@ -444,15 +445,30 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
             break;
         }
     }
-    let key = String::from_utf8(buf[0..pos].to_vec())
+
+    if pos == length {
+        return Err(io::Error::from(io::ErrorKind::InvalidData));
+    }
+
+    let key = String::from_utf8(buf[0..pos - 1].to_vec())
         .map_err(|err| {
             io::Error::new(io::ErrorKind::InvalidData, err)
         })?;
 
     return match key.as_ref() {
         "PRIORITY" => {
-            let p = buf[length] as u64;
-            Ok((key, p.into()))
+            let value = match (buf[length - 1] - b'0') as i32 {
+                0 => "EMERG",
+                1 => "ALERT",
+                2 => "CRIT",
+                3 => "ERR",
+                4 => "WARNING",
+                5 => "NOTICE",
+                6 => "INFO",
+                7 => "DEBUG",
+                _ => "UNKNOWN",
+            };
+            Ok((key, value.into()))
         }
         "_SOURCE_MONOTONIC_TIMESTAMP" => {
             let mut ts = 0u64;
@@ -471,7 +487,11 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
             let value = String::from_utf8(buf[pos..length].to_vec()).map_err(|err| {
                 io::Error::new(io::ErrorKind::InvalidData, err)
             })?;
-            Ok((key, value.into()))
+            if key == MESSAGE {
+                Ok(("message".to_string(), value.into()))
+            } else {
+                Ok((key, value.into()))
+            }
         }
     };
 }
@@ -509,7 +529,6 @@ impl Decoder for EntryCodec {
                 }
 
                 (false, Some(offset)) => {
-                    // TODO: implement it
                     // we found a correct frame
                     if offset == 0 {
                         // new frame
@@ -548,13 +567,67 @@ impl Decoder for EntryCodec {
 }
 
 #[cfg(test)]
-mod tests {
+mod checkpoints_tests {
+    use tempfile::tempdir;
     use super::*;
 
-    use tokio::fs::File;
-    use tokio::io::AsyncRead;
+    #[tokio::test]
+    async fn test_checkpoints() {
+        let tempdir = tempdir().unwrap();
+        let mut filename = tempdir.path().to_path_buf();
+        filename.push(CHECKPOINT_FILENAME);
+        let mut checkpointer = Checkpointer::new(filename)
+            .await
+            .unwrap();
+
+        // read nothing
+        assert_eq!(checkpointer.get().await.unwrap().is_none(), true);
+
+        // read first write
+        checkpointer.set("foo")
+            .await
+            .unwrap();
+        assert_eq!(checkpointer.get().await.unwrap(), Some("foo".to_string()));
+
+        // read more
+        checkpointer.set("bar")
+            .await
+            .unwrap();
+        assert_eq!(checkpointer.get().await.unwrap(), Some("bar".to_string()))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use futures::Stream;
+    use std::pin::Pin;
+    use std::{
+        io::{BufRead, Cursor},
+        task::{Context, Poll},
+    };
+    use std::io::BufReader;
+    use chrono::TimeZone;
+    use tempfile::tempdir;
+    use tokio::time::{sleep, timeout, Duration};
     use tokio_stream::StreamExt;
-    use tokio_util::codec::{FramedRead, BytesCodec};
+    use crate::event::Event;
+
+    #[test]
+    fn test_decode_kv() {
+        let (k, v) = decode_kv("_SYSTEMD_UNIT=NetworkManager.service".as_bytes()).unwrap();
+        assert_eq!(k, "_SYSTEMD_UNIT");
+        assert_eq!(v, Value::String("NetworkManager.service".to_string()));
+
+        let (k, v) = decode_kv("PRIORITY=5".as_bytes()).unwrap();
+        assert_eq!(k, "PRIORITY");
+        assert_eq!(v, Value::String("NOTICE".to_string()));
+
+        // unknown priority
+        let (k, v) = decode_kv("PRIORITY=9".as_bytes()).unwrap();
+        assert_eq!(k, "PRIORITY");
+        assert_eq!(v, Value::String("UNKNOWN".to_string()))
+    }
 
     #[tokio::test]
     async fn test_codec() {
@@ -565,17 +638,243 @@ mod tests {
         while let Some(result) = stream.next().await {
             match result {
                 Ok(fields) => {
-                    println!("fields: {:?}", fields);
-
                     count += 1;
-                    if count == 3 {
-                        return;
-                    }
+                    println!("fields: {:?}", fields);
                 }
 
                 Err(err) => {
                     println!("err: {:?}", err)
                 }
+            }
+        }
+
+        assert_eq!(count, 8);
+    }
+
+    struct TestJournal {}
+
+
+    impl TestJournal {
+        fn new(
+            checkpoint: &Option<String>,
+        ) -> (
+            BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
+            StopJournalctlFn,
+        ) {
+            let mut journal = TestJournal {};
+            (journal_stream(), Box::new(|| ()))
+        }
+    }
+
+    fn journal_stream() -> BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>> {
+        let text = r#"_SYSTEMD_UNIT=sysinit.target
+MESSAGE=System Initialization
+__CURSOR=1
+_SOURCE_REALTIME_TIMESTAMP=1578529839140001
+PRIORITY=6
+
+_SYSTEMD_UNIT=unit.service
+MESSAGE=unit message
+__CURSOR=2
+_SOURCE_REALTIME_TIMESTAMP=1578529839140002
+PRIORITY=7
+
+_SYSTEMD_UNIT=badunit.service
+MESSAGE=[194,191,72,101,108,108,111,63]
+__CURSOR=2
+_SOURCE_REALTIME_TIMESTAMP=1578529839140003
+PRIORITY=5
+
+_SYSTEMD_UNIT=stdout
+MESSAGE=Missing timestamp
+__CURSOR=3
+__REALTIME_TIMESTAMP=1578529839140004
+PRIORITY=2
+
+_SYSTEMD_UNIT=stdout
+MESSAGE=Different timestamps
+__CURSOR=4
+_SOURCE_REALTIME_TIMESTAMP=1578529839140005
+__REALTIME_TIMESTAMP=1578529839140004
+PRIORITY=3
+
+_SYSTEMD_UNIT=syslog.service
+MESSAGE=Non-ASCII in other field
+__CURSOR=5
+_SOURCE_REALTIME_TIMESTAMP=1578529839140005
+__REALTIME_TIMESTAMP=1578529839140004
+PRIORITY=3
+SYSLOG_RAW=[194,191,87,111,114,108,100,63]
+
+_SYSTEMD_UNIT=NetworkManager.service
+MESSAGE=<info>  [1608278027.6016] dhcp-init: Using DHCP client 'dhclient'
+__CURSOR=6
+_SOURCE_REALTIME_TIMESTAMP=1578529839140005
+__REALTIME_TIMESTAMP=1578529839140004
+PRIORITY=6
+SYSLOG_FACILITY=[DHCP4, DHCP6]
+
+PRIORITY=5
+SYSLOG_FACILITY=0
+SYSLOG_IDENTIFIER=kernel
+_TRANSPORT=kernel
+__REALTIME_TIMESTAMP=1578529839140006
+MESSAGE=audit log
+
+"#;
+        let cursor = Cursor::new(text);
+        let reader = tokio::io::BufReader::new(cursor);
+        let stream = FramedRead::new(reader, EntryCodec::new());
+
+        Box::pin(stream)
+    }
+
+    #[tokio::test]
+    async fn test_journal_stream() {
+        // let (mut stream, stop) = TestJournal::new(&None);
+        let mut stream = journal_stream();
+        // let entries = stream.collect::<Vec<_>>();
+        while let Some(result) = stream.next().await {
+            match result {
+                Ok(entry) => println!("entry: {:?}", entry),
+                Err(err) => println!("err: {:?}", err)
+            }
+        }
+    }
+
+    fn create_unit_matches<S: Into<String>>(units: Vec<S>) -> HashSet<String> {
+        let units: HashSet<String> = units.into_iter().map(Into::into).collect();
+        units
+    }
+
+    async fn run_with_units(includes: &[&str], excludes: &[&str], cursor: Option<&str>) -> Vec<Event> {
+        let includes = create_unit_matches(includes.to_vec());
+        let excludes = create_unit_matches(excludes.to_vec());
+        run_journal(includes, excludes, cursor).await
+    }
+
+    async fn run_journal(
+        includes: HashSet<String>,
+        excludes: HashSet<String>,
+        cursor: Option<&str>,
+    ) -> Vec<Event> {
+        let (tx, rx) = Pipeline::new_test();
+        let (trigger, shutdown, _) = ShutdownSignal::new_wired();
+        let tempdir = tempdir().unwrap();
+        let mut checkpoint_path = tempdir.path().to_path_buf();
+        checkpoint_path.push(CHECKPOINT_FILENAME);
+
+        let mut checkpointer = Checkpointer::new(checkpoint_path.clone())
+            .await
+            .expect("Creating checkpointer failed");
+        if let Some(cursor) = cursor {
+            checkpointer
+                .set(cursor)
+                .await
+                .expect("Could not set checkpoint");
+        }
+
+        let source = JournaldSource {
+            includes,
+            excludes,
+            batch_size: DEFAULT_BATCH_SIZE,
+            output: tx,
+        };
+
+
+        tokio::spawn(source.run_shutdown(
+            checkpointer,
+            shutdown,
+            Box::new(|checkpoint| Ok(TestJournal::new(checkpoint))),
+        ));
+
+        sleep(Duration::from_millis(200)).await;
+        drop(trigger);
+        timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>()).await.unwrap()
+    }
+
+    fn test_journal(includes: &[&str], excludes: &[&str]) -> JournaldSource {
+        let (tx, _) = Pipeline::new_test();
+        let journal = JournaldSource {
+            includes: create_unit_matches(includes.to_vec()),
+            excludes: create_unit_matches(excludes.to_vec()),
+            batch_size: DEFAULT_BATCH_SIZE,
+            output: tx,
+        };
+
+        journal
+    }
+
+    #[test]
+    fn unit_filter() {
+        // if nothing configured, allow all
+        let journal = test_journal(&[], &[]);
+        assert_eq!(journal.filter("foo"), false);
+        assert_eq!(journal.filter("bar"), false);
+
+        // filter one
+        let journal = test_journal(&[], &["foo"]);
+        assert_eq!(journal.filter("foo"), true);
+        assert_eq!(journal.filter("bar"), false);
+    }
+
+    #[tokio::test]
+    async fn reads_journal() {
+        let received = run_with_units(&[], &[], None).await;
+        for ev in &received {
+            println!("{:?}", ev);
+        }
+        // assert_eq!(received.len(), 8);
+        assert_eq!(
+            message(&received[0]),
+            Value::String("System Initialization".into())
+        );
+
+        assert_eq!(timestamp(&received[0]), value_ts(1578529839, 140001000));
+        assert_eq!(priority(&received[0]), Value::String("INFO".into()));
+        assert_eq!(message(&received[1]), Value::String("unit message".into()));
+        assert_eq!(timestamp(&received[1]), value_ts(1578529839, 140002000));
+        assert_eq!(priority(&received[1]), Value::String("DEBUG".into()));
+    }
+
+    fn message(event: &Event) -> Value {
+        let log = event.as_log();
+        println!("---- {:?}", log);
+        let v = log.fields.get("message").unwrap();
+        match v {
+            Value::String(_) => {
+                return v.clone();
+            }
+            _ => {
+                panic!("invalid event")
+            }
+        }
+    }
+
+    fn value_ts(secs: i64, usecs: u32) -> Value {
+        Value::Timestamp(chrono::Utc.timestamp(secs, usecs))
+    }
+
+    fn timestamp(event: &Event) -> Value {
+        let log = event.as_log();
+        let v = log.fields.get("_SOURCE_REALTIME_TIMESTAMP").unwrap();
+        let ns = match v {
+            Value::String(s) => s.parse::<i64>().unwrap(),
+            _ => panic!("unexpected timestamp type")
+        };
+
+        Value::Timestamp(chrono::Utc.timestamp_nanos(ns * 1000))
+    }
+
+    fn priority(event: &Event) -> Value {
+        let log = event.as_log();
+        let v = log.fields.get("PRIORITY").unwrap();
+        match v {
+            Value::String(_) => {
+                return v.clone();
+            }
+            _ => {
+                panic!("invalid event")
             }
         }
     }

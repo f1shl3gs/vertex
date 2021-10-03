@@ -24,10 +24,9 @@ use vertex::{
     topology,
 };
 use std::collections::HashMap;
-use nom::combinator::not;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
-use tracing::{info, warn, error, Level, dispatcher::{set_global_default}, Dispatch};
+use tracing::{info, warn, error, dispatcher::{set_global_default}, Dispatch};
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
 
@@ -83,7 +82,7 @@ fn init(color: bool, json: bool, levels: &str) {
     );
 
     #[cfg(feature = "tokio-console")]
-        let subscriber = {
+    let subscriber = {
         let (tasks_layer, tasks_server) = console_subscriber::TasksLayer::new();
         tokio::spawn(tasks_server.serve());
 
@@ -91,9 +90,10 @@ fn init(color: bool, json: bool, levels: &str) {
             .with(tasks_layer)
             .with(tracing_subscriber::filter::EnvFilter::from(levels))
     };
+
     #[cfg(not(feature = "tokio-console"))]
         let subscriber = tracing_subscriber::registry::Registry::default()
-            .with(tracing_subscriber::filter::EnvFilter::from(levels));
+        .with(tracing_subscriber::filter::EnvFilter::from(levels));
 
     // dev note: we attempted to refactor to reduce duplication but it was starting to seem like
     // the refactored code would be introducting more complexity than it was worth to remove this

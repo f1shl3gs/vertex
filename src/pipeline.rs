@@ -33,6 +33,11 @@ pub struct Pipeline {
 }
 
 impl Pipeline {
+    #[cfg(test)]
+    pub fn new_test() -> (Self, mpsc::Receiver<Event>) {
+        Self::new_with_buffer(100, vec![])
+    }
+
     fn try_flush(
         &mut self,
         cx: &mut Context<'_>,
@@ -151,11 +156,15 @@ impl futures::Sink<Event> for Pipeline {
 
 #[cfg(test)]
 mod tests {
+    use std::time::Duration;
     use super::*;
     use crate::{event::Metric};
     use crate::event::MetricValue;
     use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
+    use tokio::time::{
+        sleep, timeout
+    };
 
     #[derive(Clone)]
     struct AddTag {
@@ -194,6 +203,23 @@ mod tests {
         tx.send(true).await.unwrap();
         let received = rx.recv().await.unwrap();
         assert_eq!(true, received);
+    }
+
+    #[tokio::test]
+    async fn test_send_and_recv() {
+        let total = 10u64;
+        let (mut tx, mut rx) = Pipeline::new_test();
+        tokio::spawn(async move {
+            for i in 0..total {
+                let s = format!("{}", i);
+                let ev = Event::from(s);
+                tx.send(ev).await.unwrap();
+            }
+        });
+
+        sleep(Duration::from_millis(100)).await;
+        let es = timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>()).await.unwrap();
+        assert_eq!(es.len(), 10);
     }
 
     #[tokio::test]
