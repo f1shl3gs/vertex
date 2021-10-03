@@ -158,8 +158,8 @@ impl futures::Sink<Event> for Pipeline {
 mod tests {
     use std::time::Duration;
     use super::*;
-    use crate::{event::Metric};
-    use crate::event::MetricValue;
+    use event::Metric;
+    use event::MetricValue;
     use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
     use tokio::time::{

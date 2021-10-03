@@ -194,7 +194,7 @@ impl Sink<Event> for Fanout {
 #[cfg(test)]
 mod tests {
     use super::{ControlMessage, Fanout};
-    use crate::{event::Event};
+    use event::Event;
     use futures::{channel::mpsc, stream, FutureExt, Sink, SinkExt, StreamExt};
     use std::{
         pin::Pin,
@@ -202,8 +202,8 @@ mod tests {
     };
     use tokio::time::{sleep, Duration};
     use futures::task::noop_waker_ref;
-    use crate::event::Metric;
-    use crate::event::MetricValue::Gauge;
+    use event::Metric;
+    use event::MetricValue::Gauge;
 
     async fn collect_ready<S>(mut rx: S) -> Vec<S::Item>
         where S: futures::Stream + Unpin

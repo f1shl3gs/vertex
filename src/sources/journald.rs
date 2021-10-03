@@ -613,7 +613,7 @@ mod tests {
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout, Duration};
     use tokio_stream::StreamExt;
-    use crate::event::Event;
+    use event::Event;
 
     #[test]
     fn test_decode_kv() {
