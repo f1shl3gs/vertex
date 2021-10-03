@@ -1,10 +1,6 @@
-use crate::{
-    tags,
-    event::Metric,
-};
-use crate::sources::node::read_to_string;
 use std::collections::BTreeMap;
-use crate::sources::node::errors::{Error, ErrorContext};
+use super::{read_to_string, Error, ErrorContext};
+use event::{tags, Metric};
 
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";

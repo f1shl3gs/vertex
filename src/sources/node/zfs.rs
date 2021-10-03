@@ -1,13 +1,9 @@
 /// Exposes ZFS performance statistics
 
-use crate::{
-    event::Metric,
-    tags,
-};
-use crate::sources::node::errors::Error;
 use tokio::io::AsyncBufReadExt;
 use std::collections::BTreeMap;
-use crate::sources::node::read_to_string;
+use event::{tags, Metric};
+use super::{read_to_string, Error};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {

@@ -1,12 +1,7 @@
 /// Exposes available entropy
 
-use crate::{
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-    sources::node::errors::{Error, ErrorContext},
-    sources::node::read_into,
-};
+use super::{Error, ErrorContext, read_into};
+use event::{tags, gauge_metric, Metric};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (avail, pool_size) = read_random(proc_path).await

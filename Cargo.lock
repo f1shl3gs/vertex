@@ -667,7 +667,10 @@ version = "0.1.0"
 dependencies = [
  "buffers",
  "bytes 1.1.0",
+ "chrono",
+ "prost",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -2970,6 +2973,7 @@ dependencies = [
  "derivative",
  "dotenv-parser",
  "dyn-clone",
+ "event",
  "exitcode",
  "futures",
  "glob",

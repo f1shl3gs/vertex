@@ -13,7 +13,7 @@ use pin_project::pin_project;
 use serde::{Deserialize, Serialize};
 
 pub use buffers::{Acker, DecodeBytes, EncodeBytes};
-use crate::event::Event;
+use event::Event;
 
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]

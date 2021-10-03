@@ -4,7 +4,7 @@ use async_trait::async_trait;
 
 use crate::config::{TransformConfig, GlobalOptions, DataType};
 use crate::transforms::{Transform, FunctionTransform};
-use crate::event::Event;
+use event::Event;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

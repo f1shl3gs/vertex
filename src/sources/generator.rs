@@ -6,7 +6,7 @@ use crate::config::{deserialize_duration, serialize_duration, SourceConfig, Sour
 use crate::sources::Source;
 
 use tokio_stream::wrappers::IntervalStream;
-use crate::event::{Event, Metric, MetricValue};
+use event::{Event, Metric, MetricValue};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 

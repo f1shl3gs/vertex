@@ -2,12 +2,11 @@
 
 use serde::{Deserialize, Serialize};
 use crate::{
-    gauge_metric,
     config::{deserialize_regex, serialize_regex},
-    event::{Metric, MetricValue},
 };
 use tokio::io::AsyncBufReadExt;
-use crate::sources::node::errors::{Error, ErrorContext};
+use super::{Error, ErrorContext};
+use event::{gauge_metric, Metric};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {

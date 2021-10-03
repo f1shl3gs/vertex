@@ -9,4 +9,6 @@ edition = "2018"
 buffers = { path = "../buffers" }
 bytes = { version = "1.0.1", default-features = false }
 serde = { version = "1.0.130", features = ["derive"] }
-# prost = { version = "0.8.0", default-features = false, features = ["std"] }
+chrono = { version = "0.4.19" }
+prost = { version = "0.8.0", default-features = false, features = ["std"] }
+serde_json = { version = "1.0.68" }

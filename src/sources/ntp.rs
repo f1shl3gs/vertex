@@ -13,7 +13,7 @@ use crate::pipeline::Pipeline;
 use tokio_stream::wrappers::IntervalStream;
 use futures::{stream, StreamExt, SinkExt};
 use rsntp;
-use crate::event::{
+use event::{
     Event,
     Metric,
     MetricValue,

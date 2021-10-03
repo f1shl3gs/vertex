@@ -11,12 +11,8 @@ use std::collections::BTreeMap;
 /// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 
 use std::path::PathBuf;
-use crate::{
-    event::Metric,
-    tags,
-};
-use crate::sources::node::errors::Error;
-use crate::sources::node::{read_into, read_to_string};
+use event::{tags, Metric};
+use super::{Error, read_into, read_to_string};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]

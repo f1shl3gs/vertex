@@ -2,17 +2,11 @@ use std::{
     path::Path,
     ffi::CString,
 };
-
-use crate::{
-    config::{deserialize_regex, serialize_regex},
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-};
-
+use crate::config::{deserialize_regex, serialize_regex};
+use super::{Error, ErrorContext};
+use event::{tags, gauge_metric, Metric};
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
-use crate::sources::node::errors::{Error, ErrorContext};
 
 
 #[derive(Debug, Deserialize, Serialize)]

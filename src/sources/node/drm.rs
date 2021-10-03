@@ -5,16 +5,8 @@
 ///
 /// https://github.com/prometheus/node_exporter/pull/1998
 
-use crate::{
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-    sources::node::{
-        errors::{Error, ErrorContext},
-        read_to_string,
-        read_into,
-    },
-};
+use super::{read_into, read_to_string, Error, ErrorContext};
+use event::{tags, gauge_metric, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await

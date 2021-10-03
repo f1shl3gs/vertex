@@ -3,7 +3,7 @@ mod prometheus_exporter;
 mod kafka;
 mod blackhole;
 
-use crate::event::Event;
+use event::Event;
 use async_trait::async_trait;
 use futures::stream::{
     BoxStream,

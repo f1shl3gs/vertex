@@ -6,7 +6,6 @@ use std::{
 
 use crate::{
     transforms::Transform,
-    event::Event,
     topology::fanout::Fanout,
     config::{
         Config, SourceContext, ConfigDiff,
@@ -19,6 +18,7 @@ use crate::{
 
 use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
+use event::Event;
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
 

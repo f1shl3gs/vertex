@@ -1,9 +1,6 @@
 /// Collect metrics from `/proc/stat`
 
 use crate::{
-    event::{Metric, MetricValue},
-    tags,
-    sum_metric,
     config::{
         serialize_regex,
         deserialize_regex,
@@ -16,7 +13,8 @@ use std::{
 };
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
-use crate::sources::node::errors::Error;
+use super::Error;
+use event::{tags, sum_metric, Metric, MetricValue};
 
 const USER_HZ: f64 = 100.0;
 

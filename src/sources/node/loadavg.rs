@@ -1,13 +1,9 @@
 use std::{
     path::PathBuf,
 };
+use super::{Error, read_to_string};
+use event::{Metric, gauge_metric};
 
-use crate::{
-    gauge_metric,
-    event::{Metric, MetricValue},
-    sources::node::read_to_string,
-};
-use crate::sources::node::errors::Error;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(proc_path);

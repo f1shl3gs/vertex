@@ -1,16 +1,10 @@
-use crate::{
-    event::Metric,
-    invalid_error,
-    tags,
-};
-use crate::sources::node::errors::{
-    Error,
-};
+use crate::invalid_error;
+use super::Error;
 use tokio::io::AsyncBufReadExt;
 use std::convert::TryFrom;
 use std::path::Path;
 use std::convert::TryInto;
-
+use event::{tags, Metric};
 
 /// Network models the "net" line.
 #[derive(Debug, Default, PartialEq)]

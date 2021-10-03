@@ -1,11 +1,7 @@
-use crate::{
-    event::Metric,
-    invalid_error,
-    tags,
-};
-use crate::sources::node::errors::{Error, ErrorContext};
+use crate::invalid_error;
+use super::{read_to_string, Error, ErrorContext};
+use event::{tags, Metric};
 use std::path::{Path, PathBuf};
-use crate::sources::node::read_to_string;
 
 /// InfiniBandCounters contains counter values from files in
 /// /sys/class/infiniband/<Name>/ports/<Port>/counters or

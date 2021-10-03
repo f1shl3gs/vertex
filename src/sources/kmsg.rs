@@ -12,11 +12,10 @@ use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncReadExt;
 use crate::{
-    fields,
     sources::Source,
-    event::LogRecord,
     config::{DataType, SourceConfig, SourceContext},
 };
+use event::{LogRecord, fields};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

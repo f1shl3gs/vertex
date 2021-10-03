@@ -1,13 +1,13 @@
 use std::path::{Path, PathBuf};
 use crate::{
-    tags,
-    event::Metric,
     config::{deserialize_regex, serialize_regex},
 };
-use crate::sources::node::errors::Error;
-use crate::sources::node::read_to_string;
-
+use super::{
+    read_to_string,
+    Error,
+};
 use serde::{Deserialize, Serialize};
+use event::{tags, Metric};
 
 /// PowerSupply contains info from files in /sys/class/power_supply for
 /// a single power supply

@@ -1,15 +1,7 @@
 /// Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
-use crate::{
-    tags,
-    gauge_metric,
-    sum_metric,
-    event::{Metric, MetricValue},
-    sources::node::{
-        errors::{Error, ErrorContext},
-        read_to_string,
-    },
-};
+use event::{tags, gauge_metric, sum_metric, Metric};
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await

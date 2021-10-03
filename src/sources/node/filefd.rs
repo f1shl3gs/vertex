@@ -1,13 +1,5 @@
-use crate::{
-    gauge_metric,
-    event::{
-        Metric, MetricValue,
-    },
-    sources::node::{
-        read_to_string,
-        errors::{Error, ErrorContext},
-    },
-};
+use super::{Error, ErrorContext, read_to_string};
+use event::{gauge_metric, Metric };
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await

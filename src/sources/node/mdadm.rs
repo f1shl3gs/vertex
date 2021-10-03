@@ -10,13 +10,8 @@ use nom::combinator::{map_res, recognize};
 use nom::IResult;
 use nom::number::complete::double;
 use regex::Regex;
-
-use crate::{
-    sources::node::errors::{Error, ErrorContext},
-    tags,
-};
-use crate::event::Metric;
-use crate::sources::node::read_to_string;
+use event::{tags, Metric};
+use super::{read_to_string, Error, ErrorContext};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]

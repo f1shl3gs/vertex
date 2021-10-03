@@ -1,23 +1,70 @@
-mod metric;
 mod log;
+mod metric;
+mod trace;
 mod value;
+mod macros;
 
-pub use metric::{Metric, MetricValue};
+use std::collections::BTreeMap;
+pub use metric::*;
 pub use log::LogRecord;
+pub use value::Value;
+use buffers::{EncodeBytes, DecodeBytes};
+use bytes::{BufMut, Buf};
+use prost::{DecodeError, EncodeError};
 
 #[macro_export]
-macro_rules! tags {
-    ( $($x:expr => $y:expr),* ) => ({
-        let mut _map = std::collections::BTreeMap::new();
-        $(
-            _map.insert($x.into(), $y.into());
-        )*
-        _map
-    });
-    ( $($x:expr => $y:expr,)* ) => (
-        tags!{$($x => $y),*}
-    );
+macro_rules! gauge_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: event::MetricValue::Gauge($value)
+        }
+    };
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: event::MetricValue::Gauge($value)
+        }
+    };
 }
+
+#[macro_export]
+macro_rules! sum_metric {
+    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: tags!(
+                $($k => $v,)*
+            ),
+            unit: None,
+            timestamp: 0,
+            value: event::MetricValue::Sum($value.into())
+        }
+    };
+
+    ($name: expr, $desc: expr, $value: expr) => {
+        Metric{
+            name: $name.into(),
+            description: Some($desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: 0,
+            value: event::MetricValue::Sum($value)
+        }
+    };
+}
+
 
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
@@ -47,8 +94,14 @@ impl Event {
             _ => panic!("Failed type coercion, {:?} is not a metric", self)
         }
     }
-}
 
+    pub fn as_log(&self) -> &LogRecord {
+        match self {
+            Event::Log(l) => l,
+            _ => panic!("Failed type coercion, {:?} is not a log", self)
+        }
+    }
+}
 
 impl From<Metric> for Event {
     fn from(m: Metric) -> Self {
@@ -56,20 +109,49 @@ impl From<Metric> for Event {
     }
 }
 
-// impl EncodeBytes<Event> for Event {
-//     type Error = EncodeError;
-//
-//     fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error> where B: BufMut, Self: Sized {
-//         todo!()
-//         // proto::EventWrapper::from(self).encode(buffer)
-//     }
-// }
-//
-// impl DecodeBytes<Event> for Event {
-//     type Error = DecodeError;
-//
-//     fn decode<B>(buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
-//         todo!()
-//         // proto::EventWrapper::decode(buffer).map(|wrp| wrp.into())
-//     }
-// }
+impl EncodeBytes<Event> for Event {
+    type Error = EncodeError;
+
+    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error> where B: BufMut, Self: Sized {
+        todo!()
+        // proto::EventWrapper::from(self).encode(buffer)
+    }
+}
+
+impl DecodeBytes<Event> for Event {
+    type Error = DecodeError;
+
+    fn decode<B>(buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
+        todo!()
+        // proto::EventWrapper::decode(buffer).map(|wrp| wrp.into())
+    }
+}
+
+impl From<LogRecord> for Event {
+    fn from(r: LogRecord) -> Self {
+        Self::Log(r)
+    }
+}
+
+impl From<BTreeMap<String, Value>> for Event {
+    fn from(m: BTreeMap<String, Value>) -> Self {
+        Self::Log(LogRecord {
+            time_unix_nano: 0,
+            tags: Default::default(),
+            fields: m,
+        })
+    }
+}
+
+impl From<String> for Event {
+    fn from(s: String) -> Self {
+        let mut fields: BTreeMap<String, Value> = BTreeMap::new();
+        fields.insert("message".to_string(), Value::String(s));
+
+        Self::Log(LogRecord {
+            time_unix_nano: 0,
+            tags: Default::default(),
+            fields,
+        })
+    }
+}

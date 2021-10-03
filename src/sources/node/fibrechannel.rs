@@ -1,12 +1,6 @@
-use crate::sources::node::{
-    read_to_string,
-    errors::{Error, ErrorContext},
-};
+use super::{read_to_string, ErrorContext, Error};
 use std::path::PathBuf;
-use crate::{
-    event::Metric,
-    tags,
-};
+use event::{tags, Metric};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {

@@ -1,60 +1,6 @@
 use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
-#[macro_export]
-macro_rules! gauge_metric {
-    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: tags!(
-                $($k => $v,)*
-            ),
-            unit: None,
-            timestamp: 0,
-            value: MetricValue::Gauge($value)
-        }
-    };
-    ($name: expr, $desc: expr, $value: expr) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: Default::default(),
-            unit: None,
-            timestamp: 0,
-            value: MetricValue::Gauge($value)
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! sum_metric {
-    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: tags!(
-                $($k => $v,)*
-            ),
-            unit: None,
-            timestamp: 0,
-            value: MetricValue::Sum($value.into())
-        }
-    };
-
-    ($name: expr, $desc: expr, $value: expr) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: Default::default(),
-            unit: None,
-            timestamp: 0,
-            value: MetricValue::Sum($value)
-        }
-    };
-}
-
-
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
     Gauge,
@@ -98,6 +44,19 @@ impl MetricValue {
     }
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
+pub struct DataPoint {
+    pub tags: BTreeMap<String, String>,
+    pub timestamp: u64,
+    pub value: MetricValue,
+}
+
+impl DataPoint {
+    pub fn insert(&mut self, k: String, v: String) {
+        self.tags.insert(k, v);
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
     pub name: String,
@@ -114,7 +73,7 @@ pub struct Metric {
 }
 
 impl Metric {
-    pub(crate) fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
+    pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
         where
             N: Into<String>,
             D: Into<String>,
@@ -130,7 +89,7 @@ impl Metric {
         }
     }
 
-    pub(crate) fn gauge_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
+    pub fn gauge_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
         where
             N: Into<String>,
             D: Into<String>,
@@ -146,7 +105,7 @@ impl Metric {
         }
     }
 
-    pub(crate) fn sum<N, D, V>(name: N, desc: D, v: V) -> Metric
+    pub fn sum<N, D, V>(name: N, desc: D, v: V) -> Metric
         where
             N: Into<String>,
             D: Into<String>,
@@ -162,7 +121,7 @@ impl Metric {
         }
     }
 
-    pub(crate) fn sum_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
+    pub fn sum_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
         where
             N: Into<String>,
             D: Into<String>,

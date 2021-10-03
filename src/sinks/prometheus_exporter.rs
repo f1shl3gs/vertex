@@ -10,10 +10,10 @@ use crate::{
         Sink,
         StreamSink,
     },
-    event::{Event, Metric},
     config::{SinkConfig, SinkContext, DataType, Resource, HealthCheck},
     tls::TLSConfig,
 };
+use event::{Event, Metric};
 use futures::prelude::stream::BoxStream;
 use stream_cancel::{Trigger, Tripwire};
 use crate::buffers::Acker;
@@ -25,7 +25,7 @@ use hyper::service::{make_service_fn, service_fn};
 use std::convert::Infallible;
 use hyper::{Request, Body, Method, Response, StatusCode, Server};
 use futures::{StreamExt, FutureExt};
-use crate::event::MetricValue;
+use event::MetricValue;
 use hyper::http::HeaderValue;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]

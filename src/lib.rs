@@ -2,7 +2,6 @@ pub mod config;
 pub mod transforms;
 pub mod sources;
 pub mod topology;
-mod event;
 mod shutdown;
 mod sinks;
 mod timezone;

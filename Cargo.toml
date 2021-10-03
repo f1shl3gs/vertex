@@ -76,7 +76,7 @@ tempfile = { version = "3.2.0" }
 [dependencies]
 # workspaces
 buffers = { path = "lib/buffers" }
-
+event = { path = "lib/event" }
 
 # Allocation TODO
 

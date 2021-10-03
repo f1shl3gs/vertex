@@ -1,3 +1,5 @@
+mod recorder;
+
 #[cfg(test)]
 mod tests {
     #[test]

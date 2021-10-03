@@ -1,12 +1,8 @@
 /// Exposes task scheduler statistics from /proc/schedstat
 
-use crate::{
-    tags,
-    sum_metric,
-    event::{Metric, MetricValue},
-    sources::node::errors::{Error, ErrorContext},
-};
+use event::{tags, sum_metric, Metric};
 use tokio::io::AsyncBufReadExt;
+use super::{Error, ErrorContext};
 
 #[derive(Debug, Default)]
 struct Schedstat {

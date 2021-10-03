@@ -1,14 +1,5 @@
-use crate::{
-    tags,
-    gauge_metric,
-    sources::node::{
-        read_into,
-        errors::{
-            Error, ErrorContext
-        },
-    },
-    event::{Metric, MetricValue},
-};
+use super::{read_into, Error, ErrorContext};
+use event::{tags, gauge_metric, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -166,7 +157,7 @@ mod tests {
             transition_latency: Some(0),
             scaling_current_frequency: Some(1219917),
             scaling_minimum_frequency: Some(800000),
-            scaling_maximum_frequency: Some(2400000)
+            scaling_maximum_frequency: Some(2400000),
         });
 
         assert_eq!(stats[1], Stat {
@@ -177,7 +168,7 @@ mod tests {
             transition_latency: Some(4294967295),
             scaling_current_frequency: None,
             scaling_minimum_frequency: Some(1200000),
-            scaling_maximum_frequency: Some(3300000)
+            scaling_maximum_frequency: Some(3300000),
         })
     }
 }

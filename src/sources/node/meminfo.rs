@@ -4,13 +4,12 @@ use std::{
     path::PathBuf,
     collections::HashMap,
 };
-use crate::{
-    event::{Metric, MetricValue},
+use super::{read_to_string, ErrorContext, Error};
+use event::{
     gauge_metric,
     sum_metric,
-    sources::node::read_to_string,
+    Metric
 };
-use crate::sources::node::errors::{Error, ErrorContext};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);

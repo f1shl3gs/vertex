@@ -1,12 +1,8 @@
 /// Exposes thermal zone & cooling device statistics from /sys/class/thermal
 
 use std::path::PathBuf;
-use crate::{
-    event::Metric,
-    tags,
-};
-use crate::sources::node::errors::Error;
-use crate::sources::node::{read_into, read_to_string};
+use event::{tags, Metric};
+use super::{Error, read_to_string, read_into};
 
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>

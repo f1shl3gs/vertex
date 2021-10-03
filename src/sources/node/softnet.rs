@@ -6,16 +6,12 @@
 /// * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
 /// and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
 
-use crate::{
-    tags,
-    sum_metric,
-    event::{Metric, MetricValue},
-    sources::node::errors::{Error, ErrorContext},
-};
 use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
+use event::{tags, sum_metric, Metric};
+use super::{Error, ErrorContext};
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {

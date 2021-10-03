@@ -8,7 +8,7 @@ use futures::{
     FutureExt,
     stream::{ BoxStream }
 };
-use crate::event::Event;
+use event::Event;
 use tokio_stream::StreamExt;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]

@@ -1,14 +1,7 @@
 /// Exposes error detection and correction statistics
 
-use crate::{
-    tags,
-    sum_metric,
-    event::{Metric, MetricValue},
-    sources::node::{
-        read_into,
-        errors::{Error, ErrorContext},
-    },
-};
+use super::{read_into, Error, ErrorContext};
+use event::{tags, sum_metric, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);

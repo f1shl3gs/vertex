@@ -1,7 +1,7 @@
 use crate::{
-    event::Event,
     transforms::FunctionTransform,
 };
+use event::Event;
 use std::{
     collections::VecDeque,
     fmt,

@@ -8,13 +8,8 @@
 /// > some avg10=0.06 avg60=0.21 avg300=0.99 total=8537362
 /// > full avg10=0.00 avg60=0.13 avg300=0.96 total=8183134
 
-use crate::{
-    event::Metric,
-    sources::node::{
-        read_to_string,
-        errors::{Error, ErrorContext},
-    },
-};
+use event::Metric;
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/pressure/cpu", proc_path);

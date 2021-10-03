@@ -1,7 +1,7 @@
 use crate::config::{SinkConfig, SinkContext, DataType, HealthCheck};
 use crate::sinks::{Sink, StreamSink};
 use async_trait::async_trait;
-use crate::event::Event;
+use event::Event;
 use futures::FutureExt;
 use futures::prelude::stream::BoxStream;
 use serde::{Deserialize, Serialize};

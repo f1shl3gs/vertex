@@ -1,9 +1,6 @@
-use crate::{
-    event::Metric,
-    tags,
-};
-use crate::sources::node::errors::Error;
 use tokio::io::AsyncBufReadExt;
+use event::{tags, Metric};
+use super::Error;
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
@@ -189,8 +186,8 @@ mod tests {
                 name: "error case - parse error".to_string(),
                 file: "testdata/proc/net/udp_broken".to_string(),
                 want: Default::default(),
-                want_err: true
-            }
+                want_err: true,
+            },
         ];
 
         for case in cases {

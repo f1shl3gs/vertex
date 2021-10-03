@@ -1,13 +1,8 @@
 use serde::{Deserialize, Serialize};
-use crate::{
-    tags,
-    sum_metric,
-    gauge_metric,
-    config::{deserialize_regex, serialize_regex},
-    event::{Metric, MetricValue},
-    sources::node::{read_to_string, errors::{Error, ErrorContext}},
-};
+use crate::config::{deserialize_regex, serialize_regex};
 use tokio::fs;
+use event::{tags, sum_metric, gauge_metric, Metric};
+use super::{Error, ErrorContext, read_to_string};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {

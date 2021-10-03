@@ -2,7 +2,7 @@ use std::pin::Pin;
 
 use futures::Stream;
 
-use crate::event::Event;
+use event::Event;
 
 mod add_tags;
 mod aggregate;

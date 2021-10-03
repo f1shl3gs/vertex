@@ -1,11 +1,7 @@
 /// Exposes selected adjtimex(2) system call stats.
 
-use crate::{
-    gauge_metric,
-    sum_metric,
-    event::{Metric, MetricValue},
-};
-use crate::sources::node::errors::{Error, ErrorContext};
+use super::{Error, ErrorContext};
+use event::{sum_metric, gauge_metric, Metric};
 
 // The system clock is not synchronized to a reliable
 // server (TIME_ERROR)

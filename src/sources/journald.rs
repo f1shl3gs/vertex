@@ -25,7 +25,7 @@ use futures::{
     StreamExt,
     stream::BoxStream,
 };
-use crate::event::Value;
+use event::Value;
 use lazy_static::lazy_static;
 
 use nix::{

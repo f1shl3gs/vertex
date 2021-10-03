@@ -1,14 +1,7 @@
-use crate::{
-    tags,
-    sum_metric,
-    event::{Metric, MetricValue},
-};
-use crate::sources::node::errors::{Error, ErrorContext};
-use std::{
-    path::PathBuf,
-};
-use crate::sources::node::read_to_string;
+use std::path::PathBuf;
+use super::{read_to_string, Error, ErrorContext};
 use std::num::ParseIntError;
+use event::{tags, sum_metric, Metric};
 
 
 /// Exposes XFS runtime statistics

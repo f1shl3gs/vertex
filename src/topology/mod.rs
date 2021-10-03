@@ -17,7 +17,6 @@ use crate::{
         Pieces
     },
     buffers,
-    event::Event,
 };
 use tokio::{
     sync::{mpsc}
@@ -30,6 +29,7 @@ use crate::topology::task::Task;
 use std::panic::AssertUnwindSafe;
 use crate::trigger::DisabledTrigger;
 use crate::buffers::EventStream;
+use event::Event;
 
 type BuiltBuffer = (
     buffers::BufferInputCloner<Event>,

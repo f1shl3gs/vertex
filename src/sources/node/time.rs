@@ -1,14 +1,10 @@
 /// Exposes the current system time
 
-use crate::{
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-};
 use std::{
     ffi::CStr,
 };
-use crate::sources::node::errors::Error;
+use super::Error;
+use event::{tags, gauge_metric, Metric};
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();

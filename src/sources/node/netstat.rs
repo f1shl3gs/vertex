@@ -1,14 +1,10 @@
 use std::collections::BTreeMap;
-use crate::{
-    gauge_metric,
-    config::{deserialize_regex, serialize_regex},
-    sources::node::errors::{Error, ErrorContext},
-    event::{Metric, MetricValue},
-};
-
+use crate::config::{deserialize_regex, serialize_regex};
+use super::{Error, ErrorContext};
 use tokio::io::AsyncBufReadExt;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use event::{gauge_metric, Metric};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {

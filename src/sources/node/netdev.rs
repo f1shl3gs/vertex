@@ -1,18 +1,9 @@
 use serde::{Deserialize, Serialize};
 use regex::Regex;
-use crate::{
-    tags,
-    sum_metric,
-    event::{Metric, MetricValue},
-    config::{deserialize_regex, serialize_regex},
-    sources::node::{
-        errors::{Error, ErrorContext},
-        read_to_string,
-    },
-};
-use std::{
-    num::ParseIntError,
-};
+use crate::config::{deserialize_regex, serialize_regex};
+use super::{read_to_string, Error, ErrorContext};
+use std::num::ParseIntError;
+use event::{tags, sum_metric, Metric};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]

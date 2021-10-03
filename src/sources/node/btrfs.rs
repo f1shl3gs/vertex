@@ -1,11 +1,7 @@
 use std::collections::BTreeMap;
-use crate::{
-    tags,
-    event::Metric,
-};
-use crate::sources::node::errors::{Error, ErrorContext};
+use event::{Metric, tags};
+use super::{Error, ErrorContext, read_into, read_to_string};
 use std::path::{Path, PathBuf};
-use crate::sources::node::{read_into, read_to_string};
 
 const SECTOR_SIZE: u64 = 512;
 

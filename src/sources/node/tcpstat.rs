@@ -1,7 +1,5 @@
-use crate::{
-    tags,
-    event::{Metric, MetricValue}
-};
+use super::Error;
+use event::{tags, Metric, MetricValue};
 use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
 use netlink_packet_sock_diag::{
     NetlinkMessage,
@@ -18,7 +16,6 @@ use netlink_packet_sock_diag::{
     },
     constants::*,
 };
-use crate::sources::node::errors::Error;
 
 #[derive(Default, Debug)]
 struct Statistics {

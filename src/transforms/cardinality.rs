@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use std::borrow::{Cow};
 use crate::config::{TransformConfig, GlobalOptions, DataType};
 use crate::transforms::{Transform, FunctionTransform};
-use crate::event::Event;
+use event::Event;
 use std::collections::HashMap;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]

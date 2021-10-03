@@ -1,12 +1,6 @@
-use crate::{
-    tags,
-    sum_metric,
-    gauge_metric,
-    event::{Metric, MetricValue},
-};
+use event::{tags, sum_metric, gauge_metric, Metric};
 use std::path::{Path};
-use crate::sources::node::errors::{Error, ErrorContext};
-use crate::sources::node::{read_to_string};
+use super::{Error, ErrorContext, read_to_string};
 use std::collections::BTreeMap;
 use lazy_static::lazy_static;
 use regex::Regex;

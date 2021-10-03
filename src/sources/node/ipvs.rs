@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
-use crate::event::Metric;
-use crate::sources::node::errors::{Error, ErrorContext};
-use crate::sources::node::read_to_string;
+use event::Metric;
+use super::{read_to_string, Error, ErrorContext};
 use tokio::io::AsyncBufReadExt;
 use std::collections::BTreeMap;
 

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use crate::event::Metric;
-use crate::sources::node::errors::Error;
+use event::Metric;
+use super::Error;
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct BCacheConfig {

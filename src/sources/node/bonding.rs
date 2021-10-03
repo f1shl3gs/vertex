@@ -1,14 +1,8 @@
-use crate::{
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-    sources::node::read_to_string,
-};
+use super::read_to_string;
+use event::{gauge_metric, tags, Metric};
 use std::path::PathBuf;
-use std::collections::{
-    HashMap,
-};
-use crate::sources::node::errors::{Error, ErrorContext};
+use std::collections::HashMap;
+use super::{Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = PathBuf::from(sys_path);

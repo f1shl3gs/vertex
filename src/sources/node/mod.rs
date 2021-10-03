@@ -56,7 +56,7 @@ use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
-use crate::event::{Event};
+use event::Event;
 use std::{
     sync::Arc,
     time::{SystemTime, UNIX_EPOCH},
@@ -65,7 +65,9 @@ use std::{
 
 use cpu::CPUConfig;
 use diskstats::DiskStatsConfig;
-use crate::sources::node::errors::Error;
+use crate::sources::node::errors::{
+    Error, ErrorContext,
+};
 use std::str::FromStr;
 use crate::sources::node::netdev::NetdevConfig;
 use crate::sources::node::vmstat::VMStatConfig;
@@ -73,10 +75,7 @@ use crate::sources::node::netclass::NetClassConfig;
 use crate::sources::node::netstat::NetstatConfig;
 use crate::sources::node::ipvs::IPVSConfig;
 use std::io::Read;
-use crate::{
-    tags,
-    event::Metric,
-};
+use event::{tags, Metric};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

@@ -3,15 +3,10 @@
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 
 use serde::{Deserialize, Serialize};
-use crate::{
-    tags,
-    sum_metric,
-    gauge_metric,
-    event::{Metric, MetricValue},
-    config::{deserialize_regex, serialize_regex},
-};
+use crate::config::{deserialize_regex, serialize_regex};
+use super::{Error, ErrorContext};
+use event::{tags, gauge_metric, sum_metric, Metric};
 use tokio::io::{AsyncBufReadExt};
-use crate::sources::node::errors::{Error, ErrorContext};
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 

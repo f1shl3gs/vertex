@@ -1,12 +1,8 @@
 /// Exposes system information as provided by the uname systemc call
 
 use libc::c_char;
-use crate::{
-    tags,
-    gauge_metric,
-    event::{Metric, MetricValue},
-};
-use crate::sources::node::errors::Error;
+use event::{tags, gauge_metric, Metric};
+use super::Error;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {
