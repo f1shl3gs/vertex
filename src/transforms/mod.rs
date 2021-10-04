@@ -17,6 +17,7 @@ mod rename_fields;
 mod rename_tags;
 mod route;
 mod add_fields;
+mod ansii_striper;
 
 /// Transforms that are simple, and don't require attention to coordination.
 /// You can run them as simple functions over events in any order
