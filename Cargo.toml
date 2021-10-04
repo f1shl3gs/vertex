@@ -121,6 +121,8 @@ rustls = { version = "0.19.1" }
 tokio-rustls = { version = "0.22.0" }
 
 # Profile
+# criterion is not neccessary for any functionality, but the bench
+# need it.
 pprof = { version = "0.5.0", features = ["flamegraph", "criterion"] }
 
 # misc
