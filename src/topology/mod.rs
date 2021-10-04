@@ -568,6 +568,9 @@ impl Topology {
         if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
             drop(prev); // detach and forget
         }
+
+        self.shutdown_coordinator
+            .takeover_source(id, &mut new_pieces.shutdown_coordinator);
     }
 
     fn spawn_transform(&mut self, id: &str, new_pieces: &mut builder::Pieces) {

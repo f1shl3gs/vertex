@@ -78,9 +78,15 @@ pub async fn build_pieces(
         };
 
         let task = Task::new(name, typetag, async {
-            // TODO: add force shutdown
-            ext.await;
-            Ok(TaskOutput::Source)
+            match futures::future::try_select(
+                ext,
+                force_shutdown_tripwire.unit_error().boxed(),
+            ).await {
+                Ok(_) => {
+                    Ok(TaskOutput::Source)
+                }
+                Err(_) => Err(())
+            }
         });
 
         let task = Task::new(name, typetag, task);

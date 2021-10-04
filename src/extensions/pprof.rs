@@ -22,7 +22,7 @@ pub struct PProfConfig {
 #[typetag::serde(name = "pprof")]
 impl ExtensionConfig for PProfConfig {
     async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension> {
-        Ok(Box::pin(run(self.listen)))
+        Ok(Box::pin(run(self.listen, ctx.shutdown)))
     }
 
     fn extension_type(&self) -> &'static str {
@@ -30,27 +30,21 @@ impl ExtensionConfig for PProfConfig {
     }
 }
 
-async fn run(addr: SocketAddr) -> Result<(), ()> {
+async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
     let service = make_service_fn(|_conn| async {
         Ok::<_, Infallible>(service_fn(handle))
     });
 
-    // TODO: can't figure out why server won't start without spawn
-    // tokio::spawn(async move {
-    //     let server = Server::bind(&addr)
-    //         .serve(service);
-    //     if let Err(e) = server.await {
-    //         error!("pprof serve failed: {}", e)
-    //     }
-    // });
-
     let server = Server::bind(&addr)
-        .serve(service);
+        .serve(service)
+        .with_graceful_shutdown(async move {
+            shutdown.await;
+            ()
+        });
     if let Err(e) = server.await {
         error!("pprof serve failed: {}", e)
     }
 
-    println!("run done");
     Ok(())
 }
 
