@@ -37,10 +37,7 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
 
     let server = Server::bind(&addr)
         .serve(service)
-        .with_graceful_shutdown(async move {
-            shutdown.await;
-            ()
-        });
+        .with_graceful_shutdown(shutdown.map(|_| ()));
     if let Err(e) = server.await {
         error!("pprof serve failed: {}", e)
     }
@@ -78,63 +75,4 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 
     Ok(Response::new(Body::from(vec![])))
-}
-
-/// TODO: move this to a common mod
-async fn tripwire_handler(closed: bool) {
-    futures::future::poll_fn(|_| {
-        if closed {
-            std::task::Poll::Ready(())
-        } else {
-            std::task::Poll::Pending
-        }
-    })
-        .await
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::str::FromStr;
-
-    async fn hello_handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-        Ok(Response::new(Body::from("Hello World")))
-    }
-
-    #[tokio::test]
-    async fn start_server() {
-        let addr = SocketAddr::from_str("127.0.0.1:9000").unwrap();
-        let service = make_service_fn(|_conn| async {
-            Ok::<_, Infallible>(service_fn(hello_handle))
-        });
-
-        // tokio::spawn(async move {
-        //     let svr = Server::bind(&addr)
-        //         .serve(service);
-//
-        //     println!("start");
-        //     if let Err(e) = svr.await {
-        //         eprintln!("server error: {}", e)
-        //     }
-//
-        //     println!("done");
-        // });
-
-        let server = Server::bind(&addr)
-            .serve(service);
-
-        if let Err(err) = server.await {
-            println!("err: {}", err);
-        }
-    }
-
-    #[tokio::test]
-    async fn test_run() {
-        let addr = SocketAddr::from_str("127.0.0.1:9000").unwrap();
-        let task = Box::pin(run(addr));
-
-        let h = tokio::spawn(task);
-
-        let f = h.await.unwrap();
-    }
 }
