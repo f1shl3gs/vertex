@@ -533,9 +533,35 @@ impl Topology {
             );
             self.spawn_sink(id, &mut new_pieces);
         }
+
+        // Extensions
+        for id in &diff.extensions.to_change {
+            info!(
+                message = "Rebuilding extension",
+                ?id
+            );
+            self.spawn_extension(id, &mut new_pieces);
+        }
+
+        for id in &diff.extensions.to_add {
+            info!(
+                message = "Starting extension",
+                ?id
+            );
+            self.spawn_extension(id, &mut new_pieces);
+        }
     }
 
     fn spawn_sink(&mut self, id: &str, new_pieces: &mut builder::Pieces) {
+        let task = new_pieces.tasks.remove(id).unwrap();
+        let task = handle_errors(task, self.abort_tx.clone());
+        let spawned = tokio::spawn(task);
+        if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
+            drop(prev); // detach and forget
+        }
+    }
+
+    fn spawn_extension(&mut self, id: &str, new_pieces: &mut builder::Pieces) {
         let task = new_pieces.tasks.remove(id).unwrap();
         let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);

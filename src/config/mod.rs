@@ -18,7 +18,6 @@ use crate::{
 use crate::shutdown::ShutdownSignal;
 
 pub mod format;
-mod pipeline;
 mod loading;
 mod diff;
 mod helper;
@@ -169,13 +168,14 @@ pub struct Config {
 
     pub sinks: IndexMap<String, SinkOuter>,
 
+    pub extensions: IndexMap<String, Box<dyn ExtensionConfig>>,
+
     #[serde(rename = "health_checks")]
     pub health_checks: HealthcheckOptions,
 
-    expansions: IndexMap<String, Vec<String>>
+    #[serde(skip_serializing, skip_deserializing)]
+    expansions: IndexMap<String, Vec<String>>,
 }
-
-impl Config {}
 
 pub struct SourceContext {
     pub name: String,
@@ -240,6 +240,7 @@ pub trait SinkConfig: core::fmt::Debug + Send + Sync {
 
 #[derive(Debug, Clone)]
 pub struct ExtensionContext {
+    pub name: String,
     pub global: GlobalOptions,
     pub shutdown: ShutdownSignal,
 }
@@ -249,7 +250,9 @@ pub struct ExtensionContext {
 pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
     async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension>;
 
-    fn resource(&self) -> Vec<Resource> { Vec::new() }
+    fn extension_type(&self) -> &'static str;
+
+    fn resources(&self) -> Vec<Resource> { Vec::new() }
 }
 
 #[cfg(test)]

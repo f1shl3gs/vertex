@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, SinkConfig, TransformConfig, HealthcheckOptions, ExpandType};
+use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, SinkConfig, TransformConfig, HealthcheckOptions, ExpandType, ExtensionConfig};
 use indexmap::IndexMap;
 use crate::config::provider::ProviderConfig;
 use super::validation;
@@ -16,6 +16,8 @@ pub struct Builder {
     pub transforms: IndexMap<String, TransformOuter>,
     #[serde(default)]
     pub sinks: IndexMap<String, SinkOuter>,
+    #[serde(default)]
+    pub extensions: IndexMap<String, Box<dyn ExtensionConfig>>,
 
     pub provider: Option<Box<dyn ProviderConfig>>,
 
@@ -40,36 +42,6 @@ impl Builder {
 
     pub fn build_with_warnings(self) -> Result<(Config, Vec<String>), Vec<String>> {
         compile(self)
-    }
-
-    pub fn add_source<S: SourceConfig + 'static, T: Into<String>>(&mut self, name: T, source: S) {
-        self.sources.insert(name.into(), Box::new(source));
-    }
-
-    pub fn add_sink<S: SinkConfig + 'static, T: Into<String>>(
-        &mut self,
-        name: T,
-        inputs: &[&str],
-        sink: S,
-    ) {
-        let inputs = inputs.iter().map(|&s| s.to_owned()).collect::<Vec<_>>();
-        let sink = SinkOuter::new(inputs, Box::new(sink));
-        self.sinks.insert(name.into(), sink);
-    }
-
-    pub fn add_transform<T: TransformConfig + 'static, S: Into<String>>(
-        &mut self,
-        name: S,
-        inputs: &[&str],
-        transform: T,
-    ) {
-        let inputs = inputs.iter().map(|&s| s.to_owned()).collect::<Vec<_>>();
-        let transform = TransformOuter {
-            inputs,
-            inner: Box::new(transform),
-        };
-
-        self.transforms.insert(name.into(), transform);
     }
 
     pub fn append(&mut self, with: Self) -> Result<(), Vec<String>> {
@@ -103,6 +75,12 @@ impl Builder {
             }
         });
 
+        with.sinks.keys().for_each(|k| {
+            if self.extensions.contains_key(k) {
+                errors.push(format!("duplicate extension name found: {}", k))
+            }
+        });
+
         if !errors.is_empty() {
             return Err(errors);
         }
@@ -110,8 +88,51 @@ impl Builder {
         self.sources.extend(with.sources);
         self.transforms.extend(with.transforms);
         self.sinks.extend(with.sinks);
+        self.extensions.extend(with.extensions);
 
         Ok(())
+    }
+
+    #[cfg(test)]
+    pub fn add_source<S: SourceConfig + 'static, T: Into<String>>(&mut self, name: T, source: S) {
+        self.sources.insert(name.into(), Box::new(source));
+    }
+
+    #[cfg(test)]
+    pub fn add_sink<S: SinkConfig + 'static, T: Into<String>>(
+        &mut self,
+        name: T,
+        inputs: &[&str],
+        sink: S,
+    ) {
+        let inputs = inputs.iter().map(|&s| s.to_owned()).collect::<Vec<_>>();
+        let sink = SinkOuter::new(inputs, Box::new(sink));
+        self.sinks.insert(name.into(), sink);
+    }
+
+    #[cfg(test)]
+    pub fn add_transform<T: TransformConfig + 'static, S: Into<String>>(
+        &mut self,
+        name: S,
+        inputs: &[&str],
+        transform: T,
+    ) {
+        let inputs = inputs.iter().map(|&s| s.to_owned()).collect::<Vec<_>>();
+        let transform = TransformOuter {
+            inputs,
+            inner: Box::new(transform),
+        };
+
+        self.transforms.insert(name.into(), transform);
+    }
+
+    #[cfg(test)]
+    pub fn add_extension<T: ExtensionConfig + 'static, S: Into<String>>(
+        &mut self,
+        name: S,
+        extension: T,
+    ) {
+        self.extensions.insert(name.into(), Box::new(extension));
     }
 }
 
@@ -142,6 +163,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
                 sources: builder.sources,
                 sinks: builder.sinks,
                 transforms: builder.transforms,
+                extensions: builder.extensions,
                 expansions,
             },
             warnings,

@@ -99,7 +99,7 @@ tracing-log = { version = "0.1.2", default-features = false, features = ["std", 
 tracing-subscriber = { version = "0.2.24", default-features = false, features = ["env-filter", "json", "ansi"] }
 
 # HTTP
-hyper = { version = "0.14.12", features = ["server", "http1", "tcp"] }
+hyper = { version = "0.14.12", features = ["server", "http1", "http2", "tcp"] }
 hyper-rustls = { version = "0.22.1" }
 
 # Serde

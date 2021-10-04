@@ -184,3 +184,95 @@ fn interpolate(input: &str, vars: &HashMap<String, String>) -> (String, Vec<Stri
 
     (interpolated, warnings)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const INPUT: &str = r#"
+global:
+  data_dir: ./temp
+
+health_checks:
+  enabled: false
+
+extensions:
+  pprof:
+    type: pprof
+    listen: 0.0.0.0:9000
+
+sources:
+  kmsg:
+    type: kmsg
+  node:
+    type: node_metrics
+    interval: 15s
+  selfstat:
+    type: selfstat
+  generator:
+    type: generator
+#  ntp:
+#    type: ntp
+#    interval: 15s
+#    timeout: 10s
+#    pools:
+#      - time1.aliyun.com
+#      - time2.aliyun.com
+#      - time3.aliyun.com
+#      - time4.aliyun.com
+#      - time5.aliyun.com
+#      - time6.aliyun.com
+#      - time7.aliyun.com
+  journald:
+    type: journald
+    units: []
+    excludes: []
+
+transforms:
+  add_extra_tags:
+    type: add_tags
+    inputs:
+      - generator
+      # - ntp
+    tags:
+      hostname: ${HOSTNAME}
+
+sinks:
+  blackhole:
+    type: blackhole
+    inputs:
+      - journald
+  stdout:
+    type: blackhole
+    inputs:
+      - kmsg
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - add_extra_tags
+      - node
+      - selfstat
+    listen: 127.0.0.1:9101
+
+        "#;
+
+    #[test]
+    fn test_load_from_str() {
+        let (config, warnings) = load_from_str(INPUT.to_string()).unwrap();
+        assert_eq!(warnings.len(), 0);
+        assert_eq!(config.sources.len(), 5);
+    }
+
+    #[test]
+    fn test_load() {
+        let cursor = std::io::Cursor::new(INPUT.to_string());
+        let reader = std::io::BufReader::new(cursor);
+
+        let (builder, warnings) = load(reader, format::FormatHint::Some(Format::YAML)).unwrap();
+        assert_eq!(warnings.len(), 0);
+        assert_eq!(builder.sources.len(), 5);
+        assert_eq!(builder.transforms.len(), 1);
+        assert_eq!(builder.sinks.len(), 3);
+        assert_eq!(builder.extensions.len(), 1);
+    }
+}

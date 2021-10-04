@@ -47,6 +47,23 @@ impl ShutdownCoordinator {
         (shutdown_signal, force_tripwire)
     }
 
+    // TODO: implement it
+    pub fn register_extension(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output=()>) {
+        let (begun_trigger, begun_tripwire) = Tripwire::new();
+        let (force_trigger, force_tripwire) = Tripwire::new();
+        let (complete_trigger, complete_tripwire) = Tripwire::new();
+
+        self.begun_triggers.insert(name.to_string(), begun_trigger);
+        self.force_triggers.insert(name.to_string(), force_trigger);
+        self.complete_tripwires.insert(name.to_string(), complete_tripwire);
+
+        let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
+
+        let force_tripwire = force_tripwire.then(tripwire_handler);
+
+        (shutdown_signal, force_tripwire)
+    }
+
     /// Takes ownership of all internal state for the given source from another ShutdownCoordinator.
     pub fn takeover_source(&mut self, name: &str, other: &mut Self) {
         let existing = self.begun_triggers.insert(

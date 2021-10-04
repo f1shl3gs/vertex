@@ -110,8 +110,12 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
         .sinks
         .iter()
         .map(|(id, config)| (id, config.resources(id)));
+    let extension_resources = builder
+        .extensions
+        .iter()
+        .map(|(id, config)| (id, config.resources()));
     let conflicting_components =
-        Resource::conflicts(source_resources.chain(sink_resources));
+        Resource::conflicts(source_resources.chain(sink_resources).chain(extension_resources));
 
     if conflicting_components.is_empty() {
         Ok(())

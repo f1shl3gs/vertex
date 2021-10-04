@@ -8,8 +8,6 @@ extern crate vertex;
 // static GLOBAL: MiMalloc = MiMalloc;
 
 use tokio::runtime;
-use hyper::{Body, Request, Response, Server};
-use hyper::service::{make_service_fn, service_fn};
 use std::convert::Infallible;
 use tokio::time::Duration;
 
@@ -29,39 +27,6 @@ use tokio_stream::StreamExt;
 use tracing::{info, warn, error, dispatcher::{set_global_default}, Dispatch};
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
-
-
-async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let params: HashMap<String, String> = _req
-        .uri()
-        .query()
-        .map(|v| {
-            url::form_urlencoded::parse(v.as_bytes())
-                .into_owned()
-                .collect()
-        })
-        .unwrap_or_else(HashMap::new);
-
-    let seconds = match params.get("seconds") {
-        Some(value) => value.parse().unwrap_or(30u64),
-        _ => 30
-    };
-
-    let guard = pprof::ProfilerGuard::new(100).unwrap();
-
-    tokio::time::sleep(std::time::Duration::from_secs(seconds)).await;
-
-    match guard.report().build() {
-        Ok(report) => {
-            let file = std::fs::File::create("flamegraph.svg").unwrap();
-            report.flamegraph(file).unwrap();
-        }
-
-        Err(_) => {}
-    }
-
-    Ok(Response::new(Body::from(vec![])))
-}
 
 #[derive(Clap, Debug)]
 #[clap(version = "0.1.0")]
@@ -145,21 +110,6 @@ fn main() {
         .enable_time()
         .build()
         .unwrap();
-
-    rt.spawn(async {
-        let addr = "127.0.0.1:3080".parse().expect("listen addr");
-
-        let make_service = make_service_fn(|_conn| async {
-            Ok::<_, Infallible>(service_fn(handle))
-        });
-
-        let svr = Server::bind(&addr)
-            .serve(make_service);
-
-        if let Err(e) = svr.await {
-            eprintln!("server error: {}", e)
-        }
-    });
 
     info!(
         message = "start vertex",

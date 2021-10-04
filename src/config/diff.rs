@@ -62,6 +62,7 @@ pub struct ConfigDiff {
     pub sources: Difference,
     pub transforms: Difference,
     pub sinks: Difference,
+    pub extensions: Difference,
 }
 
 impl ConfigDiff {
@@ -74,6 +75,7 @@ impl ConfigDiff {
             sources: Difference::new(&old.sources, &new.sources),
             transforms: Difference::new(&old.transforms, &new.transforms),
             sinks: Difference::new(&old.sinks, &new.sinks),
+            extensions: Difference::new(&old.extensions, &new.extensions),
         }
     }
 
@@ -82,6 +84,7 @@ impl ConfigDiff {
         self.sources.flip();
         self.transforms.flip();
         self.sinks.flip();
+        self.extensions.flip();
         self
     }
 }

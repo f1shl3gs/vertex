@@ -19,6 +19,7 @@ use crate::{
 use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use event::Event;
+use crate::config::ExtensionContext;
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
 
@@ -50,6 +51,41 @@ pub async fn build_pieces(
     let mut health_checks = HashMap::new();
     let health_checks_enabled = config.health_checks.enabled;
     let mut errors = vec![];
+
+    // Build extensions
+    for (name, extension) in config
+        .extensions
+        .iter().
+        filter(|(name, _)| diff.extensions.contains_new(name))
+    {
+        let typetag = extension.extension_type();
+        let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_extension(name);
+        let ctx = ExtensionContext {
+            name: name.to_string(),
+            global: config.global.clone(),
+            shutdown: shutdown_signal,
+        };
+
+        let ext = match extension.build(ctx).await {
+            Ok(ext) => ext,
+            Err(err) => {
+                errors.push(
+                    format!("Extension {}: {}", name, err)
+                );
+
+                continue;
+            }
+        };
+
+        let task = Task::new(name, typetag, async {
+            // TODO: add force shutdown
+            ext.await;
+            Ok(TaskOutput::Source)
+        });
+
+        let task = Task::new(name, typetag, task);
+        tasks.insert(name.clone(), task);
+    }
 
     // Build sources
     for (name, source) in config

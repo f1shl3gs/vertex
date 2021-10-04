@@ -4,6 +4,11 @@ global:
 health_checks:
   enabled: false
 
+extensions:
+  pprof:
+    type: pprof
+    listen: 127.0.0.1:9000
+
 sources:
   kmsg:
     type: kmsg
@@ -26,10 +31,10 @@ sources:
 #      - time5.aliyun.com
 #      - time6.aliyun.com
 #      - time7.aliyun.com
-  journald:
-    type: journald
-    units: []
-    excludes: []
+#  journald:
+#    type: journald
+#    units: []
+#    excludes: []
 
 transforms:
   add_extra_tags:
@@ -41,10 +46,10 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
-  blackhole:
-    type: blackhole
-    inputs:
-      - journald
+#  blackhole:
+#    type: blackhole
+#    inputs:
+#      - journald
   stdout:
     type: blackhole
     inputs:
