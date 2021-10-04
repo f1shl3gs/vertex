@@ -109,7 +109,7 @@ serde_json = { version = "1.0.67", default-features = false, features = ["raw_va
 
 # netlink
 netlink-sys = { version = "0.7.0", features = ["tokio_socket"] }
-rtnetlink = { version = "0.8.0", features = ["tokio_socket"] }
+rtnetlink = { version = "0.8.1", features = ["tokio_socket"] }
 netlink-packet-sock-diag = "0.1.0"
 
 # protobuf
