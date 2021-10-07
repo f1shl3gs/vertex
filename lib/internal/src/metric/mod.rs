@@ -1,7 +1,6 @@
 mod recorder;
 mod handle;
 
-use metrics::Recorder;
 // re-export
 pub use recorder::InternalRecorder;
 

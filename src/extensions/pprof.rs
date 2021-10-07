@@ -7,7 +7,6 @@ use hyper::{
     service::{make_service_fn, service_fn},
 };
 use serde::{Deserialize, Serialize};
-use stream_cancel::Tripwire;
 use crate::config::{ExtensionConfig, ExtensionContext};
 use crate::extensions::Extension;
 use crate::shutdown::ShutdownSignal;

@@ -66,15 +66,15 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
 }
 
 impl Recorder for InternalRecorder {
-    fn register_counter(&self, key: &Key, unit: Option<Unit>, description: Option<&'static str>) {
+    fn register_counter(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
         self.inner.op(MetricKind::Counter, key, |_| {}, Handle::counter)
     }
 
-    fn register_gauge(&self, key: &Key, unit: Option<Unit>, description: Option<&'static str>) {
+    fn register_gauge(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
         self.inner.op(MetricKind::Gauge, key, |_| {}, Handle::gauge)
     }
 
-    fn register_histogram(&self, key: &Key, unit: Option<Unit>, description: Option<&'static str>) {
+    fn register_histogram(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
         self.inner.op(MetricKind::Histogram, key, |_| {}, Handle::histogram)
     }
 

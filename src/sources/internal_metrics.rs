@@ -1,7 +1,6 @@
 use std::time::{SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 use futures::{SinkExt, StreamExt};
-use regex::internal::Input;
 use tokio_stream::wrappers::IntervalStream;
 use event::Event;
 use crate::{

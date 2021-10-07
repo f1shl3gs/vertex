@@ -19,7 +19,7 @@ use crate::{
 use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use event::Event;
-use internal::{EventsReceived, EventsSent, InternalEvent};
+use internal::{EventsReceived, EventsSent};
 use crate::config::ExtensionContext;
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};

@@ -34,6 +34,7 @@ default = [
     "sources-kmsg",
     "sources-journald",
     "sources-selfstat",
+    "sources-internal_metrics",
     # transforms
     "transforms-add_tags",
     "transforms-add_fields",
@@ -54,7 +55,7 @@ tokio-console = [
 
 # sources
 sources-generator = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "dotenv-parser"]
+sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink", "dotenv-parser"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-kafka = ["rdkafka"]
 sources-kmsg = []
@@ -62,6 +63,7 @@ sources-selfstat = ["libc"]
 sources-journald = []
 sources-internal_metrics = []
 sources-internal_log = []
+sources-redis = ["redis/tokio"]
 
 # transforms
 transforms-add_tags = []
@@ -94,6 +96,7 @@ nix = "0.22.2"
 tokio = { version = "1.12.0", features = ["test-util"] }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
 tempfile = { version = "3.2.0" }
+
 
 [dependencies]
 # workspaces
@@ -169,3 +172,4 @@ libc = { version = "0.2.101", optional = true }
 dotenv-parser = { version = "0.1.3", optional = true }
 nom = { version = "7.0.0" }
 snafu = { version = "0.6.10" }
+redis = { version = "0.21.0", default-features = false, features = ["tokio", "tokio-comp"], optional = true }

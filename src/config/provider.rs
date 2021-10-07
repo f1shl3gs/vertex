@@ -76,7 +76,7 @@ pub struct FileConfig {
 #[async_trait]
 #[typetag::serde(name = "file")]
 impl ProviderConfig for FileConfig {
-    async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder> {
+    async fn build(&mut self, _signal_handler: &mut SignalHandler) -> Result<Builder> {
         todo!()
     }
 

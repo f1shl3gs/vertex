@@ -1,10 +1,21 @@
 use serde::{Deserialize, Serialize};
-use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, HealthcheckOptions, ExpandType, ExtensionConfig};
+use crate::config::{
+    GlobalOptions,
+    TransformOuter,
+    SinkOuter,
+    Config,
+    SourceConfig,
+    HealthcheckOptions,
+    ExpandType,
+    ExtensionConfig,
+};
 use indexmap::IndexMap;
 use crate::config::provider::ProviderConfig;
 use super::validation;
 use glob;
 use crate::config::global::default_data_dir;
+#[cfg(test)]
+use crate::config::{SinkConfig, TransformConfig};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

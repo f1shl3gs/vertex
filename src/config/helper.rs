@@ -30,6 +30,10 @@ pub fn default_false() -> bool {
     false
 }
 
+pub fn default_interval() -> chrono::Duration {
+    chrono::Duration::seconds(15)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

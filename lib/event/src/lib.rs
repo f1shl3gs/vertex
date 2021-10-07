@@ -133,18 +133,16 @@ impl From<Metric> for Event {
 impl EncodeBytes<Event> for Event {
     type Error = EncodeError;
 
-    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error> where B: BufMut, Self: Sized {
+    fn encode<B>(self, _buffer: &mut B) -> Result<(), Self::Error> where B: BufMut, Self: Sized {
         todo!()
-        // proto::EventWrapper::from(self).encode(buffer)
     }
 }
 
 impl DecodeBytes<Event> for Event {
     type Error = DecodeError;
 
-    fn decode<B>(buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
+    fn decode<B>(_buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
         todo!()
-        // proto::EventWrapper::decode(buffer).map(|wrp| wrp.into())
     }
 }
 

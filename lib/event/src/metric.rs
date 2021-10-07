@@ -43,8 +43,8 @@ impl ByteSizeOf for MetricValue {
     fn allocated_bytes(&self) -> usize {
         match self {
             Self::Sum(_) | Self::Gauge(_) => 0,
-            Self::Histogram { buckets, .. } => 0,
-            Self::Summary { quantiles, .. } => 0,
+            Self::Histogram { .. } => 0,
+            Self::Summary { .. } => 0,
             _ => unreachable!()
         }
     }

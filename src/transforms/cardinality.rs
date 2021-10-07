@@ -1,11 +1,11 @@
 use serde::{Deserialize, Serialize};
 use bloom::{ASMS, BloomFilter};
 use async_trait::async_trait;
-use std::borrow::{Cow};
 use crate::config::{TransformConfig, GlobalOptions, DataType};
 use crate::transforms::{Transform, FunctionTransform};
 use event::Event;
 use std::collections::HashMap;
+use std::fmt::{Debug, Formatter};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(tag = "limit_exceeded_action", rename_all = "snake_case")]
@@ -24,6 +24,7 @@ impl Default for LimitExceededAction {
 #[derive(Copy, Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 struct CardinalityConfig {
+    //
     pub limit: usize,
     pub action: LimitExceededAction,
 }
@@ -31,29 +32,35 @@ struct CardinalityConfig {
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for CardinalityConfig {
-    async fn build(&self, globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _globals: &GlobalOptions) -> crate::Result<Transform> {
         Ok(Transform::function(Cardinality::new(self.limit)))
     }
 
     fn input_type(&self) -> DataType {
-        todo!()
+        DataType::Metric
     }
 
     fn output_type(&self) -> DataType {
-        todo!()
+        DataType::Metric
     }
 
     fn transform_type(&self) -> &'static str {
-        todo!()
+        "cardinality"
     }
 }
 
-struct LabelValueSet {
+struct TagValueSet {
     elements: usize,
     filter: BloomFilter,
 }
 
-impl LabelValueSet {
+impl Debug for TagValueSet {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Bloom")
+    }
+}
+
+impl TagValueSet {
     pub fn new(limit: usize) -> Self {
         let bits = (5000 * 1024) / 8;
         let hashes = bloom::optimal_num_hashes(bits, limit as u32);
@@ -65,7 +72,7 @@ impl LabelValueSet {
     }
 
     #[inline]
-    fn contains(self, value: &str) -> bool {
+    fn contains(&self, value: &str) -> bool {
         self.filter.contains(&value)
     }
 
@@ -89,11 +96,10 @@ impl LabelValueSet {
     }
 }
 
-// #[derive(Debug)]
 struct Cardinality {
     limit: usize,
     action: LimitExceededAction,
-    accepted_labels: HashMap<String, LabelValueSet>,
+    accepted_tags: HashMap<String, TagValueSet>,
 }
 
 impl Clone for Cardinality {
@@ -101,7 +107,7 @@ impl Clone for Cardinality {
         Self {
             limit: self.limit,
             action: self.action,
-            accepted_labels: HashMap::new(),
+            accepted_tags: HashMap::new(),
         }
     }
 }
@@ -111,38 +117,45 @@ impl Cardinality {
         Self {
             limit,
             action: LimitExceededAction::DropEvent,
-            accepted_labels: HashMap::new(),
+            accepted_tags: HashMap::new(),
         }
     }
 
-    fn insert(&mut self, value: Cow<'_, String>) -> bool {
-        todo!()
-    }
+    /// Takes in key and a value corresponding to a tag on an incoming Metric
+    /// event. If that value is already part of set of accepted values for that
+    /// key, then simply retruns true. If that value is not yet part of the
+    /// accepted values for that key, checks whether we have hit the limit
+    /// for that key yet and if not adds the value to the set of accepted values
+    /// for the key and returns true, otherwise returns false. A false return
+    /// value indicates to the caller that the value is not accepted for this
+    /// key, and the configured limit_execeed_action should be taken.
+    fn try_accept_tag(&mut self, key: &str, value: &str) -> bool {
+        if !self.accepted_tags.contains_key(key) {
+            self.accepted_tags.insert(
+                key.to_string(),
+                TagValueSet::new(self.limit),
+            );
+        }
 
-    fn exceeded(&mut self, key: String, value: String) -> bool {
-        if !self.accepted_labels.contains_key(&key) {
+        let set = self.accepted_tags.get_mut(key).unwrap();
+        if set.contains(value) {
+            // Tag value has already been accepted, nothing more to do
             return true;
         }
-/*
-        let value_set = match self.accepted_labels.get_mut(&key) {
-            Some(value_set) => value_set,
-            None => {
-                let mut vs = LabelValueSet::new(self.limit);
-                self.accepted_labels.insert(key, vs);
-                vs.borrow_mut()
-            }
-        };
 
-        if value_set.contains(&value) {
+        // Tag value not yet part of the accepted set
+        if set.len() < self.limit {
+            // accept the new value
+            set.insert(value);
+            if set.len() == self.limit {
+                // emit limit reached event
+            }
+
+            true
+        } else {
+            // New tag value is rejected
             false
         }
-
-        if value_set.len() >= self.limit {
-            true
-        }
-
-        value_set.insert(&value);*/
-        false
     }
 }
 
@@ -150,15 +163,55 @@ impl FunctionTransform for Cardinality {
     fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
         let metric = event.as_metric();
 
+        for (k, v) in &metric.tags {
+            if !self.try_accept_tag(k, v) {
+                // rejected
+                return;
+            }
+        }
+
+        output.push(event)
     }
 }
 
-/*
-impl TaskTransform for Cardinality {
-    fn transform(
-        self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item=Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item=Event> + Send>> {
-        todo!()
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_tag_value_set() {
+        let mut set = TagValueSet::new(10);
+        assert_eq!(set.len(), 0);
+        assert_eq!(set.contains("foo"), false);
+
+        assert_eq!(set.insert("foo"), true);
+        assert_eq!(set.contains("foo"), true);
+        assert_eq!(set.len(), 1);
+
+        assert_eq!(set.insert("bar"), true);
+        assert_eq!(set.contains("bar"), true);
+        assert_eq!(set.len(), 2);
     }
-}*/
+
+    #[test]
+    fn test_tag_value_set_limit() {
+        let total = 50;
+        let mut set = TagValueSet::new(total);
+        for i in 0..total {
+            let val = format!("{}", i);
+            assert_eq!(set.insert(&val), true);
+        }
+
+        assert_eq!(set.len(), total);
+
+        for i in 0..total {
+            let val = format!("{}", i);
+            assert_eq!(set.insert(&val), false)
+        }
+    }
+
+    #[test]
+    fn test_tag_key_limit() {
+
+    }
+}

@@ -1,9 +1,6 @@
 pub mod metric;
 mod common;
 
-use std::io;
-use metric::InternalRecorder;
-
 pub use common::*;
 
 pub trait InternalEvent {
