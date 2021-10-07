@@ -37,12 +37,23 @@ impl FunctionTransform for AddTags {
             return;
         }
 
-        let metric = event.as_mut_metric();
-        for (k, v) in self.tags.iter() {
-            metric.tags.insert(k.clone(), v.clone());
-        }
+        match event {
+            Event::Metric(ref mut metric) => {
+                for (k, v) in self.tags.iter() {
+                    metric.tags.insert(k.clone(), v.clone());
+                }
 
-        output.push(event);
+                output.push(event);
+            }
+
+            Event::Log(ref mut log) => {
+                for (k, v) in self.tags.iter() {
+                    log.tags.insert(k.clone(), v.clone());
+                }
+
+                output.push(event);
+            }
+        }
     }
 }
 
@@ -57,11 +68,11 @@ impl TransformConfig for AddTagsConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Metric
+        DataType::Any
     }
 
     fn output_type(&self) -> DataType {
-        DataType::Metric
+        DataType::Any
     }
 
     fn transform_type(&self) -> &'static str {
