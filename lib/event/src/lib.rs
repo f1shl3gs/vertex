@@ -12,64 +12,62 @@ use buffers::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
 
-#[macro_export]
-macro_rules! gauge_metric {
-    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: tags!(
-                $($k => $v,)*
-            ),
-            unit: None,
-            timestamp: 0,
-            value: event::MetricValue::Gauge($value)
-        }
-    };
-    ($name: expr, $desc: expr, $value: expr) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: Default::default(),
-            unit: None,
-            timestamp: 0,
-            value: event::MetricValue::Gauge($value)
-        }
-    };
+pub trait ByteSizeOf {
+    /// Returns the in-memory size of this type
+    ///
+    /// This function returns the total number of bytes that
+    /// [`std::mem::size_of`] does in addition to any interior
+    /// allocated bytes. It default implementation is `std::mem::size_of`
+    /// + `ByteSizeOf::allocated_bytes`
+    fn size_of(&self) -> usize {
+        std::mem::size_of_val(self) + self.allocated_bytes()
+    }
+
+    /// Returns the allocated bytes of this type
+    fn allocated_bytes(&self) -> usize;
 }
 
-#[macro_export]
-macro_rules! sum_metric {
-    ($name: expr, $desc: expr, $value: expr, $( $k: expr => $v: expr),* ) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: tags!(
-                $($k => $v,)*
-            ),
-            unit: None,
-            timestamp: 0,
-            value: event::MetricValue::Sum($value.into())
-        }
-    };
-
-    ($name: expr, $desc: expr, $value: expr) => {
-        Metric{
-            name: $name.into(),
-            description: Some($desc.into()),
-            tags: Default::default(),
-            unit: None,
-            timestamp: 0,
-            value: event::MetricValue::Sum($value)
-        }
-    };
+impl ByteSizeOf for String {
+    fn allocated_bytes(&self) -> usize {
+        self.len()
+    }
 }
 
+impl<K, V> ByteSizeOf for BTreeMap<K, V>
+    where
+        K: ByteSizeOf,
+        V: ByteSizeOf
+{
+    fn allocated_bytes(&self) -> usize {
+        self.iter()
+            .fold(0, |acc, (k, v)| acc + k.size_of() + v.size_of())
+    }
+}
+
+impl<T> ByteSizeOf for Vec<T>
+    where
+        T: ByteSizeOf
+{
+    fn allocated_bytes(&self) -> usize {
+        self.iter()
+            .fold(0, |acc, i| acc + i.size_of())
+    }
+}
 
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),
+}
+
+impl ByteSizeOf for Event {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Event::Log(log) => log.allocated_bytes(),
+            Event::Metric(metric) => metric.allocated_bytes(),
+            _ => unreachable!()
+        }
+    }
 }
 
 impl Event {
@@ -106,6 +104,22 @@ impl Event {
         match self {
             Event::Log(l) => l,
             _ => panic!("Failed type coercion, {:?} is not a log", self)
+        }
+    }
+}
+
+impl Event {
+    /// Returns the in-memory size of this type
+    pub fn size_of(&self) -> usize {
+        std::mem::size_of_val(self) + self.allocated_bytes()
+    }
+
+    /// Returns the allocated bytes of this type
+    pub fn allocated_bytes(&self) -> usize {
+        match self {
+            Event::Metric(metric) => metric.allocated_bytes(),
+            Event::Log(log) => log.allocated_bytes(),
+            _ => unreachable!()
         }
     }
 }

@@ -22,6 +22,9 @@ extern crate bloom;
 #[macro_use]
 extern crate tracing;
 
+#[macro_use]
+extern crate internal;
+
 pub(crate) use error::Error;
 
 pub type Result<T> = std::result::Result<T, Error>;

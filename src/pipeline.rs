@@ -30,6 +30,7 @@ pub struct Pipeline {
 
     inlines: Vec<Box<dyn FunctionTransform>>,
     outstanding: usize,
+    bytes_outstanding: usize,
 }
 
 impl Pipeline {
@@ -46,7 +47,12 @@ impl Pipeline {
         // here because it gives us a chance to allow the natural batching
         // of `Pipeline` to kick in
         if self.outstanding > 0 {
+            emit!(&internal::EventsSent{
+                count: self.outstanding,
+                byte_size: self.bytes_outstanding
+            });
             self.outstanding = 0;
+            self.bytes_outstanding = 0;
         }
 
         while let Some(event) = self.enqueued.pop_front() {
@@ -107,6 +113,7 @@ impl Pipeline {
             // might blow this queue size.
             enqueued: VecDeque::with_capacity(16),
             outstanding: 0,
+            bytes_outstanding: 0,
         }
     }
 
@@ -129,6 +136,7 @@ impl futures::Sink<Event> for Pipeline {
 
     fn start_send(mut self: Pin<&mut Self>, item: Event) -> Result<(), Self::Error> {
         self.outstanding += 1;
+        self.bytes_outstanding += item.size_of();
 
         // Note how this gets **swapped** with `new_working_set` in the loop.
         // At the end of the loop, it will only contain finalized events.
@@ -163,7 +171,7 @@ mod tests {
     use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
     use tokio::time::{
-        sleep, timeout
+        sleep, timeout,
     };
 
     #[derive(Clone)]

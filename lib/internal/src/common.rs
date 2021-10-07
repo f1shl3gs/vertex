@@ -1,0 +1,32 @@
+use metrics::counter;
+use crate::InternalEvent;
+
+#[derive(Debug)]
+pub struct EventsReceived {
+    pub count: usize,
+    pub byte_size: usize,
+}
+
+impl InternalEvent for EventsReceived {
+    fn emit_metrics(&self) {
+        counter!("component_received_events_total", self.count as u64);
+        counter!("events_in_total", self.count as u64);
+        counter!("component_received_event_bytes_total", self.byte_size as u64);
+    }
+}
+
+#[derive(Debug)]
+pub struct EventsSent {
+    pub count: usize,
+    pub byte_size: usize,
+}
+
+impl InternalEvent for EventsSent {
+    fn emit_metrics(&self) {
+        if self.count > 0 {
+            counter!("events_out_total", self.count as u64);
+            counter!("component_sent_events_total", self.count as u64);
+            counter!("component_sent_event_bytes_total", self.byte_size as u64);
+        }
+    }
+}

@@ -1,5 +1,6 @@
 use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
+use crate::ByteSizeOf;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -12,7 +13,7 @@ pub enum Kind {
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
-    pub count: i32,
+    pub count: u32,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
@@ -27,15 +28,26 @@ pub enum MetricValue {
     Sum(f64),
     Gauge(f64),
     Histogram {
-        count: i64,
+        count: u64,
         sum: f64,
         buckets: Vec<Bucket>,
     },
     Summary {
-        count: f64,
+        count: u64,
         sum: f64,
         quantiles: Vec<Quantile>,
     },
+}
+
+impl ByteSizeOf for MetricValue {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Self::Sum(_) | Self::Gauge(_) => 0,
+            Self::Histogram { buckets, .. } => 0,
+            Self::Summary { quantiles, .. } => 0,
+            _ => unreachable!()
+        }
+    }
 }
 
 impl MetricValue {
@@ -67,9 +79,20 @@ pub struct Metric {
 
     pub unit: Option<String>,
 
+    /// Nanoseconds
     pub timestamp: i64,
 
     pub value: MetricValue,
+}
+
+impl ByteSizeOf for Metric {
+    fn allocated_bytes(&self) -> usize {
+        let s1 = self.tags
+            .iter()
+            .fold(0, |acc, (k, v)| acc + k.len() + v.len());
+
+        s1
+    }
 }
 
 impl Metric {

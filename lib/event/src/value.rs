@@ -2,6 +2,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize, Serializer};
 use bytes::{Bytes};
 use chrono::{DateTime, SecondsFormat, Utc};
+use crate::ByteSizeOf;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
 pub enum Value {
@@ -22,6 +23,19 @@ impl Value {
         match self {
             Value::Timestamp(ts) => timestamp_to_string(ts),
             _ => todo!()
+        }
+    }
+}
+
+impl ByteSizeOf for Value {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Value::Bytes(bytes) => bytes.len(),
+            Value::Map(map) => map
+                .iter()
+                .fold(0, |acc, (k, v)| acc + k.len() + v.size_of()),
+            Value::Array(arr) => arr.iter().fold(0, |acc, v| acc + v.size_of()),
+            _ => 0
         }
     }
 }

@@ -6,3 +6,7 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+metrics = { version = "0.17.0" }
+metrics-util = { version = "0.10.1" }
+event = { path = "../event" }
+once_cell = { version = "1.8.0" }

@@ -19,6 +19,7 @@ use crate::{
 use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use event::Event;
+use internal::{EventsReceived, EventsSent, InternalEvent};
 use crate::config::ExtensionContext;
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
@@ -176,22 +177,46 @@ pub async fn build_pieces(
         let transform = match transform {
             Transform::Function(mut t) => input_rx
                 .filter(move |event| ready(filter_event_type(event, input_type)))
-                // .inspect()
-                .flat_map(move |v| {
-                    let mut buf = Vec::with_capacity(1);
-                    t.transform(&mut buf, v);
-                    futures::stream::iter(buf.into_iter()).map(Ok)
+                .ready_chunks(128)
+                .inspect(|evs| {
+                    emit!(&EventsReceived {
+                        count: evs.len(),
+                        byte_size: evs.iter().map(|ev| ev.size_of()).sum(),
+                    });
+                })
+                .flat_map(move |events| {
+                    let mut output = Vec::with_capacity(events.len());
+                    let mut buf = Vec::with_capacity(4); // also an arbitrary,
+                    // smallish constant
+                    for v in events {
+                        t.transform(&mut buf, v);
+                        output.append(&mut buf);
+                    }
+                    emit!(&EventsSent {
+                        count: output.len(),
+                        byte_size: output.iter().map(|event| event.size_of()).sum(),
+                    });
+                    futures::stream::iter(output.into_iter()).map(Ok)
                 })
                 .forward(output)
                 .boxed(),
             Transform::Task(t) => {
                 let filtered = input_rx
-                    .filter(move |event| ready(filter_event_type(event, input_type)));
-                // .inspect()
+                    .filter(move |event| ready(filter_event_type(event, input_type)))
+                    .inspect(|ev| {
+                        emit!(&EventsReceived {
+                            count: 1,
+                            byte_size: ev.size_of()
+                        });
+                    });
 
                 t.transform(Box::pin(filtered))
                     .map(Ok)
-                    .forward(output.with(|event| async {
+                    .forward(output.with(|event: Event| async {
+                        emit!(&EventsSent {
+                            count: 1,
+                            byte_size: event.size_of(),
+                        });
                         Ok(event)
                     }))
                     .boxed()
@@ -261,7 +286,10 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|event| ready(filter_event_type(event, input_type)))
-                    // .inspect()
+                    .inspect(|ev| emit!(&EventsReceived {
+                        count: 1,
+                        byte_size: ev.size_of(),
+                    }))
                     .take_until(tripwire),
             )
                 .await

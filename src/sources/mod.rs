@@ -11,7 +11,6 @@ mod journald;
 #[cfg(feature = "sources-kafka")]
 mod kafka;
 mod nginx;
-mod internal;
 mod zookeeper;
 mod prometheus;
 mod prometheus_remote_write;
@@ -29,4 +28,6 @@ mod kubelet;
 mod selfstat;
 #[cfg(feature = "sources-kmsg")]
 mod kmsg;
+mod internal_metrics;
+mod internal_log;
 

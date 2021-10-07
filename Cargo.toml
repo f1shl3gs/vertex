@@ -60,6 +60,8 @@ sources-kafka = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
 sources-journald = []
+sources-internal_metrics = []
+sources-internal_log = []
 
 # transforms
 transforms-add_tags = []
@@ -97,6 +99,7 @@ tempfile = { version = "3.2.0" }
 # workspaces
 buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
+internal = { path = "lib/internal" }
 
 # Allocation TODO
 

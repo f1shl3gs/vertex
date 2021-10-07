@@ -19,7 +19,17 @@ bloat:
 	cargo bloat --release --crates
 
 lines:
-	@find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l
+	@echo "src: $$(find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l)"
+	@echo "lib: $$(find ./lib -name "*.rs" |xargs cat|grep -v ^$$|wc -l)"
+	@echo ""
+
+2l:
+	@{	\
+  		SRC=$(find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l) \
+  		echo "src: $${SRC}";	\
+	}
+
+
 
 
 # profile when bench
