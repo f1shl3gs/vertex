@@ -65,7 +65,6 @@ impl ByteSizeOf for Event {
         match self {
             Event::Log(log) => log.allocated_bytes(),
             Event::Metric(metric) => metric.allocated_bytes(),
-            _ => unreachable!()
         }
     }
 }
@@ -119,7 +118,6 @@ impl Event {
         match self {
             Event::Metric(metric) => metric.allocated_bytes(),
             Event::Log(log) => log.allocated_bytes(),
-            _ => unreachable!()
         }
     }
 }

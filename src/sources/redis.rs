@@ -69,10 +69,24 @@ fn convert(infos: redis::InfoDict) -> Vec<Event> {
 
 #[cfg(test)]
 mod tests {
+    use testcontainers::{
+        Docker,
+        images::redis::Redis
+    };
+    use redis::Client;
     use super::*;
 
     #[tokio::test]
     async fn dump_info() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(6379).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
 
+        let cli = Client::open(url.as_ref()).unwrap();
+        let mut conn = cli.get_tokio_connection().await.unwrap();
+
+        let infos = scrap(&cli).await.unwrap();
+        println!("{:?}", infos);
     }
 }

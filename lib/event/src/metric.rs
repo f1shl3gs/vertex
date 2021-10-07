@@ -45,7 +45,6 @@ impl ByteSizeOf for MetricValue {
             Self::Sum(_) | Self::Gauge(_) => 0,
             Self::Histogram { .. } => 0,
             Self::Summary { .. } => 0,
-            _ => unreachable!()
         }
     }
 }

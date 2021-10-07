@@ -48,7 +48,6 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
                 buckets,
             }
         }
-        _ => unreachable!()
     };
 
     let tags = key.labels()
