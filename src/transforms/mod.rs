@@ -1,13 +1,7 @@
-use std::pin::Pin;
-
-use futures::Stream;
-
-use event::Event;
-
-#[cfg(feature = "transforms-add_tags")]
-mod add_tags;
 #[cfg(feature = "transforms-add_fields")]
 mod add_fields;
+#[cfg(feature = "transforms-add_tags")]
+mod add_tags;
 mod ansii_striper;
 mod aggregate;
 
@@ -23,6 +17,10 @@ mod logfmt_parser;
 mod rename_fields;
 mod rename_tags;
 mod route;
+
+use std::pin::Pin;
+use futures::Stream;
+use event::Event;
 
 /// Transforms that are simple, and don't require attention to coordination.
 /// You can run them as simple functions over events in any order
@@ -43,8 +41,8 @@ dyn_clone::clone_trait_object!(FunctionTransform);
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
+        task: Pin<Box<dyn Stream<Item=Event> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item=Event> + Send>>;
 }
 
 /// Transforms come in two variants. Functions or tasks.
