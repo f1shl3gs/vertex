@@ -5,6 +5,7 @@ pub type Source = BoxFuture<'static, Result<(), ()>>;
 #[cfg(feature = "sources-node_metrics")]
 mod node;
 
+#[cfg(feature = "sources-journald")]
 mod journald;
 
 #[cfg(feature = "sources-kafka")]

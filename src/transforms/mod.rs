@@ -4,9 +4,16 @@ use futures::Stream;
 
 use event::Event;
 
+#[cfg(feature = "transforms-add_tags")]
 mod add_tags;
+#[cfg(feature = "transforms-add_fields")]
+mod add_fields;
+mod ansii_striper;
 mod aggregate;
+
+#[cfg(feature = "transforms-cardinality")]
 mod cardinality;
+
 mod filter;
 mod geoip;
 mod grok_parser;
@@ -16,8 +23,6 @@ mod logfmt_parser;
 mod rename_fields;
 mod rename_tags;
 mod route;
-mod add_fields;
-mod ansii_striper;
 
 /// Transforms that are simple, and don't require attention to coordination.
 /// You can run them as simple functions over events in any order
