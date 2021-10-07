@@ -194,8 +194,7 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::io::{stdout, Write};
-    use tokio::io::{AsyncBufReadExt, AsyncReadExt};
+    use tokio::io::{AsyncReadExt};
     use super::*;
 
     #[test]

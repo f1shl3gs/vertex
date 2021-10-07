@@ -602,13 +602,9 @@ mod checkpoints_tests {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use futures::Stream;
-    use std::pin::Pin;
     use std::{
-        io::{BufRead, Cursor},
-        task::{Context, Poll},
+        io::{Cursor},
     };
-    use std::io::BufReader;
     use chrono::TimeZone;
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout, Duration};
