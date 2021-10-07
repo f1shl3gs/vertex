@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, SinkConfig, TransformConfig, HealthcheckOptions, ExpandType, ExtensionConfig};
+use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, HealthcheckOptions, ExpandType, ExtensionConfig};
 use indexmap::IndexMap;
 use crate::config::provider::ProviderConfig;
 use super::validation;

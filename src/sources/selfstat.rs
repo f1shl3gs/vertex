@@ -5,7 +5,6 @@ use crate::{
     },
     sources::{
         Source,
-        node::read_to_string,
     },
     shutdown::ShutdownSignal,
     pipeline::Pipeline,
@@ -191,7 +190,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
 
 async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
-    let content = read_to_string(&path).await?;
+    let content = tokio::fs::read_to_string(&path).await?;
     let parts = content.split_ascii_whitespace()
         .collect::<Vec<_>>();
 

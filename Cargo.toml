@@ -25,34 +25,35 @@ members = [
 
 [features]
 default = [
-    "metrics",
+    # common
     "disk-buffer",
 ]
 
-metrics = [
-    "sources-metrics"
-]
-
-sources-metrics = [
-    "sources-node_metrics",
-    "sources-generator"
-]
-
+# common
 disk-buffer = []
-sources-generator = []
-sources-node_metrics = []
-
 tokio-console = [
     "console-subscriber"
 ]
 
-# sub collectors of node_metrics
-sources-node_metrics-arp = [
-    "sources-node_metrics"
-]
-sources-node_metrics-tcpstat = [
-    "sources-node_metrics"
-]
+# sources
+sources-generator = []
+sources-node_metrics = ["libc"]
+sources-ntp = ["rsntp"]
+sources-kafka = ["rdkafka"]
+sources-kmsg = []
+sources-selfstat = ["libc"]
+
+# transforms
+transforms-add_tag = []
+transforms-cardinality = []
+
+# sinks
+sink-prometheus_exporter = []
+sink-stdout = []
+sink-blackhole = []
+
+# extensions
+extension-pprof = ["pprof/flamegraph"]
 
 [[bench]]
 name = "duration"
@@ -108,9 +109,9 @@ serde_yaml = { version = "0.8.20" }
 serde_json = { version = "1.0.67", default-features = false, features = ["raw_value", "alloc"] }
 
 # netlink
-netlink-sys = { version = "0.7.0", features = ["tokio_socket"] }
-rtnetlink = { version = "0.8.1", features = ["tokio_socket"] }
-netlink-packet-sock-diag = "0.1.0"
+netlink-sys = { version = "0.7.0", features = ["tokio_socket"], optional = true }
+rtnetlink = { version = "0.8.1", features = ["tokio_socket"], optional = true }
+netlink-packet-sock-diag = { version = "0.1.0", optional = true }
 
 # protobuf
 prost = { version = "0.8.0", default-features = false, features = ["std"] }
@@ -123,7 +124,7 @@ tokio-rustls = { version = "0.22.0" }
 # Profile
 # criterion is not neccessary for any functionality, but the bench
 # need it.
-pprof = { version = "0.5.0", features = ["flamegraph", "criterion"] }
+pprof = { version = "0.5.0", default-features = false, optional = true, features = ["flamegraph", "criterion"] }
 
 # misc
 chrono = { version = "0.4.19", features = ["serde"] }
@@ -141,8 +142,8 @@ clap = { version = "3.0.0-beta.4" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
-rsntp = { version = "2.0.0", features = ["tokio"] }
-libc = { version = "0.2.101" }
-dotenv-parser = "0.1.3"
+rsntp = { version = "2.0.0", default-features = false, features = ["tokio"], optional = true }
+libc = { version = "0.2.101", optional = true }
+dotenv-parser = { version = "0.1.3", optional = true }
 nom = { version = "7.0.0" }
 snafu = { version = "0.6.10" }

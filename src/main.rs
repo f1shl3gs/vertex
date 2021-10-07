@@ -8,7 +8,6 @@ extern crate vertex;
 // static GLOBAL: MiMalloc = MiMalloc;
 
 use tokio::runtime;
-use std::convert::Infallible;
 use tokio::time::Duration;
 
 extern crate chrono;
