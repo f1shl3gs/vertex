@@ -101,6 +101,13 @@ impl Event {
             _ => panic!("Failed type coercion, {:?} is not a log", self)
         }
     }
+
+    pub fn as_mut_log(&mut self) -> &mut LogRecord {
+        match self {
+            Event::Log(l) => l,
+            _ => panic!("Failed type coercion, {:?} is not a log", self)
+        }
+    }
 }
 
 impl From<Metric> for Event {

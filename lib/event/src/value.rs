@@ -98,6 +98,12 @@ impl From<String> for Value {
     }
 }
 
+impl From<&String> for Value {
+    fn from(s: &String) -> Self {
+        Self::String(s.into())
+    }
+}
+
 impl From<&str> for Value {
     fn from(s: &str) -> Self {
         Self::String(s.to_string())
