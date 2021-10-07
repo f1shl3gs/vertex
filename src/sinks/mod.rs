@@ -1,7 +1,10 @@
-mod stdout;
-mod prometheus_exporter;
-mod kafka;
+#[cfg(feature = "sink-blackhole")]
 mod blackhole;
+mod kafka;
+#[cfg(feature = "sink-prometheus_exporter")]
+mod prometheus_exporter;
+#[cfg(feature = "sink-stdout")]
+mod stdout;
 
 use event::Event;
 use async_trait::async_trait;
@@ -32,6 +35,4 @@ impl Sink {
             Self::Stream(ref mut s) => s.run(Box::pin(input)).await,
         }
     }
-
-
 }
