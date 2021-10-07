@@ -192,7 +192,7 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
 }
 
 lazy_static! {
-    static ref status_line_re: Regex = Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap();
+    static ref STATUS_LINE_RE: Regex = Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap();
 }
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
@@ -215,7 +215,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
         return Ok((0, 0, 0, size));
     }
 
-    let caps = match status_line_re.captures(status_line) {
+    let caps = match STATUS_LINE_RE.captures(status_line) {
         Some(caps) => caps.iter()
             .map(|m| m.unwrap().as_str())
             .collect::<Vec<&str>>(),
