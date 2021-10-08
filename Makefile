@@ -16,18 +16,10 @@ build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
 bloat:
-	cargo bloat --release --crates
+	cargo bloat --features "allocator-jemalloc" --release --crates
 
 lines:
-	@echo "src: $$(find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l)"
-	@echo "lib: $$(find ./lib -name "*.rs" |xargs cat|grep -v ^$$|wc -l)"
-	@echo ""
-
-2l:
-	@{	\
-  		SRC=$(find ./src -name "*.rs" |xargs cat|grep -v ^$$|wc -l) \
-  		echo "src: $${SRC}";	\
-	}
+	@./scripts/lines.sh
 
 
 
