@@ -1,32 +1,211 @@
-use std::collections::BTreeMap;
-use std::num::ParseIntError;
+use std::collections::{BTreeMap, BTreeSet};
+use std::time::{SystemTime, UNIX_EPOCH};
 use futures::{SinkExt, StreamExt};
-use nom::InputIter;
 use redis::{InfoDict, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 use tokio_stream::wrappers::IntervalStream;
-use event::{Event, Metric};
+use event::{tags, Event, Metric};
 use snafu::Snafu;
 use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration, default_interval};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use event::{tags};
+
+use lazy_static::lazy_static;
+
+lazy_static!(
+    static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {
+        let mut m = BTreeMap::new();
+        // # Server
+		m.insert("uptime_in_seconds".to_string(), "uptime_in_seconds");
+		m.insert("process_id".to_string(),        "process_id");
+
+        // # Clients
+        m.insert("connected_clients".to_string(), "connected_clients");
+        m.insert("blocked_clients".to_string(),   "blocked_clients");
+        m.insert("tracking_clients".to_string(),  "tracking_clients");
+
+        // redis 2,3,4.x
+        m.insert("client_longest_output_list".to_string(), "client_longest_output_list");
+        m.insert("client_biggest_input_buf".to_string(),   "client_biggest_input_buf");
+
+        // the above two metrics were renamed in redis 5.x
+        m.insert("client_recent_max_output_buffer".to_string(), "client_recent_max_output_buffer_bytes");
+        m.insert("client_recent_max_input_buffer".to_string(),  "client_recent_max_input_buffer_bytes");
+
+        // # Memory
+        m.insert("allocator_active".to_string(),     "allocator_active_bytes");
+        m.insert("allocator_allocated".to_string(),  "allocator_allocated_bytes");
+        m.insert("allocator_resident".to_string(),   "allocator_resident_bytes");
+        m.insert("allocator_frag_ratio".to_string(), "allocator_frag_ratio");
+        m.insert("allocator_frag_bytes".to_string(), "allocator_frag_bytes");
+        m.insert("allocator_rss_ratio".to_string(),  "allocator_rss_ratio");
+        m.insert("allocator_rss_bytes".to_string(),  "allocator_rss_bytes");
+
+        m.insert("used_memory".to_string(),          "memory_used_bytes");
+        m.insert("used_memory_rss".to_string(),      "memory_used_rss_bytes");
+        m.insert("used_memory_peak".to_string(),     "memory_used_peak_bytes");
+        m.insert("used_memory_lua".to_string(),      "memory_used_lua_bytes");
+        m.insert("used_memory_overhead".to_string(), "memory_used_overhead_bytes");
+        m.insert("used_memory_startup".to_string(),  "memory_used_startup_bytes");
+        m.insert("used_memory_dataset".to_string(),  "memory_used_dataset_bytes");
+        m.insert("used_memory_scripts".to_string(),  "memory_used_scripts_bytes");
+        m.insert("maxmemory".to_string(),            "memory_max_bytes");
+
+        m.insert("mem_fragmentation_ratio".to_string(), "mem_fragmentation_ratio");
+        m.insert("mem_fragmentation_bytes".to_string(), "mem_fragmentation_bytes");
+        m.insert("mem_clients_slaves".to_string(),      "mem_clients_slaves");
+        m.insert("mem_clients_normal".to_string(),      "mem_clients_normal");
+
+        // https://github.com/antirez/redis/blob/17bf0b25c1171486e3a1b089f3181fff2bc0d4f0/src/evict.c#L349-L352
+        // ... the sum of AOF and slaves buffer ....
+        m.insert("mem_not_counted_for_evict".to_string(), "mem_not_counted_for_eviction_bytes");
+
+        m.insert("lazyfree_pending_objects".to_string(), "lazyfree_pending_objects");
+        m.insert("active_defrag_running".to_string(),    "active_defrag_running");
+
+        m.insert("migrate_cached_sockets".to_string(), "migrate_cached_sockets_total");
+
+        m.insert("active_defrag_hits".to_string(),       "defrag_hits");
+        m.insert("active_defrag_misses".to_string(),     "defrag_misses");
+        m.insert("active_defrag_key_hits".to_string(),   "defrag_key_hits");
+        m.insert("active_defrag_key_misses".to_string(), "defrag_key_misses");
+
+        // https://github.com/antirez/redis/blob/0af467d18f9d12b137af3b709c0af579c29d8414/src/expire.c#L297-L299
+        m.insert("expired_time_cap_reached_count".to_string(), "expired_time_cap_reached_total");
+
+        // # Persistence
+        m.insert("loading".to_string(),                      "loading_dump_file");
+        m.insert("rdb_changes_since_last_save".to_string(),  "rdb_changes_since_last_save");
+        m.insert("rdb_bgsave_in_progress".to_string(),       "rdb_bgsave_in_progress");
+        m.insert("rdb_last_save_time".to_string(),           "rdb_last_save_timestamp_seconds");
+        m.insert("rdb_last_bgsave_status".to_string(),       "rdb_last_bgsave_status");
+        m.insert("rdb_last_bgsave_time_sec".to_string(),     "rdb_last_bgsave_duration_sec");
+        m.insert("rdb_current_bgsave_time_sec".to_string(),  "rdb_current_bgsave_duration_sec");
+        m.insert("rdb_last_cow_size".to_string(),            "rdb_last_cow_size_bytes");
+        m.insert("aof_enabled".to_string(),                  "aof_enabled");
+        m.insert("aof_rewrite_in_progress".to_string(),      "aof_rewrite_in_progress");
+        m.insert("aof_rewrite_scheduled".to_string(),        "aof_rewrite_scheduled");
+        m.insert("aof_last_rewrite_time_sec".to_string(),    "aof_last_rewrite_duration_sec");
+        m.insert("aof_current_rewrite_time_sec".to_string(), "aof_current_rewrite_duration_sec");
+        m.insert("aof_last_cow_size".to_string(),            "aof_last_cow_size_bytes");
+        m.insert("aof_current_size".to_string(),             "aof_current_size_bytes");
+        m.insert("aof_base_size".to_string(),                "aof_base_size_bytes");
+        m.insert("aof_pending_rewrite".to_string(),          "aof_pending_rewrite");
+        m.insert("aof_buffer_length".to_string(),            "aof_buffer_length");
+        m.insert("aof_rewrite_buffer_length".to_string(),    "aof_rewrite_buffer_length");
+        m.insert("aof_pending_bio_fsync".to_string(),        "aof_pending_bio_fsync");
+        m.insert("aof_delayed_fsync".to_string(),            "aof_delayed_fsync");
+        m.insert("aof_last_bgrewrite_status".to_string(),    "aof_last_bgrewrite_status");
+        m.insert("aof_last_write_status".to_string(),        "aof_last_write_status");
+        m.insert("module_fork_in_progress".to_string(),      "module_fork_in_progress");
+        m.insert("module_fork_last_cow_size".to_string(),    "module_fork_last_cow_size");
+
+        // # Stats
+        m.insert("pubsub_channels".to_string(),           "pubsub_channels");
+        m.insert("pubsub_patterns".to_string(),           "pubsub_patterns");
+        m.insert("latest_fork_usec".to_string(),          "latest_fork_usec");
+        m.insert("instantaneous_ops_per_sec".to_string(), "instantaneous_ops");
+
+        // # Replication
+        m.insert("connected_slaves".to_string(),               "connected_slaves");
+        m.insert("repl_backlog_size".to_string(),              "replication_backlog_bytes");
+        m.insert("repl_backlog_active".to_string(),            "repl_backlog_is_active");
+        m.insert("repl_backlog_first_byte_offset".to_string(), "repl_backlog_first_byte_offset");
+        m.insert("repl_backlog_histlen".to_string(),           "repl_backlog_history_bytes");
+        m.insert("master_repl_offset".to_string(),             "master_repl_offset");
+        m.insert("second_repl_offset".to_string(),             "second_repl_offset");
+        m.insert("slave_expires_tracked_keys".to_string(),     "slave_expires_tracked_keys");
+        m.insert("slave_priority".to_string(),                 "slave_priority");
+        m.insert("sync_full".to_string(),                      "replica_resyncs_full");
+        m.insert("sync_partial_ok".to_string(),                "replica_partial_resync_accepted");
+        m.insert("sync_partial_err".to_string(),               "replica_partial_resync_denied");
+
+        // # Cluster
+        m.insert("cluster_stats_messages_sent".to_string(),     "cluster_messages_sent_total");
+        m.insert("cluster_stats_messages_received".to_string(), "cluster_messages_received_total");
+
+        // # Tile38
+        // based on https://tile38.com/commands/server/
+        m.insert("tile38_aof_size".to_string(),        "tile38_aof_size_bytes");
+        m.insert("tile38_avg_item_size".to_string(),   "tile38_avg_item_size_bytes");
+        m.insert("tile38_cpus".to_string(),            "tile38_cpus_total");
+        m.insert("tile38_heap_released".to_string(),   "tile38_heap_released_bytes");
+        m.insert("tile38_heap_size".to_string(),       "tile38_heap_size_bytes");
+        m.insert("tile38_http_transport".to_string(),  "tile38_http_transport");
+        m.insert("tile38_in_memory_size".to_string(),  "tile38_in_memory_size_bytes");
+        m.insert("tile38_max_heap_size".to_string(),   "tile38_max_heap_size_bytes");
+        m.insert("tile38_mem_alloc".to_string(),       "tile38_mem_alloc_bytes");
+        m.insert("tile38_num_collections".to_string(), "tile38_num_collections_total");
+        m.insert("tile38_num_hooks".to_string(),       "tile38_num_hooks_total");
+        m.insert("tile38_num_objects".to_string(),     "tile38_num_objects_total");
+        m.insert("tile38_num_points".to_string(),      "tile38_num_points_total");
+        m.insert("tile38_pointer_size".to_string(),    "tile38_pointer_size_bytes");
+        m.insert("tile38_read_only".to_string(),       "tile38_read_only");
+        m.insert("tile38_threads".to_string(),         "tile38_threads_total");
+
+        // addtl. KeyDB metrics
+        m.insert("server_threads".to_string(),        "server_threads_total");
+        m.insert("long_lock_waits".to_string(),       "long_lock_waits_total");
+        m.insert("current_client_thread".to_string(), "current_client_thread");
+
+        m
+    };
+
+    static ref COUNTER_METRICS: BTreeMap<String, &'static str> = {
+        let mut m = BTreeMap::new();
+
+        m.insert("total_connections_received".to_string(), "connections_received_total");
+        m.insert("total_commands_processed".to_string(),   "commands_processed_total");
+
+        m.insert("rejected_connections".to_string(),   "rejected_connections_total");
+        m.insert("total_net_input_bytes".to_string(),  "net_input_bytes_total");
+        m.insert("total_net_output_bytes".to_string(), "net_output_bytes_total");
+
+        m.insert("expired_keys".to_string(),    "expired_keys_total");
+        m.insert("evicted_keys".to_string(),    "evicted_keys_total");
+        m.insert("keyspace_hits".to_string(),   "keyspace_hits_total");
+        m.insert("keyspace_misses".to_string(), "keyspace_misses_total");
+
+        m.insert("used_cpu_sys".to_string(),           "cpu_sys_seconds_total");
+        m.insert("used_cpu_user".to_string(),          "cpu_user_seconds_total");
+        m.insert("used_cpu_sys_children".to_string(), "cpu_sys_children_seconds_total");
+        m.insert("used_cpu_user_children".to_string(), "cpu_user_children_seconds_total");
+
+        m
+    };
+);
 
 #[derive(Debug, Snafu)]
 enum Error {
+    #[snafu(display("Invalid data: {}", desc))]
+    InvalidData {
+        desc: String
+    },
+
     #[snafu(display("Invalid slave line"))]
     InvalidSlaveLine,
+
+    #[snafu(display("Invalid command stats"))]
+    InvalidCommandStats,
+
+    #[snafu(display("Invalid keyspace line"))]
+    InvalidKeyspaceLine,
 
     #[snafu(display("Redis error: {}", source))]
     RedisError {
         source: redis::RedisError
     },
 
-    #[snafu(display("Parse error: {}", source))]
-    ParseError {
-        source: ParseIntError,
+    #[snafu(display("Parse integer error: {}", source))]
+    ParseIntError {
+        source: std::num::ParseIntError,
+    },
+
+    #[snafu(display("Parse float error: {}", source))]
+    ParseFloatError {
+        source: std::num::ParseFloatError,
     },
 }
 
@@ -38,10 +217,18 @@ impl From<redis::RedisError> for Error {
     }
 }
 
-impl From<ParseIntError> for Error {
-    fn from(source: ParseIntError) -> Self {
-        Self::ParseError {
+impl From<std::num::ParseIntError> for Error {
+    fn from(source: std::num::ParseIntError) -> Self {
+        Self::ParseIntError {
             source,
+        }
+    }
+}
+
+impl From<std::num::ParseFloatError> for Error {
+    fn from(source: std::num::ParseFloatError) -> Self {
+        Self::ParseFloatError {
+            source
         }
     }
 }
@@ -55,13 +242,21 @@ pub struct RedisSourceConfig {
     #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
+
+    #[serde(default = "default_namespace")]
+    namespace: String,
+}
+
+fn default_namespace() -> String {
+    "redis".to_string()
 }
 
 #[async_trait::async_trait]
-#[typetag::serde(name = "redis_info")]
+#[typetag::serde(name = "redis")]
 impl SourceConfig for RedisSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let params = self.url.clone();
+        let namespace = self.namespace.clone();
         let mut output = ctx.out;
         let mut ticker = IntervalStream::new(tokio::time::interval(self.interval.to_std().unwrap()))
             .take_until(ctx.shutdown);
@@ -70,7 +265,36 @@ impl SourceConfig for RedisSourceConfig {
             while let Some(_) = ticker.next().await {
                 match scrap(params.as_ref()).await {
                     Ok(infos) => {
-                        println!("{:#?}", infos);
+                        match extract_info_metrics(&infos) {
+                            Ok(mut metrics) => {
+                                metrics.push(Metric::gauge(
+                                    "up",
+                                    "",
+                                    1,
+                                ));
+
+                                let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+                                let now = now.as_millis() as i64;
+
+                                let mut stream = futures::stream::iter(metrics)
+                                    .map(|mut m| {
+                                        m.timestamp = now;
+                                        if namespace != "" {
+                                            m.name = format!("{}_{}", namespace, m.name)
+                                        }
+
+                                        Ok(m.into())
+                                    });
+                                output.send_all(&mut stream).await;
+                            }
+                            Err(err) => {
+                                output.send(Metric::gauge(
+                                    "up",
+                                    "redis status",
+                                    0,
+                                ).into()).await;
+                            }
+                        }
                     }
                     Err(_) => {
                         output.send(Metric::gauge(
@@ -91,7 +315,7 @@ impl SourceConfig for RedisSourceConfig {
     }
 
     fn source_type(&self) -> &'static str {
-        "redis_info"
+        "redis"
     }
 }
 
@@ -107,12 +331,18 @@ async fn scrap(url: &str) -> Result<String, Error> {
     Ok(resp)
 }
 
-fn extract_info_metrics(infos: &str) -> Result<Vec<Event>, std::io::Error> {
-    let mut events = vec![];
+fn extract_info_metrics(infos: &str) -> Result<Vec<Metric>, std::io::Error> {
+    let mut metrics = vec![];
     let mut kvs = BTreeMap::new();
+    let mut handled_dbs = BTreeSet::new();
+    let mut instance_infos = BTreeMap::new();
+    let mut slave_infos: BTreeMap<String, String> = BTreeMap::new();
     let mut master_host = String::new();
     let mut master_port = String::new();
     let mut field_class = String::new();
+    let mut dbname = String::new();
+    let instance_info_fields = ["role", "redis_version", "redis_build_id", "redis_mode", "os"];
+    let slave_info_fields = ["master_host", "master_port", "slave_read_only"];
 
     for line in infos.lines() {
         let line = line.trim();
@@ -142,23 +372,192 @@ fn extract_info_metrics(infos: &str) -> Result<Vec<Event>, std::io::Error> {
             master_port = value.to_string();
         }
 
+        if instance_info_fields.contains(&key) {
+            instance_infos.insert(key, value);
+            continue;
+        }
+
+        if slave_info_fields.contains(&key) {
+            slave_infos.insert(key.to_string(), value.to_string());
+            continue;
+        }
+
         match field_class.as_ref() {
             "Replication" => {
-                if let Ok(evs) = handle_replication_metrics(master_host, master_port, key, value) {
-                    events.extend(evs);
+                if let Ok(ms) = handle_replication_metrics(&master_host, &master_port, key, value) {
+                    metrics.extend(ms);
                 }
+
+                continue;
             }
 
             "Server" => {
-
+                if let Ok(ms) = handle_server_metrics(key, value) {
+                    metrics.extend(ms);
+                }
             }
+
+            "Commandstats" => {
+                if let Ok(ms) = handle_command_stats(key, value) {
+                    metrics.extend(ms);
+                }
+
+                continue;
+            }
+
+            "Keyspace" => {
+                if let Ok((keys, expired, avg_ttl)) = parse_db_keyspace(key, value) {
+                    dbname = key.to_string();
+                    metrics.extend_from_slice(&[
+                        Metric::gauge_with_tags(
+                            "db_keys",
+                            "Total number of keys by DB",
+                            keys,
+                            tags!(
+                                "db" => key
+                            ),
+                        ).into(),
+                        Metric::gauge_with_tags(
+                            "db_keys_expiring",
+                            "Total number of expiring keys by DB",
+                            expired,
+                            tags!(
+                                "db" => key
+                            ),
+                        ).into(),
+                    ]);
+
+                    if avg_ttl > -1.0 {
+                        metrics.push(Metric::gauge_with_tags(
+                            "db_avg_ttl_seconds",
+                            "Avg TTL in seconds",
+                            avg_ttl,
+                            tags!(
+                                "db" => key
+                            ),
+                        ).into());
+                    }
+
+                    handled_dbs.insert(dbname.clone());
+                    continue;
+                }
+            }
+
+            _ => {}
+        }
+
+        if !include_metric(key) {
+            continue;
+        }
+
+        if let Ok(m) = parse_and_generate(key, value) {
+            metrics.push(m);
         }
     }
 
-    Ok(events)
+    // TODO: set db count properly
+    let dbcount = 16;
+    for i in 0..dbcount {
+        let name = format!("db{}", i);
+        if let None = handled_dbs.get(name.as_str()) {
+            metrics.extend_from_slice(&[
+                Metric::gauge_with_tags(
+                    "db_keys",
+                    "Total number of keys by DB",
+                    0,
+                    tags!(
+                        "db" => name.as_str()
+                    ),
+                ).into(),
+                Metric::gauge_with_tags(
+                    "db_keys_expiring",
+                    "Total number of expiring keys by DB",
+                    0,
+                    tags!(
+                        "db" => name.as_str()
+                    ),
+                ).into()
+            ])
+        }
+    }
+
+    let role = instance_infos.get("slave_info")
+        .map_or("", |v| *v);
+
+    metrics.push(Metric::gauge_with_tags(
+        "instance_info",
+        "Information about the Redis instance",
+        1,
+        tags!(
+            "role" => instance_infos.get("role").map_or("", |v| v),
+            "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
+            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
+            "os" => instance_infos.get("os").map_or("", |v| *v)
+        ),
+    ).into());
+
+    if role == "slave" {
+        metrics.push(Metric::gauge_with_tags(
+            "slave_info",
+            "Information about the Redis slave",
+            1,
+            slave_infos,
+        ).into())
+    }
+
+    Ok(metrics)
 }
 
-fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) -> Result<Vec<Event>, Error> {
+// TODO: this function looks wired, we need to re-implement it
+fn parse_and_generate(key: &str, value: &str) -> Result<Metric, Error> {
+    let mut name = sanitize_metric_name(key);
+    if let Some(new_name) = GAUGE_METRICS.get(name.as_str()) {
+        name = new_name.to_string();
+    }
+
+    if let Some(new_name) = COUNTER_METRICS.get(name.as_str()) {
+        name = new_name.to_string();
+    }
+
+    let mut val = match value {
+        "ok" | "true" => 1.0,
+        "err" | "fail" | "false" => 0.0,
+        _ => value.parse().unwrap_or(0.0)
+    };
+
+    if name == "latest_fork_usec" {
+        name = "latest_fork_seconds".to_string();
+        val = val / 1e6;
+    }
+
+    let metric = if let Some(name) = GAUGE_METRICS.get(name.as_str()) {
+        Metric::gauge(name.to_string(), "", val)
+    } else {
+        Metric::sum(name.to_string(), "", val)
+    };
+
+    Ok(metric)
+}
+
+fn sanitize_metric_name(name: &str) -> String {
+    let mut bytes = name.as_bytes().to_vec();
+    for i in 0..bytes.len() {
+        let b = bytes[i];
+        if b.is_ascii_alphanumeric() {
+            continue;
+        }
+
+        if b == b'_' {
+            continue;
+        }
+
+        bytes[i] = b'_';
+    }
+
+    String::from_utf8(bytes).unwrap_or_default()
+}
+
+fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) -> Result<Vec<Metric>, Error> {
     // only slaves have this field
     if key == "master_link_status" {
         let v = match value {
@@ -174,21 +573,23 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
                     "master_host" => host,
                     "master_port" => port
                 ),
-        ).into()]);
+        )]);
     }
 
     match key {
         "master_last_io_seconds_ago" | "slave_repl_offset" | "master_sync_in_progress" => {
             let v = value.parse::<i32>()?;
-            return Ok(Metric::gauge_with_tags(
-                key,
-                "",
-                v,
-                tags!(
-                    "master_host" => host,
-                    "master_port" => port
-                ),
-            ).into());
+            return Ok(vec![
+                Metric::gauge_with_tags(
+                    key,
+                    "",
+                    v,
+                    tags!(
+                        "master_host" => host,
+                        "master_port" => port
+                    ),
+                )
+            ]);
         }
 
         _ => {}
@@ -206,7 +607,7 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
                 "slave_port" => port,
                 "slave_state" => state
             ),
-        ).into());
+        ));
 
         if lag > -1.0 {
             events.push(Metric::gauge_with_tags(
@@ -218,7 +619,7 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
                     "slave_port" => port,
                     "slave_state" => state
                 ),
-            ).into())
+            ))
         }
 
         return Ok(events);
@@ -231,9 +632,9 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
 ///
 /// ```text
 /// slave0:ip=10.254.11.1,port=6379,state=online,offset=1751844676,lag=0
-///    slave1:ip=10.254.11.2,port=6379,state=online,offset=1751844222,lag=0
+/// slave1:ip=10.254.11.2,port=6379,state=online,offset=1751844222,lag=0
 /// ```
-fn parse_connected_slave_string(slave: &str, kvs: &str) -> Result<(f64, String, String, String, f64), Error> {
+fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64, &'a str, &'a str, &'a str, f64), Error> {
     let mut lag = 0.0;
     let mut connected_kvs = BTreeMap::new();
 
@@ -242,19 +643,18 @@ fn parse_connected_slave_string(slave: &str, kvs: &str) -> Result<(f64, String, 
     }
 
     for part in kvs.split(',') {
-        let kv = part.split(b'=')
+        let kv = part.split('=')
             .collect::<Vec<_>>();
         if kv.len() != 2 {
             return Err(Error::InvalidSlaveLine);
         }
 
-        connected_kvs.insert(kv[0].to_string(), kv[1].to_string());
+        connected_kvs.insert(kv[0].to_string(), kv[1]);
     }
 
     let offset = connected_kvs.get("offset")
-        .unwrap_or("0".as_ref())
-        .parse::<f64>()
-        .map_err(|_| Error::InvalidSlaveLine)?;
+        .map(|v| v.parse::<f64>().unwrap_or(0.0))
+        .unwrap();
 
     if let Some(text) = connected_kvs.get("lag") {
         lag = text.parse()?;
@@ -262,11 +662,14 @@ fn parse_connected_slave_string(slave: &str, kvs: &str) -> Result<(f64, String, 
         lag = -1.0;
     }
 
-    let ip = connected_kvs.get("ip").unwrap_or("".as_ref());
-    let port = connected_kvs.get("port").unwrap_or("".as_ref());
-    let state = connected_kvs.get("state").unwrap_or("".as_ref());
+    let ip = connected_kvs.get("ip")
+        .unwrap_or(&"");
+    let port = connected_kvs.get("port")
+        .unwrap_or(&"");
+    let state = connected_kvs.get("state")
+        .unwrap_or(&"");
 
-    Ok((offset, ip.to_string(), port.to_string(), state.to_string(), lag))
+    Ok((offset, ip, port, state, lag))
 }
 
 fn validate_slave_line(line: &str) -> bool {
@@ -278,35 +681,320 @@ fn validate_slave_line(line: &str) -> bool {
         return false;
     }
 
-    let c = line[5];
+    let c = line.as_bytes()[5];
     return c >= b'0' && c <= b'9';
+}
+
+fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
+    if key == "uptime_in_seconds" {
+        return Ok(vec![]);
+    }
+
+    let uptime = value.parse::<f64>()?;
+    let now = std::time::SystemTime::now();
+    let elapsed = now.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64();
+
+    Ok(vec![
+        Metric::gauge(
+            "start_time_seconds",
+            "Start time of the Redis instance since unix epoch in seconds.",
+            elapsed - uptime,
+        )
+    ])
+}
+
+/*
+    Format:
+    cmdstat_get:calls=21,usec=175,usec_per_call=8.33
+    cmdstat_set:calls=61,usec=3139,usec_per_call=51.46
+    cmdstat_setex:calls=75,usec=1260,usec_per_call=16.80
+*/
+fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
+    if !key.starts_with("cmdstat_") {
+        return Err(Error::InvalidCommandStats);
+    }
+
+    let values = value.split(',')
+        .collect::<Vec<_>>();
+    if values.len() < 3 {
+        return Err(Error::InvalidCommandStats);
+    }
+
+    let calls = values[0].strip_prefix("calls=")
+        .ok_or(Error::InvalidCommandStats)?
+        .parse::<f64>()?;
+    let usec = values[1].strip_prefix("usec=")
+        .ok_or(Error::InvalidCommandStats)?
+        .parse::<f64>()?;
+
+    let cmd = key.strip_prefix("cmdstat_").unwrap();
+
+    Ok(vec![
+        Metric::sum_with_tags(
+            "commands_total",
+            "Total number of calls per command",
+            calls,
+            tags!(
+                "cmd" => cmd
+            ),
+        ),
+        Metric::sum_with_tags(
+            "commands_duration_seconds_total",
+            "Total amount of time in seconds spent per command",
+            usec / 1e6,
+            tags!(
+                "cmd" => cmd
+            ),
+        ),
+    ])
+}
+
+/*
+    valid example: db0:keys=1,expires=0,avg_ttl=0
+*/
+fn parse_db_keyspace(key: &str, value: &str) -> Result<(f64, f64, f64), Error> {
+    if !key.starts_with("db") {
+        return Err(Error::InvalidKeyspaceLine);
+    }
+
+    let kvs = value.split(',')
+        .collect::<Vec<_>>();
+    if kvs.len() != 3 && kvs.len() != 2 {
+        return Err(Error::InvalidKeyspaceLine);
+    }
+
+    let keys = kvs[0].strip_prefix("keys=")
+        .ok_or(Error::InvalidKeyspaceLine)?
+        .parse::<f64>()?;
+    let expires = kvs[1].strip_prefix("expires=")
+        .ok_or(Error::InvalidKeyspaceLine)?
+        .parse::<f64>()?;
+    let mut avg_ttl = -1.0;
+    if kvs.len() > 2 {
+        avg_ttl = kvs[2].strip_prefix("avg_ttl=")
+            .ok_or(Error::InvalidKeyspaceLine)?
+            .parse::<f64>()?;
+
+        avg_ttl /= 1000.0
+    }
+
+    Ok((keys, expires, avg_ttl))
+}
+
+fn include_metric(s: &str) -> bool {
+    if s.starts_with("db") || s.starts_with("cmdstat_") || s.starts_with("cluster_") {
+        return true;
+    }
+
+    if GAUGE_METRICS.contains_key(s) {
+        return true;
+    }
+
+    COUNTER_METRICS.contains_key(s)
+}
+
+/// fetch fetch necessary data from redis, which is `info`, `databases`
+async fn fetch(url: &str) -> Result<(String, i64), Error> {
+    let mut cli = redis::Client::open(url)?;
+    let mut conn = cli.get_async_connection().await?;
+
+    let databases = query_databases(&mut conn).await?;
+    let infos = query_infos(&mut conn).await?;
+
+    Ok((infos, databases))
+}
+
+async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<i64, Error> {
+    let resp: Vec<String> = redis::cmd("CONFIG")
+        .arg("GET")
+        .arg("*")
+        .query_async(conn)
+        .await?;
+
+    if resp.len() % 2 != 0 {
+        return Err(Error::InvalidData { desc: "config response".to_string() });
+    }
+
+    for pos in 0..resp.len() / 2 {
+        let key = resp[2 * pos].as_str();
+        let value = resp[2 * pos + 1].as_str();
+
+        if key == "databases" {
+            return value.parse()
+                .map_err(|err| Error::InvalidData {
+                    desc: value.to_string(),
+                });
+        }
+    }
+
+    Ok(16)
+}
+
+async fn query_infos(conn: &mut redis::aio::Connection) -> Result<String, Error> {
+    let resp = redis::cmd("INFO")
+        .arg("ALL")
+        .query_async(conn)
+        .await?;
+
+    Ok(resp)
+}
+
+// https://redis.io/commands/ping
+async fn ping_server(cli: &redis::Client) -> Result<f64, Error> {
+    let mut conn = cli.get_async_connection().await?;
+    let start = std::time::Instant::now();
+    let s: String = redis::cmd("PING")
+        .query_async(&mut conn)
+        .await?;
+
+    let elapsed = start.elapsed().as_secs_f64();
+
+    Ok(elapsed)
 }
 
 #[cfg(test)]
 mod tests {
-    use testcontainers::{
-        Docker,
-        images::redis::Redis,
-    };
-    use redis::Client;
+    use testcontainers::{Docker, Image, images::redis::Redis};
+    use redis::{AsyncCommands, Commands};
+    use redis::aio::Connection;
     use super::*;
+
+    const REDIS_PORT: u16 = 6379;
+
+    fn test_client() -> redis::Client {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+
+        let mut cli = redis::Client::open(url).unwrap();
+
+        cli
+    }
+
+    async fn conn_manager() -> redis::aio::ConnectionManager {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+
+        let mut cli = redis::Client::open(url).unwrap();
+
+        let manager = cli.get_tokio_connection_manager().await.unwrap();
+
+        manager
+    }
+
+    async fn test_conn() -> redis::aio::MultiplexedConnection {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+
+        let mut cli = redis::Client::open(url).unwrap();
+
+        let (conn, _) = cli.create_multiplexed_tokio_connection()
+            .await.unwrap();
+        conn
+    }
+
+    #[tokio::test]
+    async fn test_ping_server() {
+        let mut conn = test_conn().await;
+
+        let s: String = redis::cmd("PING")
+            .query_async(&mut conn)
+            .await
+            .unwrap();
+        assert_eq!(s, "PONG")
+    }
+
+    fn random_port() -> u16 {
+        loop {
+            let port = rand::random::<u16>();
+            if port < 1025 {
+                continue;
+            }
+
+            if port >= 65535 {
+                continue;
+            }
+
+            return port;
+        }
+    }
+
+    async fn set_testdata(url: &str) {
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_async_connection().await.unwrap();
+
+        for i in 0..100 {
+            let key = format!("key_{}", i).to_redis_args();
+            let value = format!("value_{}", i).to_redis_args();
+
+            conn.set(key, value).await.unwrap()
+        }
+    }
+
+    #[tokio::test]
+    async fn write_testdata() {
+        let url = "redis://localhost:6379";
+        set_testdata(url).await;
+    }
 
     #[tokio::test]
     async fn dump_info() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(6379).unwrap();
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
 
+        let start = std::time::Instant::now();
+        set_testdata(url.as_ref()).await;
+        println!("set testdata done {:?}", start.elapsed());
+
         let infos = scrap(url.as_ref()).await.unwrap();
-        println!("{:#?}", infos);
+        println!("{}", infos);
+    }
+
+    #[tokio::test]
+    async fn test_config_get() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+
+
+        let cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_async_connection().await.unwrap();
+
+        let resp: Vec<String> = redis::cmd("CONFIG")
+            .arg("GET")
+            .arg("*")
+            .query_async(&mut conn)
+            .await
+            .unwrap();
+
+        println!("{:?}", resp);
     }
 
     #[test]
-    fn test_info() {
-        let cli = Client::open("redis://localhost:6379").unwrap();
-        let mut conn = cli.get_connection().unwrap();
-        let info: redis::InfoDict = redis::cmd("INFO").query(&mut conn).unwrap();
-        println!("{:#?}", info);
+    fn test_parse_db_keyspace() {
+        let key = "db0";
+        let value = "keys=100,expires=50,avg_ttl=5";
+        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
+        assert_eq!(keys, 100.0);
+        assert_eq!(expires, 50.0);
+        assert_eq!(avg_ttl, 5.0 / 1000.0);
+    }
+
+    #[test]
+    fn parse_db_keyspace_without_avg_ttl() {
+        let key = "db1";
+        let value = "keys=100,expires=50";
+        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
+        assert_eq!(keys, 100.0);
+        assert_eq!(expires, 50.0);
+        assert_eq!(avg_ttl, -1.0);
     }
 }

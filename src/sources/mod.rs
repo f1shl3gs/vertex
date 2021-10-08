@@ -15,7 +15,7 @@ mod zookeeper;
 mod prometheus;
 mod prometheus_remote_write;
 mod pulsar;
-
+// #[cfg(feature = "sources-redis")]
 mod redis;
 #[cfg(feature = "sources-generator")]
 mod generator;

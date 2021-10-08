@@ -10,6 +10,10 @@ extensions:
     listen: 127.0.0.1:9000
 
 sources:
+  redis:
+    type: redis
+    interval: 15s
+    url: redis://localhost:6379
   internal_metrics:
     type: internal_metrics
     interval: 15s
@@ -53,11 +57,12 @@ sinks:
     type: blackhole
     inputs:
       - kmsg
+      - node
   prom:
     type: prometheus_exporter
     inputs:
       - add_extra_tags
-      - node
       - selfstat
       - internal_metrics
+      - redis
     listen: 127.0.0.1:9101

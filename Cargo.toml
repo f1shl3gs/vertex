@@ -19,7 +19,6 @@ members = [
     "lib/event",
     "lib/procfs",
     "lib/file-source",
-    "lib/sources/tail",
     "lib/internal"
 ]
 
@@ -63,7 +62,7 @@ sources-selfstat = ["libc"]
 sources-journald = []
 sources-internal_metrics = []
 sources-internal_log = []
-# sources-redis = ["redis/tokio-comp"]
+sources-redis = []
 
 # transforms
 transforms-add_tags = []
@@ -97,6 +96,7 @@ tokio = { version = "1.12.0", features = ["test-util"] }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
+rand = { version = "0.8.4" }
 
 [dependencies]
 # workspaces
@@ -172,4 +172,4 @@ libc = { version = "0.2.101", optional = true }
 dotenv-parser = { version = "0.1.3", optional = true }
 nom = { version = "7.0.0" }
 snafu = { version = "0.6.10" }
-redis = { version = "0.21.0", default-features = false, features = ["aio", "tokio-comp"] }
+redis = { version = "0.21.0", default-features = false, features = ["tokio-comp", "connection-manager"] }

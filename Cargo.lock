@@ -64,6 +64,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "595d3cfa7a60d4555cb5067b99f07142a08ea778de5cf993f7b75c7d8fabc486"
 
 [[package]]
+name = "arc-swap"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6df5aef5c5830360ce5218cecb8f018af3438af5686ae945094affc86fdec63"
+
+[[package]]
 name = "arrayvec"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2354,10 +2360,12 @@ version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "202c5bf92cad3d57605c366e644a7fbf305a83f19754fc66678c6265dcc9b8b4"
 dependencies = [
+ "arc-swap",
  "async-trait",
  "bytes 1.1.0",
  "combine",
  "dtoa",
+ "futures",
  "futures-util",
  "itoa",
  "percent-encoding",
@@ -2803,10 +2811,6 @@ dependencies = [
  "quote",
  "unicode-xid",
 ]
-
-[[package]]
-name = "tail"
-version = "0.1.0"
 
 [[package]]
 name = "tap"
@@ -3333,6 +3337,7 @@ dependencies = [
  "pin-project",
  "pprof",
  "prost",
+ "rand",
  "rdkafka",
  "redis",
  "regex",
