@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# SRC=$(find ./src -name "*.rs" |xargs cat| wc -l)
 SRC=$(find ./src -name "*.rs" -print0 |xargs -0 cat| wc -l)
 LIB=$(find ./lib -name "*.rs" -print0 |xargs -0 cat| wc -l)
 DOC=$(find ./ -name "*.md" -not -path "./target/*" -print0 | xargs -0 cat | wc -l)
