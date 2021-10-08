@@ -900,7 +900,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_ping_server() {
-        let mut conn = test_conn().await;
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_tokio_connection().await.unwrap();
 
         let s: String = redis::cmd("PING")
             .query_async(&mut conn)
