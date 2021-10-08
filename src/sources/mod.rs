@@ -14,8 +14,9 @@ mod nginx;
 mod zookeeper;
 mod prometheus;
 mod prometheus_remote_write;
+#[cfg(feature = "sources-pulsar")]
 mod pulsar;
-// #[cfg(feature = "sources-redis")]
+#[cfg(feature = "sources-redis")]
 mod redis;
 #[cfg(feature = "sources-generator")]
 mod generator;
@@ -29,6 +30,6 @@ mod kubelet;
 mod selfstat;
 #[cfg(feature = "sources-kmsg")]
 mod kmsg;
+#[cfg(feature = "sources-internal_metrics")]
 mod internal_metrics;
 mod internal_log;
-
