@@ -5,6 +5,7 @@ mod value;
 mod macros;
 
 use std::collections::BTreeMap;
+use std::time::{SystemTime, UNIX_EPOCH};
 pub use metric::*;
 pub use log::LogRecord;
 pub use value::Value;
@@ -171,4 +172,10 @@ impl From<String> for Event {
             fields,
         })
     }
+}
+
+pub fn unixnano() -> i64 {
+    let now = SystemTime::now();
+    let d = now.duration_since(UNIX_EPOCH).unwrap();
+    d.as_nanos() as i64
 }

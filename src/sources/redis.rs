@@ -5,7 +5,7 @@ use redis::{InfoDict, ToRedisArgs};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 use tokio_stream::wrappers::IntervalStream;
-use event::{tags, Event, Metric};
+use event::{tags, Event, Metric, unixnano};
 use snafu::Snafu;
 use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration, default_interval};
 use crate::pipeline::Pipeline;
@@ -244,70 +244,20 @@ pub struct RedisSourceConfig {
     interval: chrono::Duration,
 
     #[serde(default = "default_namespace")]
-    namespace: String,
+    namespace: Option<String>,
 }
 
-fn default_namespace() -> String {
-    "redis".to_string()
+fn default_namespace() -> Option<String> {
+    Some("redis".to_string())
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "redis")]
 impl SourceConfig for RedisSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let params = self.url.clone();
-        let namespace = self.namespace.clone();
-        let mut output = ctx.out;
-        let mut ticker = IntervalStream::new(tokio::time::interval(self.interval.to_std().unwrap()))
-            .take_until(ctx.shutdown);
+        let src = RedisSource::from(self);
 
-        Ok(Box::pin(async move {
-            while let Some(_) = ticker.next().await {
-                match scrap(params.as_ref()).await {
-                    Ok(infos) => {
-                        match extract_info_metrics(&infos) {
-                            Ok(mut metrics) => {
-                                metrics.push(Metric::gauge(
-                                    "up",
-                                    "",
-                                    1,
-                                ));
-
-                                let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-                                let now = now.as_millis() as i64;
-
-                                let mut stream = futures::stream::iter(metrics)
-                                    .map(|mut m| {
-                                        m.timestamp = now;
-                                        if namespace != "" {
-                                            m.name = format!("{}_{}", namespace, m.name)
-                                        }
-
-                                        Ok(m.into())
-                                    });
-                                output.send_all(&mut stream).await;
-                            }
-                            Err(err) => {
-                                output.send(Metric::gauge(
-                                    "up",
-                                    "redis status",
-                                    0,
-                                ).into()).await;
-                            }
-                        }
-                    }
-                    Err(_) => {
-                        output.send(Metric::gauge(
-                            "redis_up",
-                            "redis status",
-                            0,
-                        ).into());
-                    }
-                }
-            }
-
-            Ok(())
-        }))
+        Ok(Box::pin(src.run(ctx.out, ctx.shutdown)))
     }
 
     fn output_type(&self) -> DataType {
@@ -317,6 +267,235 @@ impl SourceConfig for RedisSourceConfig {
     fn source_type(&self) -> &'static str {
         "redis"
     }
+}
+
+struct RedisSource {
+    user: Option<String>,
+    password: Option<String>,
+    url: String,
+    namespace: Option<String>,
+    interval: std::time::Duration,
+
+    client_name: Option<String>,
+    // TODO: add TLS and timeouts
+}
+
+impl RedisSource {
+    fn from(conf: &RedisSourceConfig) -> Self {
+        Self {
+            user: None,
+            password: None,
+            url: conf.url.clone(),
+            namespace: conf.namespace.clone(),
+            interval: conf.interval.to_std().unwrap(),
+            client_name: None,
+        }
+    }
+
+    async fn run(
+        self,
+        mut output: Pipeline,
+        shutdown: ShutdownSignal,
+    ) -> Result<(), ()> {
+        let mut ticker = IntervalStream::new(tokio::time::interval(self.interval))
+            .take_until(shutdown);
+
+        while let Some(_) = ticker.next().await {
+            let metrics = match self.gather().await {
+                Err(err) => {
+                    warn!(
+                        message = "collect redis metrics failed",
+                        ?err
+                    );
+
+                    vec![Metric::gauge(
+                        "up",
+                        "Information about the Redis instance",
+                        0,
+                    )]
+                }
+                Ok(mut metrics) => {
+                    metrics.push(Metric::gauge(
+                        "up",
+                        "Information about the Redis instance",
+                        1,
+                    ));
+
+                    metrics
+                }
+            };
+
+            let timestamp = unixnano();
+            let mut stream = futures::stream::iter(metrics)
+                .map(|mut m| {
+                    m.timestamp = timestamp;
+                    if let Some(ref namespace) = self.namespace {
+                        m.name = format!("{}_{}", namespace, m.name)
+                    }
+
+                    Ok(m.into())
+                });
+            output.send_all(&mut stream).await;
+        }
+
+        Ok(())
+    }
+
+    async fn gather(&self) -> Result<Vec<Metric>, Error> {
+        let mut metrics = vec![];
+        let cli = redis::Client::open(self.url.as_str())?;
+        let mut conn = cli.get_async_connection().await?;
+
+        // Ping on connect?;
+
+        if let Some(ref client_name) = self.client_name {
+            redis::cmd("CLIENT")
+                .arg("SETNAME")
+                .arg(client_name)
+                .query_async(&mut conn)
+                .await?;
+        }
+
+        let mut db_count = match query_databases(&mut conn).await {
+            Ok(n) => n,
+            Err(err) => {
+                debug!(
+                    message = "redis config get failed",
+                    ?err
+                );
+                0
+            }
+        };
+
+        let infos = query_infos(&mut conn).await?;
+
+        if infos.contains("cluster_enabled:1") {
+            let cluster_info = cluster_info(&mut conn).await?;
+            db_count = 1;
+        } else if db_count == 0 {
+            // in non-cluster mode, if db_count is zero then "CONFIG" failed to retrieve a
+            // valid number of databases and we use the Redis config default which is 16
+            db_count = 16
+        }
+
+        // info metrics
+        if let Ok(ms) = extract_info_metrics(infos.as_str(), db_count) {
+            metrics.extend(ms);
+        }
+
+        // latency
+        if let Ok(ms) = extract_latency_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if let Ok(ms) = extract_check_key_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if let Ok(ms) = extract_slowlog_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if let Ok(ms) = extract_stream_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if let Ok(ms) = extract_count_keys_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if let Ok(ms) = extract_key_group_metrics(&mut conn).await {
+            metrics.extend(ms);
+        }
+
+        if infos.contains("# Sentinel") {
+            if let Ok(ms) = extract_sentinel_metrics(&mut conn).await {
+                metrics.extend(ms);
+            }
+        }
+
+        // TODO:
+        //  1. export client list
+        //  2. Tile38 metrics
+
+        Ok(metrics)
+    }
+}
+
+async fn extract_sentinel_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+async fn extract_key_group_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+async fn extract_count_keys_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+async fn extract_stream_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+async fn extract_check_key_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error> {
+    todo!()
+}
+
+// https://redis.io/commands/latency-latest
+async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
+    conn: &mut C,
+) -> Result<Vec<Metric>, Error>
+{
+    let mut metrics = vec![];
+    let values: Vec<Vec<String>> = redis::cmd("LATENCY")
+        .arg("LATEST")
+        .query_async(conn)
+        .await?;
+
+    for parts in values {
+        let event = parts[0].as_str();
+        let spike_last = parts[1].parse::<f64>()?;
+        let spike_duration = parts[2].parse::<f64>()?;
+        let max = parts[3].parse::<f64>()?;
+
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "latency_spike_last",
+                "When the latency spike last occurred",
+                spike_last,
+                tags!(
+                    "event_name" => event
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "latency_spike_duration_seconds",
+                "Length of the last latency spike in seconds",
+                spike_duration / 1e3,
+                tags!(
+                    "event_name" => event
+                ),
+            )
+        ]);
+    }
+
+    Ok(metrics)
 }
 
 async fn scrap(url: &str) -> Result<String, Error> {
@@ -331,7 +510,7 @@ async fn scrap(url: &str) -> Result<String, Error> {
     Ok(resp)
 }
 
-fn extract_info_metrics(infos: &str) -> Result<Vec<Metric>, std::io::Error> {
+fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::io::Error> {
     let mut metrics = vec![];
     let mut kvs = BTreeMap::new();
     let mut handled_dbs = BTreeSet::new();
@@ -455,8 +634,6 @@ fn extract_info_metrics(infos: &str) -> Result<Vec<Metric>, std::io::Error> {
         }
     }
 
-    // TODO: set db count properly
-    let dbcount = 16;
     for i in 0..dbcount {
         let name = format!("db{}", i);
         if let None = handled_dbs.get(name.as_str()) {
@@ -827,10 +1004,19 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         }
     }
 
-    Ok(16)
+    Ok(0)
 }
 
-async fn query_infos(conn: &mut redis::aio::Connection) -> Result<String, Error> {
+async fn cluster_info<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
+    let resp = redis::cmd("CLUSTER")
+        .arg("INFO")
+        .query_async(conn)
+        .await?;
+
+    Ok(resp)
+}
+
+async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
     let resp = redis::cmd("INFO")
         .arg("ALL")
         .query_async(conn)
@@ -840,11 +1026,10 @@ async fn query_infos(conn: &mut redis::aio::Connection) -> Result<String, Error>
 }
 
 // https://redis.io/commands/ping
-async fn ping_server(cli: &redis::Client) -> Result<f64, Error> {
-    let mut conn = cli.get_async_connection().await?;
+async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64, Error> {
     let start = std::time::Instant::now();
-    let s: String = redis::cmd("PING")
-        .query_async(&mut conn)
+    let _s: String = redis::cmd("PING")
+        .query_async(conn)
         .await?;
 
     let elapsed = start.elapsed().as_secs_f64();
@@ -861,110 +1046,61 @@ mod tests {
 
     const REDIS_PORT: u16 = 6379;
 
-    fn test_client() -> redis::Client {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-
-        let mut cli = redis::Client::open(url).unwrap();
-
-        cli
-    }
-
-    async fn conn_manager() -> redis::aio::ConnectionManager {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-
-        let mut cli = redis::Client::open(url).unwrap();
-
-        let manager = cli.get_tokio_connection_manager().await.unwrap();
-
-        manager
-    }
-
-    async fn test_conn() -> redis::aio::MultiplexedConnection {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-
-        let mut cli = redis::Client::open(url).unwrap();
-
-        let (conn, _) = cli.create_multiplexed_tokio_connection()
-            .await.unwrap();
-        conn
-    }
-
     #[tokio::test]
     async fn test_ping_server() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-
         let mut cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_tokio_connection().await.unwrap();
+        let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
 
-        let s: String = redis::cmd("PING")
-            .query_async(&mut conn)
-            .await
-            .unwrap();
-        assert_eq!(s, "PONG")
-    }
-
-    fn random_port() -> u16 {
-        loop {
-            let port = rand::random::<u16>();
-            if port < 1025 {
-                continue;
-            }
-
-            if port >= 65535 {
-                continue;
-            }
-
-            return port;
-        }
-    }
-
-    async fn set_testdata(url: &str) {
-        let mut cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_async_connection().await.unwrap();
-
-        for i in 0..100 {
-            let key = format!("key_{}", i).to_redis_args();
-            let value = format!("value_{}", i).to_redis_args();
-
-            conn.set(key, value).await.unwrap()
-        }
+        let latency = ping_server(&mut cm).await.unwrap();
+        println!("latency {}s", latency);
     }
 
     #[tokio::test]
-    async fn write_testdata() {
-        let url = "redis://localhost:6379";
-        set_testdata(url).await;
-    }
-
-    #[tokio::test]
-    async fn dump_info() {
+    async fn test_query_databases() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+        let n = query_databases(&mut conn).await.unwrap();
+        assert_eq!(n, 16)
+    }
 
-        let start = std::time::Instant::now();
-        set_testdata(url.as_ref()).await;
-        println!("set testdata done {:?}", start.elapsed());
+    async fn write_testdata<C: redis::aio::ConnectionLike>(conn: &mut C) {
+        for i in 0..100 {
+            let key = format!("key_{}", i).to_redis_args();
+            let value = format!("value_{}", i).to_redis_args();
 
-        let infos = scrap(url.as_ref()).await.unwrap();
-        println!("{}", infos);
+            let _resp: () = redis::cmd("SET")
+                .arg(key)
+                .arg(value)
+                .query_async(conn)
+                .await
+                .unwrap();
+        }
     }
 
     #[tokio::test]
-    async fn test_config_get() {
+    async fn test_latency_latest() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+
+        write_testdata(&mut conn).await;
+
+        extract_latency_metrics(&mut conn).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn dump_config() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
