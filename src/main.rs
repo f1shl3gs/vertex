@@ -1,11 +1,10 @@
 extern crate vertex;
 
-// mimalloc do not help for reducing memory usage,
-//
-// use mimalloc::MiMalloc;
-//
-// #[global_allocator]
-// static GLOBAL: MiMalloc = MiMalloc;
+#[global_allocator]
+#[cfg(feature = "allocator-mimalloc")]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+#[cfg(feature = "allocator-jemalloc")]
+static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 use tokio::runtime;
 use tokio::time::Duration;
@@ -46,7 +45,7 @@ fn init(color: bool, json: bool, levels: &str) {
     );
 
     #[cfg(feature = "tokio-console")]
-    let subscriber = {
+        let subscriber = {
         let (tasks_layer, tasks_server) = console_subscriber::TasksLayer::new();
         tokio::spawn(tasks_server.serve());
 

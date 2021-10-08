@@ -50,6 +50,10 @@ tokio-console = [
     "console-subscriber"
 ]
 
+# allocator
+allocator-mimalloc = ["mimalloc"]
+allocator-jemalloc = ["jemallocator"]
+
 # sources
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink", "dotenv-parser"]
@@ -103,7 +107,9 @@ buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
 internal = { path = "lib/internal" }
 
-# Allocation TODO
+# Allocation
+mimalloc = { version = "0.1.26", default-features = false, optional = true }
+jemallocator = { version = "0.3.2", default-features = false, optional = true }
 
 # futrures & tokio
 tokio = { version = "1.12.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
