@@ -50,9 +50,9 @@ impl FunctionTransform for Sample {
     fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
         let value = self.key_field
             .as_ref()
-            .and_then(|fiedld| {
+            .and_then(|field| {
                 let log = event.as_log();
-                log.fields.get(fiedld)
+                log.fields.get(field)
             })
             .map(|v| v.to_string_lossy());
 
