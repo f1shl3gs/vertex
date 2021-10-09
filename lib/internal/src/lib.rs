@@ -1,5 +1,9 @@
 pub mod metric;
 mod common;
+mod sample;
+
+#[macro_use]
+extern crate metrics;
 
 pub use common::*;
 
