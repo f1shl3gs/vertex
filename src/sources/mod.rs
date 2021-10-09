@@ -37,3 +37,5 @@ mod kmsg;
 mod internal_metrics;
 #[cfg(feature = "sources-internal_log")]
 mod internal_log;
+#[cfg(feature = "sources-bind")]
+mod bind;
