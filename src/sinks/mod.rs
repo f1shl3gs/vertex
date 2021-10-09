@@ -1,6 +1,9 @@
 #[cfg(feature = "sink-blackhole")]
 mod blackhole;
+#[cfg(feature = "sink-kafka")]
 mod kafka;
+#[cfg(feature = "sink-pulsar")]
+mod pulsar;
 #[cfg(feature = "sink-prometheus_exporter")]
 mod prometheus_exporter;
 #[cfg(feature = "sink-stdout")]

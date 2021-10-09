@@ -1,9 +1,11 @@
 extern crate vertex;
 
-#[global_allocator]
 #[cfg(feature = "allocator-mimalloc")]
+#[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 #[cfg(feature = "allocator-jemalloc")]
+#[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 use tokio::runtime;

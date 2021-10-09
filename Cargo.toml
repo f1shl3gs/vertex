@@ -66,6 +66,9 @@ sources-internal_metrics = []
 sources-internal_log = []
 sources-redis = ["redis"]
 sources-pulsar = ["pulsar"]
+sources-prometheus_scrape = []
+sources-prometheus_remote_write = []
+sources-nginx_stub = []
 
 # transforms
 transforms-add_tags = []
@@ -76,6 +79,8 @@ transforms-cardinality = []
 sink-prometheus_exporter = []
 sink-stdout = []
 sink-blackhole = []
+sink-kafka = ["rdkafka"]
+sink-pulsar = ["pulsar"]
 
 # extensions
 extension-pprof = ["pprof/flamegraph"]

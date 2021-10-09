@@ -10,9 +10,12 @@ mod journald;
 
 #[cfg(feature = "sources-kafka")]
 mod kafka;
-mod nginx;
+#[cfg(feature = "sources-nginx_stub")]
+mod nginx_stub;
 mod zookeeper;
-mod prometheus;
+#[cfg(feature = "sources-prometheus_scrape")]
+mod prometheus_scrape;
+#[cfg(feature = "sources-prometheus_remote_write")]
 mod prometheus_remote_write;
 #[cfg(feature = "sources-pulsar")]
 mod pulsar;
@@ -32,4 +35,5 @@ mod selfstat;
 mod kmsg;
 #[cfg(feature = "sources-internal_metrics")]
 mod internal_metrics;
+#[cfg(feature = "sources-internal_log")]
 mod internal_log;
