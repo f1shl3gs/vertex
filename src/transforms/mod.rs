@@ -17,6 +17,7 @@ mod logfmt_parser;
 mod rename_fields;
 mod rename_tags;
 mod route;
+mod sample;
 
 use std::pin::Pin;
 use futures::Stream;

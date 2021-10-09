@@ -75,6 +75,7 @@ sources-nginx_stub = []
 transforms-add_tags = []
 transforms-add_fields = []
 transforms-cardinality = []
+transforms-sample = ["seahash"]
 
 # sinks
 sink-prometheus_exporter = []
@@ -185,3 +186,4 @@ nom = { version = "7.0.0" }
 snafu = { version = "0.6.10" }
 redis = { version = "0.21.0", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
+seahash = { version = "4.1.0", default-features = false, optional = true }
