@@ -17,7 +17,8 @@ members = [
     "lib/event",
     "lib/procfs",
     "lib/file-source",
-    "lib/internal"
+    "lib/internal",
+    "lib/prometheus"
 ]
 
 [features]
