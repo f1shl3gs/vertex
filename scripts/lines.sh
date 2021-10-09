@@ -2,10 +2,10 @@
 
 set -euo pipefail
 
-SRC=$(find ./src -name "*.rs" -print0 |xargs -0 cat| wc -l)
-LIB=$(find ./lib -name "*.rs" -print0 |xargs -0 cat| wc -l)
-BENCH=$(find ./benches -name "*.rs" -print0 | xargs -0 cat | wc -l)
-DOC=$(find ./ -name "*.md" -not -path "./target/*" -print0 | xargs -0 cat | wc -l)
+SRC=$(find ./src -name "*.rs" -print0 |xargs -0 grep -v '^$' | wc -l)
+LIB=$(find ./lib -name "*.rs" -print0 |xargs -0 grep -v '^$' | wc -l)
+BENCH=$(find ./benches -name "*.rs" -print0 | xargs -0 grep -v '^$' | wc -l)
+DOC=$(find ./ -name "*.md" -not -path "./target/*" -print0 | xargs -0 grep -v '^$' | wc -l)
 
 echo "doc:   ${DOC}"
 echo ""
