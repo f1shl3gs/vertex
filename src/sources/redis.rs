@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
+use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
 use futures::{SinkExt, StreamExt};
 use redis::{InfoDict, ToRedisArgs};
@@ -11,7 +12,6 @@ use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration,
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-
 use lazy_static::lazy_static;
 
 lazy_static!(
@@ -245,6 +245,16 @@ pub struct RedisSourceConfig {
 
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
+
+    #[serde(default)]
+    user: Option<String>,
+
+    #[serde(default)]
+    password: Option<String>,
+
+    #[serde(default)]
+    password_file: Option<PathBuf>,
+
 }
 
 fn default_namespace() -> Option<String> {
@@ -329,6 +339,7 @@ impl RedisSource {
             let mut stream = futures::stream::iter(metrics)
                 .map(|mut m| {
                     m.timestamp = timestamp;
+                    m.tags.insert("instance".to_string(), self.url.to_owned());
                     if let Some(ref namespace) = self.namespace {
                         m.name = format!("{}_{}", namespace, m.name)
                     }
@@ -388,35 +399,25 @@ impl RedisSource {
             metrics.extend(ms);
         }
 
-        if let Ok(ms) = extract_check_key_metrics(&mut conn).await {
-            metrics.extend(ms);
-        }
-
         if let Ok(ms) = extract_slowlog_metrics(&mut conn).await {
             metrics.extend(ms);
         }
 
-        if let Ok(ms) = extract_stream_metrics(&mut conn).await {
-            metrics.extend(ms);
-        }
 
-        if let Ok(ms) = extract_count_keys_metrics(&mut conn).await {
-            metrics.extend(ms);
-        }
-
-        if let Ok(ms) = extract_key_group_metrics(&mut conn).await {
-            metrics.extend(ms);
-        }
+//      Redis exporter provide this feature, but
+//      do we need it too? Under the hood, SELECT is used, which might
+//      hurt the performance of redis
+//
+//      if let Ok(ms) = extract_count_keys_metrics(&mut conn).await {
+//          metrics.extend(ms);
+//      }
+//
 
         if infos.contains("# Sentinel") {
             if let Ok(ms) = extract_sentinel_metrics(&mut conn).await {
                 metrics.extend(ms);
             }
         }
-
-        // TODO:
-        //  1. export client list
-        //  2. Tile38 metrics
 
         Ok(metrics)
     }
@@ -425,6 +426,15 @@ impl RedisSource {
 async fn extract_sentinel_metrics<C: redis::aio::ConnectionLike>(
     conn: &mut C,
 ) -> Result<Vec<Metric>, Error> {
+    let master_details: Vec<String> = redis::cmd("SENTINEL")
+        .arg("MASTERS")
+        .query_async(conn)
+        .await?;
+
+    for detail in master_details {
+        println!("detail {}", detail)
+    }
+
     todo!()
 }
 
@@ -449,13 +459,56 @@ async fn extract_stream_metrics<C: redis::aio::ConnectionLike>(
 async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
     conn: &mut C,
 ) -> Result<Vec<Metric>, Error> {
-    todo!()
-}
+    let mut metrics = vec![];
+    match redis::cmd("SLOWLOG")
+        .arg("LEN")
+        .query_async::<C, f64>(conn)
+        .await
+    {
+        Ok(length) => {
+            metrics.push(Metric::gauge(
+                "slowlog_length",
+                "Total slowlog",
+                length,
+            ));
+        }
+        Err(err) => {
+            warn!(
+                message = "slowlog length query failed",
+                ?err
+            );
+        }
+    }
 
-async fn extract_check_key_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
-    todo!()
+    let values: Vec<i64> = redis::cmd("SLOWLOG")
+        .arg("GET")
+        .arg("1")
+        .query_async(conn)
+        .await?;
+
+    let mut last_id: i64 = 0;
+    let mut last_slow_execution_second: f64 = 0.0;
+    if values.len() > 0 {
+        last_id = values[0];
+        if values.len() > 2 {
+            last_slow_execution_second = values[2] as f64 / 1e6
+        }
+    }
+
+    metrics.extend_from_slice(&[
+        Metric::gauge(
+            "slowlog_last_id",
+            "Last id of slowlog",
+            last_id as f64,
+        ),
+        Metric::gauge(
+            "last_slow_execution_duration_seconds",
+            "The amount of time needed for last slow execution, in seconds",
+            last_slow_execution_second as f64,
+        )
+    ]);
+
+    Ok(metrics)
 }
 
 // https://redis.io/commands/latency-latest
@@ -1098,6 +1151,35 @@ mod tests {
 
         extract_latency_metrics(&mut conn).await.unwrap();
     }
+
+    #[tokio::test]
+    async fn test_slowlog() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+
+        write_testdata(&mut conn).await;
+
+        let v = extract_slowlog_metrics(&mut conn).await.unwrap();
+        assert_eq!(v.len(), 3);
+    }
+
+    // #[tokio::test]
+    // async fn test_sentinel() {
+    //     let docker = testcontainers::clients::Cli::default();
+    //     let service = docker.run(Redis::default());
+    //     let host_port = service.get_host_port(REDIS_PORT).unwrap();
+    //     let url = format!("redis://localhost:{}", host_port);
+    //     let mut cli = redis::Client::open(url).unwrap();
+    //     let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+//
+    //     write_testdata(&mut conn).await;
+//
+    //     let v = extract_sentinel_metrics(&mut conn).await.unwrap();
+    // }
 
     #[tokio::test]
     async fn dump_config() {
