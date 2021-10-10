@@ -3,7 +3,7 @@ use futures::future::BoxFuture;
 pub type Source = BoxFuture<'static, Result<(), ()>>;
 
 #[cfg(feature = "sources-node_metrics")]
-mod node;
+pub mod node;
 
 #[cfg(feature = "sources-journald")]
 mod journald;
@@ -12,6 +12,7 @@ mod journald;
 mod kafka;
 #[cfg(feature = "sources-nginx_stub")]
 mod nginx_stub;
+#[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 #[cfg(feature = "sources-prometheus_scrape")]
 mod prometheus_scrape;

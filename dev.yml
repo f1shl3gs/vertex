@@ -10,6 +10,9 @@ extensions:
     listen: 127.0.0.1:9000
 
 sources:
+  zookeeper:
+    type: zookeeper
+    endpoint: 127.0.0.1:49158
   redis:
     type: redis
     interval: 15s
@@ -65,4 +68,5 @@ sinks:
       - selfstat
       - internal_metrics
       - redis
+      - zookeeper
     listen: 127.0.0.1:9101

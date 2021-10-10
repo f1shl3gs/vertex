@@ -33,6 +33,8 @@ default = [
     "sources-journald",
     "sources-selfstat",
     "sources-internal_metrics",
+    "sources-redis",
+    "sources-zookeeper",
     # transforms
     "transforms-add_tags",
     "transforms-add_fields",
@@ -70,6 +72,7 @@ sources-pulsar = ["pulsar"]
 sources-prometheus_scrape = []
 sources-prometheus_remote_write = []
 sources-nginx_stub = []
+sources-zookeeper = []
 
 # transforms
 transforms-add_tags = []
