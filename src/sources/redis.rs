@@ -413,11 +413,12 @@ impl RedisSource {
 //      }
 //
 
-        if infos.contains("# Sentinel") {
-            if let Ok(ms) = extract_sentinel_metrics(&mut conn).await {
-                metrics.extend(ms);
-            }
-        }
+        // TODO： implement this
+        // if infos.contains("# Sentinel") {
+        //     if let Ok(ms) = extract_sentinel_metrics(&mut conn).await {
+        //         metrics.extend(ms);
+        //     }
+        // }
 
         Ok(metrics)
     }
