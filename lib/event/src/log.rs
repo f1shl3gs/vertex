@@ -1,7 +1,7 @@
 use serde::{Deserialize};
-
 use crate::{ByteSizeOf, Value};
 use std::collections::BTreeMap;
+use std::fmt::Debug;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize)]
 pub struct LogRecord {
@@ -16,5 +16,15 @@ pub struct LogRecord {
 impl ByteSizeOf for LogRecord {
     fn allocated_bytes(&self) -> usize {
         self.tags.allocated_bytes() + self.fields.allocated_bytes()
+    }
+}
+
+impl LogRecord {
+    pub fn insert_field(
+        &mut self,
+        key: impl AsRef<str>,
+        value: impl Into<Value> + Debug,
+    ) -> Option<Value> {
+        todo!()
     }
 }
