@@ -16,7 +16,7 @@ build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
 bloat:
-	cargo bloat --features "allocator-jemalloc" --release --crates
+	cargo bloat --release --crates
 
 lines:
 	@./scripts/lines.sh
