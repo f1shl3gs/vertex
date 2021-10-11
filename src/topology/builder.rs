@@ -179,7 +179,7 @@ pub async fn build_pieces(
                 .filter(move |event| ready(filter_event_type(event, input_type)))
                 .ready_chunks(128)
                 .inspect(|evs| {
-                    emit!(&EventsReceived {
+                    emit!(EventsReceived {
                         count: evs.len(),
                         byte_size: evs.iter().map(|ev| ev.size_of()).sum(),
                     });
@@ -192,7 +192,7 @@ pub async fn build_pieces(
                         t.transform(&mut buf, v);
                         output.append(&mut buf);
                     }
-                    emit!(&EventsSent {
+                    emit!(EventsSent {
                         count: output.len(),
                         byte_size: output.iter().map(|event| event.size_of()).sum(),
                     });
@@ -204,7 +204,7 @@ pub async fn build_pieces(
                 let filtered = input_rx
                     .filter(move |event| ready(filter_event_type(event, input_type)))
                     .inspect(|ev| {
-                        emit!(&EventsReceived {
+                        emit!(EventsReceived {
                             count: 1,
                             byte_size: ev.size_of()
                         });
@@ -213,7 +213,7 @@ pub async fn build_pieces(
                 t.transform(Box::pin(filtered))
                     .map(Ok)
                     .forward(output.with(|event: Event| async {
-                        emit!(&EventsSent {
+                        emit!(EventsSent {
                             count: 1,
                             byte_size: event.size_of(),
                         });
@@ -286,7 +286,7 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|event| ready(filter_event_type(event, input_type)))
-                    .inspect(|ev| emit!(&EventsReceived {
+                    .inspect(|ev| emit!(EventsReceived {
                         count: 1,
                         byte_size: ev.size_of(),
                     }))
