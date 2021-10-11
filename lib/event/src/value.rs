@@ -100,9 +100,21 @@ impl From<u8> for Value {
     }
 }
 
+impl From<i32> for Value {
+    fn from(i: i32) -> Self {
+        Self::Int64(i as i64)
+    }
+}
+
 impl From<u64> for Value {
     fn from(u: u64) -> Self {
         Self::Uint64(u)
+    }
+}
+
+impl From<i64> for Value {
+    fn from(i: i64) -> Self {
+        Self::Int64(i)
     }
 }
 
@@ -121,6 +133,30 @@ impl From<&String> for Value {
 impl From<&str> for Value {
     fn from(s: &str) -> Self {
         Self::String(s.to_string())
+    }
+}
+
+impl From<&[u8]> for Value {
+    fn from(b: &[u8]) -> Self {
+        Self::Bytes(Bytes::from(b.to_owned()))
+    }
+}
+
+impl From<DateTime<Utc>> for Value {
+    fn from(ts: DateTime<Utc>) -> Self {
+        Self::Timestamp(ts)
+    }
+}
+
+impl From<Bytes> for Value {
+    fn from(bytes: Bytes) -> Self {
+        Self::Bytes(bytes)
+    }
+}
+
+impl From<BTreeMap<String, Value>> for Value {
+    fn from(map: BTreeMap<String, Value>) -> Self {
+        Self::Map(map)
     }
 }
 
