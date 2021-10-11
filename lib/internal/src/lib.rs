@@ -13,7 +13,7 @@ pub trait InternalEvent {
 }
 
 #[inline]
-pub fn emit(ev: &impl InternalEvent) {
+pub fn emit(ev: impl InternalEvent) {
     ev.emit_logs();
     ev.emit_metrics();
 }
@@ -21,6 +21,6 @@ pub fn emit(ev: &impl InternalEvent) {
 #[macro_export]
 macro_rules! emit {
     ($event: expr) => {
-        internal::emit($event)
+        $crate::emit($event)
     };
 }
