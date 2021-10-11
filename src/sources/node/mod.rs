@@ -377,10 +377,6 @@ impl NodeMetrics {
         while ticker.next().await.is_some() {
             let mut tasks = Vec::new();
 
-            let start = std::time::SystemTime::now();
-            let end = std::time::SystemTime::now();
-            let duration = end.duration_since(start).unwrap().as_secs();
-
             if self.collectors.arp {
                 let proc_path = self.proc_path.clone();
 

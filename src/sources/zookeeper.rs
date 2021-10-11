@@ -203,9 +203,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64
 
 #[cfg(test)]
 mod tests {
-    use std::thread::sleep;
-    use futures::FutureExt;
-    use testcontainers::{Docker, Image};
+    use testcontainers::{Docker};
     use zk::Zookeeper;
     use super::*;
 

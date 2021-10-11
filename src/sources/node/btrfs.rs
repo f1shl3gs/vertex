@@ -505,6 +505,6 @@ mod tests {
     #[tokio::test]
     async fn test_read_device_info() {
         let path = PathBuf::from("testdata/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
-        let infos = read_device_info(&path).await.unwrap();
+        let _infos = read_device_info(&path).await.unwrap();
     }
 }

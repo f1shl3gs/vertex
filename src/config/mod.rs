@@ -291,7 +291,7 @@ service:
         - stdout
         ";
 
-        let cb: Config = format::deserialize(text, Some(format::Format::YAML)).unwrap();
+        let _cb: Config = format::deserialize(text, Some(format::Format::YAML)).unwrap();
     }
 
     #[derive(Serialize, Deserialize)]

@@ -51,7 +51,7 @@ impl Default for HTTPConfig {
 #[async_trait]
 #[typetag::serde(name = "http")]
 impl ProviderConfig for HTTPConfig {
-    async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder> {
+    async fn build(&mut self, _signal_handler: &mut SignalHandler) -> Result<Builder> {
         todo!()
     }
 

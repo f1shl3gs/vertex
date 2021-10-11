@@ -1,12 +1,10 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
-use std::time::{SystemTime, UNIX_EPOCH};
 use futures::{SinkExt, StreamExt};
-use redis::{InfoDict, ToRedisArgs};
+use redis::ToRedisArgs;
 use serde::{Deserialize, Serialize};
-use tokio::io::AsyncBufReadExt;
 use tokio_stream::wrappers::IntervalStream;
-use event::{tags, Event, Metric, unixnano};
+use event::{tags, Metric, unixnano};
 use snafu::Snafu;
 use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration, default_interval};
 use crate::pipeline::Pipeline;
@@ -1093,9 +1091,7 @@ async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64,
 
 #[cfg(test)]
 mod tests {
-    use testcontainers::{Docker, Image, images::redis::Redis};
-    use redis::{AsyncCommands, Commands};
-    use redis::aio::Connection;
+    use testcontainers::{Docker, images::redis::Redis};
     use super::*;
 
     const REDIS_PORT: u16 = 6379;
