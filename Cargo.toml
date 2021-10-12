@@ -9,7 +9,7 @@ exclude = [
 ]
 
 [profile.release]
-lto=true
+lto = true
 
 [workspace]
 members = [
@@ -47,6 +47,9 @@ default = [
     # extensions
     "extension-pprof"
 ]
+
+# integration
+integration-test = []
 
 # common
 disk-buffer = []

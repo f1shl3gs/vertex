@@ -58,7 +58,7 @@ impl ZookeeperSource {
                             1,
                             tags!(
                                 "instance" => endpoint
-                            )
+                            ),
                         ),
                         Metric::gauge_with_tags(
                             "zk_version",
@@ -87,7 +87,7 @@ impl ZookeeperSource {
                             value,
                             tags!(
                                 "instance" => endpoint
-                            )
+                            ),
                         ).into());
                     }
 
@@ -106,7 +106,7 @@ impl ZookeeperSource {
                         0,
                         tags!(
                             "instance" => endpoint
-                        )
+                        ),
                     ).into()).await;
                 }
             }
@@ -203,10 +203,19 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64
 
 #[cfg(test)]
 mod tests {
-    use testcontainers::{Docker};
-    use zk::Zookeeper;
-    use super::*;
+    use super::parse_version;
 
+    #[test]
+    fn test_parse_version() {
+        let input = "zk_version	3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b, built on 2021-03-17 09:46 UTC";
+        let v = parse_version(input);
+        assert_eq!(v, "3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b")
+    }
+}
+
+#[cfg(feature = "integration-test")]
+#[cfg(test)]
+mod integration_tests {
     mod zk {
         use std::collections::HashMap;
         use testcontainers::{Container, Docker, Image, WaitForMessage};
@@ -297,12 +306,9 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_parse_version() {
-        let input = "zk_version	3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b, built on 2021-03-17 09:46 UTC";
-        let v = parse_version(input);
-        assert_eq!(v, "3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b")
-    }
+    use testcontainers::Docker;
+    use zk::Zookeeper;
+    use super::fetch_stats;
 
     #[tokio::test]
     async fn test_fetch_stats() {
