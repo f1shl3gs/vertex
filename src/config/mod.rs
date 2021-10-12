@@ -1,3 +1,19 @@
+pub mod format;
+mod loading;
+mod diff;
+mod helper;
+mod provider;
+mod builder;
+mod resource;
+mod validation;
+mod global;
+mod proxy;
+
+// re-export
+pub use proxy::{
+    ProxyConfig,
+};
+
 use std::path::PathBuf;
 
 use async_trait::async_trait;
@@ -16,17 +32,6 @@ use crate::{
     transforms,
 };
 use crate::shutdown::ShutdownSignal;
-
-pub mod format;
-mod loading;
-mod diff;
-mod helper;
-mod provider;
-mod builder;
-mod resource;
-mod validation;
-mod global;
-mod proxy;
 
 pub use resource::{
     Protocol,

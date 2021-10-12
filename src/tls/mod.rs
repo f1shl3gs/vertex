@@ -2,11 +2,13 @@ mod settings;
 mod maybe_tls;
 mod incoming;
 
-use std::path::PathBuf;
 pub use settings::{TLSConfig, MaybeTLSSettings};
 pub use maybe_tls::{
     MaybeTLS,
 };
+
+use std::path::PathBuf;
+use snafu::Snafu;
 
 #[derive(Debug, Snafu)]
 pub enum TLSError {

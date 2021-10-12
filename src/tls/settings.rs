@@ -46,6 +46,7 @@ fn error(err: String) -> io::Error {
     io::Error::new(io::ErrorKind::Other, err)
 }
 
+#[derive(Clone)]
 pub struct IdentityStore(Vec<u8>, String);
 
 /// Directly usable settings for TLS connectors
@@ -54,11 +55,11 @@ pub struct TLSSettings {
     verify_certificate: bool,
     verify_hostname: bool,
     // authorities: Vec<rustls::x>,
-    identity: Option<IdentityStore>
+    identity: Option<IdentityStore>,
 }
 
 impl<R, T> MaybeTLS<R, T> {
     // pub async fn bind(&self, addr: &SocketAddr) ->
 }
 
-pub type MaybeTLSSettings = MaybeTLS<(), TlsSettings>;
+pub type MaybeTLSSettings = MaybeTLS<(), TLSSettings>;

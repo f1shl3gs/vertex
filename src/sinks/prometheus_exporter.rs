@@ -243,12 +243,12 @@ impl PrometheusExporter {
                 .await
                 .map_err(|err| warn!(message = "Server bind error: {}", err))?;
 */
-            Server::builder()
+            /*Server::builder()
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
                 .await
                 .map_err(|err| warn!(message = "Server error", ?err))?;
-
+*/
             Server::bind(&address)
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))

@@ -1,4 +1,5 @@
 use std::fmt;
+use snafu::Snafu;
 use hyper::{Body, Client, http};
 use hyper::body::HttpBody;
 use hyper::client::HttpConnector;
@@ -7,6 +8,7 @@ use hyper::http::uri::InvalidUri;
 use hyper::service::Service;
 use hyper_proxy::ProxyConnector;
 use hyper_rustls::HttpsConnector;
+use crate::config::ProxyConfig;
 use crate::tls::{MaybeTLS, MaybeTLSSettings, TLSError};
 
 #[derive(Debug, Snafu)]
@@ -36,7 +38,7 @@ impl<B> HTTPClient<B>
         tls_setting: impl Into<MaybeTLSSettings>,
         proxy_config: &ProxyConfig,
     ) -> Result<HTTPClient<B>, HTTPError> {
-
+        todo!()
     }
 }
 
