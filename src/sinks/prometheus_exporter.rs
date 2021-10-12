@@ -27,6 +27,7 @@ use hyper::{Request, Body, Method, Response, StatusCode, Server};
 use futures::{StreamExt, FutureExt};
 use event::MetricValue;
 use hyper::http::HeaderValue;
+use crate::tls::MaybeTLS;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -234,6 +235,20 @@ impl PrometheusExporter {
         let (trigger, tripwire) = Tripwire::new();
         let address = self.config.listen;
         tokio::spawn(async move {
+/*
+            let tls = MaybeTLSSettings::from_config(&self.config.tls)
+                .map_err(|err| warn!(message = "Server TLS error: {}", err))?;
+
+            let listener = tls.bind(&address)
+                .await
+                .map_err(|err| warn!(message = "Server bind error: {}", err))?;
+*/
+            Server::builder()
+                .serve(new_service)
+                .with_graceful_shutdown(tripwire.then(tripwire_handler))
+                .await
+                .map_err(|err| warn!(message = "Server error", ?err))?;
+
             Server::bind(&address)
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))

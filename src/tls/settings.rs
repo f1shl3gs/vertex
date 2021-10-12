@@ -3,6 +3,8 @@ use std::{
     path::PathBuf,
     io,
 };
+use std::net::SocketAddr;
+use crate::tls::MaybeTLS;
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
@@ -38,50 +40,25 @@ impl TLSConfig {
     fn load_authorities(&self) {
         todo!()
     }
-
-/*
-    async fn hyper_client<C, B>(&self) -> Result<Client<C, B>, io::Error>
-        where
-            C: Clone + Connect,
-            B: HttpBody + Send,
-            B::Data: Send
-    {
-        let mut ca = match self.ca_file {
-            Some(ref path) => {
-                let f = File::open(path)
-                    .map_err(|err| error(format!("failed to open {}: {}", path.to_str().unwrap(), err)))?;
-
-                let rd = BufReader::new(f);
-                Some(rd)
-            }
-            None => None,
-        };
-
-        let https = match ca {
-            Some(ref mut rd) => {
-                // Build an HTTP connector which supports HTTPS too.
-                let mut http = HttpConnector::new();
-                http.enforce_http(false);
-
-                // Build a TLS client, using the custom CA store for lookups
-                let mut tls = rustls::ClientConfig::new();
-                tls.root_store
-                    .add_pem_file(rd)
-                    .map_err(|_| error("failed to load custom CA store".into()))?;
-                // Join the above part into an HTTPS connector
-                hyper_rustls::HttpsConnector::from((http, tls))
-            }
-
-            // Default HTTPS connector
-            None => hyper_rustls::HttpsConnector::with_native_roots()
-        };
-
-        Ok(Client::builder().build(https))
-    }
-    */
-
 }
 
 fn error(err: String) -> io::Error {
     io::Error::new(io::ErrorKind::Other, err)
 }
+
+pub struct IdentityStore(Vec<u8>, String);
+
+/// Directly usable settings for TLS connectors
+#[derive(Clone, Default)]
+pub struct TLSSettings {
+    verify_certificate: bool,
+    verify_hostname: bool,
+    // authorities: Vec<rustls::x>,
+    identity: Option<IdentityStore>
+}
+
+impl<R, T> MaybeTLS<R, T> {
+    // pub async fn bind(&self, addr: &SocketAddr) ->
+}
+
+pub type MaybeTLSSettings = MaybeTLS<(), TlsSettings>;

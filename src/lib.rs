@@ -14,6 +14,7 @@ mod trigger;
 mod app;
 mod extensions;
 mod error;
+mod http;
 
 pub use signal::{SignalHandler};
 

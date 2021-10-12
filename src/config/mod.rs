@@ -26,6 +26,7 @@ mod builder;
 mod resource;
 mod validation;
 mod global;
+mod proxy;
 
 pub use resource::{
     Protocol,
