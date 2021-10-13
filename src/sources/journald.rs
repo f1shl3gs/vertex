@@ -243,7 +243,7 @@ impl JournaldSource {
 
                 if let Some(tmp) = entry.remove(&*CURSOR) {
                     match tmp {
-                        Value::String(s) => *cursor = Some(s),
+                        Value::Bytes(_) => *cursor = Some(tmp.to_string_lossy()),
                         _ => {}
                     }
                 }
@@ -251,8 +251,9 @@ impl JournaldSource {
                 saw_record = true;
                 if let Some(tmp) = entry.get(SYSTEMD_UNIT) {
                     match tmp {
-                        Value::String(unit) => {
-                            if self.filter(unit) {
+                        Value::Bytes(value) => {
+                            let s = String::from_utf8_lossy(value);
+                            if self.filter(&s) {
                                 continue;
                             }
                         }
@@ -615,16 +616,16 @@ mod tests {
     fn test_decode_kv() {
         let (k, v) = decode_kv("_SYSTEMD_UNIT=NetworkManager.service".as_bytes()).unwrap();
         assert_eq!(k, "_SYSTEMD_UNIT");
-        assert_eq!(v, Value::String("NetworkManager.service".to_string()));
+        assert_eq!(v, Value::Bytes("NetworkManager.service".into()));
 
         let (k, v) = decode_kv("PRIORITY=5".as_bytes()).unwrap();
         assert_eq!(k, "PRIORITY");
-        assert_eq!(v, Value::String("NOTICE".to_string()));
+        assert_eq!(v, Value::Bytes("NOTICE".into()));
 
         // unknown priority
         let (k, v) = decode_kv("PRIORITY=9".as_bytes()).unwrap();
         assert_eq!(k, "PRIORITY");
-        assert_eq!(v, Value::String("UNKNOWN".to_string()))
+        assert_eq!(v, Value::Bytes("UNKNOWN".into()))
     }
 
     #[tokio::test]
@@ -825,22 +826,21 @@ MESSAGE=audit log
         // assert_eq!(received.len(), 8);
         assert_eq!(
             message(&received[0]),
-            Value::String("System Initialization".into())
+            Value::Bytes("System Initialization".into())
         );
 
         assert_eq!(timestamp(&received[0]), value_ts(1578529839, 140001000));
-        assert_eq!(priority(&received[0]), Value::String("INFO".into()));
-        assert_eq!(message(&received[1]), Value::String("unit message".into()));
+        assert_eq!(priority(&received[0]), Value::Bytes("INFO".into()));
+        assert_eq!(message(&received[1]), Value::Bytes("unit message".into()));
         assert_eq!(timestamp(&received[1]), value_ts(1578529839, 140002000));
-        assert_eq!(priority(&received[1]), Value::String("DEBUG".into()));
+        assert_eq!(priority(&received[1]), Value::Bytes("DEBUG".into()));
     }
 
     fn message(event: &Event) -> Value {
         let log = event.as_log();
-        println!("---- {:?}", log);
         let v = log.fields.get("message").unwrap();
         match v {
-            Value::String(_) => {
+            Value::Bytes(_) => {
                 return v.clone();
             }
             _ => {
@@ -857,7 +857,10 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("_SOURCE_REALTIME_TIMESTAMP").unwrap();
         let ns = match v {
-            Value::String(s) => s.parse::<i64>().unwrap(),
+            Value::Bytes(s) => {
+                let s = String::from_utf8_lossy(s);
+                s.parse::<i64>().unwrap()
+            },
             _ => panic!("unexpected timestamp type")
         };
 
@@ -868,7 +871,7 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("PRIORITY").unwrap();
         match v {
-            Value::String(_) => {
+            Value::Bytes(_) => {
                 return v.clone();
             }
             _ => {

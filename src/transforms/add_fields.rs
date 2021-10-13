@@ -59,7 +59,7 @@ impl FunctionTransform for AddFields {
 
         let log = event.as_mut_log();
         for (k, v) in self.fields.iter() {
-            log.fields.insert(k.clone(), v.into());
+            log.fields.insert(k.clone(), v.as_str().into());
         }
 
         output.push(event)
