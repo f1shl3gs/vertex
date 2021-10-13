@@ -159,8 +159,10 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         let unit = match u {
             [b'n', b's'] => NANOSECOND,
             [b'u', b's'] => MICROSECOND,
-            // [b'µ', b's'] => MICROSECOND,
-            // [b'μ', b's'] => MICROSECOND,
+            // "µs" U+00B5
+            [194, 181, 115] => MICROSECOND,
+            // "μs" U+03BC
+            [206, 188, 115] => MICROSECOND,
             [b'm', b's'] => MILLISECOND,
             [b's'] => SECOND,
             [b'm'] => MINUTE,
@@ -249,7 +251,9 @@ mod tests {
             ParseDurationTest { input: "10ns", want: 10 * NANOSECOND },
             ParseDurationTest { input: "11us", want: 11 * MICROSECOND },
             ParseDurationTest { input: "12µs", want: 12 * MICROSECOND }, // U+00B5
+            ParseDurationTest { input: "12µs10ns", want: 12 * MICROSECOND + 10 * NANOSECOND }, // U+00B5
             ParseDurationTest { input: "12μs", want: 12 * MICROSECOND }, // U+03BC
+            ParseDurationTest { input: "12μs10ns", want: 12 * MICROSECOND + 10 * NANOSECOND }, // U+03BC
             ParseDurationTest { input: "13ms", want: 13 * MILLISECOND },
             ParseDurationTest { input: "14s", want: 14 * SECOND },
             ParseDurationTest { input: "15m", want: 15 * MINUTE },
@@ -279,9 +283,20 @@ mod tests {
         ];
 
         for test in tests {
+            println!("input: {}", test.input);
             let d = parse_duration(&test.input).unwrap();
             assert_eq!(d, Duration::nanoseconds(test.want))
         }
+    }
+
+    #[test]
+    fn parse_us() {
+        let input = "12µs"; // U+00B5
+        let d = parse_duration(input).unwrap();
+
+
+        let input = "12μs"; // U+03BC
+        let d = parse_duration(input).unwrap();
     }
 
     #[test]
