@@ -33,6 +33,14 @@ pub enum TLSError {
     MissingRequiredIdentity,
     #[snafu(display("Creating the TLS acceptor failed: {}", source))]
     CreateAcceptor { source: std::io::Error },
+
+    // TLS
+    #[snafu(display("Could not parse certificate in {:?}", filename))]
+    CertificateParseError { filename: PathBuf },
+    #[snafu(display("Could not parse private key in {:?}", filename))]
+    PrivateKeyParseError {
+        filename: PathBuf
+    },
 }
 
 #[cfg(test)]
@@ -58,15 +66,20 @@ mod tests {
 
         let addr = "127.0.0.1:10000".parse().unwrap();
         let listener = tls.bind(&addr)
+            .await
             .unwrap();
 
         let service = make_service_fn(|_conn| async {
             Ok::<_, Infallible>(service_fn(echo_handle))
         });
 
-        Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-            .serve(service)
-            .await
-            .unwrap();
+        tokio::spawn(async {
+            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
+                .serve(service)
+                .await
+                .unwrap();
+        });
+
+
     }
 }

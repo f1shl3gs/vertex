@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     path::PathBuf,
     io,
+    fs,
 };
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -12,9 +13,10 @@ use snafu::ResultExt;
 use tokio::net::{TcpListener, TcpStream};
 use tokio_rustls::{TlsAcceptor, TlsStream};
 use tokio_stream::Stream;
+use rustls::internal::pemfile;
 use crate::tls::{MaybeTLS, MaybeTLSStream, TLSError};
 use crate::tls::incoming::MaybeTLSIncomingStream;
-use super::{IncomingListener, TcpBind};
+use super::{IncomingListener, TcpBind, FileOpenFailed, CertificateParseError};
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
@@ -60,12 +62,11 @@ fn error(err: String) -> io::Error {
 pub struct IdentityStore(Vec<u8>, String);
 
 /// Directly usable settings for TLS connectors
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct TLSSettings {
     verify_certificate: bool,
     verify_hostname: bool,
-    // authorities: Vec<rustls::x>,
-    identity: Option<IdentityStore>,
+    server_config: rustls::ServerConfig,
 }
 
 impl TLSSettings {
@@ -75,22 +76,63 @@ impl TLSSettings {
     pub fn from_config(conf: &TLSConfig) -> Result<Self, TLSError> {
         // If this is for server warning should be print
 
+        // Load public certificate
+        let certs = {
+            let note: &'static str = "certificate";
+            let filename = &conf.crt_file
+                .clone()
+                .unwrap();
+            let f = fs::File::open(filename)
+                .with_context(|| FileOpenFailed { note, filename })?;
+            let mut reader = io::BufReader::new(f);
+            // TODO: handle the error properly
+            pemfile::certs(&mut reader).unwrap()
+        };
+
+        // Load private key
+        let key = {
+            let note: &'static str = "private key";
+            let filename = &conf.key_file
+                .clone()
+                .unwrap();
+
+            let f = fs::File::open(&filename)
+                .with_context(|| FileOpenFailed { note, filename })?;
+            let mut reader = io::BufReader::new(f);
+
+            // Load and retun a single private key
+            match pemfile::rsa_private_keys(&mut reader) {
+                Ok(keys) => keys,
+                _ => return Err(TLSError::PrivateKeyParseError {
+                    filename: filename.clone()
+                })
+            }
+        };
+
+        // Do not use client certificate authentication
+        let mut server_config = rustls::ServerConfig::new(rustls::NoClientAuth::new());
+        // Select a certificate to use
+        server_config.set_single_cert(certs, key[0].clone());
+        server_config.set_protocols(&[b"h2".to_vec(), b"http/1.1".to_vec()]);
+
         Ok(Self {
             verify_certificate: conf.verify_certificate.unwrap_or(false),
             verify_hostname: conf.verify_hostname.unwrap_or(false),
-            identity: None,
+            server_config,
         })
     }
 
     pub fn acceptor(&self) -> Result<TlsAcceptor, TLSError> {
-        match self.identity {
+        /*match self.identity {
             None => Err(TLSError::MissingRequiredIdentity),
             Some(_) => {
-                let conf = rustls::ServerConfig::from();
-
-                let mut acceptor = TlsAcceptor::from();
+                let acceptor = TlsAcceptor::from(Arc::new(self.server_config));
+                Ok(acceptor)
             }
-        }
+        }*/
+
+        let acceptor = TlsAcceptor::from(Arc::new(self.server_config.clone()));
+        Ok(acceptor)
     }
 }
 
