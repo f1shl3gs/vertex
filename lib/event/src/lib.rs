@@ -164,7 +164,7 @@ impl From<BTreeMap<String, Value>> for Event {
 impl From<String> for Event {
     fn from(s: String) -> Self {
         let mut fields: BTreeMap<String, Value> = BTreeMap::new();
-        fields.insert("message".to_string(), Value::String(s));
+        fields.insert("message".to_string(), Value::Bytes(s.into()));
 
         Self::Log(LogRecord {
             time_unix_nano: 0,
