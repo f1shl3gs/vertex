@@ -3203,6 +3203,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "testify"
+version = "0.1.0"
+dependencies = [
+ "rand",
+]
+
+[[package]]
 name = "textwrap"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3718,6 +3725,7 @@ dependencies = [
  "stream-cancel",
  "tempfile",
  "testcontainers",
+ "testify",
  "tokio",
  "tokio-rustls",
  "tokio-stream",

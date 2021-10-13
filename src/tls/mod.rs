@@ -49,6 +49,7 @@ mod tests {
     use hyper::{Body, Request, Response, Server};
     use hyper::server::conn::AddrStream;
     use hyper::service::{make_service_fn, service_fn};
+    use testify::next_addr;
     use super::*;
 
     #[test]
@@ -64,7 +65,7 @@ mod tests {
         let tls = MaybeTLSSettings::from_config(&conf)
             .unwrap();
 
-        let addr = "127.0.0.1:10000".parse().unwrap();
+        let addr = next_addr();
         let listener = tls.bind(&addr)
             .await
             .unwrap();
@@ -73,13 +74,11 @@ mod tests {
             Ok::<_, Infallible>(service_fn(echo_handle))
         });
 
-        tokio::spawn(async {
+        tokio::spawn(async move {
             Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                 .serve(service)
                 .await
                 .unwrap();
         });
-
-
     }
 }
