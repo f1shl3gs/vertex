@@ -11,7 +11,7 @@ use tokio::io::{self, AsyncRead, AsyncWrite, ReadBuf};
 #[pin_project(project = MaybeTlsProj)]
 pub enum MaybeTLS<R, T> {
     Raw(#[pin] R),
-    Tls(#[pin] T),
+    TLS(#[pin] T),
 }
 
 impl<R, T> MaybeTLS<R, T> {
@@ -20,20 +20,20 @@ impl<R, T> MaybeTLS<R, T> {
     }
 
     pub const fn is_tls(&self) -> bool {
-        matches!(self, Self::Tls(_))
+        matches!(self, Self::TLS(_))
     }
 
     pub const fn raw(&self) -> Option<&R> {
         match self {
             Self::Raw(raw) => Some(raw),
-            Self::Tls(_) => None,
+            Self::TLS(_) => None,
         }
     }
 
     pub const fn tls(&self) -> Option<&T> {
         match self {
             Self::Raw(_) => None,
-            Self::Tls(tls) => Some(tls),
+            Self::TLS(tls) => Some(tls),
         }
     }
 }
@@ -41,7 +41,7 @@ impl<R, T> MaybeTLS<R, T> {
 impl<T> From<Option<T>> for MaybeTLS<(), T> {
     fn from(tls: Option<T>) -> Self {
         match tls {
-            Some(tls) => Self::Tls(tls),
+            Some(tls) => Self::TLS(tls),
             None => Self::Raw(()),
         }
     }
@@ -52,7 +52,7 @@ impl<R: Clone, T: Clone> Clone for MaybeTLS<R, T> {
     fn clone(&self) -> Self {
         match self {
             Self::Raw(raw) => Self::Raw(raw.clone()),
-            Self::Tls(tls) => Self::Tls(tls.clone()),
+            Self::TLS(tls) => Self::TLS(tls.clone()),
         }
     }
 }
@@ -61,8 +61,8 @@ impl<R: Clone, T: Clone> Clone for MaybeTLS<R, T> {
 impl<R: fmt::Debug, T: fmt::Debug> fmt::Debug for MaybeTLS<R, T> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Raw(raw) => write!(fmt, "MaybeTls::Raw({:?})", raw),
-            Self::Tls(tls) => write!(fmt, "MaybeTls::Tls({:?})", tls),
+            Self::Raw(raw) => write!(fmt, "MaybeTLS::Raw({:?})", raw),
+            Self::TLS(tls) => write!(fmt, "MaybeTLS::TLS({:?})", tls),
         }
     }
 }
@@ -74,7 +74,7 @@ impl<R: AsyncRead, T: AsyncRead> AsyncRead for MaybeTLS<R, T> {
         buf: &mut ReadBuf<'_>,
     ) -> Poll<io::Result<()>> {
         match self.project() {
-            MaybeTlsProj::Tls(s) => s.poll_read(cx, buf),
+            MaybeTlsProj::TLS(s) => s.poll_read(cx, buf),
             MaybeTlsProj::Raw(s) => s.poll_read(cx, buf),
         }
     }
@@ -83,21 +83,21 @@ impl<R: AsyncRead, T: AsyncRead> AsyncRead for MaybeTLS<R, T> {
 impl<R: AsyncWrite, T: AsyncWrite> AsyncWrite for MaybeTLS<R, T> {
     fn poll_write(self: Pin<&mut Self>, cx: &mut Context, buf: &[u8]) -> Poll<io::Result<usize>> {
         match self.project() {
-            MaybeTlsProj::Tls(s) => s.poll_write(cx, buf),
+            MaybeTlsProj::TLS(s) => s.poll_write(cx, buf),
             MaybeTlsProj::Raw(s) => s.poll_write(cx, buf),
         }
     }
 
     fn poll_flush(self: Pin<&mut Self>, cx: &mut Context) -> Poll<io::Result<()>> {
         match self.project() {
-            MaybeTlsProj::Tls(s) => s.poll_flush(cx),
+            MaybeTlsProj::TLS(s) => s.poll_flush(cx),
             MaybeTlsProj::Raw(s) => s.poll_flush(cx),
         }
     }
 
     fn poll_shutdown(self: Pin<&mut Self>, cx: &mut Context) -> Poll<io::Result<()>> {
         match self.project() {
-            MaybeTlsProj::Tls(s) => s.poll_shutdown(cx),
+            MaybeTlsProj::TLS(s) => s.poll_shutdown(cx),
             MaybeTlsProj::Raw(s) => s.poll_shutdown(cx),
         }
     }
