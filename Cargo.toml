@@ -148,7 +148,7 @@ tracing-log = { version = "0.1.2", default-features = false, features = ["std", 
 tracing-subscriber = { version = "0.2.24", default-features = false, features = ["env-filter", "json", "ansi"] }
 
 # HTTP
-hyper = { version = "0.14.13", features = ["server", "http1", "http2", "tcp", "stream"] }
+hyper = { version = "0.14.13", features = ["server", "http1", "http2", "tcp", "stream", "runtime"] }
 hyper-rustls = { version = "0.22.1" }
 hyper-proxy = { version = "0.9.1" }
 listenfd = { version = "0.3.5", default-features = false, optional = true }

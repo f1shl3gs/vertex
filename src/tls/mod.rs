@@ -46,7 +46,7 @@ pub enum TLSError {
 #[cfg(test)]
 mod tests {
     use std::convert::Infallible;
-    use hyper::{Body, Request, Response, Server};
+    use hyper::{Body, Request, Response, Server, Uri};
     use hyper::server::conn::AddrStream;
     use hyper::service::{make_service_fn, service_fn};
     use testify::next_addr;
@@ -80,5 +80,12 @@ mod tests {
                 .await
                 .unwrap();
         });
+
+        let client = hyper::Client::new();
+        let uri = format!("http://{}", addr).parse::<Uri>().unwrap();
+        let res = client.get(uri)
+            .await
+            .unwrap();
+        assert_eq!(res.status(), 200);
     }
 }
