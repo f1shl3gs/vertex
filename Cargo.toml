@@ -38,6 +38,7 @@ default = [
     "sources-internal_metrics",
     "sources-redis",
     "sources-zookeeper",
+    "sources-nginx_stub",
     # transforms
     "transforms-add_tags",
     "transforms-add_fields",
