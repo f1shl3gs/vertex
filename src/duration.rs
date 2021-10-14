@@ -283,7 +283,6 @@ mod tests {
         ];
 
         for test in tests {
-            println!("input: {}", test.input);
             let d = parse_duration(&test.input).unwrap();
             assert_eq!(d, Duration::nanoseconds(test.want))
         }
