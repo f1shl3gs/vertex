@@ -85,8 +85,129 @@ mod tests {
                 requests: 31070465,
                 reading: 6,
                 writing: 179,
-                waiting: 106
+                waiting: 106,
             }
         )
+    }
+}
+
+#[cfg(test)]
+mod integration_tests {
+    mod nginx {
+        use std::collections::HashMap;
+        use testcontainers::{Container, Docker, Image, WaitForMessage};
+        use testcontainers::images::zookeeper::Zookeeper;
+
+        const CONTAINER_IDENTIFIER: &str = "nginx";
+        const DEFAULT_TAG: &str = "1.21.3";
+
+        #[derive(Debug, Default, Clone)]
+        pub struct NginxArgs;
+
+        impl IntoIterator for NginxArgs {
+            type Item = String;
+            type IntoIter = ::std::vec::IntoIter<String>;
+
+            fn into_iter(self) -> Self::IntoIter {
+                vec![].into_iter()
+            }
+        }
+
+        #[derive(Debug)]
+        pub struct Nginx {
+            tag: String,
+            arguments: NginxArgs,
+            envs: HashMap<String, String>,
+            volumes: HashMap<String, String>,
+        }
+
+        impl Default for Nginx {
+            fn default() -> Self {
+                Self {
+                    tag: DEFAULT_TAG.to_string(),
+                    arguments: NginxArgs,
+                    envs: HashMap::new(),
+                    volumes: HashMap::new(),
+                }
+            }
+        }
+
+        impl Image for Nginx {
+            type Args = NginxArgs;
+            type EnvVars = HashMap<String, String>;
+            type Volumes = HashMap<String, String>;
+            type EntryPoint = std::convert::Infallible;
+
+            fn descriptor(&self) -> String {
+                format!("{}:{}", CONTAINER_IDENTIFIER, &self.tag)
+            }
+
+            fn wait_until_ready<D: Docker>(&self, container: &Container<'_, D, Self>) {
+                container
+                    .logs()
+                    .stdout
+                    .wait_for_message("start worker process")
+                    .unwrap();
+            }
+
+            fn args(&self) -> Self::Args {
+                self.arguments.clone()
+            }
+
+            fn env_vars(&self) -> Self::EnvVars {
+                self.envs.clone()
+            }
+
+            fn volumes(&self) -> Self::Volumes {
+                self.volumes.clone()
+            }
+
+            fn with_args(self, arguments: Self::Args) -> Self {
+                Nginx {
+                    arguments,
+                    ..self
+                }
+            }
+        }
+
+        impl Nginx {
+            pub fn with_tag(&mut self, tag_str: &str) -> &Self {
+                self.tag = tag_str.to_string();
+                self
+            }
+
+            pub fn with_volume(&mut self, src: &str, target: &str) -> &Self {
+                self.volumes.insert(src.to_string(), target.to_string());
+                self
+            }
+        }
+    }
+
+    use std::convert::TryInto;
+    use testcontainers::Docker;
+    use nginx::Nginx;
+    use super::NginxStubStatus;
+
+    #[tokio::test]
+    async fn test_fetch_and_convert() {
+        let docker = testcontainers::clients::Cli::default();
+        let image = Nginx::default()
+            .with_volume("testdata/nginx/nginx.conf", "/etc/nginx/conf.d/stub_status.conf")
+            .with_volume("testdata/nginx/nginx_auth_basic.conf", "/etc/nginx/nginx_auth_basic.conf");
+        let service = docker.run(image);
+        let host_port = service.get_host_port(8000).unwrap();
+
+        let cli = hyper::Client::new();
+        let uri = format!("http://127.0.0.1:{}/basic_status", host_port);
+        let resp = cli.get(uri.into())
+            .await
+            .unwrap();
+
+        let s = hyper::body::to_bytes(resp)
+            .await
+            .unwrap();
+
+        let s = s.to_str().unwrap();
+        let status = s.try_into().unwrap();
     }
 }

@@ -1,6 +1,8 @@
 mod settings;
 mod maybe_tls;
 mod incoming;
+mod connector;
+mod stream;
 
 pub use settings::{TLSConfig, MaybeTLSSettings, MaybeTLSListener};
 pub use maybe_tls::{
@@ -46,10 +48,12 @@ pub enum TLSError {
 #[cfg(test)]
 mod tests {
     use std::convert::Infallible;
+    use std::net::SocketAddr;
     use hyper::{Body, Request, Response, Server, Uri};
     use hyper::server::conn::AddrStream;
     use hyper::service::{make_service_fn, service_fn};
     use testify::next_addr;
+    use crate::tls::connector::HTTPSConnector;
     use super::*;
 
     #[test]
@@ -59,9 +63,7 @@ mod tests {
         Ok(Response::new("Hello, World!\n".into()))
     }
 
-    #[tokio::test]
-    async fn none_tls() {
-        let conf = None;
+    async fn setup_server(conf: &Option<TLSConfig>) -> SocketAddr {
         let tls = MaybeTLSSettings::from_config(&conf)
             .unwrap();
 
@@ -81,11 +83,41 @@ mod tests {
                 .unwrap();
         });
 
+        addr
+    }
+
+    #[tokio::test]
+    async fn none_tls() {
+        let conf = None;
+        let addr = setup_server(&conf).await;
+
         let client = hyper::Client::new();
         let uri = format!("http://{}", addr).parse::<Uri>().unwrap();
         let res = client.get(uri)
             .await
             .unwrap();
         assert_eq!(res.status(), 200);
+
+        let buf = hyper::body::to_bytes(res).await.unwrap();
+        assert_eq!(buf, "Hello, World!\n");
+    }
+
+    #[tokio::test]
+    async fn tls() {
+        let conf = TLSConfig::test_options();
+        let addr = setup_server(&Some(conf)).await;
+
+        let https = HTTPSConnector::with_native_roots();
+        let client: hyper::Client<_, hyper::Body> = hyper::Client::builder()
+            .build(https);
+
+        let uri = format!("https://{}", addr).parse::<Uri>().unwrap();
+        let res = client.get(uri)
+            .await
+            .unwrap();
+        assert_eq!(res.status(), 200);
+
+        let buf = hyper::body::to_bytes(res).await.unwrap();
+        assert_eq!(buf, "Hello, World!\n");
     }
 }

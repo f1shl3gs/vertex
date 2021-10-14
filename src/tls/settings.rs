@@ -21,11 +21,11 @@ use super::{IncomingListener, TcpBind, FileOpenFailed, CertificateParseError};
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
 #[cfg(test)]
-pub const TEST_PEM_CA_PATH: &str = "tests/data/Vector_CA.crt";
+pub const TEST_PEM_CA_PATH: &str = "testdata/tls/Vertex_CA.crt";
 #[cfg(test)]
-pub const TEST_PEM_CRT_PATH: &str = "tests/data/localhost.crt";
+pub const TEST_PEM_CRT_PATH: &str = "testdata/tls/localhost.crt";
 #[cfg(test)]
-pub const TEST_PEM_KEY_PATH: &str = "tests/data/localhost.key";
+pub const TEST_PEM_KEY_PATH: &str = "testdata/tls/localhost.key";
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -47,10 +47,6 @@ impl TLSConfig {
             key_file: Some(TEST_PEM_KEY_PATH.into()),
             ..Self::default()
         }
-    }
-
-    fn load_authorities(&self) {
-        todo!()
     }
 }
 
@@ -219,5 +215,28 @@ impl MaybeTLSListener {
                 Poll::Pending => Poll::Pending
             }
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const TEST_PEM_CRT_BYTES: &[u8] = include_bytes!("../../testdata/tls/localhost.crt");
+    const TEST_PEM_KEY_BYTES: &[u8] = include_bytes!("../../testdata/tls/localhost.key");
+
+    #[test]
+    fn from_options_pem() {
+        let cfg = TLSConfig {
+            verify_certificate: None,
+            verify_hostname: None,
+            ca_file: None,
+            crt_file: Some(TEST_PEM_CRT_PATH.into()),
+            key_file: Some(TEST_PEM_KEY_PATH.into()),
+            key_pass: None,
+        };
+
+        let _settings = TLSSettings::from_config(&cfg)
+            .unwrap();
     }
 }
