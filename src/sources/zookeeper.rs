@@ -213,7 +213,6 @@ mod tests {
     }
 }
 
-#[cfg(feature = "integration-test")]
 #[cfg(test)]
 mod integration_tests {
     mod zk {
