@@ -101,6 +101,7 @@ mod tests {
 mod integration_tests {
     mod nginx {
         use std::collections::HashMap;
+        use nix::unistd::sleep;
         use testcontainers::{Container, Docker, Image, WaitForMessage};
         use testcontainers::images::zookeeper::Zookeeper;
 
@@ -124,7 +125,7 @@ mod integration_tests {
             tag: String,
             arguments: NginxArgs,
             envs: HashMap<String, String>,
-            volumes: HashMap<String, String>,
+            pub volumes: HashMap<String, String>,
         }
 
         impl Default for Nginx {
@@ -152,7 +153,7 @@ mod integration_tests {
                 container
                     .logs()
                     .stdout
-                    .wait_for_message("start worker process")
+                    .wait_for_message("worker process")
                     .unwrap();
             }
 
@@ -176,36 +177,29 @@ mod integration_tests {
             }
         }
 
-        impl Nginx {
-            pub fn with_tag(&mut self, tag_str: &str) -> &Self {
-                self.tag = tag_str.to_string();
-                self
-            }
 
-            pub fn with_volume(&mut self, src: &str, target: &str) -> &Self {
-                self.volumes.insert(src.to_string(), target.to_string());
-                self
-            }
-        }
     }
 
     use std::convert::TryInto;
-    use testcontainers::Docker;
+    use testcontainers::{Docker, Image};
     use nginx::Nginx;
     use super::NginxStubStatus;
 
     #[tokio::test]
     async fn test_fetch_and_convert() {
         let docker = testcontainers::clients::Cli::default();
-        let image = Nginx::default()
-            .with_volume("testdata/nginx/nginx.conf", "/etc/nginx/conf.d/stub_status.conf")
-            .with_volume("testdata/nginx/nginx_auth_basic.conf", "/etc/nginx/nginx_auth_basic.conf");
+        let mut image = Nginx::default();
+        let pwd = std::env::current_dir().unwrap();
+        image.volumes.insert(format!("{}/testdata/nginx/nginx.conf", pwd.to_string_lossy()), "/etc/nginx/nginx.conf".to_string());
+        image.volumes.insert(format!("{}/testdata/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
         let service = docker.run(image);
-        let host_port = service.get_host_port(8000).unwrap();
+        let host_port = service.get_host_port(80).unwrap();
 
         let cli = hyper::Client::new();
-        let uri = format!("http://127.0.0.1:{}/basic_status", host_port);
-        let resp = cli.get(uri.into())
+        let uri = format!("http://127.0.0.1:{}/basic_status", host_port)
+            .parse().unwrap();
+
+        let resp = cli.get(uri)
             .await
             .unwrap();
 
@@ -213,7 +207,9 @@ mod integration_tests {
             .await
             .unwrap();
 
-        let s = s.to_str().unwrap();
-        let status = s.try_into().unwrap();
+        let s = std::str::from_utf8(&s).unwrap();
+        let status: NginxStubStatus = s.try_into().unwrap();
+
+        println!("{:?}", status);
     }
 }
