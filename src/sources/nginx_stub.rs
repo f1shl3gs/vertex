@@ -2,8 +2,7 @@ use std::convert::TryFrom;
 use nom::{
     bytes::complete::{tag, take_while_m_n}
 };
-use nom::character::complete::u64;
-use nom::combinator::all_consuming;
+use nom::combinator::{all_consuming, map_res};
 use nom::error::ErrorKind;
 use nom::sequence::{preceded, terminated, tuple};
 use snafu::Snafu;
@@ -25,6 +24,13 @@ struct NginxStubStatus {
     waiting: u64,
 }
 
+fn get_u64(input: &str) -> nom::IResult<&str, u64, nom::error::Error<&str>> {
+    map_res(
+        take_while_m_n(1, 20, |c: char| c.is_digit(10)),
+        |s: &str| s.parse::<u64>(),
+    )(input)
+}
+
 impl<'a> TryFrom<&'a str> for NginxStubStatus {
     type Error = ParseError;
 
@@ -33,13 +39,13 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
     fn try_from(input: &'a str) -> Result<Self, Self::Error> {
         // `usize::MAX` eq `18446744073709551615` (20 char)
         match all_consuming(tuple((
-            preceded(tag("Active connections: "), u64),
-            preceded(tag(" \nserver accepts handled requests\n "), u64),
-            preceded(tag(" "), u64),
-            preceded(tag(" "), u64),
-            preceded(tag(" \nReading: "), u64),
-            preceded(tag(" Writing: "), u64),
-            terminated(preceded(tag(" Waiting: "), u64), tag(" \n"))
+            preceded(tag("Active connections: "), get_u64),
+            preceded(tag(" \nserver accepts handled requests\n "), get_u64),
+            preceded(tag(" "), get_u64),
+            preceded(tag(" "), get_u64),
+            preceded(tag(" \nReading: "), get_u64),
+            preceded(tag(" Writing: "), get_u64),
+            terminated(preceded(tag(" Waiting: "), get_u64), tag(" \n"))
         )))(input)
         {
             Ok((_, (active, accepts, handled, requests, reading, writing, waiting))) => {
@@ -71,7 +77,7 @@ mod tests {
 
     #[test]
     fn nginx_stub_status_try_from() {
-        let data = "Active connections: 291 \n\
+        let input = "Active connections: 291 \n\
                     server accepts handled requests\n \
                     16630948 16630948 31070465 \n\
                     Reading: 6 Writing: 179 Waiting: 106 \n";

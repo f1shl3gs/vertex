@@ -39,6 +39,7 @@ default = [
     "sources-redis",
     "sources-zookeeper",
     "sources-generator",
+    "sources-nginx_stub",
     # transforms
     "transforms-add_tags",
     "transforms-add_fields",
@@ -174,9 +175,8 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 rustls = { version = "0.19.1" }
 tokio-rustls = { version = "0.22.0" }
 rustls-native-certs = { version = "0.5.0" }
-webpki = { version = "0.21.0" }
 webpki-roots = { version = "0.21.0" }
-ct-logs = { version = "0.8.0" }
+ct-logs = { version = "0.9.0" }
 
 # Profile
 # criterion is not neccessary for any functionality, but the bench
