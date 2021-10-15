@@ -1,11 +1,105 @@
+use std::collections::BTreeMap;
 use std::convert::TryFrom;
+use bytes::Bytes;
+use hyper::Uri;
 use nom::{
     bytes::complete::{tag, take_while_m_n}
 };
 use nom::combinator::{all_consuming, map_res};
 use nom::error::ErrorKind;
 use nom::sequence::{preceded, terminated, tuple};
+use rustls::internal::msgs::enums::HeartbeatMessageType::Request;
 use snafu::Snafu;
+use event::Metric;
+use crate::config::{default_interval, serialize_duration, deserialize_duration, SourceConfig, SourceContext, DataType};
+use crate::error::Context;
+use crate::http::{Auth, HTTPClient};
+use crate::sources::Source;
+use crate::tls::TLSConfig;
+
+#[derive(Debug, Deserialize, Serialize)]
+struct NginxStubConfig {
+    endpoints: Vec<String>,
+    #[serde(default = "default_interval")]
+    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    interval: chrono::Duration,
+    tls: Option<TLSConfig>,
+    auth: Option<Auth>,
+}
+
+#[async_trait::async_trait]
+#[typetag::serde(name = "nginx_stub")]
+impl SourceConfig for NginxStubConfig {
+    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+        todo!()
+    }
+
+    fn output_type(&self) -> DataType {
+        DataType::Metric
+    }
+
+    fn source_type(&self) -> &'static str {
+        "nginx_stub"
+    }
+}
+
+#[derive(Debug, Snafu)]
+enum NginxStubBuildError {
+    HostInvalidUri { source: http::uri::InvalidUri }
+}
+
+#[derive(Debug)]
+struct NginxStub {
+    client: HTTPClient,
+    endpoint: String,
+    auth: Option<Auth>,
+    tags: BTreeMap<String, String>,
+}
+
+impl NginxStub {
+    fn new(
+        client: HTTPClient,
+        endpoint: String,
+        auth: Option<Auth>,
+    ) -> Result<Self, crate::Error> {
+        let mut tags = BTreeMap::new();
+        tags.insert("endpoint".into(), endpoint.clone());
+        tags.insert("host".into(), Self::get_endpoint_host(&endpoint)?);
+
+        Ok(Self {
+            client,
+            endpoint,
+            auth,
+            tags,
+        })
+    }
+
+    fn get_endpoint_host(endpoint: &str) -> crate::Result<String> {
+        let uri: Uri = endpoint.parse()
+            .context(InvalidUri)?;
+
+        let host = match (uri.host().unwrap_or(""), uri.port()) {
+            (host, None) => host.to_owned(),
+            (host, Some(port)) => format!("{}:{}", host, port)
+        };
+
+        Ok(host)
+    }
+
+    async fn collect_metrics(&self) -> crate::Result<Vec<Metric>> {
+        let resp = self.get
+    }
+
+    async fn get_nginx_resp(&self) -> crate::Result<Bytes> {
+        let mut req = http::Request::get(&self.endpoint)
+            .body(hyper::Body::empty())?;
+        if let Some(auth) = &self.auth {
+            auth.apply(&mut req);
+        }
+
+        let resp = self.client.se
+    }
+}
 
 #[derive(Debug, Snafu, PartialEq)]
 enum ParseError {
@@ -176,8 +270,6 @@ mod integration_tests {
                 }
             }
         }
-
-
     }
 
     use std::convert::TryInto;

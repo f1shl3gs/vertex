@@ -156,6 +156,8 @@ hyper-proxy = { version = "0.9.1" }
 listenfd = { version = "0.3.5", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
+http = { version = "0.2.5" }
+headers = { version = "0.3.4" }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
