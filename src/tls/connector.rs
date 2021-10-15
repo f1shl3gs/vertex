@@ -8,8 +8,7 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 use std::{fmt, io};
 use tokio::io::{AsyncRead, AsyncWrite};
-use tokio_rustls::TlsConnector;
-use webpki::DNSNameRef;
+use tokio_rustls::{TlsConnector, webpki::DNSNameRef};
 use super::stream::MaybeHTTPSStream;
 
 type BoxError = Box<dyn std::error::Error + Send + Sync>;
@@ -53,7 +52,7 @@ impl HTTPSConnector<HttpConnector> {
         http.enforce_http(false);
 
         config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
-        config.ct_logs = Some(&ct_logs::LOGS);
+        // config.ct_logs = Some(&ct_logs::LOGS);
         (http, config).into()
     }
 }
@@ -88,7 +87,7 @@ impl<T> Service<Uri> for HTTPSConnector<T>
 
     #[allow(clippy::type_complexity)]
     type Future =
-    Pin<Box<dyn Future<Output = Result<MaybeHTTPSStream<T::Response>, BoxError>> + Send>>;
+    Pin<Box<dyn Future<Output=Result<MaybeHTTPSStream<T::Response>, BoxError>> + Send>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         match self.http.poll_ready(cx) {
