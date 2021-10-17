@@ -4,10 +4,12 @@ mod incoming;
 mod connector;
 mod stream;
 
+// re-export
 pub use settings::{TLSConfig, MaybeTLSSettings, MaybeTLSListener};
 pub use maybe_tls::{
     MaybeTLS,
 };
+pub use connector::HTTPSConnector;
 
 use std::path::PathBuf;
 use snafu::Snafu;

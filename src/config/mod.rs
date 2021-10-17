@@ -115,6 +115,28 @@ pub struct ServiceConfig {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+pub struct SourceOuter {
+    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
+    pub proxy: ProxyConfig,
+
+    #[serde(flatten)]
+    pub inner: Box<dyn SourceConfig>,
+}
+
+impl SourceOuter {
+    pub fn new(source: impl SourceConfig + 'static) -> Self {
+        Self {
+            inner: Box::new(source),
+            proxy: Default::default(),
+        }
+    }
+
+    pub fn resources(&self) -> Vec<Resource> {
+        self.inner.resources()
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
 pub struct TransformOuter {
     pub inputs: Vec<String>,
 
@@ -168,7 +190,7 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
 pub struct Config {
     pub global: GlobalOptions,
 
-    pub sources: IndexMap<String, Box<dyn SourceConfig>>,
+    pub sources: IndexMap<String, SourceOuter>,
 
     pub transforms: IndexMap<String, TransformOuter>,
 
@@ -188,6 +210,7 @@ pub struct SourceContext {
     pub out: Pipeline,
     pub shutdown: ShutdownSignal,
     pub global: GlobalOptions,
+    pub proxy: ProxyConfig,
 }
 
 #[async_trait::async_trait]
@@ -268,33 +291,79 @@ mod tests {
     #[test]
     fn deserialize_config() {
         let text = "\
+global:
+  data_dir: ./temp
+
+health_checks:
+  enabled: false
+
+extensions:
+  pprof:
+    type: pprof
+    listen: 127.0.0.1:9000
+
 sources:
+  zookeeper:
+    type: zookeeper
+    endpoint: 127.0.0.1:49158
+  redis:
+    type: redis
+    interval: 15s
+    url: redis://localhost:6379
+  internal_metrics:
+    type: internal_metrics
+    interval: 15s
+  kmsg:
+    type: kmsg
   node:
     type: node_metrics
+    interval: 15s
+  selfstat:
+    type: selfstat
+  # generator:
+  #   type: generator
+  ntp:
+    type: ntp
+    interval: 15s
+    timeout: 10s
+    pools:
+      - time1.aliyun.com
+      - time2.aliyun.com
+      - time3.aliyun.com
+      - time4.aliyun.com
+      - time5.aliyun.com
+      - time6.aliyun.com
+      - time7.aliyun.com
+#  journald:
+#    type: journald
+#    units: []
+#    excludes: []
 
 transforms:
-  add_tags:
+  add_extra_tags:
     type: add_tags
+    inputs:
+      - generator
+      - ntp
     tags:
-      foo: bar
+      hostname: ${HOSTNAME}
 
-sink:
+sinks:
+  blackhole:
+    type: blackhole
+    inputs:
+      - kmsg
+      - node
   prom:
-    type: prometheus
-    listen: :3080
-  stdout:
-    type: stdout
+    type: prometheus_exporter
+    inputs:
+      - add_extra_tags
+      - selfstat
+      - internal_metrics
+      - redis
+      - zookeeper
+    listen: 127.0.0.1:9101
 
-service:
-  extensions:
-  pipelines:
-    - sources:
-        - node
-      transforms:
-        - relabel
-      sink:
-        - prom
-        - stdout
         ";
 
         let _cb: Config = format::deserialize(text, Some(format::Format::YAML)).unwrap();

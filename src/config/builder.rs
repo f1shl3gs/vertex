@@ -1,14 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::config::{
-    GlobalOptions,
-    TransformOuter,
-    SinkOuter,
-    Config,
-    SourceConfig,
-    HealthcheckOptions,
-    ExpandType,
-    ExtensionConfig,
-};
+use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, SourceConfig, HealthcheckOptions, ExpandType, ExtensionConfig, SourceOuter};
 use indexmap::IndexMap;
 use crate::config::provider::ProviderConfig;
 use super::validation;
@@ -22,7 +13,7 @@ use crate::config::{SinkConfig, TransformConfig};
 pub struct Builder {
     pub global: GlobalOptions,
     #[serde(default)]
-    pub sources: IndexMap<String, Box<dyn SourceConfig>>,
+    pub sources: IndexMap<String, SourceOuter>,
     #[serde(default)]
     pub transforms: IndexMap<String, TransformOuter>,
     #[serde(default)]
@@ -106,7 +97,7 @@ impl Builder {
 
     #[cfg(test)]
     pub fn add_source<S: SourceConfig + 'static, T: Into<String>>(&mut self, name: T, source: S) {
-        self.sources.insert(name.into(), Box::new(source));
+        self.sources.insert(name.into(), SourceOuter::new(source));
     }
 
     #[cfg(test)]

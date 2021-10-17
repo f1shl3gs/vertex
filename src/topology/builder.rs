@@ -20,7 +20,7 @@ use stream_cancel::{Trigger, Tripwire};
 use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
 use event::Event;
 use internal::{EventsReceived, EventsSent};
-use crate::config::ExtensionContext;
+use crate::config::{ExtensionContext, ProxyConfig};
 use crate::topology::fanout::ControlChannel;
 use super::{BuiltBuffer};
 
@@ -102,16 +102,17 @@ pub async fn build_pieces(
     {
         let (tx, rx) = futures::channel::mpsc::channel::<Event>(DEFAULT_CHANNEL_BUFFER_SIZE);
         let pipeline = Pipeline::from_sender(tx, vec![]);
-        let typetag = source.source_type();
+        let typetag = source.inner.source_type();
         let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_source(name);
         let ctx = SourceContext {
             name: name.clone(),
             out: pipeline,
             shutdown: shutdown_signal,
             global: config.global.clone(),
+            proxy: ProxyConfig::merge_with_env(&config.global.proxy, &source.proxy),
         };
 
-        let src = match source.build(ctx).await {
+        let src = match source.inner.build(ctx).await {
             Ok(s) => s,
             Err(err) => {
                 errors.push(

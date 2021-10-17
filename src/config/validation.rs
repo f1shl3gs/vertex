@@ -267,7 +267,7 @@ impl From<&Builder> for Graph {
 
         // TODO: validate that node names are unique across sources/transforms/sinks?
         for (id, config) in builder.sources.iter() {
-            graph.add_source(id.clone(), config.output_type());
+            graph.add_source(id.clone(), config.inner.output_type());
         }
 
         for (id, config) in builder.transforms.iter() {

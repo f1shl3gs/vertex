@@ -34,6 +34,17 @@ pub fn default_interval() -> chrono::Duration {
     chrono::Duration::seconds(15)
 }
 
+/// Answers "Is it possible to skip serializing this value, because it's the
+/// default?"
+#[inline]
+pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
+    e == &E::default()
+}
+
+pub const fn default_acknowledgements() -> bool {
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -42,7 +53,7 @@ mod tests {
     #[derive(Deserialize, Serialize)]
     struct RE {
         #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
-        re: Regex
+        re: Regex,
     }
 
     #[test]

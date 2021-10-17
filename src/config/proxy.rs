@@ -3,7 +3,7 @@ use hyper_proxy::{Intercept, Proxy, ProxyConnector};
 use hyper_proxy::Custom;
 use no_proxy::NoProxy;
 use serde::{Deserialize, Serialize};
-use super::default_true;
+use super::{default_true, skip_serializing_if_default};
 
 fn from_env(key: &str) -> Option<String> {
     // use lowercase first and the upercase
@@ -35,13 +35,6 @@ impl NoProxyInterceptor {
             }
         ))
     }
-}
-
-/// Answers "Is it possible to skip serializing this value, because it's the
-/// default?"
-#[inline]
-pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
-    e == &E::default()
 }
 
 

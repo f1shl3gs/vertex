@@ -1,8 +1,10 @@
 use std::fmt;
+use std::fmt::Formatter;
+use serde::{Deserialize, Serialize};
 use futures::future::BoxFuture;
 use headers::HeaderMapExt;
 use http::Request;
-use snafu::Snafu;
+use snafu::{ResultExt, Snafu};
 use hyper::{Body, Client, HeaderMap, http};
 use hyper::body::HttpBody;
 use hyper::client::HttpConnector;
@@ -41,7 +43,30 @@ impl<B> HTTPClient<B>
         tls_setting: impl Into<MaybeTLSSettings>,
         proxy_config: &ProxyConfig,
     ) -> Result<HTTPClient<B>, HTTPError> {
-        todo!()
+        let mut http = HttpConnector::new();
+        http.enforce_http(false);
+
+        let settings = tls_setting.into();
+
+        let mut client_config = rustls::ClientConfig::new();
+        client_config.root_store
+            .add_pem_file()
+
+        let mut https = crate::tls::HTTPSConnector::with_connector()
+
+        let mut proxy = ProxyConnector::new(http)
+            .unwrap();
+        proxy_config.configure(&mut proxy)
+            .context(BuildProxyConnector)?;
+        let client = Client::builder()
+            .build(proxy);
+        let user_agent = HeaderValue::from_str(&format!("Vector/{}"))
+            .expect("invalid header value for version!");
+
+        Ok(HTTPClient {
+            client,
+            user_agent,
+        })
     }
 
     pub fn send(
@@ -51,6 +76,51 @@ impl<B> HTTPClient<B>
         default_request_headers(&mut req, &self.user_agent);
 
         let resp = self.client.request(req);
+        let fut = async move {
+            // Capture the time right before we issue the request.
+            // Request doesn't start the processing until we start polling it.
+            let before = std::time::Instant::now();
+
+            // Send request and wait for the result
+            let resp_result = resp.await;
+
+            // Compute the roundtrip time it took to send the request and get
+            // the response or error
+            let roundtrip = before.elapsed();
+
+            // Handle the errors and extract the response
+            let resp = resp_result
+                .map_err(|err| {
+                    // TODO: emit http error
+                    err
+                })
+                .context(CallRequest)?;
+
+            // TODO:
+            // Emit the response into the internal events system
+
+            Ok(resp)
+        };
+
+        Box::pin(fut)
+    }
+}
+
+impl<B> Clone for HTTPClient<B> {
+    fn clone(&self) -> Self {
+        Self {
+            client: self.client.clone(),
+            user_agent: self.user_agent.clone(),
+        }
+    }
+}
+
+impl<B> fmt::Debug for HTTPClient<B> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("HTTPClient")
+            .field("client", &self.client)
+            .field("user_agent", &self.user_agent)
+            .finish()
     }
 }
 
@@ -65,7 +135,7 @@ fn default_request_headers<B>(req: &mut http::Request<B>, ua: &HeaderValue) {
     if !req.headers().contains_key("Accept-Encoding") {
         req
             .headers_mut()
-            .insert("Accept-Encoding", HeaderValue::from_static("identity"))
+            .insert("Accept-Encoding", HeaderValue::from_static("identity"));
     }
 }
 
@@ -105,5 +175,43 @@ impl Auth {
                 )
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_request_headers_defaults() {
+        let ua = HeaderValue::from_static("vertex");
+        let mut req = Request::post("http://example.com")
+            .body(())
+            .unwrap();
+        default_request_headers(&mut req, &ua);
+
+        assert_eq!(req.headers().get("User-Agent"), Some(&ua));
+        assert_eq!(
+            req.headers().get("Accept-Encoding"),
+            Some(&HeaderValue::from_static("identity"))
+        );
+    }
+
+    #[test]
+    fn test_default_request_headers_does_not_overwrite() {
+        let mut req = Request::get("http://example.com")
+            .header("Accept-Encoding", "gzip")
+            .header("User-Agent", "foo")
+            .body(())
+            .unwrap();
+        default_request_headers(&mut req, &HeaderValue::from_static("vertex"));
+        assert_eq!(
+            req.headers().get("Accept-Encoding"),
+            Some(&HeaderValue::from_static("gzip"))
+        );
+        assert_eq!(
+            req.headers().get("User-Agent"),
+            Some(&HeaderValue::from_static("foo"))
+        )
     }
 }

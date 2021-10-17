@@ -313,7 +313,7 @@ impl RedisSource {
                 Err(err) => {
                     warn!(
                         message = "collect redis metrics failed",
-                        ?err
+                        %err
                     );
 
                     vec![Metric::gauge(
