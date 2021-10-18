@@ -45,6 +45,11 @@ pub enum TLSError {
     PrivateKeyParseError {
         filename: PathBuf
     },
+    #[snafu(display("Could not read private key in {:?}, err: {}", filename, source))]
+    ReadPemFailed {
+        filename: PathBuf,
+        source: std::io::Error
+    }
 }
 
 #[cfg(test)]

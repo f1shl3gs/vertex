@@ -7,14 +7,17 @@ use std::{
     sync::Arc,
     task::Poll,
 };
+use std::time::SystemTime;
 use futures::{Future, FutureExt, future::BoxFuture};
-use rustls::{Certificate, ClientConfig, RootCertStore, ServerCertVerified, internal::pemfile};
+use rustls::{Certificate, ClientConfig, Error, RootCertStore, ServerName};
+use rustls::client::ServerCertVerified;
 use snafu::ResultExt;
 use tokio::net::{TcpListener, TcpStream};
-use tokio_rustls::{TlsAcceptor, TlsStream, webpki::DNSNameRef};
+use tokio_rustls::{TlsAcceptor, TlsStream};
+use tokio_rustls::webpki::DNSNameRef;
 use tokio_stream::Stream;
 use crate::tls::{MaybeTLS, MaybeTLSStream, TLSError, incoming::MaybeTLSIncomingStream};
-use super::{IncomingListener, TcpBind, FileOpenFailed, CertificateParseError};
+use super::{IncomingListener, TcpBind, FileOpenFailed, ReadPemFailed, CertificateParseError};
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
@@ -76,11 +79,17 @@ impl TLSSettings {
             let filename = &conf.crt_file
                 .clone()
                 .unwrap();
+
             let f = fs::File::open(filename)
                 .with_context(|| FileOpenFailed { note, filename })?;
             let mut reader = io::BufReader::new(f);
-            // TODO: handle the error properly
-            pemfile::certs(&mut reader).unwrap()
+
+            let certs = rustls_pemfile::certs(&mut reader)
+                .with_context(|| ReadPemFailed { filename })?;
+
+            certs.into_iter()
+                .map(rustls::Certificate)
+                .collect::<Vec<_>>()
         };
 
         // Load private key
@@ -95,8 +104,10 @@ impl TLSSettings {
             let mut reader = io::BufReader::new(f);
 
             // Load and retun a single private key
-            match pemfile::rsa_private_keys(&mut reader) {
-                Ok(keys) => keys,
+            match rustls_pemfile::rsa_private_keys(&mut reader) {
+                Ok(keys) => {
+                    rustls::PrivateKey(keys[0].clone())
+                }
                 _ => return Err(TLSError::PrivateKeyParseError {
                     filename: filename.clone()
                 })
@@ -104,10 +115,14 @@ impl TLSSettings {
         };
 
         // Do not use client certificate authentication
-        let mut server_config = rustls::ServerConfig::new(rustls::NoClientAuth::new());
-        // Select a certificate to use
-        server_config.set_single_cert(certs, key[0].clone());
-        server_config.set_protocols(&[b"h2".to_vec(), b"http/1.1".to_vec()]);
+        let mut server_config = rustls::ServerConfig::builder()
+            .with_safe_default_cipher_suites()
+            .with_safe_default_kx_groups()
+            .with_safe_default_protocol_versions()
+            .unwrap()
+            .with_no_client_auth()
+            .with_single_cert(certs, key)
+            .expect("Bad certificate/key");
 
         Ok(Self {
             verify_certificate: conf.verify_certificate.unwrap_or(false),
@@ -165,7 +180,13 @@ impl MaybeTLSSettings {
     }
 
     pub fn client_config(&self) -> Result<ClientConfig, TLSError> {
-        let mut conf = rustls::ClientConfig::new();
+        let mut root_store = RootCertStore::empty();
+        // TODO: handle root_store properly
+
+        let mut conf = rustls::ClientConfig::builder()
+            .with_safe_defaults()
+            .with_root_certificates(root_store)
+            .with_no_client_auth();
 
         if let Some(tls) = self.tls() {
             if tls.verify_certificate {
@@ -180,15 +201,17 @@ impl MaybeTLSSettings {
 
 struct NoCertificateVerification {}
 
-impl rustls::ServerCertVerifier for NoCertificateVerification {
+impl rustls::client::ServerCertVerifier for NoCertificateVerification {
     fn verify_server_cert(
         &self,
-        _roots: &RootCertStore,
-        _presented_certs: &[Certificate],
-        _dns_name: DNSNameRef,
+        _end_entity: &Certificate,
+        _intermediates: &[Certificate],
+        _server_name: &ServerName,
+        _scts: &mut dyn Iterator<Item=&[u8]>,
         _ocsp_response: &[u8],
-    ) -> Result<ServerCertVerified, rustls::TLSError> {
-        Ok(rustls::ServerCertVerified::assertion())
+        _now: SystemTime,
+    ) -> Result<ServerCertVerified, Error> {
+        Ok(rustls::client::ServerCertVerified::assertion())
     }
 }
 
