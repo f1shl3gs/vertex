@@ -40,3 +40,5 @@ mod internal_metrics;
 mod internal_log;
 #[cfg(feature = "sources-bind")]
 mod bind;
+#[cfg(feature = "sources-haproxy")]
+mod haproxy;

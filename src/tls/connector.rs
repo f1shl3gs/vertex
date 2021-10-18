@@ -20,7 +20,7 @@ pub struct HTTPSConnector<T> {
     tls_config: Arc<ClientConfig>,
 }
 
-impl<T> HTTPSConnector<HttpConnector> {
+impl HTTPSConnector<HttpConnector> {
     /// Construct a new `HttpsConnector` using the OS root store
     pub fn with_native_roots() -> Self {
         let mut config = ClientConfig::new();
@@ -57,7 +57,6 @@ impl<T> HTTPSConnector<HttpConnector> {
     }
 
     pub fn with_connector(mut config: ClientConfig, http: HttpConnector) -> Self {
-        http.enforce_http(false);
         config.alpn_protocols = vec![b"h2".to_vec(), b"http/1.1".to_vec()];
 
         (http, config).into()

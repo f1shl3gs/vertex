@@ -390,6 +390,8 @@ mod integration_tests {
     }
 
     use std::convert::TryInto;
+    use hyper::{Body, StatusCode, Uri};
+    use rustls::internal::msgs::enums::HeartbeatMessageType::Request;
     use testcontainers::{Docker, Image};
     use nginx::Nginx;
     use crate::config::ProxyConfig;
@@ -404,18 +406,29 @@ mod integration_tests {
         image.volumes.insert(format!("{}/testdata/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
         let service = docker.run(image);
         let host_port = service.get_host_port(80).unwrap();
+        let uri = format!("http://127.0.0.1:{}{}", host_port, path)
+            .parse::<Uri>()
+            .unwrap();
 
-        let http_client = HTTPClient::new(None, proxy.clone());
+        let cli = HTTPClient::new(None, &proxy.clone())
+            .unwrap();
+        let mut req = http::Request::get(uri)
+            .body(Body::empty())
+            .unwrap();
 
-        let cli = hyper::Client::new();
-        let uri = format!("http://127.0.0.1:{}/{}", host_port, path)
-            .parse().unwrap();
+        if let Some(auth) = auth {
+            auth.apply(&mut req);
+        }
 
-        let resp = cli.get(uri)
+        println!("{:?}", req);
+
+        let resp = cli.send(req)
             .await
             .unwrap();
 
-        let s = hyper::body::to_bytes(resp)
+        let (parts, body) = resp.into_parts();
+        assert_eq!(parts.status, StatusCode::OK);
+        let s = hyper::body::to_bytes(body)
             .await
             .unwrap();
 
@@ -426,30 +439,11 @@ mod integration_tests {
 
     #[tokio::test]
     async fn test_nginx_stub_status() {
-        let docker = testcontainers::clients::Cli::default();
-        let mut image = Nginx::default();
-        let pwd = std::env::current_dir().unwrap();
-        image.volumes.insert(format!("{}/testdata/nginx/nginx.conf", pwd.to_string_lossy()), "/etc/nginx/nginx.conf".to_string());
-        image.volumes.insert(format!("{}/testdata/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
-        let service = docker.run(image);
-        let host_port = service.get_host_port(80).unwrap();
-
-        let cli = hyper::Client::new();
-        let uri = format!("http://127.0.0.1:{}/basic_status", host_port)
-            .parse().unwrap();
-
-        let resp = cli.get(uri)
-            .await
-            .unwrap();
-
-        let s = hyper::body::to_bytes(resp)
-            .await
-            .unwrap();
-
-        let s = std::str::from_utf8(&s).unwrap();
-        let status: NginxStubStatus = s.try_into().unwrap();
-
-        println!("{:?}", status);
+        test_nginx(
+            "/basic_status",
+            None,
+            ProxyConfig::default(),
+        ).await
     }
 
     #[tokio::test]
@@ -457,8 +451,8 @@ mod integration_tests {
         test_nginx(
             "/basic_status_auth",
             Some(Auth::Basic {
-                user: "vector".to_string(),
-                password: "d2kYtDNiXVXvU".to_string(),
+                user: "tom".to_string(),
+                password: "123456".to_string(),
             }),
             ProxyConfig::default(),
         ).await

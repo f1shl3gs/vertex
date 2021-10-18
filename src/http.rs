@@ -14,7 +14,7 @@ use hyper::service::Service;
 use hyper_proxy::ProxyConnector;
 use hyper_rustls::HttpsConnector;
 use crate::config::ProxyConfig;
-use crate::tls::{MaybeTLS, MaybeTLSSettings, TLSError};
+use crate::tls::{HTTPSConnector, MaybeTLS, MaybeTLSSettings, TLSError};
 
 #[derive(Debug, Snafu)]
 pub enum HTTPError {
@@ -29,7 +29,7 @@ pub enum HTTPError {
 }
 
 pub struct HTTPClient<B = Body> {
-    client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
+    client: Client<ProxyConnector<HTTPSConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
 }
 
@@ -46,21 +46,16 @@ impl<B> HTTPClient<B>
         let mut http = HttpConnector::new();
         http.enforce_http(false);
 
-        let settings = tls_setting.into();
+        // TODO: enable HTTPS
 
-        let mut client_config = rustls::ClientConfig::new();
-        client_config.root_store
-            .add_pem_file()
-
-        let mut https = crate::tls::HTTPSConnector::with_connector()
-
-        let mut proxy = ProxyConnector::new(http)
+        let https = HTTPSConnector::with_native_roots();
+        let mut proxy = ProxyConnector::new(https)
             .unwrap();
         proxy_config.configure(&mut proxy)
             .context(BuildProxyConnector)?;
         let client = Client::builder()
             .build(proxy);
-        let user_agent = HeaderValue::from_str(&format!("Vector/{}"))
+        let user_agent = HeaderValue::from_str(&format!("Vector/{}", crate::built_info::PKG_VERSION))
             .expect("invalid header value for version!");
 
         Ok(HTTPClient {

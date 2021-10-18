@@ -102,3 +102,18 @@ p2:
         }
     }
 }
+
+
+pub mod built_info {
+    include!(concat!(env!("OUT_DIR"), "/built.rs"));
+}
+
+pub fn get_version() -> String {
+    #[cfg(feature = "nightly")]
+    let version = format!("{}-nightly", built_info::PKG_VERSION);
+
+    #[cfg(not(feature = "nightly"))]
+    let version = format!("{}-nightly", built_info::PKG_VERSION);
+
+    version
+}
