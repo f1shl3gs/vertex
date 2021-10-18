@@ -43,8 +43,9 @@ impl<B> HTTPClient<B>
         tls_setting: impl Into<MaybeTLSSettings>,
         proxy_config: &ProxyConfig,
     ) -> Result<HTTPClient<B>, HTTPError> {
-        let mut http = HttpConnector::new();
-        http.enforce_http(false);
+        let settings = tls_setting.into();
+
+
 
         // TODO: enable HTTPS
 

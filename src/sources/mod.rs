@@ -4,10 +4,8 @@ pub type Source = BoxFuture<'static, Result<(), ()>>;
 
 #[cfg(feature = "sources-node_metrics")]
 pub mod node;
-
 #[cfg(feature = "sources-journald")]
 mod journald;
-
 #[cfg(feature = "sources-kafka")]
 mod kafka;
 #[cfg(feature = "sources-nginx_stub")]
@@ -42,3 +40,5 @@ mod internal_log;
 mod bind;
 #[cfg(feature = "sources-haproxy")]
 mod haproxy;
+#[cfg(feature = "sources-memcached")]
+mod memcached;

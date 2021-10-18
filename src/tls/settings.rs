@@ -9,6 +9,7 @@ use std::sync::Arc;
 use std::task::Poll;
 use futures::future::BoxFuture;
 use futures::{Future, FutureExt};
+use rustls::ClientConfig;
 use snafu::ResultExt;
 use tokio::net::{TcpListener, TcpStream};
 use tokio_rustls::{TlsAcceptor, TlsStream};
@@ -164,6 +165,37 @@ impl MaybeTLSSettings {
             listener,
             acceptor,
         })
+    }
+
+    pub fn client_config(&self) -> Result<ClientConfig, TLSError> {
+        let mut conf = rustls::ClientConfig::new();
+
+        if let Some(tls) = self.tls() {
+            if tls.verify_certificate {
+                conf.dangerous()
+                    .set_certificate_verifier(Arc::new(NoCertificateVerification {}));
+            }
+
+
+        }
+
+        Ok(conf)
+    }
+}
+
+struct NoCertificateVerification {}
+
+impl rustls::client::ServerCertVerifier for NoCertificateVerification {
+    fn verify_server_cert(
+        &self,
+        _end_entity: &rustls::Certificate,
+        _intermediates: &[rustls::Certificate],
+        _server_name: &rustls::ServerName,
+        _scts: &mut dyn Iterator<Item=&[u8]>,
+        _ocsp: &[u8],
+        _now: std::time::SystemTime,
+    ) -> Result<rustls::ServerCertVerified, rustls::Error> {
+        Ok(rustls::ServerCertVerified::assertion())
     }
 }
 
