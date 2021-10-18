@@ -1,22 +1,19 @@
 use serde::{Deserialize, Serialize};
 use std::{
-    path::PathBuf,
     io,
     fs,
+    path::PathBuf,
+    net::SocketAddr,
+    sync::Arc,
+    task::Poll,
 };
-use std::net::SocketAddr;
-use std::sync::Arc;
-use std::task::Poll;
-use futures::future::BoxFuture;
-use futures::{Future, FutureExt};
-use rustls::ClientConfig;
+use futures::{Future, FutureExt, future::BoxFuture};
+use rustls::{Certificate, ClientConfig, RootCertStore, ServerCertVerified, internal::pemfile};
 use snafu::ResultExt;
 use tokio::net::{TcpListener, TcpStream};
-use tokio_rustls::{TlsAcceptor, TlsStream};
+use tokio_rustls::{TlsAcceptor, TlsStream, webpki::DNSNameRef};
 use tokio_stream::Stream;
-use rustls::internal::pemfile;
-use crate::tls::{MaybeTLS, MaybeTLSStream, TLSError};
-use crate::tls::incoming::MaybeTLSIncomingStream;
+use crate::tls::{MaybeTLS, MaybeTLSStream, TLSError, incoming::MaybeTLSIncomingStream};
 use super::{IncomingListener, TcpBind, FileOpenFailed, CertificateParseError};
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
@@ -175,8 +172,6 @@ impl MaybeTLSSettings {
                 conf.dangerous()
                     .set_certificate_verifier(Arc::new(NoCertificateVerification {}));
             }
-
-
         }
 
         Ok(conf)
@@ -185,16 +180,14 @@ impl MaybeTLSSettings {
 
 struct NoCertificateVerification {}
 
-impl rustls::client::ServerCertVerifier for NoCertificateVerification {
+impl rustls::ServerCertVerifier for NoCertificateVerification {
     fn verify_server_cert(
         &self,
-        _end_entity: &rustls::Certificate,
-        _intermediates: &[rustls::Certificate],
-        _server_name: &rustls::ServerName,
-        _scts: &mut dyn Iterator<Item=&[u8]>,
-        _ocsp: &[u8],
-        _now: std::time::SystemTime,
-    ) -> Result<rustls::ServerCertVerified, rustls::Error> {
+        _roots: &RootCertStore,
+        _presented_certs: &[Certificate],
+        _dns_name: DNSNameRef,
+        _ocsp_response: &[u8],
+    ) -> Result<ServerCertVerified, rustls::TLSError> {
         Ok(rustls::ServerCertVerified::assertion())
     }
 }
