@@ -32,7 +32,7 @@ struct KafkaTLSConfig {
     pub options: TLSConfig,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 struct KafkaAuthConfig {
     sasl: Option<KafkaSaslConfig>,
     tls: Option<KafkaTLSConfig>,
@@ -398,6 +398,48 @@ impl ClientContext for KafkaStatisticsContext {
             rx_msgs: statistics.rxmsgs as u64,
             rx_msg_bytes: statistics.rxmsg_bytes as u64,
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const BOOTSTRAP_SERVER: &str = "localhost:9091";
+
+    fn make_config(topic: &str, group: &str) -> KafkaSourceConfig {
+        KafkaSourceConfig {
+            bootstrap_servers: BOOTSTRAP_SERVER.into(),
+            topics: vec![topic.into()],
+            group: group.into(),
+            auto_offset_reset: "beginning".to_string(),
+            session_timeout: chrono::Duration::seconds(6),
+            socket_timeout: chrono::Duration::seconds(60),
+            fetch_wait_max: chrono::Duration::milliseconds(100),
+            commit_interval: chrono::Duration::seconds(5),
+            key_field: "message_key".to_string(),
+            topic_key: "topic".to_string(),
+            partition_key: "partition".to_string(),
+            offset_key: "offset".to_string(),
+            headers_key: "headers".to_string(),
+            auth: Default::default(),
+            librdkafka_options: None,
+        }
+    }
+
+    #[tokio::test]
+    async fn consumer_create_ok() {
+        let config = make_config("topic", "group");
+        assert!(config.create_consumer().is_ok())
+    }
+
+    #[tokio::test]
+    async fn consumer_create_incorrect_auto_offset_reset() {
+        let conf = KafkaSourceConfig {
+            auto_offset_reset: "incorrect-auto-offset-reset".to_string(),
+            ..make_config("topic", "group")
+        };
+        assert!(conf.create_consumer().is_err())
     }
 }
 
