@@ -112,17 +112,27 @@ mod tests {
         let conf = TLSConfig::test_options();
         let addr = setup_server(&Some(conf)).await;
 
+        let roots = rustls::RootCertStore::empty();
+
+        let tls = rustls::ClientConfig::builder()
+            .with_safe_defaults()
+            .with_root_certificates(roots)
+            .with_no_client_auth();
+
         let https = HttpsConnectorBuilder::new()
-            // .with_tls_config(conf)
-            .with_native_roots()
+            .with_tls_config(tls)
             .https_or_http()
             .enable_http1()
+            .enable_http2()
             .build();
 
         let client: hyper::Client<_, hyper::Body> = hyper::Client::builder()
             .build(https);
 
         let uri = format!("https://{}", addr).parse::<Uri>().unwrap();
+
+        println!("uri {}", uri.host().unwrap());
+
         let res = client.get(uri)
             .await
             .unwrap();
