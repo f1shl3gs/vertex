@@ -309,6 +309,7 @@ mod tests {
 }
 
 #[cfg(test)]
+#[cfg(feature = "integration-test")]
 mod integration_tests {
     mod nginx {
         use std::collections::HashMap;
