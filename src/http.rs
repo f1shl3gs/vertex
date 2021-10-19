@@ -12,9 +12,9 @@ use hyper::header::HeaderValue;
 use hyper::http::uri::InvalidUri;
 use hyper::service::Service;
 use hyper_proxy::ProxyConnector;
-use hyper_rustls::HttpsConnector;
 use crate::config::ProxyConfig;
-use crate::tls::{HTTPSConnector, MaybeTLS, MaybeTLSSettings, TLSError};
+use crate::tls::{http::HttpsConnector, MaybeTLS, MaybeTLSSettings, TLSError};
+use crate::tls::http::HttpsConnectorBuilder;
 
 #[derive(Debug, Snafu)]
 pub enum HTTPError {
@@ -29,7 +29,7 @@ pub enum HTTPError {
 }
 
 pub struct HTTPClient<B = Body> {
-    client: Client<ProxyConnector<HTTPSConnector<HttpConnector>>, B>,
+    client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
 }
 
@@ -45,11 +45,14 @@ impl<B> HTTPClient<B>
     ) -> Result<HTTPClient<B>, HTTPError> {
         let settings = tls_setting.into();
 
+        // TODO: set config properly
+        let https = HttpsConnectorBuilder::new()
+            .with_native_roots()
+            .https_or_http()
+            .enable_http1()
+            .enable_http2()
+            .build();
 
-
-        // TODO: enable HTTPS
-
-        let https = HTTPSConnector::with_native_roots();
         let mut proxy = ProxyConnector::new(https)
             .unwrap();
         proxy_config.configure(&mut proxy)

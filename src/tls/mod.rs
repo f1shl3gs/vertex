@@ -1,15 +1,13 @@
 mod settings;
 mod maybe_tls;
 mod incoming;
-mod connector;
-mod stream;
+pub mod http;
 
 // re-export
 pub use settings::{TLSConfig, MaybeTLSSettings, MaybeTLSListener};
 pub use maybe_tls::{
     MaybeTLS,
 };
-pub use connector::HTTPSConnector;
 
 use std::path::PathBuf;
 use snafu::Snafu;
@@ -60,7 +58,7 @@ mod tests {
     use hyper::server::conn::AddrStream;
     use hyper::service::{make_service_fn, service_fn};
     use testify::next_addr;
-    use crate::tls::connector::HTTPSConnector;
+    use crate::tls::http::{HttpsConnector, HttpsConnectorBuilder};
     use super::*;
 
     #[test]
@@ -114,7 +112,13 @@ mod tests {
         let conf = TLSConfig::test_options();
         let addr = setup_server(&Some(conf)).await;
 
-        let https = HTTPSConnector::with_native_roots();
+        let https = HttpsConnectorBuilder::new()
+            // .with_tls_config(conf)
+            .with_native_roots()
+            .https_or_http()
+            .enable_http1()
+            .build();
+
         let client: hyper::Client<_, hyper::Body> = hyper::Client::builder()
             .build(https);
 

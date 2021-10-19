@@ -155,7 +155,6 @@ tracing-subscriber = { version = "0.2.24", default-features = false, features = 
 
 # HTTP
 hyper = { version = "0.14.13", features = ["server", "http1", "http2", "tcp", "stream", "runtime"] }
-hyper-rustls = { version = "0.22.1" }
 hyper-proxy = { version = "0.9.1" }
 listenfd = { version = "0.3.5", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
@@ -181,7 +180,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 rustls = { version = "0.20.0", features = ["dangerous_configuration"] }
 rustls-pemfile = { version = "0.2.1" }
 tokio-rustls = { version = "0.23.0" }
-rustls-native-certs = { version = "0.5.0" }
+rustls-native-certs = { git = "https://github.com/rustls/rustls-native-certs", default-features = false }
 webpki-roots = { version = "0.21.0" }
 ct-logs = { version = "0.9.0" }
 
