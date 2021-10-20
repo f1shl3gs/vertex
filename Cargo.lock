@@ -2379,7 +2379,10 @@ name = "prometheus"
 version = "0.1.0"
 dependencies = [
  "event",
+ "indexmap",
  "nom 7.0.0",
+ "num_enum",
+ "prost",
  "prost-build",
  "snafu",
 ]

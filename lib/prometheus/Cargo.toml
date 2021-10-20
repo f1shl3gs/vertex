@@ -9,6 +9,9 @@ edition = "2018"
 nom = { version = "7.0.0" }
 snafu = { version = "0.6.10" }
 event = { path = "../event" }
+prost = { version = "0.8" }
+num_enum = { version = "0.5.4" }
+indexmap = { version = "1.7.0" }
 
 [build-dependencies]
 prost-build = { version = "0.8" }

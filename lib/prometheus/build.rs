@@ -14,7 +14,7 @@ fn main() {
     );
     prost_build.type_attribute(
         "MetricType",
-        "#[derive(num_enum::TryFromPrimitive",
+        "#[derive(num_enum::TryFromPrimitive)]",
     );
 
     prost_build
