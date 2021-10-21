@@ -20,7 +20,8 @@ members = [
     "lib/file-source",
     "lib/internal",
     "lib/prometheus",
-    "lib/testify"
+    "lib/testify",
+    "lib/tail"
 ]
 
 [features]
