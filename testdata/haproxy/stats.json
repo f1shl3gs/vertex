@@ -1,0 +1,1125 @@
+[
+  [
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 0,
+        "name": "pxname"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Key",
+        "nature": "Name",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "str",
+        "value": "stats"
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 1,
+        "name": "svname"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Key",
+        "nature": "Name",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "str",
+        "value": "FRONTEND"
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 4,
+        "name": "scur"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Gauge",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 2
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 5,
+        "name": "smax"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Max",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 11
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 6,
+        "name": "slim"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Config",
+        "nature": "Limit",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 524253
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 7,
+        "name": "stot"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 12
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 8,
+        "name": "bin"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 8808
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 9,
+        "name": "bout"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 128330
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 10,
+        "name": "dreq"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 11,
+        "name": "dresp"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 12,
+        "name": "ereq"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 3
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 17,
+        "name": "status"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Status",
+        "nature": "Gauge",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "str",
+        "value": "OPEN"
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 26,
+        "name": "pid"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Key",
+        "nature": "Gauge",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 1
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 27,
+        "name": "iid"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Key",
+        "nature": "Gauge",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "u32",
+        "value": 1
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 28,
+        "name": "sid"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Key",
+        "nature": "Gauge",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "u32",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 32,
+        "name": "type"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Config",
+        "nature": "Gauge",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "u32",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 33,
+        "name": "rate"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Rate",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 34,
+        "name": "rate_lim"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Config",
+        "nature": "Limit",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 35,
+        "name": "rate_max"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Max",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 2
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 39,
+        "name": "hrsp_1xx"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 40,
+        "name": "hrsp_2xx"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 13
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 41,
+        "name": "hrsp_3xx"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 42,
+        "name": "hrsp_4xx"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 3
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 43,
+        "name": "hrsp_5xx"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 3
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 44,
+        "name": "hrsp_other"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 46,
+        "name": "req_rate"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Rate",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 1
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 47,
+        "name": "req_rate_max"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Max",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 2
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 48,
+        "name": "req_tot"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 20
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 51,
+        "name": "comp_in"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 52,
+        "name": "comp_out"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 53,
+        "name": "comp_byp"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 54,
+        "name": "comp_rsp"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 75,
+        "name": "mode"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Config",
+        "nature": "Gauge",
+        "scope": "Service"
+      },
+      "value": {
+        "type": "str",
+        "value": "http"
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 77,
+        "name": "conn_rate"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Rate",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 78,
+        "name": "conn_rate_max"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Max",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u32",
+        "value": 2
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 79,
+        "name": "conn_tot"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 12
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 80,
+        "name": "intercepted"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 14
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 81,
+        "name": "dcon"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 82,
+        "name": "dses"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 83,
+        "name": "wrew"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 86,
+        "name": "cache_lookups"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 87,
+        "name": "cache_hits"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 94,
+        "name": "eint"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 100,
+        "name": "ssl_sess"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 101,
+        "name": "ssl_reused_sess"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 102,
+        "name": "ssl_failed_handshake"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 103,
+        "name": "h2_headers_rcvd"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 104,
+        "name": "h2_data_rcvd"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 105,
+        "name": "h2_settings_rcvd"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 106,
+        "name": "h2_rst_stream_rcvd"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 107,
+        "name": "h2_goaway_rcvd"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 108,
+        "name": "h2_detected_conn_protocol_errors"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 109,
+        "name": "h2_detected_strm_protocol_errors"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 110,
+        "name": "h2_rst_stream_resp"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 111,
+        "name": "h2_goaway_resp"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 112,
+        "name": "h2_open_connections"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Gauge",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 113,
+        "name": "h2_backend_open_streams"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Gauge",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 114,
+        "name": "h2_total_connections"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    },
+    {
+      "objType": "Frontend",
+      "proxyId": 1,
+      "id": 0,
+      "field": {
+        "pos": 115,
+        "name": "h2_backend_total_streams"
+      },
+      "processNum": 1,
+      "tags": {
+        "origin": "Metric",
+        "nature": "Counter",
+        "scope": "Process"
+      },
+      "value": {
+        "type": "u64",
+        "value": 0
+      }
+    }
+  ]
+]
