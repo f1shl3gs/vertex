@@ -2289,6 +2289,9 @@ dependencies = [
  "log",
  "nix 0.20.1",
  "parking_lot",
+ "prost",
+ "prost-build",
+ "prost-derive",
  "symbolic-demangle",
  "tempfile",
  "thiserror",
@@ -2378,10 +2381,12 @@ dependencies = [
 name = "prometheus"
 version = "0.1.0"
 dependencies = [
+ "criterion",
  "event",
  "indexmap",
  "nom 7.0.0",
  "num_enum",
+ "pprof",
  "prost",
  "prost-build",
  "snafu",

@@ -119,6 +119,7 @@ nix = "0.22.2"
 [dev-dependencies]
 tokio = { version = "1.12.0", features = ["test-util"] }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
+pprof = { version = "0.5.0", default-features = false, features = ["flamegraph", "criterion"] }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 rand = { version = "0.8.4" }
@@ -184,10 +185,7 @@ rustls-native-certs = { git = "https://github.com/rustls/rustls-native-certs", d
 webpki-roots = { version = "0.21.0" }
 ct-logs = { version = "0.9.0" }
 
-# Profile
-# criterion is not neccessary for any functionality, but the bench
-# need it.
-pprof = { version = "0.5.0", default-features = false, optional = true, features = ["flamegraph", "criterion"] }
+pprof = { version = "0.5.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # misc
 chrono = { version = "0.4.19", features = ["serde"] }
