@@ -75,3 +75,19 @@ impl Transform {
         Transform::Task(Box::new(v))
     }
 }
+
+/// Transform a single `Event` through the `FunctionTransform`
+///
+/// # Panics
+///
+/// If `ft` attempts to emit more than one `Event` on transform this function
+/// will panic.
+#[cfg(test)]
+pub fn transform_one(ft: &mut dyn FunctionTransform, event: impl Into<event::Event>) -> Option<Event>
+{
+    let mut buf = Vec::with_capacity(1);
+    ft.transform(&mut buf, event.into());
+    assert!(buf.len() < 2);
+    buf.into_iter()
+        .next()
+}
