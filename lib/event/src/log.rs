@@ -22,8 +22,8 @@ impl ByteSizeOf for LogRecord {
 impl LogRecord {
     pub fn insert_field(
         &mut self,
-        key: impl AsRef<str>,
-        value: impl Into<Value> + Debug,
+        _key: impl AsRef<str>,
+        _value: impl Into<Value> + Debug,
     ) -> Option<Value> {
         todo!()
     }
