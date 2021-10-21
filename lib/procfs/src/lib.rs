@@ -1,15 +1,43 @@
 mod btrfs;
-mod error;
 mod read;
 mod fibre_channel;
 mod nfs;
+mod arp;
 
 pub(crate) use read::*;
 
+use snafu::Snafu;
+
+#[derive(Debug, Snafu)]
+pub enum Error {
+    #[snafu(display("open file {} failed, {}", path, source))]
+    FileOpenFailed {
+        path: String,
+        source: std::io::Error,
+    },
+
+    #[snafu(display("read file {} failed, {}", path, source))]
+    FileReadFailed {
+        path: String,
+        source: std::io::Error,
+    },
+
+    #[snafu(display("other io error, {}", source))]
+    OtherErr {
+        source: std::io::Error
+    }
+}
+
 pub struct ProcFS {
-    root: String
+    root: String,
+}
+
+#[cfg(test)]
+pub fn test_procfs() -> ProcFS {
+    println!("pwd {:?}", std::env::current_dir().unwrap());
+    todo!()
 }
 
 pub struct SysFS {
-    root: String
+    root: String,
 }

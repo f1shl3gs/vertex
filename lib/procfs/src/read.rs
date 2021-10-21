@@ -1,4 +1,5 @@
 use std::io::Read;
+use std::path::Path;
 
 /// `read_to_string` should be a async function, but the implement do sync calls from
 /// std, which will not call spawn_blocking and create extra threads for IO reading. It

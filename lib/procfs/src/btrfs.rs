@@ -1,4 +1,4 @@
-use crate::{ProcFS, SysFS};
+use crate::{Error, ProcFS, SysFS};
 
 use std::collections::BTreeMap;
 
@@ -63,5 +63,7 @@ pub struct Stats {
 }
 
 impl ProcFS {
-    pub async fn btrfs() -> Result<Vec<Stats>, Error> {}
+    pub async fn btrfs() -> Result<Vec<Stats>, Error> {
+        todo!()
+    }
 }
