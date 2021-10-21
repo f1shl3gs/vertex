@@ -40,20 +40,20 @@ impl FunctionTransform for AddTags {
 
         match event {
             Event::Metric(ref mut metric) => {
-                merge_tags(&mut self.tags, &mut metric.tags, self.overwrite);
+                merge_tags(&self.tags, &mut metric.tags, self.overwrite);
 
                 output.push(event);
             }
 
             Event::Log(ref mut log) => {
-                merge_tags(&mut self.tags, &mut log.tags, self.overwrite);
+                merge_tags(&self.tags, &mut log.tags, self.overwrite);
                 output.push(event);
             }
         }
     }
 }
 
-fn merge_tags(from: &mut BTreeMap<String, String>, to: &mut BTreeMap<String, String>, overwrite: bool) {
+fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>, overwrite: bool) {
     if overwrite {
         for (k, v) in from {
             to.insert(k.clone(), v.clone());
