@@ -494,12 +494,13 @@ mod tests {
         struct Case {
             input: String,
             want: Header,
+            tail: String,
         }
 
         fn wrap(s: &str) -> String {
             format!("  \t {}  .", s)
         }
-        let tail = "  .";
+        let tail = "  .".to_string();
 
         for case in vec![
             Case {
@@ -508,6 +509,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Counter,
                 },
+                tail: tail.to_owned()
             },
             Case {
                 input: wrap("#  TYPE abc_def counteraaaaaaaaaaa"),
@@ -515,6 +517,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Counter,
                 },
+                tail: "aaaaaaaaaaa  .".to_string(),
             },
             Case {
                 input: wrap("#TYPE \t abc_def \t gauge"),
@@ -522,6 +525,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Gauge,
                 },
+                tail: tail.to_owned()
             },
             Case {
                 input: wrap("# TYPE abc_def histogram"),
@@ -529,6 +533,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Histogram,
                 },
+                tail: tail.to_owned()
             },
             Case {
                 input: wrap("# TYPE abc_def summary"),
@@ -536,6 +541,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Summary,
                 },
+                tail: tail.to_owned()
             },
             Case {
                 input: wrap("# TYPE abc_def untyped"),
@@ -543,10 +549,11 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Untyped,
                 },
+                tail: tail.to_owned()
             },
         ] {
             let (left, r) = Header::parse(&case.input).unwrap();
-            assert_eq!(left, tail);
+            assert_eq!(left, case.tail);
             assert_eq!(r, case.want);
         }
     }

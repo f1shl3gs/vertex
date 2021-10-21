@@ -701,9 +701,9 @@ mod tests {
                         metric_family_name: $name.into(),
                         help: String::default(),
                         unit: String::default(),
-                    } )*
+                    }, )*
                 ],
-                timeseries: vec![ $(proto::Timeseries {
+                timeseries: vec![ $(proto::TimeSeries {
                     labels: vec![ $( proto::Label {
                         name: stringify!($label).into(),
                         value: $value.to_string(),
@@ -726,6 +726,146 @@ mod tests {
     fn parse_request_only_metadata() {
         let parsed = parse_request(write_request!(["one" = Counter, "two" = Gauge], [])).unwrap();
         assert_eq!(parsed.len(), 2);
+        match_group!(parsed[0], "one", Counter => |metrics: &MetricMap<SimpleMetric>| {
+            assert!(metrics.is_empty());
+        });
+        match_group!(parsed[1], "two", Gauge => |metrics: &MetricMap<SimpleMetric>| {
+            assert!(metrics.is_empty());
+        });
+    }
 
+    #[test]
+    fn parse_request_untyped() {
+        let parsed = parse_request(write_request!(
+            [],
+            [ [__name__ => "one", big => "small"] => [ 123 @ 1395066367500 ]]
+        )).unwrap();
+
+        assert_eq!(parsed.len(), 1);
+        match_group!(parsed[0], "one", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066367500), labels!(big => "small"), 123.0)
+            );
+        });
+    }
+
+    #[test]
+    fn parse_request_gauge() {
+        let parsed = parse_request(write_request!(
+            ["one" = Gauge],
+            [
+                [__name__ => "one"] => [ 12 @ 1395066367600, 14 @ 1395066367800 ],
+                [__name__ => "two"] => [ 13 @ 1395066367700 ]
+            ]
+        )).unwrap();
+
+        assert_eq!(parsed.len(), 2);
+        match_group!(parsed[0], "one", Gauge => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 2);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066367600), labels!(), 12.0),
+            );
+            assert_eq!(
+                metrics.get_index(1).unwrap(),
+                simple_metric!(Some(1395066367800), labels!(), 14.0),
+            );
+        });
+        match_group!(parsed[1], "two", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066367700), labels!(), 13.0)
+            )
+        });
+    }
+
+    #[test]
+    fn parse_request_histogram() {
+        let parsed = parse_request(write_request!(
+            ["one" = Histogram],
+            [
+                [__name__ => "one_bucket", le => "1"] => [ 15 @ 1395066367700 ],
+                [__name__ => "one_bucket", le => "+Inf"] => [ 19 @ 1395066367700 ],
+                [__name__ => "one_count"] => [ 19 @ 1395066367700 ],
+                [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
+                [__name__ => "one_total"] => [24 @ 1395066367700]
+            ]
+        )).unwrap();
+
+        assert_eq!(parsed.len(), 2);
+        match_group!(parsed[0], "one", Histogram => |metrics: &MetricMap<HistogramMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(), (
+                    &GroupKey {
+                        timestamp: Some(1395066367700),
+                        labels: labels!()
+                    },
+                    &HistogramMetric {
+                        buckets: vec![
+                            HistogramBucket { bucket: 1.0, count: 15 },
+                            HistogramBucket { bucket: f64::INFINITY, count: 19 }
+                        ],
+                        count: 19,
+                        sum: 12.0
+                    }
+                )
+            );
+        });
+
+        match_group!(parsed[1], "one_total", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066367700), labels!(), 24.0)
+            );
+        })
+    }
+
+
+    #[test]
+    fn parse_request_summary() {
+        let parsed = parse_request(write_request!(
+            ["one" = Summary],
+            [
+                [__name__ => "one", quantile => "0.5"] => [ 15 @ 1395066367700 ],
+                [__name__ => "one", quantile => "0.9"] => [ 19 @ 1395066367700 ],
+                [__name__ => "one_count"] => [ 21 @ 1395066367700 ],
+                [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
+                [__name__ => "one_total"] => [24 @ 1395066367700]
+            ]
+        )).unwrap();
+
+        assert_eq!(parsed.len(), 2);
+        match_group!(parsed[0], "one", Summary => |metrics: &MetricMap<SummaryMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(), (
+                    &GroupKey {
+                        timestamp: Some(1395066367700),
+                        labels: labels!(),
+                    },
+                    &SummaryMetric {
+                        quantiles: vec![
+                            SummaryQuantile { quantile: 0.5, value: 15.0 },
+                            SummaryQuantile { quantile: 0.9, value: 19.0 },
+                        ],
+                        count: 21,
+                        sum: 12.0
+                    }
+                )
+            );
+        });
+
+        match_group!(parsed[1], "one_total", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+            assert_eq!(metrics.len(), 1);
+            assert_eq!(
+                metrics.get_index(0).unwrap(),
+                simple_metric!(Some(1395066367700), labels!(), 24.0)
+            );
+        })
     }
 }
