@@ -1090,8 +1090,9 @@ async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64,
 
 #[cfg(test)]
 mod tests {
-    use testcontainers::{Docker, images::redis::Redis};
     use super::*;
+    use testcontainers::{Docker, images::redis::Redis};
+    use redis::ToRedisArgs;
 
     const REDIS_PORT: u16 = 6379;
 

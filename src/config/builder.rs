@@ -6,7 +6,7 @@ use super::validation;
 use glob;
 use crate::config::global::default_data_dir;
 #[cfg(test)]
-use crate::config::{SinkConfig, TransformConfig};
+use crate::config::{SourceConfig, SinkConfig, TransformConfig};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

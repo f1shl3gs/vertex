@@ -20,12 +20,13 @@ use tokio::{
 
 use tokio_util::codec::{Decoder, FramedRead};
 use bytes::{BytesMut, Buf};
+use chrono::TimeZone;
 use futures::{
     SinkExt,
     StreamExt,
     stream::BoxStream,
 };
-use event::Value;
+use event::{Event, Value};
 use lazy_static::lazy_static;
 
 use nix::{
@@ -261,7 +262,7 @@ impl JournaldSource {
                     }
                 }
 
-                match self.output.send(entry.into()).await {
+                match self.output.send(create_event(entry)).await {
                     Ok(_) => {}
                     Err(err) => {
                         error!(
@@ -307,6 +308,44 @@ impl JournaldSource {
             }
         }
     }
+}
+
+use crate::config::log_schema;
+
+fn create_event(mut entry: BTreeMap<String, Value>) -> Event {
+    let mut log: event::LogRecord = entry.into();
+
+    // Convert some journald-specific field names into LogSchema's
+    if let Some(msg) = log.remove_field(MESSAGE) {
+        log.insert_field(log_schema().message_key(), msg);
+    }
+    if let Some(host) = log.remove_field(HOSTNAME) {
+        log.insert_field(log_schema().host_key(), host);
+    }
+    // Translate the timestamp, and so leave both old and new names
+    if let Some(Value::Bytes(timestamp)) = log
+        .get_field(&*SOURCE_TIMESTAMP)
+        .or_else(|| log.get_field(RECEIVED_TIMESTAMP))
+    {
+        if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {
+            let timestamp = chrono::Utc.timestamp(
+                (timestamp / 1_000_000) as i64,
+                (timestamp % 1_000_000) as u32 * 1_000,
+            );
+            log.insert_field(
+                log_schema().timestamp_key(),
+                Value::Timestamp(timestamp),
+            );
+        }
+    }
+
+    // Add source type
+    log.insert_field(
+        log_schema().source_type_key(),
+        "journald",
+    );
+
+    log.into()
 }
 
 /// A function that starts journalctl process.
@@ -860,7 +899,7 @@ MESSAGE=audit log
             Value::Bytes(s) => {
                 let s = String::from_utf8_lossy(s);
                 s.parse::<i64>().unwrap()
-            },
+            }
             _ => panic!("unexpected timestamp type")
         };
 

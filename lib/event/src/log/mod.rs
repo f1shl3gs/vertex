@@ -19,6 +19,16 @@ pub struct LogRecord {
     pub fields: BTreeMap<String, Value>,
 }
 
+impl From<BTreeMap<String, Value>> for LogRecord {
+    fn from(fields: BTreeMap<String, Value>) -> Self {
+        Self {
+            time_unix_nano: 0,
+            tags: Default::default(),
+            fields,
+        }
+    }
+}
+
 impl ByteSizeOf for LogRecord {
     fn allocated_bytes(&self) -> usize {
         self.tags.allocated_bytes() + self.fields.allocated_bytes()
@@ -60,14 +70,14 @@ impl LogRecord {
         &mut self,
         key: impl AsRef<str>,
     ) -> Option<Value> {
-        remove::remove(&mut self.fields, key, false)
+        remove::remove(&mut self.fields, key.as_ref(), false)
     }
 
     pub fn remove_field_prune(
         &mut self,
         key: impl AsRef<str>,
     ) -> Option<Value> {
-        remove::remove(&mut self.fields, key, true)
+        remove::remove(&mut self.fields, key.as_ref(), true)
     }
 }
 
