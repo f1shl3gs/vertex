@@ -129,6 +129,8 @@ fn main() {
             .await
             .map_err(handle_config_errors)
             .unwrap();
+
+        // TODO: how to set this when reload
         let log_schema = config.global.log_schema.clone();
         config::init_log_schema(|| {
             Ok(log_schema)
