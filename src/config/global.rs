@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use snafu::{ResultExt, Snafu};
 use crate::timezone;
 use serde::{Deserialize, Serialize};
-use crate::config::{ProxyConfig, skip_serializing_if_default};
+use crate::config::{LogSchema, ProxyConfig, skip_serializing_if_default};
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {
@@ -35,12 +35,12 @@ pub enum DataDirError {
 pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]
     pub data_dir: PathBuf,
-
     #[serde(default = "default_timezone")]
     pub timezone: timezone::TimeZone,
-
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub proxy: ProxyConfig,
+    #[serde(skip_serializing_if = "skip_serializing_if_default")]
+    pub log_schema: LogSchema
 }
 
 pub fn default_data_dir() -> PathBuf {

@@ -59,6 +59,12 @@ impl Builder {
             errors.push("conflicting values for 'data_dir' found".to_owned());
         }
 
+        // If the user has multiple config files, we must *merge* log schemas
+        // until we meet a conflict, then we are allowed to error
+        if let Err(merge_errs) = self.global.log_schema.merge(&with.global.log_schema) {
+            errors.extend(merge_errs)
+        }
+
         with.sources.keys().for_each(|k| {
             if self.sources.contains_key(k) {
                 errors.push(format!("duplicate source name found: {}", k));

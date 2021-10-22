@@ -129,6 +129,10 @@ fn main() {
             .await
             .map_err(handle_config_errors)
             .unwrap();
+        let log_schema = config.global.log_schema.clone();
+        config::init_log_schema(|| {
+            Ok(log_schema)
+        }, true);
 
         let diff = config::ConfigDiff::initial(&config);
         let pieces = topology::build_or_log_errors(&config, &diff, HashMap::new())
