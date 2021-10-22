@@ -212,3 +212,5 @@ snafu = { version = "0.6.10" }
 redis = { version = "0.21.0", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 seahash = { version = "4.1.0", default-features = false, optional = true }
+# std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
+once_cell = { version = "1.8.0" }

@@ -1,4 +1,4 @@
-pub mod format;
+mod format;
 mod loading;
 mod diff;
 mod helper;
@@ -8,22 +8,20 @@ mod resource;
 mod validation;
 mod global;
 mod proxy;
+mod log_schema;
 
 // re-export
-pub use proxy::{
-    ProxyConfig,
-};
+pub use proxy::{ProxyConfig};
+pub use helper::*;
+pub use diff::ConfigDiff;
+pub use format::{Format, FormatHint};
+pub use log_schema::{log_schema, LogSchema};
 
 use std::path::PathBuf;
-
 use async_trait::async_trait;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
-
-pub use helper::*;
-pub use diff::ConfigDiff;
-pub use format::{Format, FormatHint};
 
 use crate::{
     pipeline::Pipeline,
