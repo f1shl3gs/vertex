@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
-use indexmap::IndexMap;
 use async_trait::async_trait;
 
 use crate::config::{TransformConfig, GlobalOptions, DataType};

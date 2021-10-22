@@ -2,8 +2,6 @@
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     use futures::stream::TryStreamExt;
     use rtnetlink::{new_connection, Error, Handle, IpVersion};
 

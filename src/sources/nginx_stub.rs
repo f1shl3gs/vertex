@@ -9,7 +9,6 @@ use nom::{
 use nom::combinator::{all_consuming, map_res};
 use nom::error::ErrorKind;
 use nom::sequence::{preceded, terminated, tuple};
-use rustls::internal::msgs::enums::HeartbeatMessageType::Request;
 use futures::{SinkExt, StreamExt, TryFutureExt};
 use snafu::{Snafu, ResultExt};
 use event::{

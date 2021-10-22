@@ -1,7 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
 use futures::{SinkExt, StreamExt};
-use redis::ToRedisArgs;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use event::{tags, Metric, unixnano};
@@ -1024,7 +1023,7 @@ fn include_metric(s: &str) -> bool {
 
 /// fetch fetch necessary data from redis, which is `info`, `databases`
 async fn fetch(url: &str) -> Result<(String, i64), Error> {
-    let mut cli = redis::Client::open(url)?;
+    let cli = redis::Client::open(url)?;
     let mut conn = cli.get_async_connection().await?;
 
     let databases = query_databases(&mut conn).await?;

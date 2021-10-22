@@ -72,7 +72,6 @@ pub mod ser_de {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use serde::{Deserialize, Serialize};
     use chrono_tz::{Tz};
 

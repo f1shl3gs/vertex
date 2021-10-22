@@ -49,10 +49,6 @@ mod stream;
 
 #[cfg(test)]
 mod tests {
-    use crate::tls::http::connector::builder::ConnectorBuilder;
-
-    use super::*;
-
     #[test]
     fn dummy() {
 

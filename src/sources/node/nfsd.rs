@@ -558,7 +558,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::Path;
     use tempfile::tempdir;
     use super::*;
 

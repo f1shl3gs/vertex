@@ -8,16 +8,15 @@ use std::{
     task::Poll,
 };
 use std::time::SystemTime;
-use futures::{Future, FutureExt, future::BoxFuture};
+use futures::{Future};
 use rustls::{Certificate, ClientConfig, Error, RootCertStore, ServerName};
 use rustls::client::ServerCertVerified;
 use snafu::ResultExt;
 use tokio::net::{TcpListener, TcpStream};
-use tokio_rustls::{TlsAcceptor, TlsStream};
-use tokio_rustls::webpki::DNSNameRef;
+use tokio_rustls::{TlsAcceptor};
 use tokio_stream::Stream;
-use crate::tls::{MaybeTLS, MaybeTLSStream, TLSError, incoming::MaybeTLSIncomingStream};
-use super::{IncomingListener, TcpBind, FileOpenFailed, ReadPemFailed, CertificateParseError};
+use crate::tls::{MaybeTLS, TLSError, incoming::MaybeTLSIncomingStream};
+use super::{IncomingListener, TcpBind, FileOpenFailed, ReadPemFailed};
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 

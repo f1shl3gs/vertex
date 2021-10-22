@@ -27,7 +27,6 @@ use hyper::{Request, Body, Method, Response, StatusCode, Server};
 use futures::{StreamExt, FutureExt};
 use event::MetricValue;
 use hyper::http::HeaderValue;
-use crate::tls::MaybeTLS;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

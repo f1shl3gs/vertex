@@ -13,7 +13,7 @@ use hyper::http::uri::InvalidUri;
 use hyper::service::Service;
 use hyper_proxy::ProxyConnector;
 use crate::config::ProxyConfig;
-use crate::tls::{http::HttpsConnector, MaybeTLS, MaybeTLSSettings, TLSError};
+use crate::tls::{http::HttpsConnector, MaybeTLSSettings, TLSError};
 use crate::tls::http::HttpsConnectorBuilder;
 
 #[derive(Debug, Snafu)]
@@ -21,7 +21,7 @@ pub enum HTTPError {
     #[snafu(display("Failed to build TLS connector: {}", source))]
     BuildTLSConnector { source: TLSError },
     #[snafu(display("Failed to build HTTPS connector: {}", source))]
-    BuildHTTPSConnector { source: rustls::TLSError },
+    BuildHTTPSConnector { source: rustls::Error },
     #[snafu(display("Failed to build Proxy connector: {}", source))]
     BuildProxyConnector { source: InvalidUri },
     #[snafu(display("Failed to make HTTP(S) request: {}", source))]

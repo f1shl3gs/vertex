@@ -55,10 +55,9 @@ mod tests {
     use std::convert::Infallible;
     use std::net::SocketAddr;
     use hyper::{Body, Request, Response, Server, Uri};
-    use hyper::server::conn::AddrStream;
     use hyper::service::{make_service_fn, service_fn};
     use testify::next_addr;
-    use crate::tls::http::{HttpsConnector, HttpsConnectorBuilder};
+    use crate::tls::http::{HttpsConnectorBuilder};
     use super::*;
 
     #[test]
@@ -144,6 +143,6 @@ mod tests {
 }
 
 mod tls_tests {
-    use std::sync::Arc;
+
 
 }

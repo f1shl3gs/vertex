@@ -170,7 +170,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             let mut name = prefix.clone();
             if element == "input" {
                 // input is actually the value
-                if let Some(v) = props.get("") {
+                if let Some(_v) = props.get("") {
                     name = name + "_input";
                 }
             } else if element != "" {
@@ -225,13 +225,13 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             }
 
             if sensor_type == "temp" && element != "type" {
-                let mut element = element;
+                let mut element = element.as_str();
                 if element == "" {
-                    element = &"input".to_string();
+                    element = "input";
                 }
 
                 let name = &format!("{}_celsius", name);
-                let desc = &format!("Hardware monitor for temperature ({})", sensor);
+                let desc = &format!("Hardware monitor for temperature ({})", element);
                 metrics.push(gauge_metric!(
                         name,
                         desc,
