@@ -1,6 +1,7 @@
 use std::borrow::Cow;
 use serde::{Deserializer, Serializer};
 use regex::Regex;
+use tokio_stream::wrappers::IntervalStream;
 
 use crate::duration::parse_duration;
 
@@ -43,6 +44,13 @@ pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
 
 pub const fn default_acknowledgements() -> bool {
     false
+}
+
+pub fn ticker_from_duration(duration: chrono::Duration) -> Result<IntervalStream, ()> {
+    let duration = duration.to_std()
+        .map_err(|_| ())?;
+    let interval = tokio::time::interval(duration.into());
+    Ok(IntervalStream::new(interval))
 }
 
 #[cfg(test)]
