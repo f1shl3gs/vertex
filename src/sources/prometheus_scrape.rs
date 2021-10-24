@@ -1,11 +1,7 @@
-mod parser;
-
 use std::time::Instant;
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt, TryStreamExt};
-use nix::sys::socket::shutdown;
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
-use tokio_stream::StreamExt;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::http::{Auth, HTTPClient};
@@ -36,17 +32,18 @@ struct PrometheusScrapeConfig {
     auth: Option<Auth>,
 }
 
-#[ansyc_trait::async_trait]
+#[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_scrape")]
 impl SourceConfig for PrometheusScrapeConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let urls = self.endpoints
             .iter()
-            .map(|s| s.parse::<http::Uri>().context(sources::UriParseError))
-            .collect::<Result<Vec<http::Uri>, source::BuildError>>()?;
+            .map(|s| s.parse::<http::Uri>().context(crate::sources::UriParseError))
+            .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
+        let tls = TLSSettings::from_config(&self.tls)?;
         Ok(scrape(
             urls,
-            self.tls.clone(),
+            tls,
             self.auth.clone(),
             ctx.proxy,
             None,
@@ -68,7 +65,7 @@ impl SourceConfig for PrometheusScrapeConfig {
 
 fn scrape(
     urls: Vec<http::Uri>,
-    tls: Option<TLSConfig>,
+    tls: TLSSettings,
     auth: Option<Auth>,
     proxy: ProxyConfig,
     instance_tag: Option<String>,
@@ -84,7 +81,6 @@ fn scrape(
         );
     });
 
-    let tls = TLSSettings::from_config(&tls)?;
     let ticker = ticker_from_duration(interval).unwrap();
 
     Box::pin(
@@ -156,4 +152,14 @@ fn scrape(
             .forward(output)
             .inspect(|_| info!("Finished sending"))
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn dummy() {
+
+    }
 }

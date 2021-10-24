@@ -4,7 +4,7 @@ mod incoming;
 pub mod http;
 
 // re-export
-pub use settings::{TLSConfig, MaybeTLSSettings, MaybeTLSListener};
+pub use settings::{TLSConfig, TLSSettings, MaybeTLSSettings, MaybeTLSListener};
 pub use maybe_tls::{
     MaybeTLS,
 };

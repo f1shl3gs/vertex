@@ -69,8 +69,11 @@ impl TLSSettings {
     /// Generate a filled out settings struct from the given optional
     /// option set, interpreted as client options. If `options` is
     /// `None`, the result is set to defaults(ie: empty)
-    pub fn from_config(conf: &TLSConfig) -> Result<Self, TLSError> {
+    pub fn from_config(conf: &Option<TLSConfig>) -> Result<Self, TLSError> {
         // If this is for server warning should be print
+
+        let tls = &TLSConfig::default();
+        let conf = conf.as_ref().unwrap_or(&tls);
 
         // Load public certificate
         let certs = {
@@ -156,7 +159,7 @@ impl MaybeTLSSettings {
         match conf {
             None => Ok(Self::Raw(())), // No config, no TLS settings
             Some(config) => {
-                let tls = TLSSettings::from_config(config)?;
+                let tls = TLSSettings::from_config(&Some(config.clone()))?;
                 Ok(Self::TLS(tls))
             }
         }
@@ -283,7 +286,7 @@ mod tests {
             key_pass: None,
         };
 
-        let _settings = TLSSettings::from_config(&cfg)
+        let _settings = TLSSettings::from_config(&Some(cfg))
             .unwrap();
     }
 }

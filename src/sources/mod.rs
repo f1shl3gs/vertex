@@ -1,7 +1,3 @@
-use futures::future::BoxFuture;
-
-pub type Source = BoxFuture<'static, Result<(), ()>>;
-
 #[cfg(feature = "sources-node_metrics")]
 pub mod node;
 #[cfg(feature = "sources-journald")]
@@ -42,3 +38,14 @@ mod bind;
 mod haproxy;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
+
+use snafu::Snafu;
+use futures::future::BoxFuture;
+
+pub type Source = BoxFuture<'static, Result<(), ()>>;
+
+#[derive(Debug, Snafu)]
+enum BuildError {
+    #[snafu(display("URI parse error: {}", source))]
+    UriParseError { source: ::http::uri::InvalidUri }
+}
