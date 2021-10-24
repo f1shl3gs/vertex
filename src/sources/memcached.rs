@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::future::Future;
 use std::io::BufRead;
 
 use snafu::{OptionExt, ResultExt, Snafu};
@@ -101,14 +102,20 @@ fn parse_line(line: &str) -> Result<(String, f64), ParseError> {
     Ok((parts[1].to_string(), v))
 }
 
-async fn stats_v2(addr: &str) -> Result<Stats, ParseError> {
+async fn stats<Fut>(
+    addr: &str,
+    query: impl FnOnce(&str, &str) -> Fut,
+) -> Result<Stats, ParseError>
+    where
+        Fut: Future<Output=Result<String, std::io::Error>>
+{
     let mut stats = Stats::default();
     for cmd in vec!["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
-        let resp = request(addr, cmd)
+        let mut lines = query(addr, cmd)
             .await?
-            .as_str();
+            .as_str()
+            .lines();
 
-        let mut lines = resp.lines();
         while let Some(line) = lines.next() {
             if line.starts_with(CLIENT_ERROR_PREFIX) {
                 // TODO: more error context
@@ -159,26 +166,6 @@ async fn stats_v2(addr: &str) -> Result<Stats, ParseError> {
     Ok(stats)
 }
 
-async fn stats(addr: &str) -> Result<Stats, ParseError> {
-    let resp = request(addr, "stats\r\n").await
-        .with_context(|| CommandExecFailed { cmd: "stats".to_string() })?;
-    let stats = parse_stats(&resp)?;
-
-    let resp = request(addr, "stats slabs\r\n").await
-        .with_context(|| CommandExecFailed { cmd: "stats slabs".to_string() })?;
-    let slabs = parse_stats_slabs(&resp)?;
-
-    let resp = request(addr, "stats items\r\n").await
-        .with_context(|| CommandExecFailed { cmd: "stats items".to_string() })?;
-    let items = parse_stats_items(&resp)?;
-
-    Ok(Stats {
-        stats,
-        slabs,
-        items,
-    })
-}
-
 async fn request(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
     let socket = TcpStream::connect(addr).await?;
     let (mut reader, mut writer) = tokio::io::split(socket);
@@ -189,61 +176,6 @@ async fn request(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
     reader.read_to_string(&mut buf).await?;
     Ok(buf)
 }
-
-fn parse_stats(input: &str) -> Result<HashMap<String, String>, ParseError> {
-    let mut lines = input.lines();
-    let mut stats = HashMap::<String, String>::with_capacity(100);
-    while let Some(line) = lines.next() {
-        if !line.starts_with(STAT_PREFIX) {
-            continue;
-        }
-
-        let parts = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
-        stats.insert(parts[1].to_string(), parts[2].to_string());
-    }
-
-    Ok(stats)
-}
-
-fn parse_stats_slabs(input: &str) -> Result<HashMap<i32, HashMap<String, String>>, ParseError> {
-    let mut lines = input.lines();
-    let mut stats = HashMap::new();
-    while let Some(line) = lines.next() {
-        if !line.starts_with(STAT_PREFIX) {
-            continue;
-        }
-
-        let parts = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
-        if parts.len() != 3 {
-            return Err(ParseError::InvalidLine);
-        }
-        let sub_parts = parts[1].split(":")
-            .collect::<Vec<_>>();
-        if sub_parts.len() != 2 {
-            return Err(ParseError::InvalidLine);
-        }
-        let index = sub_parts[0].parse().context(ParseError::InvalidLine)?;
-
-        let slab = match stats.get_mut(&index) {
-            Some(mut slab) => slab,
-            _ => {
-                let slab = HashMap::<String, String>::with_capacity(15);
-                stats.insert(index, slab).unwrap()
-            }
-        };
-
-        slab.insert(sub_parts[1].to_string(), parts[2].to_string());
-    }
-
-    Ok(stats)
-}
-
-fn parse_stats_items(input: &str) -> Result<HashMap<i32, HashMap<String, String>>, ParseError> {
-    todo!()
-}
-
 
 #[cfg(test)]
 mod tests {
