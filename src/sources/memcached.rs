@@ -92,9 +92,9 @@ async fn gather(addr: &str) -> Vec<Metric> {
                     "The version of this memcached server.",
                     1,
                     tags!(
-                "version" => version,
-                "libevent" => libevent
-            ),
+                        "version" => version,
+                        "libevent" => libevent
+                    ),
                 )
             ]);
 
@@ -108,18 +108,18 @@ async fn gather(addr: &str) -> Vec<Metric> {
                         "Total number of all requests broken down by command (get, set, etc.) and status.",
                         hits,
                         tags!(
-                    "command" => op,
-                    "status" => "hit"
-                ),
+                            "command" => op,
+                            "status" => "hit"
+                        ),
                     ),
                     Metric::sum_with_tags(
                         "memcached_commands_total",
                         "Total number of all requests broken down by command (get, set, etc.) and status.",
                         misses,
                         tags!(
-                    "command" => op,
-                    "status" => "miss"
-                ),
+                            "command" => op,
+                            "status" => "miss"
+                        ),
                     )
                 ])
             }
@@ -166,9 +166,9 @@ async fn gather(addr: &str) -> Vec<Metric> {
                 "Total number of all requests broken down by command (get, set, etc.) and status.",
                 sets - cas,
                 tags!(
-            "command" => "set",
-            "status" => "hit"
-        ),
+                    "command" => "set",
+                    "status" => "hit"
+                ),
             ));
 
             metrics.extend_from_slice(&[
@@ -292,10 +292,10 @@ async fn gather(addr: &str) -> Vec<Metric> {
                         "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                         get_value!(stats, (op.to_owned() + "_hits").as_str()),
                         tags!(
-                    "slab" => slab,
-                    "command" => op,
-                    "status" => "hit"
-                ),
+                            "slab" => slab,
+                            "command" => op,
+                            "status" => "hit"
+                        ),
                     ));
                 }
 
@@ -304,10 +304,10 @@ async fn gather(addr: &str) -> Vec<Metric> {
                     "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                     get_value!(stats, "cas_badval"),
                     tags!(
-                "slab" => slab,
-                "command" => "cas",
-                "status" => "badval"
-            ),
+                        "slab" => slab,
+                        "command" => "cas",
+                        "status" => "badval"
+                    ),
                 ));
 
                 let sets = get_value!(stats, "cmd_set");
@@ -317,10 +317,10 @@ async fn gather(addr: &str) -> Vec<Metric> {
                     "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                     sets - cases,
                     tags!(
-                "slab" => slab,
-                "command" => "set",
-                "status" => "hit"
-            ),
+                        "slab" => slab,
+                        "command" => "set",
+                        "status" => "hit"
+                    ),
                 ));
 
                 metrics.extend_from_slice(&[
@@ -329,64 +329,64 @@ async fn gather(addr: &str) -> Vec<Metric> {
                         "Number of bytes allocated to each chunk within this slab class.",
                         get_value!(stats, "chunk_size"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_chunks_per_page",
                         "Number of chunks within a single page for this slab class.",
                         get_value!(stats, "chunks_per_page"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_current_pages",
                         "Number of pages allocated to this slab class.",
                         get_value!(stats, "total_pages"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_current_chunks",
                         "Number of chunks allocated to this slab class.",
                         get_value!(stats, "total_chunks"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_chunks_used",
                         "Number of chunks allocated to an item",
                         get_value!(stats, "used_chunks"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_chunks_free",
                         "Number of chunks not yet allocated items",
                         get_value!(stats, "free_chunks"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_chunks_free_end",
                         "Number of free chunks at the end of the last allocated page",
                         get_value!(stats, "free_chunks_end"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_mem_requested_bytes",
                         "Number of bytes of memory actual items take up within a slab",
                         get_value!(stats, "mem_requested"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     )
                 ]);
             }
@@ -400,52 +400,52 @@ async fn gather(addr: &str) -> Vec<Metric> {
                         "Number of items currently stored in this slab class",
                         get_value!(stats, "number"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::gauge_with_tags(
                         "memcached_slab_items_age_seconds",
                         "Number of seconds the oldest item has been in the slab class",
                         get_value!(stats, "age"),
                         tags!(
-                    "slab" => slab
-                ),
+                            "slab" => slab
+                        ),
                     ),
                     Metric::sum_with_tags(
                         "memcached_slab_lru_hits_total",
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_hot"),
                         tags!(
-                    "slab" => slab,
-                    "lru" => "hot"
-                ),
+                            "slab" => slab,
+                            "lru" => "hot"
+                        ),
                     ),
                     Metric::sum_with_tags(
                         "memcached_slab_lru_hits_total",
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_warm"),
                         tags!(
-                    "slab" => slab,
-                    "lru" => "warm"
-                ),
+                            "slab" => slab,
+                            "lru" => "warm"
+                        ),
                     ),
                     Metric::sum_with_tags(
                         "memcached_slab_lru_hits_total",
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_cold"),
                         tags!(
-                    "slab" => slab,
-                    "lru" => "cold"
-                ),
+                            "slab" => slab,
+                            "lru" => "cold"
+                        ),
                     ),
                     Metric::sum_with_tags(
                         "memcached_slab_lru_hits_total",
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_temporary"),
                         tags!(
-                    "slab" => slab,
-                    "lru" => "temporary"
-                ),
+                            "slab" => slab,
+                            "lru" => "temporary"
+                        ),
                     ),
                 ]);
 
