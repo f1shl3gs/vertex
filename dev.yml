@@ -13,6 +13,10 @@ sources:
   zookeeper:
     type: zookeeper
     endpoint: 127.0.0.1:49158
+  memcached:
+    type: memcached
+    endpoints:
+      - 127.0.0.1:11211
   redis:
     type: redis
     interval: 15s
@@ -69,4 +73,5 @@ sinks:
       - internal_metrics
       - redis
       - zookeeper
+      - memcached
     listen: 127.0.0.1:9101
