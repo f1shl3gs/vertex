@@ -839,6 +839,20 @@ mod tests {
         }
     }
 
+    async fn write_data(addr: &str, n: i32) {
+        let mut socket = TcpStream::connect(addr).await.unwrap();
+        let (mut reader, mut writer) = socket.split();
+
+        for i in 0..n {
+            let cmd = format!("set {} 0 0 5\nvalue\r\n", i + 1);
+
+            writer.write_all(cmd.as_bytes()).await.unwrap();
+
+            let mut buf = [0u8; 128];
+            reader.read(&mut buf).await.unwrap();
+        }
+    }
+
     #[tokio::test]
     async fn test_query() {
         let docker = testcontainers::clients::Cli::default();
@@ -847,14 +861,10 @@ mod tests {
         let host_port = service.get_host_port(11211).unwrap();
         let addr = format!("127.0.0.1:{}", host_port);
 
-        let resp = query(&addr, "stats\r\n").await.unwrap();
-        println!("{}", resp);
-    }
+        write_data(&addr, 1000).await;
 
-    #[tokio::test]
-    async fn test_raw_query() {
-        let addr = "127.0.0.1:11211";
-        let resp = query(addr, "stats items\r\n").await.unwrap();
-        println!("{}", resp);
+        let stats = fetch_stats(&addr, query).await.unwrap();
+
+        assert_eq!(stats.stats.get("cmd_set").unwrap(), &1000.0);
     }
 }
