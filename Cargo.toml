@@ -2,7 +2,7 @@
 name = "vertex"
 version = "0.1.0"
 authors = ["f1shl3gs"]
-edition = "2018"
+edition = "2021"
 
 exclude = [
     "testdata"
