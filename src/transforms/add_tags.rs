@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
 
-use crate::config::{TransformConfig, GlobalOptions, DataType};
+use crate::config::{TransformConfig, GlobalOptions, DataType, GenerateConfig, TransformDescription};
 use crate::transforms::{Transform, FunctionTransform};
 use event::Event;
 
@@ -90,6 +90,20 @@ impl TransformConfig for AddTagsConfig {
 
     fn transform_type(&self) -> &'static str {
         "add_tags"
+    }
+}
+
+inventory::submit! {
+    TransformDescription::new::<AddTagsConfig>("add_tags")
+}
+
+impl GenerateConfig for AddTagsConfig {
+    fn generate_config() -> String {
+        r##"
+tags:
+    foo: bar
+    key: value
+        "##.to_string()
     }
 }
 

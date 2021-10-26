@@ -109,7 +109,10 @@ fn main() {
 
     if let Some(commands) = opts.commands {
         match commands {
-            Commands::Describe(d) => d.list()
+            Commands::Sources(sources) => sources.run(),
+            Commands::Transforms(transforms) => transforms.run(),
+            Commands::Sinks(sinks) => sinks.run(),
+            _ => { unreachable!() }
         }
 
         return;
