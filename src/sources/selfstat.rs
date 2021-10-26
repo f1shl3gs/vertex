@@ -1,3 +1,15 @@
+use std::{
+    fmt::Debug,
+    io::Read,
+    time::{SystemTime, UNIX_EPOCH},
+};
+
+use serde::{Deserialize, Serialize};
+use tokio_stream::wrappers::IntervalStream;
+use futures::{StreamExt, SinkExt};
+use tokio::sync::RwLock;
+use event::{Event, tags, gauge_metric, sum_metric, Metric};
+
 use crate::{
     config::{
         SourceConfig, SourceContext, DataType,
@@ -9,16 +21,6 @@ use crate::{
     shutdown::ShutdownSignal,
     pipeline::Pipeline,
 };
-use std::{
-    fmt::Debug,
-    io::Read,
-    time::{SystemTime, UNIX_EPOCH},
-};
-use serde::{Deserialize, Serialize};
-use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt};
-use tokio::sync::RwLock;
-use event::{Event, tags, gauge_metric, sum_metric, Metric};
 
 const USER_HZ: f64 = 100.0;
 
