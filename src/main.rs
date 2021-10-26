@@ -10,7 +10,6 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
-use tokio::runtime;
 use tokio::time::Duration;
 
 extern crate chrono;
@@ -37,6 +36,9 @@ use crate::commands::Commands;
 struct Opts {
     #[clap(short, long, default_value = "/etc/vertex/vertex.conf")]
     pub config: String,
+
+    #[clap(short, long, env = "VERTEX_THREADS", about = "Specify how many threads used for the async runtime")]
+    threads: Option<usize>,
 
     #[clap(subcommand)]
     commands: Option<Commands>,
@@ -118,24 +120,29 @@ fn main() {
         return;
     }
 
-    let rt = runtime::Builder::new_multi_thread()
-        // .worker_threads(4)
+    let threads = opts.threads.unwrap_or_else(|| {
+        num_cpus::get()
+    });
+
+    let runtime = tokio::runtime::Builder::new_multi_thread()
+        .worker_threads(threads)
         .thread_name("vertex-worker")
         .enable_io()
         .enable_time()
         .build()
         .unwrap();
 
-    info!(
-        message = "start vertex",
-        config = ?opts.config
-    );
-
-    rt.block_on(async move {
+    runtime.block_on(async move {
         #[cfg(test)]
             init(true, false, "debug");
         #[cfg(not(test))]
             init(true, false, "info");
+
+        info!(
+            message = "start vertex",
+            threads = threads,
+            config = ?opts.config
+        );
 
         let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
         signal_handler.forever(signal::os_signals());
@@ -257,7 +264,7 @@ fn main() {
         }
     });
 
-    rt.shutdown_timeout(Duration::from_secs(5))
+    runtime.shutdown_timeout(Duration::from_secs(5))
 }
 
 pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {

@@ -221,3 +221,4 @@ seahash = { version = "4.1.0", default-features = false, optional = true }
 # std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
 once_cell = { version = "1.8.0" }
 inventory = { version = "0.1.10" }
+num_cpus = { version = "1.13.0" }

@@ -3702,6 +3702,7 @@ dependencies = [
  "nix 0.22.2",
  "no-proxy",
  "nom 7.0.0",
+ "num_cpus",
  "once_cell",
  "pin-project",
  "pprof",

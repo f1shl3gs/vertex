@@ -463,7 +463,7 @@ mod tests {
 
         for (want, input) in tests {
             let duration = chrono::Duration::nanoseconds(input);
-            assert_eq!(duration_to_string(duration), want)
+            assert_eq!(duration_to_string(&duration), want)
         }
     }
 }
