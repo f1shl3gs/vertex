@@ -4,6 +4,7 @@ use std::io::{BufRead, Stdout};
 use std::time::Instant;
 
 use futures::{SinkExt, StreamExt};
+use hyper::client::connect::Connect;
 use snafu::{OptionExt, ResultExt, Snafu};
 use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt};
@@ -76,13 +77,37 @@ macro_rules! get_value {
     };
 }
 
+macro_rules! get_bool_value {
+    ($map:expr, $key: expr) => {
+        match $map.get($key) {
+            None => 0.0,
+            Some(v) => {
+                if v == "yes" {
+                    1.0
+                } else {
+                    0.0
+                }
+            }
+        }
+    }
+}
+
+macro_rules! get_value_from_string {
+    ($map:expr, $key: expr) => {
+        match $map.get($key) {
+            None => 0.0,
+            Some(v) => v.parse::<f64>().unwrap_or(0.0)
+        }
+    };
+}
+
 async fn gather(addr: &str) -> Vec<Metric> {
     let mut metrics = vec![];
 
     let start = Instant::now();
     let result = fetch_stats(addr, query).await;
     let elapsed = start.elapsed().as_secs_f64();
-    let up = result.is_ok();
+    let mut up = result.is_ok();
 
     match result {
         Ok(Stats { version, libevent, stats, slabs, items }) => {
@@ -573,7 +598,83 @@ async fn gather(addr: &str) -> Vec<Metric> {
                 }
             }
         }
-        Err(ref err) => {}
+        Err(ref err) => {
+            warn!(
+                message = "Fetch stats failed",
+                addr = addr,
+                %err
+            )
+        }
+    }
+
+    let result = stats_settings(addr).await;
+    up = result.is_ok();
+    match result {
+        Ok(stats) => {
+            if let Some(v) = stats.get("maxconns") {
+                if let Ok(v) = v.parse::<f64>() {
+                    metrics.push(Metric::gauge(
+                        "memcached_max_connections",
+                        "Maximum number of clients allowed",
+                        v,
+                    ));
+                }
+            }
+
+            if let Some(value) = stats.get("lru_crawler") {
+                if value == "yes" {
+                    metrics.extend_from_slice(&[
+                        Metric::gauge(
+                            "memcached_lru_crawler_enabled",
+                            "Whether the LRU crawler is enabled",
+                            get_bool_value!(stats, "lru_crawler"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_sleep",
+                            "Microseconds to sleep between LRU crawls",
+                            get_value_from_string!(stats, "lru_crawler_sleep"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_to_crawl",
+                            "Max items to crawl per slab per run",
+                            get_value_from_string!(stats, "lru_crawler_tocrawl"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_maintainer_thread",
+                            "Split LRU mode and backgroud threads",
+                            get_bool_value!(stats, "lru_maintainer_thread"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_hot_percent",
+                            "Percent of slab memory reserved for HOT LRU",
+                            get_value_from_string!(stats, "hot_lru_pct"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_warm_percent",
+                            "Percent of slab memory reserved for WARM LRU",
+                            get_value_from_string!(stats, "warm_lru_pct"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_hot_max_factor",
+                            "Set idle age of HOT LRU to COLD age * this",
+                            get_value_from_string!(stats, "hot_max_factor"),
+                        ),
+                        Metric::gauge(
+                            "memcached_lru_crawler_warm_max_factor",
+                            "Set idle age of WARM LRU to COLD age * this",
+                            get_value_from_string!(stats, "warm_max_factor"),
+                        )
+                    ])
+                }
+            }
+        }
+        Err(ref err) => {
+            warn!(
+                message = "Fetch stats settings failed",
+                addr = addr,
+                %err
+            )
+        }
     }
 
     metrics.extend_from_slice(&[
@@ -711,7 +812,31 @@ async fn fetch_stats<'a, F, Fut>(
     Ok(stats)
 }
 
+async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
+    let mut stats = HashMap::with_capacity(80);
+    let resp: String = query(addr, "stats settings\r\n").await
+        .context(CommandExecFailed { cmd: "stats settings\r\n".to_string() })?;
+
+    let mut lines = resp.lines();
+    while let Some(line) = lines.next() {
+        if !line.starts_with(STAT_PREFIX) {
+            continue;
+        }
+
+        let parts = line.split_ascii_whitespace()
+            .collect::<Vec<_>>();
+        if parts.len() != 3 {
+            continue;
+        }
+
+        stats.insert(parts[1].to_string(), parts[2].to_string());
+    }
+
+    Ok(stats)
+}
+
 // TODO: this implement is stupid, refactor should be done as soon as possible
+#[cfg(not(test))]
 async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
     let socket = TcpStream::connect(addr).await?;
     let (mut reader, mut writer) = tokio::io::split(socket);
@@ -734,26 +859,28 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 }
 
 #[cfg(test)]
+async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
+    let path = match cmd {
+        "stats\r\n" => "testdata/memcached/stats.txt",
+        "stats slabs\r\n" => "testdata/memcached/slabs.txt",
+        "stats items\r\n" => "testdata/memcached/items.txt",
+        "stats settings\r\n" => "testdata/memcached/settings.txt",
+        _ => panic!("unknown commands")
+    };
+
+    std::fs::read_to_string(path)
+}
+
+#[cfg(test)]
 mod tests {
     use std::io::BufReader;
     use testcontainers::Docker;
-    use crate::sources::memcached::tests::memcached::Memcached;
+    use memcached::Memcached;
     use super::*;
 
-    async fn mock_query<'a>(_addr: &str, cmd: &str) -> Result<String, std::io::Error> {
-        let path = match cmd {
-            "stats\r\n" => "testdata/memcached/stats.txt",
-            "stats slabs\r\n" => "testdata/memcached/slabs.txt",
-            "stats items\r\n" => "testdata/memcached/items.txt",
-            _ => panic!("unknown commands")
-        };
-
-        std::fs::read_to_string(path)
-    }
-
     #[tokio::test]
-    async fn test_parse() {
-        let stats = fetch_stats("dummy", mock_query).await.unwrap();
+    async fn test_parse_stats() {
+        let stats = fetch_stats("dummy", query).await.unwrap();
         assert_eq!(stats.version, "1.6.12");
         assert_eq!(stats.libevent, "2.1.12-stable");
 
@@ -768,6 +895,18 @@ mod tests {
 
         assert_eq!(*stats.items.get("1").unwrap().get("mem_requested").unwrap(), 65.0);
         assert_eq!(*stats.items.get("1").unwrap().get("number").unwrap(), 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_parse_stats_settings() {
+        let stats = stats_settings("dummy").await.unwrap();
+        assert_eq!(stats.get("chunk_size").unwrap(), "48");
+        assert_eq!(stats.get("umask").unwrap(), "700");
+        assert_eq!(stats.get("binding_protocol").unwrap(), "auto-negotiate");
+        assert_eq!(stats.get("warm_max_factor").unwrap(), "2.00");
+        assert_eq!(stats.get("ssl_min_version").unwrap(), "tlsv1.2");
+        assert_eq!(stats.get("memory_file").unwrap(), "(null)");
+        assert_eq!(stats.get("stat_key_prefix").unwrap(), ":");
     }
 
     mod memcached {
