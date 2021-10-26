@@ -50,7 +50,11 @@ mod bcache;
 
 use typetag;
 use serde::{Deserialize, Serialize};
-use crate::sources::Source;
+use crate::{
+    sources::Source,
+    config::SourceDescription,
+    impl_generate_config_from_default,
+};
 use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
 use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
@@ -285,6 +289,23 @@ fn default_sys_path() -> String {
 fn default_collectors() -> Collectors {
     Collectors::default()
 }
+
+impl Default for NodeMetricsConfig {
+    fn default() -> Self {
+        Self {
+            interval: default_interval(),
+            proc_path: default_proc_path(),
+            sys_path: default_sys_path(),
+            collectors: default_collectors(),
+        }
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<NodeMetricsConfig>("node")
+}
+
+impl_generate_config_from_default!(NodeMetricsConfig);
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct NodeMetrics {

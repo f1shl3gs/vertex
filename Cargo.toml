@@ -43,7 +43,7 @@ default = [
     "sources-nginx_stub",
     "sources-haproxy",
     "sources-memcached",
-    "sources-prometheus_scrape",
+    # "sources-prometheus_scrape",
     "sources-fluentd",
     "sources-syslog",
     # transforms
@@ -206,7 +206,7 @@ regex = { version = "1.5.4" }
 hostname = { version = "0.3.1" }
 bloom = { version = "0.3.2" }
 exitcode = { version = "1.1.2" }
-clap = { version = "3.0.0-beta.4" }
+clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
@@ -220,3 +220,4 @@ pulsar = { version = "4.1.1", default-features = false, optional = true, feature
 seahash = { version = "4.1.0", default-features = false, optional = true }
 # std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
 once_cell = { version = "1.8.0" }
+inventory = { version = "0.1.10" }

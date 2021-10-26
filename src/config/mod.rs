@@ -9,6 +9,7 @@ mod validation;
 mod global;
 mod proxy;
 mod log_schema;
+mod component;
 
 // re-export
 pub use proxy::{ProxyConfig};
@@ -16,6 +17,7 @@ pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use log_schema::{log_schema, LogSchema, init_log_schema};
+pub use component::{GenerateConfig, ComponentDescription};
 
 use std::path::PathBuf;
 use async_trait::async_trait;
@@ -281,6 +283,18 @@ pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
 
     fn resources(&self) -> Vec<Resource> { Vec::new() }
 }
+
+pub type SourceDescription = ComponentDescription<Box<dyn SourceConfig>>;
+inventory::collect!(SourceDescription);
+
+pub type TransformDescription = ComponentDescription<Box<dyn TransformConfig>>;
+inventory::collect!(TransformDescription);
+
+pub type SinkDescription = ComponentDescription<Box<dyn SinkConfig>>;
+inventory::collect!(SinkDescription);
+
+pub type ExtensionDescription = ComponentDescription<Box<dyn ExtensionConfig>>;
+inventory::collect!(ExtensionDescription);
 
 #[cfg(test)]
 mod tests {

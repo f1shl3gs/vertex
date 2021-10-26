@@ -1,3 +1,5 @@
+mod commands;
+
 extern crate vertex;
 
 #[cfg(feature = "allocator-mimalloc")]
@@ -14,7 +16,7 @@ use tokio::time::Duration;
 extern crate chrono;
 extern crate chrono_tz;
 
-use clap::{AppSettings, Clap};
+use clap::{Parser};
 
 use vertex::{
     signal::{self, SignalTo},
@@ -27,15 +29,17 @@ use tokio_stream::StreamExt;
 use tracing::{info, warn, error, dispatcher::{set_global_default}, Dispatch};
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
+use vertex::config::SourceDescription;
+use crate::commands::Commands;
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap(version = "0.1.0")]
-#[clap(setting = AppSettings::ColoredHelp)]
 struct Opts {
     #[clap(short, long, default_value = "/etc/vertex/vertex.conf")]
     pub config: String,
 
-    // todo sub commands
+    #[clap(subcommand)]
+    commands: Option<Commands>,
 }
 
 fn init(color: bool, json: bool, levels: &str) {
@@ -102,6 +106,14 @@ fn init(color: bool, json: bool, levels: &str) {
 
 fn main() {
     let opts: Opts = Opts::parse();
+
+    if let Some(commands) = opts.commands {
+        match commands {
+            Commands::Describe(d) => d.list()
+        }
+
+        return;
+    }
 
     let rt = runtime::Builder::new_multi_thread()
         // .worker_threads(4)
