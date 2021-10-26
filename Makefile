@@ -1,5 +1,7 @@
 build:
 	cargo build --release
+	# striping is not enabled in stable Cargo, so here we are
+	strip target/release/vertex
 
 build-musl:
 	cargo build --release --target=x86_64-unknown-linux-musl
