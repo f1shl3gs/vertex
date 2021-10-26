@@ -38,6 +38,10 @@ mod bind;
 mod haproxy;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
+#[cfg(feature = "sources-fluentd")]
+mod fluentd;
+#[cfg(feature = "sources-syslog")]
+mod syslog;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;
