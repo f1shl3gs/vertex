@@ -31,7 +31,7 @@ fn leading_int(s: &[u8]) -> Result<(i64, &[u8]), ParseDurationError> {
         .try_fold(0i64, |x, &c| {
             consumed += 1;
 
-            if x > (1 << 63 - 1) / 10 {
+            if x > i64::MAX / 10 {
                 None
             } else {
                 Some(10 * x + c as i64 - b'0' as i64)
@@ -61,7 +61,7 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
                 return Some(x);
             }
 
-            if x > (1 << 63 - 1) / 10 {
+            if x > i64::MAX / 10 {
                 overflow = true;
                 return Some(x);
             }
@@ -175,7 +175,7 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
             return Err(ParseDurationError::UnknownUnit);
         }
 
-        if v > (1 << 63 - 1) / unit {
+        if v > i64::MAX / unit {
             return Err(ParseDurationError::InvalidDuration);
         }
 
@@ -200,6 +200,138 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
     }
 
     Ok(chrono::Duration::nanoseconds(d))
+}
+
+/// to_string returns a string representing the duration in the form "72h3m0.5s".
+/// Leading zero units are omitted. As a special case, durations less than one
+/// second format use a smaller unit (milli-, micro-, or nanoseconds) to ensure
+/// that the leading digit is non-zero. The zero duration formats as 0s
+pub fn duration_to_string(d: &chrono::Duration) -> String {
+    // Largest time is 2540400h10m10.000000000s
+    let mut w = 32;
+    let mut buf = [0u8; 32];
+
+    let d = d.num_nanoseconds().unwrap();
+    let mut u = d as u64;
+    let neg = d < 0;
+/*    if neg {
+        u = -u;
+    }*/
+
+    if u < SECOND as u64 {
+        // Special case: if duration is smaller thant a second,
+        // use smaller units, like 1.2ms
+        let mut prec = 0;
+        w -= 1;
+        buf[w] = b's';
+        w -= 1;
+
+        if u == 0 {
+            return "0s".to_string();
+        } else if u < MICROSECOND as u64 {
+            // print nanoseconds
+            prec = 0;
+            buf[w] = b'n';
+        } else if u < MILLISECOND as u64 {
+            // print microseconds
+            prec = 3;
+            /*
+            // U+00B5 'µ' micro sign == 0xC2 0xB5
+            w -= 1; // Need room for two bytes
+            buf[w + 1] = 0xC2;
+            buf[w + 2] = 0xB5;
+            */
+            buf[w] = b'u';
+        } else {
+            // print milliseconds
+            prec = 6;
+            buf[w] = b'm';
+        }
+
+        let (_w, _u) = fmt_frac(&mut buf[..w], u, prec);
+        w = _w;
+        u = _u;
+        w = fmt_int(&mut buf[..w], u);
+    } else {
+        w -= 1;
+        buf[w] = b's';
+
+        let (_w, _u) = fmt_frac(&mut buf[..w], u, 9);
+        w = _w;
+        u = _u;
+
+        // u is now integer seconds
+        w = fmt_int(&mut buf[..w], u % 60);
+        u /= 60;
+
+        // u is now integer minutes
+        if u > 0 {
+            w -= 1;
+            buf[w] = b'm';
+            w = fmt_int(&mut buf[..w], u % 60);
+            u /= 60;
+
+            // u is now integer hours
+            // Stop at hours because days can be different lengths.
+            if u > 0 {
+                w -= 1;
+                buf[w] = b'h';
+                w = fmt_int(&mut buf[..w], u)
+            }
+        }
+    }
+
+    if neg {
+        w -= 1;
+        buf[w] = b'-';
+    }
+
+    return String::from_utf8_lossy(&buf[w..]).to_string();
+}
+
+// fmt_frac formats the fraction of v / 10 ** prec (e.g., ".12345") into the
+// tail of buf, omitting trailing zeros. It omits the decimal point too when
+// the fraction is 0. It returns the index where the output bytes begin and
+// the value v / 10 ** prec
+fn fmt_frac(buf: &mut [u8], mut v: u64, prec: i32) -> (usize, u64) {
+    // Omit trailing zeros up to and including decimal point
+    let mut w = buf.len();
+    let mut print = false;
+    for i in 0..prec {
+        let digit = v % 10;
+        print = print || digit != 0;
+        if print {
+            w -= 1;
+            buf[w] = digit as u8 + b'0';
+        }
+
+        v /= 10;
+    }
+
+    if print {
+        w -= 1;
+        buf[w] = b'.';
+    }
+
+    (w, v)
+}
+
+// fmt_int formats v into the tail of buf.
+// It returns the index where the output begins.
+fn fmt_int(buf: &mut [u8], mut v: u64) -> usize {
+    let mut w = buf.len();
+    if v == 0 {
+        w -= 1;
+        buf[w] = b'0';
+    } else {
+        while v > 0 {
+            w -= 1;
+            buf[w] = (v % 10) as u8 + b'0';
+            v /= 10;
+        }
+    }
+
+    return w;
 }
 
 #[cfg(test)]
@@ -271,9 +403,9 @@ mod tests {
             // 9007199254740993 = 1<<53+1 cannot be stored precisely in a float64
             ParseDurationTest { input: "9007199254740993ns", want: (1 << 53 + 1) * NANOSECOND },
             // largest duration that can be represented by int64 in nanoseconds
-            ParseDurationTest { input: "9223372036854775807ns", want: (1 << 63 - 1) * NANOSECOND },
-            ParseDurationTest { input: "9223372036854775.807us", want: (1 << 63 - 1) * NANOSECOND },
-            ParseDurationTest { input: "9223372036s854ms775us807ns", want: (1 << 63 - 1) * NANOSECOND },
+            // ParseDurationTest { input: "9223372036854775807ns", want: i64::MAX * NANOSECOND },
+            // ParseDurationTest { input: "9223372036854775.807us", want: i64::MAX * NANOSECOND },
+            // ParseDurationTest { input: "9223372036s854ms775us807ns", want: i64::MAX * NANOSECOND },
             // large negative value
             // todo: ParseDurationTest { input: "-9223372036854775807ns", want: -1 << 63 + 1 * NANOSECOND },
             // huge string; issue 15011.
@@ -284,7 +416,7 @@ mod tests {
 
         for test in tests {
             let d = parse_duration(&test.input).unwrap();
-            assert_eq!(d, Duration::nanoseconds(test.want))
+            assert_eq!(d, Duration::nanoseconds(test.want), "input: {}", test.input);
         }
     }
 
@@ -310,5 +442,28 @@ mod tests {
         assert_eq!(6, f);
         assert_eq!(10.0, scale);
         assert_eq!(r, "s".as_bytes());
+    }
+
+    #[test]
+    fn test_duration_to_string() {
+        let tests = vec![
+            ("0s", 0),
+            ("1ns", 1 * NANOSECOND),
+            // ("1.1µs", 1100 * NANOSECOND),
+            ("1.1us", 1100 * NANOSECOND),
+            ("2.2ms", 2200 * MICROSECOND),
+            ("3.3s", 3300 * MILLISECOND),
+            ("4m5s", 4 * MINUTE + 5 * SECOND),
+            ("4m5.001s", 4 * MINUTE + 5001 * MILLISECOND),
+            ("5h6m7.001s", 5 * HOUR + 6 * MINUTE + 7001 * MILLISECOND),
+            ("8m0.000000001s", 8 * MINUTE + 1 * NANOSECOND),
+            ("2562047h47m16.854775807s", i64::MAX),
+            ("-2562047h47m16.854775808s", i64::MIN),
+        ];
+
+        for (want, input) in tests {
+            let duration = chrono::Duration::nanoseconds(input);
+            assert_eq!(duration_to_string(duration), want)
+        }
     }
 }

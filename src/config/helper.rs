@@ -3,7 +3,7 @@ use serde::{Deserializer, Serializer};
 use regex::Regex;
 use tokio_stream::wrappers::IntervalStream;
 
-use crate::duration::parse_duration;
+use crate::duration::{duration_to_string, parse_duration};
 
 pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Result<chrono::Duration, D::Error> {
     let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
@@ -11,7 +11,8 @@ pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Resul
 }
 
 pub fn serialize_duration<S: Serializer>(_d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
-    s.serialize_str("1m")
+    let d = duration_to_string(_d);
+    s.serialize_str(&d)
 }
 
 pub fn deserialize_regex<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Regex, D::Error> {
