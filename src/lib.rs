@@ -22,6 +22,9 @@ pub use signal::{SignalHandler};
 extern crate bloom;
 
 #[macro_use]
+extern crate lazy_static;
+
+#[macro_use]
 extern crate tracing;
 
 #[macro_use]
@@ -111,10 +114,10 @@ pub mod built_info {
 
 pub fn get_version() -> String {
     #[cfg(feature = "nightly")]
-    let version = format!("{}-nightly", built_info::PKG_VERSION);
+        let version = format!("{}-nightly", built_info::PKG_VERSION);
 
     #[cfg(not(feature = "nightly"))]
-    let version = format!("{}-nightly", built_info::PKG_VERSION);
+        let version = format!("{}-nightly", built_info::PKG_VERSION);
 
     version
 }

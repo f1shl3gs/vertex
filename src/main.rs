@@ -152,9 +152,9 @@ fn main() {
             .unwrap();
 
         // TODO: how to set this when reload
-        let log_schema = config.global.log_schema.clone();
-        config::init_log_schema(|| {
-            Ok(log_schema)
+        let schema = config.global.log_schema.clone();
+        log_schema::init_log_schema(|| {
+            Ok(schema)
         }, true);
 
         let diff = config::ConfigDiff::initial(&config);

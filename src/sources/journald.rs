@@ -8,33 +8,33 @@ use std::{io, path::PathBuf, cmp, time::Duration};
 use std::io::SeekFrom;
 use std::path::Path;
 use std::process::Stdio;
+
 use serde::{Deserialize, Serialize};
-use crate::config::{DataType, SourceConfig, SourceContext};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
+use log_schema::log_schema;
+use bytes::{BytesMut, Buf};
+use chrono::TimeZone;
+use event::{Event, Value};
+use tokio_util::codec::{Decoder, FramedRead};
 use tokio::{
     process::Command,
     time::sleep,
 };
-
-use tokio_util::codec::{Decoder, FramedRead};
-use bytes::{BytesMut, Buf};
-use chrono::TimeZone;
 use futures::{
     SinkExt,
     StreamExt,
     stream::BoxStream,
 };
-use event::{Event, Value};
-use lazy_static::lazy_static;
-
 use nix::{
     sys::signal::{kill, Signal},
     unistd::Pid,
 };
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
+
+use crate::config::{DataType, SourceConfig, SourceContext};
+use crate::pipeline::Pipeline;
+use crate::shutdown::ShutdownSignal;
+use crate::sources::Source;
 
 const DEFAULT_BATCH_SIZE: usize = 16;
 const CHECKPOINT_FILENAME: &str = "checkpoint.txt";
@@ -309,8 +309,6 @@ impl JournaldSource {
         }
     }
 }
-
-use crate::config::log_schema;
 
 fn create_event(entry: BTreeMap<String, Value>) -> Event {
     let mut log: event::LogRecord = entry.into();

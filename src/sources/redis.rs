@@ -9,7 +9,6 @@ use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration,
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use lazy_static::lazy_static;
 
 lazy_static!(
     static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {

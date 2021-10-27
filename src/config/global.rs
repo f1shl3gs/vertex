@@ -1,9 +1,12 @@
 use std::fs::DirBuilder;
 use std::path::PathBuf;
+
 use snafu::{ResultExt, Snafu};
-use crate::timezone;
 use serde::{Deserialize, Serialize};
-use crate::config::{LogSchema, ProxyConfig, skip_serializing_if_default};
+use log_schema::LogSchema;
+
+use crate::config::{ProxyConfig, skip_serializing_if_default};
+use crate::timezone;
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {
@@ -40,7 +43,7 @@ pub struct GlobalOptions {
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub proxy: ProxyConfig,
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
-    pub log_schema: LogSchema
+    pub log_schema: LogSchema,
 }
 
 pub fn default_data_dir() -> PathBuf {

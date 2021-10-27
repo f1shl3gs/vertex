@@ -2,7 +2,6 @@
 
 use std::path::Path;
 
-use lazy_static::lazy_static;
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take_while};
 use nom::character::complete::{digit1, multispace0};

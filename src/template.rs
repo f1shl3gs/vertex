@@ -6,13 +6,11 @@ use bytes::Bytes;
 use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
 use snafu::Snafu;
-use lazy_static::lazy_static;
 use regex::{Captures, Regex};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use event::{EventRef, Metric, Value};
-
-use crate::config::log_schema;
+use log_schema::log_schema;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap();

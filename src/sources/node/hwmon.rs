@@ -2,7 +2,6 @@ use event::{tags, sum_metric, gauge_metric, Metric};
 use std::path::{Path};
 use super::{Error, ErrorContext, read_to_string};
 use std::collections::BTreeMap;
-use lazy_static::lazy_static;
 use regex::Regex;
 
 

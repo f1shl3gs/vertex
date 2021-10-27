@@ -8,7 +8,6 @@ mod resource;
 mod validation;
 mod global;
 mod proxy;
-mod log_schema;
 mod component;
 
 // re-export
@@ -16,7 +15,6 @@ pub use proxy::{ProxyConfig};
 pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
-pub use log_schema::*;
 pub use component::{GenerateConfig, ComponentDescription, ExampleError};
 
 use std::path::PathBuf;
