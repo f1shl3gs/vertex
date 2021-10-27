@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
-use event::{tags, Metric, unixnano};
+use event::{tags, Metric};
 use snafu::Snafu;
 use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration, default_interval};
 use crate::pipeline::Pipeline;
@@ -332,10 +332,10 @@ impl RedisSource {
                 }
             };
 
-            let timestamp = unixnano();
+            let timestamp = chrono::Utc::now();
             let mut stream = futures::stream::iter(metrics)
                 .map(|mut m| {
-                    m.timestamp = timestamp;
+                    m.timestamp = Some(timestamp);
                     m.tags.insert("instance".to_string(), self.url.to_owned());
                     if let Some(ref namespace) = self.namespace {
                         m.name = format!("{}_{}", namespace, m.name)

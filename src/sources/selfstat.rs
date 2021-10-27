@@ -1,7 +1,6 @@
 use std::{
     fmt::Debug,
     io::Read,
-    time::{SystemTime, UNIX_EPOCH},
 };
 
 use serde::{Deserialize, Serialize};
@@ -78,8 +77,7 @@ impl SelfStat {
         while ticker.next().await.is_some() {
             match gather().await {
                 Ok(metrics) => {
-                    let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-                    let now = now.as_millis() as i64;
+                    let now = Some(chrono::Utc::now());
 
                     let mut stream = futures::stream::iter(metrics)
                         .map(|mut m| {

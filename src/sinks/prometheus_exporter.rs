@@ -273,16 +273,20 @@ impl StreamSink for PrometheusExporter {
 
             let mut metrics = self.metrics.write().unwrap();
             let entry = match metric.timestamp {
-                0 => {
+                None => {
                     let now = Utc::now().timestamp();
                     ExpiringEntry {
                         metric,
                         expired_at: now + expiration,
                     }
                 }
-                ts => ExpiringEntry {
-                    metric,
-                    expired_at: ts + expiration,
+                Some(timestamp) => {
+                    let ts = timestamp.timestamp();
+
+                    ExpiringEntry {
+                        metric,
+                        expired_at: ts + expiration,
+                    }
                 }
             };
 
@@ -306,7 +310,7 @@ mod tests {
             description: None,
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge(0.1),
         };
         let mut m2 = m1.clone();

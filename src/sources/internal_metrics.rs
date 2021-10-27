@@ -1,15 +1,15 @@
-use std::time::{SystemTime, UNIX_EPOCH};
 use serde::{Deserialize, Serialize};
 use futures::{SinkExt, StreamExt};
 use tokio_stream::wrappers::IntervalStream;
 use event::Event;
+use internal::metric::{init_global, get_global, InternalRecorder};
+
 use crate::{
     config::{DataType, deserialize_duration, serialize_duration, SourceConfig, SourceContext},
     shutdown::ShutdownSignal,
     sources::Source,
+    pipeline::Pipeline,
 };
-use internal::metric::{init_global, get_global, InternalRecorder};
-use crate::pipeline::Pipeline;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -52,16 +52,13 @@ async fn run(
     let mut ticker = IntervalStream::new(interval)
         .take_until(shutdown);
 
-    while let Some(now) = ticker.next().await {
-        let ts = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos() as i64;
+    while let Some(_) = ticker.next().await {
+        let timestamp = Some(chrono::Utc::now());
         let metrics = recorder.capture_metrics();
 
         let mut stream = futures::stream::iter(metrics)
             .map(|mut m| {
-                m.timestamp = ts;
+                m.timestamp = timestamp;
                 Event::Metric(m)
             })
             .map(Ok);

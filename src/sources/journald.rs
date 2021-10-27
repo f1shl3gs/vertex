@@ -312,7 +312,7 @@ impl JournaldSource {
 
 use crate::config::log_schema;
 
-fn create_event(mut entry: BTreeMap<String, Value>) -> Event {
+fn create_event(entry: BTreeMap<String, Value>) -> Event {
     let mut log: event::LogRecord = entry.into();
 
     // Convert some journald-specific field names into LogSchema's

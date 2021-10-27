@@ -1,5 +1,5 @@
 use clap::Parser;
-use vertex::config::{ExampleError, SinkDescription, SourceDescription, TransformDescription};
+use vertex::config::{SinkDescription, SourceDescription, TransformDescription};
 
 #[derive(Debug, Parser)]
 pub enum Commands {

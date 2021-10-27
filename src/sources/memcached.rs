@@ -1,13 +1,11 @@
 use std::collections::HashMap;
 use std::future::Future;
-use std::io::{BufRead, Stdout};
 use std::time::Instant;
 
 use futures::{SinkExt, StreamExt};
-use hyper::client::connect::Connect;
-use snafu::{OptionExt, ResultExt, Snafu};
+use snafu::{ResultExt, Snafu};
 use serde::{Deserialize, Serialize};
-use tokio::io::{AsyncBufReadExt, AsyncReadExt, AsyncWriteExt};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use event::{Event, Metric, tags};
 
@@ -780,7 +778,7 @@ async fn fetch_stats<'a, F, Fut>(
 
                 2 => {
                     // Slab stats
-                    let mut slab = match stats.slabs.get_mut(subs[0]) {
+                    let slab = match stats.slabs.get_mut(subs[0]) {
                         Some(slab) => slab,
                         None => {
                             stats.slabs.insert(subs[0].to_string(), Default::default());
@@ -793,7 +791,7 @@ async fn fetch_stats<'a, F, Fut>(
 
                 3 => {
                     // Slab item stats
-                    let mut item = match stats.items.get_mut(subs[1]) {
+                    let item = match stats.items.get_mut(subs[1]) {
                         Some(item) => item,
                         None => {
                             stats.items.insert(subs[1].to_string(), Default::default());
@@ -873,7 +871,6 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::io::BufReader;
     use testcontainers::Docker;
     use memcached::Memcached;
     use super::*;

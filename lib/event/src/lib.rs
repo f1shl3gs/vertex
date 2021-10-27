@@ -4,11 +4,13 @@ mod trace;
 mod value;
 mod macros;
 
-use std::collections::BTreeMap;
-use std::time::{SystemTime, UNIX_EPOCH};
+// re-export
 pub use metric::*;
 pub use log::LogRecord;
 pub use value::Value;
+
+use std::collections::BTreeMap;
+
 use buffers::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
@@ -174,8 +176,38 @@ impl From<String> for Event {
     }
 }
 
-pub fn unixnano() -> i64 {
-    let now = SystemTime::now();
-    let d = now.duration_since(UNIX_EPOCH).unwrap();
-    d.as_nanos() as i64
+impl From<&str> for Event {
+    fn from(s: &str) -> Self {
+        let log = LogRecord::from(s);
+        Self::Log(log)
+    }
+}
+
+/// A wrapper for references to inner event types, where reconstituting
+/// a full `Event` from a `LogEvent` or `Metric` might be inconvenient.
+#[derive(Clone, Copy, Debug)]
+pub enum EventRef<'a> {
+    Log(&'a LogRecord),
+    Metric(&'a Metric),
+}
+
+impl<'a> From<&'a Event> for EventRef<'a> {
+    fn from(event: &'a Event) -> Self {
+        match event {
+            Event::Log(log) => log.into(),
+            Event::Metric(metric) => metric.into(),
+        }
+    }
+}
+
+impl<'a> From<&'a LogRecord> for EventRef<'a> {
+    fn from(log: &'a LogRecord) -> Self {
+        Self::Log(log)
+    }
+}
+
+impl<'a> From<&'a Metric> for EventRef<'a> {
+    fn from(metric: &'a Metric) -> Self {
+        Self::Metric(metric)
+    }
 }

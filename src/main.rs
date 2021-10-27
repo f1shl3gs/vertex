@@ -28,7 +28,6 @@ use tokio_stream::StreamExt;
 use tracing::{info, warn, error, dispatcher::{set_global_default}, Dispatch};
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
-use vertex::config::SourceDescription;
 use crate::commands::Commands;
 
 #[derive(Parser, Debug)]

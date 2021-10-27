@@ -59,7 +59,7 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
         description: None,
         tags,
         unit: None,
-        timestamp: 0,
+        timestamp: None,
         value,
     }
 }

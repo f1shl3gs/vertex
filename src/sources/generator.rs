@@ -27,14 +27,15 @@ impl GeneratorConfig {
         let mut ticker = IntervalStream::new(interval)
             .take_until(shutdown);
 
-        while let Some(now) = ticker.next().await {
+        while let Some(_) = ticker.next().await {
+            let now = Some(chrono::Utc::now());
             let event = Event::Metric(
                 Metric {
                     name: "ge".into(),
                     description: None,
                     tags: Default::default(),
                     unit: None,
-                    timestamp: now.elapsed().as_secs() as i64,
+                    timestamp: now,
                     value: MetricValue::Gauge(6.0),
                 }
             );

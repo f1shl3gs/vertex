@@ -28,7 +28,7 @@ macro_rules! state_metric {
                 "cpu" => $cpu
             ),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge($value)
         }
     };

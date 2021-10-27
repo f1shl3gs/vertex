@@ -2,7 +2,7 @@
 
 use std::collections::BTreeMap;
 use futures::{SinkExt, StreamExt};
-use event::{tags, Metric, unixnano};
+use event::{tags, Metric};
 use crate::Error;
 use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
@@ -91,10 +91,10 @@ impl ZookeeperSource {
                         ).into());
                     }
 
-                    let timestamp = unixnano();
+                    let now = chrono::Utc::now();
                     let mut stream = futures::stream::iter(metrics)
                         .map(|mut m| {
-                            m.timestamp = timestamp;
+                            m.timestamp = Some(now);
                             Ok(m.into())
                         });
                     output.send_all(&mut stream).await;
@@ -138,7 +138,7 @@ impl SourceConfig for ZookeeperConfig {
 }
 
 fn parse_version(input: &str) -> String {
-    let mut input = input.strip_prefix("zk_version").unwrap();
+    let input = input.strip_prefix("zk_version").unwrap();
     let version = input.trim_start()
         .split(',')
         .nth(0)

@@ -41,7 +41,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "device" => device,
             ),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge(count as f64),
         })
     }

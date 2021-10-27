@@ -16,7 +16,7 @@ pub use proxy::{ProxyConfig};
 pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
-pub use log_schema::{log_schema, LogSchema, init_log_schema};
+pub use log_schema::*;
 pub use component::{GenerateConfig, ComponentDescription, ExampleError};
 
 use std::path::PathBuf;

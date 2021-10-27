@@ -15,6 +15,7 @@ mod app;
 mod extensions;
 mod error;
 mod http;
+mod template;
 
 pub use signal::{SignalHandler};
 

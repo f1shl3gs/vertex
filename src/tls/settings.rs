@@ -117,7 +117,7 @@ impl TLSSettings {
         };
 
         // Do not use client certificate authentication
-        let mut server_config = rustls::ServerConfig::builder()
+        let server_config = rustls::ServerConfig::builder()
             .with_safe_default_cipher_suites()
             .with_safe_default_kx_groups()
             .with_safe_default_protocol_versions()
@@ -182,7 +182,7 @@ impl MaybeTLSSettings {
     }
 
     pub fn client_config(&self) -> Result<ClientConfig, TLSError> {
-        let mut root_store = RootCertStore::empty();
+        let root_store = RootCertStore::empty();
         // TODO: handle root_store properly
 
         let mut conf = rustls::ClientConfig::builder()

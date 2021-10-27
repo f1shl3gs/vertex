@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use crate::ByteSizeOf;
 
@@ -78,8 +79,7 @@ pub struct Metric {
 
     pub unit: Option<String>,
 
-    /// Nanoseconds
-    pub timestamp: i64,
+    pub timestamp: Option<DateTime<Utc>>,
 
     pub value: MetricValue,
 }
@@ -106,7 +106,7 @@ impl Metric {
             description: Some(desc.into()),
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge(v.into()),
         }
     }
@@ -122,7 +122,7 @@ impl Metric {
             description: Some(desc.into()),
             tags,
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge(value.into()),
         }
     }
@@ -138,7 +138,7 @@ impl Metric {
             description: Some(desc.into()),
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Sum(v.into()),
         }
     }
@@ -154,9 +154,31 @@ impl Metric {
             description: Some(desc.into()),
             tags,
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Sum(value.into()),
         }
+    }
+
+    #[inline]
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    #[inline]
+    pub fn timestamp(&self) -> Option<DateTime<Utc>> {
+        self.timestamp
+    }
+
+    #[inline]
+    pub fn with_timestamp(mut self, ts: Option<DateTime<Utc>>) -> Self {
+        self.timestamp = ts;
+        self
+    }
+
+    #[inline]
+    pub fn with_tags(mut self, tags: BTreeMap<String, String>) -> Self {
+        self.tags = tags;
+        self
     }
 }
 

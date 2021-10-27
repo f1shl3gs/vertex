@@ -48,38 +48,35 @@ mod network_route;
 mod wifi;
 mod bcache;
 
+use std::io::Read;
+use std::str::FromStr;
+use std::{
+    sync::Arc,
+    path::Path,
+};
+
 use typetag;
 use serde::{Deserialize, Serialize};
+use tokio_stream::wrappers::IntervalStream;
+use futures::{StreamExt, SinkExt};
+use event::{Event, tags, Metric};
+
+use self::netdev::NetdevConfig;
+use self::vmstat::VMStatConfig;
+use self::netclass::NetClassConfig;
+use self::netstat::NetstatConfig;
+use self::ipvs::IPVSConfig;
+use self::cpu::CPUConfig;
+use self::diskstats::DiskStatsConfig;
+use self::errors::{Error, ErrorContext};
+use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
+use crate::shutdown::ShutdownSignal;
+use crate::pipeline::Pipeline;
 use crate::{
     sources::Source,
     config::SourceDescription,
     impl_generate_config_from_default,
 };
-use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
-use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt};
-use crate::shutdown::ShutdownSignal;
-use crate::pipeline::Pipeline;
-use event::Event;
-use std::{
-    sync::Arc,
-    time::{SystemTime, UNIX_EPOCH},
-    path::Path,
-};
-
-use cpu::CPUConfig;
-use diskstats::DiskStatsConfig;
-use crate::sources::node::errors::{
-    Error, ErrorContext,
-};
-use std::str::FromStr;
-use crate::sources::node::netdev::NetdevConfig;
-use crate::sources::node::vmstat::VMStatConfig;
-use crate::sources::node::netclass::NetClassConfig;
-use crate::sources::node::netstat::NetstatConfig;
-use crate::sources::node::ipvs::IPVSConfig;
-use std::io::Read;
-use event::{tags, Metric};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -727,12 +724,11 @@ impl NodeMetrics {
                     metrics
                 });
 
-            let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
-            let now = now.as_millis() as i64;
+            let now = chrono::Utc::now();
 
             let mut stream = futures::stream::iter(metrics)
                 .map(|mut m| {
-                    m.timestamp = now;
+                    m.timestamp = Some(now);
                     Event::Metric(m)
                 })
                 .map(Ok);

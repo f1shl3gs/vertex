@@ -51,6 +51,13 @@ impl Value {
         }
     }
 
+    pub fn as_timestamp(&self) -> Option<&DateTime<Utc>> {
+        match &self {
+            Value::Timestamp(ts) => Some(ts),
+            _ => None
+        }
+    }
+
     /// Merges `other` value into self.
     ///
     /// Will concatenate `Bytes` and overwrite the rest value kinds

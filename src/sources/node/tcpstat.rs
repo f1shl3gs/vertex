@@ -41,7 +41,7 @@ macro_rules! state_metric {
                 "state" => $name
             ),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge($value as f64)
         }
     };

@@ -4,12 +4,16 @@ mod get;
 mod path_iter;
 mod remove;
 
-use serde::{Deserialize};
-use crate::{ByteSizeOf, Value};
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize)]
+use serde::{Deserialize};
+use bytes::Bytes;
+use chrono::Utc;
+
+use crate::{ByteSizeOf, Value};
+
+#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize)]
 pub struct LogRecord {
     // time_unix_nano is the time when the event occurred
     pub time_unix_nano: u64,
@@ -26,6 +30,30 @@ impl From<BTreeMap<String, Value>> for LogRecord {
             tags: Default::default(),
             fields,
         }
+    }
+}
+
+impl From<&str> for LogRecord {
+    fn from(s: &str) -> Self {
+        s.to_owned().into()
+    }
+}
+
+impl From<String> for LogRecord {
+    fn from(s: String) -> Self {
+        Bytes::from(s).into()
+    }
+}
+
+impl From<Bytes> for LogRecord {
+    fn from(bs: Bytes) -> Self {
+        let mut log = LogRecord::default();
+
+        // TODO: log schema should be used here
+        log.insert_field("message", bs);
+        log.insert_field("timestamp", Utc::now());
+
+        log
     }
 }
 

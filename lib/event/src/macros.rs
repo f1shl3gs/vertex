@@ -38,7 +38,7 @@ macro_rules! gauge_metric {
                 $($k => $v,)*
             ),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: event::MetricValue::Gauge($value)
         }
     };
@@ -48,7 +48,7 @@ macro_rules! gauge_metric {
             description: Some($desc.into()),
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: event::MetricValue::Gauge($value)
         }
     };
@@ -64,7 +64,7 @@ macro_rules! sum_metric {
                 $($k => $v,)*
             ),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: event::MetricValue::Sum($value.into())
         }
     };
@@ -75,7 +75,7 @@ macro_rules! sum_metric {
             description: Some($desc.into()),
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: event::MetricValue::Sum($value)
         }
     };

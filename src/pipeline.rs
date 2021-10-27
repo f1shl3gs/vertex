@@ -249,7 +249,7 @@ mod tests {
             description: None,
             tags: Default::default(),
             unit: None,
-            timestamp: 0,
+            timestamp: None,
             value: MetricValue::Gauge(0.1),
         });
 
