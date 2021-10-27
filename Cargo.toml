@@ -21,7 +21,8 @@ members = [
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
-    "lib/tail"
+    "lib/tail",
+    "lib/log_schema"
 ]
 
 [features]
@@ -138,6 +139,7 @@ buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
 internal = { path = "lib/internal" }
 prometheus = { path = "lib/prometheus" }
+log_schema = { path = "lib/log_schema" }
 
 # Allocation
 mimalloc = { version = "0.1.26", default-features = false, optional = true }
@@ -218,7 +220,5 @@ snafu = { version = "0.6.10" }
 redis = { version = "0.21.0", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 seahash = { version = "4.1.0", default-features = false, optional = true }
-# std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
-once_cell = { version = "1.8.0" }
 inventory = { version = "0.1.10" }
 num_cpus = { version = "1.13.0" }

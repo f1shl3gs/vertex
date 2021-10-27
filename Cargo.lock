@@ -1532,6 +1532,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "log_schema"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "once_cell",
+ "serde",
+]
+
+[[package]]
 name = "lz4"
 version = "1.23.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3696,6 +3705,7 @@ dependencies = [
  "lazy_static",
  "libc",
  "listenfd",
+ "log_schema",
  "mimalloc",
  "netlink-packet-sock-diag",
  "netlink-sys",
@@ -3703,7 +3713,6 @@ dependencies = [
  "no-proxy",
  "nom 7.0.0",
  "num_cpus",
- "once_cell",
  "pin-project",
  "pprof",
  "prometheus",
