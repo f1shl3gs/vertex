@@ -45,6 +45,7 @@ default = [
     "sources-haproxy",
     "sources-memcached",
     # "sources-prometheus_scrape",
+    "sources-tail",
     "sources-fluentd",
     "sources-syslog",
     # transforms
@@ -92,6 +93,7 @@ sources-haproxy = []
 sources-memcached = []
 sources-fluentd = []
 sources-syslog = []
+sources-tail = []
 
 # transforms
 transforms-add_tags = []

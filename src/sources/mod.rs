@@ -42,6 +42,8 @@ mod memcached;
 mod fluentd;
 #[cfg(feature = "sources-syslog")]
 mod syslog;
+#[cfg(feature = "sources-tail")]
+mod tail;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;
