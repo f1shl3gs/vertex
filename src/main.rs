@@ -113,7 +113,7 @@ fn main() {
             Commands::Sources(sources) => sources.run(),
             Commands::Transforms(transforms) => transforms.run(),
             Commands::Sinks(sinks) => sinks.run(),
-            _ => { unreachable!() }
+            Commands::Extensions => { },
         }
 
         return;

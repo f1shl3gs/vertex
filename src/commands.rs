@@ -6,7 +6,7 @@ pub enum Commands {
     Sources(Sources),
     Transforms(Transforms),
     Sinks(Sinks),
-    Extension,
+    Extensions,
 }
 
 #[derive(Debug, Parser)]
