@@ -1,6 +1,7 @@
+use std::process::ExitStatus;
 use assert_cmd::Command;
 
-fn run_command(args: Vec<&str>) -> Vec<u8> {
+fn run_command(args: Vec<&str>) -> (Vec<u8>, ExitStatus) {
     let mut cmd = Command::cargo_bin("vertex")
         .unwrap();
     for arg in args {
@@ -10,7 +11,7 @@ fn run_command(args: Vec<&str>) -> Vec<u8> {
     let output = cmd.output()
         .expect("Failed to execute process");
 
-    output.stdout
+    (output.stdout, output.status)
 }
 
 fn assert_no_log_lines(output: Vec<u8>) {
@@ -29,14 +30,16 @@ fn assert_no_log_lines(output: Vec<u8>) {
 #[test]
 fn clean_output() {
     let tests = vec![
-        vec!["sources"],
-        vec!["transforms"],
-        vec!["sinks"],
-        vec!["something_not_exist"]
+        (vec!["sources"], true),
+        (vec!["transforms"], true),
+        (vec!["sinks"], true),
+        (vec!["extensions"], true),
+        (vec!["something_not_exist"], false),
     ];
 
-    for args in tests {
-        let output = run_command(args);
+    for (args, want) in tests {
+        let (output, status) = run_command(args.clone());
         assert_no_log_lines(output);
+        assert_eq!(status.success(), want, "args: {:?}", args)
     }
 }
