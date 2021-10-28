@@ -63,7 +63,7 @@ impl MaybeTLSIncomingStream<TcpStream> {
                 StreamState::Accepting(fut) => {
                     match futures::ready!(fut.as_mut().poll(cx)) {
                         Ok(stream) => {
-                            this.state = StreamState::Accepted(MaybeTLSStream::TLS(stream));
+                            this.state = StreamState::Accepted(MaybeTLSStream::Tls(stream));
                             continue;
                         }
 
@@ -115,7 +115,7 @@ impl AsyncWrite for MaybeTLSIncomingStream<TcpStream> {
             StreamState::Accepting(fut) => {
                 match futures::ready!(fut.as_mut().poll(cx)) {
                     Ok(stream) => {
-                        this.state = StreamState::Accepted(MaybeTLSStream::TLS(stream));
+                        this.state = StreamState::Accepted(MaybeTLSStream::Tls(stream));
                         Poll::Pending
                     },
                     Err(err) => {

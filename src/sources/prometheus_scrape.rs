@@ -1,10 +1,11 @@
-use std::time::Instant;
+use chrono::{DateTime, TimeZone, Utc};
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt, TryStreamExt};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
-use tokio_stream::wrappers::IntervalStream;
+use event::{Event, Metric};
+use prometheus::{MetricGroup, GroupKind};
 
-use crate::http::{Auth, HTTPClient};
+use crate::http::{Auth, HttpClient};
 use crate::tls::{TLSConfig, TLSSettings};
 use crate::config::{serialize_duration, deserialize_duration, default_interval, default_false, SourceConfig, SourceContext, DataType, ticker_from_duration, ProxyConfig};
 use crate::pipeline::Pipeline;
@@ -88,15 +89,6 @@ fn scrape(
             .map(move |_| futures::stream::iter(urls.clone()))
             .flatten()
             .map(move |url| {
-                let client = HTTPClient::new(tls, &proxy)
-                    .expect("Building HTTP client failed");
-                let mut req = http::Request::get(&url)
-                    .body(hyper::body::Body::empty())
-                    .expect("error creating request");
-                if let Some(auth) = &auth {
-                    auth.apply(&mut req);
-                }
-
                 let instance = instance_tag.as_ref().map(|tag| {
                     let instance = format!(
                         "{}:{}",
@@ -107,9 +99,19 @@ fn scrape(
                             _ => 0
                         })
                     );
+
+                    instance
                 });
 
-                let start = Instant::now();
+                let client = HttpClient::new(tls.clone(), &proxy)
+                    .expect("Building HTTP client failed");
+                let mut req = http::Request::get(&url)
+                    .body(hyper::body::Body::empty())
+                    .expect("error creating request");
+                if let Some(auth) = &auth {
+                    auth.apply(&mut req);
+                }
+
                 client.send(req)
                     .map_err(crate::Error::from)
                     .and_then(|resp| async move {
@@ -121,12 +123,46 @@ fn scrape(
                     .filter_map(move |resp| {
                         std::future::ready(match resp {
                             Ok((header, body)) if header.status == hyper::StatusCode::OK => {
+                                let body = String::from_utf8_lossy(&body);
+
                                 match prometheus::parse_text(&body) {
                                     Ok(groups) => {
                                         // TODO: convert
+                                        let events = convert_events(groups);
+                                        // Some(events)
+                                        Some(futures::stream::iter(events).map(move |mut event| {
+                                            let metric = event.as_mut_metric();
+                                            /*
+                                                                                        if let Some(instance) = instance {
+                                                                                            match (honor_labels, metric.tag_value("instance")) {
+                                                                                                (false, Some(old_instance)) => {
+                                                                                                    metric.insert_tag(
+                                                                                                        "exported_instance".to_string(),
+                                                                                                        old_instance,
+                                                                                                    );
+                                                                                                    metric.insert_tag(
+                                                                                                        "instance".to_string(),
+                                                                                                        instance.clone(),
+                                                                                                    );
+                                                                                                }
+                                                                                                (true, Some(_)) => {},
+                                                                                                (_, None) => {
+                                                                                                    metric.insert_tag(
+                                                                                                        "instance".to_string(),
+                                                                                                        instance.clone()
+                                                                                                    );
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                            */
+                                            // TODO: set instance
+
+                                            Ok(event)
+                                        }))
                                     }
                                     Err(err) => {
                                         // TODO: handle it
+                                        None
                                     }
                                 }
                             }
@@ -143,10 +179,17 @@ fn scrape(
                             }
 
                             Err(err) => {
+                                warn!(
+                                    message = "HTTP request processing error",
+                                    %url,
+                                    ?err
+                                );
+
                                 None
                             }
                         })
                     })
+                    .flatten()
             })
             .flatten()
             .forward(output)
@@ -154,12 +197,65 @@ fn scrape(
     )
 }
 
+fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
+    let mut events = Vec::with_capacity(groups.len());
+    let start = Utc::now();
+
+    for group in groups {
+        let name = &group.name;
+        match group.metrics {
+            GroupKind::Counter(map) => {
+                for (key, metric) in map {
+                    let counter = Metric::sum(
+                        name,
+                        "",
+                        metric.value,
+                    )
+                        .with_timestamp(utc_timestamp(key.timestamp, start))
+                        .with_tags(key.labels);
+
+                    events.push(counter.into());
+                }
+            }
+            GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
+                for (key, metric) in metrics {
+                    let gauge = Metric::gauge(
+                        name,
+                        "",
+                        metric.value,
+                    )
+                        .with_timestamp(utc_timestamp(key.timestamp, start))
+                        .with_tags(key.labels);
+
+                    events.push(gauge.into());
+                }
+            }
+            GroupKind::Summary(metrics) => {
+                for (key, metric) in metrics {
+
+                }
+            }
+            _ => {}
+        }
+    }
+
+    events
+}
+
+fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
+    match timestamp {
+        None => Some(default),
+        Some(timestamp) => {
+            Utc.timestamp_opt(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
+                .latest()
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn dummy() {
-
-    }
+    #[tokio::test]
+    async fn scrape_honor_labels() {}
 }

@@ -95,6 +95,7 @@ impl ByteSizeOf for Metric {
 }
 
 impl Metric {
+    #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
         where
             N: Into<String>,
@@ -111,6 +112,7 @@ impl Metric {
         }
     }
 
+    #[inline]
     pub fn gauge_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
         where
             N: Into<String>,
@@ -127,6 +129,7 @@ impl Metric {
         }
     }
 
+    #[inline]
     pub fn sum<N, D, V>(name: N, desc: D, v: V) -> Metric
         where
             N: Into<String>,
@@ -143,6 +146,7 @@ impl Metric {
         }
     }
 
+    #[inline]
     pub fn sum_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
         where
             N: Into<String>,
@@ -156,6 +160,26 @@ impl Metric {
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(value.into()),
+        }
+    }
+
+    #[inline]
+    pub fn histogram<N, V>(name: N, v: V) -> Metric
+        where
+            N: Into<String>,
+            V: Into<f64>
+    {
+        Self {
+            name: name.into(),
+            description: None,
+            tags: BTreeMap::default(),
+            unit: None,
+            timestamp: None,
+            value: MetricValue::Histogram {
+                count: 0,
+                sum: 0.0,
+                buckets: vec![]
+            }
         }
     }
 
@@ -179,6 +203,25 @@ impl Metric {
     pub fn with_tags(mut self, tags: BTreeMap<String, String>) -> Self {
         self.tags = tags;
         self
+    }
+
+    #[inline]
+    pub fn with_desc(mut self, desc: Option<String>) -> Self {
+        self.description = desc;
+        self
+    }
+
+    #[inline]
+    pub fn tag_value(&self, name: &str) -> Option<String> {
+        self.tags
+            .get(name)
+            .map(|v| v.to_string())
+    }
+
+    #[inline]
+    pub fn insert_tag(&mut self, name: String, value: String) -> Option<String> {
+        self.tags
+            .insert(name, value)
     }
 }
 

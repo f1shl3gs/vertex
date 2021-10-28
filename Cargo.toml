@@ -44,7 +44,7 @@ default = [
     "sources-nginx_stub",
     "sources-haproxy",
     "sources-memcached",
-    # "sources-prometheus_scrape",
+    "sources-prometheus_scrape",
     "sources-tail",
     "sources-fluentd",
     "sources-syslog",

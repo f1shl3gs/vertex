@@ -98,7 +98,7 @@ pub struct SimpleMetric {
     pub value: f64,
 }
 
-type MetricMap<T> = IndexMap<GroupKey, T>;
+pub type MetricMap<T> = IndexMap<GroupKey, T>;
 
 #[derive(Debug)]
 pub enum GroupKind {

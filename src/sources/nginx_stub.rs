@@ -17,7 +17,7 @@ use event::{
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use crate::config::{default_interval, serialize_duration, deserialize_duration, SourceConfig, SourceContext, DataType};
-use crate::http::{Auth, HTTPClient};
+use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
 use crate::tls::{MaybeTLSSettings, TLSConfig};
 
@@ -36,7 +36,7 @@ struct NginxStubConfig {
 impl SourceConfig for NginxStubConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let tls = MaybeTLSSettings::from_config(&self.tls)?;
-        let http_client = HTTPClient::new(tls, &ctx.proxy)?;
+        let http_client = HttpClient::new(tls, &ctx.proxy)?;
 
         let mut sources = Vec::with_capacity(self.endpoints.len());
         for endpoint in self.endpoints.iter() {
@@ -103,7 +103,7 @@ enum NginxError {
 
 #[derive(Debug)]
 struct NginxStub {
-    client: HTTPClient,
+    client: HttpClient,
     endpoint: String,
     auth: Option<Auth>,
     tags: BTreeMap<String, String>,
@@ -111,7 +111,7 @@ struct NginxStub {
 
 impl NginxStub {
     fn new(
-        client: HTTPClient,
+        client: HttpClient,
         endpoint: String,
         auth: Option<Auth>,
     ) -> Result<Self, crate::Error> {
@@ -395,7 +395,7 @@ mod integration_tests {
     use testcontainers::{Docker, Image};
     use nginx::Nginx;
     use crate::config::ProxyConfig;
-    use crate::http::{Auth, HTTPClient};
+    use crate::http::{Auth, HttpClient};
     use super::NginxStubStatus;
 
     async fn test_nginx(path: &'static str, auth: Option<Auth>, proxy: ProxyConfig) {
@@ -410,7 +410,7 @@ mod integration_tests {
             .parse::<Uri>()
             .unwrap();
 
-        let cli = HTTPClient::new(None, &proxy.clone())
+        let cli = HttpClient::new(None, &proxy.clone())
             .unwrap();
         let mut req = http::Request::get(uri)
             .body(Body::empty())

@@ -17,7 +17,7 @@ use crate::tls::{http::HttpsConnector, MaybeTLSSettings, TLSError};
 use crate::tls::http::HttpsConnectorBuilder;
 
 #[derive(Debug, Snafu)]
-pub enum HTTPError {
+pub enum HttpError {
     #[snafu(display("Failed to build TLS connector: {}", source))]
     BuildTLSConnector { source: TLSError },
     #[snafu(display("Failed to build HTTPS connector: {}", source))]
@@ -28,12 +28,12 @@ pub enum HTTPError {
     CallRequest { source: hyper::Error },
 }
 
-pub struct HTTPClient<B = Body> {
+pub struct HttpClient<B = Body> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
 }
 
-impl<B> HTTPClient<B>
+impl<B> HttpClient<B>
     where
         B: fmt::Debug + HttpBody + Send + 'static,
         B::Data: Send,
@@ -42,8 +42,11 @@ impl<B> HTTPClient<B>
     pub fn new(
         tls_setting: impl Into<MaybeTLSSettings>,
         proxy_config: &ProxyConfig,
-    ) -> Result<HTTPClient<B>, HTTPError> {
+    ) -> Result<HttpClient<B>, HttpError> {
         let settings = tls_setting.into();
+
+        let cc = settings.client_config()
+            .expect("build client tls config");
 
         // TODO: set config properly
         let https = HttpsConnectorBuilder::new()
@@ -62,7 +65,7 @@ impl<B> HTTPClient<B>
         let user_agent = HeaderValue::from_str(&format!("Vector/{}", crate::built_info::PKG_VERSION))
             .expect("invalid header value for version!");
 
-        Ok(HTTPClient {
+        Ok(HttpClient {
             client,
             user_agent,
         })
@@ -71,7 +74,7 @@ impl<B> HTTPClient<B>
     pub fn send(
         &self,
         mut req: Request<B>,
-    ) -> BoxFuture<'static, Result<http::Response<Body>, HTTPError>> {
+    ) -> BoxFuture<'static, Result<http::Response<Body>, HttpError>> {
         default_request_headers(&mut req, &self.user_agent);
 
         let resp = self.client.request(req);
@@ -105,7 +108,7 @@ impl<B> HTTPClient<B>
     }
 }
 
-impl<B> Clone for HTTPClient<B> {
+impl<B> Clone for HttpClient<B> {
     fn clone(&self) -> Self {
         Self {
             client: self.client.clone(),
@@ -114,7 +117,7 @@ impl<B> Clone for HTTPClient<B> {
     }
 }
 
-impl<B> fmt::Debug for HTTPClient<B> {
+impl<B> fmt::Debug for HttpClient<B> {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         f.debug_struct("HTTPClient")
             .field("client", &self.client)
@@ -138,7 +141,7 @@ fn default_request_headers<B>(req: &mut http::Request<B>, ua: &HeaderValue) {
     }
 }
 
-pub type HTTPClientFuture = <HTTPClient as Service<http::Request<Body>>>::Future;
+pub type HTTPClientFuture = <HttpClient as Service<http::Request<Body>>>::Future;
 
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]

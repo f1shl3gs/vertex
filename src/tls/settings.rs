@@ -62,7 +62,8 @@ pub struct IdentityStore(Vec<u8>, String);
 pub struct TLSSettings {
     verify_certificate: bool,
     verify_hostname: bool,
-    server_config: rustls::ServerConfig,
+    certs: Vec<rustls::Certificate>,
+    keys: Vec<rustls::PrivateKey>,
 }
 
 impl TLSSettings {
@@ -72,78 +73,76 @@ impl TLSSettings {
     pub fn from_config(conf: &Option<TLSConfig>) -> Result<Self, TLSError> {
         // If this is for server warning should be print
 
-        let tls = &TLSConfig::default();
-        let conf = conf.as_ref().unwrap_or(&tls);
+        let default = &TLSConfig::default();
+        let conf = conf.as_ref().unwrap_or(&default);
 
         // Load public certificate
         let certs = {
-            let note: &'static str = "certificate";
-            let filename = &conf.crt_file
-                .clone()
-                .unwrap();
+            match &conf.crt_file {
+                None => vec![],
+                Some(filename) => {
+                    let note: &'static str = "certificate";
+                    let f = fs::File::open(filename)
+                        .with_context(|| FileOpenFailed { note, filename })?;
+                    let mut reader = io::BufReader::new(f);
 
-            let f = fs::File::open(filename)
-                .with_context(|| FileOpenFailed { note, filename })?;
-            let mut reader = io::BufReader::new(f);
+                    let certs = rustls_pemfile::certs(&mut reader)
+                        .with_context(|| ReadPemFailed { filename })?;
 
-            let certs = rustls_pemfile::certs(&mut reader)
-                .with_context(|| ReadPemFailed { filename })?;
-
-            certs.into_iter()
-                .map(rustls::Certificate)
-                .collect::<Vec<_>>()
-        };
-
-        // Load private key
-        let key = {
-            let note: &'static str = "private key";
-            let filename = &conf.key_file
-                .clone()
-                .unwrap();
-
-            let f = fs::File::open(&filename)
-                .with_context(|| FileOpenFailed { note, filename })?;
-            let mut reader = io::BufReader::new(f);
-
-            // Load and retun a single private key
-            match rustls_pemfile::rsa_private_keys(&mut reader) {
-                Ok(keys) => {
-                    rustls::PrivateKey(keys[0].clone())
+                    certs.into_iter()
+                        .map(rustls::Certificate)
+                        .collect::<Vec<_>>()
                 }
-                _ => return Err(TLSError::PrivateKeyParseError {
-                    filename: filename.clone()
-                })
             }
         };
 
-        // Do not use client certificate authentication
-        let server_config = rustls::ServerConfig::builder()
-            .with_safe_default_cipher_suites()
-            .with_safe_default_kx_groups()
-            .with_safe_default_protocol_versions()
-            .unwrap()
-            .with_no_client_auth()
-            .with_single_cert(certs, key)
-            .expect("Bad certificate/key");
+        // Load private key
+        let keys = match &conf.crt_file {
+            None => vec![rustls::PrivateKey(vec![])],
+            Some(filename) => {
+                let note: &'static str = "private key";
+                let f = fs::File::open(&filename)
+                    .with_context(|| FileOpenFailed { note, filename })?;
+                let mut reader = io::BufReader::new(f);
+
+                // Load and retun a single private key
+                match rustls_pemfile::rsa_private_keys(&mut reader) {
+                    Ok(keys) => {
+                        keys.iter()
+                            .map(|v| rustls::PrivateKey(v.clone()))
+                            .collect::<Vec<_>>()
+                    }
+                    _ => return Err(TLSError::PrivateKeyParseError {
+                        filename: filename.clone()
+                    })
+                }
+            }
+        };
 
         Ok(Self {
             verify_certificate: conf.verify_certificate.unwrap_or(false),
             verify_hostname: conf.verify_hostname.unwrap_or(false),
-            server_config,
+            certs,
+            keys,
+            // server_config,
         })
     }
 
     pub fn acceptor(&self) -> Result<TlsAcceptor, TLSError> {
-        /*match self.identity {
-            None => Err(TLSError::MissingRequiredIdentity),
-            Some(_) => {
-                let acceptor = TlsAcceptor::from(Arc::new(self.server_config));
-                Ok(acceptor)
-            }
-        }*/
+        let conf = rustls::ServerConfig::builder()
+            .with_safe_defaults()
+            .with_no_client_auth()
+            .with_single_cert(self.certs.clone(), self.keys[0].clone())
+            .expect("Bad certificate/key");
 
-        let acceptor = TlsAcceptor::from(Arc::new(self.server_config.clone()));
+        let acceptor = TlsAcceptor::from(Arc::new(conf));
         Ok(acceptor)
+    }
+}
+
+impl From<TLSSettings> for MaybeTLSSettings {
+    fn from(tls: TLSSettings) -> Self {
+        Self::Tls(tls)
     }
 }
 
@@ -160,7 +159,7 @@ impl MaybeTLSSettings {
             None => Ok(Self::Raw(())), // No config, no TLS settings
             Some(config) => {
                 let tls = TLSSettings::from_config(&Some(config.clone()))?;
-                Ok(Self::TLS(tls))
+                Ok(Self::Tls(tls))
             }
         }
     }
@@ -172,7 +171,7 @@ impl MaybeTLSSettings {
 
         let acceptor = match self {
             Self::Raw(()) => None,
-            Self::TLS(tls) => Some(tls.acceptor()?),
+            Self::Tls(tls) => Some(tls.acceptor()?),
         };
 
         Ok(MaybeTLSListener {
