@@ -12,7 +12,6 @@ use hyper::{
 use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use crate::extensions::Extension;
 use crate::shutdown::ShutdownSignal;
-use crate::impl_generate_config_from_default;
 
 
 #[derive(Debug, Deserialize, Serialize)]
