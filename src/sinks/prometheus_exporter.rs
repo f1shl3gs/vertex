@@ -131,6 +131,26 @@ struct PrometheusExporter {
     metrics: Arc<RwLock<IndexSet<ExpiringEntry>>>,
 }
 
+macro_rules! write_metric {
+    ($dst:expr, $name:expr, $tags:expr, $value:expr) => {
+        if $tags.is_empty() {
+            writeln!(&mut $dst, "{} {}", $name.to_owned(), $value).unwrap();
+        } else {
+            writeln!(
+                &mut $dst,
+                "{}{{{}}} {}",
+                $name,
+                $tags
+                    .iter()
+                    .map(|(k, v)| format!("{}=\"{}\"", k, v))
+                    .collect::<Vec<String>>()
+                    .join(","),
+                $value
+            ).unwrap();
+        }
+    }
+}
+
 fn handle(
     req: Request<Body>,
     metrics: &IndexSet<ExpiringEntry>,
@@ -146,28 +166,28 @@ fn handle(
                 .fold(String::new(), |mut result, ent| {
                     match ent.metric.value {
                         MetricValue::Gauge(v) | MetricValue::Sum(v) => {
-                            if ent.tags.is_empty() {
-                                writeln!(
-                                    &mut result,
-                                    "{} {}",
-                                    ent.name,
-                                    v
-                                ).unwrap();
-                            } else {
-                                writeln!(
-                                    &mut result,
-                                    "{}{{{}}} {}",
-                                    ent.name,
-                                    ent.tags
-                                        .iter()
-                                        .map(|(k, v)| format!("{}=\"{}\"", k, v))
-                                        .collect::<Vec<String>>()
-                                        .join(","),
-                                    v
-                                ).unwrap();
-                            }
+                            write_metric!(result, ent.name, ent.tags, v);
                         }
-                        _ => unreachable!()
+                        MetricValue::Summary { ref quantiles, sum, count } => {
+                            for q in quantiles {
+                                let mut tags = ent.tags.clone();
+                                tags.insert("quantile".to_string(), q.upper.to_string());
+                                write_metric!(result, ent.name, tags, q.value)
+                            }
+
+                            write_metric!(result, format!("{}_sum", ent.name), ent.tags.clone(), sum);
+                            write_metric!(result, format!("{}_count", ent.name), ent.tags.clone(), count);
+                        }
+                        MetricValue::Histogram { ref buckets, sum, count } => {
+                            for b in buckets {
+                                let mut tags = ent.tags.clone();
+                                tags.insert("le".to_string(), b.upper.to_string());
+                                write_metric!(result, ent.name, tags, b.count);
+                            }
+
+                            write_metric!(result, format!("{}_sum", ent.name), ent.tags.clone(), sum);
+                            write_metric!(result, format!("{}_count", ent.name), ent.tags.clone(), count);
+                        }
                     }
 
                     result
@@ -234,14 +254,14 @@ impl PrometheusExporter {
         let (trigger, tripwire) = Tripwire::new();
         let address = self.config.listen;
         tokio::spawn(async move {
-/*
-            let tls = MaybeTLSSettings::from_config(&self.config.tls)
-                .map_err(|err| warn!(message = "Server TLS error: {}", err))?;
+            /*
+                        let tls = MaybeTLSSettings::from_config(&self.config.tls)
+                            .map_err(|err| warn!(message = "Server TLS error: {}", err))?;
 
-            let listener = tls.bind(&address)
-                .await
-                .map_err(|err| warn!(message = "Server bind error: {}", err))?;
-*/
+                        let listener = tls.bind(&address)
+                            .await
+                            .map_err(|err| warn!(message = "Server bind error: {}", err))?;
+            */
             /*Server::builder()
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))

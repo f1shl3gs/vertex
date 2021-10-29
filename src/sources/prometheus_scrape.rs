@@ -2,7 +2,7 @@ use chrono::{DateTime, TimeZone, Utc};
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt, TryStreamExt};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
-use event::{Event, Metric};
+use event::{Bucket, Event, Metric, MetricValue, Quantile};
 use prometheus::{MetricGroup, GroupKind};
 
 use crate::http::{Auth, HttpClient};
@@ -232,10 +232,45 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
             }
             GroupKind::Summary(metrics) => {
                 for (key, metric) in metrics {
+                    let mut m = Metric {
+                        name: name.to_string(),
+                        description: None,
+                        tags: Default::default(),
+                        unit: None,
+                        timestamp: utc_timestamp(key.timestamp, start),
+                        value: MetricValue::Summary {
+                            count: metric.count as u64,
+                            sum: metric.sum,
+                            quantiles: metric.quantiles.iter()
+                                .map(|q| Quantile { upper: q.quantile, value: q.value })
+                                .collect::<Vec<_>>(),
+                        },
+                    };
 
+                    events.push(m.into());
                 }
             }
-            _ => {}
+            GroupKind::Histogram(metrics) => {
+                for (key, metric) in metrics {
+                    let mut m = Metric {
+                        name: name.to_string(),
+                        description: None,
+                        tags: Default::default(),
+                        unit: None,
+                        timestamp: utc_timestamp(key.timestamp, start),
+                        value: MetricValue::Histogram {
+                            count: metric.count as u64,
+                            sum: metric.sum,
+                            buckets: metric.buckets
+                                .iter()
+                                .map(|b| Bucket { upper: b.bucket, count: b.count })
+                                .collect::<Vec<_>>(),
+                        },
+                    };
+
+                    events.push(m.into());
+                }
+            }
         }
     }
 
