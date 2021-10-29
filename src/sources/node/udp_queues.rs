@@ -201,7 +201,7 @@ mod tests {
             }
 
             let actual = result.unwrap();
-            assert_eq!(actual, case.want)
+            assert_eq!(actual, case.want, "{}", case.name)
         }
     }
 }
