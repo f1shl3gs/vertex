@@ -109,11 +109,13 @@ fn main() {
     let opts: Opts = Opts::parse();
 
     if let Some(commands) = opts.commands {
+        use crate::config::ExtensionDescription;
+
         match commands {
             Commands::Sources(sources) => sources.run(),
             Commands::Transforms(transforms) => transforms.run(),
             Commands::Sinks(sinks) => sinks.run(),
-            Commands::Extensions => { },
+            Commands::Extensions(extensions) => extensions.run(),
         }
 
         return;

@@ -1,13 +1,17 @@
+use std::marker::PhantomData;
+use std::ops::Add;
 use clap::Parser;
-use vertex::config::{SinkDescription, SourceDescription, TransformDescription};
+use vertex::config::{ExtensionDescription, SinkDescription, SourceDescription, TransformDescription};
 
 #[derive(Debug, Parser)]
 pub enum Commands {
     Sources(Sources),
     Transforms(Transforms),
     Sinks(Sinks),
-    Extensions,
+    Extensions(Extensions),
 }
+
+/// TODO: the run implement is dummy, maybe we can simplify it with trait
 
 #[derive(Debug, Parser)]
 pub struct Sources {
@@ -84,6 +88,33 @@ impl Sinks {
             _ => {
                 for sink in inventory::iter::<SinkDescription> {
                     println!("{}", sink.type_str);
+                }
+            }
+        }
+    }
+}
+
+#[derive(Debug, Parser)]
+pub struct Extensions {
+    name: Option<String>,
+}
+
+impl Extensions {
+    pub fn run(&self) {
+        match &self.name {
+            Some(name) => {
+                for extension in inventory::iter::<ExtensionDescription> {
+                    if extension.type_str == name {
+                        let example = ExtensionDescription::example(extension.type_str).unwrap();
+                        println!("Name: {}\n", extension.type_str);
+                        println!("{}\n", example)
+                    }
+                }
+            }
+
+            _ => {
+                for sink in ExtensionDescription::types() {
+                    println!("{}", sink)
                 }
             }
         }
