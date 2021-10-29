@@ -1,5 +1,3 @@
-use std::marker::PhantomData;
-use std::ops::Add;
 use clap::Parser;
 use vertex::config::{ExtensionDescription, SinkDescription, SourceDescription, TransformDescription};
 

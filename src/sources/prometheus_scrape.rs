@@ -1,5 +1,5 @@
 use chrono::{DateTime, TimeZone, Utc};
-use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt, TryStreamExt};
+use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use event::{Bucket, Event, Metric, MetricValue, Quantile};
