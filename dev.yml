@@ -12,7 +12,7 @@ extensions:
 sources:
   zookeeper:
     type: zookeeper
-    endpoint: 127.0.0.1:49158
+    endpoint: 127.0.0.1:2181
   memcached:
     type: memcached
     endpoints:
@@ -72,12 +72,12 @@ sinks:
   prom:
     type: prometheus_exporter
     inputs:
-      # - add_extra_tags
-      # - selfstat
-      # - internal_metrics
-      # - redis
-      # - zookeeper
-      # - memcached
+      - add_extra_tags
+      - selfstat
+      - internal_metrics
+      - redis
+      - zookeeper
+      - memcached
       # - node
       - prometheus_scrape
     listen: 127.0.0.1:9101
