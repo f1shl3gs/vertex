@@ -177,8 +177,8 @@ headers = { version = "0.3.4" }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
-serde_yaml = { version = "0.8.20" }
-serde_json = { version = "1.0.67", default-features = false, features = ["raw_value", "alloc"] }
+serde_yaml = { version = "0.8.21" }
+serde_json = { version = "1.0.68", default-features = false }
 
 # netlink
 netlink-sys = { version = "0.7.0", features = ["tokio_socket"], optional = true }
