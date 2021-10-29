@@ -82,7 +82,7 @@ impl Sinks {
             }
 
             _ => {
-                for sink in inventory::iter::<TransformDescription> {
+                for sink in inventory::iter::<SinkDescription> {
                     println!("{}", sink.type_str);
                 }
             }
