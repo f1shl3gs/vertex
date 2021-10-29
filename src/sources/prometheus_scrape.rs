@@ -47,7 +47,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             tls,
             self.auth.clone(),
             ctx.proxy,
-            None,
+            Some("instance".to_string()),
             self.honor_labels,
             self.interval,
             ctx.shutdown,
@@ -121,6 +121,8 @@ fn scrape(
                     })
                     .into_stream()
                     .filter_map(move |resp| {
+                        let instance = instance.clone();
+
                         std::future::ready(match resp {
                             Ok((header, body)) if header.status == hyper::StatusCode::OK => {
                                 let body = String::from_utf8_lossy(&body);
@@ -132,30 +134,28 @@ fn scrape(
                                         // Some(events)
                                         Some(futures::stream::iter(events).map(move |mut event| {
                                             let metric = event.as_mut_metric();
-                                            /*
-                                                                                        if let Some(instance) = instance {
-                                                                                            match (honor_labels, metric.tag_value("instance")) {
-                                                                                                (false, Some(old_instance)) => {
-                                                                                                    metric.insert_tag(
-                                                                                                        "exported_instance".to_string(),
-                                                                                                        old_instance,
-                                                                                                    );
-                                                                                                    metric.insert_tag(
-                                                                                                        "instance".to_string(),
-                                                                                                        instance.clone(),
-                                                                                                    );
-                                                                                                }
-                                                                                                (true, Some(_)) => {},
-                                                                                                (_, None) => {
-                                                                                                    metric.insert_tag(
-                                                                                                        "instance".to_string(),
-                                                                                                        instance.clone()
-                                                                                                    );
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                            */
-                                            // TODO: set instance
+
+                                            if let Some(instance) = &instance {
+                                                match (honor_labels, metric.tag_value("instance")) {
+                                                    (false, Some(old_instance)) => {
+                                                        metric.insert_tag(
+                                                            "exported_instance".to_string(),
+                                                            old_instance,
+                                                        );
+                                                        metric.insert_tag(
+                                                            "instance".to_string(),
+                                                            instance.clone(),
+                                                        );
+                                                    }
+                                                    (true, Some(_)) => {}
+                                                    (_, None) => {
+                                                        metric.insert_tag(
+                                                            "instance".to_string(),
+                                                            instance.clone(),
+                                                        );
+                                                    }
+                                                }
+                                            }
 
                                             Ok(event)
                                         }))
