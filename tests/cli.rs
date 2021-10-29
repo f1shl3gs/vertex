@@ -31,9 +31,15 @@ fn assert_no_log_lines(output: Vec<u8>) {
 fn clean_output() {
     let tests = vec![
         (vec!["sources"], true),
+        (vec!["sources", "node"], true),
+        (vec!["sources", "something_not_exist"], true),
         (vec!["transforms"], true),
+        (vec!["transforms", "add_tags"], true),
+        (vec!["transforms", "something_not_exist"], true),
         (vec!["sinks"], true),
+        (vec!["sinks", "something_not_exist"], true),
         (vec!["extensions"], true),
+        (vec!["extensions", "something_not_exist"], true),
         (vec!["something_not_exist"], false),
     ];
 

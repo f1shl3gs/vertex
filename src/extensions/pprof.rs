@@ -1,15 +1,19 @@
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
+
 use futures::FutureExt;
+use serde::{Deserialize, Serialize};
 use hyper::{
     Body, Request, Response, Server,
     service::{make_service_fn, service_fn},
 };
-use serde::{Deserialize, Serialize};
-use crate::config::{ExtensionConfig, ExtensionContext};
+
+use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use crate::extensions::Extension;
 use crate::shutdown::ShutdownSignal;
+use crate::impl_generate_config_from_default;
+
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -74,4 +78,16 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 
     Ok(Response::new(Body::from(vec![])))
+}
+
+inventory::submit! {
+    ExtensionDescription::new::<PProfConfig>("pprof")
+}
+
+impl GenerateConfig for PProfConfig {
+    fn generate_config() -> String {
+        r##"
+listen: 0.0.0.0:10910
+        "##.to_string()
+    }
 }
