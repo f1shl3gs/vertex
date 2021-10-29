@@ -175,8 +175,8 @@ fn handle(
                                 write_metric!(result, ent.name, tags, q.value)
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags.clone(), sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags.clone(), count);
+                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
+                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
                         }
                         MetricValue::Histogram { ref buckets, sum, count } => {
                             for b in buckets {
@@ -185,8 +185,8 @@ fn handle(
                                 write_metric!(result, ent.name, tags, b.count);
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags.clone(), sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags.clone(), count);
+                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
+                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
                         }
                     }
 
