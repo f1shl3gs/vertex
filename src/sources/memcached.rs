@@ -99,15 +99,10 @@ macro_rules! get_value_from_string {
     };
 }
 
-async fn gather(addr: &str) -> Vec<Metric> {
+async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
 
-    let start = Instant::now();
-    let result = fetch_stats(addr, query).await;
-    let elapsed = start.elapsed().as_secs_f64();
-    let mut up = result.is_ok();
-
-    match result {
+    match fetch_stats(addr, query).await {
         Ok(Stats { version, libevent, stats, slabs, items }) => {
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
@@ -595,19 +590,25 @@ async fn gather(addr: &str) -> Vec<Metric> {
                     }
                 }
             }
+
+            Ok(metrics)
         }
-        Err(ref err) => {
+        Err(err) => {
             warn!(
                 message = "Fetch stats failed",
                 addr = addr,
                 %err
-            )
+            );
+
+            Err(err)
         }
     }
+}
 
-    let result = stats_settings(addr).await;
-    up = result.is_ok();
-    match result {
+async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
+    let mut metrics = vec![];
+
+    match stats_settings(addr).await {
         Ok(stats) => {
             if let Some(v) = stats.get("maxconns") {
                 if let Ok(v) = v.parse::<f64>() {
@@ -665,15 +666,32 @@ async fn gather(addr: &str) -> Vec<Metric> {
                     ])
                 }
             }
+
+            Ok(metrics)
         }
-        Err(ref err) => {
+        Err(err) => {
             warn!(
                 message = "Fetch stats settings failed",
                 addr = addr,
                 %err
-            )
+            );
+
+            Err(err)
         }
     }
+}
+
+async fn gather(addr: &str) -> Vec<Metric> {
+    let start = Instant::now();
+
+    let (stats, settings) = futures::future::join(
+        fetch_stats_metrics(addr),
+        fetch_settings_metric(addr)
+    ).await;
+
+    let up = stats.is_ok() && settings.is_ok();
+    let mut metrics = stats.unwrap_or(vec![]);
+    metrics.extend(settings.unwrap_or(vec![]));
 
     metrics.extend_from_slice(&[
         Metric::gauge(
@@ -684,7 +702,7 @@ async fn gather(addr: &str) -> Vec<Metric> {
         Metric::gauge(
             "memcached_scrape_duration",
             "",
-            elapsed,
+            start.elapsed().as_secs_f64(),
         ),
     ]);
 
