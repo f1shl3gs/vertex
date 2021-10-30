@@ -1,8 +1,8 @@
 use std::collections::BTreeMap;
 
 use nom::branch::alt;
-use nom::bytes::complete::{escaped, tag, take, take_till, take_while};
-use nom::character::complete::{anychar, none_of};
+use nom::bytes::complete::{escaped, tag, take_while};
+use nom::character::complete::none_of;
 use nom::IResult;
 use nom::sequence::{delimited, tuple};
 use event::{tags, Metric};
