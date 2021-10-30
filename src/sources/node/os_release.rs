@@ -1,6 +1,13 @@
 use std::collections::BTreeMap;
-use super::{read_to_string, Error, ErrorContext};
+
+use nom::branch::alt;
+use nom::bytes::complete::{escaped, tag, take, take_till, take_while};
+use nom::character::complete::{anychar, none_of};
+use nom::IResult;
+use nom::sequence::{delimited, tuple};
 use event::{tags, Metric};
+
+use super::{read_to_string, Error, ErrorContext};
 
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
@@ -51,13 +58,43 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
+fn parse_quoted(input: &str) -> IResult<&str, &str> {
+    let esc = escaped(none_of("\\\""), '\\', tag("\""));
+    let esc_or_empty = alt((esc, tag("")));
+    let res = delimited(tag("\""), esc_or_empty, tag("\""))(input)?;
+
+    Ok(res)
+}
+
+fn parse_none_quoted(input: &str) -> IResult<&str, &str> {
+    // dummy but works
+    let n = take_while(|c| true)(input)?;
+    Ok(n)
+}
+
 async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {
     let content = read_to_string(path).await?;
+    let mut envs = BTreeMap::new();
 
-    dotenv_parser::parse_dotenv(&content)
-        .map_err(|err| {
-            Error::new_invalid("parse os info failed")
-        })
+    for line in content.lines() {
+        match tuple((
+            take_while(|c: char| {c.is_uppercase() || c == '_'}),
+            tag("="),
+            alt((
+                parse_quoted,
+                parse_none_quoted,
+            ))
+        ))(line) {
+            Ok((_, (key, _, value))) => {
+                envs.insert(key.to_string(), value.to_string());
+            }
+            _ => {
+                // do nothing for now
+            }
+        }
+    }
+
+    Ok(envs)
 }
 
 #[cfg(test)]
