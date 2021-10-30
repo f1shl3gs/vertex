@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
-use std::time::{SystemTime, UNIX_EPOCH};
 
 use futures::FutureExt;
 use http::Request;
