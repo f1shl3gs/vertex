@@ -47,8 +47,8 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
     Ok(())
 }
 
-async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let params: HashMap<String, String> = _req
+async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    let params: HashMap<String, String> = req
         .uri()
         .query()
         .map(|v| {
