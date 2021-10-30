@@ -124,7 +124,7 @@ path = "benches/node_source_hwmon.rs"
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
-nix = "0.22.2"
+nix = ">=0.22.2"
 
 [dev-dependencies]
 tokio = { version = "1.12.0", features = ["test-util"] }
