@@ -57,7 +57,8 @@ default = [
     "sink-prometheus_exporter",
     "sink-stdout",
     # extensions
-    "extension-pprof"
+    "extension-pprof",
+    "extension-jemalloc"
 ]
 
 # integration
@@ -110,6 +111,7 @@ sink-pulsar = ["pulsar"]
 
 # extensions
 extension-pprof = ["pprof/flamegraph"]
+extension-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
 
 [[bench]]
 name = "duration"
@@ -147,6 +149,8 @@ log_schema = { path = "lib/log_schema" }
 # Allocation
 mimalloc = { version = "0.1.26", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
+jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
+jemalloc-ctl = { version = "0.3.3", optional = true }
 
 # futrures & tokio
 tokio = { version = "1.12.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }

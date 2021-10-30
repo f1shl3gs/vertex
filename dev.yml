@@ -8,6 +8,8 @@ extensions:
   pprof:
     type: pprof
     listen: 127.0.0.1:9000
+  jemalloc:
+    type: jemalloc
 
 sources:
   zookeeper:
