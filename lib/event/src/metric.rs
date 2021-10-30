@@ -164,26 +164,6 @@ impl Metric {
     }
 
     #[inline]
-    pub fn histogram<N, V>(name: N, v: V) -> Metric
-        where
-            N: Into<String>,
-            V: Into<f64>
-    {
-        Self {
-            name: name.into(),
-            description: None,
-            tags: BTreeMap::default(),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Histogram {
-                count: 0,
-                sum: 0.0,
-                buckets: vec![]
-            }
-        }
-    }
-
-    #[inline]
     pub fn name(&self) -> &str {
         &self.name
     }
