@@ -232,7 +232,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
             }
             GroupKind::Summary(metrics) => {
                 for (key, metric) in metrics {
-                    let mut m = Metric {
+                    let m = Metric {
                         name: name.to_string(),
                         description: None,
                         tags: Default::default(),
@@ -252,7 +252,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
             }
             GroupKind::Histogram(metrics) => {
                 for (key, metric) in metrics {
-                    let mut m = Metric {
+                    let m = Metric {
                         name: name.to_string(),
                         description: None,
                         tags: Default::default(),

@@ -569,7 +569,6 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
     let mut master_host = String::new();
     let mut master_port = String::new();
     let mut field_class = String::new();
-    let mut dbname = String::new();
     let instance_info_fields = ["role", "redis_version", "redis_build_id", "redis_mode", "os"];
     let slave_info_fields = ["master_host", "master_port", "slave_read_only"];
 
@@ -636,7 +635,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
 
             "Keyspace" => {
                 if let Ok((keys, expired, avg_ttl)) = parse_db_keyspace(key, value) {
-                    dbname = key.to_string();
+                    let dbname = key.to_string();
                     metrics.extend_from_slice(&[
                         Metric::gauge_with_tags(
                             "db_keys",
@@ -862,7 +861,6 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
 /// slave1:ip=10.254.11.2,port=6379,state=online,offset=1751844222,lag=0
 /// ```
 fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64, &'a str, &'a str, &'a str, f64), Error> {
-    let mut lag = 0.0;
     let mut connected_kvs = BTreeMap::new();
 
     if !validate_slave_line(slave) {
@@ -883,11 +881,10 @@ fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64
         .map(|v| v.parse::<f64>().unwrap_or(0.0))
         .unwrap();
 
-    if let Some(text) = connected_kvs.get("lag") {
-        lag = text.parse()?;
-    } else {
-        lag = -1.0;
-    }
+    let lag = match connected_kvs.get("lag") {
+        Some(text) => text.parse()?,
+        _ => -1.0
+    };
 
     let ip = connected_kvs.get("ip")
         .unwrap_or(&"");

@@ -195,18 +195,13 @@ lazy_static! {
 }
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
-    let mut active = 0;
-    let mut total = 0;
-    let mut down = 0;
-    let mut size = 0;
-
     let size_str = status_line.split_ascii_whitespace().nth(0).unwrap();
-    size = size_str.parse()
+    let size = size_str.parse()
         .context("unexpected status line")?;
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {
         // In the device deviceLine, only disks have a number associated with them in []
-        total = dev_line.matches("[").count() as i64;
+        let total = dev_line.matches("[").count() as i64;
         return Ok((total, total, 0, size));
     }
 
@@ -226,9 +221,9 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
         return Err(Error::new_invalid(msg));
     }
 
-    total = caps[2].parse()?;
-    active = caps[3].parse()?;
-    down = caps[4].matches("_").count() as i64;
+    let total = caps[2].parse()?;
+    let active = caps[3].parse()?;
+    let down = caps[4].matches("_").count() as i64;
 
     Ok((active, total, down, size))
 }

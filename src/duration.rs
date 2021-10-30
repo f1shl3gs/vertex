@@ -107,7 +107,6 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
     }
 
     while !s.is_empty() {
-        let mut v = 0;
         let mut f = 0;
         let mut scale = 1.0;
 
@@ -120,7 +119,7 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         // Consume [0-9]*
         let pl = s.len();
         let (l, remain) = leading_int(s)?;
-        v = l;
+        let mut v = l;
         s = remain;
         let pre = pl != s.len();
 
