@@ -1,5 +1,6 @@
 mod watch;
 mod scan;
+mod checkpoint;
 
 #[cfg(test)]
 mod tests {
