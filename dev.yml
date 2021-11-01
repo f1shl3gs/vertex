@@ -8,8 +8,8 @@ extensions:
   pprof:
     type: pprof
     listen: 127.0.0.1:9000
-  jemalloc:
-    type: jemalloc
+  # jemalloc:
+  #   type: jemalloc
 
 sources:
   zookeeper:
@@ -55,6 +55,10 @@ sources:
     type: prometheus_scrape
     endpoints:
       - http://localhost:9100/metrics
+  nginx:
+    type: nginx_stub
+    endpoints:
+      - http://localhost:10980/basic_status
 
 transforms:
   add_extra_tags:
@@ -80,6 +84,7 @@ sinks:
       - redis
       - zookeeper
       - memcached
-      # - node
-      - prometheus_scrape
+      - nginx
+      - node
+      # - prometheus_scrape
     listen: 127.0.0.1:9101
