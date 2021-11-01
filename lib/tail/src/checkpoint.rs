@@ -1,6 +1,7 @@
 use std::io;
 use std::fs;
 use std::collections::BTreeSet;
+use std::os::unix::fs::MetadataExt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 
@@ -19,13 +20,25 @@ enum State {
     V1 { checkpoints: BTreeSet<Checkpoint> }
 }
 
-#[derive(Copy, Clone, Debug, Deserialize, Serialize)]
+#[derive(Copy, Clone, Debug, Deserialize, Serialize, Hash, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Fingerprint {
     dev: u64,
     inode: u64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+impl TryFrom<PathBuf> for Fingerprint {
+    type Error = std::io::Error;
+
+    fn try_from(path: PathBuf) -> Result<Self, Self::Error> {
+        let metadata = path.metadata()?;
+        Ok(Self {
+            dev: metadata.dev(),
+            inode: metadata.ino(),
+        })
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Checkpoint {
     fingerprint: Fingerprint,
     position: Position,
@@ -68,7 +81,7 @@ impl CheckpointsView {
         }
 
         if let Some((_, value)) = self.removed_times.remove(&old) {
-            self.removed_times.insert(new, value)
+            self.removed_times.insert(new, value);
         }
     }
 
@@ -128,7 +141,7 @@ pub struct Checkpointer {
 impl Checkpointer {
     pub fn new(data_dir: &Path) -> Self {
         let dir = data_dir.join("checkpoints");
-        let temp_file_path = data_dir.join(TMP_FILE_NAME);
+        let tmp_file_path = data_dir.join(TMP_FILE_NAME);
         let stable_file_path = data_dir.join(STABLE_FILE_NAME);
 
         Checkpointer {
