@@ -700,7 +700,7 @@ async fn gather(addr: &str) -> Vec<Metric> {
             if up { 1.0 } else { 0.0 },
         ),
         Metric::gauge(
-            "memcached_scrape_duration",
+            "memcached_scrape_duration_seconds",
             "",
             start.elapsed().as_secs_f64(),
         ),
