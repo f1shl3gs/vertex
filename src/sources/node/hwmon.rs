@@ -1,43 +1,60 @@
-use event::{tags, sum_metric, gauge_metric, Metric};
-use std::path::{Path};
-use super::{Error, ErrorContext, read_to_string};
 use std::collections::BTreeMap;
+use std::path::{Path};
+
+use event::{tags, sum_metric, gauge_metric, Metric};
 use regex::Regex;
+
+use super::{Error, ErrorContext, read_to_string};
 
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let path = format!("{}/class/hwmon", sys_path);
-    let mut dirs = tokio::fs::read_dir(path).await
-        .context("read hwmon dir failed")?;
+    let entries = std::fs::read_dir(format!("{}/class/hwmon", sys_path))?
+        .collect::<Result<Vec<_>, std::io::Error>>()?;
 
-    let mut metrics = Vec::new();
-    while let Some(entry) = dirs.next_entry().await
-        .context("read next entry of hwmon dirs failed")?
-    {
-        let meta = entry.metadata().await?;
-        let meta = match meta.file_type().is_symlink() {
-            true => {
-                match tokio::fs::canonicalize(entry.path()).await {
-                    Ok(p) => p.metadata()?,
-                    _ => continue
+    let tasks = entries
+        .into_iter()
+        .map(|entry| {
+            tokio::spawn(async move {
+                let meta = entry.metadata()?;
+                let meta = match meta.file_type().is_symlink() {
+                    true => {
+                        match tokio::fs::canonicalize(entry.path()).await {
+                            Ok(p) => p.metadata()?,
+                            Err(err) => return Err(err)
+                        }
+                    }
+                    false => meta
+                };
+
+                if !meta.is_dir() {
+                    return Ok(vec![]);
                 }
-            }
-            false => meta
-        };
 
-        if !meta.is_dir() {
-            continue;
-        }
+                let ep = entry.path();
+                let dir = ep.to_str().unwrap();
+                match hwmon_metrics(dir).await {
+                    Ok(metrics) => Ok(metrics),
+                    Err(err) => {
+                        warn!(
+                                message = "hwmon_metrics error {}",
+                                %err,
+                            );
 
-        let ep = entry.path();
-        let dir = ep.to_str().unwrap();
-        match hwmon_metrics(dir).await {
-            Ok(mut ms) => metrics.append(&mut ms),
-            Err(err) => {
-                warn!("hwmon_metrics error {}", err);
+                        Ok(vec![])
+                    }
+                }
+            })
+        });
+
+    let metrics = futures::future::join_all(tasks).await
+        .iter()
+        .fold(Vec::<Metric>::new(), |mut metrics, result| {
+            if let Ok(Ok(ms)) = result {
+                metrics.extend_from_slice(ms.as_slice())
             }
-        }
-    }
+
+            metrics
+        });
 
     Ok(metrics)
 }
@@ -72,7 +89,10 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
         let sensor_type = match explode_sensor_filename(sensor) {
             Ok((st, _, _)) => st,
             _ => {
-                warn!("unknown type {}", sensor);
+                warn!(
+                    message = "unknown sensor type",
+                    %sensor
+                );
                 continue;
             }
         };
@@ -348,29 +368,40 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
+// This function can be optimized by parallelling sensors
 async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let mut dirs = tokio::fs::read_dir(dir).await?;
-
+    let mut dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
-    while let Some(entry) = dirs.next_entry().await? {
-        let filename = entry.file_name();
 
-        if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
-            if !is_hwmon_sensor(sensor) {
-                continue;
-            }
+    while let Some(result) = dirs.next() {
+        match result {
+            Ok(entry) => {
+                let filename = entry.file_name();
 
-            match read_to_string(entry.path()).await {
-                Ok(v) => {
-                    let sensor = format!("{}{}", sensor, num);
-                    if !stats.contains_key(&sensor) {
-                        stats.insert(sensor.clone(), BTreeMap::new());
+                if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
+                    if !is_hwmon_sensor(sensor) {
+                        continue;
                     }
 
-                    let props = stats.get_mut(&sensor).unwrap();
-                    props.insert(property.to_string(), v);
+                    match read_to_string(entry.path()).await {
+                        Ok(v) => {
+                            let sensor = format!("{}{}", sensor, num);
+                            if !stats.contains_key(&sensor) {
+                                stats.insert(sensor.clone(), BTreeMap::new());
+                            }
+
+                            let props = stats.get_mut(&sensor).unwrap();
+                            props.insert(property.to_string(), v);
+                        }
+                        _ => continue
+                    }
                 }
-                _ => continue
+            }
+            Err(err) => {
+                warn!(
+                    message = "read sensor dir failed",
+                    %err
+                );
             }
         }
     }
