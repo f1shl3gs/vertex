@@ -326,9 +326,7 @@ mod tests {
 mod integration_tests {
     mod nginx {
         use std::collections::HashMap;
-        use nix::unistd::sleep;
         use testcontainers::{Container, Docker, Image, WaitForMessage};
-        use testcontainers::images::zookeeper::Zookeeper;
 
         const CONTAINER_IDENTIFIER: &str = "nginx";
         const DEFAULT_TAG: &str = "1.21.3";
@@ -405,8 +403,7 @@ mod integration_tests {
 
     use std::convert::TryInto;
     use hyper::{Body, StatusCode, Uri};
-    use rustls::internal::msgs::enums::HeartbeatMessageType::Request;
-    use testcontainers::{Docker, Image};
+    use testcontainers::Docker;
     use nginx::Nginx;
     use crate::config::ProxyConfig;
     use crate::http::{Auth, HttpClient};
