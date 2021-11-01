@@ -1,21 +1,22 @@
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
-use std::time::Instant;
+use std::ops::Sub;
+
 use bytes::Bytes;
+use chrono::Utc;
 use hyper::{StatusCode, Uri};
-use nom::{
-    bytes::complete::{tag, take_while_m_n}
-};
-use nom::combinator::{all_consuming, map_res};
-use nom::error::ErrorKind;
-use nom::sequence::{preceded, terminated, tuple};
 use futures::{SinkExt, StreamExt, TryFutureExt};
 use snafu::{Snafu, ResultExt};
-use event::{
-    Metric, Event,
-};
+use event::{Metric, Event};
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
+use nom::{
+    bytes::complete::{tag, take_while_m_n},
+    combinator::{all_consuming, map_res},
+    error::ErrorKind,
+    sequence::{preceded, terminated, tuple},
+};
+
 use crate::config::{default_interval, serialize_duration, deserialize_duration, SourceConfig, SourceContext, DataType};
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
@@ -61,8 +62,6 @@ impl SourceConfig for NginxStubConfig {
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let start = Instant::now();
-
                 let metrics = futures::future::join_all(
                     sources.iter().map(|s| s.collect())
                 ).await;
@@ -140,16 +139,32 @@ impl NginxStub {
     }
 
     async fn collect(&self) -> Vec<Metric> {
+        let start = Utc::now();
         let (up, mut metrics) = match self.collect_metrics().await {
             Ok(metrics) => (1.0, metrics),
             Err(_) => (0.0, vec![]),
         };
+        let end = Utc::now();
+        let d = end.sub(start)
+            .num_nanoseconds()
+            .expect("Nano seconds should not overflow");
 
-        metrics.push(Metric::gauge(
-            "up",
+        metrics.push(Metric::gauge_with_tags(
+            "nginx_up",
             "",
             up,
+            self.tags.clone(),
         ));
+        metrics.push(Metric::gauge_with_tags(
+            "nginx_scrape_duration_seconds",
+            "",
+            d as f64 / 1000.0 / 1000.0 / 1000.0,
+            self.tags.clone(),
+        ));
+
+        for m in metrics.iter_mut() {
+            m.timestamp = Some(end);
+        }
 
         metrics
     }
@@ -161,37 +176,37 @@ impl NginxStub {
 
         Ok(vec![
             Metric::gauge_with_tags(
-                "connections_active",
+                "nginx_connections_active",
                 "",
                 status.active as f64,
                 self.tags.clone(),
             ),
             Metric::sum_with_tags(
-                "connections_accepted_total",
+                "nginx_connections_accepted_total",
                 "",
                 status.accepts as f64,
                 self.tags.clone(),
             ),
             Metric::sum_with_tags(
-                "connections_handled_total",
+                "nginx_connections_handled_total",
                 "",
                 status.handled as f64,
                 self.tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "connections_reading",
+                "nginx_connections_reading",
                 "",
                 status.reading as f64,
                 self.tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "connections_writing",
+                "nginx_connections_writing",
                 "",
                 status.writing as f64,
                 self.tags.clone(),
             ),
             Metric::gauge_with_tags(
-                "connections_waiting",
+                "nginx_connections_waiting",
                 "",
                 status.waiting as f64,
                 self.tags.clone(),
@@ -308,7 +323,6 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "integration-test")]
 mod integration_tests {
     mod nginx {
         use std::collections::HashMap;
