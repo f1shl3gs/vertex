@@ -16,6 +16,7 @@ mod extensions;
 mod error;
 mod http;
 mod template;
+mod multiline;
 
 pub use signal::{SignalHandler};
 

@@ -3205,11 +3205,13 @@ dependencies = [
  "bytes",
  "chrono",
  "dashmap",
+ "flate2",
  "futures",
  "glob",
  "quickcheck",
  "serde",
  "serde_json",
+ "tempfile",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -3439,6 +3441,7 @@ dependencies = [
  "futures-sink",
  "log",
  "pin-project-lite",
+ "slab",
  "tokio",
 ]
 

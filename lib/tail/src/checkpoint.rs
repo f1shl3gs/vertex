@@ -26,10 +26,10 @@ pub struct Fingerprint {
     inode: u64,
 }
 
-impl TryFrom<PathBuf> for Fingerprint {
+impl TryFrom<&PathBuf> for Fingerprint {
     type Error = std::io::Error;
 
-    fn try_from(path: PathBuf) -> Result<Self, Self::Error> {
+    fn try_from(path: &PathBuf) -> Result<Self, Self::Error> {
         let metadata = path.metadata()?;
         Ok(Self {
             dev: metadata.dev(),
@@ -160,7 +160,7 @@ impl Checkpointer {
     /// Persist the current checkpoints state to disk, makeing our best effort to
     /// do so in an atomic way that allow for recovering the previous state in
     /// the event of a crash
-    pub fn flush(&self) -> Result<usize, io::Error> {
+    pub fn persist(&self) -> Result<usize, io::Error> {
         // First drop any checkpoints for files that were removed more than 60s
         // ago. This keeps our working set as small as possible and makes sure we
         // don't spend time and IO writing checkpoints that don't matter anymore.

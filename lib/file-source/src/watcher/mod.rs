@@ -1,21 +1,22 @@
 use std::{
     fs,
-    io::{self, BufRead},
+    io::{self, BufRead, Seek},
     path::PathBuf,
     time::{
         Duration,
         Instant,
     },
 };
-use std::io::Seek;
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
 use tracing::{debug};
 use flate2::bufread::MultiGzDecoder;
+
 use crate::{Position, ReadFrom};
 use crate::buffer::read_until_with_max_size;
 use crate::metadata_ext::PortableFileExt;
+
 
 /// The `Watcher` struct defines the polling based state machine which reads
 /// from a file path, transparently updating the underlying file descriptor

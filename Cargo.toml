@@ -154,7 +154,7 @@ jemalloc-ctl = { version = "0.3.3", optional = true }
 # futrures & tokio
 tokio = { version = "1.13.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time"] }
-tokio-util = { version = "0.6.7", features = ["codec"] }
+tokio-util = { version = "0.6.7", default-features = false, features = ["codec", "time"] }
 bytes = { version = "1.1.0", features = ["serde"] }
 futures = { version = "0.3.17" }
 async-trait = { version = "0.1.50" }
