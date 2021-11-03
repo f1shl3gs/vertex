@@ -101,7 +101,7 @@ pub fn open<'a, T>(
             },
             _ => DataDirError::Metadata {
                 data_dir: dir.into(),
-                source: err,
+                source: err
             }
         })
         .and_then(|m| {
