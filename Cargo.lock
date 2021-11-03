@@ -245,6 +245,7 @@ dependencies = [
  "futures",
  "pin-project",
  "serde",
+ "snafu",
  "tokio",
 ]
 

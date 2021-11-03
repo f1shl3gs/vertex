@@ -9,6 +9,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
+use snafu::Snafu;
 use futures::{Sink, Stream};
 use pin_project::pin_project;
 
@@ -100,7 +101,7 @@ pub fn open<'a, T>(
             },
             _ => DataDirError::Metadata {
                 data_dir: dir.into(),
-                source: err
+                source: err,
             }
         })
         .and_then(|m| {
@@ -118,7 +119,7 @@ pub fn open<'a, T>(
 
 #[derive(Default)]
 pub struct Buffer<T> {
-    phantom: PhantomData<T>
+    phantom: PhantomData<T>,
 }
 
 impl<T> Buffer<T>
@@ -132,7 +133,6 @@ impl<T> Buffer<T>
         max_size: usize,
         buffer_usage_data: Arc<BufferUsageData>,
     ) -> Result<(Writer<T>, Reader<T>, Acker), DataDirError> {
-
         todo!()
     }
 }

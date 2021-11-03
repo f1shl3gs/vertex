@@ -11,3 +11,4 @@ futures = { version = "0.3.16", default-features = false, features = ["std"] }
 pin-project = { version = "1.0.8", default-features = false }
 serde = { version = "1.0.127", default-features = false, features = ["derive"] }
 tokio = { version = "1.13.0", default-features = false, features = ["rt", "macros", "rt-multi-thread"] }
+snafu = { version = "0.6" }
