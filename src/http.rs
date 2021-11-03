@@ -62,7 +62,7 @@ impl<B> HttpClient<B>
             .context(BuildProxyConnector)?;
         let client = Client::builder()
             .build(proxy);
-        let user_agent = HeaderValue::from_str(&format!("Vector/{}", crate::built_info::PKG_VERSION))
+        let user_agent = HeaderValue::from_str(&format!("Vertex/{}", crate::built_info::PKG_VERSION))
             .expect("invalid header value for version!");
 
         Ok(HttpClient {

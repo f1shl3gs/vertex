@@ -1,15 +1,17 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, hash_map::Entry};
 use std::hash::Hash;
 use std::pin::Pin;
+use std::time::Duration;
 use std::task::{Context, Poll};
-use bytes::Bytes;
 
-use chrono::Duration;
+use bytes::{Bytes, BytesMut};
 use futures::Stream;
-use regex::Regex;
+use regex::bytes::Regex;
 use serde::{Deserialize, Serialize};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
+use futures::StreamExt;
+use pin_project::pin_project;
 
 /// The mode of operation of the line aggregator
 #[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
@@ -92,6 +94,17 @@ pub struct Logic<K, C> {
     timeouts: DelayQueue<K>,
 }
 
+impl<K, C> Logic<K, C> {
+    /// Create a new `Logic` using the specified `Config`
+    pub fn new(config: Config) -> Self {
+        Self {
+            config,
+            buffers: HashMap::new(),
+            timeouts: DelayQueue::new(),
+        }
+    }
+}
+
 impl<T, K, C> LineAgg<T, K, C>
     where
         T: Stream<Item=(K, Bytes, C)> + Unpin,
@@ -136,9 +149,9 @@ impl<T, K, C> Stream for LineAgg<T, K, C>
 
             // If we're in draining mode, short circuit here.
             if let Some(to_drain) = &mut this.draining {
-                match to_drain.pop() {
+                return match to_drain.pop() {
                     Some(val) => Poll::Ready(Some(val)),
-                    _ => Poll::Ready(None)
+                    _ => Poll::Ready(None),
                 }
             }
 
@@ -215,5 +228,200 @@ impl<T, K, C> LineAgg<T, K, C>
         };
 
         Some(val)
+    }
+}
+
+/// Specifies the amount of lines to emit in response to a single input line.
+/// We have to emit either one or two lines.
+pub enum Emit<T> {
+    /// Emit one line.
+    One(T),
+    /// Emit two lines, in the order they're specified
+    Two(T, T),
+}
+
+/// A helper enum
+enum Decision {
+    Continue,
+    EndInclude,
+    EndExclude,
+}
+
+impl<K, C> Logic<K, C>
+    where
+        K: Hash + Eq + Clone,
+{
+    /// Handle line, if we have something to output - return it.
+    pub fn handle_line(
+        &mut self,
+        src: K,
+        line: Bytes,
+        context: C,
+    ) -> Option<(K, Emit<(Bytes, C)>)> {
+        // Check if we already have the buffered data for the source
+        match self.buffers.entry(src) {
+            Entry::Occupied(mut entry) => {
+                let condition_matched = self.config.condition_pattern.is_match(line.as_ref());
+                let decision = match (self.config.mode, condition_matched) {
+                    // All consecutive lines matching this pattern are included in the group
+                    (Mode::ContinueThrough, true) => Decision::Continue,
+                    (Mode::ContinueThrough, false) => Decision::EndExclude,
+                    // All consecutive lines matching this pattern, plus one additional line,
+                    // are included in the group
+                    (Mode::ContinuePast, true) => Decision::Continue,
+                    (Mode::ContinuePast, false) => Decision::EndInclude,
+                    // All consecutive lines not matching this pattern are included in the group
+                    (Mode::HaltBefore, true) => Decision::EndExclude,
+                    (Mode::HaltBefore, false) => Decision::Continue,
+                    // All consecutive lines, up to and including the first line matching this
+                    // pattern, are included in the group
+                    (Mode::HaltWith, true) => Decision::EndInclude,
+                    (Mode::HaltWith, false) => Decision::Continue
+                };
+
+                match decision {
+                    Decision::Continue => {
+                        let buffered = entry.get_mut();
+                        self.timeouts.reset(&buffered.0, self.config.timeout);
+                        buffered.1.add_next_line(line);
+                        None
+                    }
+                    Decision::EndInclude => {
+                        let (src, (key, mut buffered)) = entry.remove_entry();
+                        self.timeouts.remove(&key);
+                        buffered.add_next_line(line);
+                        Some((src, Emit::One(buffered.merge())))
+                    }
+                    Decision::EndExclude => {
+                        let (src, (key, buffered)) = entry.remove_entry();
+                        self.timeouts.remove(&key);
+                        Some((src, Emit::Two(buffered.merge(), (line, context))))
+                    }
+                }
+            }
+            Entry::Vacant(entry) => {
+                // This line is a candidate for buffering, or passing through
+                if self.config.start_pattern.is_match(line.as_ref()) {
+                    // It was indeed a new line we need to filter. Set the timeout
+                    // buffer this line.
+                    let key = self.timeouts
+                        .insert(entry.key().clone(), self.config.timeout);
+                    entry.insert((key, Aggregate::new(line, context)));
+                    None
+                } else {
+                    // It's just a regular line we don't really care about
+                    Some((entry.into_key(), Emit::One((line, context))))
+                }
+            }
+        }
+    }
+}
+
+struct Aggregate<C> {
+    lines: Vec<Bytes>,
+    context: C,
+}
+
+impl<C> Aggregate<C> {
+    fn new(first_line: Bytes, context: C) -> Self {
+        Self {
+            lines: vec![first_line],
+            context,
+        }
+    }
+
+    fn add_next_line(&mut self, line: Bytes) {
+        self.lines.push(line)
+    }
+
+    fn merge(self) -> (Bytes, C) {
+        let capacity = self.lines.iter()
+            .map(|line| line.len() + 1)
+            .sum::<usize>() - 1;
+        let mut bytes_mut = BytesMut::with_capacity(capacity);
+        let mut first = true;
+        for line in self.lines {
+            if first {
+                first = false
+            } else {
+                bytes_mut.extend_from_slice(b"\n");
+            }
+
+            bytes_mut.extend_from_slice(&line);
+        }
+
+        (bytes_mut.freeze(), self.context)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use tokio_stream::StreamExt;
+    use super::*;
+
+    type Filename = String;
+
+    fn stream_from_lines<'a>(lines: &'a [&'static str]) -> impl Stream<Item=(Filename, Bytes, ())> + 'a {
+        futures::stream::iter(lines.iter().map(|line| (
+            "test.log".to_owned(),
+            Bytes::from_static(line.as_bytes()),
+            (),
+        )))
+    }
+
+    fn assert_results(actual: Vec<(Filename, Bytes, ())>, expected: &[&str]) {
+        let expected_mapped: Vec<(Filename, Bytes, ())> = expected
+            .iter()
+            .map(|line| (
+                "test.log".to_owned(),
+                Bytes::copy_from_slice(line.as_bytes()),
+                (),
+            ))
+            .collect();
+
+        assert_eq!(
+            actual, expected_mapped,
+            "actual on the left, expected on the right"
+        )
+    }
+
+    async fn run_and_assert(lines: &[&'static str], config: Config, expected: &[&'static str]) {
+        let stream = stream_from_lines(lines);
+        let logic = Logic::new(config);
+        let aggr = LineAgg::new(stream, logic);
+        let results = aggr.collect().await;
+        assert_results(results, expected)
+    }
+
+    #[tokio::test]
+    async fn mode_continue_through_1() {
+        let lines = vec![
+            "some usual line",
+            "some other usual line",
+            "first part",
+            " second part",
+            " last part",
+            "another normal message",
+            "finishing message",
+            " last part of the incomplete finishing message",
+        ];
+
+        let config = Config {
+            start_pattern: Regex::new("^[^\\s]").unwrap(),
+            condition_pattern: Regex::new("^[\\s]+").unwrap(),
+            mode: Mode::ContinueThrough,
+            timeout: std::time::Duration::from_millis(10),
+        };
+
+        let expected = vec![
+            "some usual line",
+            "some other usual line",
+            concat!("first part\n", " second part\n", " last part"),
+            "another normal message",
+            concat!(
+            "finishing message\n",
+            " last part of the incomplete finishing message"
+            ),
+        ];
     }
 }
