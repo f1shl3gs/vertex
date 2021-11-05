@@ -1,15 +1,17 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::fmt::Display;
+use std::marker::PhantomData;
 
 use futures::Stream;
+
 use crate::DecodeBytes;
 
 pub struct Reader<T>
     where
         T: Send + Sync + Unpin,
 {
-
+    phantom: PhantomData<T>
 }
 
 impl<T> Stream for Reader<T>

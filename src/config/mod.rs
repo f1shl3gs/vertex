@@ -16,6 +16,8 @@ pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use component::{GenerateConfig, ComponentDescription, ExampleError};
+#[cfg(test)]
+pub use component::test_generate_config;
 
 use std::path::PathBuf;
 use async_trait::async_trait;
@@ -209,6 +211,19 @@ pub struct SourceContext {
     pub shutdown: ShutdownSignal,
     pub global: GlobalOptions,
     pub proxy: ProxyConfig,
+}
+
+impl SourceContext {
+    #[cfg(test)]
+    pub fn new_test(output: Pipeline) -> Self {
+        Self {
+            name: "default".to_string(),
+            out: output,
+            shutdown: ShutdownSignal::noop(),
+            global: Default::default(),
+            proxy: Default::default(),
+        }
+    }
 }
 
 #[async_trait::async_trait]

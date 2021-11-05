@@ -30,8 +30,8 @@ mod selfstat;
 mod kmsg;
 #[cfg(feature = "sources-internal_metrics")]
 mod internal_metrics;
-#[cfg(feature = "sources-internal_log")]
-mod internal_log;
+#[cfg(feature = "sources-internal_logs")]
+mod internal_logs;
 #[cfg(feature = "sources-bind")]
 mod bind;
 #[cfg(feature = "sources-haproxy")]
@@ -44,6 +44,8 @@ mod fluentd;
 mod syslog;
 #[cfg(feature = "sources-tail")]
 mod tail;
+#[cfg(feature = "sources-kafka_metrics")]
+mod kafka_metrics;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;

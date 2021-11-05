@@ -2,13 +2,14 @@ pub mod config;
 pub mod transforms;
 pub mod sources;
 pub mod topology;
+pub mod trace;
+pub mod signal;
+pub mod duration;
 mod shutdown;
 mod sinks;
 mod timezone;
-pub mod duration;
 mod pipeline;
 mod buffers;
-pub mod signal;
 mod tls;
 mod trigger;
 mod app;
@@ -121,4 +122,8 @@ pub fn get_version() -> String {
         let version = format!("{}-nightly", built_info::PKG_VERSION);
 
     version
+}
+
+pub fn hostname() -> std::io::Result<String> {
+    Ok(::hostname::get()?.to_string_lossy().into())
 }

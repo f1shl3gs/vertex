@@ -33,10 +33,12 @@ default = [
     "sources-node_metrics",
     "sources-ntp",
     "sources-kafka",
+    "sources-kafka_metrics",
     "sources-kmsg",
     "sources-journald",
     "sources-selfstat",
     "sources-internal_metrics",
+    "sources-internal_logs",
     "sources-redis",
     "sources-zookeeper",
     "sources-generator",
@@ -78,11 +80,12 @@ sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-kafka = ["rdkafka"]
+sources-kafka_metrics = []
 sources-kmsg = []
 sources-selfstat = ["libc"]
 sources-journald = []
 sources-internal_metrics = []
-sources-internal_log = []
+sources-internal_logs = []
 sources-redis = ["redis"]
 sources-pulsar = ["pulsar"]
 sources-prometheus_scrape = []
@@ -227,3 +230,4 @@ pulsar = { version = "4.1.1", default-features = false, optional = true, feature
 seahash = { version = "4.1.0", default-features = false, optional = true }
 inventory = { version = "0.1.10" }
 num_cpus = { version = "1.13.0" }
+once_cell = { version = "1.8", default-features = false }

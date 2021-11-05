@@ -3,7 +3,6 @@ mod writer;
 
 use std::io;
 use std::fmt::{Debug, Display};
-use std::marker::PhantomData;
 use std::path::{Path, PathBuf};
 use std::pin::Pin;
 use std::sync::Arc;
@@ -32,7 +31,7 @@ pub enum DataDirError {
     #[snafu(display("Unable to open data_dir {:?}: {:?}", data_dir, source))]
     Open {
         data_dir: PathBuf,
-        source: leveldb::database::error::Error,
+        source: std::io::Error,
     },
 }
 
@@ -45,7 +44,7 @@ pub struct Writer<T>
         <T as DecodeBytes<T>>::Error: Debug,
 {
     #[pin]
-    inner: String, // TODO: implement it
+    inner: writer::Writer<T>,
 }
 
 impl<T> Sink<T> for Writer<T>
@@ -82,7 +81,7 @@ pub fn open<'a, T>(
     Writer<T>,
     Box<dyn Stream<Item=T> + 'a + Unpin + Send>,
     super::Acker
-), DataDirErrr>
+), DataDirError>
     where
         T: 'a + Send + Sync + Unpin + Clone + EncodeBytes<T> + DecodeBytes<T>,
         <T as EncodeBytes<T>>::Error: Debug,
@@ -101,7 +100,7 @@ pub fn open<'a, T>(
             },
             _ => DataDirError::Metadata {
                 data_dir: dir.into(),
-                source: err
+                source: err,
             }
         })
         .and_then(|m| {
@@ -117,7 +116,7 @@ pub fn open<'a, T>(
     todo!()
 }
 
-#[derive(Default)]
+/*#[derive(Default)]
 pub struct Buffer<T> {
     phantom: PhantomData<T>,
 }
@@ -135,4 +134,4 @@ impl<T> Buffer<T>
     ) -> Result<(Writer<T>, Reader<T>, Acker), DataDirError> {
         todo!()
     }
-}
+}*/

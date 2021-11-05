@@ -1,8 +1,13 @@
 use std::fmt::Debug;
 use std::pin::Pin;
+use std::sync::Arc;
+use std::sync::atomic::AtomicUsize;
 use std::task::{Context, Poll};
+
 use futures::Sink;
+
 use crate::{DecodeBytes, EncodeBytes};
+use crate::usage::BufferUsageData;
 
 pub struct Writer<T>
 where
@@ -10,7 +15,11 @@ where
     <T as EncodeBytes<T>>::Error: Debug,
     <T as DecodeBytes<T>>::Error: Debug,
 {
-    // TODO
+    offset: Arc<AtomicUsize>,
+
+    slot: Option<T>,
+
+    usage: Arc<BufferUsageData>,
 }
 
 impl<T> Clone for Writer<T>
@@ -21,7 +30,9 @@ where
 {
     fn clone(&self) -> Self {
         Self {
-            // TODO
+            offset: self.offset.clone(),
+            slot: None,
+            usage: self.usage.clone()
         }
     }
 }
@@ -57,7 +68,9 @@ where
     <T as EncodeBytes<T>>::Error: Debug,
     <T as DecodeBytes<T>>::Error: Debug,
 {
-
+    fn flush(&self) {
+        // TODO
+    }
 }
 
 impl<T> Drop for Writer<T>

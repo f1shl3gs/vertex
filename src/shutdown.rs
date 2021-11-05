@@ -358,6 +358,15 @@ impl ShutdownSignal {
     }
 
     #[cfg(test)]
+    pub fn noop() -> Self {
+        let (trigger, tripwire) = Tripwire::new();
+        Self {
+            begin: Some(tripwire),
+            completed: Some(ShutdownSignalToken::new(trigger)),
+        }
+    }
+
+    #[cfg(test)]
     pub fn new_wired() -> (Trigger, ShutdownSignal, Tripwire) {
         let (trigger_shutdown, tripwire) = Tripwire::new();
         let (trigger, shutdown_done) = Tripwire::new();

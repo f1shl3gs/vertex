@@ -247,6 +247,12 @@ impl From<bool> for Value {
     }
 }
 
+impl From<u32> for Value {
+    fn from(v: u32) -> Self {
+        Self::Uint64(v as u64)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use std::io::Read;
