@@ -1,32 +1,36 @@
-use serde::{Deserialize, Serialize};
-use async_trait::async_trait;
 use std::{
+    fmt::Write,
     net::{SocketAddr, IpAddr, Ipv4Addr},
     sync::{Arc, RwLock},
+    hash::Hasher,
+    ops::{Deref, DerefMut},
+    convert::Infallible,
 };
-use std::fmt::Write;
-use crate::{
-    sinks::{
-        Sink,
-        StreamSink,
-    },
-    config::{SinkConfig, SinkContext, DataType, Resource, HealthCheck},
-    tls::TLSConfig,
-};
+
+use serde::{Deserialize, Serialize};
+use async_trait::async_trait;
 use event::{Event, Metric};
 use futures::prelude::stream::BoxStream;
 use stream_cancel::{Trigger, Tripwire};
-use crate::buffers::Acker;
 use chrono::Utc;
-use std::hash::Hasher;
 use indexmap::set::IndexSet;
-use std::ops::{Deref, DerefMut};
 use hyper::service::{make_service_fn, service_fn};
-use std::convert::Infallible;
 use hyper::{Request, Body, Method, Response, StatusCode, Server};
 use futures::{StreamExt, FutureExt};
 use event::MetricValue;
 use hyper::http::HeaderValue;
+
+use crate::{
+    buffers::Acker,
+    sinks::{
+        Sink,
+        StreamSink,
+    },
+    config::{SinkDescription, SinkConfig, SinkContext, DataType, Resource, HealthCheck},
+    tls::TLSConfig,
+    impl_generate_config_from_default,
+};
+
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -63,6 +67,12 @@ fn default_listen_address() -> SocketAddr {
 fn default_telemetry_path() -> String {
     "/metrics".into()
 }
+
+inventory::submit! {
+    SinkDescription::new::<PrometheusExporterConfig>("prometheus_exporter")
+}
+
+impl_generate_config_from_default!(PrometheusExporterConfig);
 
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
