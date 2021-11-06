@@ -98,12 +98,15 @@ inventory::submit! {
 }
 
 impl GenerateConfig for AddTagsConfig {
-    fn generate_config() -> String {
-        r##"
-tags:
-    foo: bar
-    key: value
-        "##.to_string()
+    fn generate_config() -> serde_yaml::Value {
+        let mut tags = BTreeMap::new();
+        tags.insert("key1".to_string(), "value1".to_string());
+        tags.insert("key2".to_string(), "value2".to_string());
+
+        serde_yaml::to_value(Self {
+            tags,
+            overwrite: default_overwrite(),
+        }).unwrap()
     }
 }
 
@@ -121,7 +124,7 @@ mod tests {
             1,
             tags!(
                 "k1" => "v1"
-            )
+            ),
         );
 
         let m = tags!(
@@ -140,7 +143,7 @@ mod tests {
                 tags!(
                     "k1" => "v1",
                     "k2" => "v2"
-                )
+                ),
             ).into()
         )
     }
@@ -153,7 +156,7 @@ mod tests {
             1,
             tags!(
                 "k1" => "v1"
-            )
+            ),
         );
         let m = tags!(
             "k1" => "v1_new",
@@ -170,7 +173,7 @@ mod tests {
                 tags!(
                     "k1" => "v1_new",
                     "k2" => "v2"
-                )
+                ),
             ).into()
         );
     }

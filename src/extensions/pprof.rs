@@ -12,12 +12,21 @@ use hyper::{
 use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use crate::extensions::Extension;
 use crate::shutdown::ShutdownSignal;
+use crate::impl_generate_config_from_default;
 
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct PProfConfig {
     pub listen: SocketAddr,
+}
+
+impl Default for PProfConfig {
+    fn default() -> Self {
+        Self {
+            listen: "0.0.0.0:10910".parse().unwrap()
+        }
+    }
 }
 
 #[async_trait::async_trait]
@@ -83,10 +92,4 @@ inventory::submit! {
     ExtensionDescription::new::<PProfConfig>("pprof")
 }
 
-impl GenerateConfig for PProfConfig {
-    fn generate_config() -> String {
-        r##"
-listen: 0.0.0.0:10910
-        "##.to_string()
-    }
-}
+impl_generate_config_from_default!(PProfConfig);

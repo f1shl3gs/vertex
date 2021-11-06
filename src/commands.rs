@@ -10,7 +10,6 @@ pub enum Commands {
 }
 
 /// TODO: the run implement is dummy, maybe we can simplify it with trait
-
 #[derive(Debug, Parser)]
 pub struct Sources {
     name: Option<String>,
@@ -24,7 +23,7 @@ impl Sources {
                     if source.type_str == name {
                         let example = SourceDescription::example(source.type_str).unwrap();
                         println!("Name: {}\n", source.type_str);
-                        println!("{}\n", example)
+                        println!("{:?}\n", example)
                     }
                 }
             }
@@ -50,7 +49,7 @@ impl Transforms {
                     if transform.type_str == name {
                         let example = TransformDescription::example(transform.type_str).unwrap();
                         println!("Name: {}\n", transform.type_str);
-                        println!("{}\n", example)
+                        println!("{:?}\n", example)
                     }
                 }
             }
@@ -78,7 +77,7 @@ impl Sinks {
                     if sink.type_str == name {
                         let example = SinkDescription::example(sink.type_str).unwrap();
                         println!("Name: {}\n", sink.type_str);
-                        println!("{}\n", example)
+                        println!("{:?}\n", example)
                     }
                 }
             }
@@ -105,7 +104,7 @@ impl Extensions {
                     if extension.type_str == name {
                         let example = ExtensionDescription::example(extension.type_str).unwrap();
                         println!("Name: {}\n", extension.type_str);
-                        println!("{}\n", example)
+                        println!("{:?}\n", example)
                     }
                 }
             }

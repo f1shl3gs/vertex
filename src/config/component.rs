@@ -3,18 +3,15 @@ use std::marker::PhantomData;
 use snafu::Snafu;
 
 pub trait GenerateConfig {
-    fn generate_config() -> String;
+    fn generate_config() -> serde_yaml::Value;
 }
 
 #[macro_export]
 macro_rules! impl_generate_config_from_default {
     ($type:ty) => {
         impl $crate::config::GenerateConfig for $type {
-            fn generate_config() -> String {
-                let s = serde_yaml::to_string(&<$type>::default())
-                    .unwrap();
-
-                s
+            fn generate_config() -> serde_yaml::Value {
+                serde_yaml::to_value(&Self::default()).unwrap()
             }
         }
     };
@@ -32,7 +29,7 @@ pub enum ExampleError {
 /// and other useful information about the plugin
 pub struct ComponentDescription<T: Sized> {
     pub type_str: &'static str,
-    example: String,
+    example: serde_yaml::Value,
     component_type: PhantomData<T>,
 }
 
@@ -52,7 +49,7 @@ impl<T> ComponentDescription<T>
     }
 
     /// Returns an example config for a plugin identified by tis type
-    pub fn example(type_str: &str) -> Result<String, ExampleError> {
+    pub fn example(type_str: &str) -> Result<serde_yaml::Value, ExampleError> {
         inventory::iter::<ComponentDescription<T>>
             .into_iter()
             .find(|t| t.type_str == type_str)
