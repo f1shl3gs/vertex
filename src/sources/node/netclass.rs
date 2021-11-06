@@ -401,7 +401,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_netcalss_interface() {
-        let path = "testdata/sys/class/net/eth0";
+        let path = "tests/fixtures/sys/class/net/eth0";
         let nci = NetClassInterface::from(path).await.unwrap();
 
         assert_eq!(nci.addr_assign_type, Some(3));

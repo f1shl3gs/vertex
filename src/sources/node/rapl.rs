@@ -121,7 +121,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_rapl_zones() {
-        let root = "testdata/sys";
+        let root = "tests/fixtures/sys";
         let zones = get_rapl_zones(root).await.unwrap();
         assert_eq!(zones.len(), 3);
         assert_eq!(zones[0].microjoules, 240422366267);

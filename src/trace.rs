@@ -1,9 +1,14 @@
+use std::any::TypeId;
 use std::sync::{Mutex, MutexGuard};
 
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use event::LogRecord;
 use once_cell::sync::OnceCell;
-use tracing::{info, warn, error, dispatcher::{set_global_default}, Dispatch};
+use tracing::{dispatcher::{set_global_default}, Dispatch, Subscriber, Metadata, Id, Event};
+use tracing::level_filters::LevelFilter;
+use tracing::span::{Attributes, Record};
+use tracing::subscriber::Interest;
+use tracing_core::span::Current;
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
 
@@ -44,7 +49,89 @@ pub fn reset_early_buffer() {
     *early_buffer() = Some(vec![])
 }
 
+struct BroadcastSubscriber<S> {
+    subscriber: S,
+}
+
+impl<S: Subscriber + 'static> Subscriber for BroadcastSubscriber<S> {
+    #[inline]
+    fn register_callsite(&self, metadata: &'static Metadata<'static>) -> Interest {
+        self.subscriber.register_callsite(metadata)
+    }
+
+    #[inline]
+    fn enabled(&self, metadata: &Metadata<'_>) -> bool {
+        self.subscriber.enabled(metadata)
+    }
+
+    #[inline]
+    fn max_level_hint(&self) -> Option<LevelFilter> {
+        self.subscriber.max_level_hint()
+    }
+
+    #[inline]
+    fn new_span(&self, span: &Attributes<'_>) -> Id {
+        self.subscriber.new_span(span)
+    }
+
+    #[inline]
+    fn record(&self, span: &Id, record: &Record<'_>) {
+        self.subscriber.record(span, record)
+    }
+
+    #[inline]
+    fn record_follows_from(&self, span: &Id, follows: &Id) {
+        self.subscriber.record_follows_from(span, follows)
+    }
+
+    #[inline]
+    fn event(&self, event: &Event<'_>) {
+        if let Some(buffer) = early_buffer().as_mut() {
+            buffer.push(event.into())
+        }
+
+        if let Some(sender) = SENDER.get() {
+            // Ignore errors
+            let _ = sender.send(event.into());
+        }
+
+        self.subscriber.event(event)
+    }
+
+    #[inline]
+    fn enter(&self, span: &Id) {
+        self.subscriber.enter(span)
+    }
+
+    #[inline]
+    fn exit(&self, span: &Id) {
+        self.subscriber.exit(span)
+    }
+
+    #[inline]
+    fn clone_span(&self, id: &Id) -> Id {
+        self.subscriber.clone_span(id)
+    }
+
+    #[inline]
+    fn try_close(&self, id: Id) -> bool {
+        self.subscriber.try_close(id)
+    }
+
+    #[inline]
+    fn current_span(&self) -> Current {
+        self.subscriber.current_span()
+    }
+
+    unsafe fn downcast_raw(&self, id: TypeId) -> Option<*const ()> {
+        self.subscriber.downcast_raw(id)
+    }
+}
+
 pub fn init(color: bool, json: bool, levels: &str) {
+    BUFFER.set(Mutex::new(Some(vec![])))
+        .expect("Log record buffer init failed");
+
     // An escape hatch to disable injecting a metrics layer into tracing.
     // May be used for performance reasons. This is a hidden and undocumented functionality.
     let metrics_layer_enabled = !matches!(
@@ -83,8 +170,8 @@ pub fn init(color: bool, json: bool, levels: &str) {
             .with_test_writer(); // ensures output is captured
 
         // TODO: rate limit
-        let s = subscriber.with(formatter);
-        Dispatch::new(s)
+        let subscriber = subscriber.with(formatter);
+        Dispatch::new(BroadcastSubscriber { subscriber })
     } else {
         #[cfg(not(test))]
             let formatter = tracing_subscriber::fmt::Layer::default()
@@ -98,8 +185,8 @@ pub fn init(color: bool, json: bool, levels: &str) {
 
         // TODO: rate limit
 
-        let s = subscriber.with(formatter);
-        Dispatch::new(s)
+        let subscriber = subscriber.with(formatter);
+        Dispatch::new(BroadcastSubscriber { subscriber })
     };
 
     let _ = LogTracer::init().expect("init log tracer failed");

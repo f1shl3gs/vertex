@@ -21,11 +21,11 @@ use super::{IncomingListener, TcpBind, FileOpenFailed, ReadPemFailed};
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
 #[cfg(test)]
-pub const TEST_PEM_CA_PATH: &str = "testdata/tls/Vertex_CA.crt";
+pub const TEST_PEM_CA_PATH: &str = "tests/fixtures/tls/Vertex_CA.crt";
 #[cfg(test)]
-pub const TEST_PEM_CRT_PATH: &str = "testdata/tls/localhost.crt";
+pub const TEST_PEM_CRT_PATH: &str = "tests/fixtures/tls/localhost.crt";
 #[cfg(test)]
-pub const TEST_PEM_KEY_PATH: &str = "testdata/tls/localhost.key";
+pub const TEST_PEM_KEY_PATH: &str = "tests/fixtures/tls/localhost.key";
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -271,8 +271,8 @@ impl MaybeTLSListener {
 mod tests {
     use super::*;
 
-    const TEST_PEM_CRT_BYTES: &[u8] = include_bytes!("../../testdata/tls/localhost.crt");
-    const TEST_PEM_KEY_BYTES: &[u8] = include_bytes!("../../testdata/tls/localhost.key");
+    const TEST_PEM_CRT_BYTES: &[u8] = include_bytes!("../../tests/fixtures/tls/localhost.crt");
+    const TEST_PEM_KEY_BYTES: &[u8] = include_bytes!("../../tests/fixtures/tls/localhost.key");
 
     #[test]
     fn from_options_pem() {

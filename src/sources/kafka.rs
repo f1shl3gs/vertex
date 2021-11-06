@@ -322,7 +322,6 @@ async fn drain(
                     None => continue
                 };
                 let mut log = LogRecord {
-                    time_unix_nano: 0,
                     tags: Default::default(),
                     fields: Default::default(),
                 };

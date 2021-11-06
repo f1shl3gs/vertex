@@ -139,14 +139,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_cpu_freq_cpu_info() {
-        let cpu_path = "testdata/sys/devices/system/cpu/cpu0";
+        let cpu_path = "tests/fixtures/sys/devices/system/cpu/cpu0";
         let v = parse_cpu_freq_cpu_info(cpu_path).await.unwrap();
         println!("{:?}", v);
     }
 
     #[tokio::test]
     async fn test_get_cpu_freq_stat() {
-        let sys_path = "testdata/sys";
+        let sys_path = "tests/fixtures/sys";
         let stats = get_cpu_freq_stat(sys_path).await.unwrap();
 
         assert_eq!(stats[0], Stat {

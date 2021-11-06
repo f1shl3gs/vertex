@@ -10,22 +10,24 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
-use tokio::time::Duration;
-
 extern crate chrono;
 extern crate chrono_tz;
 
-use clap::{Parser};
+use std::collections::HashMap;
 
+use clap::{Parser};
+use tokio::time::Duration;
+use tokio_stream::wrappers::UnboundedReceiverStream;
+use tokio_stream::StreamExt;
+use tracing::{info, warn, error};
 use vertex::{
     signal::{self, SignalTo},
     config::{self, ConfigPath, FormatHint},
     topology,
 };
-use std::collections::HashMap;
-use tokio_stream::wrappers::UnboundedReceiverStream;
-use tokio_stream::StreamExt;
+
 use crate::commands::Commands;
+
 
 #[derive(Parser, Debug)]
 #[clap(version = "0.1.0")]
@@ -66,15 +68,11 @@ fn main() {
         .build()
         .unwrap();
 
-    // Any internal_logs source will have grabbed a copy of the early buffer by this
-    // point and set up a subscriber
-    crate::trace::stop_buffering();
-
     runtime.block_on(async move {
         #[cfg(test)]
-        crate::trace::init(true, false, "debug");
+        vertex::trace::init(true, false, "debug");
         #[cfg(not(test))]
-        crate::trace::init(true, false, "info");
+        vertex::trace::init(true, false, "info");
 
         info!(
             message = "start vertex",
@@ -106,6 +104,10 @@ fn main() {
         // run
         let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
         let mut sources_finished = topology.sources_finished();
+
+        // Any internal_logs source will have grabbed a copy of the early buffer by this
+        // point and set up a subscriber
+        vertex::trace::stop_buffering();
 
         let signal = loop {
             tokio::select! {

@@ -59,6 +59,8 @@ sources:
     type: nginx_stub
     endpoints:
       - http://localhost:10980/basic_status
+  internal_logs:
+    type: internal_logs
 
 transforms:
   add_extra_tags:
@@ -70,6 +72,10 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
+  stdout:
+    type: stdout
+    inputs:
+      - internal_logs
   blackhole:
     type: blackhole
     inputs:

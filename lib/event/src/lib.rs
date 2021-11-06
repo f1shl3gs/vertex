@@ -156,7 +156,6 @@ impl From<LogRecord> for Event {
 impl From<BTreeMap<String, Value>> for Event {
     fn from(m: BTreeMap<String, Value>) -> Self {
         Self::Log(LogRecord {
-            time_unix_nano: 0,
             tags: Default::default(),
             fields: m,
         })
@@ -169,7 +168,6 @@ impl From<String> for Event {
         fields.insert("message".to_string(), Value::Bytes(s.into()));
 
         Self::Log(LogRecord {
-            time_unix_nano: 0,
             tags: Default::default(),
             fields,
         })

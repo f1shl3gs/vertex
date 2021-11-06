@@ -265,7 +265,7 @@ include: .*
     #[tokio::test]
     async fn test_get_net_dev_stats() {
         let conf = NetdevConfig::Include(regex::Regex::new(".*").unwrap());
-        let path = "testdata/proc";
+        let path = "tests/fixtures/proc";
         let stats = conf.get_net_dev_stats(path).await.unwrap();
 
         assert_eq!(stats[0], DeviceStatus {

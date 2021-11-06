@@ -3,19 +3,20 @@
 /// https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
 
 use std::{
-    io::{
-        self, Read,
-    },
+    io::{self, Read},
     time,
 };
+
+use chrono::{Utc, TimeZone};
 use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncReadExt;
+use event::{LogRecord, fields};
+
 use crate::{
     sources::Source,
     config::{DataType, SourceConfig, SourceContext},
 };
-use event::{LogRecord, fields};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -59,13 +60,17 @@ impl SourceConfig for KmsgConfig {
 
                         match parse_line(&buf, n) {
                             Ok((priority, seq, ts, msg)) => {
+                                let nano_seconds = boot + ts * 1000;
+                                let timestamp = Utc.timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32);
+                                let timestamp_key = log_schema::log_schema().timestamp_key();
+
                                 let record = LogRecord {
-                                    time_unix_nano: boot + ts * 1000,
                                     tags: Default::default(),
                                     fields: fields!(
                                         "priority" => priority,
                                         "sequence" => seq,
-                                        "message" => msg
+                                        "message" => msg,
+                                        timestamp_key => timestamp
                                     ),
                                 };
 

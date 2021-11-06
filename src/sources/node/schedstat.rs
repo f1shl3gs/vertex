@@ -98,7 +98,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_schedstat() {
-        let path = "testdata/proc";
+        let path = "tests/fixtures/proc";
         let stats = schedstat(path).await.unwrap();
 
         assert_ne!(stats.len(), 0);

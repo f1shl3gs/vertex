@@ -22,9 +22,7 @@ macro_rules! fields {
         )*
         _map
     });
-    ( $($x:expr => $y:expr,)* ) => (
-        tags!{$($x => $y),*}
-    );
+
 }
 
 

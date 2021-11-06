@@ -212,7 +212,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_proc_stat() {
-        let (cpu_time, threads, _, vsize, rss) = get_proc_stat("testdata/node_metrics/fixtures/proc", 26231).await.unwrap();
+        let (cpu_time, threads, _, vsize, rss) = get_proc_stat("tests/fixtures/node_metrics/fixtures/proc", 26231).await.unwrap();
 
         assert_eq!(cpu_time, 17.21);
         assert_eq!(threads, 1.0);

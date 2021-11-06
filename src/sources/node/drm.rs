@@ -201,7 +201,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_class_dram_card_amdgpu_stats() {
-        let path = "testdata/sys";
+        let path = "tests/fixtures/sys";
 
         let stats = class_drm_card_amdgpu_stats(path).await.unwrap();
 

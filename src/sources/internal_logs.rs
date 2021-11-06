@@ -1,6 +1,5 @@
 use chrono::Utc;
 use futures::{SinkExt, StreamExt};
-use nix::unistd::gethostname;
 use serde::{Deserialize, Serialize};
 use log_schema::log_schema;
 use tokio::sync::broadcast::error::RecvError;
@@ -29,7 +28,16 @@ impl_generate_config_from_default!(InternalLogsConfig);
 #[typetag::serde(name = "internal_logs")]
 impl SourceConfig for InternalLogsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        todo!()
+        let host_key = self.host_key
+            .as_deref()
+            .unwrap_or_else(|| log_schema().host_key())
+            .to_owned();
+        let pid_key = self.pid_key
+            .as_deref()
+            .unwrap_or("pid")
+            .to_owned();
+
+        Ok(Box::pin(run(host_key, pid_key, ctx.out, ctx.shutdown)))
     }
 
     fn output_type(&self) -> DataType {
@@ -65,7 +73,7 @@ async fn run(
         }
 
         log.insert_field(pid_key.clone(), pid);
-        log.try_insert_field(log_schema().source_type_key(), "internal_log");
+        log.try_insert_field(log_schema().source_type_key(), "internal_logs");
         log.try_insert_field(log_schema().timestamp_key(), Utc::now());
 
         Ok(log.into())
@@ -95,6 +103,7 @@ mod tests {
     use std::time::Duration;
     use tokio::time::sleep;
     use futures::channel::mpsc;
+    use tokio_stream::StreamExt;
     use event::Value;
     use testify::collect_ready;
     use super::*;

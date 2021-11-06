@@ -103,7 +103,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_parse_os_release() {
-        let path = format!("testdata{}", USR_LIB_OS_RELEASE);
+        let path = format!("tests/fixtures{}", USR_LIB_OS_RELEASE);
         let m = parse_os_release(&path).await.unwrap();
 
         assert_eq!(m.get("NAME").unwrap(), "Ubuntu");

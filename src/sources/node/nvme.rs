@@ -62,7 +62,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_dir() {
-        let path = PathBuf::from("testdata/sys/class/nvme/nvme0");
+        let path = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
         let mut rd = tokio::fs::read_dir(path).await.unwrap();
 
         while let Some(dir) = rd.next_entry().await.unwrap() {
@@ -72,7 +72,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_nvme_device() {
-        let root = PathBuf::from("testdata/sys/class/nvme/nvme0");
+        let root = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
         let infos = read_nvme_device(root).await.unwrap();
 
         assert_eq!(infos[0], "S680HF8N190894I");

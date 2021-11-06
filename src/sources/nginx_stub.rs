@@ -413,8 +413,8 @@ mod integration_tests {
         let docker = testcontainers::clients::Cli::default();
         let mut image = Nginx::default();
         let pwd = std::env::current_dir().unwrap();
-        image.volumes.insert(format!("{}/testdata/nginx/nginx.conf", pwd.to_string_lossy()), "/etc/nginx/nginx.conf".to_string());
-        image.volumes.insert(format!("{}/testdata/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
+        image.volumes.insert(format!("{}/tests/fixtures/nginx/nginx.conf", pwd.to_string_lossy()), "/etc/nginx/nginx.conf".to_string());
+        image.volumes.insert(format!("{}/tests/fixtures/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
         let service = docker.run(image);
         let host_port = service.get_host_port(80).unwrap();
         let uri = format!("http://127.0.0.1:{}{}", host_port, path)

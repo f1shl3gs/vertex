@@ -877,10 +877,10 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
     let path = match cmd {
-        "stats\r\n" => "testdata/memcached/stats.txt",
-        "stats slabs\r\n" => "testdata/memcached/slabs.txt",
-        "stats items\r\n" => "testdata/memcached/items.txt",
-        "stats settings\r\n" => "testdata/memcached/settings.txt",
+        "stats\r\n" => "tests/fixtures/memcached/stats.txt",
+        "stats slabs\r\n" => "tests/fixtures/memcached/slabs.txt",
+        "stats items\r\n" => "tests/fixtures/memcached/items.txt",
+        "stats settings\r\n" => "tests/fixtures/memcached/settings.txt",
         _ => panic!("unknown commands")
     };
 

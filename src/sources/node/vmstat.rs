@@ -73,7 +73,7 @@ mod tests {
     #[tokio::test]
     async fn test_gather() {
         let conf = VMStatConfig::default();
-        let proc = "testdata/proc";
+        let proc = "tests/fixtures/proc";
 
         let ms = conf.gather(proc).await.unwrap();
         assert_ne!(ms.len(), 0);

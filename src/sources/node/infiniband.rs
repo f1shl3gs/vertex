@@ -825,7 +825,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_infiniband_class() {
-        let root = PathBuf::from("testdata/sys/class/infiniband");
+        let root = PathBuf::from("tests/fixtures/sys/class/infiniband");
         let devs = infiniband_class(root).await.unwrap();
 
         assert_eq!(devs[0], InfiniBandDevice {

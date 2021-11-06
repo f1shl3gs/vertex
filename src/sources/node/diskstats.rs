@@ -168,7 +168,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_gather() {
-        let proc_path = "testdata/proc";
+        let proc_path = "tests/fixtures/proc";
         let collector = DiskStatsConfig {
             ignored: default_ignored()
         };

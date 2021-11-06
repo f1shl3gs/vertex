@@ -112,7 +112,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_edac_stats() {
-        let path = "testdata/sys/devices/system/edac/mc/mc0";
+        let path = "tests/fixtures/sys/devices/system/edac/mc/mc0";
         let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await.unwrap();
 
         assert_eq!(ce_count, 1);
@@ -123,7 +123,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_edac_csrow_stats() {
-        let path = "testdata/sys/devices/system/edac/mc/mc0/csrow0";
+        let path = "tests/fixtures/sys/devices/system/edac/mc/mc0/csrow0";
         let (ce_count, ue_count) = read_edac_csrow_stats(path).await.unwrap();
 
         assert_eq!(ce_count, 3);

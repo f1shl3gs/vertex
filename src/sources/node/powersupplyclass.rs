@@ -454,7 +454,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_power_supply_class() {
-        let root = "testdata/sys";
+        let root = "tests/fixtures/sys";
         let pss = power_supply_class(root).await.unwrap();
 
         assert_eq!(pss.len(), 2);

@@ -420,7 +420,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_stats() {
-        let path = "testdata/sys";
+        let path = "tests/fixtures/sys";
         let stats = stats(path).await.unwrap();
 
         struct Alloc {
@@ -504,7 +504,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_read_device_info() {
-        let path = PathBuf::from("testdata/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
+        let path = PathBuf::from("tests/fixtures/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
         let _infos = read_device_info(&path).await.unwrap();
     }
 }

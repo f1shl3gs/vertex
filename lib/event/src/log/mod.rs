@@ -10,14 +10,12 @@ use std::fmt::Debug;
 use serde::{Deserialize};
 use bytes::Bytes;
 use chrono::Utc;
+use tracing::field::Field;
 
 use crate::{ByteSizeOf, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize)]
 pub struct LogRecord {
-    // time_unix_nano is the time when the event occurred
-    pub time_unix_nano: u64,
-
     pub tags: BTreeMap<String, String>,
 
     pub fields: BTreeMap<String, Value>,
@@ -26,7 +24,6 @@ pub struct LogRecord {
 impl From<BTreeMap<String, Value>> for LogRecord {
     fn from(fields: BTreeMap<String, Value>) -> Self {
         Self {
-            time_unix_nano: 0,
             tags: Default::default(),
             fields,
         }
@@ -52,6 +49,59 @@ impl From<Bytes> for LogRecord {
         // TODO: log schema should be used here
         log.insert_field("message", bs);
         log.insert_field("timestamp", Utc::now());
+
+        log
+    }
+}
+
+impl tracing::field::Visit for LogRecord {
+    fn record_i64(&mut self, field: &Field, value: i64) {
+        self.insert_field(field.name(), value);
+    }
+
+    fn record_u64(&mut self, field: &Field, value: u64) {
+        self.insert_field(field.name(), value);
+    }
+
+    fn record_bool(&mut self, field: &Field, value: bool) {
+        self.insert_field(field.name(), value);
+    }
+
+    fn record_str(&mut self, field: &Field, value: &str) {
+        self.insert_field(field.name(), value.to_string());
+    }
+
+    fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
+        self.insert_field(field.name(), format!("{:?}", value));
+    }
+}
+
+impl From<&tracing::Event<'_>> for LogRecord {
+    fn from(event: &tracing::Event<'_>) -> Self {
+        let now = chrono::Utc::now();
+        let mut log = LogRecord::default();
+        event.record(&mut log);
+
+        log.insert_field("timestamp", now);
+
+        let meta = event.metadata();
+        log.insert_field("metadata.level", meta.level().to_string());
+        log.insert_field("metadata.target", meta.target().to_string());
+        log.insert_field(
+            "metadata.module_path",
+            meta.module_path()
+                .map_or(Value::Null, |mp| Value::Bytes(mp.to_string().into())),
+        );
+        log.insert_field(
+            "metadata.kind",
+            if meta.is_event() {
+                Value::Bytes("event".to_string().into())
+            } else if meta.is_span() {
+                Value::Bytes("span".to_string().into())
+            } else {
+                Value::Null
+            },
+        );
 
         log
     }
