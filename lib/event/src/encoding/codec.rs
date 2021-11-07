@@ -40,7 +40,7 @@ impl Encoder<Event> for StandardEncodings {
         let n = match self {
             StandardEncodings::Text => DEFAULT_TEXT_ENCODER.encode(input, writer),
             StandardEncodings::Json | StandardEncodings::NdJson => DEFAULT_JSON_ENCODER.encode(input, writer),
-        };
+        }?;
 
         written += n;
         let n = self.single_trailer_hook(writer)?;
@@ -92,7 +92,9 @@ pub struct StandardJsonEncoding;
 
 impl Encoder<LogRecord> for StandardJsonEncoding {
     fn encode(&self, input: LogRecord, writer: &mut dyn Write) -> std::io::Result<usize> {
-        as_tr
+        as_tracked_write(writer, &input, |writer, item| {
+            serde_json::to_writer(writer, item)
+        })
     }
 }
 
@@ -117,7 +119,7 @@ impl Encoder<Event> for StandardJsonEncoding {
 pub struct StandardTextEncoding;
 
 impl Encoder<Event> for StandardTextEncoding {
-    fn encode(&self, input: Event, writer: &mut dyn Write) -> io::Result<usize> {
+    fn encode(&self, event: Event, writer: &mut dyn Write) -> io::Result<usize> {
         match event {
             Event::Log(log) => {
                 let msg = log.get_field(log_schema().message_key())

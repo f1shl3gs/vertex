@@ -7,14 +7,14 @@ mod remove;
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 
-use serde::{Deserialize};
+use serde::{Deserialize, Serialize};
 use bytes::Bytes;
 use chrono::Utc;
 use tracing::field::Field;
 
 use crate::{ByteSizeOf, Value};
 
-#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
     pub tags: BTreeMap<String, String>,
 

@@ -20,6 +20,7 @@ pub enum BatchError {
 pub struct BatchConfig {
     pub max_bytes: Option<usize>,
     pub max_events: Option<usize>,
+    #[serde(default)]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub timeout: Option<chrono::Duration>,
 }
@@ -40,7 +41,7 @@ impl BatchConfig {
                 return Self {
                     max_bytes: Some(limit),
                     ..self
-                }
+                };
             }
         }
 

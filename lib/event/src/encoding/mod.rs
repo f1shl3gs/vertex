@@ -55,18 +55,33 @@ pub trait EncodingConfiguration {
     fn only_fields(&self) -> &Option<Vec<Vec<PathComponent>>>;
     fn except_fields(&self) -> &Option<Vec<String>>;
 
+    fn apply_only_fields(&self, log: &mut LogRecord) {
+        todo!()
+    }
+    fn apply_except_fields(&self, log: &mut LogRecord) {
+        todo!()
+    }
+    fn apply_timestamp_format(&self, log: &mut LogRecord) {
+        todo!()
+    }
+
     /// Check that the configuration is valid.
     ///
     /// If an error is returned, the entire encoding configuration should be considered inoperable.
     ///
     /// For example, this checks if `except_fields` and `only_fields` items are mutually exclusive.
     fn validate(&self) -> Result<(), std::io::Error> {
-        if let (Some(only_fields), Some(expect_fields)) = (&self.only_fields(), &self.expect_fields()) {
+        if let (Some(only_fields), Some(expect_fields)) = (&self.only_fields(), &self.except_fields()) {
             if expect_fields.iter().any(|f| {
                 let path_iter = PathIter::new(f).collect::<Vec<_>>();
                 only_fields.iter().any(|v| v == &path_iter)
             }) {
-                return Err("`expect_fields` and `only_fields` should be mutaually exclusive".into());
+                let err = std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "`expect_fields` and `only_fields` should be mutually exclusive",
+                );
+
+                return Err(err);
             }
         }
 
@@ -83,7 +98,9 @@ pub trait EncodingConfiguration {
         // No rules are currently applied to metrics
         if let Some(log) = event.maybe_as_log_mut() {
             // Ordering in here should not matter
-            self.apply_except_fi
+            self.apply_except_fields(log);
+            self.apply_only_fields(log);
+            self.apply_timestamp_format(log);
         }
     }
 }

@@ -1,7 +1,11 @@
 use std::collections::BTreeMap;
+use std::fmt::{Display, Formatter};
+
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+
 use crate::ByteSizeOf;
+
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -91,6 +95,30 @@ impl ByteSizeOf for Metric {
             .fold(0, |acc, (k, v)| acc + k.len() + v.len());
 
         s1
+    }
+}
+
+impl Display for Metric {
+    /// Display a metric using something like Prometheus's text format
+    ///
+    /// ```text
+    /// TIMESTAMP NAMESPACE_NAME{TAGS} KIND DATA
+    /// ```
+    ///
+    /// TIMESTAMP is in ISO 8601 format with UTC time zone.
+    ///
+    /// KIND is either `=` for absolute metrics, or `+` for incremental metrics.
+    ///
+    /// DATA is dependent on the type of metric, and is a simplified representation
+    /// of the data contents. In particular, distributions, histograms, and summaries
+    /// are represented as a list of `X@Y` words, where `X` is the rate, count, or quantile,
+    /// and `Y` is the value or bucket
+    ///
+    /// example:
+    /// ```text
+    /// 2020-08-12T20:23:37.248661343Z vertex_processed_bytes_total{component_kind="sink",component_type="blackhole"} = 6371
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        todo!()
     }
 }
 
