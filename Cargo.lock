@@ -812,6 +812,7 @@ dependencies = [
  "buffers",
  "bytes",
  "chrono",
+ "log_schema",
  "prost 0.8.0",
  "serde",
  "serde_json",

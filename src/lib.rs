@@ -18,6 +18,8 @@ mod error;
 mod http;
 mod template;
 mod multiline;
+mod common;
+mod batch;
 
 pub use signal::{SignalHandler};
 

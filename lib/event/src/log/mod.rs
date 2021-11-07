@@ -1,7 +1,7 @@
 mod insert;
 mod contains;
 mod get;
-mod path_iter;
+pub mod path_iter;
 mod remove;
 
 use std::collections::BTreeMap;

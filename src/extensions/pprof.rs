@@ -9,7 +9,7 @@ use hyper::{
     service::{make_service_fn, service_fn},
 };
 
-use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
+use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
 use crate::extensions::Extension;
 use crate::shutdown::ShutdownSignal;
 use crate::impl_generate_config_from_default;

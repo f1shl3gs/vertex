@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 buffers = { path = "../buffers" }
+log_schema = { path = "../log_schema" }
+
 bytes = { version = "1.0.1", default-features = false, features = ["serde"] }
 serde = { version = "1.0.130", features = ["derive"] }
 chrono = { version = "0.4.19", features = ["serde"] }

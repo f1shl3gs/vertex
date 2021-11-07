@@ -26,7 +26,10 @@ use crate::{
         Sink,
         StreamSink,
     },
-    config::{SinkDescription, SinkConfig, SinkContext, DataType, Resource, HealthCheck},
+    config::{
+        default_false, SinkDescription, SinkConfig, SinkContext,
+        DataType, Resource, HealthCheck,
+    },
     tls::TLSConfig,
     impl_generate_config_from_default,
 };
@@ -45,7 +48,8 @@ pub struct PrometheusExporterConfig {
     #[serde(default = "default_telemetry_path")]
     pub telemetry_path: String,
 
-    pub compression: Option<bool>,
+    #[serde(default = "default_false")]
+    pub compression: bool,
 }
 
 impl Default for PrometheusExporterConfig {
@@ -55,7 +59,7 @@ impl Default for PrometheusExporterConfig {
             tls: None,
             listen: default_listen_address(),
             telemetry_path: default_telemetry_path(),
-            compression: None,
+            compression: default_false(),
         }
     }
 }

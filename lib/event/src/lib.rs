@@ -3,6 +3,7 @@ mod metric;
 mod trace;
 mod value;
 mod macros;
+mod encoding;
 
 // re-export
 pub use metric::*;
