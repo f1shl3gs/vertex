@@ -1,9 +1,12 @@
 use std::collections::BTreeMap;
 use std::convert::TryInto;
+
 use serde::{Deserialize, Serialize, Serializer};
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, SecondsFormat, Utc};
+
 use crate::ByteSizeOf;
+
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
 pub enum Value {
@@ -250,6 +253,61 @@ impl From<bool> for Value {
 impl From<u32> for Value {
     fn from(v: u32) -> Self {
         Self::Uint64(v as u64)
+    }
+}
+
+impl<T: Into<Value>> From<Vec<T>> for Value {
+    fn from(value: Vec<T>) -> Self {
+        value.into_iter()
+            .map(std::convert::Into::into)
+            .collect::<Self>()
+    }
+}
+
+impl FromIterator<Value> for Value {
+    fn from_iter<T: IntoIterator<Item=Value>>(iter: T) -> Self {
+        Value::Array(iter.into_iter().collect::<Vec<Value>>())
+    }
+}
+
+impl FromIterator<(String, Value)> for Value {
+    fn from_iter<T: IntoIterator<Item=(String, Value)>>(iter: T) -> Self {
+        Value::Map(iter.into_iter().collect::<BTreeMap<String, Value>>())
+    }
+}
+
+impl TryFrom<serde_yaml::Value> for Value {
+    type Error = std::io::Error;
+
+    fn try_from(value: serde_yaml::Value) -> Result<Self, Self::Error> {
+        Ok(match value {
+            serde_yaml::Value::String(s) => Self::from(s),
+            serde_yaml::Value::Number(n) => {
+                if n.is_f64() {
+                    Self::from(n.as_f64().unwrap())
+                } else if n.is_i64() {
+                    Self::from(n.as_i64().unwrap())
+                } else {
+                    Self::from(n.as_f64().unwrap())
+                }
+            }
+            serde_yaml::Value::Null => Self::Null,
+            serde_yaml::Value::Bool(b) => Self::from(b),
+            serde_yaml::Value::Sequence(seq) => {
+                let arr = seq.into_iter()
+                    .map(Value::try_from)
+                    .collect::<Result<Vec<_>, std::io::Error>>()?;
+
+                Self::from(arr)
+            }
+            serde_yaml::Value::Mapping(map) => {
+                let map = map.iter()
+                    .map(|(k, v)| Value::try_from((*v).clone()).map(|v| (k, v)))
+                    .collect::<Result<BTreeMap<_, _>, std::io::Error>>()?;
+
+                Self::from(map)
+            }
+        })
     }
 }
 

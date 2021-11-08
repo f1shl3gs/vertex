@@ -1,17 +1,19 @@
 use std::collections::BTreeMap;
 use std::time::Duration;
 use futures::prelude::stream::BoxStream;
+use futures::StreamExt;
 use nom::combinator::value;
 use rdkafka::{ClientConfig, ClientContext, Statistics};
 use rdkafka::consumer::{BaseConsumer, Consumer};
-use rdkafka::producer::FutureProducer;
+use rdkafka::producer::{FutureProducer, FutureRecord};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use buffers::Acker;
+use event::encoding::{Encoder, EncodingConfig, StandardEncodings};
 use event::Event;
 
 use crate::batch::BatchConfig;
-use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaRole};
+use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaRole, KafkaStatisticsContext};
 use crate::config::{DataType, deserialize_duration, GenerateConfig, HealthCheck, serialize_duration, SinkConfig, SinkContext};
 use crate::sinks::{Sink, StreamSink};
 use crate::template::Template;
@@ -187,21 +189,13 @@ impl KafkaSinkConfig {
     }
 }
 
-pub struct KafkaStatisticsContext;
-
-impl ClientContext for KafkaStatisticsContext {
-    fn stats(&self, statistics: Statistics) {
-
-    }
-}
-
 struct KafkaSink {
     acker: Acker,
     topic: Template,
     key_field: Option<String>,
     headers_field: Option<String>,
-
-    producer: FutureProducer<KafkaStatisticsContext>
+    encoder: EncodingConfig<StandardEncodings>,
+    producer: FutureProducer<KafkaStatisticsContext>,
 }
 
 impl KafkaSink {
@@ -211,7 +205,20 @@ impl KafkaSink {
 #[async_trait::async_trait]
 impl StreamSink for KafkaSink {
     async fn run(&mut self, input: BoxStream<'_, Event>) -> Result<(), ()> {
+        while let Some(event) = input.next().await {
+            let topic = match self.topic.render_string(&event) {
+                Ok(topic) => topic,
+                Err(_) => continue
+            };
+            let payload = vec![];
+            let event_byte_size = event.size_of();
+            self.encoder.encode(event, &mut body).ok()?;
+            let record = FutureRecord::to(&topic)
+                .payload()
+            self.producer.send()
+        }
 
+        Ok(())
     }
 }
 

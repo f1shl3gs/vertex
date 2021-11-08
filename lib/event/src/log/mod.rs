@@ -13,6 +13,7 @@ use chrono::Utc;
 use tracing::field::Field;
 
 use crate::{ByteSizeOf, Value};
+use crate::encoding::MaybeAsLogMut;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -51,6 +52,12 @@ impl From<Bytes> for LogRecord {
         log.insert_field("timestamp", Utc::now());
 
         log
+    }
+}
+
+impl MaybeAsLogMut for LogRecord {
+    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
+        Some(self)
     }
 }
 

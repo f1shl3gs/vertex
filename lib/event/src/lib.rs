@@ -3,7 +3,7 @@ mod metric;
 mod trace;
 mod value;
 mod macros;
-mod encoding;
+pub mod encoding;
 
 // re-export
 pub use metric::*;
@@ -108,6 +108,11 @@ impl Event {
             Event::Log(l) => l,
             _ => panic!("Failed type coercion, {:?} is not a log", self)
         }
+    }
+
+    #[inline]
+    pub fn new_empty_log() -> Self {
+        Event::Log(LogRecord::default())
     }
 }
 
