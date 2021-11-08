@@ -301,11 +301,14 @@ impl TryFrom<serde_yaml::Value> for Value {
                 Self::from(arr)
             }
             serde_yaml::Value::Mapping(map) => {
-                let map = map.iter()
-                    .map(|(k, v)| Value::try_from((*v).clone()).map(|v| (k, v)))
-                    .collect::<Result<BTreeMap<_, _>, std::io::Error>>()?;
+                let mut fmap = BTreeMap::new();
+                map.iter()
+                    .map(|(k, v)| fmap.insert(
+                        k.as_str().unwrap().to_owned(),
+                        Self::try_from(v.clone()).unwrap(),
+                    ));
 
-                Self::from(map)
+                Self::from(fmap)
             }
         })
     }
