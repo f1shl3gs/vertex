@@ -47,7 +47,7 @@ impl Pipeline {
         // here because it gives us a chance to allow the natural batching
         // of `Pipeline` to kick in
         if self.outstanding > 0 {
-            emit!(internal::EventsSent{
+            emit!(&internal::EventsSent{
                 count: self.outstanding,
                 byte_size: self.bytes_outstanding
             });

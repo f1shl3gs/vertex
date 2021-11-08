@@ -27,10 +27,8 @@ extern crate bloom;
 
 #[macro_use]
 extern crate lazy_static;
-
 #[macro_use]
 extern crate tracing;
-
 #[macro_use]
 extern crate internal;
 

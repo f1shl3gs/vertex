@@ -1,11 +1,15 @@
 use std::path::{Path, PathBuf};
 
-use rdkafka::ClientConfig;
+use rdkafka::{ClientConfig, ClientContext, Statistics};
+use rdkafka::consumer::ConsumerContext;
 use snafu::Snafu;
 use serde::{Deserialize, Serialize};
+use metrics::{gauge, counter};
+use internal::{InternalEvent, KafkaEventReceived, update_counter};
 
 use crate::Error;
 use crate::tls::TLSConfig;
+
 
 #[derive(Debug, Snafu)]
 enum KafkaError {
@@ -106,4 +110,34 @@ impl KafkaAuthConfig {
 pub fn pathbuf_to_string(path: &Path) -> Result<&str, Error> {
     path.to_str()
         .ok_or_else(|| KafkaError::InvalidPath { path: path.into() }.into())
+}
+
+pub struct KafkaStatisticsContext;
+
+impl ClientContext for KafkaStatisticsContext {
+    fn stats(&self, statistics: Statistics) {
+        emit!(&KafkaStatisticsReceived { statistics: &statistics })
+    }
+}
+
+impl ConsumerContext for KafkaStatisticsContext {}
+
+
+pub struct KafkaStatisticsReceived<'a> {
+    statistics: &'a rdkafka::Statistics,
+}
+
+impl InternalEvent for KafkaStatisticsReceived<'_> {
+    fn emit_metrics(&self) {
+        gauge!("kafka_queue_messages", self.statistics.msg_cnt as f64);
+        gauge!("kafka_queue_messages_bytes", self.statistics.msg_size as f64);
+        update_counter!("kafka_requests_total", self.statistics.tx as u64);
+        update_counter!("kafka_requests_bytes_total", self.statistics.tx_bytes as u64);
+        update_counter!("kafka_responses_total", self.statistics.rx as u64);
+        update_counter!("kafka_responses_bytes_total", self.statistics.rx_bytes as u64);
+        update_counter!("kafka_produced_messages_total", self.statistics.txmsgs as u64);
+        update_counter!("kafka_produced_messages_bytes_total", self.statistics.txmsg_bytes as u64);
+        update_counter!("kafka_consumed_messages_total", self.statistics.rxmsgs as u64);
+        update_counter!("kafka_consumed_messages_bytes_total", self.statistics.rxmsg_bytes as u64);
+    }
 }

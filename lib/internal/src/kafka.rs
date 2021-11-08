@@ -13,33 +13,6 @@ impl InternalEvent for KafkaEventReceived {
     }
 }
 
-pub struct KafkaStatisticsReceived {
-    pub msg_cnt: f64,
-    pub msg_size: f64,
-    pub tx: u64,
-    pub tx_bytes: u64,
-    pub rx: u64,
-    pub rx_bytes: u64,
-    pub tx_msgs: u64,
-    pub tx_msg_bytes: u64,
-    pub rx_msgs: u64,
-    pub rx_msg_bytes: u64,
-}
-
-impl InternalEvent for KafkaStatisticsReceived {
-    fn emit_metrics(&self) {
-        gauge!("kafka_queue_messages", self.msg_cnt);
-        gauge!("kafka_queue_messages_bytes", self.msg_size);
-        update_counter!("kafka_requests_total", self.tx);
-        update_counter!("kafka_requests_bytes_total", self.tx_bytes);
-        update_counter!("kafka_responses_total", self.rx);
-        update_counter!("kafka_response_bytes_total", self.rx_bytes);
-        update_counter!("kafka_produced_messages_total", self.tx_msgs);
-        update_counter!("kafka_produced_messages_bytes_total", self.tx_msg_bytes);
-        update_counter!("kafka_consumed_messages_total", self.rx_msgs);
-        update_counter!("kafka_consumed_messages_bytes_total", self.rx_msg_bytes);
-    }
-}
 
 pub struct KafkaEventFailed {}
 

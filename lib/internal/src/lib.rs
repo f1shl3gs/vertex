@@ -12,10 +12,12 @@ pub use kafka::*;
 pub trait InternalEvent {
     fn emit_logs(&self) {}
     fn emit_metrics(&self) {}
+
+    fn name(&self) -> Option<&str> { None }
 }
 
 #[inline]
-pub fn emit(ev: impl InternalEvent) {
+pub fn emit(ev: &impl InternalEvent) {
     ev.emit_logs();
     ev.emit_metrics();
 }
@@ -68,12 +70,13 @@ macro_rules! update_counter {
 mod tests {
     #[macro_export]
     macro_rules! emit2 {
-    (
-        [
-            // [$($name:expr, $type:ident, $value:expr,  $($label_key:expr => $label_value:literal),* ), *],*
-            $( [ $name:expr, $type:ident, $value:expr, $( $label_key:expr => $label_value:expr),* ] ),*
-        ]
-    ) => {
+        // metrics only
+        (
+            [
+                // [$($name:expr, $type:ident, $value:expr,  $($label_key:expr => $label_value:literal),* ), *],*
+                $( [ $name:expr, $type:ident, $value:expr, $( $label_key:expr => $label_value:expr),* ] ),*
+            ]
+        ) => {
             $(  $type!(
                 $name,
                 $value,
@@ -81,6 +84,9 @@ mod tests {
                 $($label_key => $label_value,)*
             );)*
         };
+
+        // metrics and logs
+        // todo
     }
 
 

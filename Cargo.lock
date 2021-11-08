@@ -3772,6 +3772,7 @@ dependencies = [
  "libc",
  "listenfd",
  "log_schema",
+ "metrics",
  "mimalloc",
  "netlink-packet-sock-diag",
  "netlink-sys",

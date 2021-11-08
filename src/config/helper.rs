@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use serde::{Deserializer, Serializer};
+use serde::{Deserialize, Deserializer, Serializer};
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::duration::{duration_to_string, parse_duration};
@@ -30,6 +30,24 @@ pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Resul
 pub fn serialize_duration<S: Serializer>(_d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
     let d = duration_to_string(_d);
     s.serialize_str(&d)
+}
+
+pub fn deserialize_duration_option<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Option<chrono::Duration>, D::Error> {
+    let s: Option<String> = Option::deserialize(deserializer)?;
+    match s {
+        Some(text) => {
+            let duration = parse_duration(&text).map_err(serde::de::Error::custom)?;
+            Ok(Some(duration))
+        }
+        None => Ok(None)
+    }
+}
+
+pub fn serialize_duration_option<S: Serializer>(d: &Option<chrono::Duration>, s: S) -> Result<S::Ok, S::Error> {
+    match d {
+        Some(d) => s.serialize_str(&duration_to_string(d)),
+        None => s.serialize_none()
+    }
 }
 
 pub mod regex {
@@ -95,7 +113,7 @@ mod tests {
     #[derive(Deserialize, Serialize)]
     struct RE {
         #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
-        re: Regex,
+        re: ::regex::Regex,
     }
 
     #[test]

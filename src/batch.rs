@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 
-use crate::config::{deserialize_duration, serialize_duration};
+use crate::config::{deserialize_duration_option, serialize_duration_option};
 
 
 #[derive(Debug, Snafu, PartialEq)]
@@ -21,7 +21,7 @@ pub struct BatchConfig {
     pub max_bytes: Option<usize>,
     pub max_events: Option<usize>,
     #[serde(default)]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(deserialize_with = "deserialize_duration_option", serialize_with = "serialize_duration_option")]
     pub timeout: Option<chrono::Duration>,
 }
 

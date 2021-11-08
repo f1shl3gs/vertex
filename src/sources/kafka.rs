@@ -10,9 +10,9 @@ use rdkafka::message::{BorrowedMessage, Headers};
 use serde::{Deserialize, Serialize};
 use event::{LogRecord, Value};
 use snafu::{Snafu, ResultExt};
-use internal::{KafkaEventReceived, KafkaStatisticsReceived};
+use internal::{KafkaEventReceived};
 
-use crate::common::kafka::KafkaAuthConfig;
+use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
 use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration};
 use crate::Error;
 use crate::pipeline::Pipeline;
@@ -232,7 +232,7 @@ async fn drain(
             }
 
             Ok(msg) => {
-                emit!(KafkaEventReceived {
+                emit!(&KafkaEventReceived {
                     byte_size: msg.payload_len()
                 });
 
@@ -296,27 +296,6 @@ async fn drain(
     }
 
     Ok(())
-}
-
-struct KafkaStatisticsContext;
-
-impl ConsumerContext for KafkaStatisticsContext {}
-
-impl ClientContext for KafkaStatisticsContext {
-    fn stats(&self, statistics: Statistics) {
-        emit!(KafkaStatisticsReceived {
-            msg_cnt: statistics.msg_cnt as f64,
-            msg_size: statistics.msg_size as f64,
-            tx: statistics.tx as u64,
-            tx_bytes: statistics.tx_bytes as u64,
-            rx: statistics.rx as u64,
-            rx_bytes: statistics.rx_bytes as u64,
-            tx_msgs: statistics.txmsgs as u64,
-            tx_msg_bytes: statistics.txmsg_bytes as u64,
-            rx_msgs: statistics.rxmsgs as u64,
-            rx_msg_bytes: statistics.rxmsg_bytes as u64,
-        })
-    }
 }
 
 #[cfg(test)]

@@ -2,8 +2,9 @@ use std::collections::BTreeMap;
 use std::time::Duration;
 use futures::prelude::stream::BoxStream;
 use nom::combinator::value;
-use rdkafka::ClientConfig;
+use rdkafka::{ClientConfig, ClientContext, Statistics};
 use rdkafka::consumer::{BaseConsumer, Consumer};
+use rdkafka::producer::FutureProducer;
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use buffers::Acker;
@@ -65,7 +66,10 @@ inventory::submit! {
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
     async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        todo!()
+        let sink = KafkaSink::new(self.clone(), ctx.acker)?;
+        let health_check = healthcheck(self.clone());
+
+        Ok((Sink::Stream(Box::new(sink)), health_check))
     }
 
     fn input_type(&self) -> DataType {
@@ -183,11 +187,21 @@ impl KafkaSinkConfig {
     }
 }
 
+pub struct KafkaStatisticsContext;
+
+impl ClientContext for KafkaStatisticsContext {
+    fn stats(&self, statistics: Statistics) {
+
+    }
+}
+
 struct KafkaSink {
     acker: Acker,
     topic: Template,
     key_field: Option<String>,
     headers_field: Option<String>,
+
+    producer: FutureProducer<KafkaStatisticsContext>
 }
 
 impl KafkaSink {
@@ -197,7 +211,7 @@ impl KafkaSink {
 #[async_trait::async_trait]
 impl StreamSink for KafkaSink {
     async fn run(&mut self, input: BoxStream<'_, Event>) -> Result<(), ()> {
-        todo!()
+
     }
 }
 

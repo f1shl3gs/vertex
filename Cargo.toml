@@ -166,6 +166,9 @@ stream-cancel = { version = "0.8.1" }
 async-stream = { version = "0.3.2" }
 console-subscriber = { git = "https://github.com/tokio-rs/console", rev = "f2c30d52c9f22de69bac38009a9183135808806c", optional = true }
 
+# Metrics
+metrics = { version = "0.17.0" }
+
 # Tracing
 tracing = { version = "0.1.28", default-features = false }
 tracing-core = { version = "0.1.21", default-features = false }
