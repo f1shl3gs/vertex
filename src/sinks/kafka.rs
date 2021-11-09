@@ -15,6 +15,7 @@ use rdkafka::{
     consumer::{BaseConsumer, Consumer},
     producer::{FutureProducer, FutureRecord},
 };
+use rdkafka::util::Timeout;
 
 use crate::batch::BatchConfig;
 use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaRole, KafkaStatisticsContext};
@@ -242,14 +243,22 @@ impl StreamSink for KafkaSink {
             };
             let mut payload = vec![];
             let event_byte_size = event.size_of();
-            self.encoder.encode(event, &mut payload).ok()?;
+
+            if let Err(err) = self.encoder.encode(event, &mut payload) {
+                // TODO: handle error
+                continue;
+            }
+
             let record = FutureRecord::to(&topic)
                 .payload(&payload);
-            match self.producer.send(record).await {
+            match self.producer.send(record, Timeout::Never).await {
                 Ok((_partition, _offset)) => {
                     continue;
                 }
-                Err((err, _original_record)) => Err(err)
+                Err((err, _original_record)) => {
+                    // TODO: handle error
+                    continue;
+                }
             }
         }
 
