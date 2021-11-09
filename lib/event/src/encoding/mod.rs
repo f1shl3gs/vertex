@@ -70,10 +70,33 @@ pub trait EncodingConfiguration {
     fn timestamp_format(&self) -> &Option<TimestampFormat>;
 
     fn apply_only_fields(&self, log: &mut LogRecord) {
-        todo!()
+        if let Some(only_fields) = &self.only_fields() {
+            let mut to_remove = log.keys()
+                .filter(|field| {
+                    let field_path = PathIter::new(field)
+                        .collect::<Vec<_>>();
+                    !only_fields.iter()
+                        .any(|only| {
+                            field_path.starts_with(&only[..])
+                        })
+                })
+                .collect::<Vec<_>>();
+
+            // reverse sort so that we delete array elements at the end first rather than the start
+            // so that any `nulls` at the end are dropped and empty arrays are pruned
+            to_remove.sort_by(|a, b| b.cmp(a));
+
+            for removal in to_remove {
+                log.remove_field_prune(removal, true);
+            }
+        }
     }
     fn apply_except_fields(&self, log: &mut LogRecord) {
-        todo!()
+        if let Some(except_fields) = &self.except_fields() {
+            for field in except_fields {
+                log.remove_field(field);
+            }
+        }
     }
     fn apply_timestamp_format(&self, log: &mut LogRecord) {
         todo!()
@@ -170,7 +193,8 @@ mod tests {
     use super::*;
     use log_schema::log_schema;
     use indoc::indoc;
-    use serde_yaml::Value;
+    use serde_yaml::Value as YamlValue;
+    use crate::Value;
 
     #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
     enum TestEncoding {
@@ -231,14 +255,14 @@ mod tests {
     }
 
     const YAML_EXCEPT_FIELD: &str = indoc! {r#"
-        encoding
+        encoding:
             codec: "Snoot"
             except_fields:
-            - "a.b.c"
-            - "b"
-            - "c[0].y"
-            - "d\\.z"
-            - "e"
+                - "a.b.c"
+                - "b"
+                - "c[0].y"
+                - "d\\.z"
+                - "e"
     "#};
 
     #[test]
@@ -330,29 +354,29 @@ mod tests {
         let mut event = Event::from("Demo");
         let timestamp = event
             .as_mut_log()
-            .get(log_schema().timestamp_key())
+            .get_field(log_schema().timestamp_key())
             .unwrap()
             .clone();
         let timestamp = timestamp.as_timestamp().unwrap();
         event
             .as_mut_log()
-            .insert("another", Value::Timestamp(*timestamp));
+            .insert_field("another", Value::Timestamp(*timestamp));
 
         config.encoding.apply_rules(&mut event);
 
         match event
             .as_mut_log()
-            .get(log_schema().timestamp_key())
+            .get_field(log_schema().timestamp_key())
             .unwrap()
         {
-            Value::Number(_) => {},
+            Value::Int64(_) => {}
             e => panic!(
                 "Timestamp was not transformed into a Unix timestamp. Was {:?}",
                 e
             ),
         }
-        match event.as_mut_log().get("another").unwrap() {
-            Value::Number(_) => {}
+        match event.as_mut_log().get_field("another").unwrap() {
+            Value::Int64(_) => {}
             e => panic!(
                 "Timestamp was not transformed into a Unix timestamp. Was {:?}",
                 e

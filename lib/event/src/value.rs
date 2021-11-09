@@ -259,7 +259,7 @@ impl From<u32> for Value {
 impl<T: Into<Value>> From<Vec<T>> for Value {
     fn from(value: Vec<T>) -> Self {
         value.into_iter()
-            .map(std::convert::Into::into)
+            .map(::std::convert::Into::into)
             .collect::<Self>()
     }
 }
@@ -276,6 +276,42 @@ impl FromIterator<(String, Value)> for Value {
     }
 }
 
+impl From<serde_yaml::Value> for Value {
+    fn from(value: serde_yaml::Value) -> Self {
+        match value {
+            serde_yaml::Value::String(s) => Self::from(s),
+            serde_yaml::Value::Number(n) => {
+                if n.is_f64() {
+                    Self::from(n.as_f64().unwrap())
+                } else if n.is_i64() {
+                    Self::from(n.as_i64().unwrap())
+                } else {
+                    Self::from(n.as_f64().unwrap())
+                }
+            }
+            serde_yaml::Value::Null => Self::Null,
+            serde_yaml::Value::Bool(b) => Self::from(b),
+            serde_yaml::Value::Sequence(seq) => {
+                let arr = seq.into_iter()
+                    .map(Value::from)
+                    .collect::<Vec<_>>();
+
+                Self::from(arr)
+            }
+            serde_yaml::Value::Mapping(map) => {
+                let mut fmap = BTreeMap::new();
+                map.iter()
+                    .map(|(k, v)| fmap.insert(
+                        k.as_str().unwrap().to_owned(),
+                        Self::from(v.clone()),
+                    ));
+
+                Self::from(fmap)
+            }
+        }
+    }
+}
+/*
 impl TryFrom<serde_yaml::Value> for Value {
     type Error = std::io::Error;
 
@@ -313,7 +349,7 @@ impl TryFrom<serde_yaml::Value> for Value {
         })
     }
 }
-
+*/
 #[cfg(test)]
 mod tests {
     use std::io::Read;

@@ -3,6 +3,7 @@ mod contains;
 mod get;
 pub mod path_iter;
 mod remove;
+mod keys;
 
 use std::collections::BTreeMap;
 use std::fmt::Debug;
@@ -161,8 +162,13 @@ impl LogRecord {
     pub fn remove_field_prune(
         &mut self,
         key: impl AsRef<str>,
+        prune: bool,
     ) -> Option<Value> {
-        remove::remove(&mut self.fields, key.as_ref(), true)
+        remove::remove(&mut self.fields, key.as_ref(), prune)
+    }
+
+    pub fn keys<'a>(&'a self) -> impl Iterator<Item=String> + 'a {
+        keys::keys(&self.fields)
     }
 }
 
