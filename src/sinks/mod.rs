@@ -1,12 +1,12 @@
-#[cfg(feature = "sink-blackhole")]
+#[cfg(feature = "sinks-blackhole")]
 mod blackhole;
-#[cfg(feature = "sink-kafka")]
+#[cfg(feature = "sinks-kafka")]
 mod kafka;
-#[cfg(feature = "sink-pulsar")]
+#[cfg(feature = "sinks-pulsar")]
 mod pulsar;
-#[cfg(feature = "sink-prometheus_exporter")]
+#[cfg(feature = "sinks-prometheus_exporter")]
 mod prometheus_exporter;
-#[cfg(feature = "sink-stdout")]
+#[cfg(feature = "sinks-stdout")]
 mod stdout;
 
 use event::Event;

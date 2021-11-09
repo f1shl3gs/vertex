@@ -1,23 +1,32 @@
 use std::collections::BTreeMap;
 use std::time::Duration;
-use futures::prelude::stream::BoxStream;
-use futures::StreamExt;
-use nom::combinator::value;
-use rdkafka::{ClientConfig, ClientContext, Statistics};
-use rdkafka::consumer::{BaseConsumer, Consumer};
-use rdkafka::producer::{FutureProducer, FutureRecord};
+
 use serde::{Deserialize, Serialize};
-use snafu::ResultExt;
+use snafu::{Snafu, ResultExt};
 use buffers::Acker;
-use event::encoding::{Encoder, EncodingConfig, StandardEncodings};
-use event::Event;
+use event::{
+    encoding::{Encoder, EncodingConfig, StandardEncodings},
+    Event,
+};
+use futures::{StreamExt, FutureExt};
+use futures::stream::BoxStream;
+use rdkafka::{
+    ClientConfig, ClientContext, Statistics,
+    consumer::{BaseConsumer, Consumer},
+    producer::{FutureProducer, FutureRecord},
+};
 
 use crate::batch::BatchConfig;
 use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaRole, KafkaStatisticsContext};
-use crate::config::{DataType, deserialize_duration, GenerateConfig, HealthCheck, serialize_duration, SinkConfig, SinkContext};
 use crate::sinks::{Sink, StreamSink};
-use crate::template::Template;
+use crate::template::{Template, TemplateParseError};
+use crate::config::{
+    DataType, deserialize_duration, GenerateConfig, HealthCheck,
+    serialize_duration, SinkConfig, SinkContext, SourceDescription,
+};
 
+
+const QUEUED_MIN_MESSAGES: u64 = 100000;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -27,10 +36,10 @@ pub struct KafkaSinkConfig {
     pub key_field: Option<String>,
     pub compression: KafkaCompression,
     #[serde(default = "default_socket_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialization_with = "serialize_duration")]
+    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub socket_timeout: chrono::Duration,
-    #[serde(defalut = "default_message_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialization_with = "serialize_duration")]
+    #[serde(default = "default_message_timeout")]
+    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub message_timeout: chrono::Duration,
     pub auth: KafkaAuthConfig,
     pub batch: BatchConfig,
@@ -47,21 +56,36 @@ const fn default_message_timeout() -> chrono::Duration {
     chrono::Duration::milliseconds(300000)
 }
 
+inventory::submit! {
+    SourceDescription::new::<KafkaSinkConfig>("kafka")
+}
+
 impl GenerateConfig for KafkaSinkConfig {
     fn generate_config() -> serde_yaml::Value {
-        serde_yaml::Value::try_from(Self {
+        serde_yaml::to_value(Self {
             bootstrap_servers: "127.0.0.1:9092".to_string(),
             topic: "some_topic".to_string(),
             key_field: Some("uid".to_string()),
             compression: KafkaCompression::None,
             socket_timeout: default_socket_timeout(),
             message_timeout: default_message_timeout(),
+            auth: Default::default(),
+            batch: Default::default(),
+            librdkafka_options: Default::default(),
         }).unwrap()
     }
 }
 
-inventory::submit! {
-    SourceDescription::new::<KafkaSinkConfig>("kafka")
+#[derive(Debug, Snafu)]
+enum BuildError {
+    #[snafu(display("`message_group_id` should be defined for FIFO queue"))]
+    MessageGroupIdMissing,
+    #[snafu(display("`message_group_id` is not allowed with non-FIFO queue"))]
+    MessageGroupIdNotAllowed,
+    #[snafu(display("invalid topic template: {}", source))]
+    TopicTemplate { source: TemplateParseError },
+    #[snafu(display("invalid message_deduplication_id template: {}", source))]
+    MessageDeduplicationIdTemplate { source: TemplateParseError },
 }
 
 #[async_trait::async_trait]
@@ -69,9 +93,8 @@ inventory::submit! {
 impl SinkConfig for KafkaSinkConfig {
     async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
         let sink = KafkaSink::new(self.clone(), ctx.acker)?;
-        let health_check = healthcheck(self.clone());
-
-        Ok((Sink::Stream(Box::new(sink)), health_check))
+        let hc = healthcheck(self.clone()).boxed();
+        Ok((Sink::Stream(Box::new(sink)), hc))
     }
 
     fn input_type(&self) -> DataType {
@@ -83,6 +106,11 @@ impl SinkConfig for KafkaSinkConfig {
     }
 }
 
+fn to_string(value: impl serde::Serialize) -> String {
+    let value = serde_json::to_value(value).unwrap();
+    value.as_str().unwrap().into()
+}
+
 impl KafkaSinkConfig {
     fn to_rdkafka(&self, role: KafkaRole) -> crate::Result<ClientConfig> {
         let mut client_config = ClientConfig::new();
@@ -90,11 +118,11 @@ impl KafkaSinkConfig {
 
         client_config
             .set("bootstrap.servers", &self.bootstrap_servers)
-            .set("compression.codec", codec.as_str().unwrap().into())
+            .set("compression.codec", to_string(self.compression))
             .set("socket.timeout.ms", &self.socket_timeout.to_string())
             .set("message.timeout.ms", &self.message_timeout.to_string())
             .set("statistics.interval.ms", "1000")
-            .set("queued.min.messages", QUEUE_MIN_MESSAGE.to_string());
+            .set("queued.min.messages", QUEUED_MIN_MESSAGES.to_string());
 
         self.auth.apply(&mut client_config)?;
 
@@ -119,7 +147,7 @@ impl KafkaSinkConfig {
                 debug!(
                     librdkafka_option = key,
                     batch_option = "timeout_secs",
-                    value,
+                    value = value.num_seconds(),
                     "Applying batch option as librdkafka option"
                 );
 
@@ -163,7 +191,7 @@ impl KafkaSinkConfig {
                         The config already sets this as `librdkafka_options.batch.size={}`.\
                         Please delete one",
                         key, value, val
-                    ).into_boxed_str());
+                    ).into());
                 }
                 debug!(
                     librdkafka_option = key,
@@ -199,23 +227,30 @@ struct KafkaSink {
 }
 
 impl KafkaSink {
-    fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {}
+    fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {
+        todo!()
+    }
 }
 
 #[async_trait::async_trait]
 impl StreamSink for KafkaSink {
-    async fn run(&mut self, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         while let Some(event) = input.next().await {
             let topic = match self.topic.render_string(&event) {
                 Ok(topic) => topic,
                 Err(_) => continue
             };
-            let payload = vec![];
+            let mut payload = vec![];
             let event_byte_size = event.size_of();
-            self.encoder.encode(event, &mut body).ok()?;
+            self.encoder.encode(event, &mut payload).ok()?;
             let record = FutureRecord::to(&topic)
-                .payload()
-            self.producer.send()
+                .payload(&payload);
+            match self.producer.send(record).await {
+                Ok((_partition, _offset)) => {
+                    continue;
+                }
+                Err((err, _original_record)) => Err(err)
+            }
         }
 
         Ok(())
@@ -254,4 +289,15 @@ async fn healthcheck(config: KafkaSinkConfig) -> crate::Result<()> {
     trace!(message = "Health check completed");
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::config::test_generate_config;
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        test_generate_config::<KafkaSinkConfig>()
+    }
 }

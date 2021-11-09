@@ -76,7 +76,9 @@ pub fn test_generate_config<T>()
     where
             for<'de> T: GenerateConfig + serde::Deserialize<'de>,
 {
-    let cfg = T::generate_config().to_string();
+    let cfg = serde_yaml::to_string(&T::generate_config())
+        .expect("Invalid config generated when stringify");
+
     serde_yaml::from_str::<T>(&cfg)
         .expect("Invalid config generated");
 }

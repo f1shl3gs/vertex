@@ -1,7 +1,7 @@
-#[cfg(feature = "extension-pprof")]
+#[cfg(feature = "extensions-pprof")]
 mod pprof;
 mod exec;
-#[cfg(feature = "extension-jemalloc")]
+#[cfg(feature = "extensions-jemalloc")]
 mod jemalloc;
 
 use futures::future::BoxFuture;

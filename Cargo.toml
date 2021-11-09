@@ -5,7 +5,7 @@ authors = ["f1shl3gs"]
 edition = "2021"
 
 exclude = [
-    "testdata"
+    "tests/fixtures"
 ]
 
 [profile.release]
@@ -54,12 +54,13 @@ default = [
     "transforms-add_fields",
     "transforms-cardinality",
     # sinks
-    "sink-blackhole",
-    "sink-prometheus_exporter",
-    "sink-stdout",
+    "sinks-blackhole",
+    "sinks-prometheus_exporter",
+    "sinks-stdout",
+    "sinks-kafka",
     # extensions
-    "extension-pprof",
-    # "extension-jemalloc"
+    "extensions-pprof",
+    # "extensions-jemalloc"
 ]
 
 # integration
@@ -105,15 +106,15 @@ transforms-cardinality = []
 transforms-sample = ["seahash"]
 
 # sinks
-sink-prometheus_exporter = []
-sink-stdout = []
-sink-blackhole = []
-sink-kafka = ["rdkafka"]
-sink-pulsar = ["pulsar"]
+sinks-prometheus_exporter = []
+sinks-stdout = []
+sinks-blackhole = []
+sinks-kafka = ["rdkafka"]
+sinks-pulsar = ["pulsar"]
 
 # extensions
-extension-pprof = ["pprof/flamegraph"]
-extension-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+extensions-pprof = ["pprof/flamegraph"]
+extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
 
 [[bench]]
 name = "duration"
