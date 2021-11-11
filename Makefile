@@ -15,7 +15,8 @@ bloat:
 lines:
 	@./scripts/lines.sh
 
-
+image: build-musl
+	@docker build -t vertex -f Dockerfile .
 
 
 # profile when bench
