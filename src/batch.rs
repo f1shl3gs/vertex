@@ -2,7 +2,10 @@ use std::marker::PhantomData;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 
-use crate::config::{deserialize_duration_option, serialize_duration_option, skip_serializing_if_default};
+use crate::config::{
+    deserialize_duration_option, serialize_duration_option,
+    skip_serializing_if_default,
+};
 
 
 #[derive(Debug, Snafu, PartialEq)]
