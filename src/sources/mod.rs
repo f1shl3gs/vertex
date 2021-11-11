@@ -18,6 +18,7 @@ mod pulsar;
 mod redis;
 #[cfg(feature = "sources-generator")]
 mod generator;
+#[cfg(feature = "sources-libvirt")]
 mod libvirt;
 #[cfg(feature = "sources-ntp")]
 mod ntp;
@@ -46,6 +47,8 @@ mod syslog;
 mod tail;
 #[cfg(feature = "sources-kafka_metrics")]
 mod kafka_metrics;
+#[cfg(feature = "sources-mysqld")]
+mod mysqld;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;

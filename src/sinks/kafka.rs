@@ -6,7 +6,6 @@ use serde::{Deserialize, Serialize};
 use snafu::{Snafu, ResultExt};
 use buffers::Acker;
 use futures::{stream::BoxStream, StreamExt, FutureExt};
-use nom::AsBytes;
 use event::{encoding::{Encoder, EncodingConfig, StandardEncodings}, Event, Value};
 use rdkafka::{
     ClientConfig, ClientContext, Statistics,

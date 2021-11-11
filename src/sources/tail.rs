@@ -2,9 +2,13 @@ use std::path::PathBuf;
 
 use chrono::Duration;
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 
-use crate::config::{DataType, deserialize_duration, serialize_duration, SourceConfig, SourceContext};
 use crate::sources::Source;
+use crate::config::{
+    DataType, deserialize_duration, GenerateConfig,
+    serialize_duration, SourceConfig, SourceContext, SourceDescription
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TailConfig {
@@ -28,6 +32,28 @@ fn default_ignore_older_than() -> Duration {
 
 fn default_glob_interval() -> Duration {
     Duration::seconds(3)
+}
+
+impl GenerateConfig for TailConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(
+            Self {
+                ignore_older_than: default_ignore_older_than(),
+                host_key: None,
+                include: vec![
+                    "/path/to/include/*.log".into()
+                ],
+                exclude: vec![
+                    "/path/to/exclude/noop.log".into()
+                ],
+                glob_interval: default_glob_interval(),
+            }
+        ).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<TailConfig>("tail")
 }
 
 #[async_trait::async_trait]
