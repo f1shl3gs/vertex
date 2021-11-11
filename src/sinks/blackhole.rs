@@ -1,5 +1,3 @@
-use crate::config::{SinkConfig, SinkContext, DataType, HealthCheck};
-use crate::sinks::{Sink, StreamSink};
 use async_trait::async_trait;
 use event::Event;
 use futures::FutureExt;
@@ -8,11 +6,24 @@ use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
 use buffers::Acker;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+use crate::{
+    impl_generate_config_from_default,
+    config::{SinkConfig, SinkContext, DataType, HealthCheck, SinkDescription},
+    sinks::{Sink, StreamSink}
+};
+
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct BlackholeConfig {
     pub rate: Option<usize>,
 }
+
+inventory::submit! {
+    SinkDescription::new::<BlackholeConfig>("blackhole")
+}
+
+impl_generate_config_from_default!(BlackholeConfig);
 
 #[async_trait]
 #[typetag::serde(name = "blackhole")]

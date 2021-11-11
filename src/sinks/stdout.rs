@@ -1,18 +1,29 @@
 use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
-
-use crate::sinks::{Sink, StreamSink};
-use crate::config::{SinkConfig, SinkContext, DataType, HealthCheck};
-use crate::buffers::Acker;
+use event::Event;
+use tokio_stream::StreamExt;
 use futures::{
     FutureExt,
     stream::{ BoxStream }
 };
-use event::Event;
-use tokio_stream::StreamExt;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+use crate::{
+    buffers::Acker,
+    impl_generate_config_from_default,
+    config::{SinkConfig, SinkContext, DataType, HealthCheck, SinkDescription},
+    sinks::{Sink, StreamSink}
+};
+
+
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct StdoutConfig {}
+
+inventory::submit! {
+    SinkDescription::new::<StdoutConfig>("stdout")
+}
+
+impl_generate_config_from_default!(StdoutConfig);
 
 #[async_trait]
 #[typetag::serde(name = "stdout")]

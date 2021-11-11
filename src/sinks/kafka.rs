@@ -1,29 +1,28 @@
 use std::collections::BTreeMap;
 use std::time::Duration;
+use bytes::Bytes;
 
 use serde::{Deserialize, Serialize};
 use snafu::{Snafu, ResultExt};
 use buffers::Acker;
-use event::{
-    encoding::{Encoder, EncodingConfig, StandardEncodings},
-    Event,
-};
-use futures::{StreamExt, FutureExt};
-use futures::stream::BoxStream;
+use futures::{stream::BoxStream, StreamExt, FutureExt};
+use nom::AsBytes;
+use event::{encoding::{Encoder, EncodingConfig, StandardEncodings}, Event, Value};
 use rdkafka::{
     ClientConfig, ClientContext, Statistics,
     consumer::{BaseConsumer, Consumer},
     producer::{FutureProducer, FutureRecord},
+    util::Timeout,
+    message::OwnedHeaders,
 };
-use rdkafka::util::Timeout;
 
 use crate::batch::BatchConfig;
-use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaRole, KafkaStatisticsContext};
+use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaHeaderExtractionFailed, KafkaRole, KafkaStatisticsContext};
 use crate::sinks::{Sink, StreamSink};
 use crate::template::{Template, TemplateParseError};
 use crate::config::{
     DataType, deserialize_duration, GenerateConfig, HealthCheck,
-    serialize_duration, SinkConfig, SinkContext, SourceDescription,
+    serialize_duration, SinkConfig, SinkContext, SinkDescription,
 };
 
 
@@ -47,18 +46,18 @@ pub struct KafkaSinkConfig {
     pub librdkafka_options: BTreeMap<String, String>,
 }
 
-const fn default_socket_timeout() -> chrono::Duration {
+fn default_socket_timeout() -> chrono::Duration {
     // default in librdkafka
     chrono::Duration::milliseconds(60000)
 }
 
-const fn default_message_timeout() -> chrono::Duration {
+fn default_message_timeout() -> chrono::Duration {
     // default in librdkafka
     chrono::Duration::milliseconds(300000)
 }
 
 inventory::submit! {
-    SourceDescription::new::<KafkaSinkConfig>("kafka")
+    SinkDescription::new::<KafkaSinkConfig>("kafka")
 }
 
 impl GenerateConfig for KafkaSinkConfig {
@@ -218,6 +217,13 @@ impl KafkaSinkConfig {
     }
 }
 
+struct KafkaRequestMetadata {
+    key: Option<Bytes>,
+    timestamp_millis: Option<i64>,
+    headers: Option<OwnedHeaders>,
+    topic: String,
+}
+
 struct KafkaSink {
     acker: Acker,
     topic: Template,
@@ -231,35 +237,60 @@ impl KafkaSink {
     fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {
         todo!()
     }
+
+    fn get_metadata(&self, event: &Event) -> Option<KafkaRequestMetadata> {
+        let key = get_key(event, &self.key_field);
+        let headers = get_headers(event, &self.headers_field);
+        let timestamp_millis = get_timestamp_millis(event);
+        let topic = self.topic
+            .render_string(event)
+            .ok()?;
+
+        Some(KafkaRequestMetadata {
+            key,
+            timestamp_millis,
+            headers,
+            topic
+        })
+    }
+
+    async fn send(&self, event: Event) {
+        let metadata = match self.get_metadata(&event) {
+            Some(metadata) => metadata,
+            _ => return
+        };
+
+        let mut payload = vec![];
+        let event_byte_size = event.size_of();
+
+        // TODO: We need to refactor the encoder,
+        //  cause the input doesn't need to be mutable, and it shouldn't
+        if let Err(err) = self.encoder.encode(event, &mut payload) {
+            // TODO: handle error
+            return;
+        }
+
+        let mut record = FutureRecord::to(&metadata.topic)
+            .payload(&payload);
+        if let Some(key) = &metadata.key {
+            record.key = Some(&key[..]);
+        }
+        if let Some(headers) = metadata.headers {
+            record.headers = Some(headers);
+        }
+        if let Some(timestamp) = metadata.timestamp_millis {
+            record.timestamp = Some(timestamp);
+        }
+
+        self.producer.send(record, Timeout::Never).await;
+    }
 }
 
 #[async_trait::async_trait]
 impl StreamSink for KafkaSink {
     async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         while let Some(event) = input.next().await {
-            let topic = match self.topic.render_string(&event) {
-                Ok(topic) => topic,
-                Err(_) => continue
-            };
-            let mut payload = vec![];
-            let event_byte_size = event.size_of();
-
-            if let Err(err) = self.encoder.encode(event, &mut payload) {
-                // TODO: handle error
-                continue;
-            }
-
-            let record = FutureRecord::to(&topic)
-                .payload(&payload);
-            match self.producer.send(record, Timeout::Never).await {
-                Ok((_partition, _offset)) => {
-                    continue;
-                }
-                Err((err, _original_record)) => {
-                    // TODO: handle error
-                    continue;
-                }
-            }
+            self.send(event).await
         }
 
         Ok(())
@@ -298,6 +329,66 @@ async fn healthcheck(config: KafkaSinkConfig) -> crate::Result<()> {
     trace!(message = "Health check completed");
 
     Ok(())
+}
+
+fn get_headers(event: &Event, headers_field: &Option<String>) -> Option<OwnedHeaders> {
+    headers_field.as_ref()
+        .and_then(|headers_field| {
+            if let Event::Log(log) = event {
+                if let Some(headers) = log.get_field(headers_field) {
+                    match headers {
+                        Value::Map(map) => {
+                            let mut owned_headers = OwnedHeaders::new_with_capacity(map.len());
+                            for (key, value) in map {
+                                if let Value::Bytes(value_bytes) = value {
+                                    owned_headers = owned_headers.add(key, value_bytes.as_ref());
+                                } else {
+                                    emit!(&KafkaHeaderExtractionFailed {
+                                        headers_field
+                                    });
+                                }
+                            }
+
+                            return Some(owned_headers);
+                        }
+
+                        _ => {
+                            emit!(&KafkaHeaderExtractionFailed {
+                                headers_field
+                            });
+                        }
+                    }
+                }
+            }
+            None
+        })
+}
+
+fn get_timestamp_millis(event: &Event) -> Option<i64> {
+    match &event {
+        Event::Log(log) => {
+            log.get_field(log_schema::log_schema().timestamp_key())
+                .and_then(|v| v.as_timestamp())
+                .copied()
+        }
+
+        Event::Metric(metric) => metric.timestamp()
+    }.map(|ts| ts.timestamp_millis())
+}
+
+fn get_key(event: &Event, key_field: &Option<String>) -> Option<Bytes> {
+    key_field.as_ref()
+        .and_then(|key_field| match event {
+            Event::Log(log) => {
+                log.get_field(key_field)
+                    .map(|value| value.as_bytes())
+            }
+            Event::Metric(metric) => {
+                metric.tags
+                    .get(key_field)
+                    .map(|value| value.clone().into())
+            }
+        })
 }
 
 #[cfg(test)]

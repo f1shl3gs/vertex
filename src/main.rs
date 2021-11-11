@@ -6,7 +6,7 @@ extern crate vertex;
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[cfg(any(feature = "allocator-jemalloc", feature = "extension-jemalloc"))]
+#[cfg(any(feature = "allocator-jemalloc", feature = "extensions-jemalloc"))]
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
@@ -70,9 +70,9 @@ fn main() {
 
     runtime.block_on(async move {
         #[cfg(test)]
-        vertex::trace::init(true, false, "debug");
+            vertex::trace::init(true, false, "debug");
         #[cfg(not(test))]
-        vertex::trace::init(true, false, "info");
+            vertex::trace::init(true, false, "info");
 
         info!(
             message = "start vertex",

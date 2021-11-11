@@ -141,3 +141,20 @@ impl InternalEvent for KafkaStatisticsReceived<'_> {
         update_counter!("kafka_consumed_messages_bytes_total", self.statistics.rxmsg_bytes as u64);
     }
 }
+
+pub struct KafkaHeaderExtractionFailed<'a> {
+    pub headers_field: &'a str,
+}
+
+impl<'a> InternalEvent for KafkaHeaderExtractionFailed<'a> {
+    fn emit_logs(&self) {
+        warn!(
+            message = "Failed to extract header. Value should be a map of String -> Bytes",
+            header_field = self.headers_field
+        )
+    }
+
+    fn emit_metrics(&self) {
+        counter!("kafka_header_extraction_failures_total", 1);
+    }
+}
