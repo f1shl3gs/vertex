@@ -1160,20 +1160,6 @@ mod tests {
         assert_eq!(v.len(), 3);
     }
 
-    // #[tokio::test]
-    // async fn test_sentinel() {
-    //     let docker = testcontainers::clients::Cli::default();
-    //     let service = docker.run(Redis::default());
-    //     let host_port = service.get_host_port(REDIS_PORT).unwrap();
-    //     let url = format!("redis://localhost:{}", host_port);
-    //     let mut cli = redis::Client::open(url).unwrap();
-    //     let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
-//
-    //     write_testdata(&mut conn).await;
-//
-    //     let v = extract_sentinel_metrics(&mut conn).await.unwrap();
-    // }
-
     #[tokio::test]
     async fn dump_config() {
         let docker = testcontainers::clients::Cli::default();
