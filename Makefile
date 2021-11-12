@@ -18,6 +18,9 @@ lines:
 image: build-musl
 	@docker build -t vertex -f Dockerfile .
 
+static:
+	docker run --rm -it -v "/home/f1shl3gs/Workspaces/clion/vertex/docker/builder/cargo-config.toml:/opt/rust/cargo/config" -v "$$(pwd)":/home/rust/src musl-builder cargo build --release
+
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

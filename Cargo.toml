@@ -207,7 +207,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 rustls = { version = "0.20.0", features = ["dangerous_configuration"] }
 rustls-pemfile = { version = "0.2.1" }
 tokio-rustls = { version = "0.23.0" }
-rustls-native-certs = { git = "https://github.com/rustls/rustls-native-certs", default-features = false }
+rustls-native-certs = { version = "0.6.1", default-features = false }
 webpki-roots = { version = "0.21.0" }
 ct-logs = { version = "0.9.0" }
 
@@ -239,4 +239,4 @@ seahash = { version = "4.1.0", default-features = false, optional = true }
 inventory = { version = "0.1.10" }
 num_cpus = { version = "1.13.0" }
 once_cell = { version = "1.8", default-features = false }
-sqlx = { version = "0.5.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls"] }
+sqlx = { version = "0.5.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
