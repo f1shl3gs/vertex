@@ -8,8 +8,7 @@ use buffers::Acker;
 use futures::{stream::BoxStream, StreamExt, FutureExt};
 use event::{encoding::{Encoder, EncodingConfig, StandardEncodings}, Event, Value};
 use rdkafka::{
-    ClientConfig, ClientContext, Statistics,
-    consumer::{BaseConsumer, Consumer},
+    ClientConfig, consumer::{BaseConsumer, Consumer},
     producer::{FutureProducer, FutureRecord},
     util::Timeout,
     message::OwnedHeaders,

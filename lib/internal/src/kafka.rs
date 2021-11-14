@@ -1,5 +1,4 @@
 use crate::InternalEvent;
-use crate::update_counter;
 
 #[derive(Debug)]
 pub struct KafkaEventReceived {

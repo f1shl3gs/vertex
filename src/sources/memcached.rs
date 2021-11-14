@@ -737,7 +737,7 @@ enum ParseError {
     InvalidValue { source: std::num::ParseFloatError },
     #[snafu(display("read line failed: {}", source))]
     ReadLine { source: std::io::Error },
-    #[snafu(display("command {} execute failed: {}", cmd, source))]
+    #[snafu(display("command \"{}\" execute failed: {}", cmd, source))]
     CommandExecFailed { cmd: String, source: std::io::Error },
     #[snafu(display("client error"))]
     ClientError,

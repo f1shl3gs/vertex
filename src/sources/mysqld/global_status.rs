@@ -1,9 +1,11 @@
 use std::collections::BTreeMap;
-use nom::InputIter;
-use sqlx::{Column, MySqlPool, Row};
+
+use snafu::ResultExt;
+use sqlx::MySqlPool;
 use event::{Metric, tags};
-use crate::config::DataType::Metric;
-use crate::Error;
+
+use super::QueryFailed;
+
 
 #[derive(Debug, sqlx::FromRow)]
 struct GlobalStatus {
@@ -13,11 +15,11 @@ struct GlobalStatus {
     value: String,
 }
 
-pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::QueryError> {
     let stats = sqlx::query_as::<_, GlobalStatus>(r#"SHOW GLOBAL STATUS"#)
         .fetch_all(pool)
         .await
-        .unwrap();
+        .context(QueryFailed)?;
 
     let mut metrics = vec![];
     let mut text_items = BTreeMap::new();
@@ -31,21 +33,34 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         let fv = match stat.value.parse::<f64>() {
             Ok(v) => v,
             _ => {
-                if text_items.contains(&key) {
+                if text_items.contains_key(&key) {
                     text_items.insert(key.clone(), stat.value.clone());
                 }
                 continue;
             }
         };
 
-        match key.as_str() {
+        let (split_key, name) = match key.split_once("_") {
+            Some((key, name)) => (key, name),
+            None => {
+                // TODO: handle those metrics
+                //   GlobalStatus { name: "Connections", value: "20" }
+                //   GlobalStatus { name: "Queries", value: "248" }
+                //   GlobalStatus { name: "Questions", value: "116" }
+                //   GlobalStatus { name: "Uptime", value: "1321" }
+                println!("unsplitable: {:?}", stat);
+                continue;
+            }
+        };
+
+        match split_key {
             "com" => metrics.push(Metric::sum_with_tags(
                 "mysql_global_status_commands_total",
                 "Total number of executed MySQL commands",
                 fv,
                 tags!(
                     "command" => name
-                )
+                ),
             )),
             "handler" => metrics.push(Metric::sum_with_tags(
                 "mysql_global_status_handlers_total",
@@ -53,7 +68,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 fv,
                 tags!(
                     "handler" => name
-                )
+                ),
             )),
             "connection_errors" => metrics.push(Metric::sum_with_tags(
                 "mysql_global_status_connection_errors_total",
@@ -61,7 +76,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 fv,
                 tags!(
                     "error" => name
-                )
+                ),
             )),
             "innodb_buffer_pool_pages" => {
                 match name {
@@ -72,7 +87,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                             fv,
                             tags!(
                                 "state" => name
-                            )
+                            ),
                         ));
                     }
                     "dirty" => {
@@ -90,7 +105,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                             fv,
                             tags!(
                                 "operation" => name
-                            )
+                            ),
                         ));
                     }
                 }
@@ -101,7 +116,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 fv,
                 tags!(
                     "operation" => name
-                )
+                ),
             )),
             "performance_schema" => metrics.push(Metric::sum_with_tags(
                 "mysql_global_status_performance_schema_lost_total",
@@ -109,11 +124,11 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 fv,
                 tags!(
                     "instrumentation" => name
-                )
+                ),
             )),
             _ => {
                 metrics.push(Metric::gauge(
-                    "mysql_global_status_" + key,
+                    "mysql_global_status_".to_owned() + &key,
                     "Generic metric from SHOW GLOBAL STATUS",
                     fv,
                 ));
@@ -131,7 +146,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 "wsrep_local_state_uuid" => text_items.get("wsrep_local_state_uuid").unwrap(),
                 "wsrep_cluster_state_uuid" => text_items.get("wsrep_cluster_state_uuid").unwrap(),
                 "wsrep_provider_version" => text_items.get("wsrep_provider_version").unwrap()
-            )
+            ),
         ));
     }
 
@@ -153,6 +168,7 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
         if evs.len() == values.len() {
             for (_, value, index, _) in evs.iter_mut() {
+                let index = *index;
                 match values[index].parse::<f64>() {
                     Ok(v) => *value = v,
                     Err(_) => parsing_success = false
@@ -162,9 +178,9 @@ pub async fn query(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
             if parsing_success {
                 for (name, value, _, desc) in evs {
                     metrics.push(Metric::gauge(
-                        "mysql_galera_evs_repl_latency_" + name,
+                        "mysql_galera_evs_repl_latency_".to_owned() + name,
                         desc,
-                        value
+                        value,
                     ));
                 }
             }
@@ -192,9 +208,9 @@ fn valid_name(s: &str) -> String {
         .map(|x| {
             if x.is_alphanumeric() {
                 x
+            } else {
+                '_'
             }
-
-            '_'
         })
         .collect::<String>()
         .to_lowercase()
@@ -219,7 +235,7 @@ mod tests {
             .await
             .unwrap();
 
-        let result = query(&pool).await;
+        let result = gather(&pool).await;
     }
 
     #[tokio::test]

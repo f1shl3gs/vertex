@@ -4,29 +4,11 @@ use tokio_stream::wrappers::IntervalStream;
 
 use crate::duration::{duration_to_string, parse_duration};
 
-pub mod duration {
-    use std::borrow::Cow;
-    use serde::{Deserializer, Serializer};
-    use crate::duration::{duration_to_string, parse_duration};
-
-    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<chrono::Duration, D::Error> {
-        let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
-        parse_duration(&s).map_err(serde::de::Error::custom)
-    }
-
-    pub fn serialize<S: Serializer>(_d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
-        let d = duration_to_string(_d);
-        s.serialize_str(&d)
-    }
-}
-
-#[deprecated]
 pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Result<chrono::Duration, D::Error> {
     let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
     parse_duration(&s).map_err(serde::de::Error::custom)
 }
 
-#[deprecated]
 pub fn serialize_duration<S: Serializer>(_d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
     let d = duration_to_string(_d);
     s.serialize_str(&d)
@@ -50,27 +32,11 @@ pub fn serialize_duration_option<S: Serializer>(d: &Option<chrono::Duration>, s:
     }
 }
 
-pub mod regex {
-    use serde::{Deserializer, Serializer};
-    use regex::Regex;
-
-    pub fn deserialize<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Regex, D::Error> {
-        let s: String = serde::Deserialize::deserialize(deserializer)?;
-        Regex::new(&s).map_err(serde::de::Error::custom)
-    }
-
-    pub fn serialize<S: Serializer>(re: &Regex, s: S) -> Result<S::Ok, S::Error> {
-        s.serialize_str(re.as_str())
-    }
-}
-
-#[deprecated]
 pub fn deserialize_regex<'de, D: Deserializer<'de>>(deserializer: D) -> Result<::regex::Regex, D::Error> {
     let s: String = serde::Deserialize::deserialize(deserializer)?;
     ::regex::Regex::new(&s).map_err(serde::de::Error::custom)
 }
 
-#[deprecated]
 pub fn serialize_regex<S: Serializer>(re: &::regex::Regex, s: S) -> Result<S::Ok, S::Error> {
     s.serialize_str(re.as_str())
 }

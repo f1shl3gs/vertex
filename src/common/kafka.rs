@@ -5,7 +5,7 @@ use rdkafka::consumer::ConsumerContext;
 use snafu::Snafu;
 use serde::{Deserialize, Serialize};
 use metrics::{gauge, counter};
-use internal::{InternalEvent, KafkaEventReceived, update_counter};
+use internal::{InternalEvent, update_counter};
 
 use crate::Error;
 use crate::tls::TLSConfig;

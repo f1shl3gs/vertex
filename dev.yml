@@ -61,6 +61,10 @@ sources:
       - http://localhost:10980/basic_status
   internal_logs:
     type: internal_logs
+  mysql:
+    type: mysqld
+    username: root
+    password: password
 
 transforms:
   add_extra_tags:
@@ -72,10 +76,10 @@ transforms:
       hostname: ${HOSTNAME}
 
 sinks:
-  stdout:
-    type: stdout
-    inputs:
-      - internal_logs
+  # stdout:
+  #   type: stdout
+  #   inputs:
+  #     - internal_logs
   blackhole:
     type: blackhole
     inputs:
@@ -93,4 +97,5 @@ sinks:
       - nginx
       - node
       # - prometheus_scrape
+      - mysql
     listen: 127.0.0.1:9101

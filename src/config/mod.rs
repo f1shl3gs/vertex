@@ -11,7 +11,6 @@ mod proxy;
 mod component;
 
 // re-export
-pub use helper::duration;
 pub use proxy::{ProxyConfig};
 pub use helper::*;
 pub use diff::ConfigDiff;
