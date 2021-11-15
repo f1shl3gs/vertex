@@ -17,18 +17,16 @@ macro_rules! impl_generate_config_from_default {
     };
 }
 
-/// TODO
 #[macro_export]
-macro_rules! register_source {
-    ($name:expr, $ty:ident, $example:expr) => {
-        impl $crate::config::GenerateConfig for $type {
-            fn generate_config() -> serde_yaml::Value {
-                serde_yaml::to_value($example).unwrap()
-            }
-        }
-
+macro_rules! register_source_config {
+    ($name:expr, $type:ty) => {
         inventory::submit! {
-            $crate::config::SourceDescription::new::<$ty>($name)
+            $crate::config::SourceDescription::new::<$type>($name)
+        }
+    };
+    (name = $name:expr, typ =  $type:ty) => {
+        inventory::submit! {
+            $crate::config::SourceDescription::new::<$type>($name)
         }
     };
 }

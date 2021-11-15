@@ -15,14 +15,18 @@ macro_rules! impl_list_and_example {
             pub fn run(&self) {
                 match &self.name {
                     Some(name) => {
-                        let example = $desc::example(&name)
-                            .expect("Successful when generate example");
-                        println!("{}", serde_yaml::to_string(&example).unwrap());
+                        match $desc::example(&name) {
+                            Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                            Err(err) => {
+                                println!("Generate example failed: {}", err);
+                                std::process::exit(exitcode::UNAVAILABLE);
+                            }
+                        }
                     },
 
                     _ => {
                         for item in $desc::types() {
-                            println!("{}", item)
+                            println!("{}", item);
                         }
                     }
                 }

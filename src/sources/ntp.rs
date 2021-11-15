@@ -14,6 +14,7 @@ use crate::sources::Source;
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use crate::{
+    register_source_config,
     config::{
         deserialize_duration, serialize_duration, SourceDescription,
         default_interval, SourceConfig, SourceContext, DataType, GenerateConfig
@@ -44,10 +45,17 @@ impl GenerateConfig for NTPConfig {
         serde_yaml::to_value(Self {
             timeout: default_timeout(),
             interval: default_interval(),
-            pools: vec![]
+            pools: vec![
+                "0.pool.ntp.org".to_string(),
+                "1.pool.ntp.org".to_string(),
+                "2.pool.ntp.org".to_string(),
+                "3.pool.ntp.org".to_string(),
+            ]
         }).unwrap()
     }
 }
+
+register_source_config!("ntp", NTPConfig);
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]
