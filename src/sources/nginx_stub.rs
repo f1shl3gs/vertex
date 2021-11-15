@@ -16,11 +16,15 @@ use nom::{
     error::ErrorKind,
     sequence::{preceded, terminated, tuple},
 };
+use serde_yaml::Value;
 
-use crate::config::{default_interval, serialize_duration, deserialize_duration, SourceConfig, SourceContext, DataType};
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
 use crate::tls::{MaybeTLSSettings, TLSConfig};
+use crate::config::{
+    default_interval, serialize_duration, deserialize_duration,
+    SourceConfig, SourceContext, DataType, GenerateConfig, SourceDescription,
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct NginxStubConfig {
@@ -30,6 +34,23 @@ struct NginxStubConfig {
     interval: chrono::Duration,
     tls: Option<TLSConfig>,
     auth: Option<Auth>,
+}
+
+impl GenerateConfig for NginxStubConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            endpoints: vec![
+                "http://127.0.0.1:1111".to_string()
+            ],
+            interval: default_interval(),
+            tls: None,
+            auth: None
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<NginxStubConfig>("nginx_stub")
 }
 
 #[async_trait::async_trait]

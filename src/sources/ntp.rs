@@ -1,34 +1,52 @@
 use chrono::Duration;
 use serde::{Deserialize, Serialize};
-use crate::{
-    config::{
-        deserialize_duration,
-        serialize_duration,
-    }
-};
-use crate::config::{SourceConfig, SourceContext, DataType};
-use crate::sources::Source;
-use crate::shutdown::ShutdownSignal;
-use crate::pipeline::Pipeline;
 use tokio_stream::wrappers::IntervalStream;
 use futures::{stream, StreamExt, SinkExt};
 use rsntp;
+use serde_yaml::Value;
 use event::{
     Event,
     Metric,
     MetricValue,
 };
 
+use crate::sources::Source;
+use crate::shutdown::ShutdownSignal;
+use crate::pipeline::Pipeline;
+use crate::{
+    config::{
+        deserialize_duration, serialize_duration, SourceDescription,
+        default_interval, SourceConfig, SourceContext, DataType, GenerateConfig
+    }
+};
+
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct NTPConfig {
+    #[serde(default = "default_timeout")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub timeout: Duration,
 
+    #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub interval: Duration,
 
     pub pools: Vec<String>,
+}
+
+fn default_timeout() -> Duration {
+    Duration::seconds(10)
+}
+
+impl GenerateConfig for NTPConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            timeout: default_timeout(),
+            interval: default_interval(),
+            pools: vec![]
+        }).unwrap()
+    }
 }
 
 #[async_trait::async_trait]

@@ -1,8 +1,11 @@
 use serde::{Deserialize, Serialize};
 use futures::{SinkExt, StreamExt};
+use serde_yaml::Value;
 use tokio_stream::wrappers::IntervalStream;
 use event::Event;
 use internal::metric::{init_global, get_global, InternalRecorder};
+
+use crate::config::{default_interval, GenerateConfig, SourceDescription};
 
 use crate::{
     config::{DataType, deserialize_duration, serialize_duration, SourceConfig, SourceContext},
@@ -11,16 +14,30 @@ use crate::{
     pipeline::Pipeline,
 };
 
+
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-struct InternalMetricConfig {
+struct InternalMetricsConfig {
+    #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
 }
 
+impl GenerateConfig for InternalMetricsConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            interval: default_interval()
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<InternalMetricsConfig>("internal_metrics")
+}
+
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_metrics")]
-impl SourceConfig for InternalMetricConfig {
+impl SourceConfig for InternalMetricsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         init_global()?;
         let recorder = get_global()?;

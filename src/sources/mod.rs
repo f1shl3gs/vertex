@@ -49,6 +49,8 @@ mod tail;
 mod kafka_metrics;
 #[cfg(feature = "sources-mysqld")]
 mod mysqld;
+mod kube_events;
+mod kube_state_metrics;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;

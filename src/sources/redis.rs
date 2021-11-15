@@ -1,14 +1,21 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
+
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 use tokio_stream::wrappers::IntervalStream;
 use event::{tags, Metric};
 use snafu::Snafu;
-use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration, default_interval};
+
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
+use crate::config::{
+    DataType, SourceConfig, SourceContext, deserialize_duration,
+    serialize_duration, default_interval, GenerateConfig, SourceDescription,
+};
+
 
 lazy_static!(
     static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {
@@ -247,10 +254,22 @@ pub struct RedisSourceConfig {
 
     #[serde(default)]
     password: Option<String>,
+}
 
-    #[serde(default)]
-    password_file: Option<PathBuf>,
+impl GenerateConfig for RedisSourceConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            url: "127.0.0.1:1111".to_string(),
+            interval: default_interval(),
+            namespace: None,
+            user: None,
+            password: Some("some_password".to_string())
+        }).unwrap()
+    }
+}
 
+inventory::submit! {
+    SourceDescription::new::<RedisSourceConfig>("redis")
 }
 
 fn default_namespace() -> Option<String> {

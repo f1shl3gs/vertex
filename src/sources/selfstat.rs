@@ -6,6 +6,7 @@ use std::{
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
+use serde_yaml::Value;
 use tokio::sync::RwLock;
 use event::{Event, tags, gauge_metric, sum_metric, Metric};
 
@@ -13,6 +14,7 @@ use crate::{
     config::{
         SourceConfig, SourceContext, DataType,
         deserialize_duration, serialize_duration,
+        SourceDescription, GenerateConfig
     },
     sources::{
         Source,
@@ -20,6 +22,7 @@ use crate::{
     shutdown::ShutdownSignal,
     pipeline::Pipeline,
 };
+
 
 const USER_HZ: f64 = 100.0;
 
@@ -52,6 +55,17 @@ impl SourceConfig for SelfStatConfig {
     }
 }
 
+impl GenerateConfig for SelfStatConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            interval: default_interval()
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<SelfStatConfig>("selfstat")
+}
 
 struct SelfStat {
     interval: std::time::Duration,

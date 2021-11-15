@@ -1,28 +1,46 @@
 // mntr
 
 use std::collections::BTreeMap;
+
 use futures::{SinkExt, StreamExt};
 use event::{tags, Metric};
-use crate::Error;
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
-use crate::config::{
-    DataType, SourceConfig, SourceContext,
-    deserialize_duration, serialize_duration, default_interval,
-};
+
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
+use crate::Error;
+use crate::config::{
+    DataType, SourceConfig, SourceContext, deserialize_duration,
+    serialize_duration, default_interval, GenerateConfig, SourceDescription
+};
+
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 struct ZookeeperConfig {
     endpoint: String,
 
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     #[serde(default = "default_interval")]
     interval: chrono::Duration,
+}
+
+impl GenerateConfig for ZookeeperConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            endpoint: "127.0.0.1:9092".to_string(),
+            interval: default_interval(),
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<ZookeeperConfig>("zookeeper")
 }
 
 struct ZookeeperSource {

@@ -17,6 +17,22 @@ macro_rules! impl_generate_config_from_default {
     };
 }
 
+/// TODO
+#[macro_export]
+macro_rules! register_source {
+    ($name:expr, $ty:ident, $example:expr) => {
+        impl $crate::config::GenerateConfig for $type {
+            fn generate_config() -> serde_yaml::Value {
+                serde_yaml::to_value($example).unwrap()
+            }
+        }
+
+        inventory::submit! {
+            $crate::config::SourceDescription::new::<$ty>($name)
+        }
+    };
+}
+
 #[derive(Debug, Snafu, Clone, PartialEq)]
 pub enum ExampleError {
     #[snafu(display("unable to create an example for this component"))]

@@ -10,17 +10,29 @@ use std::{
 use chrono::{Utc, TimeZone};
 use futures::SinkExt;
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 use tokio::io::AsyncReadExt;
 use event::{LogRecord, fields};
 
 use crate::{
     sources::Source,
-    config::{DataType, SourceConfig, SourceContext},
+    config::{DataType, SourceConfig, SourceContext, GenerateConfig, SourceDescription},
 };
+
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct KmsgConfig {}
+
+impl GenerateConfig for KmsgConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {}).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<KmsgConfig>("kmsg")
+}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kmsg")]

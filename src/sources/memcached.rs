@@ -5,12 +5,17 @@ use std::time::Instant;
 use futures::{SinkExt, StreamExt};
 use snafu::{ResultExt, Snafu};
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use event::{Event, Metric, tags};
 
-use crate::config::{DataType, default_interval, deserialize_duration, serialize_duration, SourceConfig, SourceContext, ticker_from_duration};
 use crate::sources::Source;
+use crate::config::{
+    DataType, default_interval, deserialize_duration, GenerateConfig, serialize_duration,
+    SourceConfig, SourceContext, ticker_from_duration, SourceDescription
+};
+
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
@@ -22,6 +27,22 @@ struct MemcachedConfig {
     #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
+}
+
+impl GenerateConfig for MemcachedConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            endpoints: vec![
+                "127.0.0.1:1111".to_string(),
+                "127.0.0.1:2222".to_string(),
+            ],
+            interval: default_interval()
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<MemcachedConfig>("memcached")
 }
 
 #[async_trait::async_trait]

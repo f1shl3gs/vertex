@@ -1,16 +1,21 @@
 use chrono::{DateTime, TimeZone, Utc};
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
 use snafu::ResultExt;
 use event::{Bucket, Event, Metric, MetricValue, Quantile};
 use prometheus::{MetricGroup, GroupKind};
 
 use crate::http::{Auth, HttpClient};
 use crate::tls::{TLSConfig, TLSSettings};
-use crate::config::{serialize_duration, deserialize_duration, default_interval, default_false, SourceConfig, SourceContext, DataType, ticker_from_duration, ProxyConfig};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
+use crate::config::{
+    serialize_duration, deserialize_duration, default_interval, default_false,
+    SourceConfig, SourceContext, DataType, ticker_from_duration,
+    ProxyConfig, GenerateConfig, SourceDescription
+};
 
 
 // pulled up, and split over multiple lines, because the long lines trip up rustfmt such that it
@@ -31,6 +36,25 @@ struct PrometheusScrapeConfig {
     honor_labels: bool,
     tls: Option<TLSConfig>,
     auth: Option<Auth>,
+}
+
+impl GenerateConfig for PrometheusScrapeConfig {
+    fn generate_config() -> Value {
+        serde_yaml::to_value(Self {
+            endpoints: vec![
+                "http://127.0.0.1:1111/metrics".to_string(),
+                "http://127.0.0.1:2222/metrics".to_string(),
+            ],
+            interval: default_interval(),
+            honor_labels: false,
+            tls: None,
+            auth: None,
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<PrometheusScrapeConfig>("prometheus_scrape")
 }
 
 #[async_trait::async_trait]

@@ -13,7 +13,10 @@ use snafu::{Snafu, ResultExt};
 use internal::{KafkaEventReceived};
 
 use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
-use crate::config::{DataType, SourceConfig, SourceContext, deserialize_duration, serialize_duration};
+use crate::config::{
+    DataType, SourceConfig, SourceContext, deserialize_duration,
+    serialize_duration, GenerateConfig, SourceDescription,
+};
 use crate::Error;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
@@ -93,6 +96,34 @@ struct KafkaSourceConfig {
     auth: KafkaAuthConfig,
 
     librdkafka_options: Option<HashMap<String, String>>,
+}
+
+impl GenerateConfig for KafkaSourceConfig {
+    fn generate_config() -> serde_yaml::Value {
+        serde_yaml::to_value(Self {
+            bootstrap_servers: "".to_string(),
+            topics: vec![
+                "topic_1".to_string()
+            ],
+            group: "foo".to_string(),
+            auto_offset_reset: "".to_string(),
+            session_timeout: default_session_timeout(),
+            socket_timeout: default_socket_timeout(),
+            fetch_wait_max: default_fetch_wait_max(),
+            commit_interval: default_commit_interval(),
+            key_field: default_key_field(),
+            topic_key: default_topic_key(),
+            partition_key: default_partition_key(),
+            offset_key: default_offset_key(),
+            headers_key: default_headers_key(),
+            auth: Default::default(),
+            librdkafka_options: None,
+        }).unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<KafkaSourceConfig>("kafka")
 }
 
 #[derive(Debug, Snafu)]
@@ -342,6 +373,4 @@ mod tests {
 
 #[cfg(test)]
 #[cfg(feature = "integration-test")]
-mod integration_tests {
-
-}
+mod integration_tests {}
