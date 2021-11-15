@@ -16,15 +16,15 @@ use crate::pipeline::Pipeline;
 use crate::{
     register_source_config,
     config::{
-        deserialize_duration, serialize_duration, SourceDescription,
-        default_interval, SourceConfig, SourceContext, DataType, GenerateConfig
+        deserialize_duration, serialize_duration, default_interval,
+        SourceConfig, SourceContext, DataType, GenerateConfig
     }
 };
 
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct NTPConfig {
+pub struct NtpConfig {
     #[serde(default = "default_timeout")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub timeout: Duration,
@@ -40,7 +40,7 @@ fn default_timeout() -> Duration {
     Duration::seconds(10)
 }
 
-impl GenerateConfig for NTPConfig {
+impl GenerateConfig for NtpConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
             timeout: default_timeout(),
@@ -55,11 +55,11 @@ impl GenerateConfig for NTPConfig {
     }
 }
 
-register_source_config!("ntp", NTPConfig);
+register_source_config!("ntp", NtpConfig);
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]
-impl SourceConfig for NTPConfig {
+impl SourceConfig for NtpConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let ntp = NTP {
             interval: self.interval.to_std()?,

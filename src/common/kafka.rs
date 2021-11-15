@@ -8,7 +8,7 @@ use metrics::{gauge, counter};
 use internal::{InternalEvent, update_counter};
 
 use crate::Error;
-use crate::tls::TLSConfig;
+use crate::tls::TlsOptions;
 
 
 #[derive(Debug, Snafu)]
@@ -46,7 +46,7 @@ struct KafkaSaslConfig {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct KafkaTLSConfig {
     pub enabled: Option<bool>,
-    pub options: TLSConfig,
+    pub options: TlsOptions,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]

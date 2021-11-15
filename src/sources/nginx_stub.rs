@@ -20,7 +20,7 @@ use serde_yaml::Value;
 
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
-use crate::tls::{MaybeTLSSettings, TLSConfig};
+use crate::tls::{MaybeTlsSettings, TlsConfig};
 use crate::config::{
     default_interval, serialize_duration, deserialize_duration,
     SourceConfig, SourceContext, DataType, GenerateConfig, SourceDescription,
@@ -32,7 +32,7 @@ struct NginxStubConfig {
     #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
-    tls: Option<TLSConfig>,
+    tls: Option<TlsConfig>,
     auth: Option<Auth>,
 }
 
@@ -57,7 +57,7 @@ inventory::submit! {
 #[typetag::serde(name = "nginx_stub")]
 impl SourceConfig for NginxStubConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let tls = MaybeTLSSettings::from_config(&self.tls)?;
+        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let http_client = HttpClient::new(tls, &ctx.proxy)?;
 
         let mut sources = Vec::with_capacity(self.endpoints.len());

@@ -6,7 +6,7 @@ use crate::{signal, config::{
 use url::Url;
 use serde::{Deserialize, Serialize};
 use indexmap::map::IndexMap;
-use crate::tls::TLSConfig;
+use crate::tls::TlsConfig;
 use super::builder::Builder;
 
 pub type Result<T> = std::result::Result<T, Vec<String>>;
@@ -34,7 +34,7 @@ pub struct HTTPConfig {
     request: RequestConfig,
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
-    tls: Option<TLSConfig>,
+    tls: Option<TlsConfig>,
 }
 
 impl Default for HTTPConfig {
@@ -62,7 +62,7 @@ impl ProviderConfig for HTTPConfig {
 
 async fn http_request(
     url: &Url,
-    tls: &Option<TLSConfig>,
+    tls: &Option<TlsConfig>,
     headers: &IndexMap<String, String>,
 ) -> std::result::Result<bytes::Bytes, &'static str> {
     todo!()

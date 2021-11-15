@@ -19,6 +19,7 @@ mod template;
 mod multiline;
 mod common;
 mod batch;
+mod tcp;
 
 pub use signal::{SignalHandler};
 

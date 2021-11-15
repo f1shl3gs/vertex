@@ -177,6 +177,7 @@ metrics = { version = "0.17.0" }
 # Tracing
 tracing = { version = "0.1.28", default-features = false }
 tracing-core = { version = "0.1.21", default-features = false }
+tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
 tracing-subscriber = { version = "0.2.24", default-features = false, features = ["env-filter", "json", "ansi"] }
 
@@ -188,6 +189,7 @@ cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
 http = { version = "0.2.5" }
 headers = { version = "0.3.4" }
+tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
@@ -204,12 +206,12 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 # tonic = { version = "0.5.2" }
 
 # TLS
-rustls = { version = "0.20.0", features = ["dangerous_configuration"] }
-rustls-pemfile = { version = "0.2.1" }
-tokio-rustls = { version = "0.23.0" }
-rustls-native-certs = { version = "0.6.1", default-features = false }
-webpki-roots = { version = "0.21.0" }
-ct-logs = { version = "0.9.0" }
+tokio-openssl = { version = "0.6.3", default-features = false }
+openssl = { version = "0.10.36", default-features = false }
+hyper-openssl = { version = "0.9.1", default-features = false }
+
+# Networking
+socket2 = { version = "0.4.2", default-features = false }
 
 pprof = { version = "0.6.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 

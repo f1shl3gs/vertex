@@ -30,7 +30,7 @@ use crate::{
         default_false, SinkDescription, SinkConfig, SinkContext,
         DataType, Resource, HealthCheck,
     },
-    tls::TLSConfig,
+    tls::TlsConfig,
     impl_generate_config_from_default,
 };
 
@@ -40,7 +40,7 @@ use crate::{
 pub struct PrometheusExporterConfig {
     pub namespace: Option<String>,
 
-    pub tls: Option<TLSConfig>,
+    pub tls: Option<TlsConfig>,
 
     #[serde(default = "default_listen_address")]
     pub listen: SocketAddr,

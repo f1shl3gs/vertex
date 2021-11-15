@@ -2,11 +2,12 @@ use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
 use crate::sources::Source;
-use crate::tls::TLSConfig;
+use crate::tls::TlsConfig;
 use crate::config::{
     deserialize_duration, serialize_duration, default_interval, SourceConfig,
     SourceContext, DataType, SourceDescription, GenerateConfig,
 };
+use crate::http::HttpClient;
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -19,23 +20,7 @@ struct HaproxyConfig {
     endpoints: Vec<String>,
 
     #[serde(default)]
-    tls: Option<TLSConfig>
-}
-
-#[async_trait::async_trait]
-#[typetag::serde(name = "haproxy")]
-impl SourceConfig for HaproxyConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        todo!()
-    }
-
-    fn output_type(&self) -> DataType {
-        DataType::Metric
-    }
-
-    fn source_type(&self) -> &'static str {
-        "haproxy"
-    }
+    tls: Option<TlsConfig>
 }
 
 impl GenerateConfig for HaproxyConfig {
@@ -55,3 +40,24 @@ inventory::submit! {
     SourceDescription::new::<HaproxyConfig>("haproxy")
 }
 
+#[async_trait::async_trait]
+#[typetag::serde(name = "haproxy")]
+impl SourceConfig for HaproxyConfig {
+    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+        todo!()
+    }
+
+    fn output_type(&self) -> DataType {
+        DataType::Metric
+    }
+
+    fn source_type(&self) -> &'static str {
+        "haproxy"
+    }
+}
+
+async fn gather(
+    endpoints: Vec<String>,
+) -> Result<(), ()> {
+    todo!()
+}

@@ -7,7 +7,7 @@ use event::{Bucket, Event, Metric, MetricValue, Quantile};
 use prometheus::{MetricGroup, GroupKind};
 
 use crate::http::{Auth, HttpClient};
-use crate::tls::{TLSConfig, TLSSettings};
+use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
@@ -34,7 +34,7 @@ struct PrometheusScrapeConfig {
     interval: chrono::Duration,
     #[serde(default = "default_false")]
     honor_labels: bool,
-    tls: Option<TLSConfig>,
+    tls: Option<TlsOptions>,
     auth: Option<Auth>,
 }
 
@@ -65,7 +65,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             .iter()
             .map(|s| s.parse::<http::Uri>().context(crate::sources::UriParseError))
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
-        let tls = TLSSettings::from_config(&self.tls)?;
+        let tls = TlsSettings::from_options(&self.tls)?;
         Ok(scrape(
             urls,
             tls,
@@ -90,7 +90,7 @@ impl SourceConfig for PrometheusScrapeConfig {
 
 fn scrape(
     urls: Vec<http::Uri>,
-    tls: TLSSettings,
+    tls: TlsSettings,
     auth: Option<Auth>,
     proxy: ProxyConfig,
     instance_tag: Option<String>,

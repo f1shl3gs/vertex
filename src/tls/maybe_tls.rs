@@ -9,12 +9,12 @@ use tokio::io::{self, AsyncRead, AsyncWrite, ReadBuf};
 /// A type wrapper for objects that can exist in either a raw state or
 /// wrapped by TLS handling.
 #[pin_project(project = MaybeTlsProj)]
-pub enum MaybeTLS<R, T> {
+pub enum MaybeTls<R, T> {
     Raw(#[pin] R),
     Tls(#[pin] T),
 }
 
-impl<R, T> MaybeTLS<R, T> {
+impl<R, T> MaybeTls<R, T> {
     pub const fn is_raw(&self) -> bool {
         matches!(self, Self::Raw(_))
     }
@@ -38,7 +38,7 @@ impl<R, T> MaybeTLS<R, T> {
     }
 }
 
-impl<T> From<Option<T>> for MaybeTLS<(), T> {
+impl<T> From<Option<T>> for MaybeTls<(), T> {
     fn from(tls: Option<T>) -> Self {
         match tls {
             Some(tls) => Self::Tls(tls),
@@ -48,7 +48,7 @@ impl<T> From<Option<T>> for MaybeTLS<(), T> {
 }
 
 // Conditionally implement Clone for Cloneable types
-impl<R: Clone, T: Clone> Clone for MaybeTLS<R, T> {
+impl<R: Clone, T: Clone> Clone for MaybeTls<R, T> {
     fn clone(&self) -> Self {
         match self {
             Self::Raw(raw) => Self::Raw(raw.clone()),
@@ -58,16 +58,16 @@ impl<R: Clone, T: Clone> Clone for MaybeTLS<R, T> {
 }
 
 // Conditionally implement Debug for Debuggable types
-impl<R: fmt::Debug, T: fmt::Debug> fmt::Debug for MaybeTLS<R, T> {
+impl<R: fmt::Debug, T: fmt::Debug> fmt::Debug for MaybeTls<R, T> {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            Self::Raw(raw) => write!(fmt, "MaybeTLS::Raw({:?})", raw),
-            Self::Tls(tls) => write!(fmt, "MaybeTLS::TLS({:?})", tls),
+            Self::Raw(raw) => write!(fmt, "MaybeTls::Raw({:?})", raw),
+            Self::Tls(tls) => write!(fmt, "MaybeTls::Tls({:?})", tls),
         }
     }
 }
 
-impl<R: AsyncRead, T: AsyncRead> AsyncRead for MaybeTLS<R, T> {
+impl<R: AsyncRead, T: AsyncRead> AsyncRead for MaybeTls<R, T> {
     fn poll_read(
         self: Pin<&mut Self>,
         cx: &mut Context,
@@ -80,7 +80,7 @@ impl<R: AsyncRead, T: AsyncRead> AsyncRead for MaybeTLS<R, T> {
     }
 }
 
-impl<R: AsyncWrite, T: AsyncWrite> AsyncWrite for MaybeTLS<R, T> {
+impl<R: AsyncWrite, T: AsyncWrite> AsyncWrite for MaybeTls<R, T> {
     fn poll_write(self: Pin<&mut Self>, cx: &mut Context, buf: &[u8]) -> Poll<io::Result<usize>> {
         match self.project() {
             MaybeTlsProj::Tls(s) => s.poll_write(cx, buf),

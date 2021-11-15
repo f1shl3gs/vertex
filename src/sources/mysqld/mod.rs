@@ -15,7 +15,7 @@ use snafu::Snafu;
 use event::{Event, Metric, tags};
 
 use crate::sources::Source;
-use crate::tls::TLSConfig;
+use crate::tls::TlsConfig;
 use crate::config::{
     GenerateConfig, SourceDescription, default_false, default_true,
     SourceConfig, SourceContext, DataType, ticker_from_duration, default_interval,
@@ -73,7 +73,7 @@ struct MysqldConfig {
     username: Option<String>,
     #[serde(default)]
     password: Option<String>,
-    ssl: Option<TLSConfig>,
+    ssl: Option<TlsConfig>,
 
     #[serde(default = "default_interval")]
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
