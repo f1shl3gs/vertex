@@ -132,8 +132,8 @@ impl GenerateConfig for MysqldConfig {
                 },
                 host: default_host(),
                 port: default_port(),
-                username: None,
-                password: None,
+                username: Some("foo".to_string()),
+                password: Some("some_password".to_string()),
                 ssl: None,
                 interval: default_interval(),
             }

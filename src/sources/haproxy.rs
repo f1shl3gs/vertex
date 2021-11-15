@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
-use crate::config::{deserialize_duration, serialize_duration, default_interval, SourceConfig, SourceContext, DataType, SourceDescription, GenerateConfig};
 use crate::sources::Source;
 use crate::tls::TLSConfig;
+use crate::config::{
+    deserialize_duration, serialize_duration, default_interval, SourceConfig,
+    SourceContext, DataType, SourceDescription, GenerateConfig,
+};
 
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -13,7 +16,7 @@ struct HaproxyConfig {
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     interval: chrono::Duration,
 
-    uri: String,
+    endpoints: Vec<String>,
 
     #[serde(default)]
     tls: Option<TLSConfig>
@@ -39,7 +42,10 @@ impl GenerateConfig for HaproxyConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
             interval: default_interval(),
-            uri: "http://127.0.0.1:8404/metrics".to_string(),
+            endpoints: vec![
+                "http://127.0.0.1:1111/metrics".to_string(),
+                "http://127.0.0.1:2222/metrics".to_string(),
+            ],
             tls: None
         }).unwrap()
     }
