@@ -4,6 +4,8 @@ mod slave_status;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
+#[cfg(test)]
+mod tests;
 
 use chrono::Utc;
 use futures::{SinkExt, StreamExt};
@@ -23,9 +25,9 @@ use crate::config::{
 };
 
 #[derive(Debug, Snafu)]
-pub enum QueryError {
-    #[snafu(display("query execute failed, {}", source))]
-    QueryFailed { source: sqlx::Error }
+pub enum Error {
+    #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
+    QueryFailed { source: sqlx::Error, query: &'static str }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -161,16 +163,31 @@ impl SourceConfig for MysqldConfig {
 
             while ticker.next().await.is_some() {
                 let mut tasks = vec![];
-                let pool = pool.clone();
 
+                let p = pool.clone();
                 tasks.push(tokio::spawn(async move {
-                    global_status::gather(&pool).await
+                    global_status::gather(&p).await
+                }));
+
+                let p = pool.clone();
+                tasks.push(tokio::spawn(async move {
+                    global_variables::gather(&p).await
+                }));
+
+                let p = pool.clone();
+                tasks.push(tokio::spawn(async move {
+                    info_schema_innodb_cmp::gather(&p).await
                 }));
 
                 // When `try_join_all` works with `JoinHandle`, the behavior does not match
                 // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
                 let metrics = match futures::future::try_join_all(tasks).await {
                     Err(err) => {
+                        warn!(
+                            message = "Staring scrape tasks failed",
+                            %err
+                        );
+
                         vec![
                             Metric::gauge_with_tags(
                                 "mysql_up",
@@ -184,7 +201,7 @@ impl SourceConfig for MysqldConfig {
                     },
                     Ok(results) => {
                         let merged = results.iter()
-                            .fold(Ok(vec![]), |mut acc, part| {
+                            .fold(Ok(vec![]), | acc, part| {
                                 match (acc, part) {
                                     (Ok(mut acc), Ok(part)) => {
                                         acc.extend_from_slice(part);
@@ -208,16 +225,23 @@ impl SourceConfig for MysqldConfig {
 
                                 metrics
                             },
-                            Err(_) => vec![
-                                Metric::gauge_with_tags(
-                                    "mysql_up",
-                                    "Whether the MySQL server is up.",
-                                    0,
-                                    tags!(
-                                        "instance" => instance
-                                    ),
-                                )
-                            ]
+                            Err(err) => {
+                                warn!(
+                                    message = "Scrape metrics failed",
+                                    %err
+                                );
+
+                                vec![
+                                    Metric::gauge_with_tags(
+                                        "mysql_up",
+                                        "Whether the MySQL server is up.",
+                                        0,
+                                        tags!(
+                                            "instance" => instance
+                                        ),
+                                    )
+                                ]
+                            }
                         }
                     }
                 };
@@ -246,83 +270,15 @@ impl SourceConfig for MysqldConfig {
     }
 }
 
-
-#[cfg(test)]
-mod tests {
-    use futures::future::try_join_all;
-    use futures::stream::FuturesUnordered;
-    use tokio_stream::StreamExt;
-    use super::*;
-
-    async fn mock(i: i32) -> Result<i32, u32> {
-        if i != 3 {
-            Ok(i)
-        } else {
-            Err(i as u32)
-        }
-    }
-
-    #[tokio::test]
-    async fn test_try_join_all_success() {
-        let tasks = vec![
-            mock(1),
-            mock(2),
-            mock(4)
-        ];
-
-        let result = try_join_all(tasks).await;
-        println!("{:#?}", result);
-    }
-
-    #[tokio::test]
-    async fn test_try_join_all() {
-        let inputs = vec![1, 2, 3, 4];
-        let ts = inputs.iter()
-            .map(|input| mock(*input))
-            .collect::<FuturesUnordered<_>>();
-
-        let result = ts.fold(Ok(vec![]), |mut acc, part| {
-            match (acc, part) {
-                (Err(err), _) => Err(err),
-                (Ok(mut acc), Ok(part)) => {
-                    acc.push(part);
-                    Ok(acc)
-                },
-                (Ok(_), Err(err)) => Err(err)
+pub fn valid_name(s: &str) -> String {
+    s.chars()
+        .map(|x| {
+            if x.is_alphanumeric() {
+                x
+            } else {
+                '_'
             }
-        });
-
-        let re = result.await;
-        println!("{:?}", re);
-
-        let tasks = vec![
-            tokio::spawn(mock(1)),
-            tokio::spawn(mock(2)),
-            tokio::spawn(mock(3)),
-            tokio::spawn(mock(4))
-        ];
-
-        let result = try_join_all(tasks).await;
-        println!("{:#?}", result);
-    }
-
-    #[tokio::test]
-    async fn test_try_join_all_only_one_and_error() {
-        let tasks = vec![
-            async { return mock(3).await; },
-        ];
-
-        let result = try_join_all(tasks).await;
-        println!("{:#?}", result);
-    }
-
-    #[tokio::test]
-    async fn test_try_join_all_only_one_and_ok() {
-        let tasks = vec![
-            async move { return mock(1).await; },
-        ];
-
-        let result = try_join_all(tasks).await;
-        println!("{:#?}", result);
-    }
+        })
+        .collect::<String>()
+        .to_lowercase()
 }

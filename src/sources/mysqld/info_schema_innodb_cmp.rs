@@ -1,0 +1,113 @@
+use snafu::ResultExt;
+use sqlx::MySqlPool;
+use event::{Metric, tags};
+
+use super::{Error, QueryFailed};
+
+
+const INNODB_CMP_QUERY: &str = r#"SELECT page_size, compress_ops, compress_ops_ok, compress_time, uncompress_ops, uncompress_time FROM information_schema.innodb_cmp"#;
+
+#[derive(Debug, sqlx::FromRow)]
+struct Record {
+    page_size: i32,
+    compress_ops: i32,
+    compress_ops_ok: i32,
+    compress_time: i32,
+    uncompress_ops: i32,
+    uncompress_time: i32,
+}
+
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+    let records = sqlx::query_as::<_, Record>(INNODB_CMP_QUERY)
+        .fetch_all(pool)
+        .await
+        .context(QueryFailed { query: INNODB_CMP_QUERY })?;
+
+    let mut metrics = Vec::with_capacity(5 * records.len());
+
+    for record in records {
+        let page_size = &record.page_size.to_string();
+
+        metrics.extend_from_slice(&[
+            Metric::sum_with_tags(
+                "mysql_info_schema_innodb_cmp_compress_ops_total",
+                "Number of times a B-tree page of the size PAGE_SIZE has been compressed",
+                record.compress_ops,
+                tags!(
+                    "page_size" => page_size
+                )
+            ),
+            Metric::sum_with_tags(
+                "mysql_info_schema_innodb_cmp_compress_ops_ok_total",
+                "Number of times a B-tree page of the size PAGE_SIZE has been successfully compressed",
+                record.compress_ops_ok,
+                tags!(
+                    "page_size" => page_size
+                )
+            ),
+            Metric::sum_with_tags(
+                "mysql_info_schema_innodb_cmp_compress_time_seconds_total",
+                "Number of times a B-tree page of the size PAGE_SIZE has been successfully compressed",
+                record.compress_time,
+                tags!(
+                    "page_size" => page_size
+                )
+            ),
+            Metric::sum_with_tags(
+                "mysql_info_schema_innodb_cmp_uncompress_ops_total",
+                "Number of times a B-tree page of the size PAGE_SIZe has been uncompressed",
+                record.uncompress_ops,
+                tags!(
+                    "page_size" => page_size,
+                )
+            ),
+            Metric::sum_with_tags(
+                "mysql_info_schema_innodb_cmp_uncompress_time_seconds_total",
+                "Total time in secnods spent in uncompressing B-tree pages",
+                record.uncompress_time,
+                tags!(
+                    "page_size" => page_size
+                )
+            )
+        ]);
+    }
+
+    Ok(metrics)
+}
+
+#[cfg(test)]
+mod tests {
+    use std::io::Read;
+    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
+    use testcontainers::Docker;
+    use crate::sources::mysqld::tests::Mysql;
+    use super::*;
+
+    #[tokio::test]
+    async fn test_gather() {
+        let docker = testcontainers::clients::Cli::default();
+        let image = Mysql::default()
+            .with_env("MYSQL_ROOT_PASSWORD", "password");
+        let service = docker.run(image);
+        let host_port = service.get_host_port(3306).unwrap();
+        let pool = MySqlPool::connect_lazy_with(MySqlConnectOptions::new()
+            .host("127.0.0.1")
+            .username("root")
+            .password("password")
+            .port(host_port)
+            .ssl_mode(MySqlSslMode::Disabled));
+
+        let metrics = gather(&pool).await.map_err(|err| {
+            let  testcontainers::core::Logs { mut stdout, mut stderr } = service.logs();
+            let mut buf = String::new();
+            stdout.read_to_string(&mut buf);
+            println!("stdout:\n{}", buf);
+            let mut buf = String::new();
+            stderr.read_to_string(&mut buf);
+            println!("stderr:\n{}", buf);
+
+            err
+        }).unwrap();
+        assert_ne!(metrics.len(), 0);
+    }
+}

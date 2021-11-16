@@ -10,7 +10,7 @@ use std::{
 
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
-use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request, header};
+use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
 use hyper::{
     body::{Body, HttpBody},
     client,

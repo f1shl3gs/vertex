@@ -4,8 +4,10 @@ use snafu::ResultExt;
 use sqlx::MySqlPool;
 use event::{Metric, tags};
 
-use super::QueryFailed;
+use super::{QueryFailed, valid_name};
 
+
+const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
 #[derive(Debug, sqlx::FromRow)]
 struct GlobalStatus {
@@ -15,11 +17,11 @@ struct GlobalStatus {
     value: String,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::QueryError> {
-    let stats = sqlx::query_as::<_, GlobalStatus>(r#"SHOW GLOBAL STATUS"#)
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
+    let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed)?;
+        .context(QueryFailed { query: GLOBAL_STATUS_QUERY })?;
 
     let mut metrics = vec![];
     let mut text_items = BTreeMap::new();
@@ -48,7 +50,6 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::QueryError> 
                 //   GlobalStatus { name: "Queries", value: "248" }
                 //   GlobalStatus { name: "Questions", value: "116" }
                 //   GlobalStatus { name: "Uptime", value: "1321" }
-                println!("unsplitable: {:?}", stat);
                 continue;
             }
         };
@@ -203,49 +204,3 @@ fn is_global_status(name: &str) -> bool {
     GLOBAL_STATUS_PREFIXES.contains(&name)
 }
 
-fn valid_name(s: &str) -> String {
-    s.chars()
-        .map(|x| {
-            if x.is_alphanumeric() {
-                x
-            } else {
-                '_'
-            }
-        })
-        .collect::<String>()
-        .to_lowercase()
-}
-
-#[cfg(test)]
-mod tests {
-    use sqlx::{Connection, ConnectOptions, MySql};
-    use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions, MySqlSslMode};
-    use sqlx::pool::PoolOptions;
-    use super::*;
-
-    #[tokio::test]
-    async fn test_query() {
-        let options = MySqlConnectOptions::new()
-            .host("127.0.0.1")
-            .port(3306)
-            .username("root")
-            .password("password")
-            .ssl_mode(MySqlSslMode::Disabled);
-        let pool = MySqlPool::connect_with(options)
-            .await
-            .unwrap();
-
-        let result = gather(&pool).await;
-    }
-
-    #[tokio::test]
-    async fn test_options_from_uri() {
-        let uri = r#"mysql://root:password@127.0.0.1/?ssl=disabled"#;
-        let mut options = uri.parse::<MySqlConnectOptions>().unwrap();
-        // options = options.ssl_mode(MySqlSslMode::Disabled);
-
-        println!("{:#?}", options);
-
-        let pool = MySqlPool::connect_with(options).await.unwrap();
-    }
-}
