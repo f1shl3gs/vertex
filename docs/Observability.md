@@ -2,7 +2,7 @@
 
 ## Pain
 
-### Specific
+### Self Describe
 For now, vertex do this as `Vector` do, but it is not always good enough.
 ```rust
 #[derive(Debug)]
@@ -52,6 +52,28 @@ At this situation, `InternalEvent` is totally unnecessary, this must be consider
 Some events contain the struct other crate defined, so define those events without introduce 
 dependencies in `lib/internal` is impossible. So putting common and dep-agnostic event is `lib/internal`,
 others put in their own mod?
+
+### Reference
+#### Performance
+The macros of `metrics` is really convenient, but the performance might not that good, because it will
+hash every time `counter!()`, `gauge!()`, `histogram` called, maybe we can skip this and increase it by reference just like 
+prometheus does.
+```rust
+// Something like this
+const HTTP_REQUESTS : Counter = Counter::new("http_request_total");
+
+fn foo() {
+    // ...
+    HTTP_REQUESTS.increase();
+    // ...
+}
+```
+#### Register & Deregister
+Metric can be registered by `new()`, and `Drop` will de-register it. It looks just fine, but codes might
+not be clean and simple. All components of Vertex are created, modified or removed dynamically, so `const`
+must not be used. put those in `SourceConfig` is not a good practice definitely, register metrics when 
+the async function start is great(if the component is not very complex).
+
 
 ## Drawbacks
 
