@@ -9,3 +9,4 @@ event = { path = "../event" }
 metrics = { version = "0.17.0" }
 metrics-util = { version = "0.10.1" }
 once_cell = { version = "1.8.0" }
+quanta = { version = "0.9.3" }

@@ -1,33 +1,50 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
+
 use metrics::{GaugeValue, Key, Recorder, Unit};
-use metrics_util::{Generational, MetricKind, NotTracked};
+use metrics_util::{Generational, MetricKind, MetricKindMask, Tracked, Recency};
 use event::{Bucket, Metric, MetricValue};
+use quanta::Clock;
+
 use super::handle::Handle;
 
-pub type Registry = metrics_util::Registry<Key, Handle, NotTracked<Handle>>;
+pub type Registry = metrics_util::Registry<Key, Handle, Tracked<Handle>>;
 
 /// InternalRecorder is a metric recorder implementation that's suitable
 /// for the advanced usage that we have in Vertex
 #[derive(Clone)]
 pub struct InternalRecorder {
-    inner: Arc<Registry>,
+    recency: Arc<Recency<Key>>,
+    registry: Arc<Registry>,
 }
 
 impl InternalRecorder {
     pub fn new() -> Self {
-        let reg = Arc::new(Registry::untracked());
+        let registry = Arc::new(Registry::tracked());
+        let recency = Recency::new(
+            Clock::new(),
+            MetricKindMask::ALL,
+            Some(std::time::Duration::from_secs(5 * 60)),
+        );
+
         Self {
-            inner: reg
+            recency: Arc::new(recency),
+            registry,
         }
     }
 
     /// Take a snapshot of all gathered metrics and expose them as metric
     pub fn capture_metrics(&self) -> impl Iterator<Item=Metric> {
-        let mut metrics = vec![];
-        self.inner.visit(|_kind, (key, handle)| {
-            metrics.push(metric_from_kv(key, handle.get_inner()));
-        });
+        let handlers = self.registry.get_handles();
+        let mut metrics = Vec::with_capacity(handlers.len());
+
+        for ((kind, key), (gen, handle)) in handlers.into_iter() {
+            if !self.recency.should_store(kind, &key, gen, &self.registry) {
+                continue;
+            }
+
+            metrics.push(metric_from_kv(&key, &handle));
+        }
 
         metrics.into_iter()
     }
@@ -66,19 +83,19 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
 
 impl Recorder for InternalRecorder {
     fn register_counter(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.inner.op(MetricKind::Counter, key, |_| {}, Handle::counter)
+        self.registry.op(MetricKind::Counter, key, |_| {}, Handle::counter)
     }
 
     fn register_gauge(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.inner.op(MetricKind::Gauge, key, |_| {}, Handle::gauge)
+        self.registry.op(MetricKind::Gauge, key, |_| {}, Handle::gauge)
     }
 
     fn register_histogram(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.inner.op(MetricKind::Histogram, key, |_| {}, Handle::histogram)
+        self.registry.op(MetricKind::Histogram, key, |_| {}, Handle::histogram)
     }
 
     fn increment_counter(&self, key: &Key, value: u64) {
-        self.inner
+        self.registry
             .op(
                 MetricKind::Counter,
                 key,
@@ -88,7 +105,7 @@ impl Recorder for InternalRecorder {
     }
 
     fn update_gauge(&self, key: &Key, value: GaugeValue) {
-        self.inner
+        self.registry
             .op(
                 MetricKind::Gauge,
                 key,
@@ -98,7 +115,7 @@ impl Recorder for InternalRecorder {
     }
 
     fn record_histogram(&self, key: &Key, value: f64) {
-        self.inner.op(
+        self.registry.op(
             MetricKind::Histogram,
             key,
             |handle| handle.record_histogram(value),
