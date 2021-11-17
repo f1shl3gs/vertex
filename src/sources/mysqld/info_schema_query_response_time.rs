@@ -41,7 +41,30 @@ async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
     Ok(status != 0)
 }
 
-#[derive(sqlx::FromRow)]
+/*
+mysql> SELECT TIME, COUNT, TOTAL FROM INFORMATION_SCHEMA.QUERY_RESPONSE_TIME_READ;
++----------------+-------+----------------+
+| TIME           | COUNT | TOTAL          |
++----------------+-------+----------------+
+|       0.000001 |     0 |       0.000000 |
+|       0.000010 |     0 |       0.000000 |
+|       0.000100 |     3 |       0.000121 |
+|       0.001000 |     0 |       0.000000 |
+|       0.010000 |     0 |       0.000000 |
+|       0.100000 |     0 |       0.000000 |
+|       1.000000 |     0 |       0.000000 |
+|      10.000000 |     0 |       0.000000 |
+|     100.000000 |     0 |       0.000000 |
+|    1000.000000 |     0 |       0.000000 |
+|   10000.000000 |     0 |       0.000000 |
+|  100000.000000 |     0 |       0.000000 |
+| 1000000.000000 |     0 |       0.000000 |
+| TOO LONG       |     0 | TOO LONG       |
++----------------+-------+----------------+
+14 rows in set (0.00 sec)
+*/
+// proc-macro derive will panicked
+// #[derive(sqlx::FromRow)]
 struct Statistic {
     #[sqlx(reanem = "TIME")]
     time: f64,
