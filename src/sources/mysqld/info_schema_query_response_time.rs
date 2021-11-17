@@ -3,8 +3,10 @@ use std::ops::Index;
 use futures::StreamExt;
 use rdkafka::admin::ConfigSource::Default;
 use snafu::ResultExt;
-use sqlx::{MySqlPool};
+use sqlx::{FromRow, MySqlPool, Row};
 use event::{Bucket, Metric, MetricValue};
+use sqlx;
+use sqlx::mysql::MySqlRow;
 
 use super::{QueryFailed, Error};
 
@@ -63,15 +65,31 @@ mysql> SELECT TIME, COUNT, TOTAL FROM INFORMATION_SCHEMA.QUERY_RESPONSE_TIME_REA
 +----------------+-------+----------------+
 14 rows in set (0.00 sec)
 */
-// proc-macro derive will panicked
-// #[derive(sqlx::FromRow)]
+#[derive(Debug, sqlx::FromRow)]
 struct Statistic {
-    #[sqlx(reanem = "TIME")]
-    time: f64,
-    #[sqlx(reanem = "COUNT")]
+    #[sqlx(rename = "TIME")]
+    time: String,
+    #[sqlx(rename = "COUNT")]
     count: u32,
-    #[sqlx(reanem = "TOTAL")]
-    total: f64,
+    #[sqlx(rename = "TOTAL")]
+    total: String,
+}
+
+/*
+impl<'r> FromRow<'r, PgRow> for User {
+    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
+        let name = row.try_get("name")?;
+        let status = row.try_get("status")?;
+
+        Ok(User{ name, status })
+    }
+}
+*/
+
+impl<'r> FromRow<'r, MySqlRow> for Statistic {
+    fn from_row(row: &'r MySqlRow) -> Result<Self, sqlx::Error> {
+        let time = row.try_get()
+    }
 }
 
 async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Metric, Error> {
@@ -85,6 +103,15 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
     let mut buckets: Vec<Bucket> = Vec::with_capacity(16);
 
     'outer: for record in records.iter() {
+        let record_time = match record.time.parse() {
+            Ok(fv) => fv,
+            Err(_) => continue
+        };
+        let record_total = match record.total.parse() {
+            Ok(fv) => fv,
+            Err(_) => continue
+        };
+
         total += record.total;
         count += record.count;
 
