@@ -80,17 +80,16 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-    use testcontainers::Docker;
-    use crate::sources::mysqld::tests::{Mysql, test_gather};
+    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
 
-    async fn gather_wrapper(pool: MySqlPool) -> Result<Vec<Metric>, Error> {
-        gather(&pool).await
-    }
-
     #[tokio::test]
-    async fn test_info_schema_innodb_cmpmem_gather() {
-        test_gather(gather_wrapper).await
+    async fn test_gather() {
+        async fn wrapper(pool: MySqlPool) {
+            let metrics = gather(&pool).await.unwrap();
+            assert_ne!(metrics.len(), 0);
+        };
+
+        setup_and_run(wrapper).await;
     }
 }

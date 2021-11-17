@@ -103,7 +103,6 @@ mod tests {
     use std::time::Duration;
     use tokio::time::sleep;
     use futures::channel::mpsc;
-    use tokio_stream::StreamExt;
     use event::Value;
     use testify::collect_ready;
     use super::*;

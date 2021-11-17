@@ -5,16 +5,15 @@ mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
 #[cfg(test)]
-mod tests;
+mod test_utils;
 
-use std::sync::Arc;
 use chrono::Utc;
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
-use snafu::Snafu;
+use snafu::{ResultExt, Snafu};
 use event::{Event, Metric, tags};
 
 use crate::sources::Source;
@@ -25,10 +24,15 @@ use crate::config::{
     deserialize_duration, serialize_duration,
 };
 
+
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
-    QueryFailed { source: sqlx::Error, query: &'static str }
+    QueryFailed { source: sqlx::Error, query: &'static str },
+    #[snafu(display("get server version failed, err: {}", source))]
+    GetServerVersionFailed { source: sqlx::Error },
+    #[snafu(display("parse mysql version failed, version: {}", version))]
+    ParseMysqlVersionFailed { version: String },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -163,27 +167,57 @@ impl SourceConfig for MysqldConfig {
             let instance = instance.as_str();
 
             while ticker.next().await.is_some() {
+                let version = match get_mysql_version(&pool).await {
+                    Ok(v) => v,
+                    Err(err) => {
+                        warn!(
+                            message = "get mysql version failed",
+                            instance,
+                            %err
+                        );
+
+                        output.send(Metric::gauge_with_tags(
+                            "mysql_up",
+                            "Whether the MySQL server is up.",
+                            0,
+                            tags!(
+                                 "instance" => instance
+                             ),
+                        ).into()).await;
+
+                        continue
+                    }
+                };
+
                 let mut tasks = vec![];
 
-                let p = pool.clone();
-                tasks.push(tokio::spawn(async move {
-                    global_status::gather(&p).await
-                }));
+                if version >= 5.1 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        global_status::gather(&p).await
+                    }));
+                }
 
-                let p = pool.clone();
-                tasks.push(tokio::spawn(async move {
-                    global_variables::gather(&p).await
-                }));
+                if version >= 5.1 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        global_variables::gather(&p).await
+                    }));
+                }
 
-                let p = pool.clone();
-                tasks.push(tokio::spawn(async move {
-                    info_schema_innodb_cmp::gather(&p).await
-                }));
+                if version >= 5.5 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        info_schema_innodb_cmp::gather(&p).await
+                    }));
+                }
 
-                let p = pool.clone();
-                tasks.push(tokio::spawn(async move {
-                    info_schema_innodb_cmpmem::gather(&p).await
-                }));
+                if version >= 5.5 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        info_schema_innodb_cmpmem::gather(&p).await
+                    }));
+                }
 
                 // When `try_join_all` works with `JoinHandle`, the behavior does not match
                 // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
@@ -204,15 +238,15 @@ impl SourceConfig for MysqldConfig {
                                 ),
                             )
                         ]
-                    },
+                    }
                     Ok(results) => {
                         let merged = results.iter()
-                            .fold(Ok(vec![]), | acc, part| {
+                            .fold(Ok(vec![]), |acc, part| {
                                 match (acc, part) {
                                     (Ok(mut acc), Ok(part)) => {
                                         acc.extend_from_slice(part);
                                         Ok(acc)
-                                    },
+                                    }
                                     (Ok(_), Err(err)) => Err(err),
                                     (Err(err), _) => Err(err),
                                 }
@@ -230,7 +264,7 @@ impl SourceConfig for MysqldConfig {
                                 ));
 
                                 metrics
-                            },
+                            }
                             Err(err) => {
                                 warn!(
                                     message = "Scrape metrics failed",
@@ -256,6 +290,8 @@ impl SourceConfig for MysqldConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(|mut m| {
                         m.timestamp = Some(now);
+                        m.tags.insert("instance".to_string(), instance.to_string());
+
                         Event::Metric(m)
                     })
                     .map(Ok);
@@ -287,4 +323,91 @@ pub fn valid_name(s: &str) -> String {
         })
         .collect::<String>()
         .to_lowercase()
+}
+
+#[async_trait::async_trait]
+pub trait Scraper {
+    fn version(&self) -> f64;
+
+    async fn scrape(&self, pool: &MySqlPool) -> Result<Vec<Metric>, Error>;
+}
+
+const VERSION_QUERY: &str = "SELECT @@version";
+
+async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
+    let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
+        .fetch_one(pool)
+        .await
+        .context(QueryFailed { query: VERSION_QUERY })?;
+
+    let nums = version.split('.')
+        .collect::<Vec<_>>();
+    if nums.len() < 2 {
+        return Err(Error::ParseMysqlVersionFailed { version: version.clone()});
+    }
+
+    let version = match (nums[0].parse::<f64>(), nums[1].parse::<f64>()) {
+        (Ok(major), Ok(mut minor)) => {
+            loop {
+                minor /= 10.0;
+                if minor < 1.0 {
+                    break
+                }
+            }
+
+            major + minor
+        },
+        _ => {
+            // If we can't match/parse the version, set it some big value that matches all versions.
+            1000.0
+        }
+    };
+
+    Ok(version)
+}
+/*
+async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+    let scrapers: Vec<dyn Scraper> = vec![];
+    let version = get_mysql_version(pool).await?;
+    let mut tasks = Vec::with_capacity(scrapers.len());
+
+    for s in scrapers {
+        if s.version() < version {
+            continue;
+        }
+
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move {
+            s.scrape(p).await
+        }));
+    }
+
+    let r = futures::future::join_all(tasks).await
+        .iter()
+        .flatten()
+        .fold(vec![], |mut acc, result| {
+            let metrics = result.unwrap();
+            acc.extend(metrics);
+            acc
+        });
+
+    Ok(r)
+}
+*/
+
+#[cfg(test)]
+mod tests {
+    use crate::sources::mysqld::test_utils::setup_and_run;
+    use super::*;
+
+    #[tokio::test]
+    async fn test_parse_version() {
+        async fn test(pool: MySqlPool) {
+            let version = get_mysql_version(&pool).await.unwrap();
+
+            assert_eq!(version, 5.7)
+        }
+
+        setup_and_run(test).await;
+    }
 }

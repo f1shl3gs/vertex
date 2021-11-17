@@ -234,4 +234,12 @@ mod tests {
             assert_eq!(parse_wsrep_provider_options(input), want);
         }
     }
+
+    #[tokio::test]
+    async fn test_gather() {
+        async fn wrapper(pool: &MySqlPool) {
+            let metrics = gather(&pool).await.unwrap();
+            assert_ne!(metrics.len(), 0);
+        }
+    }
 }

@@ -22,7 +22,6 @@ use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use tower::Service;
 use tracing_futures::Instrument;
-use internal::InternalEvent;
 
 use crate::{
     config::ProxyConfig,

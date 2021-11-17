@@ -35,7 +35,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 record.compress_ops,
                 tags!(
                     "page_size" => page_size
-                )
+                ),
             ),
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmp_compress_ops_ok_total",
@@ -43,7 +43,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 record.compress_ops_ok,
                 tags!(
                     "page_size" => page_size
-                )
+                ),
             ),
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmp_compress_time_seconds_total",
@@ -51,7 +51,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 record.compress_time,
                 tags!(
                     "page_size" => page_size
-                )
+                ),
             ),
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmp_uncompress_ops_total",
@@ -59,7 +59,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 record.uncompress_ops,
                 tags!(
                     "page_size" => page_size,
-                )
+                ),
             ),
             Metric::sum_with_tags(
                 "mysql_info_schema_innodb_cmp_uncompress_time_seconds_total",
@@ -67,7 +67,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                 record.uncompress_time,
                 tags!(
                     "page_size" => page_size
-                )
+                ),
             )
         ]);
     }
@@ -78,36 +78,16 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 #[cfg(test)]
 mod tests {
     use std::io::Read;
-    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-    use testcontainers::Docker;
-    use crate::sources::mysqld::tests::Mysql;
+    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
 
     #[tokio::test]
-    async fn test_gather() {
-        let docker = testcontainers::clients::Cli::default();
-        let image = Mysql::default()
-            .with_env("MYSQL_ROOT_PASSWORD", "password");
-        let service = docker.run(image);
-        let host_port = service.get_host_port(3306).unwrap();
-        let pool = MySqlPool::connect_lazy_with(MySqlConnectOptions::new()
-            .host("127.0.0.1")
-            .username("root")
-            .password("password")
-            .port(host_port)
-            .ssl_mode(MySqlSslMode::Disabled));
+    async fn test_info_schema_innodb_cmp_gather() {
+        async fn wrapper(pool: MySqlPool) {
+            let metrics = gather(&pool).await.unwrap();
+            assert_ne!(metrics.len(), 0);
+        }
 
-        let metrics = gather(&pool).await.map_err(|err| {
-            let  testcontainers::core::Logs { mut stdout, mut stderr } = service.logs();
-            let mut buf = String::new();
-            stdout.read_to_string(&mut buf);
-            println!("stdout:\n{}", buf);
-            let mut buf = String::new();
-            stderr.read_to_string(&mut buf);
-            println!("stderr:\n{}", buf);
-
-            err
-        }).unwrap();
-        assert_ne!(metrics.len(), 0);
+        setup_and_run(wrapper).await;
     }
 }

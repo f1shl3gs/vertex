@@ -3,8 +3,6 @@ use std::future::Future;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
 use testcontainers::{Container, Docker, Image, WaitForMessage};
-use event::Metric;
-use crate::sources::mysqld::Error;
 
 
 const DEFAULT_TAG: &str = "5.7.36";
@@ -40,6 +38,11 @@ impl Default for Mysql {
 impl Mysql {
     pub fn with_env(mut self, key: &str, value: &str) -> Self {
         self.envs.insert(key.to_string(), value.to_string());
+        self
+    }
+
+    pub fn with_tag(mut self, tag: impl ToString) -> Self {
+        self.tag = tag.to_string();
         self
     }
 }
@@ -84,11 +87,11 @@ impl Image for Mysql {
     }
 }
 
-pub async fn test_gather<F, Fut>(gather: F)
+pub async fn setup_and_run<F, Fut>(handle: F)
 where
     F: FnOnce(MySqlPool) -> Fut,
     F: 'static,
-    Fut: Future<Output = Result<Vec<Metric>, Error>>
+    Fut: Future<Output = ()>
 {
     let docker = testcontainers::clients::Cli::default();
     let image = Mysql::default()
@@ -104,17 +107,5 @@ where
         .await
         .unwrap();
 
-    let metrics = gather(pool).await.map_err(|err| {
-        let testcontainers::core::Logs { mut stdout, mut stderr } = service.logs();
-        let mut buf = String::new();
-        stdout.read_to_string(&mut buf);
-        println!("stdout:\n{}", buf);
-        let mut buf = String::new();
-        stderr.read_to_string(&mut buf);
-        println!("stderr:\n{}", buf);
-
-        err
-    }).unwrap();
-
-    assert_ne!(metrics.len(), 0);
+    handle(pool).await;
 }

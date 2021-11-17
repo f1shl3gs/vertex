@@ -7,7 +7,7 @@ use event::{Bucket, Event, Metric, MetricValue, Quantile};
 use prometheus::{MetricGroup, GroupKind};
 
 use crate::http::{Auth, HttpClient};
-use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
+use crate::tls::{TlsOptions, TlsSettings};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;

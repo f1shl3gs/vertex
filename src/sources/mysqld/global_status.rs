@@ -204,3 +204,18 @@ fn is_global_status(name: &str) -> bool {
     GLOBAL_STATUS_PREFIXES.contains(&name)
 }
 
+#[cfg(test)]
+mod tests {
+    use crate::sources::mysqld::test_utils::setup_and_run;
+    use super::*;
+
+    #[tokio::test]
+    async fn test_gather() {
+        async fn wrapper(pool: MySqlPool) {
+            let metrics = gather(&pool).await.unwrap();
+            assert_ne!(metrics.len(), 0);
+        }
+
+        setup_and_run(wrapper).await;
+    }
+}

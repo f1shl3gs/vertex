@@ -2,7 +2,7 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use metrics::{GaugeValue, Key, Recorder, Unit};
-use metrics_util::{Generational, MetricKind, MetricKindMask, Tracked, Recency};
+use metrics_util::{MetricKind, MetricKindMask, Tracked, Recency};
 use event::{Bucket, Metric, MetricValue};
 use quanta::Clock;
 
