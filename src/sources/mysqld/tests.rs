@@ -84,9 +84,9 @@ impl Image for Mysql {
     }
 }
 
-pub async fn test_gather<'a, F, Fut>(gather: F)
+pub async fn test_gather<F, Fut>(gather: F)
 where
-    F: FnOnce(&MySqlPool) -> Fut,
+    F: FnOnce(MySqlPool) -> Fut,
     F: 'static,
     Fut: Future<Output = Result<Vec<Metric>, Error>>
 {
@@ -95,14 +95,16 @@ where
         .with_env("MYSQL_ROOT_PASSWORD", "password");
     let service = docker.run(image);
     let host_port = service.get_host_port(3306).unwrap();
-    let pool = MySqlPool::connect_lazy_with(MySqlConnectOptions::new()
+    let pool = MySqlPool::connect_with(MySqlConnectOptions::new()
         .host("127.0.0.1")
         .username("root")
         .password("password")
         .port(host_port)
-        .ssl_mode(MySqlSslMode::Disabled));
+        .ssl_mode(MySqlSslMode::Disabled))
+        .await
+        .unwrap();
 
-    let metrics = gather(&pool).await.map_err(|err| {
+    let metrics = gather(pool).await.map_err(|err| {
         let testcontainers::core::Logs { mut stdout, mut stderr } = service.logs();
         let mut buf = String::new();
         stdout.read_to_string(&mut buf);

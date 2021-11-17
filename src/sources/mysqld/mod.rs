@@ -7,6 +7,7 @@ mod info_schema_query_response_time;
 #[cfg(test)]
 mod tests;
 
+use std::sync::Arc;
 use chrono::Utc;
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -177,6 +178,11 @@ impl SourceConfig for MysqldConfig {
                 let p = pool.clone();
                 tasks.push(tokio::spawn(async move {
                     info_schema_innodb_cmp::gather(&p).await
+                }));
+
+                let p = pool.clone();
+                tasks.push(tokio::spawn(async move {
+                    info_schema_innodb_cmpmem::gather(&p).await
                 }));
 
                 // When `try_join_all` works with `JoinHandle`, the behavior does not match

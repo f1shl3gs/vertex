@@ -5,18 +5,16 @@ use event::{Metric, tags};
 use super::{Error, QueryFailed};
 
 
-const INNODB_CMP_MEMORY_QUERY: &str = r#"SELECT
-                  page_size, buffer_pool_instance, pages_used, pages_free, relocation_ops, relocation_time
-                  FROM information_schema.innodb_cmpmem"#;
+const INNODB_CMP_MEMORY_QUERY: &str = r#"SELECT page_size, buffer_pool_instance, pages_used, pages_free, relocation_ops, relocation_time FROM information_schema.innodb_cmpmem"#;
 
 #[derive(Debug, sqlx::FromRow)]
 struct Record {
     page_size: i32,
-    buffer_pool: i32,
-    pages_used: f64,
-    pages_free: f64,
-    relocation_ops: f64,
-    relocation_time: f64,
+    buffer_pool_instance: i32,
+    pages_used: i32,
+    pages_free: i32,
+    relocation_ops: i32,
+    relocation_time: i32,
 }
 
 pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
@@ -28,14 +26,14 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::with_capacity(records.len() * 4);
     for Record {
         page_size,
-        buffer_pool,
+        buffer_pool_instance,
         pages_used,
         pages_free,
         relocation_ops,
         relocation_time
     } in records {
         let page_size = &page_size.to_string();
-        let buffer_pool = &buffer_pool.to_string();
+        let buffer_pool = &buffer_pool_instance.to_string();
 
         metrics.extend_from_slice(&[
             Metric::sum_with_tags(
@@ -82,11 +80,17 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::mysqld::tests::test_gather;
+    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
+    use testcontainers::Docker;
+    use crate::sources::mysqld::tests::{Mysql, test_gather};
     use super::*;
+
+    async fn gather_wrapper(pool: MySqlPool) -> Result<Vec<Metric>, Error> {
+        gather(&pool).await
+    }
 
     #[tokio::test]
     async fn test_info_schema_innodb_cmpmem_gather() {
-        test_gather(gather);
+        test_gather(gather_wrapper).await
     }
 }
