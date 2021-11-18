@@ -21,6 +21,7 @@ struct Record {
 impl<'r> FromRow<'r, MySqlRow> for Record {
     fn from_row(row: &'r MySqlRow) -> Result<Self, sqlx::Error> {
         let mut record: Record = Default::default();
+
         for column in row.columns() {
             let name = column.name();
             let value = match row.try_get::<'r, String, _>(name) {
