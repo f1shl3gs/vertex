@@ -3,6 +3,8 @@ services:
   master:
     image: percona:ps-8.0
     restart: unless-stopped
+    ports:
+      - "9150:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
     networks:
@@ -13,6 +15,8 @@ services:
   slave:
     image: percona:ps-8.0
     restart: unless-stopped
+    ports:
+      - "9151:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
     networks:

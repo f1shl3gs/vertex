@@ -35,6 +35,8 @@ pub enum Error {
     GetServerVersionFailed { source: sqlx::Error },
     #[snafu(display("parse mysql version failed, version: {}", version))]
     ParseMysqlVersionFailed { version: String },
+    #[snafu(display("query slave status failed"))]
+    QuerySlaveStatusFailed,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
