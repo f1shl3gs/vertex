@@ -25,6 +25,8 @@ use crate::config::{
 };
 
 
+const VERSION_QUERY: &str = "SELECT @@version";
+
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
@@ -219,6 +221,13 @@ impl SourceConfig for MysqldConfig {
                     }));
                 }
 
+                if version >= 5.1 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        info_schema_query_response_time::gather(&p).await
+                    }));
+                }
+
                 // When `try_join_all` works with `JoinHandle`, the behavior does not match
                 // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
                 let metrics = match futures::future::try_join_all(tasks).await {
@@ -325,15 +334,6 @@ pub fn valid_name(s: &str) -> String {
         .to_lowercase()
 }
 
-#[async_trait::async_trait]
-pub trait Scraper {
-    fn version(&self) -> f64;
-
-    async fn scrape(&self, pool: &MySqlPool) -> Result<Vec<Metric>, Error>;
-}
-
-const VERSION_QUERY: &str = "SELECT @@version";
-
 async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
@@ -365,35 +365,6 @@ async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
 
     Ok(version)
 }
-/*
-async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
-    let scrapers: Vec<dyn Scraper> = vec![];
-    let version = get_mysql_version(pool).await?;
-    let mut tasks = Vec::with_capacity(scrapers.len());
-
-    for s in scrapers {
-        if s.version() < version {
-            continue;
-        }
-
-        let p = pool.clone();
-        tasks.push(tokio::spawn(async move {
-            s.scrape(p).await
-        }));
-    }
-
-    let r = futures::future::join_all(tasks).await
-        .iter()
-        .flatten()
-        .fold(vec![], |mut acc, result| {
-            let metrics = result.unwrap();
-            acc.extend(metrics);
-            acc
-        });
-
-    Ok(r)
-}
-*/
 
 #[cfg(test)]
 mod tests {

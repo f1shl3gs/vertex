@@ -1,7 +1,5 @@
-use std::collections::{BTreeMap, HashMap};
-use std::ops::Index;
-use futures::StreamExt;
-use rdkafka::admin::ConfigSource::Default;
+use std::collections::BTreeMap;
+
 use snafu::ResultExt;
 use sqlx::{FromRow, MySqlPool, Row};
 use event::{Bucket, Metric, MetricValue};
@@ -28,7 +26,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::new();
     for query in [RESPONSE_TIME_QUERY, RESPONSE_TIME_READ_QUERY, RESPONSE_TIME_WRITE_QUERY] {
-        // todo
+        metrics.push(query_response_time(&pool, query).await?);
     }
 
     Ok(metrics)
@@ -40,55 +38,32 @@ async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
         .await
         .context(QueryFailed { query: RESPONSE_TIME_CHECK_QUERY })?;
 
-    Ok(status != 0)
+    Ok(status == 1)
 }
 
-/*
-mysql> SELECT TIME, COUNT, TOTAL FROM INFORMATION_SCHEMA.QUERY_RESPONSE_TIME_READ;
-+----------------+-------+----------------+
-| TIME           | COUNT | TOTAL          |
-+----------------+-------+----------------+
-|       0.000001 |     0 |       0.000000 |
-|       0.000010 |     0 |       0.000000 |
-|       0.000100 |     3 |       0.000121 |
-|       0.001000 |     0 |       0.000000 |
-|       0.010000 |     0 |       0.000000 |
-|       0.100000 |     0 |       0.000000 |
-|       1.000000 |     0 |       0.000000 |
-|      10.000000 |     0 |       0.000000 |
-|     100.000000 |     0 |       0.000000 |
-|    1000.000000 |     0 |       0.000000 |
-|   10000.000000 |     0 |       0.000000 |
-|  100000.000000 |     0 |       0.000000 |
-| 1000000.000000 |     0 |       0.000000 |
-| TOO LONG       |     0 | TOO LONG       |
-+----------------+-------+----------------+
-14 rows in set (0.00 sec)
-*/
-#[derive(Debug, sqlx::FromRow)]
 struct Statistic {
-    #[sqlx(rename = "TIME")]
-    time: String,
-    #[sqlx(rename = "COUNT")]
+    time: f64,
     count: u32,
-    #[sqlx(rename = "TOTAL")]
-    total: String,
+    total: f64,
 }
-
-/*
-impl<'r> FromRow<'r, PgRow> for User {
-    fn from_row(row: &'r PgRow) -> Result<Self, Error> {
-        let name = row.try_get("name")?;
-        let status = row.try_get("status")?;
-
-        Ok(User{ name, status })
-    }
-}
-*/
 
 impl<'r> FromRow<'r, MySqlRow> for Statistic {
     fn from_row(row: &'r MySqlRow) -> Result<Self, sqlx::Error> {
-        let time = row.try_get()
+        let time = row.try_get::<String, _>("TIME")?
+            .trim()
+            .parse::<f64>()
+            .unwrap_or(0.0);
+        let count = row.try_get::<u32, _>("COUNT")?;
+        let total = row.try_get::<String, _>("TOTAL")?
+            .trim()
+            .parse::<f64>()
+            .unwrap_or(0.0);
+
+        Ok(Self {
+            time,
+            count,
+            total
+        })
     }
 }
 
@@ -98,30 +73,19 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
         .await
         .context(QueryFailed { query })?;
 
-    let mut total = 0.0;
+    let mut sum = 0.0;
     let mut count = 0;
     let mut buckets: Vec<Bucket> = Vec::with_capacity(16);
 
-    'outer: for record in records.iter() {
-        let record_time = match record.time.parse() {
-            Ok(fv) => fv,
-            Err(_) => continue
-        };
-        let record_total = match record.total.parse() {
-            Ok(fv) => fv,
-            Err(_) => continue
-        };
-
-        total += record.total;
+    for record in records.iter() {
+        sum += record.total;
         count += record.count;
 
-        for b in buckets.iter_mut() {
-            if b.upper != record.time {
-                continue;
-            }
-
-            b.count = count;
-            continue 'outer;
+        // Special case for "TOO LONG" row where we take into account the count
+        // field which is the only available and do not add it as a part of histogram
+        // or metric
+        if record.time == 0.0 {
+            continue
         }
 
         buckets.push(Bucket {
@@ -157,7 +121,7 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
         timestamp: None,
         value: MetricValue::Histogram {
             count: count as u64,
-            sum: total as f64,
+            sum,
             buckets,
         },
     })
@@ -166,20 +130,48 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
 #[cfg(test)]
 mod tests {
     use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
+    use testcontainers::Docker;
+    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
     use super::*;
 
     #[tokio::test]
-    async fn test_gather() {
+    async fn integration() {
+        let docker = testcontainers::clients::Cli::default();
+        let image = GenericImage::new("percona:5.7.35")
+            .with_env_var("MYSQL_ROOT_PASSWORD", "password")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "ready for connections".to_string(),
+                stream: Stream::StdErr
+            });
+        let service = docker.run(image);
+        let host_port = service.get_host_port(3306).unwrap();
+
+        std::thread::sleep(std::time::Duration::from_secs(15));
+
         let pool = MySqlPool::connect_with(MySqlConnectOptions::new()
             .host("127.0.0.1")
             .username("root")
             .password("password")
-            .port(3307)
+            .port(host_port)
             .ssl_mode(MySqlSslMode::Disabled))
             .await
             .unwrap();
 
-        let m = query_response_time(&pool, RESPONSE_TIME_QUERY).await.unwrap();
-        println!("{:#?}", m);
+        // Setup the plugin
+        for q in [
+            r#"INSTALL PLUGIN QUERY_RESPONSE_TIME_AUDIT SONAME 'query_response_time.so'"#,
+            r#"INSTALL PLUGIN QUERY_RESPONSE_TIME SONAME 'query_response_time.so'"#,
+            r#"INSTALL PLUGIN QUERY_RESPONSE_TIME_READ SONAME 'query_response_time.so'"#,
+            r#"INSTALL PLUGIN QUERY_RESPONSE_TIME_WRITE SONAME 'query_response_time.so'"#,
+            r#"SET GLOBAL query_response_time_stats = on"#,
+        ] {
+            sqlx::query(q)
+                .execute(&pool)
+                .await
+                .unwrap();
+        }
+
+        let metrics = gather(&pool).await.unwrap();
+        assert_eq!(metrics.len(), 3);
     }
 }

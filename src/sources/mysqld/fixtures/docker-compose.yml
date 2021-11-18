@@ -1,0 +1,33 @@
+version: '3'
+services:
+  master:
+    image: percona:ps-8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    networks:
+      default:
+        aliases:
+          - mysql
+
+  slave:
+    image: percona:ps-8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    networks:
+      default:
+        aliases:
+          - mysql
+
+#   Master
+#   mysql> set global server_id = 1;
+#   mysql> CREATE USER 'replication'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+#   mysql> GRANT REPLICATION SLAVE ON *.* TO 'replication'@'%';
+#   mysql> show grants for replication@'%';
+
+
+# Slave
+#   mysql> set global server_id = 2;
+#   mysql> CHANGE MASTER TO MASTER_HOST='master', MASTER_USER='replication', MASTER_PASSWORD='password', MASTER_LOG_FILE='binlog.000002', MASTER_LOG_POS=349;
+#   mysql> START SLAVE;

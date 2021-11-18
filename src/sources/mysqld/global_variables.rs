@@ -1,6 +1,4 @@
 use std::collections::BTreeMap;
-use std::ops::Index;
-use nom::bytes::complete::take_while;
 use nom::FindSubstring;
 
 use snafu::ResultExt;

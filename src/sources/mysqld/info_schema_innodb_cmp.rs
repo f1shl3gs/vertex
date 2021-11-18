@@ -77,7 +77,6 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use std::io::Read;
     use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
 
