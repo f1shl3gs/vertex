@@ -7,7 +7,6 @@ use crate::config::{
     deserialize_duration, serialize_duration, default_interval, SourceConfig,
     SourceContext, DataType, SourceDescription, GenerateConfig,
 };
-use crate::http::HttpClient;
 
 
 #[derive(Debug, Deserialize, Serialize)]

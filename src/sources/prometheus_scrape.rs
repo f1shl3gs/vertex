@@ -316,5 +316,7 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn scrape_honor_labels() {}
+    async fn scrape_honor_labels() {
+        todo!()
+    }
 }
