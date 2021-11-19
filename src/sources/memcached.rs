@@ -851,7 +851,7 @@ async fn fetch_stats<'a, F, Fut>(
 async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
     let mut stats = HashMap::with_capacity(80);
     let resp: String = query(addr, "stats settings\r\n").await
-        .context(CommandExecFailed { cmd: "stats settings\r\n".to_string() })?;
+        .context(CommandExecFailed { cmd: "stats settings".to_string() })?;
 
     let mut lines = resp.lines();
     while let Some(line) = lines.next() {
