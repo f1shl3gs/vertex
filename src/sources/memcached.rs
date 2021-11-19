@@ -19,7 +19,6 @@ use crate::config::{
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
-const END_PREFIX: &str = "END";
 
 #[derive(Debug, Deserialize, Serialize)]
 struct MemcachedConfig {
