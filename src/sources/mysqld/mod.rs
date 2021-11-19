@@ -223,10 +223,17 @@ impl SourceConfig for MysqldConfig {
                     }));
                 }
 
-                if version >= 5.1 {
+                if version >= 5.5 {
                     let p = pool.clone();
                     tasks.push(tokio::spawn(async move {
                         info_schema_query_response_time::gather(&p).await
+                    }));
+                }
+
+                if version >= 5.1 {
+                    let p = pool.clone();
+                    tasks.push(tokio::spawn(async move {
+                        slave_status::gather(&p).await
                     }));
                 }
 

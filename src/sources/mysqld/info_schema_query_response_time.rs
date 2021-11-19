@@ -35,10 +35,23 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
     let status = sqlx::query_scalar::<_, i32>(RESPONSE_TIME_CHECK_QUERY)
         .fetch_one(pool)
-        .await
-        .context(QueryFailed { query: RESPONSE_TIME_CHECK_QUERY })?;
+        .await;
 
-    Ok(status == 1)
+    match status {
+        Ok(status) => Ok(status == 1),
+        Err(err) => {
+            match err.as_database_error() {
+                Some(db_err) => {
+                    if db_err.code() == Some("HY000".into()) {
+                        Ok(false)
+                    } else {
+                        Err(Error::QueryFailed { source: err, query: RESPONSE_TIME_CHECK_QUERY })
+                    }
+                }
+                _ => Err(Error::QuerySlaveStatusFailed)
+            }
+        }
+    }
 }
 
 struct Statistic {
@@ -62,7 +75,7 @@ impl<'r> FromRow<'r, MySqlRow> for Statistic {
         Ok(Self {
             time,
             count,
-            total
+            total,
         })
     }
 }
@@ -85,7 +98,7 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
         // field which is the only available and do not add it as a part of histogram
         // or metric
         if record.time == 0.0 {
-            continue
+            continue;
         }
 
         buckets.push(Bucket {
@@ -141,7 +154,7 @@ mod tests {
             .with_env_var("MYSQL_ROOT_PASSWORD", "password")
             .with_wait_for(WaitFor::LogMessage {
                 message: "ready for connections".to_string(),
-                stream: Stream::StdErr
+                stream: Stream::StdErr,
             });
         let service = docker.run(image);
         let host_port = service.get_host_port(3306).unwrap();

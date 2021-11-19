@@ -1,11 +1,13 @@
 use std::collections::BTreeMap;
+
 use chrono::NaiveDateTime;
-use sqlx::{Column, FromRow, MySqlPool, Row};
+use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};
 use sqlx::mysql::MySqlRow;
-use event::Metric;
+use event::{Metric, tags};
 use regex::Regex;
 
 use crate::sources::mysqld::Error;
+
 
 #[derive(Default, Debug)]
 struct Record {
@@ -22,29 +24,50 @@ impl<'r> FromRow<'r, MySqlRow> for Record {
     fn from_row(row: &'r MySqlRow) -> Result<Self, sqlx::Error> {
         let mut record: Record = Default::default();
 
-        for column in row.columns() {
+        for (index, column) in row.columns().iter().enumerate() {
             let name = column.name();
-            let value = match row.try_get::<'r, String, _>(name) {
-                Ok(value) => value,
-                _ => continue
-            };
 
             match name {
-                "Master_UUID" => record.master_uuid = value,
-                "Master_Host" => record.master_host = value,
+                "Master_UUID" => record.master_uuid = row.try_get::<'r, String, _>(index)?,
+                "Master_Host" => record.master_host = row.try_get::<'r, String, _>(index)?,
                 // MySQL & Percona
-                "Channel_Name" => record.channel_name = value,
+                "Channel_Name" => record.channel_name = row.try_get::<'r, String, _>(index)?,
                 // MariaDB
-                "Connection_name" => record.connection_name = value,
+                "Connection_name" => record.connection_name = row.try_get::<'r, String, _>(index)?,
                 _ => {
-                    match row.try_get::<'r, String, _>(name) {
-                        Ok(value) => {
-                            if let Some(fv) = parse_status(&value) {
-                                record.values.insert(name.to_lowercase(), fv);
-                            }
-                        },
-                        _ => {}
+                    // TODO: this implement is ugly, it could be simple and clear if we can
+                    //   access the value of `raw`'s value([u8]), but it is defined with "pub(crate)"
+                    //      /// Implementation of [`ValueRef`] for MySQL.
+                    //      #[derive(Clone)]
+                    //      pub struct MySqlValueRef<'r> {
+                    //          pub(crate) value: Option<&'r [u8]>,
+                    //          pub(crate) row: Option<&'r Bytes>,
+                    //          pub(crate) type_info: MySqlTypeInfo,
+                    //          pub(crate) format: MySqlValueFormat,
+                    //      }
+
+                    let raw = row.try_get_raw(index)?;
+                    if raw.is_null() {
+                        continue;
                     }
+
+                    if let Ok(text) = row.try_get::<'r, &str, _>(index) {
+                        if let Some(fv) = parse_status(text) {
+                            record.values.insert(name.to_lowercase(), fv);
+                        }
+
+                        continue;
+                    }
+
+                    if let Ok(v) = row.try_get::<'r, u32, _>(index) {
+                        record.values.insert(name.to_lowercase(), v as f64);
+                        continue;
+                    }
+
+                    debug!(
+                        message = "unknown column type from slave status",
+                        name,
+                    );
                 }
             }
         }
@@ -69,7 +92,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                         Ok(r) => {
                             record = Some(r);
                             break 'outer;
-                        },
+                        }
                         _ => continue
                     }
                 }
@@ -82,12 +105,31 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     }
 
     if record.is_none() {
-        return Err(Error::QuerySlaveStatusFailed)
+        return Err(Error::QuerySlaveStatusFailed);
     }
 
-    println!("{:?}", record);
+    return match record {
+        Some(record) => {
+            let mut metrics = Vec::with_capacity(record.values.len());
 
-    Ok(vec![])
+            for (k, v) in record.values {
+                metrics.push(Metric::gauge_with_tags(
+                    format!("mysql_slave_status_{}", k),
+                    "Generic metric from SHOW SLAVE STATUS",
+                    v,
+                    tags!(
+                        "master_host" => &record.master_host,
+                        "master_uuid" => &record.master_uuid,
+                        "channel_name" => &record.channel_name,
+                        "connection_name" => &record.connection_name
+                    ),
+                ));
+            }
+
+            Ok(metrics)
+        }
+        None => Err(Error::QuerySlaveStatusFailed),
+    };
 }
 
 lazy_static! {
