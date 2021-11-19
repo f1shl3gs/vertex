@@ -65,6 +65,7 @@ sources:
     type: mysqld
     username: root
     password: password
+    port: 9151
 
 transforms:
   add_extra_tags:
