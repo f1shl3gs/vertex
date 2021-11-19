@@ -12,7 +12,7 @@ use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-use sqlx::MySqlPool;
+use sqlx::{ConnectOptions, MySqlPool};
 use snafu::{ResultExt, Snafu};
 use event::{Event, Metric, tags};
 
@@ -122,6 +122,8 @@ impl MysqldConfig {
         if let Some(password) = &self.password {
             options = options.password(password);
         }
+
+        options.disable_statement_logging();
 
         options
     }
