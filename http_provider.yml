@@ -1,0 +1,13 @@
+global:
+  data_dir: ./temp
+
+health_checks:
+  enabled: false
+
+provider:
+  type: http
+  url: http://localhost:8100/config
+  interval: 10s
+  # persist: remote.yml
+  # attributes:
+  #   foo: bar

@@ -59,8 +59,8 @@ sources:
     type: nginx_stub
     endpoints:
       - http://localhost:10980/basic_status
-  internal_logs:
-    type: internal_logs
+  # internal_logs:
+  #   type: internal_logs
   mysql:
     type: mysqld
     username: root
@@ -97,6 +97,6 @@ sinks:
       - memcached
       - nginx
       - node
-      # - prometheus_scrape
+      - prometheus_scrape
       - mysql
     listen: 127.0.0.1:9101

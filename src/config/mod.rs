@@ -16,6 +16,7 @@ pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use component::{GenerateConfig, ComponentDescription, ExampleError};
+pub use loading::load;
 #[cfg(test)]
 pub use component::test_generate_config;
 

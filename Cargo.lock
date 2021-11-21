@@ -1667,6 +1667,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60302e4db3a61da70c0cb7991976248362f30319e88850c487b9b95bbf059e00"
 
 [[package]]
+name = "md5"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
+
+[[package]]
 name = "memchr"
 version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4012,6 +4018,9 @@ name = "uuid"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
+dependencies = [
+ "getrandom",
+]
 
 [[package]]
 name = "vcpkg"
@@ -4065,6 +4074,7 @@ dependencies = [
  "libc",
  "listenfd",
  "log_schema",
+ "md5",
  "metrics",
  "mimalloc",
  "netlink-packet-sock-diag",
@@ -4109,6 +4119,7 @@ dependencies = [
  "tracing-subscriber",
  "typetag",
  "url",
+ "uuid",
 ]
 
 [[package]]
