@@ -51,6 +51,8 @@ default = [
     "sources-syslog",
     "sources-libvirt",
     "sources-mysqld",
+    "sources-nvidia_smi",
+    "sources-mongodb",
     # transforms
     "transforms-add_tags",
     "transforms-add_fields",
@@ -102,6 +104,8 @@ sources-syslog = []
 sources-tail = []
 sources-libvirt = []
 sources-mysqld = ["sqlx"]
+sources-nvidia_smi = []
+sources-mongodb = ["mongodb/tokio-runtime"]
 
 # transforms
 transforms-add_tags = []
@@ -244,3 +248,4 @@ once_cell = { version = "1.8", default-features = false }
 sqlx = { version = "0.5.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 uuid = { version = "0.8", default-features = false, features = ["v4"] }
 md5 = { version = "0.7" }
+mongodb = { version = "2.0.2", default-features = false, optional = true, features = ["tokio-runtime"] }

@@ -51,6 +51,10 @@ mod kafka_metrics;
 mod mysqld;
 mod kube_events;
 mod kube_state_metrics;
+#[cfg(feature = "sources-nvidia_smi")]
+mod nvidia_smi;
+#[cfg(feature = "sources-mongodb")]
+mod mongodb;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;
