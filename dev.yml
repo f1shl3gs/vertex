@@ -66,6 +66,8 @@ sources:
     username: root
     password: password
     port: 9151
+  nvidia:
+    type: nvidia_smi
 
 transforms:
   add_extra_tags:
@@ -100,3 +102,8 @@ sinks:
       - prometheus_scrape
       - mysql
     listen: 127.0.0.1:9101
+  prom_single:
+    type: prometheus_exporter
+    listen: 127.0.0.1:9102
+    inputs:
+      - nvidia
