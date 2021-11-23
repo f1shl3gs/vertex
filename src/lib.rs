@@ -20,6 +20,7 @@ mod multiline;
 mod common;
 mod batch;
 mod tcp;
+mod async_read;
 
 pub use signal::{SignalHandler};
 
@@ -48,7 +49,7 @@ pub fn get_version() -> String {
         let version = format!("{}-nightly", built_info::PKG_VERSION);
 
     #[cfg(not(feature = "nightly"))]
-        let version = format!("{}-nightly", built_info::PKG_VERSION);
+        let version = format!("{}-stable", built_info::PKG_VERSION);
 
     version
 }
