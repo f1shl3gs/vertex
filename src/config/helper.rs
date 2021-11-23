@@ -9,9 +9,8 @@ pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Resul
     parse_duration(&s).map_err(serde::de::Error::custom)
 }
 
-pub fn serialize_duration<S: Serializer>(_d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
-    let d = duration_to_string(_d);
-    s.serialize_str(&d)
+pub fn serialize_duration<S: Serializer>(d: &chrono::Duration, s: S) -> Result<S::Ok, S::Error> {
+    s.serialize_str(&duration_to_string(d))
 }
 
 pub fn deserialize_duration_option<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Option<chrono::Duration>, D::Error> {

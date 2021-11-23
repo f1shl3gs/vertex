@@ -88,7 +88,7 @@ mod tests {
         async fn wrapper(pool: MySqlPool) {
             let metrics = gather(&pool).await.unwrap();
             assert_ne!(metrics.len(), 0)
-        };
+        }
 
         setup_and_run(wrapper).await;
     }
