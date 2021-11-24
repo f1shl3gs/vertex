@@ -37,7 +37,7 @@ impl BufferUsageData {
             }
         });
 
-        buffer_usage_data
+        usage
     }
 
     pub fn increment_received_events(&self, count: u64, byte_size: usize) {
