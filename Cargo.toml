@@ -62,6 +62,9 @@ default = [
     "sinks-prometheus_exporter",
     "sinks-stdout",
     "sinks-kafka",
+    "sinks-elasticsearch",
+    "sinks-loki",
+    "sinks-clickhouse",
     # extensions
     "extensions-pprof",
     # "extensions-jemalloc"
@@ -119,6 +122,10 @@ sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka"]
 sinks-pulsar = ["pulsar"]
+sinks-elasticsearch = []
+sinks-loki = []
+sinks-vertex = []
+sinks-clickhouse = []
 
 # extensions
 extensions-pprof = ["pprof/flamegraph"]

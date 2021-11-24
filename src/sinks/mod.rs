@@ -8,6 +8,14 @@ mod pulsar;
 mod prometheus_exporter;
 #[cfg(feature = "sinks-stdout")]
 mod stdout;
+#[cfg(feature = "sinks-elasticsearch")]
+mod elasticsearch;
+#[cfg(feature = "sinks-loki")]
+mod loki;
+#[cfg(feature = "sinks-vertex")]
+mod vertex;
+#[cfg(feature = "sinks-clickhouse")]
+mod clickhouse;
 
 use event::Event;
 use async_trait::async_trait;
