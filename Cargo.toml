@@ -22,7 +22,8 @@ members = [
     "lib/testify",
     "lib/tail",
     "lib/log_schema",
-    "lib/tracing-limit"
+    "lib/tracing-limit",
+    "lib/redfish"
 ]
 
 [features]
