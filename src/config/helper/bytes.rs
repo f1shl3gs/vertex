@@ -24,12 +24,12 @@ const EBYTE: usize = PBYTE * 1000;
 
 #[derive(Debug, Snafu)]
 pub enum ParseBytesError {
-    #[snafu(display("parse float part failed, {}", source))]
+    #[snafu(display("Parse float part failed, {}", source))]
     ParseFloatFailed { source: ParseFloatError },
-    #[snafu(display("unknown unit \"{}\" found", unit))]
+    #[snafu(display("Unknown unit \"{}\" found", unit))]
     UnknownUnit { unit: String },
-    #[snafu(display("too large: {}", source))]
-    TooLarge { source: String },
+    #[snafu(display("Too large: {}", input))]
+    TooLarge { input: String },
 }
 
 /// bytes produces a human readable representation of an SI size
@@ -98,7 +98,7 @@ pub fn parse_bytes(s: &str) -> Result<u64, ParseBytesError> {
 
     let f = (f * m as f64) as u64;
     if f > u64::MAX {
-        return Err(ParseBytesError::TooLarge { source: s.to_string() });
+        return Err(ParseBytesError::TooLarge { input: s.to_string() });
     }
 
     Ok(f as u64)
