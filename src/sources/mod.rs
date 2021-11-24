@@ -55,6 +55,8 @@ mod kube_state_metrics;
 mod nvidia_smi;
 #[cfg(feature = "sources-mongodb")]
 mod mongodb;
+#[cfg(feature = "sources-elasticsearch")]
+mod elasticsearch;
 
 use snafu::Snafu;
 use futures::future::BoxFuture;
