@@ -21,7 +21,8 @@ members = [
     "lib/prometheus",
     "lib/testify",
     "lib/tail",
-    "lib/log_schema"
+    "lib/log_schema",
+    "lib/tracing-limit"
 ]
 
 [features]
@@ -163,6 +164,7 @@ event = { path = "lib/event" }
 internal = { path = "lib/internal" }
 prometheus = { path = "lib/prometheus" }
 log_schema = { path = "lib/log_schema" }
+tracing-limit = { path = "lib/tracing-limit" }
 
 # Allocation
 mimalloc = { version = "0.1.26", default-features = false, optional = true }
@@ -184,6 +186,7 @@ console-subscriber = { git = "https://github.com/tokio-rs/console", rev = "f2c30
 
 # Metrics
 metrics = { version = "0.17.0" }
+metrics-tracing-context = { version = "0.8.1", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.28", default-features = false }
@@ -256,4 +259,4 @@ sqlx = { version = "0.5.6", default-features = false, optional = true, features 
 uuid = { version = "0.8", default-features = false, features = ["v4"] }
 md5 = { version = "0.7" }
 mongodb = { version = "2.0.2", default-features = false, optional = true, features = ["tokio-runtime"] }
-serde-xml-rs = { version = "0.5", default-features = false, optional = true}
+serde-xml-rs = { version = "0.5", default-features = false, optional = true }

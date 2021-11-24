@@ -1,12 +1,12 @@
 /// This module defines traits that allow conversion to and from `bytes`
 /// buffers. The vertex project needs ser/de that is defined by the
 /// type being serialized. That is, while it's typical in the ecosystem
-/// to define ser/de in terms of `serde` we have protobuf ser/de in places
+/// to define ser/de in terms of `helper` we have protobuf ser/de in places
 /// that are not suitable for use with that technique, see [this discussion]
 /// (https://github.com/danburkert/prost$faq) for details. But, we want
 /// generic structures for ser/de and so that's what this module provides.
 /// The definition is inspired by the types from [`prost::Message`], though
-/// split into an ecode and decode side as serde dose.
+/// split into an ecode and decode side as helper dose.
 use bytes::{Buf, BufMut};
 
 /// Encode a `T` into a `bytes` buffer, possibly unsuccessfully

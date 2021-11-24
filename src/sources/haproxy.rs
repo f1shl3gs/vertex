@@ -1,6 +1,6 @@
 use std::io::BufRead;
 
-use snafu;
+use snafu::Snafu;
 use futures::TryFutureExt;
 use http::StatusCode;
 use serde::{Deserialize, Serialize};
@@ -169,7 +169,7 @@ fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
     todo!()
 }
 
-fn parse_info(reader: impl io::BufRead) -> Result<(String, String), Error> {
+fn parse_info(reader: impl std::io::BufRead) -> Result<(String, String), Error> {
     let mut lines = reader.lines();
     let mut release_date = String::new();
     let mut version = String::new();
@@ -197,6 +197,7 @@ fn parse_info(reader: impl io::BufRead) -> Result<(String, String), Error> {
 
 #[cfg(test)]
 mod tests {
+    use std::io;
     use std::io::BufReader;
     use super::*;
 
@@ -213,7 +214,8 @@ mod tests {
     #[test]
     fn test_parse_csv_resp() {
         let content = include_str!("../../tests/fixtures/haproxy/stats.csv");
-        let metrics = parse_csv_resp(content).unwrap();
+        let reader = BufReader::new(io::Cursor::new(content));
+        let metrics = parse_csv(reader).unwrap();
 
     }
 }

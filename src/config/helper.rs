@@ -1,3 +1,5 @@
+mod bytes;
+
 use std::borrow::Cow;
 use serde::{Deserialize, Deserializer, Serializer};
 use tokio_stream::wrappers::IntervalStream;

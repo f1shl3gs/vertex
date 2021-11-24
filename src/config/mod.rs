@@ -25,7 +25,7 @@ use std::path::PathBuf;
 use async_trait::async_trait;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
 use indexmap::IndexMap;
-use serde::{Deserialize, Serialize};
+use ::serde::{Deserialize, Serialize};
 
 use crate::{
     pipeline::Pipeline,
@@ -95,7 +95,7 @@ pub enum DataType {
     Trace,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Debug)]
+#[derive(Deserialize, Serialize, Debug)]
 pub enum ExpandType {
     Parallel,
     Serial,

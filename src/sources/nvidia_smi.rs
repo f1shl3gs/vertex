@@ -320,7 +320,7 @@ impl<'de> Deserialize<'de> for Value {
 }
 
 impl Serialize for Value {
-    // serde require this implement, but it shall not call forever
+    // helper require this implement, but it shall not call forever
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
         let raw = format!("{} {}", self.value, self.unit.to_string());
         serializer.serialize_str(&raw)
