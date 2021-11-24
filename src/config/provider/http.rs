@@ -9,14 +9,15 @@ use md5::Digest;
 use url::Url;
 use serde::{Deserialize, Serialize};
 
-use crate::config::{
-    Builder, ProxyConfig, provider::ProviderConfig,
-    deserialize_duration, serialize_duration,
-};
 use crate::http::HttpClient;
 use crate::SignalHandler;
 use crate::signal;
 use crate::tls::{TlsOptions, TlsSettings};
+use crate::config::{
+    ProviderDescription, Builder, ProxyConfig, provider::ProviderConfig,
+    deserialize_duration, serialize_duration, GenerateConfig, default_interval,
+};
+
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct RequestConfig {
@@ -53,7 +54,7 @@ impl Default for HttpConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "http")]
 impl ProviderConfig for HttpConfig {
-    async fn build(&mut self, signal_handler: &mut SignalHandler) -> crate::config::provider::Result<Builder> {
+    async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
         let url = self.url.take()
             .ok_or_else(|| vec!["URL is required for http provider".to_owned()])?;
 
@@ -79,6 +80,25 @@ impl ProviderConfig for HttpConfig {
 
     fn provider_type(&self) -> &'static str {
         "http"
+    }
+}
+
+inventory::submit! {
+    ProviderDescription::new::<HttpConfig>("http")
+}
+
+impl GenerateConfig for HttpConfig {
+    fn generate_config() -> serde_yaml::Value {
+        let url = "https://example.config.com/config".parse().unwrap();
+
+        serde_yaml::to_value(Self {
+            url: Some(url),
+            request: Default::default(),
+            interval: default_interval(),
+            tls: None,
+            proxy: Default::default(),
+            persist: None
+        }).unwrap()
     }
 }
 

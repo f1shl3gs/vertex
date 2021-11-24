@@ -8,7 +8,7 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 
 use crate::log::path_iter::{PathComponent, PathIter};
-use crate::{Event, LogRecord};
+use crate::{Event, LogRecord, Value};
 
 // re-export
 pub use codec::*;
@@ -91,6 +91,7 @@ pub trait EncodingConfiguration {
             }
         }
     }
+
     fn apply_except_fields(&self, log: &mut LogRecord) {
         if let Some(except_fields) = &self.except_fields() {
             for field in except_fields {
@@ -98,8 +99,27 @@ pub trait EncodingConfiguration {
             }
         }
     }
+
     fn apply_timestamp_format(&self, log: &mut LogRecord) {
-        todo!()
+        if let Some(format) = &self.timestamp_format() {
+            match format {
+                TimestampFormat::Unix => {
+                    let mut timestamps = Vec::new();
+                    for (k, v) in log.all_fields() {
+                        if let Value::Timestamp(ts) = v {
+                            timestamps.push((k.clone(), Value::Int64(ts.timestamp())))
+                        }
+                    }
+
+                    for (k, v) in timestamps {
+                        log.insert_field(k, v);
+                    }
+                }
+
+                // RFC3339 is the default serialization of a timestamp
+                TimestampFormat::RFC3339 => ()
+            }
+        }
     }
 
     /// Check that the configuration is valid.

@@ -51,6 +51,7 @@ fn main() {
             Commands::Transforms(transforms) => transforms.run(),
             Commands::Sinks(sinks) => sinks.run(),
             Commands::Extensions(extensions) => extensions.run(),
+            Commands::Providers(providers) => providers.run(),
         }
 
         return;

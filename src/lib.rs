@@ -12,7 +12,6 @@ mod pipeline;
 mod buffers;
 mod tls;
 mod trigger;
-mod app;
 mod extensions;
 mod http;
 mod template;

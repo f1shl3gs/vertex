@@ -15,6 +15,7 @@ use tracing::field::Field;
 
 use crate::{ByteSizeOf, Value};
 use crate::encoding::MaybeAsLogMut;
+use crate::log::keys::all_fields;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -169,6 +170,10 @@ impl LogRecord {
 
     pub fn keys<'a>(&'a self) -> impl Iterator<Item=String> + 'a {
         keys::keys(&self.fields)
+    }
+
+    pub fn all_fields(&self) -> impl Iterator<Item = (String, &Value)> + Serialize {
+        all_fields(&self.fields)
     }
 }
 

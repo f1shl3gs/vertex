@@ -1,4 +1,4 @@
-# Configuration & Service Discovery
+# Remote Configuration
 
 First we need a solution for `Remote Configuration`, which will save us lots of 
 time when we change the configuration.
@@ -80,40 +80,17 @@ Vertex to poll the remote source for config changes.
 This can simplify implementation but increase the time that the configuration 
 changes become effective.
 
-# Service Discovery
-There is no such standard service discovery to connect to like `Consul`, it would 
-be cool to have Vertex connect to that and automatically start collecting data for 
-service that Vertex support.
+## Heartbeat
+With this implement we should also implement heartbeat too, then the UI can show
+us how many (healthy or unhealthy) vertex connected. If the instance haven't sent 
+heartbeat for 5m(just an example), then it should be marked as instance lost.   
 
-So when a new Server/Pod/MySQL comes on, Vertex will automatically start collecting
-data from it.
+Note: `The config server might get performance issues when there are lots of vertex
+instances connect`
 
-`OpenTelemetry` already implement a handy [discovery mechanism](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver/receivercreator),
-and it is very promising. 
+## Route
+With the attributes provided by vertex, we can implement something like a route
+to delivery different config for different Vertex. For example, if the attributes
+contains "env=prod", then we response the "prod" config, etc. 
 
-This implement has two main parts:
-- Discovery targets/services from ports or kubernetes
-- Create receiver(source is call in vertex) dynamically. So the source should be 
-      very simple.
-
-```yaml
-extensions:
-  k8s: {} # some config
-
-sources:
-  mysqls:
-    type: creator
-    discovery: 
-      - k8s
-    # just a demo, it will change in the futures
-    templates:
-      "{{ label.service }}": 
-        type: mysql
-        host: {{ annotations.ip_address }}
-        port: {{ annotations.port }}
-
-sinks:
-  stdout:
-    type: stdout
-    inputs: mysqls
-```
+## Plan of Attack

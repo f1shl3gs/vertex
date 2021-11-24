@@ -117,8 +117,31 @@ impl Display for Metric {
     /// example:
     /// ```text
     /// 2020-08-12T20:23:37.248661343Z vertex_processed_bytes_total{component_kind="sink",component_type="blackhole"} = 6371
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+    fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
+        if let Some(timestamp) = &self.timestamp {
+            write!(fmt, "{:?} ", timestamp)?;
+        }
+
+        write!(fmt, "{}", self.name)?;
+
+        if self.tags.len() != 0 {
+            write!(fmt, "{{")?;
+
+            for (k, v) in &self.tags {
+                write!(fmt, "{}={}", k, v)?;
+            }
+
+            write!(fmt, "}}")?;
+        }
+
+        match self.value {
+            MetricValue::Sum(v) | MetricValue::Gauge(v) => {
+                write!(fmt, " {}", v)
+            },
+            _ => {
+                Ok(())
+            }
+        }
     }
 }
 

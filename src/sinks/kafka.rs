@@ -280,7 +280,12 @@ impl KafkaSink {
             record.timestamp = Some(timestamp);
         }
 
-        self.producer.send(record, Timeout::Never).await;
+        match self.producer.send(record, Timeout::Never).await {
+            Ok(m) => {},
+            Err((err, msg)) => {
+
+            }
+        }
     }
 }
 

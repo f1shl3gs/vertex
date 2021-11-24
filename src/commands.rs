@@ -1,5 +1,8 @@
 use clap::Parser;
-use vertex::config::{ExtensionDescription, SinkDescription, SourceDescription, TransformDescription};
+use vertex::config::{
+    ExtensionDescription, SinkDescription, SourceDescription,
+    TransformDescription, ProviderDescription
+};
 
 #[derive(Debug, Parser)]
 pub enum Commands {
@@ -7,6 +10,7 @@ pub enum Commands {
     Transforms(Transforms),
     Sinks(Sinks),
     Extensions(Extensions),
+    Providers(Providers)
 }
 
 macro_rules! impl_list_and_example {
@@ -62,3 +66,31 @@ pub struct Extensions {
 }
 
 impl_list_and_example!(Extensions, ExtensionDescription);
+
+#[derive(Debug, Parser)]
+pub struct Providers {
+    name: Option<String>,
+}
+
+impl Providers {
+    pub fn run(&self) {
+        match &self.name {
+            Some(name) => {
+                match ProviderDescription::example(&name) {
+                    Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                    Err(err) => {
+                        println!("Generate example failed: {:?}", err);
+                        std::process::exit(exitcode::UNAVAILABLE)
+                    }
+                }
+            },
+            _ => {
+                for desc in inventory::iter::<ProviderDescription> {
+                    println!("{}", desc.type_str)
+                }
+            }
+        }
+    }
+}
+
+// impl_list_and_example!(ConfigProviders, ProviderDescription);

@@ -19,6 +19,7 @@ pub use component::{GenerateConfig, ComponentDescription, ExampleError};
 pub use loading::load;
 #[cfg(test)]
 pub use component::test_generate_config;
+pub use provider::ProviderDescription;
 
 use std::path::PathBuf;
 use async_trait::async_trait;
