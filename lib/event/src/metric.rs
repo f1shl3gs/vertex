@@ -250,9 +250,9 @@ impl Metric {
     }
 
     #[inline]
-    pub fn insert_tag(&mut self, name: String, value: String) -> Option<String> {
+    pub fn insert_tag(&mut self, name: impl ToString, value: impl ToString) -> Option<String> {
         self.tags
-            .insert(name, value)
+            .insert(name.to_string(), value.to_string())
     }
 }
 
