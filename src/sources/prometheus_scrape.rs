@@ -14,7 +14,7 @@ use crate::sources::Source;
 use crate::config::{
     serialize_duration, deserialize_duration, default_interval, default_false,
     SourceConfig, SourceContext, DataType, ticker_from_duration,
-    ProxyConfig, GenerateConfig, SourceDescription
+    ProxyConfig, GenerateConfig, SourceDescription,
 };
 
 
@@ -163,18 +163,18 @@ fn scrape(
                                                 match (honor_labels, metric.tag_value("instance")) {
                                                     (false, Some(old_instance)) => {
                                                         metric.insert_tag(
-                                                            "exported_instance".to_string(),
+                                                            "exported_instance",
                                                             old_instance,
                                                         );
                                                         metric.insert_tag(
-                                                            "instance".to_string(),
+                                                            "instance",
                                                             instance.clone(),
                                                         );
                                                     }
                                                     (true, Some(_)) => {}
                                                     (_, None) => {
                                                         metric.insert_tag(
-                                                            "instance".to_string(),
+                                                            "instance",
                                                             instance.clone(),
                                                         );
                                                     }
