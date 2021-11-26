@@ -142,7 +142,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
     );
 
     #[cfg(feature = "tokio-console")]
-        let subscriber = {
+    let subscriber = {
         let (tasks_layer, tasks_server) = console_subscriber::TasksLayer::new();
         tokio::spawn(tasks_server.serve());
 
@@ -152,7 +152,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
     };
 
     #[cfg(not(feature = "tokio-console"))]
-        let subscriber = tracing_subscriber::registry::Registry::default()
+    let subscriber = tracing_subscriber::registry::Registry::default()
         .with(tracing_subscriber::filter::EnvFilter::from(levels));
 
     // dev note: we attempted to refactor to reduce duplication but it was starting to seem like
