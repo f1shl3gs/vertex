@@ -26,7 +26,7 @@
 // For more information, please refer to <http://unlicense.org>
 
 use rand::{thread_rng, Rng};
-use std::net::{IpAddr, SocketAddr, TcpListener, ToSocketAddrs, UdpSocket};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, TcpListener, ToSocketAddrs, UdpSocket};
 
 pub type Port = u16;
 
@@ -88,6 +88,10 @@ pub fn pick_unused_port(ip: IpAddr) -> Port {
             }
         }
     }
+}
+
+pub fn pick_unused_local_port() -> Port {
+    pick_unused_port(IpAddr::V4(Ipv4Addr::LOCALHOST))
 }
 
 #[cfg(test)]
