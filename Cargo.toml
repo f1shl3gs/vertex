@@ -8,8 +8,8 @@ exclude = [
     "tests/fixtures"
 ]
 
-[profile.release]
-lto = true
+# [profile.release]
+# lto = true
 
 [workspace]
 members = [
@@ -146,6 +146,11 @@ path = "benches/duration.rs"
 name = "hwmon_gather"
 harness = false
 path = "benches/node_source_hwmon.rs"
+
+[[bench]]
+name = "haproxy"
+harness = false
+path = "benches/haproxy.rs"
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
