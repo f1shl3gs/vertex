@@ -1,4 +1,3 @@
-use std::fmt::format;
 use std::num::ParseFloatError;
 
 use snafu::{Snafu, ResultExt};
