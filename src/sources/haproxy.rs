@@ -1,12 +1,12 @@
-use std::collections::BTreeMap;
 use std::io::BufRead;
 
+use bytes::Buf;
 use snafu::Snafu;
-use futures::TryFutureExt;
+use futures::{SinkExt, StreamExt};
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
-use event::{Metric, tags};
+use event::{Event, Metric, tags};
 
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
@@ -14,7 +14,7 @@ use crate::tls::{MaybeTlsSettings, TlsConfig};
 use crate::Error;
 use crate::config::{
     deserialize_duration, serialize_duration, default_interval, SourceConfig,
-    SourceContext, DataType, SourceDescription, GenerateConfig, ProxyConfig,
+    SourceContext, DataType, SourceDescription, GenerateConfig, ProxyConfig, ticker_from_duration,
 };
 
 
@@ -76,7 +76,41 @@ inventory::submit! {
 #[typetag::serde(name = "haproxy")]
 impl SourceConfig for HaproxyConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        todo!()
+        let endpoints = self.endpoints.iter()
+            .map(|f| f.parse::<Uri>())
+            .flatten()
+            .collect::<Vec<_>>();
+
+        let auth = self.auth.clone();
+        let proxy = ctx.proxy.clone();
+        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
+        let mut ticker = ticker_from_duration(self.interval).unwrap()
+            .take_until(ctx.shutdown);
+        let mut output = ctx.out.sink_map_err(|err| {
+            error!(
+                message = "Error sending haproxy metrics",
+                %err
+            )
+        });
+
+        Ok(Box::pin(async move {
+            while ticker.next().await.is_some() {
+                let metrics = futures::future::join_all(
+                    endpoints.iter()
+                        .map(|uri| gather(uri, &tls, &auth, &proxy))
+                ).await;
+
+                let mut stream = futures::stream::iter(metrics)
+                    .map(futures::stream::iter)
+                    .flatten()
+                    .map(Event::Metric)
+                    .map(Ok);
+
+                output.send_all(&mut stream).await?
+            }
+
+            Ok(())
+        }))
     }
 
     fn output_type(&self) -> DataType {
@@ -88,45 +122,88 @@ impl SourceConfig for HaproxyConfig {
     }
 }
 
-async fn gather(
-    endpoints: Vec<String>,
-    tls: Option<TlsConfig>,
+async fn scrap(
+    uri: &Uri,
+    tls: MaybeTlsSettings,
     auth: Option<Auth>,
     proxy: &ProxyConfig,
-) -> Result<(), Error> {
-    /*    let tls = MaybeTlsSettings::from_config(&tls, false)?;
-        let client = HttpClient::new(tls, &proxy)?;
+) -> Result<Vec<Metric>, Error> {
+    let client = HttpClient::new(tls, &proxy)?;
 
-        let mut tasks = vec![];
-        for endpoint in endpoints.iter() {
-            let uri = endpoint.parse()?;
-            let mut req = http::Request::get(uri)
-                .body(hyper::Body::empty())?;
+    let mut req = http::Request::get(uri)
+        .body(hyper::Body::empty())?;
 
-            if let Some(auth) = &auth {
-                auth.apply(&mut req);
-            }
+    if let Some(auth) = &auth {
+        auth.apply(&mut req);
+    }
 
-            tokio::spawn(async move {
-                let resp = client.send(req).await?;
-                let (parts, body) = resp.into_parts();
-                match parts.status {
-                    StatusCode::OK => {
+    let resp = client.send(req).await?;
+    let (parts, body) = resp.into_parts();
 
-                    },
-                    status => {
+    let metrics = match parts.status {
+        StatusCode::OK => {
+            let b = hyper::body::to_bytes(body)
+                .await?;
 
-                    }
+            match parse_csv(b.reader()) {
+                Ok(metrics) => metrics,
+                Err(err) => {
+                    warn!(
+                        message = "Parse haproxy response csv failed",
+                        ?err
+                    );
+                    vec![]
                 }
-            })
+            }
         }
+        status => {
+            warn!(
+                message = "Fetch haproxy stats failed",
+                code = status.as_str(),
+            );
 
-    */
-    todo!()
+            vec![]
+        }
+    };
+
+    Ok(metrics)
+}
+
+async fn gather(
+    uri: &Uri,
+    tls: &MaybeTlsSettings,
+    auth: &Option<Auth>,
+    proxy: &ProxyConfig,
+) -> Vec<Metric> {
+    let start = std::time::Instant::now();
+    let mut metrics = match scrap(uri, tls.clone(), auth.clone(), proxy).await {
+        Ok(ms) => ms,
+        Err(err) => vec![]
+    };
+    let elapsed = start.elapsed().as_secs_f64();
+    let up = if metrics.len() != 0 { 1 } else { 0 };
+    let instance = format!("{}:{}", uri.host().unwrap().clone(), uri.port_u16().unwrap());
+    metrics.extend_from_slice(&[
+        Metric::gauge(
+            "haproxy_up",
+            "Was the last scrape of HAProxy successful.",
+            up,
+        ),
+        Metric::gauge(
+            "haproxy_scrape_duration_seconds",
+            "",
+            elapsed,
+        )
+    ]);
+
+    metrics.iter_mut()
+        .for_each(|m| { m.insert_tag("instance", &instance); });
+
+    metrics
 }
 
 #[derive(Debug, Snafu)]
-enum ParseError {
+pub enum ParseError {
     #[snafu(display("row is too short"))]
     RowTooShort,
 
@@ -134,7 +211,7 @@ enum ParseError {
     UnknownTypeOfMetrics { typ: String },
 }
 
-fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
+pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
     let mut lines = reader.lines();
 
@@ -152,92 +229,25 @@ fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
 
         let pxname = parts[PXNAME_FIELD];
         let svname = parts[SVNAME_FIELD];
-        let status = parts[STATUS_FIELD];
         let typ = parts[TYPE_FIELD];
 
         let partial = match typ {
             "0" => {
                 // frontend
-                parse_frontend(&line, pxname)
+                parse_frontend(parts, pxname)
             }
             "1" => {
                 // backend
-                parse_backend(&line, pxname)
+                parse_backend(parts, pxname)
             }
             "2" => {
                 // server
-                parse_server(&line, pxname, svname)
+                parse_server(parts, pxname, svname)
             }
-            _ => {
-                return Err(ParseError::UnknownTypeOfMetrics { typ: typ.into() });
-            }
+            _ => continue
         };
 
         metrics.extend(partial);
-    }
-
-    Ok(metrics)
-}
-
-fn parse_line(line: &str, list: Vec<(usize, &'static str, &'static str, &'static str, BTreeMap<String, String>)>) -> Result<Vec<Metric>, ParseError> {
-    let mut metrics = vec![];
-    let row = line.split(",")
-        .map(|s| s.trim())
-        .collect::<Vec<_>>();
-
-    for (index, name, desc, typ, tags) in list.iter() {
-        if *index > row.len() - 1 {
-            continue;
-        }
-
-        let text = row[*index];
-        let value = match *index {
-            STATUS_FIELD => parse_status_field(text),
-            CHECK_DURATION_FIELD | QTIME_MS_FIELD | CTIME_MS_FIELD | RTIME_MS_FIELD | TTIME_MS_FIELD => {
-                let value = match text.parse::<f64>() {
-                    Ok(v) => v,
-                    Err(err) => {
-                        warn!(
-                            message = "Can't parse CSV field value",
-                            value = text,
-                            ?err
-                        );
-
-                        continue;
-                    }
-                };
-
-                value / 1000.0
-            }
-            _ => match text.parse() {
-                Ok(v) => v,
-                Err(err) => {
-                    warn!(
-                        message = "Can't parse CSV failed value",
-                        value = text,
-                        ?err
-                    );
-
-                    continue;
-                }
-            }
-        };
-
-        match *typ {
-            "gauge" => metrics.push(Metric::gauge_with_tags(
-                *name,
-                *desc,
-                value,
-                tags.clone(),
-            )),
-            "counter" => metrics.push(Metric::sum_with_tags(
-                *name,
-                *desc,
-                value,
-                tags.clone(),
-            )),
-            _ => unreachable!()
-        }
     }
 
     Ok(metrics)
@@ -325,11 +335,8 @@ macro_rules! try_push_metric {
     };
 }
 
-fn parse_server(line: &str, pxname: &str, svname: &str) -> Vec<Metric> {
-    let mut metrics = vec![];
-    let row = line.split(",")
-        .map(|s| s.trim())
-        .collect::<Vec<_>>();
+fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
+    let mut metrics = Vec::with_capacity(32);
 
     try_push_metric!(metrics, row, 2,  "haproxy_server_current_queue", "Current number of queued requests assigned to this server.", "gauge");
     try_push_metric!(metrics, row, 3,  "haproxy_server_max_queue", "Maximum observed number of queued requests assigned to this server.", "gauge");
@@ -365,21 +372,16 @@ fn parse_server(line: &str, pxname: &str, svname: &str) -> Vec<Metric> {
     try_push_metric!(metrics, row, 61, "haproxy_server_http_total_time_average_seconds", "Avg. HTTP total time for last 1024 successful connections.", "gauge");
 
     metrics.iter_mut()
-        .map(|m| {
+        .for_each(|m| {
             m.insert_tag("backend", pxname);
             m.insert_tag("server", svname);
-
-            m
         });
 
     metrics
 }
 
-fn parse_frontend(line: &str, pxname: &str) -> Vec<Metric> {
-    let mut metrics = vec![];
-    let row = line.split(",")
-        .map(|s| s.trim())
-        .collect::<Vec<_>>();
+fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    let mut metrics = Vec::with_capacity(23);
 
     try_push_metric!(metrics, row, 4,  "haproxy_frontend_current_sessions", "Current number of active sessions.", "gauge");
     try_push_metric!(metrics, row, 5,  "haproxy_frontend_max_sessions", "Maximum observed number of active sessions.", "gauge");
@@ -406,16 +408,15 @@ fn parse_frontend(line: &str, pxname: &str) -> Vec<Metric> {
     try_push_metric!(metrics, row, 79, "haproxy_frontend_connections_total", "Total number of connections", "counter");
 
     metrics.iter_mut()
-        .map(|m| m.insert_tag("frontend", pxname));
+        .for_each(|m| {
+            m.insert_tag("frontend", pxname);
+        });
 
     metrics
 }
 
-fn parse_backend(line: &str, pxname: &str) -> Vec<Metric> {
-    let mut metrics = vec![];
-    let row = line.split(",")
-        .map(|s| s.trim())
-        .collect::<Vec<_>>();
+fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    let mut metrics = Vec::with_capacity(34);
 
     try_push_metric!(metrics, row, 2,  "haproxy_backend_current_queue", "Current number of queued requests not assigned to any server.", "gauge");
     try_push_metric!(metrics, row, 3,  "haproxy_backend_max_queue", "Maximum observed number of queued requests not assigned to any server.", "gauge");
@@ -453,7 +454,9 @@ fn parse_backend(line: &str, pxname: &str) -> Vec<Metric> {
     try_push_metric!(metrics, row, 61, "haproxy_backend_http_total_time_average_seconds", "Avg. HTTP total time for last 1024 successful connections.", "gauge");
 
     metrics.iter_mut()
-        .map(|m| m.insert_tag("backend", pxname));
+        .for_each(|m| {
+            m.insert_tag("backend", pxname);
+        });
 
     metrics
 }
@@ -471,6 +474,9 @@ fn parse_status_field(value: &str) -> f64 {
 mod tests {
     use std::io;
     use std::io::BufReader;
+    use std::time::Duration;
+    use testcontainers::{Docker, RunArgs};
+    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
     use super::*;
 
     #[test]
@@ -488,6 +494,10 @@ mod tests {
         let content = include_str!("../../tests/fixtures/haproxy/stats.csv");
         let reader = BufReader::new(io::Cursor::new(content));
         let metrics = parse_csv(reader).unwrap();
+
+        for m in metrics {
+            println!("{:?}\n", m);
+        }
     }
 
     #[test]
@@ -509,5 +519,38 @@ mod tests {
         for (input, want) in tests {
             assert_eq!(parse_status_field(input), want as f64);
         }
+    }
+
+    #[tokio::test]
+    async fn test_gather() {
+        let pwd = std::env::current_dir().unwrap();
+        let port = testify::pick_unused_local_port();
+        let run_args = RunArgs::default()
+            .with_mapped_port((port, 8404));
+        let docker = testcontainers::clients::Cli::default();
+        let image = GenericImage::new("haproxy:2.4.7")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "remaining in queue".to_string(),
+                stream: Stream::StdOut,
+            })
+            .with_volume(
+                format!("{}/tests/fixtures/haproxy/haproxy.cfg", pwd.to_string_lossy()),
+                "/usr/local/etc/haproxy/haproxy.cfg",
+            );
+        let service = docker.run_with_args(image, run_args);
+        let host_port = service.get_host_port(8404).unwrap();
+
+        // test unhealth gather
+        let uncorrect_port = host_port - 1; // dummy, but ok
+        let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port).parse().unwrap();
+        let tls = MaybeTlsSettings::from_config(&None, false).unwrap();
+        let metrics = gather(&uri, &tls, &None, &ProxyConfig::default()).await;
+        assert_eq!(metrics.len(), 2);
+
+        // test health gather
+        let uri = format!("http://127.0.0.1:{}/stats?stats;csv", host_port).parse().unwrap();
+        let tls = MaybeTlsSettings::from_config(&None, false).unwrap();
+        let metrics = gather(&uri, &tls, &None, &ProxyConfig::default()).await;
+        assert_ne!(metrics.len(), 2);
     }
 }

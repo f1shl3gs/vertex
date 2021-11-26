@@ -36,7 +36,7 @@ mod internal_logs;
 #[cfg(feature = "sources-bind")]
 mod bind;
 #[cfg(feature = "sources-haproxy")]
-mod haproxy;
+pub mod haproxy;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
 #[cfg(feature = "sources-fluentd")]
