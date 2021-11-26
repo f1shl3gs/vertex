@@ -1,5 +1,5 @@
 use std::collections::BTreeMap;
-use std::fmt::{Display, Formatter};
+use std::fmt::{Display, Formatter, Write};
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -127,8 +127,13 @@ impl Display for Metric {
         if self.tags.len() != 0 {
             write!(fmt, "{{")?;
 
+            let mut n = 0;
             for (k, v) in &self.tags {
-                write!(fmt, "{}={}", k, v)?;
+                n += 1;
+                write!(fmt, "{}=\"{}\"", k, v)?;
+                if n != self.tags.len() {
+                    fmt.write_char(',')?;
+                }
             }
 
             write!(fmt, "}}")?;
