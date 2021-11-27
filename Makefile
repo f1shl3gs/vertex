@@ -21,6 +21,13 @@ image: build-musl
 static:
 	docker run --rm -it -v "/home/f1shl3gs/Workspaces/clion/vertex/docker/builder/cargo-config.toml:/opt/rust/cargo/config" -v "$$(pwd)":/home/rust/src musl-builder cargo build --release
 
+build_x86_64-unknown-linux-musl:
+	docker build -f docker/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl docker/cross
+	cross build \
+		--release \
+		--no-default-features \
+		--target x86_64-unknown-linux-musl \
+		--features target-x86_64-unknown-linux-musl
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

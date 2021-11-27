@@ -74,6 +74,15 @@ default = [
     # "extensions-jemalloc"
 ]
 
+target-x86_64-unknown-linux-musl = [
+    "disk-buffer",
+    "sinks",
+    "sources",
+    "transforms",
+    "openssl/vendored",
+    "rdkafka-cmake",
+]
+
 # integration
 integration-test = []
 
@@ -88,6 +97,36 @@ allocator-mimalloc = ["mimalloc"]
 allocator-jemalloc = ["jemallocator"]
 
 # sources
+sources = [
+    "sources-bind",
+    "sources-generator",
+    "sources-node_metrics",
+    "sources-ntp",
+    "sources-kafka",
+    "sources-kafka_metrics",
+    "sources-kmsg",
+    "sources-selfstat",
+    "sources-journald",
+    "sources-internal_metrics",
+    "sources-internal_logs",
+    "sources-redis",
+    "sources-pulsar",
+    "sources-prometheus_scrape",
+    "sources-prometheus_remote_write",
+    "sources-nginx_stub",
+    "sources-zookeeper",
+    "sources-haproxy",
+    "sources-memcached",
+    "sources-fluentd",
+    "sources-syslog",
+    "sources-tail",
+    "sources-libvirt",
+    "sources-mysqld",
+    "sources-nvidia_smi",
+    "sources-mongodb",
+    "sources-elasticsearch"
+]
+
 sources-bind = []
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
@@ -117,12 +156,30 @@ sources-mongodb = ["mongodb/tokio-runtime"]
 sources-elasticsearch = []
 
 # transforms
+transforms = [
+    "transforms-add_tags",
+    "transforms-add_fields",
+    "transforms-cardinality",
+
+]
 transforms-add_tags = []
 transforms-add_fields = []
 transforms-cardinality = []
 transforms-sample = ["seahash"]
 
 # sinks
+sinks = [
+    "sinks-prometheus_exporter",
+    "sinks-stdout",
+    "sinks-blackhole",
+    "sinks-kafka",
+    "sinks-pulsar",
+    "sinks-elasticsearch",
+    "sinks-loki",
+    "sinks-vertex",
+    "sinks-clickhouse",
+]
+
 sinks-prometheus_exporter = []
 sinks-stdout = []
 sinks-blackhole = []
@@ -136,6 +193,13 @@ sinks-clickhouse = []
 # extensions
 extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+
+# misc
+
+# Enables `rdkafka` dependency.
+# This feature is more portable, but requires `cmake` as build dependency. Use it if `rdkafka-plain` doesn't work.
+# The `sasl` feature has to be added because of the limitations of `librdkafka` build scripts for `cmake`.
+rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
 
 [[bench]]
 name = "duration"
@@ -231,7 +295,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false }
+openssl = { version = "0.10.36", default-features = false, features = ["vendored"] }
 hyper-openssl = { version = "0.9.1", default-features = false }
 
 # Networking
