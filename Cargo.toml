@@ -160,7 +160,7 @@ transforms = [
     "transforms-add_tags",
     "transforms-add_fields",
     "transforms-cardinality",
-
+    "transforms-sample"
 ]
 transforms-add_tags = []
 transforms-add_fields = []

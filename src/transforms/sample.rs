@@ -1,8 +1,12 @@
 use event::Event;
+use internal::InternalEvent;
+use serde::{Deserialize, Serialize};
+
 use crate::config::{DataType, GlobalOptions, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 
-#[derive(Debug, Clone)]
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 struct SampleConfig {
     rate: u64,
     key_field: Option<String>,
@@ -66,8 +70,17 @@ impl FunctionTransform for Sample {
         if num % self.rate == 0 {
             output.push(event);
         } else {
-            emit!(SampleEventDiscard);
+            emit!(&SampleEventDiscarded);
         }
+    }
+}
+
+#[derive(Debug)]
+struct SampleEventDiscarded;
+
+impl InternalEvent for SampleEventDiscarded {
+    fn emit_metrics(&self) {
+        counter!("events_discarded_total", 1);
     }
 }
 

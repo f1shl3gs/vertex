@@ -1,6 +1,5 @@
 pub mod metric;
 mod common;
-mod sample;
 mod kafka;
 
 #[macro_use]
