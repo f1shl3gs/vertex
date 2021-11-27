@@ -1,3 +1,5 @@
+VERSION     := "0.1.0"
+
 build:
 	cargo build --release
 	# striping is not enabled in stable Cargo, so here we are
@@ -15,9 +17,6 @@ bloat:
 lines:
 	@./scripts/lines.sh
 
-image: build-musl
-	@docker build -t vertex -f Dockerfile .
-
 static:
 	docker run --rm -it -v "/home/f1shl3gs/Workspaces/clion/vertex/docker/builder/cargo-config.toml:/opt/rust/cargo/config" -v "$$(pwd)":/home/rust/src musl-builder cargo build --release
 
@@ -28,6 +27,10 @@ build_x86_64-unknown-linux-musl:
 		--no-default-features \
 		--target x86_64-unknown-linux-musl \
 		--features target-x86_64-unknown-linux-musl
+
+image: build_x86_64-unknown-linux-musl
+	cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
+	cd distribution/docker && strip vertex && docker build -t vertex:${VERSION}-alpine .
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30
