@@ -11,7 +11,7 @@ mod metadata;
 pub use metric::*;
 pub use log::LogRecord;
 pub use value::Value;
-pub use finalization::EventFinalizers;
+pub use finalization::{EventFinalizers, EventStatus};
 
 use std::collections::BTreeMap;
 use std::sync::Arc;

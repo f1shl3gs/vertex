@@ -76,15 +76,12 @@ impl SourceConfig for KmsgConfig {
                                 let timestamp = Utc.timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32);
                                 let timestamp_key = log_schema::log_schema().timestamp_key();
 
-                                let record = LogRecord {
-                                    tags: Default::default(),
-                                    fields: fields!(
+                                let record = LogRecord::from(fields!(
                                         "priority" => priority,
                                         "sequence" => seq,
                                         "message" => msg,
                                         timestamp_key => timestamp
-                                    ),
-                                };
+                                    ));
 
                                 output.send(record.into()).await.unwrap();
                             }

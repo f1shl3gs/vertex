@@ -1,7 +1,9 @@
 /// Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
-use event::{tags, Metric};
+use event::Metric;
+
 use super::{read_to_string, Error, ErrorContext};
+
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stat = read_stat(proc_path).await

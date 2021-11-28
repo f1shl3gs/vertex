@@ -1,14 +1,15 @@
+use std::path::PathBuf;
+
+use tokio::io::AsyncBufReadExt;
+use event::Metric;
+
+use super::{Error, ErrorContext, read_into};
+
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
 /// Maybe we can fetch conntrack statistics from netlink api
 /// https://github.com/torvalds/linux/blob/master/net/netfilter/nf_conntrack_netlink.c
 /// https://github.com/ti-mo/conntrack/blob/5b022d74eb6f79d2ddbddd0100e93b3aeeadfff8/conn.go#L465
-
-use super::{Error, ErrorContext, read_into};
-use std::path::PathBuf;
-use tokio::io::AsyncBufReadExt;
-use event::{tags, Metric};
-
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");

@@ -284,9 +284,10 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
         // that isn't possible in `validate`, but alas.
         let timeout = self.timeout.ok_or(BatchError::InvalidTimeout)?;
 
-        Ok(BatcherSettings::new(
+        todo!()
+        /*Ok(BatcherSettings::new(
 
-        ))
+        ))*/
     }
 }
 

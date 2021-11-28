@@ -1,20 +1,14 @@
 /// Collect metrics from `/proc/stat`
 
-use crate::{
-    config::{
-        serialize_regex,
-        deserialize_regex,
-        default_false,
-        default_true,
-    },
-};
-use std::{
-    path::PathBuf,
-};
+use std::path::PathBuf;
+
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
+use event::{tags, Metric};
+
 use super::Error;
-use event::{tags, Metric, MetricValue};
+use crate::config::{serialize_regex, deserialize_regex, default_false, default_true};
+
 
 const USER_HZ: f64 = 100.0;
 

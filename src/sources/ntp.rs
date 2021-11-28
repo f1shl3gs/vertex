@@ -4,11 +4,7 @@ use tokio_stream::wrappers::IntervalStream;
 use futures::{stream, StreamExt, SinkExt};
 use rsntp;
 use serde_yaml::Value;
-use event::{
-    Event,
-    Metric,
-    MetricValue,
-};
+use event::{Event, Metric};
 
 use crate::sources::Source;
 use crate::shutdown::ShutdownSignal;

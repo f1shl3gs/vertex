@@ -1,12 +1,11 @@
 /// Exposes ARP statistics from `/proc/net/arp`.
-use event::{tags, Metric, MetricValue};
-use std::{
-    collections::HashMap,
-};
-use tokio::io::{
-    AsyncBufReadExt
-};
+use std::collections::HashMap;
+
+use event::{tags, Metric};
+use tokio::io::AsyncBufReadExt;
+
 use super::{Error, ErrorContext};
+
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/arp", proc_path);

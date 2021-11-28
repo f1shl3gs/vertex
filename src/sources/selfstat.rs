@@ -8,7 +8,7 @@ use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
 use serde_yaml::Value;
 use tokio::sync::RwLock;
-use event::{Event, tags, Metric};
+use event::{Event, Metric};
 
 use crate::{
     config::{

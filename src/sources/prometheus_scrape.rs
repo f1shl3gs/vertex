@@ -3,7 +3,7 @@ use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::ResultExt;
-use event::{Bucket, Event, Metric, MetricValue, Quantile};
+use event::{Bucket, Event, Metric, Quantile};
 use prometheus::{MetricGroup, GroupKind};
 
 use crate::http::{Auth, HttpClient};

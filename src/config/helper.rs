@@ -1,9 +1,8 @@
 use std::borrow::Cow;
 use serde::{Deserialize, Deserializer, Serializer};
 use tokio_stream::wrappers::IntervalStream;
-use humanize::{bytes, duration_to_string, parse_duration};
+use humanize::{duration_to_string, parse_duration};
 
-use crate::duration::{duration_to_string, parse_duration};
 
 pub fn deserialize_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Result<chrono::Duration, D::Error> {
     let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;

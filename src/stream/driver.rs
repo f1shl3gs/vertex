@@ -1,6 +1,9 @@
 use std::cmp::Ordering;
 use std::collections::BinaryHeap;
 use std::num::NonZeroUsize;
+use buffers::Acker;
+use event::EventStatus;
+use internal::EventsSent;
 
 /// Newtype wrapper around sequence numbers to enforce misuse resistance.
 #[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
@@ -117,4 +120,38 @@ impl AcknowledgementTracker {
     }
 }
 
-// TODO:
+pub trait DriverResponse {
+    fn event_status(&self) -> EventStatus;
+    fn events_send(&self) -> EventsSent;
+}
+
+/// Drives the interaction between a stream of items and a service which processes
+/// them asynchronously.
+///
+/// `Driver`, as a high-level, facilitates taking items from an arbitrary `Stream`
+/// and pushing them through a `Service`, spawning each call to the service so that
+/// work can be run concurrently, managing waiting for the service to be ready before
+/// processing more items, and so on.
+///
+/// Additionally, `Driver` handles two event-specific facilities: finalization and
+/// acknowledgement.
+///
+/// This capability is parameterized so any implementation which can define how to
+/// interpret the response for each request, as well as define how many events a
+/// request is compromised of, can be used with `Driver`.
+pub struct Driver<I, S> {
+    input: I,
+    service: S,
+    acker: Acker,
+}
+
+impl<I, S> Driver<I, S> {
+    pub fn new(input: I, service: S, acker: Acker) -> Self {
+        Self {
+            input,
+            service,
+            acker,
+        }
+    }
+}
+

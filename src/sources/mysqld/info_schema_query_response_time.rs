@@ -1,8 +1,6 @@
-use std::collections::BTreeMap;
-
 use snafu::ResultExt;
 use sqlx::{FromRow, MySqlPool, Row};
-use event::{Bucket, Metric, MetricValue};
+use event::{Bucket, Metric};
 use sqlx;
 use sqlx::mysql::MySqlRow;
 

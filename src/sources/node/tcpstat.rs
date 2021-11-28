@@ -1,5 +1,4 @@
-use super::Error;
-use event::{tags, Metric, MetricValue};
+use event::{tags, Metric};
 use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
 use netlink_packet_sock_diag::{
     NetlinkMessage,
@@ -16,6 +15,9 @@ use netlink_packet_sock_diag::{
     },
     constants::*,
 };
+
+use super::Error;
+
 
 #[derive(Default, Debug)]
 struct Statistics {

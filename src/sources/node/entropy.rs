@@ -1,7 +1,9 @@
 /// Exposes available entropy
 
+use event::Metric;
+
 use super::{Error, ErrorContext, read_into};
-use event::{tags, Metric};
+
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (avail, pool_size) = read_random(proc_path).await
