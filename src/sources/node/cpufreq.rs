@@ -1,5 +1,5 @@
 use super::{read_into, Error, ErrorContext};
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -9,56 +9,68 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
         let cpu = &stat.name;
 
         if let Some(v) = stat.current_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_hertz",
                 "Current cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ));
         }
 
         if let Some(v) = stat.minimum_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_min_hertz",
                 "Minimum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ));
         }
 
         if let Some(v) = stat.maximum_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_frequency_max_hertz",
                 "Maximum cpu thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ))
         }
 
         if let Some(v) = stat.scaling_current_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_scaling_frequency_hertz",
                 "Current scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ))
         }
 
         if let Some(v) = stat.scaling_minimum_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_scaling_frequency_min_hertz",
                 "Minimum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ));
         }
 
         if let Some(v) = stat.scaling_maximum_frequency {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_cpu_scaling_frequency_max_hertz",
                 "Maximum scaled CPU thread frequency in hertz.",
                 v as f64 * 1000.0,
-                "cpu" => cpu
+                tags!(
+                    "cpu" => cpu,
+                ),
             ));
         }
     }

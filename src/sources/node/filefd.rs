@@ -1,17 +1,17 @@
 use super::{Error, ErrorContext, read_to_string};
-use event::{gauge_metric, Metric };
+use event::Metric;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path).await
         .context("read file-nr failed")?;
 
     Ok(vec![
-        gauge_metric!(
+        Metric::gauge(
             "node_filefd_allocated",
             "File descriptor statistics: allocated",
             allocated as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_filefd_maximum",
             "File descriptor statistics: maximum",
             maximum as f64

@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use crate::config::{deserialize_regex, serialize_regex};
 use tokio::fs;
-use event::{tags, sum_metric, gauge_metric, Metric};
+use event::{tags, Metric};
 use super::{Error, ErrorContext, read_to_string};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -46,177 +46,215 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
             up = 1.0;
         }
 
-        metrics.push(gauge_metric!(
+        metrics.push(Metric::gauge_with_tags(
             "node_network_up",
             "Value is 1 if operstat is 'up', o otherwise",
             up,
-            "device" => device
+            tags!(
+                "device" => device,
+            ),
         ));
 
-        metrics.push(gauge_metric!(
+        metrics.push(Metric::gauge_with_tags(
             "node_network_info",
             "Non-numeric data from /sys/class/net/<iface>, value is always 1",
             1f64,
-            "device" => device,
-            "address" => nci.address,
-            "broadcast" => nci.broadcast,
-            "duplex" => nci.duplex,
-            "operstate" => nci.operstate,
-            "ifalias" => nci.ifalias
+            tags!(
+                "device" => device,
+                "address" => nci.address,
+                "broadcast" => nci.broadcast,
+                "duplex" => nci.duplex,
+                "operstate" => nci.operstate,
+                "ifalias" => nci.ifalias,
+            ),
         ));
 
         if let Some(v) = nci.addr_assign_type {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_address_assign_type",
                 "address_assign_type value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.carrier {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_carrier",
                 "carrier value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.carrier_changes {
-            metrics.push(sum_metric!(
+            metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_changes_total",
                 "carrier_changes value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.carrier_up_count {
-            metrics.push(sum_metric!(
+            metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_up_changes_total",
                 "carrier_up_count value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.carrier_down_count {
-            metrics.push(sum_metric!(
+            metrics.push(Metric::sum_with_tags(
                 "node_network_carrier_down_changes_total",
                 "carrier_down_count value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.dev_id {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_device_id",
                 "dev_id value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.dormant {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_dormant",
                 "dormant value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.flags {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_flags",
                 "flags value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.ifindex {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_id",
                 "ifindex value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.iflink {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link",
                 "iflink value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.link_mode {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_iface_link_mode",
                 "link_mode value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.mtu {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_mtu_bytes",
                 "mtu value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.name_assign_type {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_name_assign_type",
                 "name_assign_type value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.netdev_group {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_net_dev_group",
                 "netdev_group value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
 
         if let Some(v) = nci.speed {
             // Some devices return -1 if the speed is unknown
             let speed_bytes = v as f64 * 1000.0 * 1000.0 / 8.0;
-            metrics.push(gauge_metric!(
-                    "node_network_speed_bytes",
-                    "speed value of /sys/class/net/<iface>",
-                    speed_bytes,
-                    "device" => device
-                ));
+            metrics.push(Metric::gauge_with_tags(
+                "node_network_speed_bytes",
+                "speed value of /sys/class/net/<iface>",
+                speed_bytes,
+                tags!(
+                        "device" => device,
+                ),
+            ));
         }
 
         if let Some(v) = nci.tx_queue_len {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_transmit_queue_length",
                 "tx_queue_len value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ))
         }
 
         if let Some(v) = nci.typ {
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_network_protocol_type",
                 "type value of /sys/class/net/<iface>",
                 v as f64,
-                "device" => device
+                tags!(
+                    "device" => device,
+                ),
             ));
         }
     }

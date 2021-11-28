@@ -8,7 +8,7 @@ use tokio_stream::wrappers::IntervalStream;
 use futures::{StreamExt, SinkExt};
 use serde_yaml::Value;
 use tokio::sync::RwLock;
-use event::{Event, tags, gauge_metric, sum_metric, Metric};
+use event::{Event, tags, Metric};
 
 use crate::{
     config::{
@@ -124,37 +124,37 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
     let page_size = 4096.0;
 
     Ok(vec![
-        gauge_metric! {
+        Metric::gauge(
             "process_max_fds",
             "Maximum number of open file descriptors.",
             max_fds,
-        },
-        gauge_metric!(
+        ),
+        Metric::gauge(
             "process_open_fds",
             "Number of open file descriptors",
             fds,
         ),
-        sum_metric!(
+        Metric::sum(
             "process_cpu_seconds_total",
             "Total user and system CPU time spent in seconds",
             cpu_total,
         ),
-        sum_metric!(
+        Metric::sum(
             "process_start_time_seconds",
             "Start time of the process since unix epoch in seconds",
             start_time,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "process_virtual_memory_bytes",
             "Virtual memory size in bytes",
             vsize,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "process_resident_memory_bytes",
             "Resident memory size in bytes",
             rss * page_size,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "process_threads",
             "Number of OS threads created",
             threads,

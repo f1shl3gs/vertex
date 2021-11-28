@@ -1,4 +1,6 @@
+use std::borrow::Cow;
 use std::num::ParseFloatError;
+use serde::{Deserializer, Serializer};
 
 use snafu::{Snafu, ResultExt};
 
@@ -36,14 +38,14 @@ pub enum ParseBytesError {
 /// See also: parse_bytes
 ///
 /// Bytes(82854982) -> 83 MB
-pub fn bytes(s: u64) -> String {
+pub fn bytes(s: usize) -> String {
     humanate_bytes(s, 1000.0, ["B", "kB", "MB", "GB", "TB", "PB", "EB"])
 }
 
 /// ibytes produces a human readable representation of an IEC size.
 ///
 /// IBytes(82854982) -> 79 MiB
-pub fn ibytes(s: u64) -> String {
+pub fn ibytes(s: usize) -> String {
     humanate_bytes(s, 1024.0, ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"])
 }
 
@@ -51,7 +53,7 @@ pub fn ibytes(s: u64) -> String {
 ///
 /// parse_bytes("42 MB") -> Ok(42000000)
 /// parse_bytes("42 mib") -> Ok(44040192)
-pub fn parse_bytes(s: &str) -> Result<u64, ParseBytesError> {
+pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
     let mut last_digit = 0;
     let mut has_comma = false;
 
@@ -68,7 +70,7 @@ pub fn parse_bytes(s: &str) -> Result<u64, ParseBytesError> {
     }
 
     let num = &s[..last_digit];
-    let mut tn = String::new();
+    let mut tn = num.to_string();
     if has_comma {
         tn = num.replace(",", "");
     }
@@ -95,12 +97,12 @@ pub fn parse_bytes(s: &str) -> Result<u64, ParseBytesError> {
         _ => return Err(ParseBytesError::UnknownUnit { unit: extra.clone() })
     };
 
-    let f = (f * m as f64) as u64;
-    if f > u64::MAX {
+    let f = (f * m as f64) as usize;
+    if f > usize::MAX {
         return Err(ParseBytesError::TooLarge { input: s.to_string() });
     }
 
-    Ok(f as u64)
+    Ok(f as usize)
 }
 
 #[inline]
@@ -108,7 +110,7 @@ fn logn(n: f64, b: f64) -> f64 {
     n.log2() / b.log2()
 }
 
-fn humanate_bytes(s: u64, base: f64, sizes: [&str; 7]) -> String {
+fn humanate_bytes(s: usize, base: f64, sizes: [&str; 7]) -> String {
     if s < 10 {
         return format!("{} B", s);
     }
@@ -122,13 +124,23 @@ fn humanate_bytes(s: u64, base: f64, sizes: [&str; 7]) -> String {
     format!("{} {}", val, suffix)
 }
 
+pub fn deserialize_bytes<'de, D: Deserializer<'de>>(deserializer: D) -> Result<usize, D::Error> {
+    let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
+    parse_bytes(&s).map_err(serde::de::Error::custom)
+}
+
+pub fn serialize_bytes<S: Serializer>(u: &usize, s: S) -> Result<S::Ok, S::Error> {
+    let b = bytes(*u);
+    s.serialize_str(&b)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     #[test]
     fn test_bytes() {
-        let input = 82854982u64;
+        let input = 82854982usize;
 
         let s = bytes(input);
         println!("{}", s);
@@ -136,7 +148,7 @@ mod tests {
 
     #[test]
     fn test_ibytes() {
-        let input = 82854982u64;
+        let input = 82854982usize;
 
         let s = ibytes(input);
         println!("{}", s);
@@ -145,12 +157,16 @@ mod tests {
     #[test]
     fn test_parse_bytes() {
         let tests = [
-            ("42MB", 42000000)
+            ("42MB", 42000000),
+            ("128MB", 128 * 1024 * 1024),
+            ("128M", 128 * 1024 * 1024),
+            ("128.0MB", 128 * 1024 * 1024),
+            ("128.0m", 128 * 1024 * 1024),
+            ("128.0 MB", 128 * 1024 * 1024),
         ];
 
         for (input, want) in tests {
             let value = parse_bytes(input).unwrap();
-            println!("{}", value);
         }
     }
 }

@@ -1,7 +1,7 @@
 /// Exposes error detection and correction statistics
 
 use super::{read_into, Error, ErrorContext};
-use event::{tags, sum_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
@@ -18,31 +18,39 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await
                     .context("read edac stats failed")?;
 
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_edac_correctable_errors_total",
                     "Total correctable memory errors.",
                     ce_count as f64,
-                    "controller" => controller
+                    tags!(
+                        "controller" => controller
+                    ),
                 ));
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_edac_uncorrectable_errors_total",
                     "Total uncorrectable memory errors.",
                     ue_count as f64,
-                    "controller" => controller
+                    tags!(
+                        "controller" => controller,
+                    ),
                 ));
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_edac_csrow_correctable_errors_total",
                     "Total correctable memory errors for this csrow.",
                     ce_noinfo_count as f64,
-                    "controller" => controller,
-                    "csrow" => "unknown"
+                    tags!(
+                        "controller" => controller,
+                        "csrow" => "unknown",
+                    ),
                 ));
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_edac_csrow_uncorrectable_errors_total",
                     "Total uncorrectable memory errors for this csrow.",
                     ue_noinfo_count as f64,
-                    "controller" => controller,
-                    "csrow" => "unknown"
+                    tags!(
+                        "controller" => controller,
+                        "csrow" => "unknown",
+                    ),
                 ));
 
                 // for each controller, walk the csrow directories
@@ -58,20 +66,24 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
 
                             match read_edac_csrow_stats(path).await {
                                 Ok((ce_count, ue_count)) => {
-                                    metrics.push(sum_metric!(
+                                    metrics.push(Metric::sum_with_tags(
                                         "node_edac_csrow_correctable_errors_total",
                                         "Total correctable memory errors for this csrow.",
                                         ce_count as f64,
-                                        "controller" => controller,
-                                        "csrow" => num
+                                        tags!(
+                                            "controller" => controller,
+                                            "csrow" => num,
+                                        ),
                                     ));
 
-                                    metrics.push(sum_metric!(
+                                    metrics.push(Metric::sum_with_tags(
                                         "node_edac_csrow_uncorrectable_errors_total",
                                         "Total uncorrectable memory errors for this csrow.",
                                         ue_count as f64,
-                                        "controller" => controller,
-                                        "csrow" => num
+                                        tags!(
+                                            "controller" => controller,
+                                            "csrow" => num,
+                                        ),
                                     ))
                                 }
                                 _ => {}

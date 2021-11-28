@@ -6,7 +6,7 @@ use crate::{
 };
 use tokio::io::AsyncBufReadExt;
 use super::{Error, ErrorContext};
-use event::{gauge_metric, Metric};
+use event::Metric;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
@@ -52,7 +52,7 @@ impl VMStatConfig {
 
             match parts[1].parse::<f64>() {
                 Ok(v) => {
-                    metrics.push(gauge_metric!(
+                    metrics.push(Metric::gauge(
                         format ! ("node_vmstat_{}", parts[0]),
                         format !("/proc/vmstat information field {}", parts[0]),
                         v

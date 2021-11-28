@@ -1,8 +1,7 @@
-mod bytes;
-
 use std::borrow::Cow;
 use serde::{Deserialize, Deserializer, Serializer};
 use tokio_stream::wrappers::IntervalStream;
+use humanize::{bytes, duration_to_string, parse_duration};
 
 use crate::duration::{duration_to_string, parse_duration};
 

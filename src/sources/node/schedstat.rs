@@ -1,6 +1,6 @@
 /// Exposes task scheduler statistics from /proc/schedstat
 
-use event::{tags, sum_metric, Metric};
+use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 use super::{Error, ErrorContext};
 
@@ -21,25 +21,31 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     for stat in stats {
         let cpu = &stat.cpu;
 
-        metrics.push(sum_metric!(
+        metrics.push(Metric::sum_with_tags(
             "node_schedstat_running_seconds_total",
             "Number of seconds CPU spent running a process.",
-            stat.running_nanoseconds as f64,
-            "cpu" => cpu
+            stat.running_nanoseconds,
+            tags!(
+                "cpu" => cpu
+            ),
         ));
 
-        metrics.push(sum_metric!(
+        metrics.push(Metric::sum_with_tags(
             "node_schedstat_waiting_seconds_total",
             "Number of seconds spent by processing waiting for this CPU.",
-            stat.waiting_nanoseconds as f64,
-            "cpu" => cpu
+            stat.waiting_nanoseconds,
+            tags!(
+                "cpu" => cpu,
+            ),
         ));
 
-        metrics.push(sum_metric!(
+        metrics.push(Metric::sum_with_tags(
             "node_schedstat_timeslices_total",
             "Number of timeslices executed by CPU.",
-            stat.run_time_slices as f64,
-            "cpu" => cpu
+            stat.run_time_slices,
+            tags!(
+                "cpu" => cpu
+            ),
         ))
     }
 

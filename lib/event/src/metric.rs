@@ -4,7 +4,8 @@ use std::fmt::{Display, Formatter, Write};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::ByteSizeOf;
+use crate::{ByteSizeOf, EventFinalizer};
+use crate::metadata::EventMetadata;
 
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
@@ -86,6 +87,9 @@ pub struct Metric {
     pub timestamp: Option<DateTime<Utc>>,
 
     pub value: MetricValue,
+
+    #[serde(skip)]
+    metadata: EventMetadata,
 }
 
 impl ByteSizeOf for Metric {
@@ -142,7 +146,7 @@ impl Display for Metric {
         match self.value {
             MetricValue::Sum(v) | MetricValue::Gauge(v) => {
                 write!(fmt, " {}", v)
-            },
+            }
             _ => {
                 Ok(())
             }
@@ -150,13 +154,70 @@ impl Display for Metric {
     }
 }
 
+pub trait IntoF64 {
+    fn into_f64(self) -> f64;
+}
+
+macro_rules! impl_intof64 {
+    ($typ:ident) => {
+        impl IntoF64 for $typ {
+            #[inline]
+            fn into_f64(self) -> f64 {
+                self as f64
+            }
+        }
+    };
+}
+
+impl_intof64!(usize);
+impl_intof64!(i64);
+impl_intof64!(u64);
+impl_intof64!(f64);
+impl_intof64!(u32);
+impl_intof64!(i32);
+impl_intof64!(f32);
+impl_intof64!(i16);
+impl_intof64!(i8);
+impl_intof64!(u8);
+
+impl IntoF64 for bool {
+    #[inline]
+    fn into_f64(self) -> f64 {
+        if self {
+            1.0
+        } else {
+            0.0
+        }
+    }
+}
+
+impl IntoF64 for std::time::Duration {
+    #[inline]
+    fn into_f64(self) -> f64 {
+        self.as_secs_f64()
+    }
+}
+
 impl Metric {
+    #[inline]
+    pub fn new(name: impl ToString, tags: BTreeMap<String, String>, value: MetricValue) -> Self {
+        Self {
+            name: name.to_string(),
+            description: None,
+            tags,
+            unit: None,
+            timestamp: None,
+            value,
+            metadata: Default::default(),
+        }
+    }
+
     #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
         where
             N: Into<String>,
             D: Into<String>,
-            V: Into<f64>
+            V: IntoF64
     {
         Self {
             name: name.into(),
@@ -164,7 +225,8 @@ impl Metric {
             tags: Default::default(),
             unit: None,
             timestamp: None,
-            value: MetricValue::Gauge(v.into()),
+            value: MetricValue::Gauge(v.into_f64()),
+            metadata: Default::default(),
         }
     }
 
@@ -173,7 +235,7 @@ impl Metric {
         where
             N: Into<String>,
             D: Into<String>,
-            V: Into<f64>
+            V: IntoF64
     {
         Self {
             name: name.into(),
@@ -181,7 +243,8 @@ impl Metric {
             tags,
             unit: None,
             timestamp: None,
-            value: MetricValue::Gauge(value.into()),
+            value: MetricValue::Gauge(value.into_f64()),
+            metadata: Default::default(),
         }
     }
 
@@ -199,6 +262,7 @@ impl Metric {
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(v.into()),
+            metadata: Default::default(),
         }
     }
 
@@ -207,7 +271,7 @@ impl Metric {
         where
             N: Into<String>,
             D: Into<String>,
-            V: Into<f64>
+            V: IntoF64
     {
         Self {
             name: name.into(),
@@ -215,7 +279,66 @@ impl Metric {
             tags,
             unit: None,
             timestamp: None,
-            value: MetricValue::Sum(value.into()),
+            value: MetricValue::Sum(value.into_f64()),
+            metadata: Default::default(),
+        }
+    }
+
+    #[inline]
+    pub fn histogram<N, D, C, S>(
+        name: N,
+        desc: D,
+        count: C,
+        sum: S,
+        buckets: Vec<Bucket>,
+    ) -> Metric
+        where
+            N: Into<String>,
+            D: Into<String>,
+            C: Into<u64>,
+            S: IntoF64
+    {
+        Self {
+            name: name.into(),
+            description: Some(desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: None,
+            metadata: Default::default(),
+            value: MetricValue::Histogram {
+                count: count.into(),
+                sum: sum.into_f64(),
+                buckets,
+            },
+        }
+    }
+
+    #[inline]
+    pub fn summary<N, D, C, S>(
+        name: N,
+        desc: D,
+        count: C,
+        sum: S,
+        quantiles: Vec<Quantile>
+    ) -> Metric
+        where
+            N: Into<String>,
+            D: Into<String>,
+            C: Into<u64>,
+            S: IntoF64
+    {
+        Self {
+            name: name.into(),
+            description: Some(desc.into()),
+            tags: Default::default(),
+            unit: None,
+            timestamp: None,
+            metadata: Default::default(),
+            value: MetricValue::Summary {
+                count: count.into(),
+                sum: sum.into_f64(),
+                quantiles
+            },
         }
     }
 
@@ -258,6 +381,10 @@ impl Metric {
     pub fn insert_tag(&mut self, name: impl ToString, value: impl ToString) -> Option<String> {
         self.tags
             .insert(name.to_string(), value.to_string())
+    }
+
+    pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
+        self.metadata.add_finalizer(finalizer);
     }
 }
 

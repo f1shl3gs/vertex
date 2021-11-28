@@ -1,7 +1,7 @@
 /// Exposes selected adjtimex(2) system call stats.
 
 use super::{Error, ErrorContext};
-use event::{sum_metric, gauge_metric, Metric};
+use event::Metric;
 
 // The system clock is not synchronized to a reliable
 // server (TIME_ERROR)
@@ -32,87 +32,87 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     const PPM16FRAC: f64 = 1000000.0 * 65536.0;
 
     Ok(vec![
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_sync_status",
             "Is clock synchronized to a reliable server (1 = yes, 0 = no).",
             sync_status as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_offset_seconds",
             "Time offset in between local system and reference clock.",
             tx.offset as f64 / divisor
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_frequency_adjustment_ratio",
             "Local clock frequency adjustment.",
             tx.freq as f64 / PPM16FRAC
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_maxerror_seconds",
             "Maximum error in seconds.",
             tx.maxerror as f64 / MICROSECONDS
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_estimated_error_seconds",
             "Estimated error in seconds.",
             tx.esterror as f64 / MICROSECONDS
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_status",
             "Value of the status array bits.",
             tx.status as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_loop_time_constant",
             "Phase-locked loop time constant.",
             tx.constant as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_tick_seconds",
             "Seconds between clock ticks.",
             tx.tick as f64 / MICROSECONDS
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_pps_frequency_hertz",
             "Pulse per second frequency.",
             tx.ppsfreq as f64 / PPM16FRAC
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_pps_jitter_seconds",
             "Pulse per second jitter.",
             tx.jitter as f64 / divisor
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_pps_shift_seconds",
             "Pulse per second interval duration.",
             tx.shift as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_pps_stability_hertz",
             "Pulse per second stability, average of recent frequency changes.",
             tx.stabil as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_pps_jitter_total",
             "Pulse per second count of jitter limit exceeded events.",
             tx.jitcnt as f64
         ),
-        sum_metric!(
+        Metric::sum(
             "node_timex_pps_calibration_total",
             "Pulse per second count of calibration intervals.",
             tx.calcnt as f64
         ),
-        sum_metric!(
+        Metric::sum(
             "node_timex_pps_error_total",
             "Pulse per second count of calibration errors.",
             tx.errcnt as f64
         ),
-        sum_metric!(
+        Metric::sum(
             "node_timex_pps_stability_exceeded_total",
             "Pulse per second count of stability limit exceeded events.",
             tx.stbcnt as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_timex_tai_offset_seconds",
             "International Atomic Time (TAI) offset.",
             tx.tai as f64

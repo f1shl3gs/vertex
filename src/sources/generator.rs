@@ -30,14 +30,11 @@ impl GeneratorConfig {
         while let Some(_) = ticker.next().await {
             let now = Some(chrono::Utc::now());
             let event = Event::Metric(
-                Metric {
-                    name: "ge".into(),
-                    description: None,
-                    tags: Default::default(),
-                    unit: None,
-                    timestamp: now,
-                    value: MetricValue::Gauge(6.0),
-                }
+                Metric::gauge(
+                    "ge",
+                    "",
+                    6,
+                ).with_timestamp(now)
             );
 
             out.send(event).await.map_err(|err| {

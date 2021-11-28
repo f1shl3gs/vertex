@@ -3,7 +3,7 @@ use regex::Regex;
 use crate::config::{deserialize_regex, serialize_regex};
 use super::{read_to_string, Error, ErrorContext};
 use std::num::ParseIntError;
-use event::{tags, sum_metric, Metric};
+use event::{tags, Metric};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -47,101 +47,133 @@ impl NetdevConfig {
             }
 
             metrics.extend_from_slice(&[
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_bytes_total",
                     "Network device statistic receive_bytes",
                     stat.recv_bytes as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_packets_total",
                     "Network device statistic receive_packets",
-                    stat.recv_packets  as f64 ,
-                    "device" => device
+                    stat.recv_packets as f64,
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_errs_total",
                     "Network device statistic receive_errs",
                     stat.recv_errs as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_drop_total",
                     "Network device statistic receive_drop",
                     stat.recv_drop as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_fifo_total",
                     "Network device statistic receive_fifo",
                     stat.recv_fifo as f64,
-                    "device" => device
+                    tags!(
+                            "device" => device,
+                        ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_frame_total",
                     "Network device statistic receive_frame",
                     stat.recv_frame as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_compressed_total",
                     "Network device statistic receive_compressed",
                     stat.recv_compressed as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_receive_multicast_total",
                     "Network device statistic receive_multicast",
                     stat.recv_multicast as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_bytes_total",
                     "Network device statistic transmit_bytes",
                     stat.transmit_bytes as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_packets_total",
                     "Network device statistic transmit_packets",
                     stat.transmit_packets as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_errs_total",
                     "Network device statistic transmit_errs",
                     stat.transmit_errs as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_drop_total",
                     "Network device statistic transmit_drop",
                     stat.transmit_drop as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_fifo_total",
                     "Network device statistic transmit_fifo",
                     stat.transmit_fifo as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_colls_total",
                     "Network device statistic transmit_colls",
                     stat.transmit_colls as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_carrier_total",
                     "Network device statistic transmit_carrier",
                     stat.transmit_carrier as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
-                sum_metric!(
+                Metric::sum_with_tags(
                     "node_network_transmit_compressed_total",
                     "Network device statistic transmit_compressed",
                     stat.transmit_compressed as f64,
-                    "device" => device
+                    tags!(
+                        "device" => device,
+                    ),
                 ),
             ])
         }

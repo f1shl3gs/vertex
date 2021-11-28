@@ -4,7 +4,6 @@ pub mod sources;
 pub mod topology;
 pub mod trace;
 pub mod signal;
-pub mod duration;
 mod shutdown;
 mod sinks;
 mod timezone;
@@ -20,6 +19,7 @@ mod common;
 mod batch;
 mod tcp;
 mod async_read;
+mod stream;
 
 pub use signal::{SignalHandler};
 

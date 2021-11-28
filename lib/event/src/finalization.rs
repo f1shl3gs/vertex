@@ -1,0 +1,392 @@
+use std::pin::Pin;
+use std::sync::Arc;
+use std::task::{Context, Poll};
+use std::iter;
+use std::mem;
+use std::os::raw::c_schar;
+use std::future::Future;
+
+use futures::future::FutureExt;
+use atomig::{Atom, Atomic, Ordering};
+use tokio::sync::oneshot;
+use tracing::error;
+use serde::{Deserialize, Serialize};
+
+use crate::ByteSizeOf;
+
+
+type ImmutVec<T> = Box<[T]>;
+
+/// The status of an individual event
+#[derive(Atom, Copy, Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[repr(u8)]
+pub enum EventStatus {
+    /// All copies of this event were dropped without being finalized
+    /// the default.
+    Dropped,
+    /// All copies of this event were delivered successfully.
+    Delivered,
+    /// At least one copy of this event encountered a retriable error.
+    Errored,
+    /// At least one copy of this event encountered a permanent failure
+    /// or rejection.
+    Failed,
+    /// This status has been recorded and should not be updated
+    Recorded,
+}
+
+impl EventStatus {
+    /// Update this status with another event's finalization status and
+    /// return the result.
+    ///
+    /// # Panics
+    ///
+    /// Passing a new status of `Dropped` is a programming error and
+    /// will panic in debug/test builds.
+    pub fn update(self, status: Self) -> Self {
+        match (self, status) {
+            // `Recorded` always overwrites existing status and is never updated
+            (_, Self::Recorded) | (Self::Recorded, _) => Self::Recorded,
+            // `Dropped` always updates to the new status,
+            (Self::Dropped, _) => status,
+            // Updates *to* `Dropped` are nonsense.
+            (_, Self::Dropped) => {
+                debug_assert!(false, "Updating EventStatus to Dropped is nonsense");
+                self
+            }
+            // `Failed` overrides `Errored` or `Delivered`,
+            (Self::Failed, _) | (_, Self::Failed) => Self::Failed,
+            // `Errored` overrides `Delivered`
+            (Self::Errored, _) | (_, Self::Errored) => Self::Errored,
+            // No change for `Delivered`
+            (Self::Delivered, Self::Delivered) => Self::Delivered
+        }
+    }
+}
+
+/// An object that can be finalized.
+pub trait Finalizable {
+    /// Consumes the finalizers of this Object.
+    ///
+    /// Typically used for coalescing the finalizers of multiple items,
+    /// such as when batching finalizable objects where all finalizations
+    /// will be processed when the batch itself is processed.
+    fn take_finalizers(&mut self) -> EventFinalizers;
+}
+
+impl<T: Finalizable> Finalizable for Vec<T> {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        self.iter_mut()
+            .fold(EventFinalizers::default(), |mut acc, x| {
+                acc.merge(x.take_finalizers());
+                acc
+            })
+    }
+}
+
+/// Wrapper type for an array of event finalizers. This is the primary public
+/// interface to event finalization metadata.
+#[derive(Clone, Debug, Default)]
+pub struct EventFinalizers(ImmutVec<Arc<EventFinalizer>>);
+
+impl Eq for EventFinalizers {}
+
+impl PartialEq for EventFinalizers {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.len() == other.0.len() &&
+            (self.0.iter())
+                .zip(other.0.iter())
+                .all(|(a, b)| Arc::ptr_eq(a, b))
+    }
+}
+
+impl PartialOrd for EventFinalizers {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        // There is no partial order defined structurally on `EventFinalizer`.
+        // Partial equality is defined on the equality of `Arc`s. Therefore,
+        // Partial ordering of `EventFinalizers` is defined only on the
+        // length of the finalizers.
+        self.0.len().partial_cmp(&other.0.len())
+    }
+}
+
+impl ByteSizeOf for EventFinalizers {
+    fn allocated_bytes(&self) -> usize {
+        self.0.iter()
+            .fold(0, |acc, arc| acc + arc.size_of())
+    }
+}
+
+impl EventFinalizers {
+    /// Create a new array of event finalizer with the single event.
+    pub fn new(finalizer: EventFinalizer) -> Self {
+        Self(vec![Arc::new(finalizer)].into())
+    }
+
+    /// Add a single finalizer to this array.
+    pub fn add(&mut self, finalizer: EventFinalizer) {
+        self.add_generic(iter::once(Arc::new(finalizer)));
+    }
+
+    /// Merge the given list of finalizers into this array
+    pub fn merge(&mut self, other: Self) {
+        // Box<[T]> is missing IntoIterator; this just adds a `capacity` value
+        let other: Vec<_> = other.0.into();
+        self.add_generic(other.into_iter());
+    }
+
+    fn add_generic<I>(&mut self, items: I)
+        where
+            I: ExactSizeIterator<Item=Arc<EventFinalizer>>,
+    {
+        if self.0.is_empty() {
+            self.0 = items.collect::<Vec<_>>().into();
+        } else if items.len() > 0 {
+            // this requires a bit of extra work both to avoid cloning
+            // the actual elements and because `self.0` cannot be mutated
+            // in place.
+            let finalizers = mem::replace(&mut self.0, vec![].into());
+            let mut result: Vec<_> = finalizers.into();
+
+            // This is the only step that may cause a (re)allocation.
+            result.reserve_exact(items.len());
+            for entry in items {
+                // Deduplicate by hand, assume the list is trivially small
+                if !result.iter().any(|existing| Arc::ptr_eq(existing, &entry)) {
+                    result.push(entry);
+                }
+            }
+
+            self.0 = result.into();
+        }
+    }
+
+    /// Update the status of all finalizers in this set.
+    pub fn update_status(&self, status: EventStatus) {
+        for finalizer in self.0.iter() {
+            finalizer.update_status(status);
+        }
+    }
+
+    /// Update all sources for this finalizer with the current status. This
+    /// *drops* the finalizer array elements so they may imediately signal
+    /// the source batch
+    pub fn update_sources(&mut self) {
+        let finalizers = mem::take(&mut self.0);
+        for finalizer in finalizers.iter() {
+            finalizer.update_batch();
+        }
+    }
+
+    #[cfg(test)]
+    fn count_finalizers(&self) -> usize {
+        self.0.len()
+    }
+}
+
+#[derive(Atom, Copy, Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[repr(u8)]
+pub enum BatchStatus {
+    /// All events in the batch were accepted (the default)
+    Delivered,
+    /// At least one event in the batch had a transient error in delivery
+    Errored,
+    /// At least one event in the batch had a permanent failure.
+    Failed,
+}
+
+impl BatchStatus {
+    /// Update this status with another batch's delivery status, and
+    /// return the result.
+    fn update(self, status: EventStatus) -> Self {
+        match (self, status) {
+            // `Dropped` and `Delivered` do not change the status.
+            (_, EventStatus::Dropped) | (_, EventStatus::Delivered) => self,
+            // `Failed` overrides `Errored` and `Delivered`
+            (Self::Failed, _) | (_, EventStatus::Failed) => Self::Failed,
+            // `Errored` overrides `Delivered`
+            (Self::Errored, _) | (_, EventStatus::Errored) => Self::Errored,
+            // No change for `Delivered`
+            _ => self,
+        }
+    }
+}
+
+/// A batch notifier contains the status of the current batch along
+/// with a one-shot notifier to send that status back to the source.
+/// It is shared among all events of a batch
+#[derive(Debug)]
+pub struct BatchNotifier {
+    status: Atomic<BatchStatus>,
+    notifier: Option<oneshot::Sender<BatchStatus>>,
+}
+
+impl BatchNotifier {
+    /// Create a new `BatchNotifier` along with the receiver
+    /// used to await its finalization status.
+    pub fn new_with_receiver() -> (Arc<Self>, BatchStatusReceiver) {
+        let (sender, receiver) = oneshot::channel();
+        let notifier = Self {
+            status: Atomic::new(BatchStatus::Delivered),
+            notifier: Some(sender),
+        };
+
+        (Arc::new(notifier), BatchStatusReceiver(receiver))
+    }
+
+    /// Optionally call `new_with_receiver` and wrap the result in `Option`s
+    pub fn maybe_new_with_receiver(
+        enabled: bool,
+    ) -> (Option<Arc<Self>>, Option<BatchStatusReceiver>) {
+        if enabled {
+            let (batch, receiver) = Self::new_with_receiver();
+            (Some(batch), Some(receiver))
+        } else {
+            (None, None)
+        }
+    }
+
+    /// Apply a new batch notifier to a batch of events, and returns
+    /// the receiver.
+    pub fn maybe_apply_to_events(
+        enabled: bool,
+        events: &mut [crate::Event],
+    ) -> Option<BatchStatusReceiver> {
+        enabled.then(|| {
+            let (batch, receiver) = Self::new_with_receiver();
+            for event in events {
+                event.add_batch_notifier(Arc::clone(&batch));
+            }
+
+            receiver
+        })
+    }
+
+    /// Update this notifier's status from the status of a finalized event.
+    fn update_status(&self, status: EventStatus) {
+        // The status starts as Delivered and can only change if the new status
+        // is different than that.
+        if status != EventStatus::Delivered && status != EventStatus::Dropped {
+            self.status
+                .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |old_status| {
+                    Some(old_status.update(status))
+                })
+                .unwrap_or_else(|_| unreachable!());
+        }
+    }
+
+    /// Send this notifier's status up to the source.
+    fn send_status(&mut self) {
+        if let Some(notifier) = self.notifier.take() {
+            let status = self.status.load(Ordering::Relaxed);
+            // Ignore the error case, as it will happen during normal source
+            // shutdown and we can't detect that here.
+            let _ = notifier.send(status);
+        }
+    }
+}
+
+impl Drop for BatchNotifier {
+    fn drop(&mut self) {
+        self.send_status();
+    }
+}
+
+/// An event finalizer is the shared data required to handle tracking
+/// the status of an event, and updating the status of a batch with
+/// that when the event is dropped.
+#[derive(Debug)]
+pub struct EventFinalizer {
+    status: Atomic<EventStatus>,
+    batch: Arc<BatchNotifier>,
+}
+
+impl ByteSizeOf for EventFinalizer {
+    fn allocated_bytes(&self) -> usize {
+        0
+    }
+}
+
+impl EventFinalizer {
+    /// Create a new event in a batch
+    pub fn new(batch: Arc<BatchNotifier>) -> Self {
+        let status = Atomic::new(EventStatus::Dropped);
+        Self {
+            status,
+            batch,
+        }
+    }
+
+    /// Update this finalizer's status in place with the given `EventStatus`
+    pub fn update_status(&self, status: EventStatus) {
+        self.status
+            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |old_status| {
+                Some(old_status.update(status))
+            })
+            .unwrap_or_else(|_| unreachable!());
+    }
+
+    /// Update the batch for this event with this finalizer's status, and
+    /// mark this eent as no longer requiring update.
+    pub fn update_batch(&self) {
+        let status = self.status
+            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |_| {
+                Some(EventStatus::Recorded)
+            })
+            .unwrap_or_else(|_| unreachable!());
+
+        self.batch.update_status(status);
+    }
+}
+
+impl Drop for EventFinalizer {
+    fn drop(&mut self) {
+        self.update_batch();
+    }
+}
+
+/// A convenience new type wrapper for the one-shot receiver for
+/// an indivadual batch status.
+#[pin_project::pin_project]
+pub struct BatchStatusReceiver(oneshot::Receiver<BatchStatus>);
+
+impl Future for BatchStatusReceiver {
+    type Output = BatchStatus;
+    fn poll(mut self: Pin<&mut Self>, ctx: &mut std::task::Context<'_>) -> Poll<Self::Output> {
+        match self.0.poll_unpin(ctx) {
+            Poll::Pending => Poll::Pending,
+            Poll::Ready(Ok(status)) => Poll::Ready(status),
+            Poll::Ready(Err(err)) => {
+                error!(
+                    message = "Batch status receiver dropped before sending.",
+                    %err,
+                );
+
+                Poll::Ready(BatchStatus::Errored)
+            }
+        }
+    }
+}
+
+impl BatchStatusReceiver {
+    /// Wrapper for the underlying `try_recv` function.
+    ///
+    /// # Errors
+    ///
+    /// - `TryRecvError::Empty` if no value has been sent yet.
+    /// - `TryRecvError::Closed` if the sender has dropped without sending a value
+    pub fn try_recv(&mut self) -> Result<BatchStatus, oneshot::error::TryRecvError> {
+        self.0.try_recv()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn defaults() {
+        let finalizer = EventFinalizers::default();
+        assert_eq!(finalizer.count_finalizers(), 0);
+    }
+}

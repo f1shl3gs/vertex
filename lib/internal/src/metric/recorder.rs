@@ -71,14 +71,7 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
         .map(|label| (String::from(label.key()), String::from(label.value())))
         .collect::<BTreeMap<String, String>>();
 
-    Metric {
-        name: key.name().to_string(),
-        description: None,
-        tags,
-        unit: None,
-        timestamp: None,
-        value,
-    }
+    Metric::new(key.name(), tags, value)
 }
 
 impl Recorder for InternalRecorder {

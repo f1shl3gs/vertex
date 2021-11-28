@@ -126,18 +126,13 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
 
     // buckets.sort_by(|a, b| a.upper.cmp(b.upper));
 
-    Ok(Metric {
-        name: name.to_string(),
-        description: Some(desc.to_string()),
-        tags: BTreeMap::new(),
-        unit: None,
-        timestamp: None,
-        value: MetricValue::Histogram {
-            count: count as u64,
-            sum,
-            buckets,
-        },
-    })
+    Ok(Metric::histogram(
+        name,
+        desc,
+        count,
+        sum,
+        buckets,
+    ))
 }
 
 #[cfg(test)]

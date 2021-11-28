@@ -7,17 +7,17 @@
 use super::{Error, ErrorContext, read_into};
 use std::path::PathBuf;
 use tokio::io::AsyncBufReadExt;
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_into(path).await
+    let count = read_into::<_, u64, _>(path).await
         .context("read conntrack count failed")?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
-    let max = read_into(path).await?;
+    let max = read_into::<_, u64, _>(path).await?;
 
     let stats = get_conntrack_statistics(&proc_path).await
         .context("get conntrack statistics failed")?;
@@ -39,55 +39,55 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 
     Ok(vec![
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_entries",
             "Number of currently allocated flow entries for connection tracking.",
-            count,
+            count as f64,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_entries_limit",
             "Maximum size of connection tracking table.",
-            max,
+            max as f64,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_found",
             "Number of searched entries which were successful.",
             statistic.found as f64,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_invalid",
             "Number of packets seen which can not be tracked.",
             statistic.invalid as f64,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_ignore",
             "Number of packets seen which are already connected to a conntrack entry.",
             statistic.ignore as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_insert",
             "Number of entries inserted into the list.",
-            statistic.insert as f64
+            statistic.insert,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_insert_failed",
             "Number of entries for which list insertion was attempted but failed.",
-            statistic.insert_failed as f64
+            statistic.insert_failed,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_drop",
             "Number of packets dropped due to conntrack failure.",
-            statistic.drop as f64
+            statistic.drop,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_early_drop",
             "Number of dropped conntrack entries to make room for new ones, if maximum table size was reached.",
-            statistic.early_drop as f64
+            statistic.early_drop,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_nf_conntrack_stat_search_restart",
             "Number of conntrack table lookups which had to be restarted due to hashtable resizes.",
-            statistic.search_restart as f64,
+            statistic.search_restart,
         ),
     ])
 }

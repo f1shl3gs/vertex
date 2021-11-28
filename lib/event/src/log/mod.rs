@@ -13,15 +13,19 @@ use bytes::Bytes;
 use chrono::Utc;
 use tracing::field::Field;
 
-use crate::{ByteSizeOf, Value};
+use crate::{ByteSizeOf, EventFinalizer, Value};
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
+use crate::metadata::EventMetadata;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
     pub tags: BTreeMap<String, String>,
 
     pub fields: BTreeMap<String, Value>,
+
+    #[serde(skip)]
+    metadata: EventMetadata,
 }
 
 impl From<BTreeMap<String, Value>> for LogRecord {
@@ -29,6 +33,7 @@ impl From<BTreeMap<String, Value>> for LogRecord {
         Self {
             tags: Default::default(),
             fields,
+            metadata: EventMetadata::default(),
         }
     }
 }
@@ -172,8 +177,12 @@ impl LogRecord {
         keys::keys(&self.fields)
     }
 
-    pub fn all_fields(&self) -> impl Iterator<Item = (String, &Value)> + Serialize {
+    pub fn all_fields(&self) -> impl Iterator<Item=(String, &Value)> + Serialize {
         all_fields(&self.fields)
+    }
+
+    pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
+        self.metadata.add_finalizer(finalizer);
     }
 }
 

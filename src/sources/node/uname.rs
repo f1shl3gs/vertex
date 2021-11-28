@@ -1,7 +1,7 @@
 /// Exposes system information as provided by the uname systemc call
 
 use libc::c_char;
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 use super::Error;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
@@ -28,16 +28,18 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     let domainname = &to_string(u.domainname);
 
     Ok(vec![
-        gauge_metric!(
+        Metric::gauge_with_tags(
             "node_uname_info",
             "Labeled system information as provided by the uname system call.",
             1f64,
-            "sysname" => sysname,
-            "release" => release,
-            "version" => version,
-            "machine" => machine,
-            "nodename" => nodename,
-            "domainname" => domainname
+            tags!(
+                "sysname" => sysname,
+                "release" => release,
+                "version" => version,
+                "machine" => machine,
+                "nodename" => nodename,
+                "domainname" => domainname,
+            ),
         )
     ])
 }

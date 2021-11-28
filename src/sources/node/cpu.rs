@@ -14,23 +14,21 @@ use std::{
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
 use super::Error;
-use event::{tags, sum_metric, Metric, MetricValue};
+use event::{tags, Metric, MetricValue};
 
 const USER_HZ: f64 = 100.0;
 
 macro_rules! state_metric {
     ($cpu: expr, $mode: expr, $value: expr) => {
-        Metric{
-            name: "node_cpu_seconds_total".into(),
-            description: Some("Seconds the CPUs spent in each mode".into()),
-            tags: tags! (
+        Metric::gauge_with_tags(
+            "node_cpu_seconds_total",
+            "Seconds the CPUs spent in each mode",
+            $value,
+            tags! (
                 "mode" => $mode,
                 "cpu" => $cpu
-            ),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Gauge($value)
-        }
+            )
+        )
     };
 }
 
@@ -92,20 +90,24 @@ impl CPUConfig {
             // Guest CPU is also accounted for in cpuStat.User and cpuStat.Nice,
             // expose these as separate metrics.
             if self.guest {
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_cpu_guest_seconds_total",
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest,
-                    "cpu" => cpu,
-                    "mode" => "user"
+                    tags!(
+                        "cpu" => cpu,
+                        "mode" => "user",
+                    ),
                 ));
 
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_cpu_guest_seconds_total",
                     "Seconds the CPUs spent in guests (VMs) for each mode.",
                     stat.guest_nice,
-                    "cpu" => cpu,
-                    "mode" => "nice"
+                    tags!(
+                        "cpu" => cpu,
+                        "mode" => "nice"
+                    ),
                 ));
             }
         }

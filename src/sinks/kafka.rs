@@ -14,7 +14,7 @@ use rdkafka::{
     message::OwnedHeaders,
 };
 
-use crate::batch::BatchConfig;
+use crate::batch::{BatchConfig, NoDefaultBatchSettings};
 use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaHeaderExtractionFailed, KafkaRole, KafkaStatisticsContext};
 use crate::sinks::{Sink, StreamSink};
 use crate::template::{Template, TemplateParseError};
@@ -40,7 +40,7 @@ pub struct KafkaSinkConfig {
     #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
     pub message_timeout: chrono::Duration,
     pub auth: KafkaAuthConfig,
-    pub batch: BatchConfig,
+    pub batch: BatchConfig<NoDefaultBatchSettings>,
     pub librdkafka_options: BTreeMap<String, String>,
 }
 
@@ -248,7 +248,7 @@ impl KafkaSink {
             key,
             timestamp_millis,
             headers,
-            topic
+            topic,
         })
     }
 
@@ -281,10 +281,8 @@ impl KafkaSink {
         }
 
         match self.producer.send(record, Timeout::Never).await {
-            Ok(m) => {},
-            Err((err, msg)) => {
-
-            }
+            Ok(m) => {}
+            Err((err, msg)) => {}
         }
     }
 }

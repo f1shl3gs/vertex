@@ -6,7 +6,7 @@
 /// https://github.com/prometheus/node_exporter/pull/1998
 
 use super::{read_into, read_to_string, Error, ErrorContext};
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path).await
@@ -21,57 +21,73 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
         let vendor = "amd";
 
         metrics.extend_from_slice(&[
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_card_info",
                 "Card information",
                 1f64,
-                "card" => card,
-                "memory_vendor" => memory_vendor,
-                "power_performance_level" => power_performance_level,
-                "unique_id" => unique_id,
-                "vendor" => vendor
+                tags!(
+                    "card" => card,
+                    "memory_vendor" => memory_vendor,
+                    "power_performance_level" => power_performance_level,
+                    "unique_id" => unique_id,
+                    "vendor" => vendor,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_gpu_busy_percent",
                 "How busy the GPU is as a percentage.",
-                stat.gpu_busy_percent as f64,
-                "card" => card
+                stat.gpu_busy_percent,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_memory_gtt_size_bytes",
                 "The size of the graphics translation table (GTT) block in bytes",
-                stat.memory_gtt_size as f64,
-                "card" => card
+                stat.memory_gtt_size,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_memory_gtt_used_bytes",
                 "The used amount of the graphics translation table (GTT) block in bytes",
-                stat.memory_gtt_used as f64,
-                "card" => card
+                stat.memory_gtt_used,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_vis_vram_size_bytes",
                 "The size of visible VRAM in bytes",
-                stat.memory_visible_vram_size as f64,
-                "card" => card
+                stat.memory_visible_vram_size,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_vis_vram_used_bytes",
                 "The used amount of visible VRAM in bytes",
-                stat.memory_visible_vram_used as f64,
-                "card" => card
+                stat.memory_visible_vram_used,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_memory_vram_size_bytes",
                 "The size of VRAM in bytes",
-                stat.memory_vram_size as f64,
-                "card" => card
+                stat.memory_vram_size,
+                tags!(
+                    "card" => card,
+                ),
             ),
-            gauge_metric!(
+            Metric::gauge_with_tags(
                 "node_drm_memory_vram_used_bytes",
                 "The used amount of VRAM in bytes",
-                stat.memory_vram_used as f64,
-                "card" => card
+                stat.memory_vram_used,
+                tags!(
+                    "card" => card,
+                ),
             )
         ])
     }

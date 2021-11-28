@@ -10,7 +10,7 @@ use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
-use event::{tags, sum_metric, Metric};
+use event::{tags, Metric};
 use super::{Error, ErrorContext};
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
@@ -42,25 +42,31 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 let cpu = &n.to_string();
                 n += 1;
 
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_softnet_processed_total",
                     "Number of processed packets",
-                    stat.processed as f64,
-                    "cpu" => cpu
+                    stat.processed,
+                    tags!(
+                        "cpu" => cpu
+                    ),
                 ));
 
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_softnet_dropped_total",
                     "Number of dropped packets",
-                    stat.dropped as f64,
-                    "cpu" => cpu
+                    stat.dropped,
+                    tags!(
+                        "cpu" => cpu,
+                    ),
                 ));
 
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                     "node_softnet_times_squeezed_total",
                     "Number of times processing packets ran out of quota",
-                    stat.time_squeezed as f64,
-                    "cpu" => cpu
+                    stat.time_squeezed,
+                    tags!(
+                        "cpu" => cpu,
+                    ),
                 ));
             }
 

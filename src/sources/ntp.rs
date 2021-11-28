@@ -17,8 +17,8 @@ use crate::{
     register_source_config,
     config::{
         deserialize_duration, serialize_duration, default_interval,
-        SourceConfig, SourceContext, DataType, GenerateConfig
-    }
+        SourceConfig, SourceContext, DataType, GenerateConfig,
+    },
 };
 
 
@@ -50,7 +50,7 @@ impl GenerateConfig for NtpConfig {
                 "1.pool.ntp.org".to_string(),
                 "2.pool.ntp.org".to_string(),
                 "3.pool.ntp.org".to_string(),
-            ]
+            ],
         }).unwrap()
     }
 }
@@ -117,38 +117,26 @@ impl NTP {
                     let leap = result.leap_indicator() as u8 as f64;
 
                     let metrics = vec![
-                        Metric {
-                            name: "ntp_stratum".into(),
-                            description: Some("NTPD stratum".into()),
-                            tags: Default::default(),
-                            unit: None,
-                            timestamp,
-                            value: MetricValue::gauge(result.stratum()),
-                        },
-                        Metric {
-                            name: "ntp_leap".into(),
-                            description: Some("NTPD leap second indicator, 2 bits".into()),
-                            tags: Default::default(),
-                            unit: None,
-                            timestamp,
-                            value: MetricValue::Gauge(leap),
-                        },
-                        Metric {
-                            name: "ntp_rtt_seconds".into(),
-                            description: Some("RTT to NTPD".into()),
-                            tags: Default::default(),
-                            unit: None,
-                            timestamp,
-                            value: MetricValue::Gauge(rtt),
-                        },
-                        Metric {
-                            name: "ntp_offset_seconds".into(),
-                            description: Some("ClockOffset between NTP and local clock".into()),
-                            tags: Default::default(),
-                            unit: None,
-                            timestamp,
-                            value: MetricValue::Gauge(clock_offset),
-                        },
+                        Metric::gauge(
+                            "ntp_stratum",
+                            "NTPD stratum",
+                            result.stratum(),
+                        ),
+                        Metric::gauge(
+                            "ntp_leap",
+                            "NTPD leap second indicator, 2 bits",
+                            leap,
+                        ),
+                        Metric::gauge(
+                            "ntp_rtt_seconds",
+                            "RTT to NTPD",
+                            rtt,
+                        ),
+                        Metric::gauge(
+                            "ntp_offset_seconds",
+                            "ClockOffset between NTP and local clock",
+                            clock_offset,
+                        ),
                         // TODO: reference_timestamp_seconds
                         // TODO: root_delay_seconds
                         // TODO: root_dispersion_seconds

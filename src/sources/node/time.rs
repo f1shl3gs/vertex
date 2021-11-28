@@ -4,7 +4,7 @@ use std::{
     ffi::CStr,
 };
 use super::Error;
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
@@ -18,16 +18,18 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     let tz = libc_timezone();
 
     Ok(vec![
-        gauge_metric!(
+        Metric::gauge(
             "node_time_seconds",
             "System time in seconds since epoch (1970)",
-            now_sec
+            now_sec,
         ),
-        gauge_metric!(
+        Metric::gauge_with_tags(
             "node_time_time_zone",
             "System time zone offset in seconds",
             offset,
-            "time_zone" => tz.as_str()
+            tags!(
+                "time_zone" => tz.as_str(),
+            ),
         ),
     ])
 }

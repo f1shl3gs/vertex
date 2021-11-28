@@ -1,7 +1,9 @@
 use std::path::PathBuf;
-use super::{read_to_string, Error, ErrorContext};
 use std::num::ParseIntError;
-use event::{tags, sum_metric, Metric};
+
+use event::{tags, Metric};
+
+use super::{read_to_string, Error, ErrorContext};
 
 
 /// Exposes XFS runtime statistics
@@ -17,239 +19,317 @@ pub async fn gather(proc_path: &str, sys_path: &str) -> Result<Vec<Metric>, Erro
         let name = &stat.name.clone();
 
         metrics.extend_from_slice(&[
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_allocated_total",
                 "Number of extents allocated for a filesystem.",
                 stat.extent_allocation.extents_allocated as f64,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_allocated_total",
                 "Number of blocks allocated for a filesystem.",
                 stat.extent_allocation.blocks_allocated,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_extent_allocation_extents_freed_total",
                 "Number of extents freed for a filesystem.",
                 stat.extent_allocation.extents_freed,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_extent_allocation_blocks_freed_total",
                 "Number of blocks freed for a filesystem.",
                 stat.extent_allocation.blocks_freed,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_allocation_btree_lookups_total",
                 "Number of allocation B-tree lookups for a filesystem.",
                 stat.allocation_btree.lookups,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_allocation_btree_compares_total",
                 "Number of allocation B-tree compares for a filesystem.",
                 stat.allocation_btree.compares,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_inserted_total",
                 "Number of allocation B-tree records inserted for a filesystem.",
                 stat.allocation_btree.records_inserted,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_allocation_btree_records_deleted_total",
                 "Number of allocation B-tree records deleted for a filesystem.",
                 stat.allocation_btree.records_deleted,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_reads_total",
                 "Number of block map for read operations for a filesystem.",
                 stat.block_mapping.reads,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_writes_total",
                 "Number of block map for write operations for a filesystem.",
                 stat.block_mapping.writes,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_unmaps_total",
                 "Number of block unmaps (deletes) for a filesystem.",
                 stat.block_mapping.unmaps,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_insertions_total",
                 "Number of extent list insertions for a filesystem.",
                 stat.block_mapping.extent_list_insertions,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_deletions_total",
                 "Number of extent list deletions for a filesystem.",
                 stat.block_mapping.extent_list_deletions,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_lookups_total",
                 "Number of extent list lookups for a filesystem.",
                 stat.block_mapping.extent_list_lookups,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_mapping_extent_list_compares_total",
                 "Number of extent list compares for a filesystem.",
                 stat.block_mapping.extent_list_compares,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_map_btree_lookups_total",
                 "Number of block map B-tree lookups for a filesystem.",
                 stat.block_map_btree.lookups,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_map_btree_compares_total",
                 "Number of block map B-tree compares for a filesystem.",
                 stat.block_map_btree.compares,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_inserted_total",
                 "Number of block map B-tree records inserted for a filesystem.",
                 stat.block_map_btree.records_inserted,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_block_map_btree_records_deleted_total",
                 "Number of block map B-tree records deleted for a filesystem.",
                 stat.block_map_btree.records_deleted,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_directory_operation_lookup_total",
                 "Number of file name directory lookups which miss the operating systems directory name lookup cache.",
                 stat.directory_operation.lookups,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_directory_operation_create_total",
                 "Number of times a new directory entry was created for a filesystem.",
                 stat.directory_operation.creates,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_directory_operation_remove_total",
                 "Number of times an existing directory entry was created for a filesystem.",
                 stat.directory_operation.removes,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_directory_operation_getdents_total",
                 "Number of times the directory getdents operation was performed for a filesystem.",
                 stat.directory_operation.get_dents,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_attempts_total",
                 "Number of times the OS looked for an XFS inode in the inode cache.",
                 stat.inode_operation.attempts,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_found_total",
                 "Number of times the OS looked for and found an XFS inode in the inode cache.",
                 stat.inode_operation.found,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_recycled_total",
                 "Number of times the OS found an XFS inode in the cache, but could not use it as it was being recycled.",
                 stat.inode_operation.recycle,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_missed_total",
                 "Number of times the OS looked for an XFS inode in the cache, but did not find it.",
                 stat.inode_operation.missed,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_duplicates_total",
                 "Number of times the OS tried to add a missing XFS inode to the inode cache, but found it had already been added by another process.",
                 stat.inode_operation.duplicate,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_reclaims_total",
                 "Number of times the OS reclaimed an XFS inode from the inode cache to free memory for another purpose.",
                 stat.inode_operation.reclaims,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_inode_operation_attribute_changes_total",
                 "Number of times the OS explicitly changed the attributes of an XFS inode.",
                 stat.inode_operation.attribute_change,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_read_calls_total",
                 "Number of read(2) system calls made to files in a filesystem.",
                 stat.read_write.read,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_write_calls_total",
                 "Number of write(2) system calls made to files in a filesystem.",
                 stat.read_write.write,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_active_total",
                 "Number of vnodes not on free lists for a filesystem.",
                 stat.vnode.active,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_allocate_total",
                 "Number of times vn_alloc called for a filesystem.",
                 stat.vnode.allocate,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_get_total",
                 "Number of times vn_get called for a filesystem.",
                 stat.vnode.get,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_hold_total",
                 "Number of times vn_hold called for a filesystem.",
                 stat.vnode.hold,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_release_total",
                 "Number of times vn_rele called for a filesystem.",
                 stat.vnode.release,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_reclaim_total",
                 "Number of times vn_reclaim called for a filesystem.",
                 stat.vnode.reclaim,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             ),
-            sum_metric!(
+            Metric::sum_with_tags(
                 "node_xfs_vnode_remove_total",
                 "Number of times vn_remove called for a filesystem.",
                 stat.vnode.remove,
-                "device" => name
+                tags!(
+                    "device" => name
+                ),
             )
         ]);
     }

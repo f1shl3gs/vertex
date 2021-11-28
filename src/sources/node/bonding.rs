@@ -1,5 +1,5 @@
 use super::read_to_string;
-use event::{gauge_metric, tags, Metric};
+use event::{tags, Metric};
 use std::path::PathBuf;
 use std::collections::HashMap;
 use super::{Error, ErrorContext};
@@ -9,21 +9,24 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = read_bonding_stats(path).await
         .context("read bonding stats failed")?;
 
-    let mut metrics = Vec::new();
+    let mut metrics = Vec::with_capacity(stats.len() * 2);
 
     for (master, status) in stats {
-        metrics.push(gauge_metric!(
+        metrics.push(Metric::gauge_with_tags(
             "node_bonding_slaves",
             "Number of configured slaves per bonding interface.",
             status[0],
-            "master" => master.clone()
+            tags!(
+                "master" => &master,
+            ),
         ));
-
-        metrics.push(gauge_metric!(
+        metrics.push(Metric::gauge_with_tags(
             "node_bonding_active",
             "Number of active slaves per bonding interface.",
             status[1],
-            "master" => master.clone()
+            tags!(
+                "master" => &master
+            ),
         ));
     }
 

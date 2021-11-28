@@ -4,7 +4,7 @@ use super::{Error, ErrorContext};
 use tokio::io::AsyncBufReadExt;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use event::{gauge_metric, Metric};
+use event::Metric;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
@@ -60,7 +60,7 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
                 continue;
             }
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge(
                 format!("node_netstat_{}", key),
                 format!("Statistic {}{}", protocol, name),
                 v

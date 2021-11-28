@@ -2,7 +2,7 @@ use std::{
     path::PathBuf,
 };
 use super::{Error, read_to_string};
-use event::{Metric, gauge_metric};
+use event::Metric;
 
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
@@ -11,17 +11,17 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     match get_load(root).await {
         Ok(loads) => {
             Ok(vec![
-                gauge_metric!(
+                Metric::gauge(
                     "node_load1",
                     "1m load average",
                     loads[0]
                 ),
-                gauge_metric!(
+                Metric::gauge(
                     "node_load5",
                     "5m load average",
                     loads[1]
                 ),
-                gauge_metric!(
+                Metric::gauge(
                     "node_load15",
                     "15m load average",
                     loads[2]

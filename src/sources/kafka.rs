@@ -271,10 +271,7 @@ async fn drain(
                     Some(payload) => payload,
                     None => continue
                 };
-                let mut log = LogRecord {
-                    tags: Default::default(),
-                    fields: Default::default(),
-                };
+                let mut log = LogRecord::default();
                 log.fields.insert("message".to_string(), payload.into());
                 let timestamp = msg.timestamp()
                     .to_millis()

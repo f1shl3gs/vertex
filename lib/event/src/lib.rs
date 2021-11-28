@@ -4,17 +4,22 @@ mod trace;
 mod value;
 mod macros;
 pub mod encoding;
+mod finalization;
+mod metadata;
 
 // re-export
 pub use metric::*;
 pub use log::LogRecord;
 pub use value::Value;
+pub use finalization::EventFinalizers;
 
 use std::collections::BTreeMap;
+use std::sync::Arc;
 
 use buffers::{EncodeBytes, DecodeBytes};
 use bytes::{BufMut, Buf};
 use prost::{DecodeError, EncodeError};
+use crate::finalization::{BatchNotifier, EventFinalizer};
 
 pub trait ByteSizeOf {
     /// Returns the in-memory size of this type
@@ -114,6 +119,14 @@ impl Event {
     pub fn new_empty_log() -> Self {
         Event::Log(LogRecord::default())
     }
+
+    pub fn add_batch_notifier(&mut self, batch: Arc<BatchNotifier>) {
+        let finalizer = EventFinalizer::new(batch);
+        match self {
+            Self::Log(log) => log.add_finalizer(finalizer),
+            Self::Metric(metric) => metric.add_finalizer(finalizer),
+        }
+    }
 }
 
 impl Event {
@@ -161,10 +174,7 @@ impl From<LogRecord> for Event {
 
 impl From<BTreeMap<String, Value>> for Event {
     fn from(m: BTreeMap<String, Value>) -> Self {
-        Self::Log(LogRecord {
-            tags: Default::default(),
-            fields: m,
-        })
+        Self::Log(m.into())
     }
 }
 
@@ -173,10 +183,7 @@ impl From<String> for Event {
         let mut fields: BTreeMap<String, Value> = BTreeMap::new();
         fields.insert("message".to_string(), Value::Bytes(s.into()));
 
-        Self::Log(LogRecord {
-            tags: Default::default(),
-            fields,
-        })
+        Self::Log(fields.into())
     }
 }
 

@@ -1,8 +1,6 @@
-use std::{
-    path::PathBuf,
-};
+use std::path::PathBuf;
 use super::{read_to_string, Error, ErrorContext};
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);
@@ -17,15 +15,17 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     {
         let infos = read_nvme_device(dir.path()).await?;
 
-        metrics.push(gauge_metric!(
-                    "node_nvme_info",
-                    "node_nvme_info Non-numeric data from /sys/class/nvme/<device>, value is always 1",
-                    1f64,
-                    "serial" => infos[0].clone(),
-                    "model" => infos[1].clone(),
-                    "state" => infos[2].clone(),
-                    "firmware_rev" => infos[3].clone()
-                ));
+        metrics.push(Metric::gauge_with_tags(
+            "node_nvme_info",
+            "node_nvme_info Non-numeric data from /sys/class/nvme/<device>, value is always 1",
+            1f64,
+            tags!(
+                "serial" => &infos[0],
+                "model" => &infos[1],
+                "state" => &infos[2],
+                "firmware_rev" => &infos[3]
+            ),
+        ));
     }
 
     Ok(metrics)

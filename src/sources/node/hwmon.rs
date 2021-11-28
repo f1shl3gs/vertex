@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::path::{Path};
 
-use event::{tags, sum_metric, gauge_metric, Metric};
+use event::{tags, Metric};
 use regex::Regex;
 
 use super::{Error, ErrorContext, read_to_string};
@@ -74,12 +74,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::new();
     if let Ok(chip_name) = human_readable_chip_name(dir).await {
-        metrics.push(gauge_metric!(
+        metrics.push(Metric::gauge_with_tags(
             "node_hwmon_chip_names",
             "Annotation metric for human-readable chip names",
             1f64,
-            "chip" => chip,
-            "chip_name" => chip_name
+            tags!(
+                "chip" => chip,
+                "chip_name" => chip_name,
+            )
         ));
     }
 
@@ -101,13 +103,15 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             Some(v) => {
                 if v != "" {
                     metrics.push(
-                        gauge_metric!(
+                        Metric::gauge_with_tags(
                              "node_hwmon_sensor_label",
                              "Label for given chip and sensor",
                              1f64,
-                             "label" => v,
-                             "chip" => chip,
-                             "sensor" => sensor
+                             tags!(
+                                "label" => v,
+                                "chip" => chip,
+                                "sensor" => sensor,
+                             ),
                          )
                     );
                 }
@@ -126,12 +130,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 None => {}
             }
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_beep_enabled",
                 "Hardware beep enabled",
                 v,
-                "chip" => chip,
-                "sensor" => sensor
+                tags!(
+                    "chip" => chip,
+                    "sensor" => sensor,
+                ),
             ));
 
             continue;
@@ -140,7 +146,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
         if sensor_type == "vrm" {
             let v = match props.get("") {
                 Some(value) => {
-                    let pr = value.parse();
+                    let pr = value.parse::<f64>();
                     if pr.is_err() {
                         continue;
                     }
@@ -151,12 +157,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 None => { continue; }
             };
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_voltage_regulator_version",
                 "Hardware voltage regulator",
                 v,
-                "chip" => chip,
-                "sensor" => sensor
+                tags!(
+                    "chip" => chip,
+                    "sensor" => sensor,
+                ),
             ));
 
             continue;
@@ -169,12 +177,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             }
             let pv = pv.unwrap();
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_hwmon_update_interval_seconds",
                 "Hardware monitor update interval",
                 pv * 0.001,
-                "chip" => chip,
-                "sensor" => sensor
+                tags!(
+                    "chip" => chip,
+                    "sensor" => sensor,
+                ),
             ));
 
             continue;
@@ -196,7 +206,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 name = format!("{}_{}", name, sanitized(element));
             }
 
-            let pv = match value.parse() {
+            let pv = match value.parse::<f64>() {
                 Ok(v) => v,
                 _ => continue
             };
@@ -206,24 +216,28 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &name;
                 let desc = &format!("Hardware sensor {} status ({})", sensor, sensor_type);
 
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        ),
                     ));
                 continue;
             }
 
             if element == "beep" {
                 let name = name + "_enabled";
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         &name,
                         "Hardware monitor sensor has beeping enabled",
                         pv,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -233,12 +247,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &format!("{}_volts", name);
                 let desc = &format!("Hardware monitor for voltage ({})", element);
 
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv * 0.001,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -251,12 +267,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
                 let name = &format!("{}_celsius", name);
                 let desc = &format!("Hardware monitor for temperature ({})", element);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv * 0.001,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -264,12 +282,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "curr" {
                 let name = &format!("{}_amps", name);
                 let desc = &format!("Hardware monitor for current ({})", sensor);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv * 0.001,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -277,12 +297,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "energy" {
                 let name = &format!("{}_joule_total", name);
                 let desc = &format!("Hardware monitor for joules used so far ({})", sensor);
-                metrics.push(sum_metric!(
+                metrics.push(Metric::sum_with_tags(
                         name,
                         desc,
                         pv / 1000000.0,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -290,12 +312,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "power" && element == "accuracy" {
                 let name = &name;
                 let desc = "Hardware monitor power meter accuracy, as a ratio";
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv / 1000000.0,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        ),
                     ));
                 continue;
             }
@@ -303,12 +327,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "power" && (element == "average_interval" || element == "average_interval_min" || element == "average_interval_max") {
                 let name = &format!("{}_seconds", name);
                 let desc = &format!("Hardware monitor power usage update interval ({})", element);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv * 0.001,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        ),
                     ));
                 continue;
             }
@@ -316,12 +342,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "power" {
                 let name = &(name + "_watt");
                 let desc = &format!("Hardware monitor for power usage in watts ({})", element);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv /1000000.0,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        ),
                     ));
                 continue;
             }
@@ -329,12 +357,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "humidity" {
                 let name = &name;
                 let desc = &format!("Hardware monitor for humidity, as a ratio (multiply with 100.0 to get the humidity as a percentage) ({})", element);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv /1000000.0,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        )
                     ));
                 continue;
             }
@@ -342,12 +372,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if sensor_type == "fan" && (element == "input" || element == "min" || element == "max" || element == "target") {
                 let name = &(name + "_rpm");
                 let desc = &format!("hardware monitor for fan revolutions per minute ({})", element);
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                         name,
                         desc,
                         pv,
-                        "chip" => chip,
-                        "sensor" => sensor
+                        tags!(
+                            "chip" => chip,
+                            "sensor" => sensor,
+                        ),
                     ));
                 continue;
             }
@@ -355,12 +387,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             // fallback, just dump the metric as is
             let name = &name;
             let desc = &format!("Hardware monitor {} element {}", sensor_type, element);
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                     name,
                     desc,
                     pv,
-                    "chip" => chip,
-                    "sensor" => sensor
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    )
                 ));
         }
     }

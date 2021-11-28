@@ -5,11 +5,7 @@ use std::{
     collections::HashMap,
 };
 use super::{read_to_string, ErrorContext, Error};
-use event::{
-    gauge_metric,
-    sum_metric,
-    Metric
-};
+use event::Metric;
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);
@@ -18,17 +14,17 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::new();
     for (k, v) in infos {
-        let k = k.clone();
+
         if k.ends_with("_total") {
-            metrics.push(sum_metric!(
-                "node_memory_".to_owned() + &k,
-                "Memory information field ".to_owned() + &k,
+            metrics.push(Metric::gauge(
+                format!("node_memory_{}", k),
+                format!("Memory information field {}", k),
                 v
             ));
         } else {
-            metrics.push(gauge_metric!(
-                "node_memory_".to_owned() + &k,
-                "Memory information field ".to_owned() + &k,
+            metrics.push(Metric::gauge(
+                format!("node_memory_{}", k),
+                format!("Memory information field {}", k),
                 v
             ));
         }

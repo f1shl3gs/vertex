@@ -23,7 +23,8 @@ members = [
     "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
-    "lib/redfish"
+    "lib/redfish",
+    "lib/humanize"
 ]
 
 [features]
@@ -239,6 +240,7 @@ internal = { path = "lib/internal" }
 prometheus = { path = "lib/prometheus" }
 log_schema = { path = "lib/log_schema" }
 tracing-limit = { path = "lib/tracing-limit" }
+humanize = { path = "lib/humanize" }
 
 # Allocation
 mimalloc = { version = "0.1.26", default-features = false, optional = true }
@@ -283,6 +285,7 @@ tower = { version = "0.4.10", default-features = false, features = ["buffer", "l
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
 serde_yaml = { version = "0.8.21" }
 serde_json = { version = "1.0.68", default-features = false }
+serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
 # netlink
 netlink-sys = { version = "0.7.0", features = ["tokio_socket"], optional = true }
@@ -333,4 +336,3 @@ sqlx = { version = "0.5.6", default-features = false, optional = true, features 
 uuid = { version = "0.8", default-features = false, features = ["v4"] }
 md5 = { version = "0.7" }
 mongodb = { version = "2.0.2", default-features = false, optional = true, features = ["tokio-runtime"] }
-serde-xml-rs = { version = "0.5", default-features = false, optional = true }

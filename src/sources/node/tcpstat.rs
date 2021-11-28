@@ -34,16 +34,14 @@ struct Statistics {
 
 macro_rules! state_metric {
     ($name: expr, $value: expr) => {
-        Metric{
-            name: "node_tcp_connection_states".into(),
-            description: None,
-            tags: tags! (
+        Metric::gauge_with_tags(
+            "node_tcp_connection_states",
+            "",
+            $value,
+            tags!(
                 "state" => $name
-            ),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Gauge($value as f64)
-        }
+            )
+        )
     };
 }
 

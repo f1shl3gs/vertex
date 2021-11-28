@@ -1,0 +1,10 @@
+[package]
+name = "humanize"
+version = "0.1.0"
+edition = "2021"
+
+
+[dependencies]
+snafu = { version = "0.6.10" }
+chrono = { version = "0.4.19", features = ["serde"] }
+serde = { version = "1.0.130", default-features = false, features = ["std"] }

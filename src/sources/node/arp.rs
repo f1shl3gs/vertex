@@ -34,16 +34,14 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
     let mut metrics = Vec::with_capacity(devices.len());
     for (device, count) in devices {
-        metrics.push(Metric {
-            name: "node_arp_entries".into(),
-            description: None,
-            tags: tags!(
-                "device" => device,
+        metrics.push(Metric::gauge_with_tags(
+            "node_arp_entries",
+            "",
+            count as f64,
+            tags!(
+                "device" => &device,
             ),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Gauge(count as f64),
-        })
+        ));
     }
 
     Ok(metrics)

@@ -4,7 +4,7 @@ use std::{
 };
 use crate::config::{deserialize_regex, serialize_regex};
 use super::{Error, ErrorContext};
-use event::{tags, gauge_metric, Metric};
+use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
 
@@ -47,62 +47,75 @@ impl FileSystemConfig {
 
         let mut metrics = Vec::new();
 
-        for stat in stats {
+        for stat in &stats {
+            let Stat { device, mount_point, fs_type, .. } = stat;
             if stat.device_error == 1 {
-                metrics.push(gauge_metric!(
+                metrics.push(Metric::gauge_with_tags(
                     "node_filesystem_device_error",
                     "Whether an error occurred while getting statistics for the given device.",
                     1.0,
-                    "device" => stat.device.clone(),
-                    "mount_point" => stat.mount_point.clone(),
-                    "fstype" => stat.fs_type.clone()
+                    tags!(
+                        "device" => device,
+                        "mount_point" => mount_point,
+                        "fstype" => fs_type,
+                    ),
                 ));
                 continue;
             }
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_filesystem_size_bytes",
                 "Filesystem size in bytes.",
                 stat.size as f64,
-                "device" => stat.device.clone(),
-                "mount_point" => stat.mount_point.clone(),
-                "fstype" => stat.fs_type.clone()
+                tags!(
+                    "device" => device,
+                    "mount_point" => mount_point,
+                    "fstype" => fs_type,
+                ),
             ));
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_filesystem_free_bytes",
                 "Filesystem free space in bytes.",
                 stat.free as f64,
-                "device" => stat.device.clone(),
-                "mount_point" => stat.mount_point.clone(),
-                "fstype" => stat.fs_type.clone()
+                tags!(
+                    "device" => device,
+                    "mount_point" => mount_point,
+                    "fstype" => fs_type,
+                ),
             ));
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_filesystem_avail_bytes",
                 "Filesystem space available to non-root users in bytes.",
                 stat.avail as f64,
-                "device" => stat.device.clone(),
-                "mount_point" => stat.mount_point.clone(),
-                "fstype" => stat.fs_type.clone()
+                tags!(
+                    "device" => device,
+                    "mount_point" => mount_point,
+                    "fstype" => fs_type,
+                ),
             ));
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_filesystem_files",
                 "Filesystem total file nodes.",
                 stat.files as f64,
-                "device" => stat.device.clone(),
-                "mount_point" => stat.mount_point.clone(),
-                "fstype" => stat.fs_type.clone()
+                tags!(
+                    "device" => device,
+                    "mount_point" => mount_point,
+                    "fstype" => fs_type,
+                ),
             ));
 
-            metrics.push(gauge_metric!(
+            metrics.push(Metric::gauge_with_tags(
                 "node_filesystem_readonly",
                 "Filesystem read-only status.",
                 stat.ro as f64,
-                "device" => stat.device.clone(),
-                "mount_point" => stat.mount_point.clone(),
-                "fstype" => stat.fs_type.clone()
+                tags!(
+                    "device" => device,
+                    "mount_point" => mount_point,
+                    "fstype" => fs_type,
+                ),
             ));
         }
 

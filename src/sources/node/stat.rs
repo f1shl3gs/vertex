@@ -1,6 +1,6 @@
 /// Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
 
-use event::{tags, gauge_metric, sum_metric, Metric};
+use event::{tags, Metric};
 use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
@@ -8,32 +8,32 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         .context("read stat failed")?;
 
     Ok(vec![
-        sum_metric!(
+        Metric::sum(
             "node_intr_total",
             "Total number of interrupts serviced.",
             stat.intr as f64,
         ),
-        sum_metric!(
+        Metric::sum(
             "node_context_switches_total",
             "Total number of context switches.",
             stat.ctxt as f64,
         ),
-        sum_metric!(
+        Metric::sum(
             "node_forks_total",
             "Total number of forks.",
             stat.forks as f64,
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_boot_time_seconds",
             "Node boot time, in unixtime.",
             stat.btime as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_procs_running",
             "Number of processes in runnable state.",
             stat.procs_running as f64
         ),
-        gauge_metric!(
+        Metric::gauge(
             "node_procs_blocked",
             "Number of processes blocked waiting for I/O to complete.",
             stat.procs_blocked as f64
