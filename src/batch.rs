@@ -1,8 +1,8 @@
 use std::marker::PhantomData;
 use std::num::NonZeroUsize;
+use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
-use chrono::Duration;
 use snafu::Snafu;
 use internal::InternalEvent;
 use event::EventFinalizers;
@@ -118,7 +118,7 @@ pub trait SinkBatchSettings {
     const MAX_EVENTS: Option<usize>;
     const MAX_BYTES: Option<usize>;
 
-    const TIMEOUT: chrono::Duration;
+    const TIMEOUT: Duration;
 }
 
 /// Reasonable default batch settings for sinks with timeliness concerns,
@@ -129,7 +129,7 @@ pub struct RealtimeEventBasedDefaultBatchSettings;
 impl SinkBatchSettings for RealtimeEventBasedDefaultBatchSettings {
     const MAX_EVENTS: Option<usize> = Some(1000);
     const MAX_BYTES: Option<usize> = None;
-    const TIMEOUT: Duration = chrono::Duration::seconds(1);
+    const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
 /// Reasonable default batch settings for sinks with timeliness concerns,
@@ -140,7 +140,7 @@ pub struct RealtimeSizeBasedDefaultBatchSettings;
 impl SinkBatchSettings for RealtimeSizeBasedDefaultBatchSettings {
     const MAX_EVENTS: Option<usize> = None;
     const MAX_BYTES: Option<usize> = Some(10_000_000);
-    const TIMEOUT: Duration = chrono::Duration::seconds(1);
+    const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
 /// Reasonable default batch settings for sinks focused on shipping
@@ -151,7 +151,7 @@ pub struct BulkSizeBasedDefaultBatchSettings;
 impl SinkBatchSettings for BulkSizeBasedDefaultBatchSettings {
     const MAX_EVENTS: Option<usize> = None;
     const MAX_BYTES: Option<usize> = Some(10_000_000);
-    const TIMEOUT: Duration = chrono::Duration::seconds(300);
+    const TIMEOUT: Duration = Duration::from_secs(300);
 }
 
 /// "Default" batch settings when a sink handles batch settings
@@ -167,7 +167,7 @@ pub struct NoDefaultBatchSettings;
 impl SinkBatchSettings for NoDefaultBatchSettings {
     const MAX_EVENTS: Option<usize> = None;
     const MAX_BYTES: Option<usize> = None;
-    const TIMEOUT: Duration = chrono::Duration::seconds(1);
+    const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
 #[derive(Clone, Copy, Debug, Default)]
