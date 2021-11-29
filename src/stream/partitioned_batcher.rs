@@ -4,12 +4,19 @@ use std::num::NonZeroUsize;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
+
 use futures::{ready, Stream};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
 use event::ByteSizeOf;
+
 use crate::partition::Partitioner;
-use crate::stream::timer::KeyedTimer;
+use super::timer::KeyedTimer;
+use super::batcher::{
+    config::BatchConfigParts, data::BatchReduce,
+    limiter::{ByteSizeOfItemSize, ItemBatchSize, SizeLimit},
+};
+
 
 /// A `KeyedTimer` based on `DelayQueue`
 pub struct ExpirationQueue<K> {
@@ -266,7 +273,7 @@ impl BatcherSettings {
                 current_size: 0,
                 item_size_calculator: item_size,
             },
-            batch_data: BatchReducer::new(reducer),
+            batch_data: BatchReduce::new(reducer),
             timeout: self.timeout,
         }
     }
@@ -496,7 +503,7 @@ mod tests {
         type Item = u64;
         type Key = u8;
 
-        fn partition(&self, item: &Self::item) -> Self::Key {
+        fn partition(&self, item: &Self::Item) -> Self::Key {
             let key = *item % u64::from(self.key_space.get());
             key as Self::Key
         }
@@ -537,7 +544,8 @@ mod tests {
         #[test]
         fn batch_item_size_leq_limit(
             stream: Vec<u64>,
-            alloction_limit in 8..128,
+            item_limit in 1..u16::MAX,
+            allocation_limit in 8..128,
             partitioner in arb_partitioner(),
             timer in arb_timer()
         ) {

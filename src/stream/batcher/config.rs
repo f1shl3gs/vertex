@@ -1,6 +1,8 @@
 use std::time::Duration;
-use crate::stream::batcher::data::BatchData;
-use crate::stream::batcher::limiter::BatchLimiter;
+
+use super::data::BatchData;
+use super::limiter::BatchLimiter;
+
 
 pub struct BatchConfigParts<L, D> {
     pub batch_limiter: L,

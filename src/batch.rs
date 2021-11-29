@@ -6,6 +6,7 @@ use chrono::Duration;
 use snafu::Snafu;
 use internal::InternalEvent;
 use event::EventFinalizers;
+use crate::stream::BatcherSettings;
 
 
 // Provide sensible sink default 10MB with 1s timeout.

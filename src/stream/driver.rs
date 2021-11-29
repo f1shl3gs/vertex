@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::{BinaryHeap, VecDeque};
 use std::num::NonZeroUsize;
 use std::fmt;
@@ -7,7 +8,7 @@ use async_stream::stream;
 use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
 use internal::EventsSent;
-use futures::{Stream, StreamExt, ready, poll, stream::FuturesUnordered};
+use futures::{Stream, StreamExt, ready, poll, stream::FuturesUnordered, stream::poll_fn};
 use tokio::{pin, select};
 use tower::Service;
 
@@ -304,7 +305,7 @@ impl<I, S> Driver<I, S>
                                         );
 
                                         finalizers.update_status(resp.event_status());
-                                        emit(&resp.events_send())
+                                        internal::emit(&resp.events_send());
                                     }
                                 };
 
@@ -340,6 +341,7 @@ mod tests {
     use std::task::{Context, Poll};
     use std::time::Duration;
     use proptest::{prop_assert_eq, proptest};
+    use proptest::prelude::Strategy;
     use rand::rngs::StdRng;
     use rand::SeedableRng;
     use rand_distr::Pareto;
@@ -435,11 +437,11 @@ mod tests {
 
         fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
             if self.permit.is_some() {
-                panic("should not call poll_ready again after a successful call");
+                panic!("should not call poll_ready again after a successful call");
             }
 
             match ready!(self.semaphore.poll_acquire(cx)) {
-                None => panic("semaphore should not be closed"),
+                None => panic!("semaphore should not be closed"),
                 Some(permit) => assert!(self.permit.replace(permit).is_none()),
             }
 
@@ -550,7 +552,7 @@ mod tests {
             let mut batch_sizes = repeat_with(move || {
                 let base = next_base.next()
                     .expect("repeat iterator should never be empty");
-                let modfied = base + last_output;
+                let modified = base + last_output;
                 let next_output = modified % max_batch_size;
                 last_output = next_output;
                 next_output
@@ -605,7 +607,7 @@ mod tests {
         // Set up our driver input stream, service, etc
         let input_requests = (0..2048).into_iter()
             .collect::<Vec<_>>();
-        let input_total: uszie = input_requests.iter().sum();
+        let input_total: usize = input_requests.iter().sum();
         let input_stream = futures::stream::iter(input_requests.into_iter().map(DelayRequest));
         let service = DelayService::new(10, Duration::from_millis(5), Duration::from_millis(150));
         let (acker, counter) = Acker::new_for_testing();

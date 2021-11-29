@@ -1,5 +1,8 @@
 use event::ByteSizeOf;
 
+use super::data::BatchData;
+
+
 pub trait BatchLimiter<T, B> {
     type ItemMetadata;
 
@@ -32,7 +35,7 @@ pub struct SizeLimit<I> {
     ///
     /// To ensure any individual event can be placed in a batch, the first element in a batch is
     /// not subject to this limit.
-    pub batch_item_limit: uszie,
+    pub batch_item_limit: usize,
 
     pub current_size: usize,
     pub item_size_calculator: I,
