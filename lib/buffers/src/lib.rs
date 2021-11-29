@@ -4,7 +4,7 @@ mod disk;
 mod usage;
 
 // re-export
-pub use acker::Acker;
+pub use acker::{Acker, Ackable};
 pub use crate::bytes::{DecodeBytes, EncodeBytes};
 
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "snake_case")]
 pub enum WhenFull {
     Block,
-    DropNewest
+    DropNewest,
 }
 
 impl Default for WhenFull {

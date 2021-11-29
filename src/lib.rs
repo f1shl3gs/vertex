@@ -20,6 +20,7 @@ mod batch;
 mod tcp;
 mod async_read;
 mod stream;
+mod partition;
 
 pub use signal::{SignalHandler};
 

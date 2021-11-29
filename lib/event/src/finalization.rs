@@ -383,10 +383,176 @@ impl BatchStatusReceiver {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use tokio::sync::oneshot::error::TryRecvError::Empty;
+
+    fn make_finalizer() -> (EventFinalizers, BatchStatusReceiver) {
+        let (batch, receiver) = BatchNotifier::new_with_receiver();
+        let finalizers = EventFinalizers::new(EventFinalizer::new(batch));
+        assert_eq!(finalizers.count_finalizers(), 1);
+        (finalizers, receiver)
+    }
 
     #[test]
     fn defaults() {
         let finalizer = EventFinalizers::default();
         assert_eq!(finalizer.count_finalizers(), 0);
+    }
+
+    #[test]
+    fn sends_notification() {
+        let (fin, mut receiver) = make_finalizer();
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(fin);
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered))
+    }
+
+    #[test]
+    fn early_update() {
+        let (mut fin, mut receiver) = make_finalizer();
+        fin.update_status(EventStatus::Failed);
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        fin.update_sources();
+        assert_eq!(fin.count_finalizers(), 0);
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Failed));
+    }
+
+    #[test]
+    fn clone_events() {
+        let (fin1, mut receiver) = make_finalizer();
+        let fin2 = fin1.clone();
+
+        assert_eq!(fin1.count_finalizers(), 1);
+        assert_eq!(fin2.count_finalizers(), 1);
+        assert_eq!(fin1, fin2);
+
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(fin1);
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(fin2);
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered));
+    }
+
+    #[test]
+    fn merge_events() {
+        let mut fin0 = EventFinalizers::default();
+        let (fin1, mut receiver1) = make_finalizer();
+        let (fin2, mut receiver2) = make_finalizer();
+
+        assert_eq!(fin0.count_finalizers(), 0);
+        fin0.merge(fin1);
+        assert_eq!(fin0.count_finalizers(), 1);
+        fin0.merge(fin2);
+        assert_eq!(fin0.count_finalizers(), 2);
+
+        assert_eq!(receiver1.try_recv(), Err(Empty));
+        assert_eq!(receiver2.try_recv(), Err(Empty));
+        drop(fin0);
+        assert_eq!(receiver1.try_recv(), Ok(BatchStatus::Delivered));
+        assert_eq!(receiver2.try_recv(), Ok(BatchStatus::Delivered));
+    }
+
+    #[test]
+    fn clone_and_merge_events() {
+        let (mut fin1, mut receiver) = make_finalizer();
+        let fin2 = fin1.clone();
+
+        fin1.merge(fin2);
+        assert_eq!(fin1.count_finalizers(), 1);
+
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(fin1);
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered));
+    }
+
+    #[test]
+    fn multi_event_batch() {
+        let (batch, mut receiver) = BatchNotifier::new_with_receiver();
+        let event1 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
+        let mut event2 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
+        let event3 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
+        let event4 = event1.clone();
+
+        drop(batch);
+        assert_eq!(event1.count_finalizers(), 1);
+        assert_eq!(event2.count_finalizers(), 1);
+        assert_eq!(event3.count_finalizers(), 1);
+        assert_eq!(event4.count_finalizers(), 1);
+        assert_ne!(event1, event2);
+        assert_ne!(event1, event3);
+        assert_eq!(event1, event4);
+        assert_ne!(event2, event3);
+        assert_ne!(event2, event4);
+        assert_ne!(event3, event4);
+
+        // and merge another
+        event2.merge(event3);
+        assert_eq!(event2.count_finalizers(), 2);
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(event1);
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(event2);
+        assert_eq!(receiver.try_recv(), Err(Empty));
+        drop(event4);
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered));
+    }
+
+    #[test]
+    fn event_status_updates() {
+        use EventStatus::{
+            Dropped,
+            Delivered,
+            Errored,
+            Failed,
+            Recorded,
+        };
+
+        assert_eq!(Dropped.update(Dropped), Dropped);
+        assert_eq!(Dropped.update(Delivered), Delivered);
+        assert_eq!(Dropped.update(Errored), Errored);
+        assert_eq!(Dropped.update(Failed), Failed);
+        assert_eq!(Dropped.update(Recorded), Recorded);
+
+        assert_eq!(Delivered.update(Delivered), Delivered);
+        assert_eq!(Delivered.update(Errored), Errored);
+        assert_eq!(Delivered.update(Failed), Failed);
+        assert_eq!(Delivered.update(Recorded), Recorded);
+
+        assert_eq!(Errored.update(Delivered), Errored);
+        assert_eq!(Errored.update(Errored), Errored);
+        assert_eq!(Errored.update(Failed), Failed);
+        assert_eq!(Errored.update(Recorded), Recorded);
+
+        assert_eq!(Failed.update(Delivered), Failed);
+        assert_eq!(Failed.update(Errored), Failed);
+        assert_eq!(Failed.update(Failed), Failed);
+        assert_eq!(Failed.update(Recorded), Recorded);
+
+        assert_eq!(Recorded.update(Delivered), Recorded);
+        assert_eq!(Recorded.update(Errored), Recorded);
+        assert_eq!(Recorded.update(Failed), Recorded);
+        assert_eq!(Recorded.update(Recorded), Recorded);
+    }
+
+    #[test]
+    fn batch_status_update() {
+        use BatchStatus::{Delivered, Errored, Failed};
+
+        assert_eq!(Delivered.update(EventStatus::Dropped), Delivered);
+        assert_eq!(Delivered.update(EventStatus::Delivered), Delivered);
+        assert_eq!(Delivered.update(EventStatus::Errored), Errored);
+        assert_eq!(Delivered.update(EventStatus::Failed), Failed);
+        assert_eq!(Delivered.update(EventStatus::Recorded), Delivered);
+
+        assert_eq!(Errored.update(EventStatus::Dropped), Errored);
+        assert_eq!(Errored.update(EventStatus::Delivered), Errored);
+        assert_eq!(Errored.update(EventStatus::Errored), Errored);
+        assert_eq!(Errored.update(EventStatus::Failed), Failed);
+        assert_eq!(Errored.update(EventStatus::Recorded), Errored);
+
+        assert_eq!(Failed.update(EventStatus::Dropped), Failed);
+        assert_eq!(Failed.update(EventStatus::Delivered), Failed);
+        assert_eq!(Failed.update(EventStatus::Errored), Failed);
+        assert_eq!(Failed.update(EventStatus::Failed), Failed);
+        assert_eq!(Failed.update(EventStatus::Recorded), Failed);
     }
 }

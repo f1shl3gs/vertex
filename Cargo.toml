@@ -231,6 +231,7 @@ rand = { version = "0.8.4" }
 env-test-util = { version = "1.0.1" }
 testify = { path = "lib/testify" }
 assert_cmd = { version = "2.0.2" }
+proptest = { version = "1.0" }
 
 [dependencies]
 # workspaces
@@ -279,7 +280,9 @@ cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
 http = { version = "0.2.5" }
 headers = { version = "0.3.4" }
-tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+
+# tower
+tower = { version = "0.4", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
@@ -304,6 +307,7 @@ hyper-openssl = { version = "0.9.1", default-features = false }
 # Networking
 socket2 = { version = "0.4.2", default-features = false }
 
+# profile
 pprof = { version = "0.6.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # misc
@@ -336,3 +340,5 @@ sqlx = { version = "0.5.6", default-features = false, optional = true, features 
 uuid = { version = "0.8", default-features = false, features = ["v4"] }
 md5 = { version = "0.7" }
 mongodb = { version = "2.0.2", default-features = false, optional = true, features = ["tokio-runtime"] }
+rand_distr = { version = "0.4.2", default-features = false }
+twox-hash = { version = "1.6.1", default-features = false }
