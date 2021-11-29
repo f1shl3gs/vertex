@@ -244,14 +244,11 @@ mod tests {
 
         let (mut pipeline, mut receiver) = Pipeline::new_with_buffer(100, vec![Box::new(t1), Box::new(t2)]);
 
-        let event = Event::Metric(Metric {
-            name: "foo".to_string(),
-            description: None,
-            tags: Default::default(),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Gauge(0.1),
-        });
+        let event = Event::Metric(Metric::gauge(
+            "foo",
+            "",
+            0.1
+        ));
 
 
         let closed = pipeline.inner.is_closed();

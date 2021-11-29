@@ -339,14 +339,11 @@ mod tests {
     #[test]
     fn test_metrics_insert() {
         let mut set = IndexSet::new();
-        let m1 = Metric {
-            name: "foo".into(),
-            description: None,
-            tags: Default::default(),
-            unit: None,
-            timestamp: None,
-            value: MetricValue::Gauge(0.1),
-        };
+        let m1 = Metric::gauge(
+            "foo",
+            "",
+            0.1,
+        );
         let mut m2 = m1.clone();
         m2.value = MetricValue::Gauge(0.2);
 

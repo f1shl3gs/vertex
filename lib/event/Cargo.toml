@@ -22,5 +22,5 @@ tracing = { version = "0.1.29", default-features = false }
 atomig = { version = "0.3.2", features = ["derive", "serde"] }
 pin-project = { version = "1.0.8", default-features = false }
 
-tokio = { version = "1.13.0", default-features = false, features = ["sync"] }
+tokio = { version = "1.14.0", default-features = false, features = ["sync"] }
 futures = { version = "0.3.17", default-features = false, features = ["std"] }

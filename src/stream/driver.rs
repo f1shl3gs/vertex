@@ -8,9 +8,11 @@ use async_stream::stream;
 use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
 use internal::EventsSent;
-use futures::{Stream, StreamExt, ready, poll, stream::FuturesUnordered, stream::poll_fn};
+use futures::{Stream, StreamExt, ready, poll, stream::FuturesUnordered, TryFutureExt, FutureExt};
+use futures_util::future::poll_fn;
 use tokio::{pin, select};
 use tower::Service;
+use tracing::Instrument;
 
 use super::futures_unordered_chunked::FuturesUnorderedChunked;
 
@@ -222,7 +224,7 @@ impl<I, S> Driver<I, S>
                 // One or more of our service calls have completed
                 Some(acks) = inflight.next(), if !inflight.is_empty() => {
                     for ack in acks {
-                        let (seq, ack_size) = ack;
+                        let (seq, ack_size): (SequenceNumber, usize) = ack;
                         let request_id = seq.id();
                         trace!(
                             message = "Acknowledging service request.",
@@ -318,7 +320,7 @@ impl<I, S> Driver<I, S>
                 }
 
                 // We've received some items from the input stream.
-                Some(reqs) = batched_input.next, if next_batch.is_none() => {
+                Some(reqs) = batched_input.next(), if next_batch.is_none() => {
                     let reqs = reqs;
                     next_batch = Some(reqs.into());
                 }
@@ -350,6 +352,7 @@ mod tests {
     use tokio_util::sync::PollSemaphore;
     use event::EventFinalizers;
     use super::*;
+    use rand_distr::{Distribution};
 
     struct DelayRequest(usize);
 

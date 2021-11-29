@@ -50,9 +50,8 @@ impl Acker {
         }
     }
 
-    #[test]
     #[must_use]
-    pub fn new_for_testing() -> (Self, Ack<AtomicUsize>) {
+    pub fn new_for_testing() -> (Self, Arc<AtomicUsize>) {
         let ack_counter = Arc::new(AtomicUsize::new(0));
         let notifier = Arc::new(AtomicWaker::new());
         let acker = Acker::Disk(

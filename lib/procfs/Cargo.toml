@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dev-dependencies]
-tokio = { version = "1.13.0", features = ["fs", "io-util", "test-util", "macros"] }
+tokio = { version = "1.14.0", features = ["fs", "io-util", "test-util", "macros"] }
 
 [dependencies]
 glob = "0.3.0"
 snafu = { version = "0.6.10" }
-tokio = { version = "1.13.0", features = ["fs", "io-util"] }
+tokio = { version = "1.14.0", features = ["fs", "io-util"] }

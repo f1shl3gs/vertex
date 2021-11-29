@@ -84,7 +84,7 @@ impl<K> KeyedTimer<K> for ExpirationQueue<K>
                 Err(err) => {
                     error!(
                         message = "Caught unexpected error while polling for expired batches: {}",
-                        err
+                        ?err
                     );
 
                     Poll::Pending
@@ -238,7 +238,7 @@ impl BatcherSettings {
 
     /// A batcher config using the `ItemBatchSize` trait to determine batch sizes.
     /// The output is a Vec<T>
-    pub fn into_item_size_config<T, I>(self, item_size: I) -> BatchConfigParts<SizeLimit<I>, Vec<I>>
+    pub fn into_item_size_config<T, I>(self, item_size: I) -> BatchConfigParts<SizeLimit<I>, Vec<T>>
         where
             I: ItemBatchSize<T>,
     {

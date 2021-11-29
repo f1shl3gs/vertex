@@ -629,14 +629,7 @@ mod tests {
 
     fn make_events(count: usize) -> Vec<Event> {
         (0..count)
-            .map(|i| Event::from(Metric {
-                name: "test_metrics".into(),
-                description: None,
-                tags: Default::default(),
-                unit: None,
-                timestamp: None,
-                value: Gauge(i as f64),
-            }))
+            .map(|i| Event::from(format!("line {}", i)))
             .collect()
     }
 }

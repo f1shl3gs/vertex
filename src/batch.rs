@@ -6,7 +6,9 @@ use chrono::Duration;
 use snafu::Snafu;
 use internal::InternalEvent;
 use event::EventFinalizers;
+
 use crate::stream::BatcherSettings;
+use crate::config::{serialize_duration_option, deserialize_duration_option};
 
 
 // Provide sensible sink default 10MB with 1s timeout.
@@ -178,6 +180,7 @@ pub struct Unmerged;
 pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
     pub max_bytes: Option<usize>,
     pub max_events: Option<usize>,
+    #[serde(deserialize_with = "deserialize_duration_option", serialize_with = "serialize_duration_option")]
     pub timeout: Option<chrono::Duration>,
 
     #[serde(skip)]
