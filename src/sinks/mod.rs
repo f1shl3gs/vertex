@@ -17,6 +17,8 @@ mod vertex;
 #[cfg(feature = "sinks-clickhouse")]
 mod clickhouse;
 
+mod util;
+
 use event::Event;
 use async_trait::async_trait;
 use futures::stream::{
