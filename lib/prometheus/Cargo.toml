@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-nom = { version = "7.0.0" }
+nom = { version = "7.1.0" }
 snafu = { version = "0.6.10" }
 event = { path = "../event" }
 prost = { version = "0.8" }
