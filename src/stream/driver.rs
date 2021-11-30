@@ -7,7 +7,7 @@ use std::task::Poll;
 use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
 use internal::EventsSent;
-use futures::{Stream, StreamExt, ready, poll, TryFutureExt, FutureExt};
+use futures::{Stream, StreamExt, poll, TryFutureExt, FutureExt};
 use futures_util::future::poll_fn;
 use tokio::{pin, select};
 use tower::Service;
