@@ -21,7 +21,7 @@ impl Concurrency {
     pub const fn if_none(self, other: Self) -> Self {
         match self {
             Self::None => other,
-            _ => Self
+            _ => self
         }
     }
 
