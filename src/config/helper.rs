@@ -40,11 +40,11 @@ pub fn serialize_regex<S: Serializer>(re: &::regex::Regex, s: S) -> Result<S::Ok
     s.serialize_str(re.as_str())
 }
 
-pub fn default_true() -> bool {
+pub const fn default_true() -> bool {
     true
 }
 
-pub fn default_false() -> bool {
+pub const fn default_false() -> bool {
     false
 }
 

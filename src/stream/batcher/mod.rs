@@ -2,14 +2,20 @@ pub mod config;
 pub mod data;
 pub mod limiter;
 
+// re-export
+pub use config::BatchConfig;
+
 use std::pin::Pin;
 use std::task::{Context, Poll};
-use futures::{Future, ready, StreamExt};
-use futures::stream::{Fuse, Stream};
-use tokio::time::Sleep;
-use config::BatchConfig;
 
-#[pin_project::pin_project]
+use futures::stream::{Fuse, Stream};
+use futures::{Future, StreamExt};
+use pin_project::pin_project;
+use tokio::time::Sleep;
+use futures::ready;
+
+
+#[pin_project]
 pub struct Batcher<S, C> {
     state: C,
 
@@ -22,7 +28,7 @@ pub struct Batcher<S, C> {
 }
 
 /// An `Option`, but with pin projection
-#[pin_project::pin_project(project = MaybeProj)]
+#[pin_project(project = MaybeProj)]
 pub enum Maybe<T> {
     Some(#[pin] T),
     None,
@@ -33,9 +39,9 @@ impl<S, C> Batcher<S, C>
         S: Stream,
         C: BatchConfig<S::Item>
 {
-    pub fn new(stream: S, config: C) -> Self {
+    pub fn new(stream: S, state: C) -> Self {
         Self {
-            state: config,
+            state,
             stream: stream.fuse(),
             timer: Maybe::None,
         }
@@ -106,11 +112,11 @@ impl<S, C> Stream for Batcher<S, C>
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+    use crate::stream::BatcherSettings;
+    use futures::stream;
     use std::num::NonZeroUsize;
     use std::time::Duration;
-    use tokio_stream::StreamExt;
-    use crate::stream::BatcherSettings;
-    use super::*;
 
     #[tokio::test]
     async fn item_limit() {
@@ -161,15 +167,15 @@ mod tests {
         tokio::time::pause();
 
         let timeout = Duration::from_millis(100);
-        let stream = futures::stream::iter([1, 2])
-            .chain(futures::stream::pending());
+        let stream = stream::iter([1, 2])
+            .chain(stream::pending());
         let batcher = Batcher::new(
             stream,
             BatcherSettings::new(
                 timeout,
                 NonZeroUsize::new(5).unwrap(),
                 NonZeroUsize::new(100).unwrap()
-            ).into_item_size_config(|x: &u32| *x as u32),
+            ).into_item_size_config(|x: &u32| *x as usize),
         );
 
         tokio::pin!(batcher);

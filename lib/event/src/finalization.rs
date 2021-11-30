@@ -1,9 +1,8 @@
 use std::pin::Pin;
 use std::sync::Arc;
-use std::task::{Context, Poll};
+use std::task::Poll;
 use std::iter;
 use std::mem;
-use std::os::raw::c_schar;
 use std::future::Future;
 
 use futures::future::FutureExt;

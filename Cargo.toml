@@ -223,6 +223,7 @@ nix = ">=0.22.2"
 
 [dev-dependencies]
 tokio = { version = "1.14.0", features = ["test-util"] }
+tokio-test = { version = "0.4.2" }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
 pprof = { version = "0.6.0", default-features = false, features = ["flamegraph", "criterion"] }
 tempfile = { version = "3.2.0" }
@@ -284,6 +285,7 @@ headers = { version = "0.3.4" }
 
 # tower
 tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tower-test = { version = "0.4.0" }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }

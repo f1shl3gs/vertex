@@ -474,7 +474,6 @@ fn parse_status_field(value: &str) -> f64 {
 mod tests {
     use std::io;
     use std::io::BufReader;
-    use std::time::Duration;
     use testcontainers::{Docker, RunArgs};
     use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
     use super::*;

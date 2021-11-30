@@ -167,7 +167,6 @@ mod tests {
     use std::time::Duration;
     use super::*;
     use event::Metric;
-    use event::MetricValue;
     use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
     use tokio::time::{

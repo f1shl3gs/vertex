@@ -303,6 +303,26 @@ pub struct PartitionedBatcher<S, P, T>
     stream: S,
 }
 
+impl<S, P> PartitionedBatcher<S, P, ExpirationQueue<P::Key>>
+    where
+        S: Stream<Item=P::Item>,
+        P: Partitioner + Unpin,
+        P::Key: Eq + Hash + Clone,
+        P::Item: ByteSizeOf,
+{
+    pub fn new(stream: S, partitioner: P, settings: BatcherSettings) -> Self {
+        Self {
+            batch_allocation_limit: settings.size_limit,
+            batch_item_limit: settings.item_limit,
+            batches: HashMap::default(),
+            closed_batches: Vec::default(),
+            timer: ExpirationQueue::new(settings.timeout),
+            partitioner,
+            stream,
+        }
+    }
+}
+
 impl<S, P, T> PartitionedBatcher<S, P, T>
     where
         S: Stream<Item=P::Item>,
@@ -415,6 +435,10 @@ impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
             }
         }
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.stream.size_hint()
+    }
 }
 
 #[cfg(test)]
@@ -517,7 +541,7 @@ mod tests {
 
     proptest! {
         #[test]
-        fn size_hit_eq(
+        fn size_hint_eq(
             stream: Vec<u64>,
             item_limit in 1..u16::MAX,
             allocation_limit in 8..128,
@@ -533,7 +557,10 @@ mod tests {
 
             let item_limit = NonZeroUsize::new(item_limit as usize).unwrap();
             let allocation_limit = NonZeroUsize::new(allocation_limit as usize).unwrap();
-            let batcher = PartitionedBatcher::with_timer(&mut stream, partitioner, timer, item_limit, Some(allocation_limit));
+            let batcher = PartitionedBatcher::with_timer(
+                &mut stream, partitioner, timer,
+                item_limit, Some(allocation_limit),
+            );
             let batcher_size_hint = batcher.size_hint();
 
             assert_eq!(stream_size_hint, batcher_size_hint);
@@ -561,7 +588,7 @@ mod tests {
                 &mut stream, partitioner, timer,
                 item_limit, Some(allocation_limit)
             );
-            let mut batcher = Pin::new(batcher);
+            let mut batcher = Pin::new(&mut batcher);
 
             loop {
                 match batcher.as_mut().poll_next(&mut cx) {
@@ -628,7 +655,8 @@ mod tests {
             let mut partitions = separate_partitions(stream.clone(), &partitioner);
 
             let mut stream = futures::stream::iter(stream.into_iter());
-            let item_limit = NonZeroUsize::new(allocation_limit as usize).unwrap();
+            let item_limit = NonZeroUsize::new(item_limit as usize).unwrap();
+            let allocation_limit = NonZeroUsize::new(allocation_limit as usize).unwrap();
             let mut batcher = PartitionedBatcher::with_timer(
                 &mut stream, partitioner, timer,
                 item_limit, Some(allocation_limit)
@@ -681,7 +709,7 @@ mod tests {
 
             let mut observed_items = 0;
             loop {
-                match batcher.as_mut().poll_next(cx) {
+                match batcher.as_mut().poll_next(&mut cx) {
                     Poll::Pending => {},
                     Poll::Ready(None) => {
                         // inner stream has shut down, ensure we passed every item through the batch

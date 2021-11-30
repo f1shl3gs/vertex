@@ -135,10 +135,10 @@ impl KafkaSinkConfig {
                 let key = "queue.buffering.max.ms";
                 if let Some(val) = self.librdkafka_options.get(key) {
                     return Err(format!(
-                        "Batching setting `batch.timeout_secs` sets `librdkafka_options.{}={}`.\
-                         The config already sets this as `librdkafka_options.queue.buffering.max.ms={}`. \
+                        "Batching setting `batch.timeout` sets `librdkafka_options.{}={}`.\
+                        The config already sets this as `librdkafka_options.queue.buffering.max.ms={}`. \
                         Please delete one.",
-                        key, value, val
+                        key, value.num_milliseconds(), val
                     ).into());
                 }
 

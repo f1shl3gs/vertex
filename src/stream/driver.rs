@@ -4,11 +4,10 @@ use std::num::NonZeroUsize;
 use std::fmt;
 use std::task::Poll;
 
-use async_stream::stream;
 use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
 use internal::EventsSent;
-use futures::{Stream, StreamExt, ready, poll, stream::FuturesUnordered, TryFutureExt, FutureExt};
+use futures::{Stream, StreamExt, ready, poll, TryFutureExt, FutureExt};
 use futures_util::future::poll_fn;
 use tokio::{pin, select};
 use tower::Service;
@@ -533,8 +532,8 @@ mod tests {
                 .map(|_| ack_trakcer.get_next_seq_num())
                 .collect::<Vec<_>>();
             let mut reordered_seq_nums = seq_ack_order.iter()
-                .filter_map(|n| seq_nums.iter().position(|n2| n2.id() == *n ))
-                .map(|i| seq_nums.swap_remove(i))
+                .filter_map(|n| seq_nums.iter().position(|n2| n2.id() == *n)
+                .map(|i| seq_nums.swap_remove(i)))
                 .collect::<VecDeque<_>>();
 
             assert!(seq_nums.is_empty());

@@ -191,10 +191,12 @@ pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
 
 impl<D: SinkBatchSettings> BatchConfig<D, Unmerged> {
     pub fn validate(self) -> Result<BatchConfig<D, Merged>, BatchError> {
+        let timeout = chrono::Duration::from_std(D::TIMEOUT)
+            .expect("Timeout should be set already");
         let config = BatchConfig {
             max_bytes: self.max_bytes.or(D::MAX_BYTES),
             max_events: self.max_events.or(D::MAX_EVENTS),
-            timeout: self.timeout.or(Some(D::TIMEOUT)),
+            timeout: self.timeout.or(Some(timeout)),
             _d: PhantomData,
             _s: PhantomData,
         };

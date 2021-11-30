@@ -21,6 +21,7 @@ mod tcp;
 mod async_read;
 mod stream;
 mod partition;
+mod stats;
 
 pub use signal::{SignalHandler};
 
