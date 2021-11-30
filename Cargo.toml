@@ -319,7 +319,7 @@ chrono-tz = { version = "0.5.3", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }
 derivative = { version = "2.2.0" }
-typetag = { version = "0.1.7" }
+typetag = { version = "0.1.8" }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 regex = { version = "1.5.4" }
 hostname = { version = "0.3.1" }
