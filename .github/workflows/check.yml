@@ -1,4 +1,4 @@
-name: Baseline Timings
+name: Check
 
 on:
   pull_request: {}
