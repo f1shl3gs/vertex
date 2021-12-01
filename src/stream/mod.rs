@@ -1,4 +1,4 @@
-mod driver;
+pub mod driver;
 mod partitioned_batcher;
 mod futures_unordered_chunked;
 mod concurrent_map;

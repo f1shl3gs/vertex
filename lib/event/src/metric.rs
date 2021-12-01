@@ -4,7 +4,7 @@ use std::fmt::{Display, Formatter, Write};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::{ByteSizeOf, EventFinalizer};
+use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable};
 use crate::metadata::EventMetadata;
 
 
@@ -99,6 +99,12 @@ impl ByteSizeOf for Metric {
             .fold(0, |acc, (k, v)| acc + k.len() + v.len());
 
         s1
+    }
+}
+
+impl Finalizable for Metric {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        self.metadata.take_finalizers()
     }
 }
 
@@ -319,7 +325,7 @@ impl Metric {
         desc: D,
         count: C,
         sum: S,
-        quantiles: Vec<Quantile>
+        quantiles: Vec<Quantile>,
     ) -> Metric
         where
             N: Into<String>,
@@ -337,7 +343,7 @@ impl Metric {
             value: MetricValue::Summary {
                 count: count.into(),
                 sum: sum.into_f64(),
-                quantiles
+                quantiles,
             },
         }
     }

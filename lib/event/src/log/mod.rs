@@ -13,7 +13,7 @@ use bytes::Bytes;
 use chrono::Utc;
 use tracing::field::Field;
 
-use crate::{ByteSizeOf, EventFinalizer, Value};
+use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
@@ -124,6 +124,12 @@ impl From<&tracing::Event<'_>> for LogRecord {
 impl ByteSizeOf for LogRecord {
     fn allocated_bytes(&self) -> usize {
         self.tags.allocated_bytes() + self.fields.allocated_bytes()
+    }
+}
+
+impl Finalizable for LogRecord {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        self.metadata.take_finalizers()
     }
 }
 

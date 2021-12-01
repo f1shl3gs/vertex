@@ -35,6 +35,12 @@ pub enum KafkaCompression {
     Zstd,
 }
 
+impl Default for KafkaCompression {
+    fn default() -> Self {
+        Self::None
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct KafkaSaslConfig {
     enabled: Option<bool>,

@@ -101,6 +101,15 @@ impl ByteSizeOf for Event {
     }
 }
 
+impl Finalizable for Event {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        match self {
+            Event::Log(log) => log.take_finalizers(),
+            Event::Metric(metric) => metric.take_finalizers(),
+        }
+    }
+}
+
 impl Event {
     /// This function panics if self is anything other than an `Event::Metric`
     pub fn as_mut_metric(&mut self) -> &mut Metric {

@@ -55,6 +55,17 @@ impl<E> EncodingConfiguration for EncodingConfig<E> {
     }
 }
 
+impl<E> From<E> for EncodingConfig<E> {
+    fn from(codec: E) -> Self {
+        Self {
+            codec,
+            schema: Default::default(),
+            only_fields: Default::default(),
+            except_fields: Default::default(),
+            timestamp_format: Default::default(),
+        }
+    }
+}
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
 pub struct Inner<E> {
