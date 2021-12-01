@@ -315,7 +315,7 @@ pprof = { version = "0.6.0", default-features = false, optional = true, features
 
 # misc
 chrono = { version = "0.4.19", features = ["serde"] }
-chrono-tz = { version = "0.5.3", features = ["serde"] }
+chrono-tz = { version = "0.6.0", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }
 derivative = { version = "2.2.0" }
