@@ -328,7 +328,7 @@ exitcode = { version = "1.1.2" }
 clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
-rdkafka = { version = "0.26.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
+rdkafka = { version = "0.28.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
 rsntp = { version = "2.0.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.101", optional = true }
 nom = { version = "7.1.0", default-features = false }
