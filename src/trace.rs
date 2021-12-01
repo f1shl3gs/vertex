@@ -173,7 +173,8 @@ pub fn init(color: bool, json: bool, levels: &str) {
 
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
         if metrics_layer_enabled {
-            let subscriber = subscriber.with(MetricsLayer::new());
+            // TODO: disable MetricsLayer for now
+            // let subscriber = subscriber.with(MetricsLayer::new());
             Dispatch::new(BroadcastSubscriber { subscriber })
         } else {
             Dispatch::new(BroadcastSubscriber { subscriber })
@@ -192,7 +193,8 @@ pub fn init(color: bool, json: bool, levels: &str) {
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
 
         if metrics_layer_enabled {
-            let subscriber = subscriber.with(MetricsLayer::new());
+            // TODO: disable MetricsLayer for now
+            // let subscriber = subscriber.with(MetricsLayer::new());
             Dispatch::new(BroadcastSubscriber { subscriber })
         } else {
             Dispatch::new(BroadcastSubscriber { subscriber })

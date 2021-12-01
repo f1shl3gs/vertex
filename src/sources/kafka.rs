@@ -305,12 +305,12 @@ async fn drain(
 
                 match output.send(log.into()).await {
                     Ok(_) => {
-                        if let Err(err) = consumer.store_offset(&msg) {
-                            warn!(
-                                message = "Unable to update consumer offset",
-                                ?err
-                            );
-                        }
+                        // if let Err(err) = consumer.store_offset(&msg) {
+                        //     warn!(
+                        //         message = "Unable to update consumer offset",
+                        //         ?err
+                        //     );
+                        // }
                     }
                     Err(err) => {
                         warn!(
