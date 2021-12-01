@@ -47,6 +47,7 @@ mod protocols;
 mod network_route;
 mod wifi;
 mod bcache;
+mod processes;
 
 use std::io::Read;
 use std::str::FromStr;
@@ -69,7 +70,7 @@ use self::ipvs::IPVSConfig;
 use self::cpu::CPUConfig;
 use self::diskstats::DiskStatsConfig;
 use self::errors::{Error, ErrorContext};
-use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true};
+use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true, default_false};
 use crate::shutdown::ShutdownSignal;
 use crate::pipeline::Pipeline;
 use crate::{
@@ -164,6 +165,9 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub pressure: bool,
 
+    #[serde(default = "default_false")]
+    pub processes: bool,
+
     #[serde(default = "default_true")]
     pub rapl: bool,
 
@@ -237,6 +241,7 @@ impl Default for Collectors {
             os_release: default_true(),
             power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
             pressure: default_true(),
+            processes: default_false(),
             rapl: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
@@ -313,10 +318,10 @@ pub struct NodeMetrics {
     collectors: Collectors,
 }
 
-/// `read_to_string` should be a async function, but the implement do sync calls from
-/// std, which will not call spawn_blocking and create extra threads for IO reading. It
-/// actually reduce cpu usage an memory. The `tokio-uring` should be introduce once it's
-/// ready.
+/// `read_to_string` should be a real async function, but the implement of
+/// `tokio::fs::read_to_string` will spawn a thread for reading files, which actually
+/// increase cpu and memory usage. The `tokio-uring` might be help, and it should be
+/// introduced once it's ready.
 ///
 /// The files this function will(should) be reading is under `/sys` and `/proc` which is
 /// relative small and the filesystem is kind of `tmpfs`, so the performance should never
@@ -612,6 +617,13 @@ impl NodeMetrics {
                 let proc_path = self.sys_path.clone();
                 tasks.push(tokio::spawn(async move {
                     record_gather!("pressure", pressure::gather(proc_path.as_ref()))
+                }))
+            }
+
+            if self.collectors.processes {
+                let proc_path = self.proc_path.clone();
+                tasks.push(tokio::spawn(async move {
+                    record_gather!("processes", processes::gather(proc_path.as_ref()))
                 }))
             }
 

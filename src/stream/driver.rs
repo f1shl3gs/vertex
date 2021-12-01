@@ -341,6 +341,7 @@ mod tests {
     use std::sync::Arc;
     use std::task::{Context, Poll};
     use std::time::Duration;
+    use futures::ready;
     use proptest::{prop_assert_eq, proptest};
     use proptest::prelude::Strategy;
     use rand::rngs::StdRng;

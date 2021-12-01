@@ -31,6 +31,8 @@ sources:
   node:
     type: node_metrics
     interval: 15s
+    collectors:
+      processes: true
   selfstat:
     type: selfstat
   # generator:
@@ -99,7 +101,7 @@ sinks:
       - memcached
       - nginx
       - node
-      - prometheus_scrape
+      # - prometheus_scrape
       - mysql
       - nvidia
     listen: 127.0.0.1:9101

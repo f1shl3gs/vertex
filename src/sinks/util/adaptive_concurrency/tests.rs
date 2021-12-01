@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use crate::sinks::util::service::Concurrency;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
