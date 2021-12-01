@@ -333,7 +333,7 @@ rsntp = { version = "2.0.0", default-features = false, features = ["tokio"], opt
 libc = { version = "0.2.101", optional = true }
 nom = { version = "7.1.0", default-features = false }
 snafu = { version = "0.6.10" }
-redis = { version = "0.21.0", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
+redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 inventory = { version = "0.2.0" }
