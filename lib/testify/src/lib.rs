@@ -3,6 +3,7 @@ mod portpicker;
 mod stream;
 pub mod temp;
 pub mod stats;
+pub mod random;
 
 // re-export
 pub use socket::{next_addr, next_addr_for_ip};

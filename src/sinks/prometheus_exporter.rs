@@ -297,7 +297,7 @@ impl PrometheusExporter {
 
 #[async_trait]
 impl StreamSink for PrometheusExporter {
-    async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         self.start_server_if_needed().await;
 
         let expiration = 5 * 60;

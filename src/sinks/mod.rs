@@ -19,17 +19,16 @@ mod clickhouse;
 
 mod util;
 
-use event::Event;
+
 use async_trait::async_trait;
-use futures::stream::{
-    BoxStream,
-    Stream,
-    StreamExt,
-};
+use futures::stream::BoxStream;
+use futures::{Stream, StreamExt};
+use std::fmt::{Debug, Formatter};
+use event::Event;
 
 #[async_trait]
 pub trait StreamSink {
-    async fn run(&mut self, input: BoxStream<'_, Event>) -> Result<(), ()>;
+    async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()>;
 }
 
 pub enum Sink {
@@ -37,15 +36,49 @@ pub enum Sink {
     Stream(Box<dyn StreamSink + Send>),
 }
 
+impl Debug for Sink {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Sink").finish()
+    }
+}
+
 impl Sink {
     /// Run the `Sink`
-    pub async fn run<S>(mut self, input: S) -> Result<(), ()>
+    ///
+    /// # Errors
+    ///
+    /// It is unclear under what conditions this function will error.
+    pub async fn run<S>(self, input: S) -> Result<(), ()>
         where
             S: Stream<Item=Event> + Send,
     {
         match self {
             Self::Sink(sink) => input.map(Ok).forward(sink).await,
-            Self::Stream(ref mut s) => s.run(Box::pin(input)).await,
+            Self::Stream(s) => s.run(Box::pin(input)).await,
+        }
+    }
+
+    /// Converts `Sink` into a `futures::Sink`
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the self instance is not `Sink`.
+    pub fn into_sink(self) -> Box<dyn futures::Sink<Event, Error=()> + Send + Unpin> {
+        match self {
+            Self::Sink(sink) => sink,
+            _ => panic!("Failed type coercion, {:?} is not a Sink", self)
+        }
+    }
+
+    /// Converts `Sink` into a `StreamSink`
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the self instance is not `Sink`.
+    pub fn into_stream(self) -> Box<dyn StreamSink + Send> {
+        match self {
+            Self::Stream(stream) => stream,
+            _ => panic!("Failed type coercion, {:?} is not a Stream", self)
         }
     }
 }

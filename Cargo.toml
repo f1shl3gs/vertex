@@ -84,6 +84,15 @@ target-x86_64-unknown-linux-musl = [
     "rdkafka-cmake",
 ]
 
+target-x86_64-unknown-linux-gnu = [
+    "disk-buffer",
+    "sinks",
+    "sources",
+    "transforms",
+    "openssl/vendored",
+    "rdkafka-cmake",
+]
+
 # integration
 integration-test = []
 
@@ -313,7 +322,7 @@ socket2 = { version = "0.4.2", default-features = false }
 # profile
 pprof = { version = "0.6.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
-# misc
+# External libs
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.0", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
@@ -345,3 +354,4 @@ md5 = { version = "0.7" }
 mongodb = { version = "2.0.2", default-features = false, optional = true, features = ["tokio-runtime"] }
 rand_distr = { version = "0.4.2", default-features = false }
 twox-hash = { version = "1.6.1", default-features = false }
+flate2 = { version = "1.0.21" }

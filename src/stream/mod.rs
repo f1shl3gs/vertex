@@ -1,8 +1,10 @@
-pub mod driver;
+mod driver;
 mod partitioned_batcher;
 mod futures_unordered_chunked;
 mod concurrent_map;
 mod timer;
-mod batcher;
+pub mod batcher;
 
-pub use partitioned_batcher::BatcherSettings;
+pub use partitioned_batcher::*;
+pub use driver::*;
+pub use concurrent_map::ConcurrentMap;

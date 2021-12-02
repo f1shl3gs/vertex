@@ -4712,6 +4712,7 @@ dependencies = [
  "env-test-util",
  "event",
  "exitcode",
+ "flate2",
  "futures",
  "futures-util",
  "glob",

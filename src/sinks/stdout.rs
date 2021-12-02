@@ -51,7 +51,7 @@ struct StdoutSink {
 
 #[async_trait]
 impl StreamSink for StdoutSink {
-    async fn run(&mut self, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         while let Some(event) = input.next().await {
             self.acker.ack(1);
 

@@ -1,0 +1,22 @@
+# Generic component-level labels and high-level groupings
+
+sources:
+  - src/sources/**/*
+
+transforms:
+  - src/transforms/**/*
+
+sinks:
+  - src/sinks/**/*
+
+topology:
+  - src/topology/**/*
+
+docs:
+  - docs/**/*
+
+benches:
+  - benches/**/*
+
+tests:
+  - tests/**/*

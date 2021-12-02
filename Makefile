@@ -28,6 +28,14 @@ build_x86_64-unknown-linux-musl:
 		--target x86_64-unknown-linux-musl \
 		--features target-x86_64-unknown-linux-musl
 
+build_x86_64-unknown-linux-gnu:
+	# docker build -f docker/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-musl docker/cross
+	cross build \
+		--release \
+		--no-default-features \
+		--target x86_64-unknown-linux-gnu \
+		--features target-x86_64-unknown-linux-gnu
+
 image: build_x86_64-unknown-linux-musl
 	cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
 	cd distribution/docker && strip vertex && docker build -t vertex:${VERSION}-alpine .

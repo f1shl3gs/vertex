@@ -1,4 +1,5 @@
 use std::task::{Context, Poll};
+
 use bytes::Bytes;
 use futures_util::future::BoxFuture;
 use rdkafka::error::KafkaError;
@@ -9,8 +10,10 @@ use tower::Service;
 use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use internal::{BytesSent, EventsSent};
+
 use crate::common::kafka::KafkaStatisticsContext;
-use crate::stream::driver::DriverResponse;
+use crate::stream::DriverResponse;
+
 
 pub struct KafkaRequestMetadata {
     pub finalizers: EventFinalizers,
@@ -75,7 +78,7 @@ impl Service<KafkaRequest> for KafkaService {
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
     fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        Poll::Ready(Ok())
+        Poll::Ready(Ok(()))
     }
 
     fn call(&mut self, req: KafkaRequest) -> Self::Future {
@@ -98,7 +101,7 @@ impl Service<KafkaRequest> for KafkaService {
             match producer.send(record, Timeout::Never).await {
                 Ok((_partition, _offset)) => {
                     emit!(&BytesSent {
-                        byte_size: req.body.len() + req.metadata.key.map(|x| x.len()).unwrap(0),
+                        byte_size: req.body.len() + req.metadata.key.map(|x| x.len()).unwrap_or(0),
                         protocol: "kafka"
                     });
 

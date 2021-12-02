@@ -11,6 +11,7 @@ use crate::config::{SourceConfig, SinkConfig, TransformConfig};
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Builder {
+    #[serde(default)]
     pub global: GlobalOptions,
     #[serde(default)]
     pub sources: IndexMap<String, SourceOuter>,
@@ -23,7 +24,7 @@ pub struct Builder {
 
     pub provider: Option<Box<dyn ProviderConfig>>,
 
-    #[serde(rename = "health_checks")]
+    #[serde(default, rename = "health_checks")]
     pub health_checks: HealthcheckOptions,
 }
 
