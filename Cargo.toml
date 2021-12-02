@@ -245,7 +245,7 @@ tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 
 # Allocation
-mimalloc = { version = "0.1.26", default-features = false, optional = true }
+mimalloc = { version = "0.1.27", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
