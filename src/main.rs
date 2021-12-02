@@ -32,7 +32,7 @@ use crate::commands::Commands;
 #[derive(Parser, Debug)]
 #[clap(version = "0.1.0")]
 struct Opts {
-    #[clap(short, long, default_value = "/etc/vertex/vertex.conf")]
+    #[clap(short, long, default_value = "/etc/vertex/vertex.yml")]
     pub config: String,
 
     #[clap(short, long, env = "VERTEX_THREADS", about = "Specify how many threads used for the async runtime")]
