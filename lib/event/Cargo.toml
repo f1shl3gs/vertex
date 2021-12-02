@@ -23,4 +23,4 @@ atomig = { version = "0.3.2", features = ["derive", "serde"] }
 pin-project = { version = "1.0.8", default-features = false }
 
 tokio = { version = "1.14.0", default-features = false, features = ["sync"] }
-futures = { version = "0.3.17", default-features = false, features = ["std"] }
+futures = { version = "0.3.18", default-features = false, features = ["std"] }
