@@ -320,7 +320,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false, features = ["vendored"] }
+openssl = { version = "0.10.38", default-features = false, features = ["vendored"] }
 hyper-openssl = { version = "0.9.1", default-features = false }
 
 # Networking
@@ -345,7 +345,7 @@ clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.28.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
-rsntp = { version = "2.0.0", default-features = false, features = ["tokio"], optional = true }
+rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.101", optional = true }
 nom = { version = "7.1.0", default-features = false }
 snafu = { version = "0.6.10" }
