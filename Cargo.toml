@@ -216,7 +216,6 @@ unix = []
 vendor-all = ["vendor-openssl", "vendor-sasl"]
 vendor-sasl = ["rdkafka/gssapi-vendored"]
 vendor-openssl = ["openssl/vendored"]
-# vendor-libz = ["libz-sys/static"]
 
 [[bench]]
 name = "duration"
@@ -320,7 +319,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false, features = ["vendored"] }
+openssl = { version = "0.10.36", default-features = false }
 hyper-openssl = { version = "0.9.1", default-features = false }
 
 # Networking

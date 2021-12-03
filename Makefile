@@ -1,4 +1,4 @@
-VERSION     := "0.1.0"
+VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 
 build:
 	cargo build --release
@@ -20,8 +20,12 @@ lines:
 static:
 	docker run --rm -it -v "/home/f1shl3gs/Workspaces/clion/vertex/docker/builder/cargo-config.toml:/opt/rust/cargo/config" -v "$$(pwd)":/home/rust/src musl-builder cargo build --release
 
+# archives
+target/artifacts/vector-${VERSION}:
+
+
 build_x86_64-unknown-linux-musl:
-	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
+#	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
 	cross build \
 		--release \
 		--no-default-features \
