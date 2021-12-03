@@ -80,8 +80,9 @@ target-x86_64-unknown-linux-musl = [
     "sinks",
     "sources",
     "transforms",
-    "openssl/vendored",
     "rdkafka-cmake",
+    "vendor-all",
+    "unix"
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -89,8 +90,9 @@ target-x86_64-unknown-linux-gnu = [
     "sinks",
     "sources",
     "transforms",
-    "openssl/vendored",
     "rdkafka-cmake",
+    "vendor-all",
+    "unix"
 ]
 
 # integration
@@ -204,12 +206,17 @@ sinks-clickhouse = []
 extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
 
-# misc
-
 # Enables `rdkafka` dependency.
 # This feature is more portable, but requires `cmake` as build dependency. Use it if `rdkafka-plain` doesn't work.
 # The `sasl` feature has to be added because of the limitations of `librdkafka` build scripts for `cmake`.
 rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
+# Enables features that work only on systems providing `cfg(unix)`
+unix = []
+# These are **very** useful on Cross compilations!
+vendor-all = ["vendor-openssl", "vendor-sasl"]
+vendor-sasl = ["rdkafka/gssapi-vendored"]
+vendor-openssl = ["openssl/vendored"]
+# vendor-libz = ["libz-sys/static"]
 
 [[bench]]
 name = "duration"
@@ -273,7 +280,7 @@ async-stream = { version = "0.3.2" }
 console-subscriber = { git = "https://github.com/tokio-rs/console", rev = "f2c30d52c9f22de69bac38009a9183135808806c", optional = true }
 
 # Metrics
-metrics = { version = "0.17.0" }
+metrics = { version = "0.17.0", default-features = false, features = ["std"] }
 metrics-tracing-context = { version = "0.8.1", default-features = false }
 
 # Tracing
@@ -285,7 +292,7 @@ tracing-subscriber = { version = "0.3.3", default-features = false, features = [
 
 # HTTP
 hyper = { version = "0.14.13", features = ["server", "http1", "http2", "tcp", "stream", "runtime"] }
-hyper-proxy = { version = "0.9.1" }
+hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
 listenfd = { version = "0.3.5", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
@@ -313,7 +320,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false, features = ["vendored"] }
+openssl = { version = "0.10.36", default-features = false }
 hyper-openssl = { version = "0.9.1", default-features = false }
 
 # Networking

@@ -906,6 +906,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "56899898ce76aaf4a0f24d914c97ea6ed976d42fec6ad33fcbb0a1103e07b2b0"
 
 [[package]]
+name = "duct"
+version = "0.13.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0fc6a0a59ed0888e0041cf708e66357b7ae1a82f1c67247e1f93b5e0818f7d8d"
+dependencies = [
+ "libc",
+ "once_cell",
+ "os_pipe",
+ "shared_child",
+]
+
+[[package]]
 name = "dyn-clone"
 version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1465,10 +1477,9 @@ dependencies = [
  "headers",
  "http",
  "hyper",
- "hyper-tls",
- "native-tls",
+ "openssl",
  "tokio",
- "tokio-native-tls",
+ "tokio-openssl",
  "tower-service",
 ]
 
@@ -1482,19 +1493,6 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-io-timeout",
-]
-
-[[package]]
-name = "hyper-tls"
-version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
-dependencies = [
- "bytes",
- "hyper",
- "native-tls",
- "tokio",
- "tokio-native-tls",
 ]
 
 [[package]]
@@ -1686,6 +1684,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ce791b7ca6638aae45be056e068fc756d871eb3b3b10b8efa62d1c9cec616752"
 dependencies = [
  "wasm-bindgen",
+]
+
+[[package]]
+name = "krb5-src"
+version = "0.3.0+1.19.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "05a015d6ce61bfe539c715eb5dd67e851927f4ada5fecfd83d6c719a72eac9b5"
+dependencies = [
+ "duct",
+ "openssl-sys",
 ]
 
 [[package]]
@@ -2503,6 +2511,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "os_pipe"
+version = "0.9.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fb233f06c2307e1f5ce2ecad9f8121cffbbee2c95428f44ea85222e460d0d213"
+dependencies = [
+ "libc",
+ "winapi",
+]
+
+[[package]]
 name = "os_str_bytes"
 version = "4.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3261,6 +3279,7 @@ dependencies = [
  "num_enum",
  "openssl-sys",
  "pkg-config",
+ "sasl2-sys",
  "zstd-sys",
 ]
 
@@ -3474,6 +3493,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "sasl2-sys"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5ea026b0f31190f6c3aa8576e7ffc11977e0d999ef9cec13ec0cc6db085234d7"
+dependencies = [
+ "cc",
+ "duct",
+ "krb5-src",
+ "libc",
+ "pkg-config",
+]
+
+[[package]]
 name = "scan_fmt"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3674,6 +3706,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "740223c51853f3145fe7c90360d2d4232f2b62e3449489c207eccde818979982"
 dependencies = [
  "lazy_static",
+]
+
+[[package]]
+name = "shared_child"
+version = "0.3.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6be9f7d5565b1483af3e72975e2dee33879b3b86bd48c0929fccf6585d79e65a"
+dependencies = [
+ "libc",
+ "winapi",
 ]
 
 [[package]]
