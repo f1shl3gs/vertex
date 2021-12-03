@@ -345,7 +345,7 @@ snafu = { version = "0.6.10" }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 seahash = { version = "4.1.0", default-features = false, optional = true }
-inventory = { version = "0.1.11" }
+inventory = { version = "0.2.0" }
 num_cpus = { version = "1.13.0" }
 once_cell = { version = "1.8", default-features = false }
 sqlx = { version = "0.5.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
