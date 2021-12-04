@@ -35,8 +35,8 @@ default = [
     # sources
     "sources-node_metrics",
     "sources-ntp",
-    "sources-kafka",
-    "sources-kafka_metrics",
+    # "sources-kafka",
+    # "sources-kafka_metrics",
     "sources-kmsg",
     "sources-journald",
     "sources-selfstat",
@@ -66,7 +66,7 @@ default = [
     "sinks-blackhole",
     "sinks-prometheus_exporter",
     "sinks-stdout",
-    "sinks-kafka",
+    # "sinks-kafka",
     "sinks-elasticsearch",
     "sinks-loki",
     "sinks-clickhouse",
@@ -81,8 +81,8 @@ target-x86_64-unknown-linux-musl = [
     "sources",
     "transforms",
     "rdkafka-cmake",
-    "vendor-all",
-    "unix"
+    # "vendor-all",
+    "unix",
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -90,8 +90,8 @@ target-x86_64-unknown-linux-gnu = [
     "sinks",
     "sources",
     "transforms",
-    "rdkafka-cmake",
-    "vendor-all",
+    # "rdkafka-cmake",
+    # "vendor-all",
     "unix"
 ]
 
@@ -114,8 +114,8 @@ sources = [
     "sources-generator",
     "sources-node_metrics",
     "sources-ntp",
-    "sources-kafka",
-    "sources-kafka_metrics",
+    # "sources-kafka",
+    # "sources-kafka_metrics",
     "sources-kmsg",
     "sources-selfstat",
     "sources-journald",
@@ -143,8 +143,8 @@ sources-bind = []
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-kafka = ["rdkafka"]
-sources-kafka_metrics = ["rdkafka"]
+# sources-kafka = ["rdkafka"]
+# sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
 sources-journald = []
@@ -184,7 +184,7 @@ sinks = [
     "sinks-prometheus_exporter",
     "sinks-stdout",
     "sinks-blackhole",
-    "sinks-kafka",
+    # "sinks-kafka",
     "sinks-pulsar",
     "sinks-elasticsearch",
     "sinks-loki",
@@ -195,7 +195,7 @@ sinks = [
 sinks-prometheus_exporter = []
 sinks-stdout = []
 sinks-blackhole = []
-sinks-kafka = ["rdkafka"]
+# sinks-kafka = ["rdkafka"]
 sinks-pulsar = ["pulsar"]
 sinks-elasticsearch = []
 sinks-loki = []
@@ -210,13 +210,14 @@ extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
 # This feature is more portable, but requires `cmake` as build dependency. Use it if `rdkafka-plain` doesn't work.
 # The `sasl` feature has to be added because of the limitations of `librdkafka` build scripts for `cmake`.
 rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
+
 # Enables features that work only on systems providing `cfg(unix)`
 unix = []
+
 # These are **very** useful on Cross compilations!
-vendor-all = ["vendor-openssl", "vendor-sasl"]
-vendor-sasl = ["rdkafka/gssapi-vendored"]
-vendor-openssl = ["openssl/vendored"]
-# vendor-libz = ["libz-sys/static"]
+# vendor-all = ["vendor-openssl"]
+# vendor-sasl = ["rdkafka/gssapi-vendored"]
+# vendor-openssl = ["openssl/vendored"]
 
 [[bench]]
 name = "duration"
@@ -344,7 +345,7 @@ exitcode = { version = "1.1.2" }
 clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
-rdkafka = { version = "0.28.0", default-features = false, features = ["tokio", "libz", "ssl", "zstd"], optional = true }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "ssl-vendored", "gssapi-vendored", "sasl"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.101", optional = true }
 nom = { version = "7.1.0", default-features = false }
