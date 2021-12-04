@@ -81,6 +81,8 @@ fn main() {
             config = ?opts.config
         );
 
+        openssl_probe::init_ssl_cert_env_vars();
+
         let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
         signal_handler.forever(signal::os_signals());
 

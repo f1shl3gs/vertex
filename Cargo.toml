@@ -46,12 +46,16 @@ target-x86_64-unknown-linux-musl = [
     "sources",
     "transforms",
     "rdkafka-cmake",
-    # "vendor-all",
     "unix",
     "openssl/vendored",
-    "sources-kafka",
+    # For some reason, once we enable "sources-kafka" the build will fail,
+    # and it looks like cross cannot link openss. The confused part is that
+    # "rdkafka" is already built due to "sinks-kafka" is enabled.
+    #
+    # Vertex is not ready for production yet, all i can do now is waiting,
+    # maybe new version of "rdkafka" or "openssl" can fix this.
+    # "sources-kafka",
     "rdkafka/gssapi-vendored",
-    # "rdkafka/ssl",
     "rdkafka/ssl-vendored",
 ]
 
@@ -61,7 +65,6 @@ target-x86_64-unknown-linux-gnu = [
     "sources",
     "transforms",
     "rdkafka-cmake",
-    # "vendor-all",
     "unix",
     "openssl/vendored",
     "rdkafka/gssapi-vendored",
@@ -116,7 +119,7 @@ sources-bind = []
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-kafka = []
+sources-kafka = ["rdkafka"]
 sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
@@ -296,6 +299,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 tokio-openssl = { version = "0.6.3", default-features = false }
 openssl = { version = "0.10.36", default-features = false }
 hyper-openssl = { version = "0.9.1", default-features = false }
+openssl-probe = { version = "0.1.4", default-features = false }
 
 # Networking
 socket2 = { version = "0.4.2", default-features = false }

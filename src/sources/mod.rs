@@ -2,7 +2,7 @@
 pub mod node;
 #[cfg(feature = "sources-journald")]
 mod journald;
-#[cfg(any(feature = "sources-kafka", feature = "rdkafka"))]
+#[cfg(feature = "sources-kafka")]
 mod kafka;
 #[cfg(feature = "sources-nginx_stub")]
 mod nginx_stub;
