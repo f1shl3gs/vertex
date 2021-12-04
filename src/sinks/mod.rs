@@ -1,6 +1,6 @@
 #[cfg(feature = "sinks-blackhole")]
 mod blackhole;
-#[cfg(feature = "sinks-kafka")]
+#[cfg(any(feature = "sinks-kafka", feature = "rdkafka"))]
 mod kafka;
 #[cfg(feature = "sinks-pulsar")]
 mod pulsar;

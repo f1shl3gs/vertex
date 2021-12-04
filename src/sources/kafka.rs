@@ -10,9 +10,7 @@ use rdkafka::message::{BorrowedMessage, Headers};
 use serde::{Deserialize, Serialize};
 use event::{LogRecord, Value};
 use snafu::{Snafu, ResultExt};
-use internal::{KafkaEventReceived};
 
-use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
 use crate::config::{
     DataType, SourceConfig, SourceContext, deserialize_duration,
     serialize_duration, GenerateConfig, SourceDescription,
@@ -21,6 +19,7 @@ use crate::Error;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
+use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext, KafkaEventReceived};
 
 
 fn default_auto_offset_reset() -> String {

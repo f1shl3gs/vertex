@@ -1,12 +1,10 @@
 pub mod metric;
 mod common;
-mod kafka;
 
 #[macro_use]
 extern crate metrics;
 
 pub use common::*;
-pub use kafka::*;
 
 pub trait InternalEvent {
     fn emit_logs(&self) {}

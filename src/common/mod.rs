@@ -1,2 +1,2 @@
-#[cfg(any(feature = "sources-kafka", feature = "sink-kafka"))]
+#[cfg(any(feature = "rdkafka"))]
 pub mod kafka;

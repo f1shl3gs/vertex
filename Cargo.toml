@@ -32,44 +32,9 @@ default = [
     # common
     "disk-buffer",
     "listenfd",
-    # sources
-    "sources-node_metrics",
-    "sources-ntp",
-    # "sources-kafka",
-    # "sources-kafka_metrics",
-    "sources-kmsg",
-    "sources-journald",
-    "sources-selfstat",
-    "sources-internal_metrics",
-    "sources-internal_logs",
-    "sources-redis",
-    "sources-zookeeper",
-    "sources-generator",
-    "sources-nginx_stub",
-    "sources-haproxy",
-    "sources-memcached",
-    "sources-prometheus_scrape",
-    "sources-tail",
-    "sources-fluentd",
-    "sources-syslog",
-    "sources-libvirt",
-    "sources-mysqld",
-    "sources-nvidia_smi",
-    "sources-mongodb",
-    "sources-elasticsearch",
-    "sources-bind",
-    # transforms
-    "transforms-add_tags",
-    "transforms-add_fields",
-    "transforms-cardinality",
-    # sinks
-    "sinks-blackhole",
-    "sinks-prometheus_exporter",
-    "sinks-stdout",
-    # "sinks-kafka",
-    "sinks-elasticsearch",
-    "sinks-loki",
-    "sinks-clickhouse",
+    "sources",
+    "transforms",
+    "sinks",
     # extensions
     "extensions-pprof",
     # "extensions-jemalloc"
@@ -83,6 +48,11 @@ target-x86_64-unknown-linux-musl = [
     "rdkafka-cmake",
     # "vendor-all",
     "unix",
+    "openssl/vendored",
+    "sources-kafka",
+    "rdkafka/gssapi-vendored",
+    # "rdkafka/ssl",
+    "rdkafka/ssl-vendored",
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -90,9 +60,12 @@ target-x86_64-unknown-linux-gnu = [
     "sinks",
     "sources",
     "transforms",
-    # "rdkafka-cmake",
+    "rdkafka-cmake",
     # "vendor-all",
-    "unix"
+    "unix",
+    "openssl/vendored",
+    "rdkafka/gssapi-vendored",
+    "sources-kafka"
 ]
 
 # integration
@@ -115,7 +88,7 @@ sources = [
     "sources-node_metrics",
     "sources-ntp",
     # "sources-kafka",
-    # "sources-kafka_metrics",
+    "sources-kafka_metrics",
     "sources-kmsg",
     "sources-selfstat",
     "sources-journald",
@@ -143,8 +116,8 @@ sources-bind = []
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
-# sources-kafka = ["rdkafka"]
-# sources-kafka_metrics = ["rdkafka"]
+sources-kafka = []
+sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
 sources-journald = []
@@ -184,7 +157,7 @@ sinks = [
     "sinks-prometheus_exporter",
     "sinks-stdout",
     "sinks-blackhole",
-    # "sinks-kafka",
+    "sinks-kafka",
     "sinks-pulsar",
     "sinks-elasticsearch",
     "sinks-loki",
@@ -195,7 +168,7 @@ sinks = [
 sinks-prometheus_exporter = []
 sinks-stdout = []
 sinks-blackhole = []
-# sinks-kafka = ["rdkafka"]
+sinks-kafka = ["rdkafka"]
 sinks-pulsar = ["pulsar"]
 sinks-elasticsearch = []
 sinks-loki = []
@@ -321,7 +294,7 @@ prost = { version = "0.8.0", default-features = false, features = ["std"] }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false, features = ["vendored"] }
+openssl = { version = "0.10.36", default-features = false }
 hyper-openssl = { version = "0.9.1", default-features = false }
 
 # Networking
@@ -345,7 +318,7 @@ exitcode = { version = "1.1.2" }
 clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
-rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "ssl-vendored", "gssapi-vendored", "sasl"] }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.101", optional = true }
 nom = { version = "7.1.0", default-features = false }
