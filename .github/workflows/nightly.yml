@@ -37,5 +37,5 @@ jobs:
         with:
           context: distribution/docker
           push: true
-          tags: f1shl3gs/vertex:nightly-alpine-${{ matrix.target }}
+          tags: f1shl3gs/vertex:nightly-${{ matrix.target }}-alpine
           file: alpine/Dockerfile
