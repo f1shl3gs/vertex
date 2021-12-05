@@ -340,3 +340,4 @@ mongodb = { version = "2.0.2", default-features = false, optional = true, featur
 rand_distr = { version = "0.4.2", default-features = false }
 twox-hash = { version = "1.6.1", default-features = false }
 flate2 = { version = "1.0.21" }
+percent-encoding = { version = "2.1.0", default-features = false }

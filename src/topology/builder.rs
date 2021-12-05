@@ -260,6 +260,7 @@ pub async fn build_pieces(
         let ctx = SinkContext {
             acker: acker.clone(),
             globals: config.global.clone(),
+            proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
         };
 
         let (sink, health_check) = match sink.inner.build(ctx).await {

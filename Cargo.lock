@@ -4789,6 +4789,7 @@ dependencies = [
  "once_cell",
  "openssl",
  "openssl-probe",
+ "percent-encoding",
  "pin-project",
  "pprof 0.6.0",
  "prometheus",

@@ -9,17 +9,19 @@ mod validation;
 mod global;
 mod proxy;
 mod component;
+mod uri;
 
 // re-export
-pub use proxy::{ProxyConfig};
+pub use proxy::ProxyConfig;
 pub use helper::*;
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
-pub use component::{GenerateConfig, ComponentDescription, ExampleError};
+pub use component::{ComponentDescription, ExampleError, GenerateConfig};
 pub use loading::load;
+pub use provider::ProviderDescription;
+pub use uri::*;
 #[cfg(test)]
 pub use component::test_generate_config;
-pub use provider::ProviderDescription;
 
 use std::path::PathBuf;
 use async_trait::async_trait;
@@ -43,14 +45,10 @@ pub use resource::{
 pub use builder::Builder;
 
 pub use helper::{
-    deserialize_duration,
-    deserialize_regex,
-    serialize_duration,
-    serialize_regex,
+    deserialize_duration, deserialize_regex, serialize_duration,
+    serialize_regex, skip_serializing_if_default
 };
-pub use loading::{
-    load_from_paths_with_provider,
-};
+pub use loading::load_from_paths_with_provider;
 use futures::future::BoxFuture;
 use crate::extensions::Extension;
 use buffers::Acker;
@@ -155,6 +153,10 @@ pub struct SinkOuter {
 
     #[serde(default)]
     pub buffer: crate::buffers::BufferConfig,
+
+    #[serde(default)]
+    #[serde(skip_serializing_if = "skip_serializing_if_default")]
+    proxy: ProxyConfig,
 }
 
 impl SinkOuter {
@@ -163,11 +165,16 @@ impl SinkOuter {
             inner,
             inputs,
             buffer: Default::default(),
+            proxy: Default::default()
         }
     }
 
     pub fn resources(&self, _id: &str) -> Vec<Resource> {
         self.inner.resources()
+    }
+
+    pub const fn proxy(&self) -> &ProxyConfig {
+        &self.proxy
     }
 }
 
@@ -264,8 +271,15 @@ pub trait TransformConfig: core::fmt::Debug + Send + Sync + dyn_clone::DynClone 
 
 #[derive(Debug, Clone)]
 pub struct SinkContext {
-    pub globals: GlobalOptions,
-    pub acker: Acker,
+    pub(super) globals: GlobalOptions,
+    pub(super) acker: Acker,
+    pub(super) proxy: ProxyConfig,
+}
+
+impl SinkContext {
+    pub const fn proxy(&self) -> &ProxyConfig {
+        &self.proxy
+    }
 }
 
 #[async_trait]
