@@ -301,10 +301,12 @@ impl From<serde_yaml::Value> for Value {
             serde_yaml::Value::Mapping(map) => {
                 let mut fmap = BTreeMap::new();
                 map.iter()
-                    .map(|(k, v)| fmap.insert(
-                        k.as_str().unwrap().to_owned(),
-                        Self::from(v.clone()),
-                    ));
+                    .for_each(|(k, v)| {
+                        fmap.insert(
+                            k.as_str().unwrap().to_owned(),
+                            Self::from(v.clone()),
+                        );
+                    });
 
                 Self::from(fmap)
             }
