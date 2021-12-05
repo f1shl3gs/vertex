@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM docker.io/alpine:3.15.0
 
 COPY vertex /usr/bin/vertex
 COPY vertex.yml /etc/vertex/vertex.yml
