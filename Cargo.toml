@@ -283,7 +283,7 @@ tower-test = { version = "0.4.0" }
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
 serde_yaml = { version = "0.8.21" }
-serde_json = { version = "1.0.68", default-features = false }
+serde_json = { version = "1.0.72", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
 # netlink
