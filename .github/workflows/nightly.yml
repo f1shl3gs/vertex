@@ -19,6 +19,11 @@ jobs:
           # - x86_64-unknown-linux-gnu
     steps:
       - uses: actions/checkout@v2
+      - uses: docker/login-action@v1
+        with:
+          registry: docker.io
+          username: f1shl3gs
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - run: docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
       - uses: actions-rs/toolchain@v1
         with:
@@ -30,10 +35,6 @@ jobs:
           command: build
           args: --target ${{ matrix.target }} --release --no-default-features --features target-${{ matrix.target }}
       - run: cp target/${{ matrix.target }}/release/vertex distribution/docker
-      - uses: docker/login-action@v1
-        with:
-          username: f1shl3gs
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
           context: distribution/docker
