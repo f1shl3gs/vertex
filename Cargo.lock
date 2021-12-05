@@ -984,7 +984,7 @@ dependencies = [
  "indoc",
  "log_schema",
  "pin-project",
- "prost 0.8.0",
+ "prost 0.9.0",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -1297,18 +1297,18 @@ dependencies = [
 
 [[package]]
 name = "headers"
-version = "0.3.4"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f0b7591fb62902706ae8e7aaff416b1b0fa2c0fd0878b46dc13baa3712d8a855"
+checksum = "a4c4eb0471fcb85846d8b0690695ef354f9afb11cb03cac2e1d7c9253351afb0"
 dependencies = [
  "base64",
  "bitflags",
  "bytes",
  "headers-core",
  "http",
+ "httpdate",
  "mime",
  "sha-1",
- "time",
 ]
 
 [[package]]
@@ -2914,7 +2914,7 @@ dependencies = [
  "nom 7.1.0",
  "num_enum",
  "pprof 0.5.0",
- "prost 0.8.0",
+ "prost 0.9.0",
  "prost-build 0.9.0",
  "snafu",
 ]
@@ -4793,7 +4793,7 @@ dependencies = [
  "pprof 0.6.0",
  "prometheus",
  "proptest",
- "prost 0.8.0",
+ "prost 0.9.0",
  "pulsar",
  "rand",
  "rand_distr",
