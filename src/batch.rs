@@ -288,12 +288,16 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
 
         // This is unfortunate since we technically have already made sure
         // that isn't possible in `validate`, but alas.
-        let timeout = self.timeout.ok_or(BatchError::InvalidTimeout)?;
+        let timeout = self.timeout
+            .ok_or(BatchError::InvalidTimeout)?
+            .to_std()
+            .unwrap();
 
-        todo!()
-        /*Ok(BatcherSettings::new(
-
-        ))*/
+        Ok(BatcherSettings::new(
+            timeout,
+            max_bytes,
+            max_events,
+        ))
     }
 }
 
