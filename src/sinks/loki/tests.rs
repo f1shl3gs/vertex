@@ -7,7 +7,11 @@ use crate::sinks::util::testing::load_sink;
 fn interpolate_labels() {
     let (config, cx) = load_sink::<LokiConfig>(r#"
 endpoint: http://localhost:3100
-labels: { label1 = "{{ foo }}", label2 = "some-static-label", label3 = "{{ foo }}", "{{ foo }}" = "{{ foo }}" }
+labels:
+    label1: "{{ foo }}"
+    label2: some-static-label
+    label3: "{{ foo }}"
+    "{{ foo }}": "{{ foo }}"
 encoding: json
 remove_label_fields: true
 "#).unwrap();
