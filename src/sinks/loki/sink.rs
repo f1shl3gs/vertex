@@ -411,7 +411,7 @@ mod tests {
             encoding: EncodingConfig::from(Encoding::Json),
             labels: HashMap::default(),
             remove_label_fields: false,
-            remove_timestamp: false,
+            remove_timestamp: true,
         };
 
         let mut event = Event::from("hello");
