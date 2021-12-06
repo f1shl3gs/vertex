@@ -1023,6 +1023,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "findshlibs"
+version = "0.10.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "40b9e59cd0f7e0806cca4be089683ecb6434e602038df21fe6bf6711b2f07f64"
+dependencies = [
+ "cc",
+ "lazy_static",
+ "libc",
+ "winapi",
+]
+
+[[package]]
 name = "fixedbitset"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2223,18 +2235,6 @@ dependencies = [
 
 [[package]]
 name = "nix"
-version = "0.20.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fa9b4819da1bc61c0ea48b63b7bc8604064dd43013e7cc325df098d49cd7c18a"
-dependencies = [
- "bitflags",
- "cc",
- "cfg-if 1.0.0",
- "libc",
-]
-
-[[package]]
-name = "nix"
 version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "cf1e25ee6b412c2a1e3fcb6a4499a5c1bfe7f43e014bdce9a6b6666e5aa2d187"
@@ -2750,34 +2750,14 @@ dependencies = [
 
 [[package]]
 name = "pprof"
-version = "0.5.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9fb4eee2f2c4f7d48fe5a33008dececbc405d0e58d2a94afe742d4f175bc401"
+checksum = "9d47237f290398d4cfcd293fcc9dcc53cdb1f9bde65b78fcbfaafa7f8190d9e9"
 dependencies = [
  "backtrace",
+ "cfg-if 1.0.0",
  "criterion",
- "inferno",
- "lazy_static",
- "libc",
- "log",
- "nix 0.20.0",
- "parking_lot",
- "prost 0.8.0",
- "prost-build 0.8.0",
- "prost-derive 0.8.0",
- "symbolic-demangle",
- "tempfile",
- "thiserror",
-]
-
-[[package]]
-name = "pprof"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "35ec6927a8c4b0bb3418964ddae137ed6b2d5aa98f4b2210d61764fb30cec4bd"
-dependencies = [
- "backtrace",
- "criterion",
+ "findshlibs",
  "inferno",
  "lazy_static",
  "libc",
@@ -2913,7 +2893,7 @@ dependencies = [
  "indexmap",
  "nom 7.1.0",
  "num_enum",
- "pprof 0.5.0",
+ "pprof",
  "prost 0.9.0",
  "prost-build 0.9.0",
  "snafu",
@@ -4790,7 +4770,7 @@ dependencies = [
  "openssl",
  "openssl-probe",
  "pin-project",
- "pprof 0.6.0",
+ "pprof",
  "prometheus",
  "proptest",
  "prost 0.9.0",
