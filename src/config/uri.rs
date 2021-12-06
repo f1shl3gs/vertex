@@ -1,19 +1,25 @@
+use std::fmt::{Debug, Display, Formatter};
 use std::str::FromStr;
+
 use http::Uri;
 use http::uri::{Authority, PathAndQuery, Scheme};
 use percent_encoding::percent_decode_str;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::de::Visitor;
+
 use crate::http::Auth;
+
 
 /// A wrapper for `http::Uri` that implements the serde traits.
 /// Authorization credentials, if exist, will be removed from the URI and stored in `auth`.
 /// For example: `http:?/user:password@example.com`
 #[derive(Clone, Default, Debug)]
-pub struct UriWithAuth {
+pub struct UriSerde {
     pub uri: Uri,
     pub auth: Option<Auth>,
 }
 
-impl UriWithAuth {
+impl UriSerde {
     /// `Uri` supports incomplete URIs such as "/test", "example.com", etc.
     /// This function fills in empty scheme with HTTP, and empty authority
     /// with `127.0.0.1`.
@@ -42,9 +48,79 @@ impl UriWithAuth {
             auth: self.auth.clone(),
         }
     }
+
+    /// Creates a new instance of `UriWithAuth` by appending a path to the existing one.
+    pub fn append_path(&self, path: &str) -> crate::Result<Self> {
+        let uri = self.uri.to_string();
+        let self_path = uri.trim_end_matches('/');
+        let other_path = path.trim_start_matches('/');
+        let path = format!("{}/{}", self_path, other_path);
+        let uri = path.parse::<Uri>()?;
+        Ok(Self {
+            uri,
+            auth: self.auth.clone(),
+        })
+    }
+
+    pub fn with_auth(mut self, auth: Option<Auth>) -> Self {
+        self.auth = auth;
+        self
+    }
 }
 
-impl FromStr for UriWithAuth {
+impl Serialize for UriSerde {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        where
+            S: Serializer
+    {
+        serializer.serialize_str(&self.to_string())
+    }
+}
+
+impl<'de> Deserialize<'de> for UriSerde {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>
+    {
+        deserializer.deserialize_str(UriVisitor)
+    }
+}
+
+impl Display for UriSerde {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match (self.uri.authority(), &self.auth) {
+            (Some(authority), Some(Auth::Basic { user, password })) => {
+                let authority = format!("{}:{}@{}", user, password, authority);
+                let authority = Authority::from_maybe_shared(authority)
+                    .map_err(|_| std::fmt::Error)?;
+                let mut parts = self.uri.clone().into_parts();
+                parts.authority = Some(authority);
+                std::fmt::Display::fmt(&Uri::from_parts(parts).unwrap(), f)
+            }
+
+            _ => std::fmt::Display::fmt(&self.uri, f)
+        }
+    }
+}
+
+struct UriVisitor;
+
+impl<'a> Visitor<'a> for UriVisitor {
+    type Value = UriSerde;
+
+    fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+        write!(formatter, "a string containning a valid HTTP Uri")
+    }
+
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+        where
+            E: serde::de::Error
+    {
+        v.parse().map_err(serde::de::Error::custom)
+    }
+}
+
+impl FromStr for UriSerde {
     type Err = <Uri as FromStr>::Err;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -53,7 +129,7 @@ impl FromStr for UriWithAuth {
     }
 }
 
-impl From<Uri> for UriWithAuth {
+impl From<Uri> for UriSerde {
     fn from(uri: Uri) -> Self {
         match uri.authority() {
             None => Self { uri, auth: None },
@@ -101,5 +177,78 @@ fn get_basic_auth(authority: &Authority) -> (Authority, Option<Auth>) {
         (authority, Some(Auth::Basic { user, password }))
     } else {
         (authority.clone(), None)
+    }
+}
+
+pub fn protocol_endpoint(uri: Uri) -> (String, String) {
+    let mut parts = uri.into_parts();
+
+    // Drop any username and password
+    parts.authority = parts.authority.map(|auth| {
+        let host = auth.host();
+        match auth.port() {
+            None => host.to_string(),
+            Some(port) => format!("{}:{}", host, port),
+        }
+            .parse()
+            .unwrap_or_else(|_| unreachable!())
+    });
+
+    // Drop the query and fragment
+    parts.path_and_query = parts.path_and_query.map(|pq| {
+        pq.path()
+            .parse::<PathAndQuery>()
+            .unwrap_or_else(|_| unreachable!())
+    });
+
+    (
+        parts.scheme.clone().unwrap_or(Scheme::HTTP).as_str().into(),
+        Uri::from_parts(parts)
+            .unwrap_or_else(|_| unreachable!())
+            .to_string()
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_endpoint() {
+        let tests = [
+            ("http://user:pass@example.com/test", "http://example.com/test", Some(("user", "pass"))),
+            ("localhost:8080", "localhost:8080", None),
+            ("/api/test", "/api/test", None),
+            ("http://user:pass;@example.com", "http://example.com", Some(("user", "pass;"))),
+            ("user:pass@example.com", "example.com", Some(("user", "pass"))),
+            ("user@example.com", "example.com", Some(("user", "")))
+        ];
+
+        for (input, want_uri, want_auth) in tests {
+            let UriSerde { uri, auth } = input.parse().unwrap();
+            assert_eq!(uri, Uri::from_maybe_shared(want_uri.to_owned()).unwrap());
+            assert_eq!(auth, want_auth.map(|(user, password)| {
+                Auth::Basic {
+                    user: user.to_owned(),
+                    password: password.to_owned()
+                }
+            }));
+        }
+    }
+
+    #[test]
+    fn protocol_endpoint_parses_urls() {
+        let tests = [
+            ("http://example.com", "http", "http://example.com"),
+            ("https://user:pass@example.org:123/path?query", "https", "https://example.org:123/path"),
+            ("gopher://example.net:123/path?foo=bar#frag,emt", "gopher", "gopher://example.net:123/path")
+        ];
+
+        for (input, protocol, endpoint) in tests {
+            assert_eq!(
+                protocol_endpoint(input.parse().unwrap()),
+                (protocol.into(), endpoint.into())
+            );
+        }
     }
 }

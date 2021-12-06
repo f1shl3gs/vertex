@@ -1,15 +1,19 @@
 use std::collections::HashMap;
 use std::time::Duration;
+use futures_util::FutureExt;
+use http::Uri;
 
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use event::encoding::EncodingConfig;
 
 use crate::batch::{BatchConfig, SinkBatchSettings};
-use crate::config::{DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, UriWithAuth};
-use crate::http::{Auth, HttpClient};
+use crate::config::{DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, UriSerde};
+use crate::http::{Auth, HttpClient, MaybeAuth};
+use crate::sinks::loki::healthcheck::health_check;
+use crate::sinks::loki::sink::LokiSink;
 use crate::sinks::Sink;
-use crate::sinks::util::service::RequestConfig;
+use crate::sinks::util::service::{Concurrency, RequestConfig};
 use crate::template::Template;
 use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
 
@@ -33,7 +37,7 @@ impl SinkBatchSettings for LokiDefaultBatchSettings {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
-enum OutOfOrderAction {
+pub enum OutOfOrderAction {
     Drop,
     RewriteTimestamp,
 }
@@ -46,11 +50,11 @@ impl Default for OutOfOrderAction {
 
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-struct LokiConfig {
-    pub endpoint: UriWithAuth,
+pub struct LokiConfig {
+    pub endpoint: UriSerde,
     pub encoding: EncodingConfig<Encoding>,
 
-    pub tenant_id: Option<Template>,
+    pub tenant: Option<Template>,
     pub labels: HashMap<Template, Template>,
 
     #[serde(default = "crate::config::default_false")]
@@ -82,15 +86,15 @@ impl LokiConfig {
 impl GenerateConfig for LokiConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
-            endpoint: "http://localhost:3100".try_into().unwrap(),
+            endpoint: "http://localhost:3100".parse().unwrap(),
             encoding: EncodingConfig::from(Encoding::Json),
-            tenant_id: None,
+            tenant: None,
             labels: Default::default(),
             remove_label_fields: false,
             remove_timestamp: false,
             out_of_order_action: Default::default(),
             auth: None,
-            request: (),
+            request: RequestConfig::new(Concurrency::None),
             batch: Default::default(),
             tls: None,
         }).unwrap()
@@ -100,7 +104,30 @@ impl GenerateConfig for LokiConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "loki")]
 impl SinkConfig for LokiConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {}
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+        if self.labels.is_empty() {
+            return Err("`labels` must include at least one label".into());
+        }
+
+        for label in self.labels.keys() {
+            if !valid_label_name(label) {
+                return Err(format!("Invalid label name {:?}", label.get_ref()).into());
+            }
+        }
+
+        let client = self.build_client(cx.clone())?;
+
+        let config = LokiConfig {
+            auth: self.auth.choose_one(&self.auth)?,
+            ..self.clone()
+        };
+
+        let sink = LokiSink::new(config.clone(), client.clone(), cx)?;
+
+        let health_check = health_check(config, client).boxed();
+
+        Ok((Sink::Stream(Box::new(sink)), health_check))
+    }
 
     fn input_type(&self) -> DataType {
         DataType::Log
@@ -117,11 +144,12 @@ pub fn valid_label_name(label: &Template) -> bool {
         // Although that isn't explicityl said anywhere besides what's in the code.
         // The closest mention is in seciont about Parse Expression https://grafana.com/docs/loki/latest/logql/
         //
-        // [a-ZA-Z0-9_]*
+        // [a-zA-Z_][a-zA-Z0-9_]*
         let label_trim = label.get_ref().trim();
         let mut label_chars = label_trim.chars();
-        if let Some(c) = label_chars.next() {
-            (c.is_ascii_alphabetic() || c == '_') && label_chars.all(|c| c.is_ascii_alphanumeric() || c == '_')
+        if let Some(ch) = label_chars.next() {
+            (ch.is_ascii_alphabetic() || ch == '_')
+                && label_chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
         } else {
             false
         }
@@ -130,24 +158,31 @@ pub fn valid_label_name(label: &Template) -> bool {
 
 #[cfg(test)]
 mod tests {
+    use crate::config::test_generate_config;
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        test_generate_config::<LokiConfig>();
+    }
 
     #[test]
     fn validate_label_names() {
         let inputs = [
-            "name",
-            " name",
-            "bee_bop",
-            "a09b",
-            "0ab",
-            "*",
-            "",
-            " ",
-            "{{field}}"
+            ("name", true),
+            (" name", true),
+            ("bee_bop", true),
+            ("a09b", true),
+            ("{{field}}", true),
+            ("0ab", false),
+            ("*", false),
+            ("", false),
+            (" ", false),
         ];
 
-        for input in inputs {
-            assert!(valid_label_name(input.try_into().unwrap()));
+        for (input, want) in inputs {
+            let tmpl = input.try_into().unwrap();
+            assert_eq!(valid_label_name(&tmpl), want, "input: {}", input);
         }
     }
 }

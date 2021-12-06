@@ -6,6 +6,7 @@ mod macros;
 pub mod encoding;
 mod finalization;
 mod metadata;
+mod logfmt;
 
 // re-export
 pub use metric::*;
@@ -130,6 +131,18 @@ impl Event {
         match self {
             Event::Metric(m) => m,
             _ => panic!("Failed type coercion, {:?} is not a metric", self)
+        }
+    }
+
+    /// Coerces self into a `LogRecord`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than an `Event::Log`
+    pub fn into_log(self) -> LogRecord {
+        match self {
+            Event::Log(log) => log,
+            _ => panic!("Failed type coercion, {:?} is not a log event", self)
         }
     }
 

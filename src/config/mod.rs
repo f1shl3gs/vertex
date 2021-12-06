@@ -46,7 +46,7 @@ pub use builder::Builder;
 
 pub use helper::{
     deserialize_duration, deserialize_regex, serialize_duration,
-    serialize_regex, skip_serializing_if_default
+    serialize_regex, skip_serializing_if_default,
 };
 pub use loading::load_from_paths_with_provider;
 use futures::future::BoxFuture;
@@ -154,6 +154,9 @@ pub struct SinkOuter {
     #[serde(default)]
     pub buffer: crate::buffers::BufferConfig,
 
+    #[serde(default = "default_true")]
+    pub health_check: bool,
+
     #[serde(default)]
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     proxy: ProxyConfig,
@@ -165,12 +168,17 @@ impl SinkOuter {
             inner,
             inputs,
             buffer: Default::default(),
-            proxy: Default::default()
+            proxy: Default::default(),
+            health_check: true,
         }
     }
 
     pub fn resources(&self, _id: &str) -> Vec<Resource> {
         self.inner.resources()
+    }
+
+    pub fn health_check(&self) -> bool {
+        self.health_check
     }
 
     pub const fn proxy(&self) -> &ProxyConfig {
@@ -274,11 +282,26 @@ pub struct SinkContext {
     pub(super) globals: GlobalOptions,
     pub(super) acker: Acker,
     pub(super) proxy: ProxyConfig,
+    pub(super) health_check: bool,
 }
 
 impl SinkContext {
     pub const fn proxy(&self) -> &ProxyConfig {
         &self.proxy
+    }
+
+    pub fn acker(&self) -> Acker {
+        self.acker.clone()
+    }
+
+    #[cfg(test)]
+    pub fn new_test() -> Self {
+        Self {
+            globals: Default::default(),
+            acker: Acker::Null,
+            proxy: Default::default(),
+            health_check: true,
+        }
     }
 }
 

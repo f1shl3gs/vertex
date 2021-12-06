@@ -33,6 +33,7 @@ use crate::{
     tls::TlsConfig,
     impl_generate_config_from_default,
 };
+use crate::stream::tripwire_handler;
 
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -219,18 +220,6 @@ fn handle(
 
     resp
 }
-
-async fn tripwire_handler(closed: bool) {
-    futures::future::poll_fn(|_| {
-        if closed {
-            std::task::Poll::Ready(())
-        } else {
-            std::task::Poll::Pending
-        }
-    })
-        .await
-}
-
 
 impl PrometheusExporter {
     fn new(config: PrometheusExporterConfig, acker: Acker) -> Self {

@@ -240,7 +240,7 @@ pub async fn build_pieces(
         .filter(|(name, _)| diff.sinks.contains_new(name))
     {
         let sink_inputs = &sink.inputs;
-        // let healthcheck = sink.healthcheck();
+        let health_check = sink.health_check();
         let typetag = sink.inner.sink_type();
         let input_type = sink.inner.input_type();
 
@@ -258,6 +258,7 @@ pub async fn build_pieces(
         };
 
         let ctx = SinkContext {
+            health_check,
             acker: acker.clone(),
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
