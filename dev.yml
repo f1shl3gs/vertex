@@ -61,8 +61,8 @@ sources:
     type: nginx_stub
     endpoints:
       - http://localhost:10980/basic_status
-  # internal_logs:
-  #   type: internal_logs
+  internal_logs:
+    type: internal_logs
   mysql:
     type: mysqld
     username: root
@@ -77,6 +77,7 @@ transforms:
     inputs:
       - generator
       - ntp
+      - internal_logs
     tags:
       hostname: ${HOSTNAME}
 
@@ -110,3 +111,11 @@ sinks:
     listen: 127.0.0.1:9102
     inputs:
       - nvidia
+  loki:
+    type: loki
+    inputs:
+      - add_extra_tags
+    encoding: json
+    labels:
+      foo: bar
+    endpoint: http://127.0.0.1:9010

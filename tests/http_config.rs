@@ -3,9 +3,8 @@ use hyper::{Body, Server};
 use hyper::service::{make_service_fn, service_fn};
 use tokio_util::codec::{BytesCodec, FramedRead};
 
+// serve a file by asynchronously reading it by chunks using tokio-util crate
 async fn send_file(_req: Request<Body>) -> hyper::Result<Response<Body>> {
-    // serve a file by asynchronously reading it by chunks using tokio-util crate
-
     if let Ok(file) = tokio::fs::File::open("").await {
         let stream = FramedRead::new(file, BytesCodec::new());
         let body = Body::wrap_stream(stream);

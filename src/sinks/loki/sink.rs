@@ -155,18 +155,22 @@ pub(super) struct EventEncoder {
 
 impl EventEncoder {
     fn build_labels(&self, event: &Event) -> Vec<(String, String)> {
-        self.labels
+        let log = event.as_log();
+        log.tags
             .iter()
-            .filter_map(|(key_tmpl, value_tmpl)| {
-                if let (Ok(key), Ok(value)) = (
-                    key_tmpl.render_string(event),
-                    value_tmpl.render_string(event),
-                ) {
-                    Some((key, value))
-                } else {
-                    None
-                }
-            })
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .chain(self.labels
+                .iter()
+                .filter_map(|(key_tmpl, value_tmpl)| {
+                    if let (Ok(key), Ok(value)) = (
+                        key_tmpl.render_string(event),
+                        value_tmpl.render_string(event),
+                    ) {
+                        Some((key, value))
+                    } else {
+                        None
+                    }
+                }))
             .collect()
     }
 
@@ -207,7 +211,8 @@ impl EventEncoder {
         let log = event.into_log();
         let event = match &self.encoding.codec() {
             Encoding::Json => {
-                serde_json::to_string(&log).expect("json encoding should never fail")
+                serde_json::to_string(&log.fields)
+                    .expect("json encoding should never fail")
             }
 
             Encoding::Text => log.get_field(schema.message_key())

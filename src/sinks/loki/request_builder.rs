@@ -84,6 +84,8 @@ impl Serialize for LokiEvent {
     }
 }
 
+// This struct is PushRequest
+// https://github.com/grafana/loki/blob/main/pkg/logproto/logproto.proto#L29
 #[derive(Debug, Default, Serialize)]
 pub struct LokiBatch {
     stream: HashMap<String, String>,
