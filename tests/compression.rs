@@ -1,10 +1,6 @@
-use std::fmt::{Debug, Display, Formatter, write};
-
-use serde::{de, ser, Serializer};
-use serde::de::{Error, MapAccess};
-use serde::Deserializer;
-use serde::ser::{SerializeMap};
+use serde::{de, ser};
 use serde_json::Value;
+use std::fmt;
 
 pub const GZIP_NONE: u32 = 0;
 pub const GZIP_FAST: u32 = 1;
@@ -17,21 +13,15 @@ pub enum Compression {
     Gzip(flate2::Compression),
 }
 
-impl Default for Compression {
-    fn default() -> Self {
-        Self::None
-    }
-}
-
 impl Compression {
-    /// Gets whether or not this compression will actually compression the input.
+    /// Gets whether or not this compression will actually compressing the input.
     ///
     /// While it may be counterintuitive for "compression" to not compress, this is simply a
     /// consequence of designing a single type that may or may not compress so that we can avoid
     /// having to box writers at a higher-level.
     ///
-    /// Some callers can benefit from knowing whether or not compression is actually taking
-    /// place, as different size limitations may come into play.
+    /// Some callers can benefit from knowing whether or not compression is actually taking place,
+    /// as different size limitations may come into play.
     pub const fn is_compressed(&self) -> bool {
         !matches!(self, Compression::None)
     }
@@ -46,40 +36,61 @@ impl Compression {
     pub const fn content_encoding(self) -> Option<&'static str> {
         match self {
             Self::None => None,
-            Self::Gzip(_) => Some("gzip")
+            Self::Gzip(_) => Some("gzip"),
+        }
+    }
+
+    pub const fn extension(self) -> &'static str {
+        match self {
+            Self::None => "log",
+            Self::Gzip(_) => "log.gz",
         }
     }
 }
-
-impl Display for Compression {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for Compression {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Self::None => write!(f, "none"),
-            Self::Gzip(ref level) => write!(f, "gzip({})", level.level())
+            Compression::None => write!(f, "none"),
+            Compression::Gzip(ref level) => write!(f, "gzip({})", level.level()),
         }
     }
 }
 
-impl<'de> serde::de::Deserialize<'de> for Compression {
+#[cfg(feature = "rusoto_core")]
+impl From<Compression> for rusoto_core::encoding::ContentEncoding {
+    fn from(compression: Compression) -> Self {
+        match compression {
+            Compression::None => rusoto_core::encoding::ContentEncoding::Identity,
+            Compression::Gzip(level) => {
+                rusoto_core::encoding::ContentEncoding::Gzip(None, level.level())
+            }
+        }
+    }
+}
+
+impl<'de> de::Deserialize<'de> for Compression {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
         where
-            D: Deserializer<'de>
+            D: de::Deserializer<'de>,
     {
         struct StringOrMap;
 
-        impl<'de> serde::de::Visitor<'de> for StringOrMap {
+        impl<'de> de::Visitor<'de> for StringOrMap {
             type Value = Compression;
 
-            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-                formatter.write_str("string or map")
+            fn expecting(&self, f: &mut fmt::Formatter) -> fmt::Result {
+                f.write_str("string or map")
             }
 
-            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E> where E: Error {
-                match v {
+            fn visit_str<E>(self, s: &str) -> Result<Self::Value, E>
+                where
+                    E: de::Error,
+            {
+                match s {
                     "none" => Ok(Compression::None),
                     "gzip" => Ok(Compression::gzip_default()),
                     _ => Err(de::Error::invalid_value(
-                        de::Unexpected::Str(v),
+                        de::Unexpected::Str(s),
                         &r#""none" or "gzip""#,
                     )),
                 }
@@ -87,7 +98,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
 
             fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
                 where
-                    A: MapAccess<'de>
+                    A: de::MapAccess<'de>,
             {
                 let mut algorithm = None;
                 let mut level = None;
@@ -98,14 +109,12 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                             if algorithm.is_some() {
                                 return Err(de::Error::duplicate_field("algorithm"));
                             }
-
                             algorithm = Some(map.next_value::<&str>()?);
                         }
                         "level" => {
                             if level.is_some() {
                                 return Err(de::Error::duplicate_field("level"));
                             }
-
                             level = Some(match map.next_value::<Value>()? {
                                 Value::Number(level) => match level.as_u64() {
                                     Some(value) if value <= 9 => {
@@ -115,7 +124,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                                         return Err(de::Error::invalid_value(
                                             de::Unexpected::Other(&level.to_string()),
                                             &"0, 1, 2, 3, 4, 5, 6, 7, 8 or 9",
-                                        ));
+                                        ))
                                     }
                                 },
                                 Value::String(level) => match level.as_str() {
@@ -127,7 +136,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                                         return Err(de::Error::invalid_value(
                                             de::Unexpected::Str(level),
                                             &r#""none", "fast", "best" or "default""#,
-                                        ));
+                                        ))
                                     }
                                 },
                                 value => {
@@ -138,11 +147,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                                 }
                             });
                         }
-
-                        _ => return Err(de::Error::unknown_field(
-                            key,
-                            &["algorithm", "level"],
-                        ))
+                        _ => return Err(de::Error::unknown_field(key, &["algorithm", "level"])),
                     };
                 }
 
@@ -152,7 +157,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                         None => Ok(Compression::None),
                     },
                     "gzip" => Ok(Compression::Gzip(level.unwrap_or_default())),
-                    algorithm => Err(de::Error::unknown_variant(algorithm, &["none", "gzip"]))
+                    algorithm => Err(de::Error::unknown_variant(algorithm, &["none", "gzip"])),
                 }
             }
         }
@@ -164,12 +169,11 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
 impl ser::Serialize for Compression {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
         where
-            S: Serializer
+            S: ser::Serializer,
     {
-        use ser::Serializer;
+        use ser::SerializeMap;
 
         let mut map = serializer.serialize_map(None)?;
-
         match self {
             Compression::None => map.serialize_entry("algorithm", "none")?,
             Compression::Gzip(level) => {
@@ -177,46 +181,24 @@ impl ser::Serialize for Compression {
                 match level.level() {
                     GZIP_NONE => map.serialize_entry("level", "none")?,
                     GZIP_FAST => map.serialize_entry("level", "fast")?,
-                    GZIP_DEFAULT => map.serialize_entry("level", "default")?,
+                    // Don't serialize if at default level, we already utilize that when
+                    // deserializing and it just clutters the resulting JSON.
+                    GZIP_DEFAULT => {}
                     GZIP_BEST => map.serialize_entry("level", "best")?,
                     level => map.serialize_entry("level", &level)?,
                 };
             }
         };
-
         map.end()
     }
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-    use serde::{Deserialize, Serialize};
+mod test {
+    use super::Compression;
 
     #[test]
-    fn deserialization_yaml() {
-        let tests = [
-            ("none", Compression::None),
-            ("algorithm: gzip\nlevel: 3", Compression::None),
-            ("algorithm: \"gzip\"", Compression::gzip_default()),
-            ("algorithm: gzip\nlevel: fast", Compression::Gzip(flate2::Compression::fast())),
-            ("algorithm: gzip\nlevel: default", Compression::gzip_default()),
-            ("algorithm: gzip\nlevel: best", Compression::Gzip(flate2::Compression::best())),
-        ];
-
-        for (input, want) in tests {
-            let compression: Compression = serde_yaml::from_str(input)
-                .map_err(|err| {
-                    println!("input:\n{}", input);
-                    err
-                }).unwrap();
-
-            assert_eq!(compression, want, "input: {}", input);
-        }
-    }
-
-    #[test]
-    fn deserialization_json() {
+    fn deserialization() {
         let fixtures_valid = [
             (r#""none""#, Compression::None),
             (r#"{"algorithm": "none"}"#, Compression::None),
@@ -276,6 +258,29 @@ mod tests {
             let deserialized: Result<Compression, _> = serde_json::from_str(source);
             let error = deserialized.expect_err("invalid source");
             assert_eq!(error.to_string().as_str(), *result);
+        }
+    }
+
+
+    #[test]
+    fn deserialization_yaml() {
+        let tests = [
+            ("none", Compression::None),
+            ("algorithm: gzip\nlevel: 3", Compression::None),
+            ("algorithm: \"gzip\"", Compression::gzip_default()),
+            ("algorithm: gzip\nlevel: fast", Compression::Gzip(flate2::Compression::fast())),
+            ("algorithm: gzip\nlevel: default", Compression::gzip_default()),
+            ("algorithm: gzip\nlevel: best", Compression::Gzip(flate2::Compression::best())),
+        ];
+
+        for (input, want) in tests {
+            let compression: Compression = serde_yaml::from_str(input)
+                .map_err(|err| {
+                    println!("input:\n{}", input);
+                    err
+                }).unwrap();
+
+            assert_eq!(compression, want, "input: {}", input);
         }
     }
 }

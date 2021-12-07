@@ -1414,6 +1414,7 @@ name = "humanize"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "criterion",
  "serde",
  "snafu",
 ]
@@ -3284,10 +3285,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "redfish"
-version = "0.1.0"
-
-[[package]]
 name = "redis"
 version = "0.21.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4795,6 +4792,8 @@ dependencies = [
  "prometheus",
  "proptest",
  "prost 0.9.0",
+ "prost-build 0.9.0",
+ "prost-types 0.9.0",
  "pulsar",
  "rand",
  "rand_distr",

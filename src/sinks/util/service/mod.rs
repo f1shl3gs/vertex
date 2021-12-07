@@ -1,7 +1,9 @@
 mod concurrency;
 mod map;
 
+// re-export
 pub use concurrency::*;
+
 
 use std::time::Duration;
 

@@ -48,7 +48,6 @@ impl Default for OutOfOrderAction {
     }
 }
 
-
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LokiConfig {
     pub endpoint: UriSerde,

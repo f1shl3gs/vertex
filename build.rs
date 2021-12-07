@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 use std::io::Write;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 struct TrackedEnv {
     envs: HashSet<String>,
@@ -174,4 +174,15 @@ fn main() {
 
     // Emit the aforementioned stanzas
     tracker.emit_rerun_stanzas();
+
+    // Generate proto if needed
+    let src = PathBuf::from("src/sinks/loki/proto");
+    let include = &[src.clone()];
+
+    println!("cargo:rerun-if-changed=src/sinks/loki/proto/loki.proto");
+    let mut config = prost_build::Config::new();
+    config.compile_protos(
+        &[src.join("loki.proto")],
+        include,
+    ).unwrap();
 }

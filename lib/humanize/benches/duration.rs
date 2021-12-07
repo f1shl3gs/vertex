@@ -1,7 +1,7 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use criterion::measurement::WallTime;
 
-use vertex::duration::{parse_duration, duration_to_string};
+use humanize::{parse_duration, duration_to_string};
 
 pub fn parse_duration_benchmark(c: &mut Criterion) -> &mut Criterion<WallTime> {
     c.bench_function("parse_duration", |b| {

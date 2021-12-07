@@ -11,7 +11,7 @@ mod stdout;
 #[cfg(feature = "sinks-elasticsearch")]
 mod elasticsearch;
 #[cfg(feature = "sinks-loki")]
-mod loki;
+pub mod loki;
 #[cfg(feature = "sinks-vertex")]
 mod vertex;
 #[cfg(feature = "sinks-clickhouse")]
