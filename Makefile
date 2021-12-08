@@ -46,7 +46,7 @@ build_x86_64-unknown-linux-gnu: artifacts-dir
 
 
 # Integration tests
-integration-tests-nginx_stub:
+integration-test-nginx_stub:
 	cargo test -p vertex --lib sources::nginx_stub::integration_tests:: --features integration-tests-nginx_stub --no-fail-fast
 
 
