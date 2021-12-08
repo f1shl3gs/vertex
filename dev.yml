@@ -116,7 +116,7 @@ sinks:
     inputs:
       - add_extra_tags
     encoding: json
-    compression: none
+    compression: gzip
     labels:
       foo: bar
     endpoint: http://127.0.0.1:9010

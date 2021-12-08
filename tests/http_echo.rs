@@ -10,8 +10,16 @@ async fn dump_request(mut req: Request<Body>) -> hyper::Result<Response<Body>> {
 
     println!();
     let body = hyper::body::to_bytes(req.body_mut()).await.unwrap();
-    let body = String::from_utf8(body.to_vec()).unwrap();
-    println!("{}\n", body);
+    let data = body.to_vec();
+
+    // First two bytes is the magic header of gzip content
+    // http://www33146ue.sakura.ne.jp/staff/iz/formats/gzip.html
+    if data[0] == 0x1f && data[1] == 0x8b {
+        println!("gzip content received")
+    } else {
+        let body = String::from_utf8(data).unwrap();
+        println!("{}\n", body);
+    }
 
     Ok(Response::builder().status(StatusCode::OK).body(Body::empty()).unwrap())
 }
