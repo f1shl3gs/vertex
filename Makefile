@@ -44,9 +44,10 @@ build_x86_64-unknown-linux-gnu: artifacts-dir
 		--features target-x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex target/artifacts/vertex-x86_64-unknown-linux-gnu
 
-image: build_x86_64-unknown-linux-musl
-	cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
-	cd distribution/docker && strip vertex && docker build -t vertex:${VERSION}-alpine .
+
+# Integration tests
+integration-tests-nginx_stub:
+	cargo test -p vertex --lib sources::nginx_stub::integration_tests:: --features integration-tests-nginx_stub --no-fail-fast
 
 
 # profile when bench
