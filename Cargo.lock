@@ -4011,6 +4011,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "sysinfo"
+version = "0.1.0"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "tail"
 version = "0.1.0"
 dependencies = [
@@ -4791,6 +4798,7 @@ dependencies = [
  "socket2 0.4.2",
  "sqlx",
  "stream-cancel",
+ "sysinfo",
  "tempfile",
  "testcontainers",
  "testify",

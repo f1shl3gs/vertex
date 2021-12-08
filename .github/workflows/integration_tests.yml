@@ -1,0 +1,39 @@
+name: Integration Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  CI: true
+
+jobs:
+  cancel-previous:
+    name: Cancel redundant jobs
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true
+
+  tests:
+    name: Integration ${{ matrix.test }}
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - nginx_stub
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash scripts/environment/prepare.sh
+      - run: make integration-test-${{ matrix.test }}

@@ -1,6 +1,6 @@
-#[cfg(feature = "sources-node_metrics")]
+#[cfg(all(unix, feature = "sources-node_metrics"))]
 pub mod node;
-#[cfg(feature = "sources-journald")]
+#[cfg(all(target_os = "linux", feature = "sources-journald"))]
 mod journald;
 #[cfg(feature = "sources-kafka")]
 mod kafka;

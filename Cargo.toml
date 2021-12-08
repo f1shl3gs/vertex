@@ -23,7 +23,8 @@ members = [
     "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
-    "lib/humanize"
+    "lib/humanize",
+    "lib/sysinfo"
 ]
 
 [features]
@@ -70,20 +71,31 @@ target-x86_64-unknown-linux-gnu = [
     "sources-kafka"
 ]
 
-# integration
-integration-test = []
+# Integration tests
+integration-tests = []
 
-# common
+integration-tests-nginx_stub = []
+integration-tests-redis = []
+integration-tests-mysql = []
+integration-tests-zookeeper = []
+integration-tests-kafka = []
+integration-tests-loki = []
+integration-tests-haproxy = []
+integration-tests-memcached = []
+integration-tests-ntp = []
+integration-tests-prometheus_scrape = []
+
+# Common
 disk-buffer = []
 tokio-console = [
     "console-subscriber"
 ]
 
-# allocator
+# Allocator
 allocator-mimalloc = ["mimalloc"]
 allocator-jemalloc = ["jemallocator"]
 
-# sources
+# Sources
 sources = [
     "sources-bind",
     "sources-generator",
@@ -239,6 +251,7 @@ prometheus = { path = "lib/prometheus" }
 log_schema = { path = "lib/log_schema" }
 tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
+sysinfo = { path = "lib/sysinfo" }
 
 # Allocation
 mimalloc = { version = "0.1.27", default-features = false, optional = true }
