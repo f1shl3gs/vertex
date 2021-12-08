@@ -309,7 +309,7 @@ pprof = { version = "0.6.1", default-features = false, optional = true, features
 
 # External libs
 chrono = { version = "0.4.19", features = ["serde"] }
-chrono-tz = { version = "0.6.0", features = ["serde"] }
+chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }
 derivative = { version = "2.2.0" }
