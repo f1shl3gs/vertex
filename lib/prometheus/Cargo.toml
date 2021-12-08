@@ -17,7 +17,7 @@ prost-build = { version = "0.9" }
 
 [dev-dependencies]
 criterion = { version = "0.3", features = ["html_reports"] }
-pprof = { version = "0.5.0", default-features = false, features = ["flamegraph", "criterion", "protobuf"] }
+pprof = { version = "0.6.1", default-features = false, features = ["flamegraph", "criterion", "protobuf"] }
 
 [lib]
 bench = false

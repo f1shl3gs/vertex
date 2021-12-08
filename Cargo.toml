@@ -220,7 +220,7 @@ prost-build = { version = "0.9" }
 tokio = { version = "1.14.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
-pprof = { version = "0.6.0", default-features = false, features = ["flamegraph", "criterion"] }
+pprof = { version = "0.6.1", default-features = false, features = ["flamegraph", "criterion"] }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 rand = { version = "0.8.4" }
@@ -228,6 +228,7 @@ env-test-util = { version = "1.0.1" }
 testify = { path = "lib/testify" }
 assert_cmd = { version = "2.0.2" }
 proptest = { version = "1.0" }
+tower-test = { version = "0.4.0" }
 
 [dependencies]
 # workspaces
@@ -240,7 +241,7 @@ tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 
 # Allocation
-mimalloc = { version = "0.1.26", default-features = false, optional = true }
+mimalloc = { version = "0.1.27", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
@@ -280,7 +281,6 @@ headers = { version = "0.3.5" }
 
 # Tower
 tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
-tower-test = { version = "0.4.0" }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
@@ -311,7 +311,7 @@ pprof = { version = "0.6.0", default-features = false, optional = true, features
 
 # External libs
 chrono = { version = "0.4.19", features = ["serde"] }
-chrono-tz = { version = "0.6.0", features = ["serde"] }
+chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }
 derivative = { version = "2.2.0" }
@@ -326,7 +326,7 @@ url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
-libc = { version = "0.2.101", optional = true }
+libc = { version = "0.2.109", optional = true }
 nom = { version = "7.1.0", default-features = false }
 snafu = { version = "0.6.10" }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
