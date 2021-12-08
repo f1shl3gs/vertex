@@ -31,6 +31,33 @@ pub fn serialize_duration_option<S: Serializer>(d: &Option<chrono::Duration>, s:
     }
 }
 
+pub fn deserialize_std_duration<'de, D: Deserializer<'de>>(deserializer: D) -> Result<std::time::Duration, D::Error> {
+    let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
+    humanize::duration_std::parse_duration(&s).map_err(serde::de::Error::custom)
+}
+
+pub fn serialize_std_duration<S: Serializer>(d: &std::time::Duration, s: S) -> Result<S::Ok, S::Error> {
+    s.serialize_str(&humanize::duration_std::duration_to_string(d))
+}
+
+pub fn deserialize_std_duration_option<'de, D: Deserializer<'de>>(deserializer: D) -> Result<Option<std::time::Duration>, D::Error> {
+    let s: Option<String> = Option::deserialize(deserializer)?;
+    match s {
+        Some(text) => {
+            let duration = humanize::duration_std::parse_duration(&text).map_err(serde::de::Error::custom)?;
+            Ok(Some(duration))
+        }
+        None => Ok(None)
+    }
+}
+
+pub fn serialize_std_duration_option<S: Serializer>(d: &Option<std::time::Duration>, s: S) -> Result<S::Ok, S::Error> {
+    match d {
+        Some(d) => s.serialize_str(&humanize::duration_std::duration_to_string(d)),
+        None => s.serialize_none()
+    }
+}
+
 pub fn deserialize_regex<'de, D: Deserializer<'de>>(deserializer: D) -> Result<::regex::Regex, D::Error> {
     let s: String = serde::Deserialize::deserialize(deserializer)?;
     ::regex::Regex::new(&s).map_err(serde::de::Error::custom)

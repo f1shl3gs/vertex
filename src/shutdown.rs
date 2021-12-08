@@ -1,12 +1,3 @@
-use stream_cancel::{Trigger, Tripwire};
-use tokio::time::{Instant, timeout_at};
-
-use futures::{
-    Future,
-    FutureExt,
-    ready,
-    future,
-};
 use std::{
     collections::HashMap,
     pin::Pin,
@@ -16,6 +7,18 @@ use std::{
         Poll,
     },
 };
+
+use stream_cancel::{Trigger, Tripwire};
+use tokio::time::{Instant, timeout_at};
+use futures::{
+    Future,
+    FutureExt,
+    ready,
+    future,
+};
+
+use crate::stream::tripwire_handler;
+
 
 #[derive(Debug, Default)]
 pub struct ShutdownCoordinator {
@@ -250,17 +253,6 @@ impl ShutdownCoordinator {
             }
         }.boxed()
     }
-}
-
-async fn tripwire_handler(closed: bool) {
-    futures::future::poll_fn(|_| {
-        if closed {
-            Poll::Ready(())
-        } else {
-            Poll::Pending
-        }
-    })
-        .await
 }
 
 struct DisableTrigger {

@@ -7,3 +7,8 @@ pub fn random_string(len: usize) -> String {
         .map(char::from)
         .collect::<String>()
 }
+
+pub fn random_lines(len: usize) -> impl Iterator<Item=String> {
+    std::iter::repeat(())
+        .map(move |_| random_string(len))
+}

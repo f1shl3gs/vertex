@@ -61,3 +61,14 @@ impl<'a> InternalEvent for BytesSent<'a> {
         Some("BytesSent")
     }
 }
+
+pub struct EventProcessed {
+    pub byte_size: usize,
+    pub component: &'static str,
+}
+
+impl InternalEvent for EventProcessed {
+    fn emit_metrics(&self) {
+        counter!("processed_bytes_total", self.byte_size as u64, "component" => self.component)
+    }
+}

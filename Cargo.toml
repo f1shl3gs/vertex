@@ -23,7 +23,6 @@ members = [
     "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
-    "lib/redfish",
     "lib/humanize"
 ]
 
@@ -196,9 +195,9 @@ unix = []
 # vendor-openssl = ["openssl/vendored"]
 
 [[bench]]
-name = "duration"
+name = "loki"
 harness = false
-path = "benches/duration.rs"
+path = "benches/loki.rs"
 
 [[bench]]
 name = "hwmon_gather"
@@ -214,6 +213,9 @@ path = "benches/haproxy.rs"
 atty = "0.2.14"
 nix = ">=0.22.2"
 
+[build-dependencies]
+prost-build = { version = "0.9" }
+
 [dev-dependencies]
 tokio = { version = "1.14.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
@@ -226,6 +228,7 @@ env-test-util = { version = "1.0.1" }
 testify = { path = "lib/testify" }
 assert_cmd = { version = "2.0.2" }
 proptest = { version = "1.0" }
+tower-test = { version = "0.4.0" }
 
 [dependencies]
 # workspaces
@@ -268,7 +271,7 @@ tracing-log = { version = "0.1.2", default-features = false, features = ["std", 
 tracing-subscriber = { version = "0.3.3", default-features = false, features = ["env-filter", "json", "ansi"] }
 
 # HTTP
-hyper = { version = "0.14.15", features = ["server", "http1", "http2", "tcp", "stream", "runtime"] }
+hyper = { version = "0.14.15", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
 listenfd = { version = "0.3.5", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
@@ -276,9 +279,8 @@ no-proxy = { version = "0.3.1" }
 http = { version = "0.2.5" }
 headers = { version = "0.3.5" }
 
-# tower
-tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
-tower-test = { version = "0.4.0" }
+# Tower
+tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
 serde = { version = "1.0.130", features = ["derive", "std", "rc"] }
@@ -286,14 +288,14 @@ serde_yaml = { version = "0.8.21" }
 serde_json = { version = "1.0.72", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
-# netlink
+# Netlink
 netlink-sys = { version = "0.7.0", features = ["tokio_socket"], optional = true }
 rtnetlink = { version = "0.8.1", features = ["tokio_socket"], optional = true }
 netlink-packet-sock-diag = { version = "0.1.0", optional = true }
 
-# protobuf
+# Protobuf
 prost = { version = "0.9.0", default-features = false, features = ["std"] }
-# tonic = { version = "0.5.2" }
+prost-types = { version = "0.9.0", default-features = false }
 
 # TLS
 tokio-openssl = { version = "0.6.3", default-features = false }
@@ -304,8 +306,8 @@ openssl-probe = { version = "0.1.4", default-features = false }
 # Networking
 socket2 = { version = "0.4.2", default-features = false }
 
-# profile
-pprof = { version = "0.6.1", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
+# Profile
+pprof = { version = "0.6.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # External libs
 chrono = { version = "0.4.19", features = ["serde"] }
@@ -340,3 +342,4 @@ mongodb = { version = "2.0.2", default-features = false, optional = true, featur
 rand_distr = { version = "0.4.2", default-features = false }
 twox-hash = { version = "1.6.1", default-features = false }
 flate2 = { version = "1.0.21" }
+percent-encoding = { version = "2.1.0", default-features = false }

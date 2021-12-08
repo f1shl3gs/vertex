@@ -37,6 +37,12 @@ pub struct AdaptiveConcurrencySettings {
 
 impl Default for AdaptiveConcurrencySettings {
     fn default() -> Self {
+        AdaptiveConcurrencySettings::const_default()
+    }
+}
+
+impl AdaptiveConcurrencySettings {
+    pub const fn const_default() -> Self {
         Self {
             decrease_ratio: 0.9,
             ewma_alpha: 0.4,
@@ -44,4 +50,3 @@ impl Default for AdaptiveConcurrencySettings {
         }
     }
 }
-
