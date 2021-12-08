@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::io::Error;
+use std::io::{Error, Write};
 use std::num::NonZeroUsize;
 
 use futures_util::stream::BoxStream;
@@ -7,7 +7,7 @@ use futures_util::StreamExt;
 use event::{ByteSizeOf, Event, EventFinalizers, Finalizable, Value};
 use snafu::Snafu;
 use buffers::Acker;
-use event::encoding::{EncodingConfig, EncodingConfiguration};
+use event::encoding::{Encoder, EncodingConfig, EncodingConfiguration};
 
 use crate::batch::BatchSettings;
 use crate::config::SinkContext;
@@ -20,7 +20,7 @@ use crate::sinks::loki::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfO
 use crate::sinks::loki::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use crate::sinks::loki::service::{LokiRequest, LokiService};
 use crate::sinks::StreamSink;
-use crate::sinks::util::{Compression, RequestBuilder};
+use crate::sinks::util::{Compression, Compressor, RequestBuilder};
 use crate::sinks::util::builder::SinkBuilderExt;
 use crate::stream::BatcherSettings;
 
@@ -72,6 +72,15 @@ pub struct LokiRequestBuilder {
     encoder: LokiBatchEncoder,
 }
 
+impl LokiRequestBuilder {
+    fn new(compression: Compression) -> Self {
+        Self {
+            compression,
+            encoder: LokiBatchEncoder::default()
+        }
+    }
+}
+
 #[derive(Debug, Snafu)]
 pub enum RequestBuildError {
     #[snafu(display("Encoded payload is greater than the max limit"))]
@@ -83,15 +92,6 @@ pub enum RequestBuildError {
 impl From<std::io::Error> for RequestBuildError {
     fn from(err: Error) -> Self {
         RequestBuildError::IO { source: err }
-    }
-}
-
-impl Default for LokiRequestBuilder {
-    fn default() -> Self {
-        Self {
-            compression: Compression::None,
-            encoder: LokiBatchEncoder::default(),
-        }
     }
 }
 
@@ -294,7 +294,7 @@ impl LokiSink {
     pub fn new(config: LokiConfig, client: HttpClient, cx: SinkContext) -> crate::Result<Self> {
         Ok(Self {
             acker: cx.acker,
-            request_builder: LokiRequestBuilder::default(),
+            request_builder: LokiRequestBuilder::new(config.compression),
             encoder: EventEncoder {
                 key_partitioner: KeyPartitioner::new(config.tenant),
                 encoding: config.encoding,

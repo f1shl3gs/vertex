@@ -21,6 +21,7 @@ apt install --yes \
   build-essential \
   ca-certificates \
   cmake \
+  gawk \
   curl \
   libclang-dev \
   libsasl2-dev \

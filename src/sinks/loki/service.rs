@@ -11,6 +11,7 @@ use snafu::Snafu;
 use crate::config::UriSerde;
 
 use crate::http::{Auth, HttpClient};
+use crate::sinks::util::Compression;
 use crate::stream::DriverResponse;
 
 
@@ -65,6 +66,7 @@ impl DriverResponse for LokiResponse {
 pub struct LokiService {
     endpoint: UriSerde,
     client: HttpClient,
+    compression: Compression,
 }
 
 impl LokiService {
@@ -72,7 +74,7 @@ impl LokiService {
         let endpoint = endpoint.append_path("loki/api/v1/push")?
             .with_auth(auth);
 
-        Ok(Self { client, endpoint })
+        Ok(Self { client, endpoint, compression: Compression::gzip_default() })
     }
 }
 
@@ -88,6 +90,10 @@ impl Service<LokiRequest> for LokiService {
     fn call(&mut self, request: LokiRequest) -> Self::Future {
         let mut builder = http::Request::post(&self.endpoint.uri)
             .header("Content-Type", "application/json");
+
+        if let Some(ce) = self.compression.content_encoding() {
+            builder = builder.header(http::header::CONTENT_ENCODING, ce);
+        }
 
         if let Some(tenant) = request.tenant {
             builder = builder.header("X-Scope-OrgID", tenant)

@@ -13,6 +13,7 @@ use crate::http::{Auth, HttpClient, MaybeAuth};
 use crate::sinks::loki::healthcheck::health_check;
 use crate::sinks::loki::sink::LokiSink;
 use crate::sinks::Sink;
+use crate::sinks::util::Compression;
 use crate::sinks::util::service::{Concurrency, RequestConfig};
 use crate::template::Template;
 use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
@@ -52,6 +53,8 @@ impl Default for OutOfOrderAction {
 pub struct LokiConfig {
     pub endpoint: UriSerde,
     pub encoding: EncodingConfig<Encoding>,
+    #[serde(default)]
+    pub compression: Compression,
 
     pub tenant: Option<Template>,
     pub labels: HashMap<Template, Template>,
@@ -96,6 +99,7 @@ impl GenerateConfig for LokiConfig {
             request: RequestConfig::new(Concurrency::None),
             batch: Default::default(),
             tls: None,
+            compression: Compression::default()
         }).unwrap()
     }
 }

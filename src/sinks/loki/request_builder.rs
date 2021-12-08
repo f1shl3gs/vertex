@@ -1,8 +1,10 @@
 use std::collections::HashMap;
 use std::io::Write;
+
 use serde::{Serialize, Serializer, ser::SerializeSeq};
 use event::{ByteSizeOf, EventFinalizers, Finalizable};
 use event::encoding::Encoder;
+
 
 pub type Labels = Vec<(String, String)>;
 

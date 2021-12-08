@@ -10,6 +10,7 @@ use crate::sinks::loki::sink::LokiSink;
 use crate::sinks::util::testing::{build_test_server, load_sink};
 use crate::tls::TlsSettings;
 
+
 #[test]
 fn interpolate_labels() {
     let (config, cx) = load_sink::<LokiConfig>(r#"
