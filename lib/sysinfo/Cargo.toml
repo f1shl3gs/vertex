@@ -1,0 +1,9 @@
+[package]
+name = "sysinfo"
+version = "0.1.0"
+edition = "2021"
+
+[target.'cfg(unix)'.dependencies]
+libc = { version = "0.2.109" }
+
+[dependencies]

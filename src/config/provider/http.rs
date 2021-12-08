@@ -8,6 +8,7 @@ use indexmap::IndexMap;
 use md5::Digest;
 use url::Url;
 use serde::{Deserialize, Serialize};
+use sysinfo::unix::{kernel_version, os_version, machine_id};
 
 use crate::http::HttpClient;
 use crate::SignalHandler;
@@ -97,7 +98,7 @@ impl GenerateConfig for HttpConfig {
             interval: default_interval(),
             tls: None,
             proxy: Default::default(),
-            persist: None
+            persist: None,
         }).unwrap()
     }
 }
@@ -119,7 +120,7 @@ async fn http_request_to_config_builder(
     tls_options: &Option<TlsOptions>,
     headers: &IndexMap<String, String>,
     proxy: &ProxyConfig,
-    attrs: IndexMap<String, String>
+    attrs: IndexMap<String, String>,
 ) -> Result<(crate::config::Builder, String), Vec<String>> {
     let config_str = http_request(url, tls_options, headers, proxy, attrs)
         .await
@@ -206,7 +207,7 @@ async fn http_request(
 fn build_attributes() -> IndexMap<String, String> {
     let mut attrs = IndexMap::new();
 
-    match std::fs::read_to_string("/etc/machine-id") {
+    match machine_id() {
         Ok(uid) => {
             attrs.insert("uid".to_string(), uid.trim().to_string());
         }
@@ -232,52 +233,6 @@ fn build_attributes() -> IndexMap<String, String> {
     attrs.insert("os".to_string(), os_version().unwrap_or("".to_string()));
 
     attrs
-}
-
-fn kernel_version() -> Option<String> {
-    let mut raw = std::mem::MaybeUninit::<libc::utsname>::zeroed();
-
-    if unsafe { libc::uname(raw.as_mut_ptr()) } == 0 {
-        let info = unsafe { raw.assume_init() };
-
-        let release = info
-            .release
-            .iter()
-            .filter(|c| **c != 0)
-            .map(|c| *c as u8 as char)
-            .collect::<String>();
-
-        Some(release)
-    } else {
-        None
-    }
-}
-
-fn os_version() -> Option<String> {
-    let content = match std::fs::read_to_string("/etc/os-release") {
-        Ok(content) => content,
-        Err(_) => {
-            match std::fs::read_to_string("/etc/lsb-release") {
-                Ok(content) => content,
-                Err(_) => return None
-            }
-        }
-    };
-
-    let mut name = String::new();
-    let mut version = String::new();
-
-    for line in content.lines() {
-        if let Some(stripped) = line.strip_prefix("NAME=") {
-            name = stripped.replace("\"", "");
-        }
-
-        if let Some(stripped) = line.strip_prefix("VERSION=") {
-            version = stripped.replace("\"", "");
-        }
-    }
-
-    Some(format!("Linux {} {}", name, version))
 }
 
 /// Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.

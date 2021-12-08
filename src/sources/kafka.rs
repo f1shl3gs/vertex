@@ -367,6 +367,5 @@ mod tests {
     }
 }
 
-#[cfg(test)]
-#[cfg(feature = "integration-test")]
+#[cfg(all(test, feature = "integration-tests"))]
 mod integration_tests {}
