@@ -44,12 +44,26 @@ build_x86_64-unknown-linux-gnu: artifacts-dir
 		--features target-x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex target/artifacts/vertex-x86_64-unknown-linux-gnu
 
+# Updates the Cargo config to product disk optimized builds(for CI, not users)
+.PHONY: slim-builds
+slim-builds:
+	./ci/slim-builds.sh
 
 # Integration tests
-integration-test-nginx_stub: export RUSTFLAGS=-Awarnings
-integration-test-nginx_stub:
+integration-test-nginx_stub: slim-builds
 	cargo test -p vertex --lib sources::nginx_stub::integration_tests:: --features integration-tests-nginx_stub --no-fail-fast
 
+integration-test-redis: slim-builds
+	cargo test -p vertex --lib sources::redis::integration_tests:: --features integration-tests-redis --no-fail-fast
+
+integration-test-zookeeper: slim-builds
+	cargo test -p vertex --lib sources::zookeeper::integration_tests:: --features integration-tests-zookeeper --no-fail-fast
+
+integration-test-memcached: slim-builds
+	cargo test -p vertex --lib sources::memcached::integration_tests:: --features integration-tests-memcached --no-fail-fast
+
+integration-test-haproxy: slim-builds
+	cargo test -p vertex --lib sources::haproxy::integration_tests:: --features integration-tests-haproxy --no-fail-fast
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

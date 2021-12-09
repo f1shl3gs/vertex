@@ -262,7 +262,7 @@ impl GenerateConfig for RedisSourceConfig {
             interval: default_interval(),
             namespace: None,
             user: None,
-            password: Some("some_password".to_string())
+            password: Some("some_password".to_string()),
         }).unwrap()
     }
 }
@@ -1105,35 +1105,35 @@ async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64,
 #[cfg(test)]
 mod tests {
     use super::*;
-    use testcontainers::{Docker, images::redis::Redis};
+
+    #[test]
+    fn test_parse_db_keyspace() {
+        let key = "db0";
+        let value = "keys=100,expires=50,avg_ttl=5";
+        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
+        assert_eq!(keys, 100.0);
+        assert_eq!(expires, 50.0);
+        assert_eq!(avg_ttl, 5.0 / 1000.0);
+    }
+
+    #[test]
+    fn parse_db_keyspace_without_avg_ttl() {
+        let key = "db1";
+        let value = "keys=100,expires=50";
+        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
+        assert_eq!(keys, 100.0);
+        assert_eq!(expires, 50.0);
+        assert_eq!(avg_ttl, -1.0);
+    }
+}
+
+#[cfg(all(test, feature = "integration-tests-redis"))]
+mod integration_tests {
+    use super::*;
     use redis::ToRedisArgs;
+    use testcontainers::{Docker, images::redis::Redis};
 
     const REDIS_PORT: u16 = 6379;
-
-    #[tokio::test]
-    async fn test_ping_server() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
-        let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
-
-        let latency = ping_server(&mut cm).await.unwrap();
-        println!("latency {}s", latency);
-    }
-
-    #[tokio::test]
-    async fn test_query_databases() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
-        let n = query_databases(&mut conn).await.unwrap();
-        assert_eq!(n, 16)
-    }
 
     async fn write_testdata<C: redis::aio::ConnectionLike>(conn: &mut C) {
         for i in 0..100 {
@@ -1150,32 +1150,16 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_latency_latest() {
+    async fn test_ping_server() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
         let mut cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+        let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
 
-        write_testdata(&mut conn).await;
-
-        extract_latency_metrics(&mut conn).await.unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_slowlog() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
-
-        write_testdata(&mut conn).await;
-
-        let v = extract_slowlog_metrics(&mut conn).await.unwrap();
-        assert_eq!(v.len(), 3);
+        let latency = ping_server(&mut cm).await.unwrap();
+        println!("latency {}s", latency);
     }
 
     #[tokio::test]
@@ -1199,23 +1183,44 @@ mod tests {
         println!("{:?}", resp);
     }
 
-    #[test]
-    fn test_parse_db_keyspace() {
-        let key = "db0";
-        let value = "keys=100,expires=50,avg_ttl=5";
-        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
-        assert_eq!(keys, 100.0);
-        assert_eq!(expires, 50.0);
-        assert_eq!(avg_ttl, 5.0 / 1000.0);
+    #[tokio::test]
+    async fn test_slowlog() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+
+        write_testdata(&mut conn).await;
+
+        let v = extract_slowlog_metrics(&mut conn).await.unwrap();
+        assert_eq!(v.len(), 3);
     }
 
-    #[test]
-    fn parse_db_keyspace_without_avg_ttl() {
-        let key = "db1";
-        let value = "keys=100,expires=50";
-        let (keys, expires, avg_ttl) = parse_db_keyspace(key, value).unwrap();
-        assert_eq!(keys, 100.0);
-        assert_eq!(expires, 50.0);
-        assert_eq!(avg_ttl, -1.0);
+    #[tokio::test]
+    async fn test_query_databases() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+        let n = query_databases(&mut conn).await.unwrap();
+        assert_eq!(n, 16)
+    }
+
+    #[tokio::test]
+    async fn test_latency_latest() {
+        let docker = testcontainers::clients::Cli::default();
+        let service = docker.run(Redis::default());
+        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let url = format!("redis://localhost:{}", host_port);
+        let mut cli = redis::Client::open(url).unwrap();
+        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+
+        write_testdata(&mut conn).await;
+
+        extract_latency_metrics(&mut conn).await.unwrap();
     }
 }

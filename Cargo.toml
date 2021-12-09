@@ -84,6 +84,7 @@ integration-tests-haproxy = []
 integration-tests-memcached = []
 integration-tests-ntp = []
 integration-tests-prometheus_scrape = []
+integration-tests-prometheus_exporter = []
 
 # Common
 disk-buffer = []

@@ -3,9 +3,11 @@ name: Integration Tests
 on:
   workflow_dispatch:
   pull_request:
+  push:
 
 env:
   CI: true
+  RUSTFLAGS: -Awarnings # Warnings are not necessary for this workflow
 
 jobs:
   cancel-previous:
@@ -26,6 +28,9 @@ jobs:
       matrix:
         test:
           - nginx_stub
+          - redis
+          - zookeeper
+          - memcached
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7

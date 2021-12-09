@@ -231,8 +231,7 @@ mod tests {
     }
 }
 
-#[cfg(test)]
-#[cfg(feature = "integration-test")]
+#[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
     mod zk {
         use std::collections::HashMap;

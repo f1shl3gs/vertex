@@ -910,7 +910,6 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 mod tests {
     use testcontainers::Docker;
-    use memcached::Memcached;
     use super::*;
 
     #[tokio::test]
@@ -943,6 +942,13 @@ mod tests {
         assert_eq!(stats.get("memory_file").unwrap(), "(null)");
         assert_eq!(stats.get("stat_key_prefix").unwrap(), ":");
     }
+}
+
+#[cfg(all(test, feature = "integration-tests-memcached"))]
+mod integration_tests {
+    use super::*;
+    use testcontainers::Docker;
+    use memcached::Memcached;
 
     mod memcached {
         use std::collections::HashMap;

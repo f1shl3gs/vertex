@@ -474,8 +474,6 @@ fn parse_status_field(value: &str) -> f64 {
 mod tests {
     use std::io;
     use std::io::BufReader;
-    use testcontainers::{Docker, RunArgs};
-    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
     use super::*;
 
     #[test]
@@ -519,6 +517,13 @@ mod tests {
             assert_eq!(parse_status_field(input), want as f64);
         }
     }
+}
+
+#[cfg(all(test, feature = "integration-tests-haproxy"))]
+mod integration_tests {
+    use testcontainers::{Docker, RunArgs};
+    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
+    use super::*;
 
     #[tokio::test]
     async fn test_gather() {
