@@ -286,7 +286,7 @@ mod integration_tests {
                 container
                     .logs()
                     .stdout
-                    .wait_for_message("The list of known four letter word commands is")
+                    .wait_for_message("ZooKeeper audit is disabled")
                     .unwrap();
             }
 
