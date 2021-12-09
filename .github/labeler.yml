@@ -1,5 +1,9 @@
 # Generic component-level labels and high-level groupings
 
+CI:
+  - ci/**/*
+  - .github/**/*
+
 sources:
   - src/sources/**/*
 
