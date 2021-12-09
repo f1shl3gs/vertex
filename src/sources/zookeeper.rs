@@ -233,12 +233,16 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
+    use testcontainers::Docker;
+    use zk::Zookeeper;
+    use super::fetch_stats;
+
     mod zk {
         use std::collections::HashMap;
         use testcontainers::{Container, Docker, Image, WaitForMessage};
 
         const CONTAINER_IDENTIFIER: &str = "bitnami/zookeeper";
-        const DEFAULT_TAG: &str = "3.7";
+        const DEFAULT_TAG: &str = "3.7.0";
 
         #[derive(Debug, Default, Clone)]
         pub struct ZookeeperArgs;
@@ -282,7 +286,7 @@ mod integration_tests {
                 container
                     .logs()
                     .stdout
-                    .wait_for_message("Started AdminServer")
+                    .wait_for_message("The list of known four letter word commands is")
                     .unwrap();
             }
 
@@ -322,10 +326,6 @@ mod integration_tests {
             }
         }
     }
-
-    use testcontainers::Docker;
-    use zk::Zookeeper;
-    use super::fetch_stats;
 
     #[tokio::test]
     async fn test_fetch_stats() {
