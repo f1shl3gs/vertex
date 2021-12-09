@@ -20,7 +20,7 @@ STAT read_buf_bytes_free 0
 STAT read_buf_oom 0
 STAT reserved_fds 20
 STAT cmd_get 0
-STAT cmd_set 0
+STAT cmd_set 100
 STAT cmd_flush 0
 STAT cmd_touch 0
 STAT cmd_meta 0
