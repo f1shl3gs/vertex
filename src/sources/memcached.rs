@@ -2,20 +2,19 @@ use std::collections::HashMap;
 use std::future::Future;
 use std::time::Instant;
 
+use event::{tags, Event, Metric};
 use futures::{SinkExt, StreamExt};
-use snafu::{ResultExt, Snafu};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
+use snafu::{ResultExt, Snafu};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
-use event::{Event, Metric, tags};
 
-use crate::sources::Source;
 use crate::config::{
-    DataType, default_interval, deserialize_duration, GenerateConfig, serialize_duration,
-    SourceConfig, SourceContext, ticker_from_duration, SourceDescription
+    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
+    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
 };
-
+use crate::sources::Source;
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
@@ -24,19 +23,20 @@ const STAT_PREFIX: &str = "STAT";
 struct MemcachedConfig {
     endpoints: Vec<String>,
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 }
 
 impl GenerateConfig for MemcachedConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
-            endpoints: vec![
-                "127.0.0.1:1111".to_string(),
-                "127.0.0.1:2222".to_string(),
-            ],
-            interval: default_interval()
-        }).unwrap()
+            endpoints: vec!["127.0.0.1:1111".to_string(), "127.0.0.1:2222".to_string()],
+            interval: default_interval(),
+        })
+        .unwrap()
     }
 }
 
@@ -52,20 +52,18 @@ impl SourceConfig for MemcachedConfig {
             .unwrap()
             .take_until(ctx.shutdown);
 
-        let mut output = ctx.out
-            .sink_map_err(|err| error!(
+        let mut output = ctx.out.sink_map_err(|err| {
+            error!(
                 message = "Error sending memcached metrics",
                 %err
-            ));
+            )
+        });
 
         let endpoints = self.endpoints.clone();
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics = futures::future::join_all(
-                    endpoints
-                        .iter()
-                        .map(|addr| gather(addr))
-                ).await;
+                let metrics =
+                    futures::future::join_all(endpoints.iter().map(|addr| gather(addr))).await;
 
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
@@ -107,14 +105,14 @@ macro_rules! get_bool_value {
                 }
             }
         }
-    }
+    };
 }
 
 macro_rules! get_value_from_string {
     ($map:expr, $key: expr) => {
         match $map.get($key) {
             None => 0.0,
-            Some(v) => v.parse::<f64>().unwrap_or(0.0)
+            Some(v) => v.parse::<f64>().unwrap_or(0.0),
         }
     };
 }
@@ -122,19 +120,23 @@ macro_rules! get_value_from_string {
 async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
 
-    match fetch_stats(addr, query).await {
-        Ok(Stats { version, libevent, stats, slabs, items }) => {
-            metrics.extend_from_slice(&[
-                Metric::gauge_with_tags(
-                    "memcached_version",
-                    "The version of this memcached server.",
-                    1,
-                    tags!(
-                        "version" => version,
-                        "libevent" => libevent
-                    ),
-                )
-            ]);
+    match fetch_stats(addr).await {
+        Ok(Stats {
+            version,
+            libevent,
+            stats,
+            slabs,
+            items,
+        }) => {
+            metrics.extend_from_slice(&[Metric::gauge_with_tags(
+                "memcached_version",
+                "The version of this memcached server.",
+                1,
+                tags!(
+                    "version" => version,
+                    "libevent" => libevent
+                ),
+            )]);
 
             for op in vec!["get", "delete", "inc", "decr", "cas", "touch"] {
                 let hits = get_value!(stats, (op.to_owned() + "_hits").as_str());
@@ -161,7 +163,6 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                     )
                 ])
             }
-
 
             metrics.extend_from_slice(&[
                 Metric::sum(
@@ -425,7 +426,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         tags!(
                             "slab" => slab
                         ),
-                    )
+                    ),
                 ]);
             }
 
@@ -570,32 +571,32 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                     (
                         "number_hot",
                         "memcached_slab_hot_items",
-                        "Number of items presently stored in the HOT LRU"
+                        "Number of items presently stored in the HOT LRU",
                     ),
                     (
                         "number_warm",
                         "memcached_slab_warm_items",
-                        "Number of items presently stored in the WARM LRU"
+                        "Number of items presently stored in the WARM LRU",
                     ),
                     (
                         "number_cold",
                         "memcached_slab_cold_items",
-                        "Number of items presently stored in the COLD LRU"
+                        "Number of items presently stored in the COLD LRU",
                     ),
                     (
                         "number_temp",
                         "memcached_slab_temporary_items",
-                        "Number of items presently stored in the TEMPORARY LRU"
+                        "Number of items presently stored in the TEMPORARY LRU",
                     ),
                     (
                         "age_hot",
                         "memcached_slab_hot_age_seconds",
-                        "Age of the oldest item in HOT LRU"
+                        "Age of the oldest item in HOT LRU",
                     ),
                     (
                         "age_warm",
                         "memcached_slab_warm_age_seconds",
-                        "Age of the oldest item in HOT LRU"
+                        "Age of the oldest item in HOT LRU",
                     ),
                 ] {
                     if let Some(v) = stats.get(key) {
@@ -682,7 +683,7 @@ async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
                             "memcached_lru_crawler_warm_max_factor",
                             "Set idle age of WARM LRU to COLD age * this",
                             get_value_from_string!(stats, "warm_max_factor"),
-                        )
+                        ),
                     ])
                 }
             }
@@ -704,10 +705,8 @@ async fn fetch_settings_metric(addr: &str) -> Result<Vec<Metric>, ParseError> {
 async fn gather(addr: &str) -> Vec<Metric> {
     let start = Instant::now();
 
-    let (stats, settings) = futures::future::join(
-        fetch_stats_metrics(addr),
-        fetch_settings_metric(addr)
-    ).await;
+    let (stats, settings) =
+        futures::future::join(fetch_stats_metrics(addr), fetch_settings_metric(addr)).await;
 
     let up = stats.is_ok() && settings.is_ok();
     let mut metrics = stats.unwrap_or(vec![]);
@@ -749,6 +748,74 @@ struct Stats {
     items: HashMap<String, HashMap<String, f64>>,
 }
 
+impl Stats {
+    fn append(&mut self, input: &str) -> Result<(), ParseError> {
+        input.lines().try_for_each(|line| {
+            if line.starts_with(CLIENT_ERROR_PREFIX) {
+                // TODO: more error context
+                return Err(ParseError::ClientError);
+            }
+
+            if !line.starts_with(STAT_PREFIX) {
+                return Ok(());
+            }
+
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
+            if parts.len() != 3 {
+                return Ok(());
+            }
+
+            if parts[1] == "version" {
+                self.version = parts[2].to_string();
+                return Ok(());
+            } else if parts[1] == "libevent" {
+                self.libevent = parts[2].to_string();
+                return Ok(());
+            }
+
+            let v = parts[2].parse().context(InvalidValue)?;
+
+            let subs = parts[1].split(':').collect::<Vec<_>>();
+            match subs.len() {
+                1 => {
+                    // Global stats
+                    self.stats.insert(parts[1].to_string(), v);
+                }
+
+                2 => {
+                    // Slab stats
+                    let slab = match self.slabs.get_mut(subs[0]) {
+                        Some(slab) => slab,
+                        None => {
+                            self.slabs.insert(subs[0].to_string(), Default::default());
+                            self.slabs.get_mut(subs[0]).unwrap()
+                        }
+                    };
+
+                    slab.insert(subs[1].to_string(), v);
+                }
+
+                3 => {
+                    // Slab item stats
+                    let item = match self.items.get_mut(subs[1]) {
+                        Some(item) => item,
+                        None => {
+                            self.items.insert(subs[1].to_string(), Default::default());
+                            self.items.get_mut(subs[1]).unwrap()
+                        }
+                    };
+
+                    item.insert(subs[2].to_string(), v);
+                }
+
+                _ => {}
+            }
+
+            Ok(())
+        })
+    }
+}
+
 #[derive(Debug, Snafu)]
 enum ParseError {
     #[snafu(display("invalid line"))]
@@ -765,114 +832,48 @@ enum ParseError {
     ParseSlabFailed { source: std::num::ParseIntError },
 }
 
-async fn fetch_stats<'a, F, Fut>(
-    addr: &'a str,
-    query: F,
-) -> Result<Stats, ParseError>
-    where
-        F: Fn(&'a str, &'a str) -> Fut,
-        Fut: Future<Output=Result<String, std::io::Error>>
-{
+async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     let mut stats = Stats::default();
     for cmd in vec!["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
-        let resp = query(addr, cmd).await
-            .with_context(|| CommandExecFailed { cmd: cmd.to_string() })?;
-        let mut lines = resp.as_str().lines();
+        let resp = query(addr, cmd).await.with_context(|| CommandExecFailed {
+            cmd: cmd.to_string(),
+        })?;
 
-        while let Some(line) = lines.next() {
-            if line.starts_with(CLIENT_ERROR_PREFIX) {
-                // TODO: more error context
-                return Err(ParseError::ClientError);
-            }
-
-            if !line.starts_with(STAT_PREFIX) {
-                continue;
-            }
-
-            let parts = line.split_ascii_whitespace()
-                .collect::<Vec<_>>();
-            if parts.len() != 3 {
-                continue;
-            }
-
-            if parts[1] == "version" {
-                stats.version = parts[2].to_string();
-                continue;
-            } else if parts[1] == "libevent" {
-                stats.libevent = parts[2].to_string();
-                continue;
-            }
-
-            let v = parts[2].parse()
-                .context(InvalidValue)?;
-
-            let subs = parts[1].split(':')
-                .collect::<Vec<_>>();
-            match subs.len() {
-                1 => {
-                    // Global stats
-                    stats.stats.insert(parts[1].to_string(), v);
-                }
-
-                2 => {
-                    // Slab stats
-                    let slab = match stats.slabs.get_mut(subs[0]) {
-                        Some(slab) => slab,
-                        None => {
-                            stats.slabs.insert(subs[0].to_string(), Default::default());
-                            stats.slabs.get_mut(subs[0]).unwrap()
-                        }
-                    };
-
-                    slab.insert(subs[1].to_string(), v);
-                }
-
-                3 => {
-                    // Slab item stats
-                    let item = match stats.items.get_mut(subs[1]) {
-                        Some(item) => item,
-                        None => {
-                            stats.items.insert(subs[1].to_string(), Default::default());
-                            stats.items.get_mut(subs[1]).unwrap()
-                        }
-                    };
-
-                    item.insert(subs[2].to_string(), v);
-                }
-
-                _ => {}
-            }
-        }
+        stats.append(&resp)?;
     }
 
     Ok(stats)
 }
 
 async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
-    let mut stats = HashMap::with_capacity(80);
-    let resp: String = query(addr, "stats settings\r\n").await
-        .context(CommandExecFailed { cmd: "stats settings".to_string() })?;
+    let resp: String = query(addr, "stats settings\r\n")
+        .await
+        .context(CommandExecFailed {
+            cmd: "stats settings".to_string(),
+        })?;
 
-    let mut lines = resp.lines();
-    while let Some(line) = lines.next() {
+    Ok(parse_stats_settings(&resp))
+}
+
+fn parse_stats_settings(input: &str) -> HashMap<String, String> {
+    let mut stats = HashMap::with_capacity(96);
+
+    input.lines().for_each(|line| {
         if !line.starts_with(STAT_PREFIX) {
-            continue;
+            return;
         }
 
-        let parts = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() != 3 {
-            continue;
+            return;
         }
 
         stats.insert(parts[1].to_string(), parts[2].to_string());
-    }
+    });
 
-    Ok(stats)
+    stats
 }
 
-// TODO: this implement is stupid, refactor should be done as soon as possible
-#[cfg(not(test))]
 async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
     let socket = TcpStream::connect(addr).await?;
     let (mut reader, mut writer) = tokio::io::split(socket);
@@ -895,45 +896,50 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 }
 
 #[cfg(test)]
-async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
-    let path = match cmd {
-        "stats\r\n" => "tests/fixtures/memcached/stats.txt",
-        "stats slabs\r\n" => "tests/fixtures/memcached/slabs.txt",
-        "stats items\r\n" => "tests/fixtures/memcached/items.txt",
-        "stats settings\r\n" => "tests/fixtures/memcached/settings.txt",
-        _ => panic!("unknown commands")
-    };
-
-    std::fs::read_to_string(path)
-}
-
-#[cfg(test)]
 mod tests {
-    use testcontainers::Docker;
     use super::*;
+    use testcontainers::Docker;
 
     #[tokio::test]
     async fn test_parse_stats() {
-        let stats = fetch_stats("dummy", query).await.unwrap();
+        let mut stats = Stats::default();
+        let data = std::fs::read_to_string("tests/fixtures/memcached/stats.txt").unwrap();
+        stats.append(&data);
+        let data = std::fs::read_to_string("tests/fixtures/memcached/slabs.txt").unwrap();
+        stats.append(&data);
+        let data = std::fs::read_to_string("tests/fixtures/memcached/items.txt").unwrap();
+        stats.append(&data);
+
         assert_eq!(stats.version, "1.6.12");
         assert_eq!(stats.libevent, "2.1.12-stable");
 
-        assert_eq!(stats.stats.len(), 90);
+        assert_eq!(*stats.stats.get("cmd_set").unwrap(), 100.0);
         assert_eq!(*stats.stats.get("limit_maxbytes").unwrap(), 67108864.0);
         assert_eq!(*stats.stats.get("lru_crawler_running").unwrap(), 0.0);
         assert_eq!(*stats.stats.get("active_slabs").unwrap(), 1.0);
         assert_eq!(*stats.stats.get("total_malloced").unwrap(), 1048576.0);
 
-        assert_eq!(*stats.slabs.get("1").unwrap().get("free_chunks").unwrap(), 10921.0);
-        assert_eq!(*stats.slabs.get("1").unwrap().get("chunk_size").unwrap(), 96.0);
+        assert_eq!(
+            *stats.slabs.get("1").unwrap().get("free_chunks").unwrap(),
+            10921.0
+        );
+        assert_eq!(
+            *stats.slabs.get("1").unwrap().get("chunk_size").unwrap(),
+            96.0
+        );
 
-        assert_eq!(*stats.items.get("1").unwrap().get("mem_requested").unwrap(), 65.0);
+        assert_eq!(
+            *stats.items.get("1").unwrap().get("mem_requested").unwrap(),
+            65.0
+        );
         assert_eq!(*stats.items.get("1").unwrap().get("number").unwrap(), 1.0);
     }
 
     #[tokio::test]
     async fn test_parse_stats_settings() {
-        let stats = stats_settings("dummy").await.unwrap();
+        let data = std::fs::read_to_string("tests/fixtures/memcached/settings.txt").unwrap();
+
+        let stats = parse_stats_settings(&data);
         assert_eq!(stats.get("chunk_size").unwrap(), "48");
         assert_eq!(stats.get("umask").unwrap(), "700");
         assert_eq!(stats.get("binding_protocol").unwrap(), "auto-negotiate");
@@ -947,8 +953,8 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-memcached"))]
 mod integration_tests {
     use super::*;
-    use testcontainers::Docker;
     use memcached::Memcached;
+    use testcontainers::Docker;
 
     mod memcached {
         use std::collections::HashMap;
@@ -1034,7 +1040,7 @@ mod integration_tests {
     }
 
     #[tokio::test]
-    async fn test_query() {
+    async fn query_stats() {
         let docker = testcontainers::clients::Cli::default();
         let image = Memcached::default();
         let service = docker.run(image);
@@ -1043,8 +1049,17 @@ mod integration_tests {
 
         write_data(&addr, 1000).await;
 
-        let stats = fetch_stats(&addr, query).await.unwrap();
-
+        let stats = fetch_stats(&addr).await.unwrap();
         assert_eq!(stats.stats.get("cmd_set").unwrap(), &1000.0);
+        assert_eq!(stats.stats.get("cmd_get").unwrap(), &0.0);
+
+        let stats = stats_settings(&addr).await.unwrap();
+        assert_eq!(stats.get("temporary_ttl").unwrap(), "61".into());
+        assert_eq!(stats.get("warm_max_factor").unwrap(), "2.00".into());
+        assert_eq!(
+            stats.get("binding_protocol").unwrap(),
+            "auto-negotiate".into()
+        );
+        assert_eq!(stats.get("ext_wbuf_size").unwrap(), "4194304".into());
     }
 }
