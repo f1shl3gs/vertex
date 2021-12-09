@@ -14,4 +14,4 @@ criterion = { version = "0.3.5", features = ["html_reports"] }
 [dependencies]
 snafu = { version = "0.6.10" }
 chrono = { version = "0.4.19", features = ["serde"] }
-serde = { version = "1.0.130", default-features = false, features = ["std"] }
+serde = { version = "1.0.131", default-features = false, features = ["std"] }
