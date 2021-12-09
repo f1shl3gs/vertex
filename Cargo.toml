@@ -335,7 +335,7 @@ regex = { version = "1.5.4" }
 hostname = { version = "0.3.1" }
 bloom = { version = "0.3.2" }
 exitcode = { version = "1.1.2" }
-clap = { version = "3.0.0-beta.5" }
+clap = { version = "3.0.0-rc.0" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
