@@ -50,25 +50,6 @@ jobs:
               - "scripts/**"
               - "ci/**"
 
-  checks:
-    name: Checks
-    runs-on: ubuntu-20.04
-    needs: changes
-    if: ${{ needs.changes.outputs.source == 'true' }}
-    steps:
-      - uses: actions/checkout@v2.4.0
-      - uses: actions/cache@v2.1.7
-        name: Cache Cargo registry + index
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
-      - name: Check style
-        run:  cargo clippy --workspace --all-targets  -- -A warnings
-      - name: Check shell
-
   cross:
     name: Cross - ${{ matrix.target }}
     runs-on: ubuntu-20.04
@@ -91,3 +72,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       - run: make build_${{ matrix.target }}
+
+  test:
+    name: Cargo test
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: ${{ needs.changes.outputs.source == 'true' }}
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        name: Cache Cargo registry + index
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash scripts/environment/prepare.sh
+      - run: cargo test --workspace --no-fail-fast
