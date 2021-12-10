@@ -1,5 +1,5 @@
-pub mod metric;
 mod common;
+pub mod metric;
 
 #[macro_use]
 extern crate metrics;
@@ -10,7 +10,9 @@ pub trait InternalEvent {
     fn emit_logs(&self) {}
     fn emit_metrics(&self) {}
 
-    fn name(&self) -> Option<&str> { None }
+    fn name(&self) -> Option<&str> {
+        None
+    }
 }
 
 #[inline]
@@ -48,7 +50,7 @@ macro_rules! update_counter {
                 prev,
                 new,
                 Ordering::SeqCst,
-                Ordering::Relaxed
+                Ordering::Relaxed,
             ) {
                 Err(val) => prev = val,
                 Ok(_) => {
@@ -85,7 +87,6 @@ mod tests {
         // metrics and logs
         // todo
     }
-
 
     #[test]
     fn test() {

@@ -1,13 +1,14 @@
 mod buffer;
 mod checkpointer;
-mod server;
-mod fingerprinter;
 mod events;
+mod fingerprinter;
 mod metadata_ext;
 mod provider;
+mod server;
 mod watcher;
 
-#[macro_use] extern crate scan_fmt;
+#[macro_use]
+extern crate scan_fmt;
 
 pub type Position = u64;
 

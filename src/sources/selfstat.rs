@@ -1,35 +1,31 @@
-use std::{
-    fmt::Debug,
-    io::Read,
-};
+use std::{fmt::Debug, io::Read};
 
+use event::{Event, Metric};
+use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt};
 use serde_yaml::Value;
 use tokio::sync::RwLock;
-use event::{Event, Metric};
+use tokio_stream::wrappers::IntervalStream;
 
 use crate::{
     config::{
-        SourceConfig, SourceContext, DataType,
-        deserialize_duration, serialize_duration,
-        SourceDescription, GenerateConfig
+        deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
+        SourceContext, SourceDescription,
     },
-    sources::{
-        Source,
-    },
-    shutdown::ShutdownSignal,
     pipeline::Pipeline,
+    shutdown::ShutdownSignal,
+    sources::Source,
 };
-
 
 const USER_HZ: f64 = 100.0;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 struct SelfStatConfig {
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 }
 
@@ -58,8 +54,9 @@ impl SourceConfig for SelfStatConfig {
 impl GenerateConfig for SelfStatConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
-            interval: default_interval()
-        }).unwrap()
+            interval: default_interval(),
+        })
+        .unwrap()
     }
 }
 
@@ -71,7 +68,6 @@ struct SelfStat {
     interval: std::time::Duration,
     cpu_total: RwLock<f64>,
 }
-
 
 impl From<&SelfStatConfig> for SelfStat {
     fn from(conf: &SelfStatConfig) -> Self {
@@ -85,8 +81,7 @@ impl From<&SelfStatConfig> for SelfStat {
 impl SelfStat {
     async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
         let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval)
-            .take_until(shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
             match gather().await {
@@ -129,11 +124,7 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
             "Maximum number of open file descriptors.",
             max_fds,
         ),
-        Metric::gauge(
-            "process_open_fds",
-            "Number of open file descriptors",
-            fds,
-        ),
+        Metric::gauge("process_open_fds", "Number of open file descriptors", fds),
         Metric::sum(
             "process_cpu_seconds_total",
             "Total user and system CPU time spent in seconds",
@@ -154,11 +145,7 @@ async fn gather() -> Result<Vec<Metric>, std::io::Error> {
             "Resident memory size in bytes",
             rss * page_size,
         ),
-        Metric::gauge(
-            "process_threads",
-            "Number of OS threads created",
-            threads,
-        ),
+        Metric::gauge("process_threads", "Number of OS threads created", threads),
     ])
 }
 
@@ -179,12 +166,10 @@ fn find_statistic(all: &str, pat: &str) -> Result<f64, std::io::Error> {
     if let Some(idx) = all.find(pat) {
         let mut iter = (all[idx + pat.len()..]).split_whitespace();
         if let Some(v) = iter.next() {
-            return v
-                .parse()
-                .map_err(|e| {
-                    // Error::Msg(format!("read statistic {} failed: {}", pat, e))
-                    std::io::Error::new(std::io::ErrorKind::InvalidInput, e)
-                });
+            return v.parse().map_err(|e| {
+                // Error::Msg(format!("read statistic {} failed: {}", pat, e))
+                std::io::Error::new(std::io::ErrorKind::InvalidInput, e)
+            });
         }
     }
 
@@ -205,8 +190,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
 async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
     let content = tokio::fs::read_to_string(&path).await?;
-    let parts = content.split_ascii_whitespace()
-        .collect::<Vec<_>>();
+    let parts = content.split_ascii_whitespace().collect::<Vec<_>>();
 
     let utime = parts[13].parse().unwrap_or(0f64);
     let stime = parts[14].parse().unwrap_or(0f64);
@@ -216,9 +200,14 @@ async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64)
     let rss = parts[23].parse().unwrap_or(0f64);
 
     // TODO: fix start time
-    Ok(((utime + stime) / USER_HZ, threads, (start_time) / USER_HZ, vsize, rss))
+    Ok((
+        (utime + stime) / USER_HZ,
+        threads,
+        (start_time) / USER_HZ,
+        vsize,
+        rss,
+    ))
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -226,7 +215,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_proc_stat() {
-        let (cpu_time, threads, _, vsize, rss) = get_proc_stat("tests/fixtures/proc", 26231).await.unwrap();
+        let (cpu_time, threads, _, vsize, rss) =
+            get_proc_stat("tests/fixtures/proc", 26231).await.unwrap();
 
         assert_eq!(cpu_time, 17.21);
         assert_eq!(threads, 1.0);

@@ -2,7 +2,6 @@ use crate::{Error, ProcFS, SysFS};
 
 use std::collections::BTreeMap;
 
-
 /// LayoutUsage contains additional usage statistics for a disk layout
 pub struct LayoutUsage {
     used_bytes: u64,
@@ -40,7 +39,6 @@ pub struct Allocation {
     data: Option<AllocationStats>,
     metadata: Option<AllocationStats>,
     system: Option<AllocationStats>,
-
 }
 
 /// Device contains information about a device that is part of

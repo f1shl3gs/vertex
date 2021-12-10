@@ -1,8 +1,8 @@
-use std::fs;
-use std::io::Write;
+use crate::ReadFrom;
 use bytes::Bytes;
 use quickcheck::{Arbitrary, Gen, QuickCheck, TestResult};
-use crate::ReadFrom;
+use std::fs;
+use std::io::Write;
 
 use crate::watch::Watcher;
 
@@ -92,11 +92,9 @@ impl FileWatcherFile {
 }
 
 fn no_truncations(action: Vec<FileWatcherAction>) {
-    let dir = tempfile::TempDir::new()
-        .expect("could not create tempdir");
+    let dir = tempfile::TempDir::new().expect("could not create tempdir");
     let path = dir.path().join("a_file.log");
-    let mut fp = fs::File::create(&path)
-        .expect("could not create");
+    let mut fp = fs::File::create(&path).expect("could not create");
     let mut rotation_count = 0;
     let mut fw = Watcher::new(
         path.clone(),
@@ -104,7 +102,8 @@ fn no_truncations(action: Vec<FileWatcherAction>) {
         None,
         100_000,
         Bytes::from("\n"),
-    ).expect("must be able to create file watcher");
+    )
+    .expect("must be able to create file watcher");
 
     let mut files: Vec<FileWatcherFile> = vec![FileWatcherFile::new()];
     let mut read_index = 0;
@@ -129,10 +128,8 @@ fn no_truncations(action: Vec<FileWatcherAction>) {
                 let mut new_path = path.clone();
                 new_path.set_extension(format!("log.{}", rotation_count));
                 rotation_count += 1;
-                fs::rename(&path, &new_path)
-                    .expect("could not rename");
-                fp = fs::File::create(&path)
-                    .expect("could not create");
+                fs::rename(&path, &new_path).expect("could not rename");
+                fp = fs::File::create(&path).expect("could not create");
                 files.insert(0, FileWatcherFile::new());
                 read_index += 1;
             }
@@ -154,8 +151,7 @@ fn no_truncations(action: Vec<FileWatcherAction>) {
                             continue;
                         }
                         Ok(Some(line)) => {
-                            let exp = files[read_index].read_line()
-                                .expect("could not readline");
+                            let exp = files[read_index].read_line().expect("could not readline");
                             assert_eq!(exp.into_bytes(), line);
                             break;
                         }
@@ -178,7 +174,7 @@ fn delay(attempts: u32) {
         6 => 64,
         7 => 128,
         8 => 256,
-        _ => 512
+        _ => 512,
     };
 
     let time = std::time::Duration::from_millis(delay);

@@ -44,10 +44,7 @@ pub struct EwmaVar {
 
 impl EwmaVar {
     pub const fn new(alpha: f64) -> Self {
-        Self {
-            state: None,
-            alpha,
-        }
+        Self { state: None, alpha }
     }
 
     pub const fn state(&self) -> Option<MeanVariance> {
@@ -64,7 +61,7 @@ impl EwmaVar {
 
                 (
                     state.mean + increment,
-                    (1.0 - self.alpha) * difference.mul_add(increment, state.variance)
+                    (1.0 - self.alpha) * difference.mul_add(increment, state.variance),
                 )
             }
         };
@@ -101,7 +98,7 @@ impl Mean {
     pub const fn average(&self) -> Option<f64> {
         match self.count {
             0 => None,
-            _ => Some(self.mean)
+            _ => Some(self.mean),
         }
     }
 }

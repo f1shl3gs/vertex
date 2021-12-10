@@ -1,9 +1,9 @@
+use super::{default_true, skip_serializing_if_default};
 use hyper::http::uri::InvalidUri;
-use hyper_proxy::{Intercept, Proxy, ProxyConnector};
 use hyper_proxy::Custom;
+use hyper_proxy::{Intercept, Proxy, ProxyConnector};
 use no_proxy::NoProxy;
 use serde::{Deserialize, Serialize};
-use super::{default_true, skip_serializing_if_default};
 
 fn from_env(key: &str) -> Option<String> {
     // use lowercase first and the upercase
@@ -24,24 +24,27 @@ impl NoProxyInterceptor {
                 }
 
                 let matches = host.map_or(false, |host| {
-                    self.0.matches(host) || port.map_or(false, |port| {
-                        let url = format!("{}:{}", host, port);
-                        self.0.matches(&url)
-                    })
+                    self.0.matches(host)
+                        || port.map_or(false, |port| {
+                            let url = format!("{}:{}", host, port);
+                            self.0.matches(&url)
+                        })
                 });
 
                 // only intercept those that don't match
                 !matches
-            }
+            },
         ))
     }
 }
 
-
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ProxyConfig {
-    #[serde(default = "default_true", skip_serializing_if = "skip_serializing_if_default")]
+    #[serde(
+        default = "default_true",
+        skip_serializing_if = "skip_serializing_if_default"
+    )]
     pub enabled: bool,
     #[serde(default)]
     pub http: Option<String>,
@@ -68,9 +71,7 @@ impl ProxyConfig {
             enabled: true,
             http: from_env("HTTP_PROXY"),
             https: from_env("HTTPS_PROXY"),
-            no_proxy: from_env("NO_PROXY")
-                .map(NoProxy::from)
-                .unwrap_or_default(),
+            no_proxy: from_env("NO_PROXY").map(NoProxy::from).unwrap_or_default(),
         }
     }
 
@@ -101,8 +102,7 @@ impl ProxyConfig {
     }
 
     fn http_intercept(&self) -> Intercept {
-        self.interceptor()
-            .intercept("http")
+        self.interceptor().intercept("http")
     }
 
     fn http_proxy(&self) -> Result<Option<Proxy>, InvalidUri> {
@@ -116,8 +116,7 @@ impl ProxyConfig {
     }
 
     fn https_intercept(&self) -> Intercept {
-        self.interceptor()
-            .intercept("https")
+        self.interceptor().intercept("https")
     }
 
     fn https_proxy(&self) -> Result<Option<Proxy>, InvalidUri> {

@@ -1,11 +1,10 @@
 use std::io::{self, Write};
 
-use serde::{Deserialize, Serialize};
 use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
 
 use crate::encoding::Encoder;
 use crate::{Event, LogRecord};
-
 
 static DEFAULT_TEXT_ENCODER: StandardTextEncoding = StandardTextEncoding;
 static DEFAULT_JSON_ENCODER: StandardJsonEncoding = StandardJsonEncoding;
@@ -35,7 +34,7 @@ impl StandardEncodings {
     fn batch_post_hook(self, writer: &mut dyn io::Write) -> io::Result<usize> {
         let buf = match self {
             StandardEncodings::Json => Some(&[b']']),
-            _ => None
+            _ => None,
         };
 
         if let Some(buf) = buf {
@@ -75,7 +74,7 @@ impl StandardEncodings {
     fn single_trailer_hook(self, writer: &mut dyn io::Write) -> io::Result<usize> {
         let buf = match self {
             StandardEncodings::NdJson => Some(&[b'\n']),
-            _ => None
+            _ => None,
         };
 
         if let Some(buf) = buf {
@@ -92,7 +91,9 @@ impl Encoder<Event> for StandardEncodings {
 
         let n = match self {
             StandardEncodings::Text => DEFAULT_TEXT_ENCODER.encode(input, writer),
-            StandardEncodings::Json | StandardEncodings::NdJson => DEFAULT_JSON_ENCODER.encode(input, writer),
+            StandardEncodings::Json | StandardEncodings::NdJson => {
+                DEFAULT_JSON_ENCODER.encode(input, writer)
+            }
         }?;
 
         written += n;
@@ -114,7 +115,9 @@ impl Encoder<Vec<Event>> for StandardEncodings {
         for (i, event) in input.into_iter().enumerate() {
             let n = match self {
                 StandardEncodings::Text => DEFAULT_TEXT_ENCODER.encode(event, writer),
-                StandardEncodings::Json | StandardEncodings::NdJson => DEFAULT_JSON_ENCODER.encode(event, writer),
+                StandardEncodings::Json | StandardEncodings::NdJson => {
+                    DEFAULT_JSON_ENCODER.encode(event, writer)
+                }
             }?;
 
             written += n;
@@ -136,9 +139,9 @@ impl Encoder<Vec<Event>> for StandardEncodings {
 }
 
 fn as_tracked_write<F, I, E>(inner: &mut dyn io::Write, input: I, f: F) -> io::Result<usize>
-    where
-        F: FnOnce(&mut dyn io::Write, I) -> Result<(), E>,
-        E: Into<io::Error> + 'static
+where
+    F: FnOnce(&mut dyn io::Write, I) -> Result<(), E>,
+    E: Into<io::Error> + 'static,
 {
     struct Tracked<'inner> {
         count: usize,
@@ -183,7 +186,7 @@ impl Encoder<Event> for StandardJsonEncoding {
             Event::Log(log) => self.encode(log, writer),
             Event::Metric(metric) => as_tracked_write(writer, &metric, |writer, item| {
                 serde_json::to_writer(writer, item)
-            })
+            }),
         }
     }
 }
@@ -201,11 +204,11 @@ impl Encoder<Event> for StandardTextEncoding {
     fn encode(&self, event: Event, writer: &mut dyn Write) -> io::Result<usize> {
         match event {
             Event::Log(log) => {
-                let msg = log.get_field(log_schema().message_key())
+                let msg = log
+                    .get_field(log_schema().message_key())
                     .map(|v| v.as_bytes())
                     .unwrap_or_default();
-                writer.write_all(&msg[..])
-                    .map(|()| msg.len())
+                writer.write_all(&msg[..]).map(|()| msg.len())
             }
 
             Event::Metric(metric) => {
@@ -218,8 +221,8 @@ impl Encoder<Event> for StandardTextEncoding {
 
 #[cfg(test)]
 mod tests {
-    use crate::Metric;
     use super::*;
+    use crate::Metric;
 
     fn encode_event(event: Event, encoding: StandardEncodings) -> io::Result<Vec<u8>> {
         let mut buf = Vec::new();
@@ -239,10 +242,8 @@ mod tests {
 
         let message = "log event";
         let event = Event::from(message.to_string());
-        let result = encode_event(event, encoding)
-            .expect("should not have failed");
-        let encoded = std::str::from_utf8(&result)
-            .expect("result should be valid");
+        let result = encode_event(event, encoding).expect("should not have failed");
+        let encoded = std::str::from_utf8(&result).expect("result should be valid");
 
         let expected = message;
         assert_eq!(expected, encoded);
@@ -258,10 +259,8 @@ mod tests {
         let message2 = "log event 2";
         let event2 = Event::from(message2);
 
-        let result = encode_events(vec![event1, event2], encoding)
-            .expect("should not have failed");
-        let encoded = std::str::from_utf8(&result)
-            .expect("result should be valid");
+        let result = encode_events(vec![event1, event2], encoding).expect("should not have failed");
+        let encoded = std::str::from_utf8(&result).expect("result should be valid");
 
         let expected = format!("{}\n{}", message1, message2);
         assert_eq!(expected, encoded);
@@ -271,16 +270,10 @@ mod tests {
     fn test_standard_text_metric_single() {
         let encoding = StandardEncodings::Text;
 
-        let event = Metric::gauge(
-            "name",
-            "desc",
-            1.23
-        ).into();
+        let event = Metric::gauge("name", "desc", 1.23).into();
 
-        let result = encode_event(event, encoding)
-            .expect("should not have failed");
-        let encoded = std::str::from_utf8(&result)
-            .expect("result should be valid");
+        let result = encode_event(event, encoding).expect("should not have failed");
+        let encoded = std::str::from_utf8(&result).expect("result should be valid");
 
         let expected = "name 1.23";
         assert_eq!(expected, encoded)

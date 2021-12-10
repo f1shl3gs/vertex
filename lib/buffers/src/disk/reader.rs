@@ -1,17 +1,17 @@
-use std::pin::Pin;
-use std::task::{Context, Poll};
 use std::fmt::Display;
 use std::marker::PhantomData;
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
 use futures::Stream;
 
 use crate::DecodeBytes;
 
 pub struct Reader<T>
-    where
-        T: Send + Sync + Unpin,
+where
+    T: Send + Sync + Unpin,
 {
-    phantom: PhantomData<T>
+    phantom: PhantomData<T>,
 }
 
 impl<T> Stream for Reader<T>
@@ -28,7 +28,7 @@ where
 
 impl<T> Drop for Reader<T>
 where
-    T: Send + Sync + Unpin
+    T: Send + Sync + Unpin,
 {
     fn drop(&mut self) {
         self.flush()
@@ -37,7 +37,7 @@ where
 
 impl<T> Reader<T>
 where
-    T: Send + Sync + Unpin
+    T: Send + Sync + Unpin,
 {
     fn flush(&mut self) {
         // TODO

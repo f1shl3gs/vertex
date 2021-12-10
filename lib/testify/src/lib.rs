@@ -1,11 +1,11 @@
-mod socket;
 mod portpicker;
+pub mod random;
+mod socket;
+pub mod stats;
 mod stream;
 pub mod temp;
-pub mod stats;
-pub mod random;
 
 // re-export
+pub use portpicker::pick_unused_local_port;
 pub use socket::{next_addr, next_addr_for_ip};
 pub use stream::*;
-pub use portpicker::pick_unused_local_port;

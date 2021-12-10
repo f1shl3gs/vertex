@@ -1,8 +1,8 @@
 use metrics::GaugeValue;
 use std::{
     slice,
-    sync::Arc,
     sync::atomic::{AtomicU32, AtomicU64, Ordering},
+    sync::Arc,
 };
 
 #[derive(Debug)]
@@ -13,7 +13,7 @@ struct AtomicF64 {
 impl AtomicF64 {
     fn new(init: f64) -> Self {
         Self {
-            inner: AtomicU64::new(init.to_bits())
+            inner: AtomicU64::new(init.to_bits()),
         }
     }
 
@@ -23,8 +23,8 @@ impl AtomicF64 {
         fetch_order: Ordering,
         mut f: F,
     ) -> Result<f64, f64>
-        where
-            F: FnMut(f64) -> Option<f64>,
+    where
+        F: FnMut(f64) -> Option<f64>,
     {
         let res = self.inner.fetch_update(set_order, fetch_order, |x| {
             let opt: Option<f64> = f(f64::from_bits(x));
@@ -54,7 +54,7 @@ impl Handle {
     pub fn increment_counter(&self, value: u64) {
         match self {
             Handle::Counter(counter) => counter.record(value),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
@@ -65,7 +65,7 @@ impl Handle {
     pub fn update_gauge(&self, value: GaugeValue) {
         match self {
             Handle::Gauge(gauge) => gauge.record(value),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 
@@ -76,7 +76,7 @@ impl Handle {
     pub fn record_histogram(&self, value: f64) {
         match self {
             Handle::Histogram(h) => h.record(value),
-            _ => unreachable!()
+            _ => unreachable!(),
         }
     }
 }
@@ -89,7 +89,7 @@ pub struct Gauge {
 impl Gauge {
     pub fn new() -> Self {
         Self {
-            inner: AtomicF64::new(0.0)
+            inner: AtomicF64::new(0.0),
         }
     }
 
@@ -184,7 +184,7 @@ impl Histogram {
 
     pub fn buckets(&self) -> BucketIter<'_> {
         BucketIter {
-            inner: self.buckets.iter()
+            inner: self.buckets.iter(),
         }
     }
 }
@@ -211,23 +211,21 @@ pub struct Counter {
 impl Counter {
     pub fn new() -> Self {
         Self {
-            inner: AtomicU64::new(0)
+            inner: AtomicU64::new(0),
         }
     }
 
     pub fn with_count(count: u64) -> Self {
         Self {
-            inner: AtomicU64::new(count)
+            inner: AtomicU64::new(count),
         }
     }
 
     pub fn record(&self, value: u64) {
-        self.inner
-            .fetch_add(value, Ordering::Relaxed);
+        self.inner.fetch_add(value, Ordering::Relaxed);
     }
 
     pub fn count(&self) -> u64 {
         self.inner.load(Ordering::Relaxed)
     }
 }
-

@@ -1,97 +1,96 @@
-use std::collections::BTreeMap;
 use nom::FindSubstring;
+use std::collections::BTreeMap;
 
+use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
-use event::{Metric, tags};
 
-use super::{Error, QueryFailed, valid_name};
-
+use super::{valid_name, Error, QueryFailed};
 
 lazy_static::lazy_static! {
     static ref GLOBAL_VARIABLES_DESC: std::collections::BTreeMap<String, String> = {
         let mut map = BTreeMap::new();
         // https://github.com/facebook/mysql-5.6/wiki/New-MySQL-RocksDB-Server-Variables
-		map.insert("rocksdb_access_hint_on_compaction_start".to_string(), "File access pattern once a compaction is started, applied to all input files of a compaction.".to_string());
-		map.insert("rocksdb_advise_random_on_open".to_string(), "Hint of random access to the filesystem when a data file is opened.".to_string());
-		map.insert("rocksdb_allow_concurrent_memtable_write".to_string(), "Allow multi-writers to update memtables in parallel.".to_string());
-		map.insert("rocksdb_allow_mmap_reads".to_string(), "Allow the OS to mmap a data file for reads.".to_string());
-		map.insert("rocksdb_allow_mmap_writes".to_string(), "Allow the OS to mmap a data file for writes.".to_string());
-		map.insert("rocksdb_block_cache_size".to_string(), "Size of the LRU block cache in RocksDB. This memory is reserved for the block cache, which is in addition to any filesystem caching that may occur.".to_string());
-		map.insert("rocksdb_block_restart_interval".to_string(), "Number of keys for each set of delta encoded data.".to_string());
-		map.insert("rocksdb_block_size_deviation".to_string(), "If the percentage of free space in the current data block (size specified in rocksdb-block-size) is less than this amount, close the block (and write record to new block).".to_string());
-		map.insert("rocksdb_block_size".to_string(), "Size of the data block for reading sst files.".to_string());
-		map.insert("rocksdb_bulk_load_size".to_string(), "Sets the number of keys to accumulate before committing them to the storage engine during bulk loading.".to_string());
-		map.insert("rocksdb_bulk_load".to_string(), "When set, MyRocks will ignore checking keys for uniqueness or acquiring locks during transactions. This option should only be used when the application is certain there are no row conflicts, such as when setting up a new MyRocks instance from an existing MySQL dump.".to_string());
-		map.insert("rocksdb_bytes_per_sync".to_string(), "Enables the OS to sync out file writes as data files are created.".to_string());
-		map.insert("rocksdb_cache_index_and_filter_blocks".to_string(), "Requests RocksDB to use the block cache for caching the index and bloomfilter data blocks from each data file. If this is not set, RocksDB will allocate additional memory to maintain these data blocks.".to_string());
-		map.insert("rocksdb_checksums_pct".to_string(), "Sets the percentage of rows to calculate and set MyRocks checksums.".to_string());
-		map.insert("rocksdb_collect_sst_properties".to_string(), "Enables collecting statistics of each data file for improving optimizer behavior.".to_string());
-		map.insert("rocksdb_commit_in_the_middle".to_string(), "Commit rows implicitly every rocksdb-bulk-load-size, during bulk load/insert/update/deletes.".to_string());
-		map.insert("rocksdb_compaction_readahead_size".to_string(), "When non-zero, bigger reads are performed during compaction. Useful if running RocksDB on spinning disks, compaction will do sequential instead of random reads.".to_string());
-		map.insert("rocksdb_compaction_sequential_deletes_count_sd".to_string(), "If enabled, factor in single deletes as part of rocksdb-compaction-sequential-deletes.".to_string());
-		map.insert("rocksdb_compaction_sequential_deletes_file_size".to_string(), "Threshold to trigger compaction if the number of sequential keys that are all delete markers exceed this value. While this compaction helps reduce request latency by removing delete markers, it can increase write rates of RocksDB.".to_string());
-		map.insert("rocksdb_compaction_sequential_deletes_window".to_string(), "Threshold to trigger compaction if, within a sliding window of keys, there exists this parameter's number of delete marker.".to_string());
-		map.insert("rocksdb_compaction_sequential_deletes".to_string(), "Enables triggering of compaction when the number of delete markers in a data file exceeds a certain threshold. Depending on workload patterns, RocksDB can potentially maintain large numbers of delete markers and increase latency of all queries.".to_string());
-		map.insert("rocksdb_create_if_missing".to_string(), "Allows creating the RocksDB database if it does not exist.".to_string());
-		map.insert("rocksdb_create_missing_column_families".to_string(), "Allows creating new column families if they did not exist.".to_string());
-		map.insert("rocksdb_db_write_buffer_size".to_string(), "Size of the memtable used to store writes within RocksDB. This is the size per column family. Once this size is reached, a flush of the memtable to persistent media occurs.".to_string());
-		map.insert("rocksdb_deadlock_detect".to_string(), "Enables deadlock detection in RocksDB.".to_string());
-		map.insert("rocksdb_debug_optimizer_no_zero_cardinality".to_string(), "Test only to prevent MyRocks from calculating cardinality.".to_string());
-		map.insert("rocksdb_delayed_write_rate".to_string(), "When RocksDB hits the soft limits/thresholds for writes, such as soft_pending_compaction_bytes_limit being hit, or level0_slowdown_writes_trigger being hit, RocksDB will slow the write rate down to the value of this parameter as bytes/second.".to_string());
-		map.insert("rocksdb_delete_obsolete_files_period_micros".to_string(), "The periodicity of when obsolete files get deleted, but does not affect files removed through compaction.".to_string());
-		map.insert("rocksdb_enable_bulk_load_api".to_string(), "Enables using the SSTFileWriter feature in RocksDB, which bypasses the memtable, but this requires keys to be inserted into the table in either ascending or descending order. If disabled, bulk loading uses the normal write path via the memtable and does not keys to be inserted in any order.".to_string());
-		map.insert("rocksdb_enable_thread_tracking".to_string(), "Set to allow RocksDB to track the status of threads accessing the database.".to_string());
-		map.insert("rocksdb_enable_write_thread_adaptive_yield".to_string(), "Set to allow RocksDB write batch group leader to wait up to the max time allowed before blocking on a mutex, allowing an increase in throughput for concurrent workloads.".to_string());
-		map.insert("rocksdb_error_if_exists".to_string(), "If set, reports an error if an existing database already exists.".to_string());
-		map.insert("rocksdb_flush_log_at_trx_commit".to_string(), "Sync'ing on transaction commit similar to innodb-flush-log-at-trx-commit: 0 - never sync, 1 - always sync, 2 - sync based on a timer controlled via rocksdb-background-sync".to_string());
-		map.insert("rocksdb_flush_memtable_on_analyze".to_string(), "When analyze table is run, determines of the memtable should be flushed so that data in the memtable is also used for calculating stats.".to_string());
-		map.insert("rocksdb_force_compute_memtable_stats".to_string(), "When enabled, also include data in the memtables for index statistics calculations used by the query optimizer. Greater accuracy, but requires more cpu.".to_string());
-		map.insert("rocksdb_force_flush_memtable_now".to_string(), "Triggers MyRocks to flush the memtables out to the data files.".to_string());
-		map.insert("rocksdb_force_index_records_in_range".to_string(), "When force index is used, a non-zero value here will be used as the number of rows to be returned to the query optimizer when trying to determine the estimated number of rows.".to_string());
-		map.insert("rocksdb_hash_index_allow_collision".to_string(), "Enables RocksDB to allow hashes to collide (uses less memory). Otherwise, the full prefix is stored to prevent hash collisions.".to_string());
-		map.insert("rocksdb_keep_log_file_num".to_string(), "Sets the maximum number of info LOG files to keep around.".to_string());
-		map.insert("rocksdb_lock_scanned_rows".to_string(), "If enabled, rows that are scanned during UPDATE remain locked even if they have not been updated.".to_string());
-		map.insert("rocksdb_lock_wait_timeout".to_string(), "Sets the number of seconds MyRocks will wait to acquire a row lock before aborting the request.".to_string());
-		map.insert("rocksdb_log_file_time_to_roll".to_string(), "Sets the number of seconds a info LOG file captures before rolling to a new LOG file.".to_string());
-		map.insert("rocksdb_manifest_preallocation_size".to_string(), "Sets the number of bytes to preallocate for the MANIFEST file in RocksDB and reduce possible random I/O on XFS. MANIFEST files are used to store information about column families, levels, active files, etc.".to_string());
-		map.insert("rocksdb_max_open_files".to_string(), "Sets a limit on the maximum number of file handles opened by RocksDB.".to_string());
-		map.insert("rocksdb_max_row_locks".to_string(), "Sets a limit on the maximum number of row locks held by a transaction before failing it.".to_string());
-		map.insert("rocksdb_max_subcompactions".to_string(), "For each compaction job, the maximum threads that will work on it simultaneously (i.e. subcompactions). A value of 1 means no subcompactions.".to_string());
-		map.insert("rocksdb_max_total_wal_size".to_string(), "Sets a limit on the maximum size of WAL files kept around. Once this limit is hit, RocksDB will force the flushing of memtables to reduce the size of WAL files.".to_string());
-		map.insert("rocksdb_merge_buf_size".to_string(), "Size (in bytes) of the merge buffers used to accumulate data during secondary key creation. During secondary key creation the data, we avoid updating the new indexes through the memtable and L0 by writing new entries directly to the lowest level in the database. This requires the values to be sorted so we use a merge/sort algorithm. This setting controls how large the merge buffers are. The default is 64Mb.".to_string());
-		map.insert("rocksdb_merge_combine_read_size".to_string(), "Size (in bytes) of the merge combine buffer used in the merge/sort algorithm as described in rocksdb-merge-buf-size.".to_string());
-		map.insert("rocksdb_new_table_reader_for_compaction_inputs".to_string(), "Indicates whether RocksDB should create a new file descriptor and table reader for each compaction input. Doing so may use more memory but may allow pre-fetch options to be specified for compaction input files without impacting table readers used for user queries.".to_string());
-		map.insert("rocksdb_no_block_cache".to_string(), "Disables using the block cache for a column family.".to_string());
-		map.insert("rocksdb_paranoid_checks".to_string(), "Forces RocksDB to re-read a data file that was just created to verify correctness.".to_string());
-		map.insert("rocksdb_pause_background_work".to_string(), "Test only to start and stop all background compactions within RocksDB.".to_string());
-		map.insert("rocksdb_perf_context_level".to_string(), "Sets the level of information to capture via the perf context plugins.".to_string());
-		map.insert("rocksdb_persistent_cache_size_mb".to_string(), "The size (in Mb) to allocate to the RocksDB persistent cache if desired.".to_string());
-		map.insert("rocksdb_pin_l0_filter_and_index_blocks_in_cache".to_string(), "If rocksdb-cache-index-and-filter-blocks is true then this controls whether RocksDB 'pins' the filter and index blocks in the cache.".to_string());
-		map.insert("rocksdb_print_snapshot_conflict_queries".to_string(), "If this is true, MyRocks will log queries that generate snapshot conflicts into the .err log.".to_string());
-		map.insert("rocksdb_rate_limiter_bytes_per_sec".to_string(), "Controls the rate at which RocksDB is allowed to write to media via memtable flushes and compaction.".to_string());
-		map.insert("rocksdb_records_in_range".to_string(), "Test only to override the value returned by records-in-range.".to_string());
-		map.insert("rocksdb_seconds_between_stat_computes".to_string(), "Sets the number of seconds between recomputation of table statistics for the optimizer.".to_string());
-		map.insert("rocksdb_signal_drop_index_thread".to_string(), "Test only to signal the MyRocks drop index thread.".to_string());
-		map.insert("rocksdb_skip_bloom_filter_on_read".to_string(), "Indicates whether the bloom filters should be skipped on reads.".to_string());
-		map.insert("rocksdb_skip_fill_cache".to_string(), "Requests MyRocks to skip caching data on read requests.".to_string());
-		map.insert("rocksdb_stats_dump_period_sec".to_string(), "Sets the number of seconds to perform a RocksDB stats dump to the info LOG files.".to_string());
-		map.insert("rocksdb_store_row_debug_checksums".to_string(), "Include checksums when writing index/table records.".to_string());
-		map.insert("rocksdb_strict_collation_check".to_string(), "Enables MyRocks to check and verify table indexes have the proper collation settings.".to_string());
-		map.insert("rocksdb_table_cache_numshardbits".to_string(), "Sets the number of table caches within RocksDB.".to_string());
-		map.insert("rocksdb_use_adaptive_mutex".to_string(), "Enables adaptive mutexes in RocksDB which spins in user space before resorting to the kernel.".to_string());
-		map.insert("rocksdb_use_direct_reads".to_string(), "Enable direct IO when opening a file for read/write. This means that data will not be cached or buffered.".to_string());
-		map.insert("rocksdb_use_fsync".to_string(), "Requires RocksDB to use fsync instead of fdatasync when requesting a sync of a data file.".to_string());
-		map.insert("rocksdb_validate_tables".to_string(), "Requires MyRocks to verify all of MySQL's .frm files match tables stored in RocksDB.".to_string());
-		map.insert("rocksdb_verify_row_debug_checksums".to_string(), "Verify checksums when reading index/table records.".to_string());
-		map.insert("rocksdb_wal_bytes_per_sync".to_string(), "Controls the rate at which RocksDB writes out WAL file data.".to_string());
-		map.insert("rocksdb_wal_recovery_mode".to_string(), "Sets RocksDB's level of tolerance when recovering the WAL files after a system crash.".to_string());
-		map.insert("rocksdb_wal_size_limit_mb".to_string(), "Maximum size the RocksDB WAL is allow to grow to. When this size is exceeded rocksdb attempts to flush sufficient memtables to allow for the deletion of the oldest log.".to_string());
-		map.insert("rocksdb_wal_ttl_seconds".to_string(), "No WAL file older than this value should exist.".to_string());
-		map.insert("rocksdb_whole_key_filtering".to_string(), "Enables the bloomfilter to use the whole key for filtering instead of just the prefix. In order for this to be efficient, lookups should use the whole key for matching.".to_string());
-		map.insert("rocksdb_write_disable_wal".to_string(), "Disables logging data to the WAL files. Useful for bulk loading.".to_string());
-		map.insert("rocksdb_write_ignore_missing_column_families".to_string(), "If 1, then writes to column families that do not exist is ignored by RocksDB.".to_string());
-		map
+        map.insert("rocksdb_access_hint_on_compaction_start".to_string(), "File access pattern once a compaction is started, applied to all input files of a compaction.".to_string());
+        map.insert("rocksdb_advise_random_on_open".to_string(), "Hint of random access to the filesystem when a data file is opened.".to_string());
+        map.insert("rocksdb_allow_concurrent_memtable_write".to_string(), "Allow multi-writers to update memtables in parallel.".to_string());
+        map.insert("rocksdb_allow_mmap_reads".to_string(), "Allow the OS to mmap a data file for reads.".to_string());
+        map.insert("rocksdb_allow_mmap_writes".to_string(), "Allow the OS to mmap a data file for writes.".to_string());
+        map.insert("rocksdb_block_cache_size".to_string(), "Size of the LRU block cache in RocksDB. This memory is reserved for the block cache, which is in addition to any filesystem caching that may occur.".to_string());
+        map.insert("rocksdb_block_restart_interval".to_string(), "Number of keys for each set of delta encoded data.".to_string());
+        map.insert("rocksdb_block_size_deviation".to_string(), "If the percentage of free space in the current data block (size specified in rocksdb-block-size) is less than this amount, close the block (and write record to new block).".to_string());
+        map.insert("rocksdb_block_size".to_string(), "Size of the data block for reading sst files.".to_string());
+        map.insert("rocksdb_bulk_load_size".to_string(), "Sets the number of keys to accumulate before committing them to the storage engine during bulk loading.".to_string());
+        map.insert("rocksdb_bulk_load".to_string(), "When set, MyRocks will ignore checking keys for uniqueness or acquiring locks during transactions. This option should only be used when the application is certain there are no row conflicts, such as when setting up a new MyRocks instance from an existing MySQL dump.".to_string());
+        map.insert("rocksdb_bytes_per_sync".to_string(), "Enables the OS to sync out file writes as data files are created.".to_string());
+        map.insert("rocksdb_cache_index_and_filter_blocks".to_string(), "Requests RocksDB to use the block cache for caching the index and bloomfilter data blocks from each data file. If this is not set, RocksDB will allocate additional memory to maintain these data blocks.".to_string());
+        map.insert("rocksdb_checksums_pct".to_string(), "Sets the percentage of rows to calculate and set MyRocks checksums.".to_string());
+        map.insert("rocksdb_collect_sst_properties".to_string(), "Enables collecting statistics of each data file for improving optimizer behavior.".to_string());
+        map.insert("rocksdb_commit_in_the_middle".to_string(), "Commit rows implicitly every rocksdb-bulk-load-size, during bulk load/insert/update/deletes.".to_string());
+        map.insert("rocksdb_compaction_readahead_size".to_string(), "When non-zero, bigger reads are performed during compaction. Useful if running RocksDB on spinning disks, compaction will do sequential instead of random reads.".to_string());
+        map.insert("rocksdb_compaction_sequential_deletes_count_sd".to_string(), "If enabled, factor in single deletes as part of rocksdb-compaction-sequential-deletes.".to_string());
+        map.insert("rocksdb_compaction_sequential_deletes_file_size".to_string(), "Threshold to trigger compaction if the number of sequential keys that are all delete markers exceed this value. While this compaction helps reduce request latency by removing delete markers, it can increase write rates of RocksDB.".to_string());
+        map.insert("rocksdb_compaction_sequential_deletes_window".to_string(), "Threshold to trigger compaction if, within a sliding window of keys, there exists this parameter's number of delete marker.".to_string());
+        map.insert("rocksdb_compaction_sequential_deletes".to_string(), "Enables triggering of compaction when the number of delete markers in a data file exceeds a certain threshold. Depending on workload patterns, RocksDB can potentially maintain large numbers of delete markers and increase latency of all queries.".to_string());
+        map.insert("rocksdb_create_if_missing".to_string(), "Allows creating the RocksDB database if it does not exist.".to_string());
+        map.insert("rocksdb_create_missing_column_families".to_string(), "Allows creating new column families if they did not exist.".to_string());
+        map.insert("rocksdb_db_write_buffer_size".to_string(), "Size of the memtable used to store writes within RocksDB. This is the size per column family. Once this size is reached, a flush of the memtable to persistent media occurs.".to_string());
+        map.insert("rocksdb_deadlock_detect".to_string(), "Enables deadlock detection in RocksDB.".to_string());
+        map.insert("rocksdb_debug_optimizer_no_zero_cardinality".to_string(), "Test only to prevent MyRocks from calculating cardinality.".to_string());
+        map.insert("rocksdb_delayed_write_rate".to_string(), "When RocksDB hits the soft limits/thresholds for writes, such as soft_pending_compaction_bytes_limit being hit, or level0_slowdown_writes_trigger being hit, RocksDB will slow the write rate down to the value of this parameter as bytes/second.".to_string());
+        map.insert("rocksdb_delete_obsolete_files_period_micros".to_string(), "The periodicity of when obsolete files get deleted, but does not affect files removed through compaction.".to_string());
+        map.insert("rocksdb_enable_bulk_load_api".to_string(), "Enables using the SSTFileWriter feature in RocksDB, which bypasses the memtable, but this requires keys to be inserted into the table in either ascending or descending order. If disabled, bulk loading uses the normal write path via the memtable and does not keys to be inserted in any order.".to_string());
+        map.insert("rocksdb_enable_thread_tracking".to_string(), "Set to allow RocksDB to track the status of threads accessing the database.".to_string());
+        map.insert("rocksdb_enable_write_thread_adaptive_yield".to_string(), "Set to allow RocksDB write batch group leader to wait up to the max time allowed before blocking on a mutex, allowing an increase in throughput for concurrent workloads.".to_string());
+        map.insert("rocksdb_error_if_exists".to_string(), "If set, reports an error if an existing database already exists.".to_string());
+        map.insert("rocksdb_flush_log_at_trx_commit".to_string(), "Sync'ing on transaction commit similar to innodb-flush-log-at-trx-commit: 0 - never sync, 1 - always sync, 2 - sync based on a timer controlled via rocksdb-background-sync".to_string());
+        map.insert("rocksdb_flush_memtable_on_analyze".to_string(), "When analyze table is run, determines of the memtable should be flushed so that data in the memtable is also used for calculating stats.".to_string());
+        map.insert("rocksdb_force_compute_memtable_stats".to_string(), "When enabled, also include data in the memtables for index statistics calculations used by the query optimizer. Greater accuracy, but requires more cpu.".to_string());
+        map.insert("rocksdb_force_flush_memtable_now".to_string(), "Triggers MyRocks to flush the memtables out to the data files.".to_string());
+        map.insert("rocksdb_force_index_records_in_range".to_string(), "When force index is used, a non-zero value here will be used as the number of rows to be returned to the query optimizer when trying to determine the estimated number of rows.".to_string());
+        map.insert("rocksdb_hash_index_allow_collision".to_string(), "Enables RocksDB to allow hashes to collide (uses less memory). Otherwise, the full prefix is stored to prevent hash collisions.".to_string());
+        map.insert("rocksdb_keep_log_file_num".to_string(), "Sets the maximum number of info LOG files to keep around.".to_string());
+        map.insert("rocksdb_lock_scanned_rows".to_string(), "If enabled, rows that are scanned during UPDATE remain locked even if they have not been updated.".to_string());
+        map.insert("rocksdb_lock_wait_timeout".to_string(), "Sets the number of seconds MyRocks will wait to acquire a row lock before aborting the request.".to_string());
+        map.insert("rocksdb_log_file_time_to_roll".to_string(), "Sets the number of seconds a info LOG file captures before rolling to a new LOG file.".to_string());
+        map.insert("rocksdb_manifest_preallocation_size".to_string(), "Sets the number of bytes to preallocate for the MANIFEST file in RocksDB and reduce possible random I/O on XFS. MANIFEST files are used to store information about column families, levels, active files, etc.".to_string());
+        map.insert("rocksdb_max_open_files".to_string(), "Sets a limit on the maximum number of file handles opened by RocksDB.".to_string());
+        map.insert("rocksdb_max_row_locks".to_string(), "Sets a limit on the maximum number of row locks held by a transaction before failing it.".to_string());
+        map.insert("rocksdb_max_subcompactions".to_string(), "For each compaction job, the maximum threads that will work on it simultaneously (i.e. subcompactions). A value of 1 means no subcompactions.".to_string());
+        map.insert("rocksdb_max_total_wal_size".to_string(), "Sets a limit on the maximum size of WAL files kept around. Once this limit is hit, RocksDB will force the flushing of memtables to reduce the size of WAL files.".to_string());
+        map.insert("rocksdb_merge_buf_size".to_string(), "Size (in bytes) of the merge buffers used to accumulate data during secondary key creation. During secondary key creation the data, we avoid updating the new indexes through the memtable and L0 by writing new entries directly to the lowest level in the database. This requires the values to be sorted so we use a merge/sort algorithm. This setting controls how large the merge buffers are. The default is 64Mb.".to_string());
+        map.insert("rocksdb_merge_combine_read_size".to_string(), "Size (in bytes) of the merge combine buffer used in the merge/sort algorithm as described in rocksdb-merge-buf-size.".to_string());
+        map.insert("rocksdb_new_table_reader_for_compaction_inputs".to_string(), "Indicates whether RocksDB should create a new file descriptor and table reader for each compaction input. Doing so may use more memory but may allow pre-fetch options to be specified for compaction input files without impacting table readers used for user queries.".to_string());
+        map.insert("rocksdb_no_block_cache".to_string(), "Disables using the block cache for a column family.".to_string());
+        map.insert("rocksdb_paranoid_checks".to_string(), "Forces RocksDB to re-read a data file that was just created to verify correctness.".to_string());
+        map.insert("rocksdb_pause_background_work".to_string(), "Test only to start and stop all background compactions within RocksDB.".to_string());
+        map.insert("rocksdb_perf_context_level".to_string(), "Sets the level of information to capture via the perf context plugins.".to_string());
+        map.insert("rocksdb_persistent_cache_size_mb".to_string(), "The size (in Mb) to allocate to the RocksDB persistent cache if desired.".to_string());
+        map.insert("rocksdb_pin_l0_filter_and_index_blocks_in_cache".to_string(), "If rocksdb-cache-index-and-filter-blocks is true then this controls whether RocksDB 'pins' the filter and index blocks in the cache.".to_string());
+        map.insert("rocksdb_print_snapshot_conflict_queries".to_string(), "If this is true, MyRocks will log queries that generate snapshot conflicts into the .err log.".to_string());
+        map.insert("rocksdb_rate_limiter_bytes_per_sec".to_string(), "Controls the rate at which RocksDB is allowed to write to media via memtable flushes and compaction.".to_string());
+        map.insert("rocksdb_records_in_range".to_string(), "Test only to override the value returned by records-in-range.".to_string());
+        map.insert("rocksdb_seconds_between_stat_computes".to_string(), "Sets the number of seconds between recomputation of table statistics for the optimizer.".to_string());
+        map.insert("rocksdb_signal_drop_index_thread".to_string(), "Test only to signal the MyRocks drop index thread.".to_string());
+        map.insert("rocksdb_skip_bloom_filter_on_read".to_string(), "Indicates whether the bloom filters should be skipped on reads.".to_string());
+        map.insert("rocksdb_skip_fill_cache".to_string(), "Requests MyRocks to skip caching data on read requests.".to_string());
+        map.insert("rocksdb_stats_dump_period_sec".to_string(), "Sets the number of seconds to perform a RocksDB stats dump to the info LOG files.".to_string());
+        map.insert("rocksdb_store_row_debug_checksums".to_string(), "Include checksums when writing index/table records.".to_string());
+        map.insert("rocksdb_strict_collation_check".to_string(), "Enables MyRocks to check and verify table indexes have the proper collation settings.".to_string());
+        map.insert("rocksdb_table_cache_numshardbits".to_string(), "Sets the number of table caches within RocksDB.".to_string());
+        map.insert("rocksdb_use_adaptive_mutex".to_string(), "Enables adaptive mutexes in RocksDB which spins in user space before resorting to the kernel.".to_string());
+        map.insert("rocksdb_use_direct_reads".to_string(), "Enable direct IO when opening a file for read/write. This means that data will not be cached or buffered.".to_string());
+        map.insert("rocksdb_use_fsync".to_string(), "Requires RocksDB to use fsync instead of fdatasync when requesting a sync of a data file.".to_string());
+        map.insert("rocksdb_validate_tables".to_string(), "Requires MyRocks to verify all of MySQL's .frm files match tables stored in RocksDB.".to_string());
+        map.insert("rocksdb_verify_row_debug_checksums".to_string(), "Verify checksums when reading index/table records.".to_string());
+        map.insert("rocksdb_wal_bytes_per_sync".to_string(), "Controls the rate at which RocksDB writes out WAL file data.".to_string());
+        map.insert("rocksdb_wal_recovery_mode".to_string(), "Sets RocksDB's level of tolerance when recovering the WAL files after a system crash.".to_string());
+        map.insert("rocksdb_wal_size_limit_mb".to_string(), "Maximum size the RocksDB WAL is allow to grow to. When this size is exceeded rocksdb attempts to flush sufficient memtables to allow for the deletion of the oldest log.".to_string());
+        map.insert("rocksdb_wal_ttl_seconds".to_string(), "No WAL file older than this value should exist.".to_string());
+        map.insert("rocksdb_whole_key_filtering".to_string(), "Enables the bloomfilter to use the whole key for filtering instead of just the prefix. In order for this to be efficient, lookups should use the whole key for matching.".to_string());
+        map.insert("rocksdb_write_disable_wal".to_string(), "Disables logging data to the WAL files. Useful for bulk loading.".to_string());
+        map.insert("rocksdb_write_ignore_missing_column_families".to_string(), "If 1, then writes to column families that do not exist is ignored by RocksDB.".to_string());
+        map
     };
 }
 
@@ -109,7 +108,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let variables = sqlx::query_as::<_, GlobalVariable>(GLOBAL_VARIABLES_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed { query: GLOBAL_VARIABLES_QUERY })?;
+        .context(QueryFailed {
+            query: GLOBAL_VARIABLES_QUERY,
+        })?;
 
     let mut metrics = vec![];
     let mut text_items = BTreeMap::new();
@@ -134,7 +135,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
         let desc = match GLOBAL_VARIABLES_DESC.get(&key) {
             Some(desc) => desc,
-            None => "Generic gauge metric from SHOW GLOBAL VARIABLES"
+            None => "Generic gauge metric from SHOW GLOBAL VARIABLES",
         };
 
         metrics.push(Metric::gauge(
@@ -150,24 +151,22 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         "MySQL version and distribution",
         1,
         tags!(
-			"innodb_version" => text_items.get("innodb_version").unwrap(),
-			"version" => text_items.get("version").unwrap(),
-			"version_comment" => text_items.get("version_comment").unwrap(),
-		),
+            "innodb_version" => text_items.get("innodb_version").unwrap(),
+            "version" => text_items.get("version").unwrap(),
+            "version_comment" => text_items.get("version_comment").unwrap(),
+        ),
     ));
 
     // mysql_galera_variables_info metric
     match text_items.get("wsrep_cluster_name") {
-        Some(value) if value != "" => {
-            metrics.push(Metric::gauge_with_tags(
-                "mysql_galera_variables_info",
-                "PXC/Galera variables information",
-                1,
-                tags!(
-					"wsrep_cluster_name" => text_items.get("wsrep_cluster_name").unwrap(),
-				),
-            ))
-        }
+        Some(value) if value != "" => metrics.push(Metric::gauge_with_tags(
+            "mysql_galera_variables_info",
+            "PXC/Galera variables information",
+            1,
+            tags!(
+                "wsrep_cluster_name" => text_items.get("wsrep_cluster_name").unwrap(),
+            ),
+        )),
         _ => {}
     }
 
@@ -189,19 +188,16 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 // parse wsrep_provider_options to get gcache.size in bytes
 fn parse_wsrep_provider_options(s: &str) -> f64 {
     match s.find_substring("gcache.size = ") {
-        Some(index) => {
-            s.chars()
-                .skip(index + 14)
-                .take_while(|c| c.is_numeric() || *c == 'M' || *c == 'G')
-                .fold(0.0, |acc, c| {
-                    match c {
-                        'M' => acc * 1024.0 * 1024.0,
-                        'G' => acc * 1024.0 * 1024.0 * 1024.0,
-                        _ => acc * 10.0 + (c as u8 - b'0') as f64
-                    }
-                })
-        }
-        None => 0.0
+        Some(index) => s
+            .chars()
+            .skip(index + 14)
+            .take_while(|c| c.is_numeric() || *c == 'M' || *c == 'G')
+            .fold(0.0, |acc, c| match c {
+                'M' => acc * 1024.0 * 1024.0,
+                'G' => acc * 1024.0 * 1024.0 * 1024.0,
+                _ => acc * 10.0 + (c as u8 - b'0') as f64,
+            }),
+        None => 0.0,
     }
 }
 

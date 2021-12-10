@@ -1,8 +1,4 @@
-use std::{
-    path::Path,
-    io::Error,
-    time::Duration
-};
+use std::{io::Error, path::Path, time::Duration};
 
 /// Every internal event in this crate has a corresponding
 /// method in this trait which should emit the event.

@@ -14,9 +14,6 @@ pub async fn health_check(config: LokiConfig, client: HttpClient) -> crate::Resu
     let resp = client.send(req).await?;
     match resp.status() {
         http::StatusCode::OK => Ok(()),
-        _ => Err(format!(
-            "A non-successful status returned: {}",
-            resp.status()
-        ).into()),
+        _ => Err(format!("A non-successful status returned: {}", resp.status()).into()),
     }
 }

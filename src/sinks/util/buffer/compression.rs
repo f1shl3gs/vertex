@@ -1,9 +1,9 @@
-use std::fmt::{Debug, Display, Formatter, write};
+use std::fmt::{write, Debug, Display, Formatter};
 
-use serde::{de, ser, Serializer};
 use serde::de::{Error, MapAccess};
+use serde::ser::SerializeMap;
 use serde::Deserializer;
-use serde::ser::{SerializeMap};
+use serde::{de, ser, Serializer};
 use serde_json::Value;
 
 pub const GZIP_NONE: u32 = 0;
@@ -46,7 +46,7 @@ impl Compression {
     pub const fn content_encoding(self) -> Option<&'static str> {
         match self {
             Self::None => None,
-            Self::Gzip(_) => Some("gzip")
+            Self::Gzip(_) => Some("gzip"),
         }
     }
 }
@@ -55,15 +55,15 @@ impl Display for Compression {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match *self {
             Self::None => write!(f, "none"),
-            Self::Gzip(ref level) => write!(f, "gzip({})", level.level())
+            Self::Gzip(ref level) => write!(f, "gzip({})", level.level()),
         }
     }
 }
 
 impl<'de> serde::de::Deserialize<'de> for Compression {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-        where
-            D: Deserializer<'de>
+    where
+        D: Deserializer<'de>,
     {
         struct StringOrMap;
 
@@ -74,7 +74,10 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                 formatter.write_str("string or map")
             }
 
-            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E> where E: Error {
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
                 match v {
                     "none" => Ok(Compression::None),
                     "gzip" => Ok(Compression::gzip_default()),
@@ -86,8 +89,8 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
             }
 
             fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
-                where
-                    A: MapAccess<'de>
+            where
+                A: MapAccess<'de>,
             {
                 let mut algorithm = None;
                 let mut level = None;
@@ -139,10 +142,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                             });
                         }
 
-                        _ => return Err(de::Error::unknown_field(
-                            key,
-                            &["algorithm", "level"],
-                        ))
+                        _ => return Err(de::Error::unknown_field(key, &["algorithm", "level"])),
                     };
                 }
 
@@ -152,7 +152,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                         None => Ok(Compression::None),
                     },
                     "gzip" => Ok(Compression::Gzip(level.unwrap_or_default())),
-                    algorithm => Err(de::Error::unknown_variant(algorithm, &["none", "gzip"]))
+                    algorithm => Err(de::Error::unknown_variant(algorithm, &["none", "gzip"])),
                 }
             }
         }
@@ -163,8 +163,8 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
 
 impl ser::Serialize for Compression {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer
+    where
+        S: Serializer,
     {
         use ser::Serializer;
 
@@ -199,9 +199,18 @@ mod tests {
             ("none", Compression::None),
             ("algorithm: gzip\nlevel: 3", Compression::None),
             ("algorithm: \"gzip\"", Compression::gzip_default()),
-            ("algorithm: gzip\nlevel: fast", Compression::Gzip(flate2::Compression::fast())),
-            ("algorithm: gzip\nlevel: default", Compression::gzip_default()),
-            ("algorithm: gzip\nlevel: best", Compression::Gzip(flate2::Compression::best())),
+            (
+                "algorithm: gzip\nlevel: fast",
+                Compression::Gzip(flate2::Compression::fast()),
+            ),
+            (
+                "algorithm: gzip\nlevel: default",
+                Compression::gzip_default(),
+            ),
+            (
+                "algorithm: gzip\nlevel: best",
+                Compression::Gzip(flate2::Compression::best()),
+            ),
         ];
 
         for (input, want) in tests {
@@ -209,7 +218,8 @@ mod tests {
                 .map_err(|err| {
                     println!("input:\n{}", input);
                     err
-                }).unwrap();
+                })
+                .unwrap();
 
             assert_eq!(compression, want, "input: {}", input);
         }

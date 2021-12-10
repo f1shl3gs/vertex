@@ -1,11 +1,10 @@
 use std::future::Future;
-use std::pin::Pin;
 use std::mem;
+use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::stream::Stream;
 use futures::stream::FuturesOrdered;
-
+use futures::stream::Stream;
 
 /// A set of futures which may complete in any order, and results are returned in chunks.
 ///
@@ -119,4 +118,3 @@ impl<F: Future> Stream for FuturesUnorderedChunked<F> {
         }
     }
 }
-

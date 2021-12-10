@@ -1,26 +1,26 @@
+pub mod encoding;
+mod finalization;
 mod log;
+mod logfmt;
+mod macros;
+mod metadata;
 mod metric;
 mod trace;
 mod value;
-mod macros;
-pub mod encoding;
-mod finalization;
-mod metadata;
-mod logfmt;
 
 // re-export
-pub use metric::*;
-pub use log::LogRecord;
-pub use value::Value;
 pub use finalization::*;
+pub use log::LogRecord;
+pub use metric::*;
+pub use value::Value;
 
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use buffers::{EncodeBytes, DecodeBytes};
-use bytes::{BufMut, Buf};
-use prost::{DecodeError, EncodeError};
 use crate::finalization::{BatchNotifier, EventFinalizer};
+use buffers::{DecodeBytes, EncodeBytes};
+use bytes::{Buf, BufMut};
+use prost::{DecodeError, EncodeError};
 
 pub trait ByteSizeOf {
     /// Returns the in-memory size of this type
@@ -67,9 +67,9 @@ impl ByteSizeOf for String {
 }
 
 impl<K, V> ByteSizeOf for BTreeMap<K, V>
-    where
-        K: ByteSizeOf,
-        V: ByteSizeOf
+where
+    K: ByteSizeOf,
+    V: ByteSizeOf,
 {
     fn allocated_bytes(&self) -> usize {
         self.iter()
@@ -78,12 +78,11 @@ impl<K, V> ByteSizeOf for BTreeMap<K, V>
 }
 
 impl<T> ByteSizeOf for Vec<T>
-    where
-        T: ByteSizeOf
+where
+    T: ByteSizeOf,
 {
     fn allocated_bytes(&self) -> usize {
-        self.iter()
-            .fold(0, |acc, i| acc + i.size_of())
+        self.iter().fold(0, |acc, i| acc + i.size_of())
     }
 }
 
@@ -116,21 +115,21 @@ impl Event {
     pub fn as_mut_metric(&mut self) -> &mut Metric {
         match self {
             Event::Metric(metric) => metric,
-            _ => panic!("Failed type coercion, {:?} is not a metric", self)
+            _ => panic!("Failed type coercion, {:?} is not a metric", self),
         }
     }
 
     pub fn as_metric(&self) -> &Metric {
         match self {
             Event::Metric(metric) => metric,
-            _ => panic!("Failed type coercion, {:?} is not a metric", self)
+            _ => panic!("Failed type coercion, {:?} is not a metric", self),
         }
     }
 
     pub fn into_metric(self) -> Metric {
         match self {
             Event::Metric(m) => m,
-            _ => panic!("Failed type coercion, {:?} is not a metric", self)
+            _ => panic!("Failed type coercion, {:?} is not a metric", self),
         }
     }
 
@@ -142,21 +141,21 @@ impl Event {
     pub fn into_log(self) -> LogRecord {
         match self {
             Event::Log(log) => log,
-            _ => panic!("Failed type coercion, {:?} is not a log event", self)
+            _ => panic!("Failed type coercion, {:?} is not a log event", self),
         }
     }
 
     pub fn as_log(&self) -> &LogRecord {
         match self {
             Event::Log(l) => l,
-            _ => panic!("Failed type coercion, {:?} is not a log", self)
+            _ => panic!("Failed type coercion, {:?} is not a log", self),
         }
     }
 
     pub fn as_mut_log(&mut self) -> &mut LogRecord {
         match self {
             Event::Log(l) => l,
-            _ => panic!("Failed type coercion, {:?} is not a log", self)
+            _ => panic!("Failed type coercion, {:?} is not a log", self),
         }
     }
 
@@ -198,7 +197,11 @@ impl From<Metric> for Event {
 impl EncodeBytes<Event> for Event {
     type Error = EncodeError;
 
-    fn encode<B>(self, _buffer: &mut B) -> Result<(), Self::Error> where B: BufMut, Self: Sized {
+    fn encode<B>(self, _buffer: &mut B) -> Result<(), Self::Error>
+    where
+        B: BufMut,
+        Self: Sized,
+    {
         todo!()
     }
 }
@@ -206,7 +209,11 @@ impl EncodeBytes<Event> for Event {
 impl DecodeBytes<Event> for Event {
     type Error = DecodeError;
 
-    fn decode<B>(_buffer: B) -> Result<Event, Self::Error> where Event: Sized, B: Buf {
+    fn decode<B>(_buffer: B) -> Result<Event, Self::Error>
+    where
+        Event: Sized,
+        B: Buf,
+    {
         todo!()
     }
 }

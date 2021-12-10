@@ -1,0 +1,39 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  CI: true
+  PROFILE: debug
+  RUSTFLAGS: "-D warnings"
+  VERBOSE: true
+  RUST_BACKTRACE: full
+
+jobs:
+  cancel-previous:
+    name: Cancel redundant jobs
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true
+
+  checks:
+    name: Checks
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        name: Cache Cargo registry + index
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Check style
+        run:  cargo clippy --workspace --all-targets  -- -A warnings

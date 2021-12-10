@@ -1,8 +1,8 @@
+mod arp;
 mod btrfs;
-mod read;
 mod fibre_channel;
 mod nfs;
-mod arp;
+mod read;
 
 pub(crate) use read::*;
 
@@ -23,19 +23,11 @@ pub enum Error {
     },
 
     #[snafu(display("other io error, {}", source))]
-    OtherErr {
-        source: std::io::Error
-    }
+    OtherErr { source: std::io::Error },
 }
 
 pub struct ProcFS {
     root: String,
-}
-
-#[cfg(test)]
-pub fn test_procfs() -> ProcFS {
-    println!("pwd {:?}", std::env::current_dir().unwrap());
-    todo!()
 }
 
 pub struct SysFS {

@@ -4,33 +4,36 @@ use std::ops::Sub;
 
 use bytes::Bytes;
 use chrono::Utc;
-use hyper::{StatusCode, Uri};
+use event::{Event, Metric};
 use futures::{SinkExt, StreamExt, TryFutureExt};
-use snafu::{Snafu, ResultExt};
-use event::{Metric, Event};
-use serde::{Deserialize, Serialize};
-use tokio_stream::wrappers::IntervalStream;
+use hyper::{StatusCode, Uri};
 use nom::{
     bytes::complete::{tag, take_while_m_n},
     combinator::{all_consuming, map_res},
     error::ErrorKind,
     sequence::{preceded, terminated, tuple},
 };
+use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
+use snafu::{ResultExt, Snafu};
+use tokio_stream::wrappers::IntervalStream;
 
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    SourceConfig, SourceContext, SourceDescription,
+};
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
 use crate::tls::{MaybeTlsSettings, TlsConfig};
-use crate::config::{
-    default_interval, serialize_duration, deserialize_duration,
-    SourceConfig, SourceContext, DataType, GenerateConfig, SourceDescription,
-};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct NginxStubConfig {
     endpoints: Vec<String>,
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
     tls: Option<TlsConfig>,
     auth: Option<Auth>,
@@ -39,13 +42,12 @@ struct NginxStubConfig {
 impl GenerateConfig for NginxStubConfig {
     fn generate_config() -> Value {
         serde_yaml::to_value(Self {
-            endpoints: vec![
-                "http://127.0.0.1:1111".to_string()
-            ],
+            endpoints: vec!["http://127.0.0.1:1111".to_string()],
             interval: default_interval(),
             tls: None,
-            auth: None
-        }).unwrap()
+            auth: None,
+        })
+        .unwrap()
     }
 }
 
@@ -69,23 +71,19 @@ impl SourceConfig for NginxStubConfig {
             )?);
         }
 
-        let mut out = ctx.out
-            .sink_map_err(|err| {
-                error!(
-                    message = "Error sending nginx stub metrics",
-                    %err
-                );
-            });
+        let mut out = ctx.out.sink_map_err(|err| {
+            error!(
+                message = "Error sending nginx stub metrics",
+                %err
+            );
+        });
 
         let interval = tokio::time::interval(self.interval.to_std().unwrap());
-        let mut ticker = IntervalStream::new(interval)
-            .take_until(ctx.shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics = futures::future::join_all(
-                    sources.iter().map(|s| s.collect())
-                ).await;
+                let metrics = futures::future::join_all(sources.iter().map(|s| s.collect())).await;
 
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
@@ -118,7 +116,7 @@ enum NginxBuildError {
 #[derive(Debug, Snafu)]
 enum NginxError {
     #[snafu(display("Invalid response status: {}", status))]
-    InvalidResponseStatus { status: StatusCode }
+    InvalidResponseStatus { status: StatusCode },
 }
 
 #[derive(Debug)]
@@ -130,11 +128,7 @@ struct NginxStub {
 }
 
 impl NginxStub {
-    fn new(
-        client: HttpClient,
-        endpoint: String,
-        auth: Option<Auth>,
-    ) -> Result<Self, crate::Error> {
+    fn new(client: HttpClient, endpoint: String, auth: Option<Auth>) -> Result<Self, crate::Error> {
         let mut tags = BTreeMap::new();
         tags.insert("endpoint".into(), endpoint.clone());
         tags.insert("host".into(), Self::get_endpoint_host(&endpoint)?);
@@ -148,12 +142,11 @@ impl NginxStub {
     }
 
     fn get_endpoint_host(endpoint: &str) -> crate::Result<String> {
-        let uri: Uri = endpoint.parse()
-            .context(HostInvalidUri)?;
+        let uri: Uri = endpoint.parse().context(HostInvalidUri)?;
 
         let host = match (uri.host().unwrap_or(""), uri.port()) {
             (host, None) => host.to_owned(),
-            (host, Some(port)) => format!("{}:{}", host, port)
+            (host, Some(port)) => format!("{}:{}", host, port),
         };
 
         Ok(host)
@@ -166,7 +159,8 @@ impl NginxStub {
             Err(_) => (0.0, vec![]),
         };
         let end = Utc::now();
-        let d = end.sub(start)
+        let d = end
+            .sub(start)
             .num_nanoseconds()
             .expect("Nano seconds should not overflow");
 
@@ -236,19 +230,16 @@ impl NginxStub {
     }
 
     async fn get_nginx_resp(&self) -> crate::Result<Bytes> {
-        let mut req = http::Request::get(&self.endpoint)
-            .body(hyper::Body::empty())?;
+        let mut req = http::Request::get(&self.endpoint).body(hyper::Body::empty())?;
         if let Some(auth) = &self.auth {
             auth.apply(&mut req);
         }
 
-        let resp = self.client
-            .send(req)
-            .await?;
+        let resp = self.client.send(req).await?;
         let (parts, body) = resp.into_parts();
         match parts.status {
             StatusCode::OK => hyper::body::to_bytes(body).err_into().await,
-            status => Err(Box::new(NginxError::InvalidResponseStatus { status }))
+            status => Err(Box::new(NginxError::InvalidResponseStatus { status })),
         }
     }
 }
@@ -256,7 +247,7 @@ impl NginxStub {
 #[derive(Debug, Snafu, PartialEq)]
 enum ParseError {
     #[snafu(display("failed to parse nginx stub status, kind: {:?}", kind))]
-    NginxStubStatusParseError { kind: ErrorKind }
+    NginxStubStatusParseError { kind: ErrorKind },
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -291,7 +282,7 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
             preceded(tag(" "), get_u64),
             preceded(tag(" \nReading: "), get_u64),
             preceded(tag(" Writing: "), get_u64),
-            terminated(preceded(tag(" Waiting: "), get_u64), tag(" \n"))
+            terminated(preceded(tag(" Waiting: "), get_u64), tag(" \n")),
         )))(input)
         {
             Ok((_, (active, accepts, handled, requests, reading, writing, waiting))) => {
@@ -311,8 +302,8 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
                     Err(ParseError::NginxStubStatusParseError { kind: err.code })
                 }
 
-                nom::Err::Incomplete(_) | nom::Err::Failure(_) => unreachable!()
-            }
+                nom::Err::Incomplete(_) | nom::Err::Failure(_) => unreachable!(),
+            },
         }
     }
 }
@@ -414,39 +405,42 @@ mod integration_tests {
             }
 
             fn with_args(self, arguments: Self::Args) -> Self {
-                Nginx {
-                    arguments,
-                    ..self
-                }
+                Nginx { arguments, ..self }
             }
         }
     }
 
-    use std::convert::TryInto;
-    use hyper::{Body, StatusCode, Uri};
-    use testcontainers::Docker;
-    use nginx::Nginx;
+    use super::NginxStubStatus;
     use crate::config::ProxyConfig;
     use crate::http::{Auth, HttpClient};
-    use super::NginxStubStatus;
+    use hyper::{Body, StatusCode, Uri};
+    use nginx::Nginx;
+    use std::convert::TryInto;
+    use testcontainers::Docker;
 
     async fn test_nginx(path: &'static str, auth: Option<Auth>, proxy: ProxyConfig) {
         let docker = testcontainers::clients::Cli::default();
         let mut image = Nginx::default();
         let pwd = std::env::current_dir().unwrap();
-        image.volumes.insert(format!("{}/tests/fixtures/nginx/nginx.conf", pwd.to_string_lossy()), "/etc/nginx/nginx.conf".to_string());
-        image.volumes.insert(format!("{}/tests/fixtures/nginx/nginx_auth_basic.conf", pwd.to_string_lossy()), "/etc/nginx/nginx_auth_basic.conf".to_string());
+        image.volumes.insert(
+            format!("{}/tests/fixtures/nginx/nginx.conf", pwd.to_string_lossy()),
+            "/etc/nginx/nginx.conf".to_string(),
+        );
+        image.volumes.insert(
+            format!(
+                "{}/tests/fixtures/nginx/nginx_auth_basic.conf",
+                pwd.to_string_lossy()
+            ),
+            "/etc/nginx/nginx_auth_basic.conf".to_string(),
+        );
         let service = docker.run(image);
         let host_port = service.get_host_port(80).unwrap();
         let uri = format!("http://127.0.0.1:{}{}", host_port, path)
             .parse::<Uri>()
             .unwrap();
 
-        let cli = HttpClient::new(None, &proxy.clone())
-            .unwrap();
-        let mut req = http::Request::get(uri)
-            .body(Body::empty())
-            .unwrap();
+        let cli = HttpClient::new(None, &proxy.clone()).unwrap();
+        let mut req = http::Request::get(uri).body(Body::empty()).unwrap();
 
         if let Some(auth) = auth {
             auth.apply(&mut req);
@@ -454,15 +448,11 @@ mod integration_tests {
 
         println!("{:?}", req);
 
-        let resp = cli.send(req)
-            .await
-            .unwrap();
+        let resp = cli.send(req).await.unwrap();
 
         let (parts, body) = resp.into_parts();
         assert_eq!(parts.status, StatusCode::OK);
-        let s = hyper::body::to_bytes(body)
-            .await
-            .unwrap();
+        let s = hyper::body::to_bytes(body).await.unwrap();
 
         let s = std::str::from_utf8(&s).unwrap();
         println!("{}", s);
@@ -471,11 +461,7 @@ mod integration_tests {
 
     #[tokio::test]
     async fn test_nginx_stub_status() {
-        test_nginx(
-            "/basic_status",
-            None,
-            ProxyConfig::default(),
-        ).await
+        test_nginx("/basic_status", None, ProxyConfig::default()).await
     }
 
     #[tokio::test]
@@ -487,6 +473,7 @@ mod integration_tests {
                 password: "123456".to_string(),
             }),
             ProxyConfig::default(),
-        ).await
+        )
+        .await
     }
 }

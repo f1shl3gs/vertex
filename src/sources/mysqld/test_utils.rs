@@ -1,9 +1,8 @@
-use std::collections::HashMap;
-use std::future::Future;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
+use std::collections::HashMap;
+use std::future::Future;
 use testcontainers::{Container, Docker, Image, WaitForMessage};
-
 
 const DEFAULT_TAG: &str = "5.7.36";
 
@@ -61,7 +60,8 @@ impl Image for Mysql {
         // TODO: It's just a workaround, without this sleep() the test will running forever.
         std::thread::sleep(std::time::Duration::from_secs(10));
 
-        container.logs()
+        container
+            .logs()
             .stderr
             .wait_for_message(r#"mysqld: ready for connections."#)
             .unwrap();
@@ -80,10 +80,7 @@ impl Image for Mysql {
     }
 
     fn with_args(self, arguments: Self::Args) -> Self {
-        Self {
-            arguments,
-            ..self
-        }
+        Self { arguments, ..self }
     }
 }
 
@@ -91,21 +88,22 @@ pub async fn setup_and_run<F, Fut>(handle: F)
 where
     F: FnOnce(MySqlPool) -> Fut,
     F: 'static,
-    Fut: Future<Output = ()>
+    Fut: Future<Output = ()>,
 {
     let docker = testcontainers::clients::Cli::default();
-    let image = Mysql::default()
-        .with_env("MYSQL_ROOT_PASSWORD", "password");
+    let image = Mysql::default().with_env("MYSQL_ROOT_PASSWORD", "password");
     let service = docker.run(image);
     let host_port = service.get_host_port(3306).unwrap();
-    let pool = MySqlPool::connect_with(MySqlConnectOptions::new()
-        .host("127.0.0.1")
-        .username("root")
-        .password("password")
-        .port(host_port)
-        .ssl_mode(MySqlSslMode::Disabled))
-        .await
-        .unwrap();
+    let pool = MySqlPool::connect_with(
+        MySqlConnectOptions::new()
+            .host("127.0.0.1")
+            .username("root")
+            .password("password")
+            .port(host_port)
+            .ssl_mode(MySqlSslMode::Disabled),
+    )
+    .await
+    .unwrap();
 
     handle(pool).await;
 }

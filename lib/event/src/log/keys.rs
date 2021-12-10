@@ -5,17 +5,18 @@ use serde::{Serialize, Serializer};
 
 use crate::Value;
 
-
 /// Iterates over all paths in from `a.b[0].c[1]` in alphabetical order.
 /// It is implemented as a wrapper around `all_fields` to reduce code
 /// duplication
-pub fn keys(fields: &BTreeMap<String, Value>) -> impl Iterator<Item=String> + '_ {
+pub fn keys(fields: &BTreeMap<String, Value>) -> impl Iterator<Item = String> + '_ {
     all_fields(fields).map(|(k, _)| k)
 }
 
 /// Iterates over all paths in from `a.b[0].c[1]` in alphabetical order and
 /// their corresponding values.
-pub fn all_fields(fields: &BTreeMap<String, Value>) -> impl Iterator<Item=(String, &Value)> + Serialize {
+pub fn all_fields(
+    fields: &BTreeMap<String, Value>,
+) -> impl Iterator<Item = (String, &Value)> + Serialize {
     FieldsIter::new(fields)
 }
 
@@ -63,7 +64,7 @@ impl<'a> FieldsIter<'a> {
                 self.path.push(component);
                 None
             }
-            _ => Some(value)
+            _ => Some(value),
         }
     }
 
@@ -74,9 +75,7 @@ impl<'a> FieldsIter<'a> {
 
     fn make_path(&mut self, component: PathComponent<'a>) -> String {
         let mut res = String::new();
-        let mut path_iter = self.path.iter()
-            .chain(iter::once(&component))
-            .peekable();
+        let mut path_iter = self.path.iter().chain(iter::once(&component)).peekable();
         loop {
             match path_iter.next() {
                 None => return res,
@@ -131,7 +130,7 @@ impl<'a> Iterator for FieldsIter<'a> {
 impl<'a> Serialize for FieldsIter<'a> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
-        S: Serializer
+        S: Serializer,
     {
         serializer.collect_map(self.clone())
     }
@@ -139,8 +138,8 @@ impl<'a> Serialize for FieldsIter<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::log::fields_from_json;
     use super::*;
+    use crate::log::fields_from_json;
     use serde_json::json;
 
     #[test]
@@ -155,9 +154,9 @@ mod tests {
             ("field2", &Value::Int64(3)),
             ("field3", &Value::Int64(5)),
         ]
-            .into_iter()
-            .map(|(k, v)| (k.into(), v))
-            .collect();
+        .into_iter()
+        .map(|(k, v)| (k.into(), v))
+        .collect();
 
         let collected: Vec<_> = all_fields(&fields).collect();
         assert_eq!(collected, expected);
@@ -190,9 +189,9 @@ mod tests {
             ("d", Value::Map(BTreeMap::new())),
             ("e", Value::Array(Vec::new())),
         ]
-            .into_iter()
-            .map(|(k, v)| (k.into(), v))
-            .collect::<Vec<_>>();
+        .into_iter()
+        .map(|(k, v)| (k.into(), v))
+        .collect::<Vec<_>>();
 
         let collected = all_fields(&fields)
             .map(|(k, v)| (k, v.clone()))

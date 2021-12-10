@@ -1,4 +1,4 @@
-use criterion::{BatchSize, Criterion, criterion_group, criterion_main, Throughput};
+use criterion::{criterion_group, criterion_main, BatchSize, Criterion, Throughput};
 use vertex::sinks::loki::valid_label_name;
 use vertex::template::Template;
 
@@ -14,7 +14,7 @@ fn bench_valid_label_name(c: &mut Criterion) {
             b.iter_batched(
                 || Template::try_from(tmpl).unwrap(),
                 |label| valid_label_name(&label),
-                BatchSize::SmallInput
+                BatchSize::SmallInput,
             );
         }
 
@@ -22,7 +22,7 @@ fn bench_valid_label_name(c: &mut Criterion) {
             b.iter_batched(
                 || Template::try_from(tmpl).unwrap(),
                 |label| valid_label_name(&label),
-                BatchSize::SmallInput
+                BatchSize::SmallInput,
             );
         }
     });

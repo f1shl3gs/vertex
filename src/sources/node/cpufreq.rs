@@ -104,7 +104,12 @@ async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
                 let mut stat = parse_cpu_freq_cpu_info(cp).await?;
 
                 // this looks terrible
-                stat.name = path.file_name().unwrap().to_str().unwrap().replace("cpu", "");
+                stat.name = path
+                    .file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .replace("cpu", "");
 
                 stats.push(stat)
             }
@@ -161,26 +166,32 @@ mod tests {
         let sys_path = "tests/fixtures/sys";
         let stats = get_cpu_freq_stat(sys_path).await.unwrap();
 
-        assert_eq!(stats[0], Stat {
-            name: "0".to_string(),
-            current_frequency: None,
-            minimum_frequency: Some(800000),
-            maximum_frequency: Some(2400000),
-            transition_latency: Some(0),
-            scaling_current_frequency: Some(1219917),
-            scaling_minimum_frequency: Some(800000),
-            scaling_maximum_frequency: Some(2400000),
-        });
+        assert_eq!(
+            stats[0],
+            Stat {
+                name: "0".to_string(),
+                current_frequency: None,
+                minimum_frequency: Some(800000),
+                maximum_frequency: Some(2400000),
+                transition_latency: Some(0),
+                scaling_current_frequency: Some(1219917),
+                scaling_minimum_frequency: Some(800000),
+                scaling_maximum_frequency: Some(2400000),
+            }
+        );
 
-        assert_eq!(stats[1], Stat {
-            name: "1".to_string(),
-            current_frequency: Some(1200195),
-            minimum_frequency: Some(1200000),
-            maximum_frequency: Some(3300000),
-            transition_latency: Some(4294967295),
-            scaling_current_frequency: None,
-            scaling_minimum_frequency: Some(1200000),
-            scaling_maximum_frequency: Some(3300000),
-        })
+        assert_eq!(
+            stats[1],
+            Stat {
+                name: "1".to_string(),
+                current_frequency: Some(1200195),
+                minimum_frequency: Some(1200000),
+                maximum_frequency: Some(3300000),
+                transition_latency: Some(4294967295),
+                scaling_current_frequency: None,
+                scaling_minimum_frequency: Some(1200000),
+                scaling_maximum_frequency: Some(3300000),
+            }
+        )
     }
 }

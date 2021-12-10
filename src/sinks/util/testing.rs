@@ -4,9 +4,9 @@ use bytes::Bytes;
 use futures::channel::mpsc;
 use futures_util::{FutureExt, SinkExt, TryFutureExt};
 use http::{Request, Response, StatusCode};
-use hyper::{Body, Server};
 use hyper::body::HttpBody;
 use hyper::service::make_service_fn;
+use hyper::{Body, Server};
 use serde::Deserialize;
 use stream_cancel::{Trigger, Tripwire};
 use tower::service_fn;
@@ -14,10 +14,9 @@ use tower::service_fn;
 use crate::config::{SinkConfig, SinkContext};
 use crate::stream::tripwire_handler;
 
-
 pub fn load_sink<T>(config: &str) -> crate::Result<(T, SinkContext)>
-    where
-            for<'a> T: Deserialize<'a> + SinkConfig
+where
+    for<'a> T: Deserialize<'a> + SinkConfig,
 {
     let config = serde_yaml::from_str(config)?;
     let cx = SinkContext::new_test();
@@ -26,11 +25,11 @@ pub fn load_sink<T>(config: &str) -> crate::Result<(T, SinkContext)>
 }
 
 pub fn build_test_server(
-    addr: SocketAddr
+    addr: SocketAddr,
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output=Result<(), ()>>
+    impl std::future::Future<Output = Result<(), ()>>,
 ) {
     build_test_server_generic(addr, || Response::new(Body::empty()))
 }
@@ -41,7 +40,7 @@ pub fn build_test_server_status(
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output=Result<(), ()>>
+    impl std::future::Future<Output = Result<(), ()>>,
 ) {
     build_test_server_generic(addr, move || {
         Response::builder()
@@ -57,12 +56,12 @@ pub fn build_test_server_generic<B>(
 ) -> (
     mpsc::Receiver<(http::request::Parts, Bytes)>,
     Trigger,
-    impl std::future::Future<Output=Result<(), ()>>,
+    impl std::future::Future<Output = Result<(), ()>>,
 )
-    where
-        B: HttpBody + Send + Sync + 'static,
-        <B as HttpBody>::Data: Send + Sync,
-        <B as HttpBody>::Error: snafu::Error + Send + Sync
+where
+    B: HttpBody + Send + Sync + 'static,
+    <B as HttpBody>::Data: Send + Sync,
+    <B as HttpBody>::Error: snafu::Error + Send + Sync,
 {
     let (tx, rx) = mpsc::channel(100);
     let service = make_service_fn(move |_| {

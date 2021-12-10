@@ -31,8 +31,8 @@ pub trait Encoder<T> {
 }
 
 impl<E, T> Encoder<T> for Arc<E>
-    where
-        E: Encoder<T>,
+where
+    E: Encoder<T>,
 {
     fn encode(&self, input: T, writer: &mut dyn Write) -> io::Result<usize> {
         (**self).encode(input, writer)
@@ -47,7 +47,7 @@ impl MaybeAsLogMut for Event {
     fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
         match self {
             Event::Log(log) => Some(log),
-            _ => None
+            _ => None,
         }
     }
 }
@@ -71,14 +71,13 @@ pub trait EncodingConfiguration {
 
     fn apply_only_fields(&self, log: &mut LogRecord) {
         if let Some(only_fields) = &self.only_fields() {
-            let mut to_remove = log.keys()
+            let mut to_remove = log
+                .keys()
                 .filter(|field| {
-                    let field_path = PathIter::new(field)
-                        .collect::<Vec<_>>();
-                    !only_fields.iter()
-                        .any(|only| {
-                            field_path.starts_with(&only[..])
-                        })
+                    let field_path = PathIter::new(field).collect::<Vec<_>>();
+                    !only_fields
+                        .iter()
+                        .any(|only| field_path.starts_with(&only[..]))
                 })
                 .collect::<Vec<_>>();
 
@@ -117,7 +116,7 @@ pub trait EncodingConfiguration {
                 }
 
                 // RFC3339 is the default serialization of a timestamp
-                TimestampFormat::RFC3339 => ()
+                TimestampFormat::RFC3339 => (),
             }
         }
     }
@@ -128,7 +127,9 @@ pub trait EncodingConfiguration {
     ///
     /// For example, this checks if `except_fields` and `only_fields` items are mutually exclusive.
     fn validate(&self) -> Result<(), std::io::Error> {
-        if let (Some(only_fields), Some(expect_fields)) = (&self.only_fields(), &self.except_fields()) {
+        if let (Some(only_fields), Some(expect_fields)) =
+            (&self.only_fields(), &self.except_fields())
+        {
             if expect_fields.iter().any(|f| {
                 let path_iter = PathIter::new(f).collect::<Vec<_>>();
                 only_fields.iter().any(|v| v == &path_iter)
@@ -149,8 +150,8 @@ pub trait EncodingConfiguration {
     ///
     /// Currently, this is idempotent.
     fn apply_rules<T>(&self, event: &mut T)
-        where
-            T: MaybeAsLogMut
+    where
+        T: MaybeAsLogMut,
     {
         // No rules are currently applied to metrics
         if let Some(log) = event.maybe_as_log_mut() {
@@ -164,15 +165,18 @@ pub trait EncodingConfiguration {
 
 pub trait VisitLogMut {
     fn visit_logs_mut<F>(&mut self, func: F)
-        where
-            F: Fn(&mut LogRecord);
+    where
+        F: Fn(&mut LogRecord);
 }
 
 impl<T> VisitLogMut for Vec<T>
-    where
-        T: VisitLogMut
+where
+    T: VisitLogMut,
 {
-    fn visit_logs_mut<F>(&mut self, func: F) where F: Fn(&mut LogRecord) {
+    fn visit_logs_mut<F>(&mut self, func: F)
+    where
+        F: Fn(&mut LogRecord),
+    {
         for item in self {
             item.visit_logs_mut(&func);
         }
@@ -180,7 +184,10 @@ impl<T> VisitLogMut for Vec<T>
 }
 
 impl VisitLogMut for Event {
-    fn visit_logs_mut<F>(&mut self, func: F) where F: Fn(&mut LogRecord) {
+    fn visit_logs_mut<F>(&mut self, func: F)
+    where
+        F: Fn(&mut LogRecord),
+    {
         if let Event::Log(log) = self {
             func(log)
         }
@@ -188,33 +195,34 @@ impl VisitLogMut for Event {
 }
 
 impl VisitLogMut for LogRecord {
-    fn visit_logs_mut<F>(&mut self, func: F) where F: Fn(&mut LogRecord) {
+    fn visit_logs_mut<F>(&mut self, func: F)
+    where
+        F: Fn(&mut LogRecord),
+    {
         func(self)
     }
 }
 
 impl<E, T> Encoder<T> for E
-    where
-        E: EncodingConfiguration,
-        E::Codec: Encoder<T>,
-        T: VisitLogMut,
+where
+    E: EncodingConfiguration,
+    E::Codec: Encoder<T>,
+    T: VisitLogMut,
 {
     fn encode(&self, mut input: T, writer: &mut dyn Write) -> io::Result<usize> {
         input.visit_logs_mut(|log| self.apply_rules(log));
-        self.codec()
-            .encode(input, writer)
+        self.codec().encode(input, writer)
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
     use super::*;
-    use log_schema::log_schema;
-    use indoc::indoc;
-    use serde_yaml::Value as YamlValue;
     use crate::Value;
+    use indoc::indoc;
+    use log_schema::log_schema;
+    use serde_yaml::Value as YamlValue;
+    use std::collections::BTreeMap;
 
     #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
     enum TestEncoding {
@@ -270,7 +278,8 @@ mod tests {
 
     #[test]
     fn exclusivity_violation() {
-        let config: std::result::Result<TestConfig, _> = serde_yaml::from_str(YAML_EXCLUSIVITY_VIOLATION);
+        let config: std::result::Result<TestConfig, _> =
+            serde_yaml::from_str(YAML_EXCLUSIVITY_VIOLATION);
         assert!(config.is_err())
     }
 

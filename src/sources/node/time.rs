@@ -1,15 +1,11 @@
-/// Exposes the current system time
-
-use std::{
-    ffi::CStr,
-};
 use super::Error;
 use event::{tags, Metric};
+/// Exposes the current system time
+use std::ffi::CStr;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
-    let offset = local_now.offset()
-        .local_minus_utc() as f64;
+    let offset = local_now.offset().local_minus_utc() as f64;
 
     let now_sec = local_now.timestamp_nanos() as f64 / 1e9;
 
@@ -41,7 +37,10 @@ fn libc_timezone() -> String {
         let mut out = std::mem::zeroed();
 
         if libc::localtime_r(&sec, &mut out).is_null() {
-            panic!("syscall localtime_r failed, {}", std::io::Error::last_os_error());
+            panic!(
+                "syscall localtime_r failed, {}",
+                std::io::Error::last_os_error()
+            );
         }
 
         let tz: &CStr = CStr::from_ptr(out.tm_zone);
@@ -52,10 +51,8 @@ fn libc_timezone() -> String {
 
 #[cfg(test)]
 mod tests {
-    use chrono::{Local};
-    use chrono_tz::{
-        CET,
-    };
+    use chrono::Local;
+    use chrono_tz::CET;
 
     #[test]
     fn test_offset() {
@@ -65,14 +62,13 @@ mod tests {
         println!("{}", cn.format("%Z"));
     }
 
-    use chrono_tz::{TZ_VARIANTS};
+    use chrono_tz::TZ_VARIANTS;
     use std::ffi::CStr;
 
     #[test]
     fn offset() {
         let local_now = chrono::Local::now();
-        let offset = local_now.offset()
-            .local_minus_utc();
+        let offset = local_now.offset().local_minus_utc();
 
         println!("offset: {}", offset);
 

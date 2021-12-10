@@ -1,7 +1,16 @@
-use std::collections::BTreeMap;
 /// Parse a single line of Prometheus text format
-
-use nom::{branch::alt, bytes::complete::{is_not, tag, take_while, take_while1}, character::complete::{char, digit1}, combinator::{map, opt, recognize, value}, Err, error::ParseError, multi::fold_many0, number::complete::double, sequence::{delimited, pair, preceded, tuple}};
+use nom::{
+    branch::alt,
+    bytes::complete::{is_not, tag, take_while, take_while1},
+    character::complete::{char, digit1},
+    combinator::{map, opt, recognize, value},
+    error::ParseError,
+    multi::fold_many0,
+    number::complete::double,
+    sequence::{delimited, pair, preceded, tuple},
+    Err,
+};
+use std::collections::BTreeMap;
 
 #[derive(Debug, snafu::Snafu, PartialEq)]
 pub enum ErrorKind {
@@ -25,7 +34,10 @@ pub enum ErrorKind {
 
     // Error that we didn't catch
     #[snafu(display("error kind: {:?}, parsing: {}", kind, input))]
-    Nom { input: String, kind: nom::error::ErrorKind },
+    Nom {
+        input: String,
+        kind: nom::error::ErrorKind,
+    },
 }
 
 /// We try to catch all nom's `ErrorKind` with our own `ErrorKind`,
@@ -45,7 +57,7 @@ impl From<nom::Err<ErrorKind>> for ErrorKind {
         match err {
             // this error only occurs when "streaming" nom is used
             nom::Err::Incomplete(_) => unreachable!(),
-            nom::Err::Error(e) | nom::Err::Failure(e) => e
+            nom::Err::Error(e) | nom::Err::Failure(e) => e,
         }
     }
 }
@@ -76,8 +88,6 @@ pub enum MetricKind {
     Untyped,
 }
 
-
-
 #[derive(Debug, PartialEq)]
 pub struct Header {
     pub metric_name: String,
@@ -89,8 +99,9 @@ impl Header {
         take_while1(|c| c == ' ' || c == '\t')(input)
             .map_err(|_: NomError| {
                 ErrorKind::ExpectedSpace {
-                    input: input.to_owned()
-                }.into()
+                    input: input.to_owned(),
+                }
+                .into()
             })
             .map(|(input, _)| (input, ()))
     }
@@ -98,17 +109,15 @@ impl Header {
     /// `# TYPE <metric_name> <metric_type>`
     fn parse(input: &str) -> IResult<Self> {
         let input = trim_space(input);
-        let (input, _) = char('#')(input)
-            .map_err(|_: NomError| ErrorKind::ExpectedChar {
-                expected: '#',
-                input: input.to_owned(),
-            })?;
+        let (input, _) = char('#')(input).map_err(|_: NomError| ErrorKind::ExpectedChar {
+            expected: '#',
+            input: input.to_owned(),
+        })?;
         let input = trim_space(input);
-        let (input, _) = tag("TYPE")(input)
-            .map_err(|_: NomError| ErrorKind::ExceptedToken {
-                expected: "TYPE",
-                input: input.to_owned(),
-            })?;
+        let (input, _) = tag("TYPE")(input).map_err(|_: NomError| ErrorKind::ExceptedToken {
+            expected: "TYPE",
+            input: input.to_owned(),
+        })?;
         let (input, _) = Self::space1(input)?;
         let (input, metric_name) = parse_name(input)?;
         let (input, _) = Self::space1(input)?;
@@ -119,9 +128,9 @@ impl Header {
             value(MetricKind::Histogram, tag("histogram")),
             value(MetricKind::Untyped, tag("untyped")),
         ))(input)
-            .map_err(|_: NomError| ErrorKind::InvalidMetricKind {
-                input: input.to_owned()
-            })?;
+        .map_err(|_: NomError| ErrorKind::InvalidMetricKind {
+            input: input.to_owned(),
+        })?;
         Ok((input, Header { metric_name, kind }))
     }
 }
@@ -151,12 +160,15 @@ impl Metric {
         let (input, value) = Self::parse_value(input)?;
         let (input, timestamp) = Self::parse_timestamp(input)?;
 
-        Ok((input, Metric {
-            name,
-            labels,
-            value,
-            timestamp,
-        }))
+        Ok((
+            input,
+            Metric {
+                name,
+                labels,
+                value,
+                timestamp,
+            },
+        ))
     }
 
     /// Float value, and +Inf, -Int, Nan
@@ -171,11 +183,12 @@ impl Metric {
             value(f64::NAN, tag("NaN")),
             double,
         ))(input)
-            .map_err(|_: NomError| {
-                ErrorKind::ParseFloatError {
-                    input: input.to_owned(),
-                }.into()
-            })
+        .map_err(|_: NomError| {
+            ErrorKind::ParseFloatError {
+                input: input.to_owned(),
+            }
+            .into()
+        })
     }
 
     fn parse_name_value(input: &str) -> IResult<(String, String)> {
@@ -192,14 +205,12 @@ impl Metric {
     fn element_parser(input: &str) -> IResult<Option<(String, String)>> {
         match Self::parse_name_value(input) {
             Ok((input, result)) => Ok((input, Some(result))),
-            Err(nom::Err::Error(parse_name_value_error)) => {
-                match match_char('}')(input) {
-                    Ok((input, _)) => Ok((input, None)),
-                    Err(nom::Err::Error(_)) => Err(nom::Err::Error(parse_name_value_error)),
-                    Err(err) => Err(err)
-                }
-            }
-            Err(err) => Err(err)
+            Err(nom::Err::Error(parse_name_value_error)) => match match_char('}')(input) {
+                Ok((input, _)) => Ok((input, None)),
+                Err(nom::Err::Error(_)) => Err(nom::Err::Error(parse_name_value_error)),
+                Err(err) => Err(err),
+            },
+            Err(err) => Err(err),
         }
     }
 
@@ -227,8 +238,8 @@ impl Metric {
                                 input = inner_input;
                                 break;
                             }
-                            Err(_) => return Err(sep_err)
-                        }
+                            Err(_) => return Err(sep_err),
+                        },
                     };
 
                     input = inner_input;
@@ -246,7 +257,7 @@ impl Metric {
         match opt(char('{'))(input) {
             Ok((input, None)) => Ok((input, BTreeMap::new())),
             Ok((input, Some(_))) => Self::parse_labels_inner(input),
-            Err(err) => Err(err)
+            Err(err) => Err(err),
         }
     }
 
@@ -301,7 +312,8 @@ impl Metric {
                 ErrorKind::ExpectedChar {
                     expected: '"',
                     input: input.to_owned(),
-                }.into()
+                }
+                .into()
             })
         }
 
@@ -323,7 +335,8 @@ fn match_char(c: char) -> impl Fn(&str) -> IResult<char> {
             ErrorKind::ExpectedChar {
                 expected: c,
                 input: input.to_owned(),
-            }.into()
+            }
+            .into()
         })
     }
 }
@@ -335,9 +348,9 @@ fn parse_name(input: &str) -> IResult<String> {
         take_while1(|c: char| c.is_alphabetic() || c == '_'),
         take_while(|c: char| c.is_alphanumeric() || c == '_' || c == ':'),
     )(input)
-        .map_err(|_: NomError| ErrorKind::ParseNameError {
-            input: input.to_owned()
-        })?;
+    .map_err(|_: NomError| ErrorKind::ParseNameError {
+        input: input.to_owned(),
+    })?;
 
     Ok((input, a.to_owned() + b))
 }
@@ -360,12 +373,12 @@ impl Line {
 
         let metric_error = match Metric::parse(input) {
             Ok((_, metric)) => return Ok(Some(Line::Metric(metric))),
-            Err(err) => err.into()
+            Err(err) => err.into(),
         };
 
         let header_error = match Header::parse(input) {
             Ok((_, header)) => return Ok(Some(Line::Header(header))),
-            Err(err) => err.into()
+            Err(err) => err.into(),
         };
 
         if let Ok((input, _)) = char::<_, NomErrorType>('#')(input) {
@@ -509,7 +522,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Counter,
                 },
-                tail: tail.to_owned()
+                tail: tail.to_owned(),
             },
             Case {
                 input: wrap("#  TYPE abc_def counteraaaaaaaaaaa"),
@@ -525,7 +538,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Gauge,
                 },
-                tail: tail.to_owned()
+                tail: tail.to_owned(),
             },
             Case {
                 input: wrap("# TYPE abc_def histogram"),
@@ -533,7 +546,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Histogram,
                 },
-                tail: tail.to_owned()
+                tail: tail.to_owned(),
             },
             Case {
                 input: wrap("# TYPE abc_def summary"),
@@ -541,7 +554,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Summary,
                 },
-                tail: tail.to_owned()
+                tail: tail.to_owned(),
             },
             Case {
                 input: wrap("# TYPE abc_def untyped"),
@@ -549,7 +562,7 @@ mod tests {
                     metric_name: "abc_def".into(),
                     kind: MetricKind::Untyped,
                 },
-                tail: tail.to_owned()
+                tail: tail.to_owned(),
             },
         ] {
             let (left, r) = Header::parse(&case.input).unwrap();
@@ -623,16 +636,22 @@ mod tests {
             ("{}", btreemap!()),
             (r#"{name="value"}"#, btreemap!( "name" => "value")),
             (r#"{name="value",}"#, btreemap!( "name" => "value")),
-            (r#"{name = "value" , key ="value"}"#, btreemap!(
-                "name" => "value",
-                "key" => "value"
-            )),
-            (r#"{ name = "" ,b="a=b" , a="},", _c = "\""}"#, btreemap!(
-                "name" => "",
-                "a" => "},",
-                "b" => "a=b",
-                "_c" => "\""
-            ))
+            (
+                r#"{name = "value" , key ="value"}"#,
+                btreemap!(
+                    "name" => "value",
+                    "key" => "value"
+                ),
+            ),
+            (
+                r#"{ name = "" ,b="a=b" , a="},", _c = "\""}"#,
+                btreemap!(
+                    "name" => "",
+                    "a" => "},",
+                    "b" => "a=b",
+                    "_c" => "\""
+                ),
+            ),
         ];
 
         for (input, want) in tests {
@@ -650,14 +669,11 @@ mod tests {
         // We don't allow theos values
         let input = wrap(r#"{name="value}"#);
         let err = Metric::parse_labels(&input).unwrap_err().into();
-        assert!(matches!(
-            err,
-            ErrorKind::ExpectedChar { expected: '"', .. }
-        ));
+        assert!(matches!(err, ErrorKind::ExpectedChar { expected: '"', .. }));
 
         let input = wrap(r#"{ a="b" c = "d" }"#);
         let err = Metric::parse_labels(&input).unwrap_err().into();
-        assert!(matches!(err, ErrorKind::ExpectedChar { expected: ',', ..}));
+        assert!(matches!(err, ErrorKind::ExpectedChar { expected: ',', .. }));
 
         let input = wrap(r#"{ a="b" ,, c="d"}"#);
         let err = Metric::parse_labels(&input).unwrap_err().into();
@@ -704,11 +720,6 @@ mod tests {
             rpc_duration_seconds_sum 1.7560473e+07
             rpc_duration_seconds_count 2693
             "##;
-        assert!(
-            input
-                .lines()
-                .map(Line::parse)
-                .all(|r| r.is_ok())
-        );
+        assert!(input.lines().map(Line::parse).all(|r| r.is_ok()));
     }
 }

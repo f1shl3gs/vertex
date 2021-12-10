@@ -2,28 +2,27 @@ use std::collections::HashMap;
 use std::io::{Error, Write};
 use std::num::NonZeroUsize;
 
-use futures_util::stream::BoxStream;
-use futures_util::StreamExt;
-use event::{ByteSizeOf, Event, EventFinalizers, Finalizable, Value};
-use snafu::Snafu;
 use buffers::Acker;
 use event::encoding::{Encoder, EncodingConfig, EncodingConfiguration};
+use event::{ByteSizeOf, Event, EventFinalizers, Finalizable, Value};
+use futures_util::stream::BoxStream;
+use futures_util::StreamExt;
+use snafu::Snafu;
 
 use crate::batch::BatchSettings;
+use crate::common::events::TemplateRenderingFailed;
 use crate::config::SinkContext;
 use crate::http::HttpClient;
-use crate::common::events::TemplateRenderingFailed;
 use crate::partition::Partitioner;
-use crate::template::Template;
 use crate::sinks::loki::config::{Encoding, LokiConfig, OutOfOrderAction};
 use crate::sinks::loki::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfOrderEventRewrite};
 use crate::sinks::loki::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use crate::sinks::loki::service::{LokiRequest, LokiService};
-use crate::sinks::StreamSink;
-use crate::sinks::util::{Compression, Compressor, RequestBuilder};
 use crate::sinks::util::builder::SinkBuilderExt;
+use crate::sinks::util::{Compression, Compressor, RequestBuilder};
+use crate::sinks::StreamSink;
 use crate::stream::BatcherSettings;
-
+use crate::template::Template;
 
 #[derive(Clone)]
 pub struct KeyPartitioner(Option<Template>);
@@ -39,18 +38,17 @@ impl Partitioner for KeyPartitioner {
     type Key = Option<String>;
 
     fn partition(&self, item: &Self::Item) -> Self::Key {
-        self.0.as_ref()
-            .and_then(|tmpl| {
-                tmpl.render_string(item)
-                    .map_err(|err| {
-                        emit!(&TemplateRenderingFailed {
-                            err,
-                            field: Some("tenant_id"),
-                            drop_event: false,
-                        })
+        self.0.as_ref().and_then(|tmpl| {
+            tmpl.render_string(item)
+                .map_err(|err| {
+                    emit!(&TemplateRenderingFailed {
+                        err,
+                        field: Some("tenant_id"),
+                        drop_event: false,
                     })
-                    .ok()
-            })
+                })
+                .ok()
+        })
     }
 }
 
@@ -76,7 +74,7 @@ impl LokiRequestBuilder {
     fn new(compression: Compression) -> Self {
         Self {
             compression,
-            encoder: LokiBatchEncoder::default()
+            encoder: LokiBatchEncoder::default(),
         }
     }
 }
@@ -111,19 +109,24 @@ impl RequestBuilder<(PartitionKey, Vec<LokiRecord>)> for LokiRequestBuilder {
         &self.encoder
     }
 
-    fn split_input(&self, input: (PartitionKey, Vec<LokiRecord>)) -> (Self::Metadata, Self::Events) {
+    fn split_input(
+        &self,
+        input: (PartitionKey, Vec<LokiRecord>),
+    ) -> (Self::Metadata, Self::Events) {
         let (key, mut events) = input;
         let batch_size = events.len();
         let events_byte_size = events.size_of();
-        let finalizers = events.iter_mut()
-            .fold(EventFinalizers::default(), |mut finalizers, record| {
-                finalizers.merge(record.take_finalizers());
-                finalizers
-            });
+        let finalizers =
+            events
+                .iter_mut()
+                .fold(EventFinalizers::default(), |mut finalizers, record| {
+                    finalizers.merge(record.take_finalizers());
+                    finalizers
+                });
 
         (
             (key.tenant, batch_size, finalizers, events_byte_size),
-            events
+            events,
         )
     }
 
@@ -159,18 +162,16 @@ impl EventEncoder {
         log.tags
             .iter()
             .map(|(k, v)| (k.to_string(), v.to_string()))
-            .chain(self.labels
-                .iter()
-                .filter_map(|(key_tmpl, value_tmpl)| {
-                    if let (Ok(key), Ok(value)) = (
-                        key_tmpl.render_string(event),
-                        value_tmpl.render_string(event),
-                    ) {
-                        Some((key, value))
-                    } else {
-                        None
-                    }
-                }))
+            .chain(self.labels.iter().filter_map(|(key_tmpl, value_tmpl)| {
+                if let (Ok(key), Ok(value)) = (
+                    key_tmpl.render_string(event),
+                    value_tmpl.render_string(event),
+                ) {
+                    Some((key, value))
+                } else {
+                    None
+                }
+            }))
             .collect()
     }
 
@@ -182,8 +183,7 @@ impl EventEncoder {
         for tmpl in self.labels.values() {
             if let Some(fields) = tmpl.get_fields() {
                 for field in fields {
-                    event.as_mut_log()
-                        .remove_field(&field);
+                    event.as_mut_log().remove_field(&field);
                 }
             }
         }
@@ -203,23 +203,24 @@ impl EventEncoder {
         };
 
         if self.remove_timestamp {
-            event.as_mut_log()
-                .remove_field(timestamp_key);
+            event.as_mut_log().remove_field(timestamp_key);
         }
 
         self.encoding.apply_rules(&mut event);
         let log = event.into_log();
         let event = match &self.encoding.codec() {
             Encoding::Json => {
-                serde_json::to_string(&log.fields)
-                    .expect("json encoding should never fail")
+                serde_json::to_string(&log.fields).expect("json encoding should never fail")
             }
 
-            Encoding::Text => log.get_field(schema.message_key())
+            Encoding::Text => log
+                .get_field(schema.message_key())
                 .map(Value::to_string_lossy)
                 .unwrap_or_default(),
 
-            Encoding::Logfmt => { todo!() }
+            Encoding::Logfmt => {
+                todo!()
+            }
         };
 
         // If no labels are provided we set our own default `{agent="vertex"}` label. This can
@@ -239,7 +240,6 @@ impl EventEncoder {
         }
     }
 }
-
 
 struct RecordFilter {
     timestamps: HashMap<PartitionKey, i64>,
@@ -334,11 +334,12 @@ impl LokiSink {
 
                         None
                     }
-                    Ok(req) => Some(req)
+                    Ok(req) => Some(req),
                 }
             })
             .into_driver(service, self.acker)
-            .run().await
+            .run()
+            .await
     }
 }
 
@@ -351,9 +352,9 @@ impl StreamSink for LokiSink {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use log_schema::log_schema;
     use testify::random::random_lines;
-    use super::*;
 
     #[test]
     fn encoder_no_labels() {
@@ -372,7 +373,10 @@ mod tests {
         let record = encoder.encode_event(event);
         assert!(record.event.event.contains(log_schema().timestamp_key()));
         assert_eq!(record.labels.len(), 1);
-        assert_eq!(record.labels[0], ("agent".to_string(), "vertex".to_string()))
+        assert_eq!(
+            record.labels[0],
+            ("agent".to_string(), "vertex".to_string())
+        )
     }
 
     #[test]

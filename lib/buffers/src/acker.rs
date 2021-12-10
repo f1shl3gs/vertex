@@ -13,13 +13,11 @@ pub trait Ackable {
 }
 
 impl<T> Ackable for Vec<T>
-    where
-        T: Ackable
+where
+    T: Ackable,
 {
     fn ack_size(&self) -> usize {
-        self.iter()
-            .map(|x| x.ack_size())
-            .sum()
+        self.iter().map(|x| x.ack_size()).sum()
     }
 }
 
@@ -54,10 +52,7 @@ impl Acker {
     pub fn new_for_testing() -> (Self, Arc<AtomicUsize>) {
         let ack_counter = Arc::new(AtomicUsize::new(0));
         let notifier = Arc::new(AtomicWaker::new());
-        let acker = Acker::Disk(
-            Arc::clone(&ack_counter),
-            Arc::clone(&notifier),
-        );
+        let acker = Acker::Disk(Arc::clone(&ack_counter), Arc::clone(&notifier));
 
         (acker, ack_counter)
     }

@@ -3,21 +3,27 @@ use std::io::ErrorKind;
 use std::path::PathBuf;
 use std::process::Command;
 
+use event::{tags, Event, Metric};
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use event::{Event, Metric, tags};
 
-use crate::{sources::Source, config::{
-    DataType, SourceConfig, SourceContext, SourceDescription, ticker_from_duration,
-    default_interval, deserialize_duration, serialize_duration, GenerateConfig,
-}, Error};
-
+use crate::{
+    config::{
+        default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
+        GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    },
+    sources::Source,
+    Error,
+};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct NvidiaSmiConfig {
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 
     #[serde(default = "default_smi_path")]
@@ -33,7 +39,8 @@ impl GenerateConfig for NvidiaSmiConfig {
         serde_yaml::to_value(Self {
             interval: default_interval(),
             path: default_smi_path(),
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -46,7 +53,8 @@ inventory::submit! {
 impl SourceConfig for NvidiaSmiConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(self.interval).unwrap()
+        let mut ticker = ticker_from_duration(self.interval)
+            .unwrap()
             .take_until(ctx.shutdown);
         let mut output = ctx.out.sink_map_err(|err| {
             error!(
@@ -59,12 +67,10 @@ impl SourceConfig for NvidiaSmiConfig {
             while ticker.next().await.is_some() {
                 match gather(&path).await {
                     Ok(metrics) => {
-                        let mut stream = futures::stream::iter(metrics)
-                            .map(Event::Metric)
-                            .map(Ok);
+                        let mut stream = futures::stream::iter(metrics).map(Event::Metric).map(Ok);
 
                         output.send_all(&mut stream).await?;
-                    },
+                    }
                     Err(err) => {
                         warn!(
                             message = "Gather metrics from nvidia smi failed",
@@ -98,9 +104,9 @@ async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
 
     let mut child = command.spawn()?;
 
-    let stdout = child.stdout
-        .take()
-        .ok_or_else(|| std::io::Error::new(ErrorKind::Other, "Unable to take stdout of spawned process"))?;
+    let stdout = child.stdout.take().ok_or_else(|| {
+        std::io::Error::new(ErrorKind::Other, "Unable to take stdout of spawned process")
+    })?;
     let smi: SMI = serde_xml_rs::from_reader(stdout)?;
 
     let mut metrics = Vec::with_capacity(smi.gpus.len() * 24);
@@ -124,109 +130,104 @@ async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
                     "compute_mode" => &gpu.compute_mode,
                     "driver_version" => &smi.driver_version,
                     "cuda_version" => &smi.cuda_version
-                )
+                ),
             ),
-            Metric::gauge_with_tags(
-                "nvidia_gpu_pstate",
-                "",
-                pstate,
-                tags.clone()
-            ),
+            Metric::gauge_with_tags("nvidia_gpu_pstate", "", pstate, tags.clone()),
             Metric::gauge_with_tags(
                 "nvidia_gpu_fan_speed_percentage",
                 "",
                 gpu.fan_speed.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_fbc_stats_session",
                 "",
                 gpu.fbc_stats.session_count,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_fbc_stats_average_fps",
                 "",
                 gpu.fbc_stats.average_fps,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_fbc_stats_average_latency",
                 "",
                 gpu.fbc_stats.average_latency,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_memory_free_bytes",
                 "",
                 gpu.fb_memory_usage.free.value * 1024.0 * 1024.0,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_memory_used_bytes",
                 "",
                 gpu.fb_memory_usage.used.value * 1024.0 * 1024.0,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_memory_total_bytes",
                 "",
                 gpu.fb_memory_usage.total.value * 1024.0 * 1024.0,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_power_draw_watts",
                 "",
                 gpu.power_readings.power_draw.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_temperature",
                 "",
                 gpu.temperature.gpu_temp.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_utilization",
                 "",
                 gpu.utilization.gpu_util.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_memory_utilization",
                 "",
                 gpu.utilization.memory_util.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_encoder_utilization",
                 "",
                 gpu.utilization.encoder_util.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_decoder_utilization",
                 "",
                 gpu.utilization.decoder_util.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_current_pcie_link_gen",
                 "",
                 gpu.pci.pci_gpu_link_info.pcie_gen.current_link_gen,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_pcie_current_link_width",
                 "",
                 gpu.pci.pci_gpu_link_info.link_widths.get_link_width(),
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_encoder_stats_session",
                 "",
                 gpu.encoder_stats.session_count,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_encoder_stats_average_fps",
@@ -238,32 +239,32 @@ async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
                 "nvidia_gpu_encoder_stats_average_latency",
                 "",
                 gpu.encoder_stats.average_latency,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_clocks_current_graphics",
                 "",
                 gpu.clocks.graphics_clock.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_clocks_current_sm",
                 "",
                 gpu.clocks.sm_clock.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_clocks_current_memory",
                 "",
                 gpu.clocks.mem_clock.value,
-                tags.clone()
+                tags.clone(),
             ),
             Metric::gauge_with_tags(
                 "nvidia_gpu_clocks_current_video",
                 "",
                 gpu.clocks.video_clock.value,
-                tags.clone()
-            )
+                tags.clone(),
+            ),
         ]);
     }
 
@@ -275,7 +276,7 @@ enum Unit {
     MiB,
     Percentage,
     Watt,
-    MHz
+    MHz,
 }
 
 impl ToString for Unit {
@@ -285,18 +286,22 @@ impl ToString for Unit {
             Unit::MiB => "MiB",
             Unit::Percentage => "%",
             Unit::Watt => "W",
-            Unit::MHz => "MHz"
-        }.to_string()
+            Unit::MHz => "MHz",
+        }
+        .to_string()
     }
 }
 
 struct Value {
     value: f64,
-    unit: Unit
+    unit: Unit,
 }
 
 impl<'de> Deserialize<'de> for Value {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
         let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
 
         if let Some((value, unit)) = s.split_once(" ") {
@@ -306,11 +311,10 @@ impl<'de> Deserialize<'de> for Value {
                 "%" => Unit::Percentage,
                 "W" => Unit::Watt,
                 "MHz" => Unit::MHz,
-                _ => return Err(serde::de::Error::custom("Unknown unit"))
+                _ => return Err(serde::de::Error::custom("Unknown unit")),
             };
 
-            let value = value.parse::<f64>()
-                .map_err(serde::de::Error::custom)?;
+            let value = value.parse::<f64>().map_err(serde::de::Error::custom)?;
 
             Ok(Value { value, unit })
         } else {
@@ -321,7 +325,10 @@ impl<'de> Deserialize<'de> for Value {
 
 impl Serialize for Value {
     // helper require this implement, but it shall not call forever
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         let raw = format!("{} {}", self.value, self.unit.to_string());
         serializer.serialize_str(&raw)
     }
@@ -370,9 +377,7 @@ struct LinkWidth {
 
 impl LinkWidth {
     fn get_link_width(&self) -> i32 {
-        let link_width = self.current_link_width
-            .strip_suffix("x")
-            .unwrap_or("0");
+        let link_width = self.current_link_width.strip_suffix("x").unwrap_or("0");
 
         link_width.parse().unwrap_or(0)
     }
@@ -434,7 +439,8 @@ struct GPU {
 
 impl GPU {
     fn pstat(&self) -> Result<i32, Error> {
-        let s = self.performance_state
+        let s = self
+            .performance_state
             .strip_prefix("P")
             .ok_or("Invalid performance state")?;
 
@@ -453,8 +459,8 @@ struct SMI {
 
 #[cfg(test)]
 mod tests {
-    use std::fs::read_to_string;
     use super::*;
+    use std::fs::read_to_string;
 
     #[test]
     fn test_deserialize_output() {

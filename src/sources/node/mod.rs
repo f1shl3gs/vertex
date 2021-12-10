@@ -1,27 +1,37 @@
 mod arp;
+mod bcache;
 mod bonding;
 mod btrfs;
+mod conntrack;
+mod cpu;
 mod cpufreq;
 mod diskstats;
+mod drm;
 mod edac;
 mod entropy;
+mod errors;
 mod fibrechannel;
 mod filefd;
 mod filesystem;
 pub mod hwmon;
 mod infiniband;
 mod ipvs;
+mod lnstat;
 mod loadavg;
 mod mdadm;
 mod meminfo;
 mod netclass;
 mod netdev;
 mod netstat;
+mod network_route;
 mod nfs;
 mod nfsd;
 mod nvme;
+mod os_release;
 mod powersupplyclass;
 mod pressure;
+mod processes;
+mod protocols;
 mod rapl;
 mod schedstat;
 mod sockstat;
@@ -35,49 +45,35 @@ mod timex;
 mod udp_queues;
 mod uname;
 mod vmstat;
+mod wifi;
 mod xfs;
 mod zfs;
-mod cpu;
-mod conntrack;
-mod errors;
-mod os_release;
-mod drm;
-mod lnstat;
-mod protocols;
-mod network_route;
-mod wifi;
-mod bcache;
-mod processes;
 
 use std::io::Read;
 use std::str::FromStr;
-use std::{
-    sync::Arc,
-    path::Path,
-};
+use std::{path::Path, sync::Arc};
 
-use typetag;
+use event::{tags, Event, Metric};
+use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt};
-use event::{Event, tags, Metric};
+use typetag;
 
-use self::netdev::NetdevConfig;
-use self::vmstat::VMStatConfig;
-use self::netclass::NetClassConfig;
-use self::netstat::NetstatConfig;
-use self::ipvs::IPVSConfig;
 use self::cpu::CPUConfig;
 use self::diskstats::DiskStatsConfig;
 use self::errors::{Error, ErrorContext};
-use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true, default_false};
-use crate::shutdown::ShutdownSignal;
-use crate::pipeline::Pipeline;
-use crate::{
-    sources::Source,
-    config::SourceDescription,
-    impl_generate_config_from_default,
+use self::ipvs::IPVSConfig;
+use self::netclass::NetClassConfig;
+use self::netdev::NetdevConfig;
+use self::netstat::NetstatConfig;
+use self::vmstat::VMStatConfig;
+use crate::config::{
+    default_false, default_true, deserialize_duration, serialize_duration, DataType, SourceConfig,
+    SourceContext,
 };
+use crate::pipeline::Pipeline;
+use crate::shutdown::ShutdownSignal;
+use crate::{config::SourceDescription, impl_generate_config_from_default, sources::Source};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -263,7 +259,11 @@ impl Default for Collectors {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct NodeMetricsConfig {
-    #[serde(default = "default_interval", deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        default = "default_interval",
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 
     #[serde(default = "default_proc_path")]
@@ -344,10 +344,10 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
 }
 
 pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
-    where
-        P: AsRef<Path>,
-        T: FromStr<Err=E>,
-        Error: From<E>
+where
+    P: AsRef<Path>,
+    T: FromStr<Err = E>,
+    Error: From<E>,
 {
     let content = read_to_string(path).await?;
     Ok(<T as FromStr>::from_str(content.as_str())?)
@@ -394,8 +394,7 @@ macro_rules! record_gather {
 impl NodeMetrics {
     async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
         let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval)
-            .take_until(shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
             let mut tasks = Vec::new();
@@ -554,7 +553,10 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("netclass", netclass::gather(conf.as_ref(), sys_path.as_ref()))
+                    record_gather!(
+                        "netclass",
+                        netclass::gather(conf.as_ref(), sys_path.as_ref())
+                    )
                 }))
             }
 
@@ -572,7 +574,10 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("netstat", netstat::gather(conf.as_ref(), proc_path.as_ref()))
+                    record_gather!(
+                        "netstat",
+                        netstat::gather(conf.as_ref(), proc_path.as_ref())
+                    )
                 }))
             }
 
@@ -609,7 +614,10 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("powersupplyclass", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
+                    record_gather!(
+                        "powersupplyclass",
+                        powersupplyclass::gather(sys_path.as_ref(), conf.as_ref())
+                    )
                 }))
             }
 
@@ -728,7 +736,8 @@ impl NodeMetrics {
                 }))
             }
 
-            let metrics = futures::future::join_all(tasks).await
+            let metrics = futures::future::join_all(tasks)
+                .await
                 .iter()
                 .flatten()
                 .fold(Vec::new(), |mut metrics, ms| {
@@ -782,9 +791,12 @@ mod tests {
 
     #[test]
     fn test_deserialize() {
-        let cs: Collectors = serde_yaml::from_str(r#"
+        let cs: Collectors = serde_yaml::from_str(
+            r#"
         arp: true
-        "#).unwrap();
+        "#,
+        )
+        .unwrap();
 
         println!("{:?}", cs);
     }

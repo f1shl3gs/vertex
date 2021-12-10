@@ -1,11 +1,11 @@
 use std::task::Poll;
 
+use futures::task::{noop_waker_ref, Context};
 use futures::{Stream, StreamExt};
-use futures::task::{Context, noop_waker_ref};
 
 pub async fn collect_ready<S>(mut rx: S) -> Vec<S::Item>
-    where
-        S: Stream + Unpin,
+where
+    S: Stream + Unpin,
 {
     let waker = noop_waker_ref();
     let mut cx = Context::from_waker(waker);

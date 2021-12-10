@@ -1,8 +1,8 @@
-use std::io::{self, BufRead};
-use bytes::BytesMut;
-use bstr::Finder;
-use tracing::warn;
 use crate::Position;
+use bstr::Finder;
+use bytes::BytesMut;
+use std::io::{self, BufRead};
+use tracing::warn;
 
 /// Read up to `max_size` bytes from `reader`, splitting by `delim`
 ///
@@ -43,7 +43,7 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
         let available: &[u8] = match reader.fill_buf() {
             Ok(n) => n,
             Err(ref e) if e.kind() == io::ErrorKind::Interrupted => continue,
-            Err(e) => return Err(e)
+            Err(e) => return Err(e),
         };
 
         let (done, used) = {
@@ -95,11 +95,11 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use bytes::BufMut;
+    use quickcheck::{QuickCheck, TestResult};
+    use std::io::Cursor;
     use std::num::NonZeroU8;
     use std::ops::Range;
-    use bytes::BufMut;
-    use std::io::Cursor;
-    use quickcheck::{TestResult, QuickCheck};
 
     fn qc_inner(chunks: Vec<Vec<u8>>, delim: u8, max_size: NonZeroU8) -> TestResult {
         // The `global_data` is the view of `chunks` as a single contiguous
@@ -176,7 +176,9 @@ mod tests {
                 &delimiter,
                 &mut buffer,
                 max_size.get() as usize,
-            ).unwrap() {
+            )
+            .unwrap()
+            {
                 None => {
                     // Subject only returns None if this is the last chunk _and_ the
                     // chunk did not contain a delimiter _or_ the delimiter was outside

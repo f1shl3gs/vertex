@@ -1,9 +1,9 @@
 use chrono::Utc;
-use futures::{SinkExt, StreamExt};
-use serde::{Deserialize, Serialize};
-use log_schema::log_schema;
-use tokio::sync::broadcast::error::RecvError;
 use event::Event;
+use futures::{SinkExt, StreamExt};
+use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
+use tokio::sync::broadcast::error::RecvError;
 
 use crate::config::{DataType, SourceConfig, SourceContext, SourceDescription};
 use crate::impl_generate_config_from_default;
@@ -28,14 +28,12 @@ impl_generate_config_from_default!(InternalLogsConfig);
 #[typetag::serde(name = "internal_logs")]
 impl SourceConfig for InternalLogsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let host_key = self.host_key
+        let host_key = self
+            .host_key
             .as_deref()
             .unwrap_or_else(|| log_schema().host_key())
             .to_owned();
-        let pid_key = self.pid_key
-            .as_deref()
-            .unwrap_or("pid")
-            .to_owned();
+        let pid_key = self.pid_key.as_deref().unwrap_or("pid").to_owned();
 
         Ok(Box::pin(run(host_key, pid_key, ctx.out, ctx.shutdown)))
     }
@@ -67,17 +65,20 @@ async fn run(
     let hostname = crate::hostname();
     let pid = std::process::id();
 
-    output.send_all(&mut futures::stream::iter(subscription.buffer).map(|mut log| {
-        if let Ok(hostname) = &hostname {
-            log.insert_field(host_key.clone(), hostname.to_owned());
-        }
+    output
+        .send_all(
+            &mut futures::stream::iter(subscription.buffer).map(|mut log| {
+                if let Ok(hostname) = &hostname {
+                    log.insert_field(host_key.clone(), hostname.to_owned());
+                }
 
-        log.insert_field(pid_key.clone(), pid);
-        log.try_insert_field(log_schema().source_type_key(), "internal_logs");
-        log.try_insert_field(log_schema().timestamp_key(), Utc::now());
+                log.insert_field(pid_key.clone(), pid);
+                log.try_insert_field(log_schema().source_type_key(), "internal_logs");
+                log.try_insert_field(log_schema().timestamp_key(), Utc::now());
 
-        Ok(log.into())
-    }))
+                Ok(log.into())
+            }),
+        )
         .await?;
 
     // Note: This loop, or anything called within it, MUST NOT generate any logs that don't
@@ -100,12 +101,12 @@ async fn run(
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
-    use tokio::time::sleep;
-    use futures::channel::mpsc;
-    use event::Value;
-    use testify::collect_ready;
     use super::*;
+    use event::Value;
+    use futures::channel::mpsc;
+    use std::time::Duration;
+    use testify::collect_ready;
+    use tokio::time::sleep;
 
     #[test]
     fn generate_config() {

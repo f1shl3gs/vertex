@@ -2,23 +2,14 @@ use std::{
     collections::HashMap,
     pin::Pin,
     sync::Arc,
-    task::{
-        Context,
-        Poll,
-    },
+    task::{Context, Poll},
 };
 
+use futures::{future, ready, Future, FutureExt};
 use stream_cancel::{Trigger, Tripwire};
-use tokio::time::{Instant, timeout_at};
-use futures::{
-    Future,
-    FutureExt,
-    ready,
-    future,
-};
+use tokio::time::{timeout_at, Instant};
 
 use crate::stream::tripwire_handler;
-
 
 #[derive(Debug, Default)]
 pub struct ShutdownCoordinator {
@@ -32,14 +23,15 @@ impl ShutdownCoordinator {
     /// of this Source and stores them as needed. Return the ShutdownSignal for
     /// this Source as well as a Tripwire that will be notified if the Source
     /// should be forcibly shutdown
-    pub fn register_source(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output=()>) {
+    pub fn register_source(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output = ()>) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
 
         self.begun_triggers.insert(name.to_string(), begun_trigger);
         self.force_triggers.insert(name.to_string(), force_trigger);
-        self.complete_tripwires.insert(name.to_string(), complete_tripwire);
+        self.complete_tripwires
+            .insert(name.to_string(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
 
@@ -51,14 +43,15 @@ impl ShutdownCoordinator {
     }
 
     // TODO: implement it
-    pub fn register_extension(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output=()>) {
+    pub fn register_extension(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output = ()>) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
 
         self.begun_triggers.insert(name.to_string(), begun_trigger);
         self.force_triggers.insert(name.to_string(), force_trigger);
-        self.complete_tripwires.insert(name.to_string(), complete_tripwire);
+        self.complete_tripwires
+            .insert(name.to_string(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
 
@@ -73,15 +66,12 @@ impl ShutdownCoordinator {
     pub fn takeover_source(&mut self, name: &str, other: &mut Self) {
         let existing = self.begun_triggers.insert(
             name.to_string(),
-            other
-                .begun_triggers
-                .remove(name)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "other ShutdownCoordinator didn't have a begun trigger for {}",
-                        name
-                    )
-                }),
+            other.begun_triggers.remove(name).unwrap_or_else(|| {
+                panic!(
+                    "other ShutdownCoordinator didn't have a begun trigger for {}",
+                    name
+                )
+            }),
         );
 
         if existing.is_some() {
@@ -93,15 +83,12 @@ impl ShutdownCoordinator {
 
         let existing = self.force_triggers.insert(
             name.to_string(),
-            other
-                .force_triggers
-                .remove(name)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "other ShutdownCoordinator didn't have a force trigger for {}",
-                        name
-                    )
-                }),
+            other.force_triggers.remove(name).unwrap_or_else(|| {
+                panic!(
+                    "other ShutdownCoordinator didn't have a force trigger for {}",
+                    name
+                )
+            }),
         );
         if existing.is_some() {
             panic!(
@@ -112,15 +99,12 @@ impl ShutdownCoordinator {
 
         let existing = self.complete_tripwires.insert(
             name.to_string(),
-            other
-                .complete_tripwires
-                .remove(name)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "Other ShutdownCoordinator didn't have a complete tripwire for {}",
-                        name
-                    );
-                }),
+            other.complete_tripwires.remove(name).unwrap_or_else(|| {
+                panic!(
+                    "Other ShutdownCoordinator didn't have a complete tripwire for {}",
+                    name
+                );
+            }),
         );
         if existing.is_some() {
             panic!(
@@ -134,7 +118,7 @@ impl ShutdownCoordinator {
     /// that resolves once all sources have either shut down completely, or have
     /// been sent the force shutdown signal. The force shutdown signal will be sent
     /// to any sources that don't cleanly shut down before the give `deadline`.
-    pub fn shutdown_all(self, deadline: Instant) -> impl Future<Output=()> {
+    pub fn shutdown_all(self, deadline: Instant) -> impl Future<Output = ()> {
         let mut complete_futures = Vec::new();
         let begun_triggers = self.begun_triggers;
         let mut complete_tripwires = self.complete_tripwires;
@@ -143,23 +127,19 @@ impl ShutdownCoordinator {
         for (name, trigger) in begun_triggers {
             trigger.cancel();
 
-            let complete_tripwire = complete_tripwires
-                .remove(&name)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "complete tripwire for source '{}' not found in the ShutdownCoordinator",
-                        name
-                    )
-                });
+            let complete_tripwire = complete_tripwires.remove(&name).unwrap_or_else(|| {
+                panic!(
+                    "complete tripwire for source '{}' not found in the ShutdownCoordinator",
+                    name
+                )
+            });
 
-            let force_trigger = force_triggers
-                .remove(&name)
-                .unwrap_or_else(|| {
-                    panic!(
-                        "force_trigger for source '{}' not found in the ShutdownCoordinator",
-                        name,
-                    )
-                });
+            let force_trigger = force_triggers.remove(&name).unwrap_or_else(|| {
+                panic!(
+                    "force_trigger for source '{}' not found in the ShutdownCoordinator",
+                    name,
+                )
+            });
 
             complete_futures.push(ShutdownCoordinator::shutdown_source_complete(
                 complete_tripwire,
@@ -178,36 +158,30 @@ impl ShutdownCoordinator {
     /// resolves to a bool that indicates if the source shut down cleanly
     /// before the given `deadline`. If the result is false then that means
     /// the source failed to shut down before `deadline` and had to be force-shutdown.
-    pub fn shutdown_source(&mut self, name: &str, deadline: Instant) -> impl Future<Output=bool> {
-        let begin_trigger = self.begun_triggers
-            .remove(name)
-            .unwrap_or_else(|| {
-                panic!(
-                    "begun_trigger for source '{}' not found in the ShutdownCoordinator",
-                    name
-                )
-            });
+    pub fn shutdown_source(&mut self, name: &str, deadline: Instant) -> impl Future<Output = bool> {
+        let begin_trigger = self.begun_triggers.remove(name).unwrap_or_else(|| {
+            panic!(
+                "begun_trigger for source '{}' not found in the ShutdownCoordinator",
+                name
+            )
+        });
 
         // This is what actually triggers the source to begin shutting down
         begin_trigger.cancel();
 
-        let complete_tripwire = self.complete_tripwires
-            .remove(name)
-            .unwrap_or_else(|| {
-                panic!(
-                    "complete_tripwire for source '{}' not found in the ShutdownCoordinator",
-                    name
-                )
-            });
+        let complete_tripwire = self.complete_tripwires.remove(name).unwrap_or_else(|| {
+            panic!(
+                "complete_tripwire for source '{}' not found in the ShutdownCoordinator",
+                name
+            )
+        });
 
-        let force_trigger = self.force_triggers
-            .remove(name)
-            .unwrap_or_else(|| {
-                panic!(
-                    "force_trigger for source '{}' not found in the ShutdownCoordinator",
-                    name
-                )
-            });
+        let force_trigger = self.force_triggers.remove(name).unwrap_or_else(|| {
+            panic!(
+                "force_trigger for source '{}' not found in the ShutdownCoordinator",
+                name
+            )
+        });
 
         ShutdownCoordinator::shutdown_source_complete(
             complete_tripwire,
@@ -219,7 +193,8 @@ impl ShutdownCoordinator {
 
     /// Returned future will finish once all sources have finished
     pub fn shutdown_tripwire(&self) -> future::BoxFuture<'static, ()> {
-        let futs = self.complete_tripwires
+        let futs = self
+            .complete_tripwires
             .values()
             .cloned()
             .map(|tripwire| tripwire.then(tripwire_handler).boxed());
@@ -234,7 +209,7 @@ impl ShutdownCoordinator {
         force_trigger: Trigger,
         name: String,
         deadline: Instant,
-    ) -> impl Future<Output=bool> {
+    ) -> impl Future<Output = bool> {
         async move {
             // Call `force_trigger.disable()` on drop
             let force_trigger = DisableTrigger::new(force_trigger);
@@ -251,7 +226,8 @@ impl ShutdownCoordinator {
                 force_trigger.into_inner().cancel();
                 false
             }
-        }.boxed()
+        }
+        .boxed()
     }
 }
 
@@ -262,7 +238,7 @@ struct DisableTrigger {
 impl DisableTrigger {
     fn new(trigger: Trigger) -> Self {
         Self {
-            trigger: Some(trigger)
+            trigger: Some(trigger),
         }
     }
 
@@ -285,7 +261,6 @@ impl From<Trigger> for DisableTrigger {
     }
 }
 
-
 /// When this struct goes out of scope and its internal refcount goes
 /// to 0 it is a signal that its corresponding Source has completed
 /// executing and may be cleaned up. It is the responsibility
@@ -299,7 +274,7 @@ pub struct ShutdownSignalToken {
 impl ShutdownSignalToken {
     fn new(trigger: Trigger) -> Self {
         Self {
-            complete: Arc::new(trigger)
+            complete: Arc::new(trigger),
         }
     }
 }
@@ -336,7 +311,7 @@ impl Future for ShutdownSignal {
                     Poll::Pending
                 }
             }
-            None => Poll::Pending
+            None => Poll::Pending,
         }
     }
 }

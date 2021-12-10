@@ -1,23 +1,12 @@
 use event::{tags, Metric};
-use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
 use netlink_packet_sock_diag::{
-    NetlinkMessage,
-    NetlinkHeader,
-    NetlinkPayload,
-    NLM_F_REQUEST,
-    NLM_F_DUMP,
-    SockDiagMessage,
-    inet::{
-        ExtensionFlags,
-        InetRequest,
-        SocketId,
-        StateFlags,
-    },
     constants::*,
+    inet::{ExtensionFlags, InetRequest, SocketId, StateFlags},
+    NetlinkHeader, NetlinkMessage, NetlinkPayload, SockDiagMessage, NLM_F_DUMP, NLM_F_REQUEST,
 };
+use netlink_sys::{protocols::NETLINK_SOCK_DIAG, SocketAddr, TokioSocket};
 
 use super::Error;
-
 
 #[derive(Default, Debug)]
 struct Statistics {
@@ -48,10 +37,7 @@ macro_rules! state_metric {
 }
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let (v4, v6) = tokio::join!(
-        fetch_tcp_stats(AF_INET),
-        fetch_tcp_stats(AF_INET6),
-    );
+    let (v4, v6) = tokio::join!(fetch_tcp_stats(AF_INET), fetch_tcp_stats(AF_INET6),);
 
     let stats = Statistics {
         established: v4.established + v6.established,
@@ -96,7 +82,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
     let socket_id = match family {
         AF_INET => SocketId::new_v4(),
         AF_INET6 => SocketId::new_v6(),
-        _ => panic!("unknown family")
+        _ => panic!("unknown family"),
     };
 
     let mut packet = NetlinkMessage {
@@ -107,7 +93,8 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
             extensions: ExtensionFlags::empty(),
             states: StateFlags::all(),
             socket_id,
-        }).into(),
+        })
+        .into(),
     };
 
     packet.finalize();
@@ -168,18 +155,8 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
 mod tests {
     use super::*;
     use netlink_packet_sock_diag::{
-        NetlinkMessage,
-        NetlinkHeader,
-        NetlinkPayload,
-        NLM_F_REQUEST,
-        NLM_F_DUMP,
-        SockDiagMessage,
-        inet::{
-            ExtensionFlags,
-            InetRequest,
-            SocketId,
-            StateFlags,
-        },
+        inet::{ExtensionFlags, InetRequest, SocketId, StateFlags},
+        NetlinkHeader, NetlinkMessage, NetlinkPayload, SockDiagMessage, NLM_F_DUMP, NLM_F_REQUEST,
     };
     use netlink_sys::{protocols::NETLINK_SOCK_DIAG, Socket, SocketAddr, TokioSocket};
 
@@ -201,7 +178,8 @@ mod tests {
                 extensions: ExtensionFlags::empty(),
                 states: StateFlags::all(),
                 socket_id: SocketId::new_v4(),
-            }).into(),
+            })
+            .into(),
         };
 
         packet.finalize();
@@ -247,10 +225,10 @@ mod tests {
                             _ => {}
                         }
                         /* println!("sock state {}", resp.header.state);
-                         println!("rx_queue {} tx_queue {}",
-                                  resp.header.recv_queue,
-                                  resp.header.send_queue,
-                         );*/
+                        println!("rx_queue {} tx_queue {}",
+                                 resp.header.recv_queue,
+                                 resp.header.send_queue,
+                        );*/
                     }
                     NetlinkPayload::Done => {
                         println!("Done");
@@ -288,7 +266,8 @@ mod tests {
                 extensions: ExtensionFlags::empty(),
                 states: StateFlags::all(),
                 socket_id: SocketId::new_v4(),
-            }).into(),
+            })
+            .into(),
         };
 
         packet.finalize();

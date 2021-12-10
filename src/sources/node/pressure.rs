@@ -1,3 +1,4 @@
+use super::{read_to_string, Error, ErrorContext};
 /// The PSI / pressure interface is described at
 ///   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/accounting/psi.txt
 /// Each resource (cpu, io, memory, ...) is exposed as a single file.
@@ -7,21 +8,18 @@
 /// Example io pressure file:
 /// > some avg10=0.06 avg60=0.21 avg300=0.99 total=8537362
 /// > full avg10=0.00 avg60=0.13 avg300=0.96 total=8183134
-
 use event::Metric;
-use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/pressure/cpu", proc_path);
-    let cpu = psi_stats(&path).await
-        .context("read cpu pressure failed")?;
+    let cpu = psi_stats(&path).await.context("read cpu pressure failed")?;
 
     let path = format!("{}/pressure/io", proc_path);
-    let io = psi_stats(&path).await
-        .context("read io pressure failed")?;
+    let io = psi_stats(&path).await.context("read io pressure failed")?;
 
     let path = format!("{}/pressure/memory", proc_path);
-    let memory = psi_stats(&path).await
+    let memory = psi_stats(&path)
+        .await
         .context("read memory pressure failed")?;
 
     let mut metrics = Vec::new();
@@ -116,8 +114,7 @@ async fn psi_stats(path: &str) -> Result<PSIStats, Error> {
 
 fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
     // some of full
-    let parts = line.split_ascii_whitespace()
-        .collect::<Vec<_>>();
+    let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
     if parts.len() != 5 {
         return Err(Error::new_invalid("malformed psi stat line"));

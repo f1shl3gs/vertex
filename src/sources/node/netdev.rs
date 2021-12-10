@@ -1,17 +1,23 @@
-use serde::{Deserialize, Serialize};
-use regex::Regex;
-use crate::config::{deserialize_regex, serialize_regex};
 use super::{read_to_string, Error, ErrorContext};
-use std::num::ParseIntError;
+use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use regex::Regex;
+use serde::{Deserialize, Serialize};
+use std::num::ParseIntError;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum NetdevConfig {
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     Include(Regex),
 
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     Exclude(Regex),
 
     All,
@@ -25,7 +31,9 @@ impl Default for NetdevConfig {
 
 impl NetdevConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let stats = self.get_net_dev_stats(proc_path).await
+        let stats = self
+            .get_net_dev_stats(proc_path)
+            .await
             .context("get netdev stats failed")?;
 
         let mut metrics = Vec::new();
@@ -84,8 +92,8 @@ impl NetdevConfig {
                     "Network device statistic receive_fifo",
                     stat.recv_fifo as f64,
                     tags!(
-                            "device" => device,
-                        ),
+                        "device" => device,
+                    ),
                 ),
                 Metric::sum_with_tags(
                     "node_network_receive_frame_total",
@@ -226,10 +234,7 @@ impl DeviceStatus {
     //     lo: 14748809    4780    0    0    0     0          0         0 14748809    4780    0    0    0     0       0          0
     /// ```
     fn from_str(s: &str) -> Result<Self, ParseIntError> {
-        let parts = s
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = s.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         let name = parts[0].strip_suffix(':').unwrap().to_string();
         let recv_bytes = parts[1].parse()?;
@@ -277,9 +282,12 @@ mod tests {
 
     #[test]
     fn test_deserialize() {
-        let conf: NetdevConfig = serde_yaml::from_str(r#"
+        let conf: NetdevConfig = serde_yaml::from_str(
+            r#"
 include: .*
-        "#).unwrap();
+        "#,
+        )
+        .unwrap();
     }
 
     #[test]
@@ -300,44 +308,50 @@ include: .*
         let path = "tests/fixtures/proc";
         let stats = conf.get_net_dev_stats(path).await.unwrap();
 
-        assert_eq!(stats[0], DeviceStatus {
-            name: "vethf345468".to_string(),
-            recv_bytes: 648,
-            recv_packets: 8,
-            recv_errs: 0,
-            recv_drop: 0,
-            recv_fifo: 0,
-            recv_frame: 0,
-            recv_compressed: 0,
-            recv_multicast: 0,
-            transmit_bytes: 438,
-            transmit_packets: 5,
-            transmit_errs: 0,
-            transmit_drop: 0,
-            transmit_fifo: 0,
-            transmit_colls: 0,
-            transmit_carrier: 0,
-            transmit_compressed: 0,
-        });
+        assert_eq!(
+            stats[0],
+            DeviceStatus {
+                name: "vethf345468".to_string(),
+                recv_bytes: 648,
+                recv_packets: 8,
+                recv_errs: 0,
+                recv_drop: 0,
+                recv_fifo: 0,
+                recv_frame: 0,
+                recv_compressed: 0,
+                recv_multicast: 0,
+                transmit_bytes: 438,
+                transmit_packets: 5,
+                transmit_errs: 0,
+                transmit_drop: 0,
+                transmit_fifo: 0,
+                transmit_colls: 0,
+                transmit_carrier: 0,
+                transmit_compressed: 0,
+            }
+        );
 
-        assert_eq!(stats[1], DeviceStatus {
-            name: "lo".to_string(),
-            recv_bytes: 1664039048,
-            recv_packets: 1566805,
-            recv_errs: 0,
-            recv_drop: 0,
-            recv_fifo: 0,
-            recv_frame: 0,
-            recv_compressed: 0,
-            recv_multicast: 0,
-            transmit_bytes: 1664039048,
-            transmit_packets: 1566805,
-            transmit_errs: 0,
-            transmit_drop: 0,
-            transmit_fifo: 0,
-            transmit_colls: 0,
-            transmit_carrier: 0,
-            transmit_compressed: 0,
-        })
+        assert_eq!(
+            stats[1],
+            DeviceStatus {
+                name: "lo".to_string(),
+                recv_bytes: 1664039048,
+                recv_packets: 1566805,
+                recv_errs: 0,
+                recv_drop: 0,
+                recv_fifo: 0,
+                recv_frame: 0,
+                recv_compressed: 0,
+                recv_multicast: 0,
+                transmit_bytes: 1664039048,
+                transmit_packets: 1566805,
+                transmit_errs: 0,
+                transmit_drop: 0,
+                transmit_fifo: 0,
+                transmit_colls: 0,
+                transmit_carrier: 0,
+                transmit_compressed: 0,
+            }
+        )
     }
 }

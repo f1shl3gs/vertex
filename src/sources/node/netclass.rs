@@ -1,21 +1,24 @@
-use serde::{Deserialize, Serialize};
+use super::{read_to_string, Error, ErrorContext};
 use crate::config::{deserialize_regex, serialize_regex};
-use tokio::fs;
 use event::{tags, Metric};
-use super::{Error, ErrorContext, read_to_string};
+use serde::{Deserialize, Serialize};
+use tokio::fs;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub ignores: regex::Regex,
 }
 
 impl Default for NetClassConfig {
     fn default() -> Self {
         Self {
-            ignores: default_ignores()
+            ignores: default_ignores(),
         }
     }
 }
@@ -25,7 +28,8 @@ fn default_ignores() -> regex::Regex {
 }
 
 pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path).await
+    let devices = net_class_devices(sys_path)
+        .await
         .context("read net class devices failed")?;
 
     let mut metrics = Vec::new();
@@ -38,7 +42,7 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
         let path = format!("{}/class/net/{}", sys_path, device);
         let nci = match NetClassInterface::from(&path).await {
             Ok(nci) => nci,
-            _ => continue
+            _ => continue,
         };
 
         let mut up = 0.0;
@@ -369,7 +373,7 @@ impl NetClassInterface {
 
             let value = match read_to_string(entry.path()).await {
                 Ok(v) => v,
-                _ => continue
+                _ => continue,
             };
 
             match file {
@@ -389,13 +393,17 @@ impl NetClassInterface {
 
                 "carrier_down_count" => nci.carrier_down_count = value.parse().ok(),
 
-                "dev_id" => nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok(),
+                "dev_id" => {
+                    nci.dev_id = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
+                }
 
                 "dormant" => nci.dormant = value.parse().ok(),
 
                 "duplex" => nci.duplex = value,
 
-                "flags" => nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok(),
+                "flags" => {
+                    nci.flags = i64::from_str_radix(value.strip_prefix("0x").unwrap(), 16).ok()
+                }
 
                 "ifalias" => nci.ifalias = value,
 

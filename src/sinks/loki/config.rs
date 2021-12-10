@@ -1,23 +1,22 @@
-use std::collections::HashMap;
-use std::time::Duration;
 use futures_util::FutureExt;
 use http::Uri;
+use std::collections::HashMap;
+use std::time::Duration;
 
+use event::encoding::EncodingConfig;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
-use event::encoding::EncodingConfig;
 
 use crate::batch::{BatchConfig, SinkBatchSettings};
 use crate::config::{DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, UriSerde};
 use crate::http::{Auth, HttpClient, MaybeAuth};
 use crate::sinks::loki::healthcheck::health_check;
 use crate::sinks::loki::sink::LokiSink;
-use crate::sinks::Sink;
-use crate::sinks::util::Compression;
 use crate::sinks::util::service::{Concurrency, RequestConfig};
+use crate::sinks::util::Compression;
+use crate::sinks::Sink;
 use crate::template::Template;
 use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
-
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -99,8 +98,9 @@ impl GenerateConfig for LokiConfig {
             request: RequestConfig::new(Concurrency::None),
             batch: Default::default(),
             tls: None,
-            compression: Compression::default()
-        }).unwrap()
+            compression: Compression::default(),
+        })
+        .unwrap()
     }
 }
 
@@ -161,8 +161,8 @@ pub fn valid_label_name(label: &Template) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::config::test_generate_config;
     use super::*;
+    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {

@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{BatchNotifier, ByteSizeOf, EventFinalizer};
 use crate::finalization::{EventFinalizers, EventStatus};
+use crate::{BatchNotifier, ByteSizeOf, EventFinalizer};
 
 #[derive(Clone, Debug, Default, Deserialize, PartialOrd, PartialEq, Serialize)]
 pub struct EventMetadata {

@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
-use event::Metric;
 use super::{read_to_string, Error, ErrorContext};
-use tokio::io::AsyncBufReadExt;
+use event::Metric;
+use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use tokio::io::AsyncBufReadExt;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
@@ -13,7 +13,7 @@ pub struct IPVSConfig {
 impl Default for IPVSConfig {
     fn default() -> Self {
         Self {
-            labels: default_labels()
+            labels: default_labels(),
         }
     }
 }
@@ -31,18 +31,40 @@ fn default_labels() -> Vec<String> {
 
 // TODO: this implement is dummy, too many to_string() and clone()
 pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(proc_path).await
+    let stats = parse_ipvs_stats(proc_path)
+        .await
         .context("parse ipvs stats failed")?;
 
     let mut metrics = vec![
-        Metric::sum("node_ipvs_connections_total", "The total number of connections made.", stats.connections as f64),
-        Metric::sum("node_ipvs_incoming_packets_total", "The total number of incoming packets.", stats.incoming_packets as f64),
-        Metric::sum("node_ipvs_outgoing_packets_total", "The total number of outgoing packets.", stats.outgoing_packets as f64),
-        Metric::sum("node_ipvs_incoming_bytes_total", "The total amount of incoming data.", stats.incoming_bytes as f64),
-        Metric::sum("node_ipvs_outgoing_bytes_total", "The total amount of outgoing data.", stats.outgoing_bytes as f64),
+        Metric::sum(
+            "node_ipvs_connections_total",
+            "The total number of connections made.",
+            stats.connections as f64,
+        ),
+        Metric::sum(
+            "node_ipvs_incoming_packets_total",
+            "The total number of incoming packets.",
+            stats.incoming_packets as f64,
+        ),
+        Metric::sum(
+            "node_ipvs_outgoing_packets_total",
+            "The total number of outgoing packets.",
+            stats.outgoing_packets as f64,
+        ),
+        Metric::sum(
+            "node_ipvs_incoming_bytes_total",
+            "The total amount of incoming data.",
+            stats.incoming_bytes as f64,
+        ),
+        Metric::sum(
+            "node_ipvs_outgoing_bytes_total",
+            "The total amount of outgoing data.",
+            stats.outgoing_bytes as f64,
+        ),
     ];
 
-    let backends = parse_ipvs_backend_status(proc_path).await
+    let backends = parse_ipvs_backend_status(proc_path)
+        .await
         .context("parse ipvs backend status failed")?;
 
     let mut sums = BTreeMap::new();
@@ -62,14 +84,15 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
                 "remote_port" => backend.remote_port.to_string(),
                 "proto" => backend.proto.clone(),
                 "local_mark" => backend.local_mark.clone(),
-                _ => "".to_string()
+                _ => "".to_string(),
             };
 
             kv[i] = lv;
         }
 
         let key = kv.join("-");
-        let mut status = sums.entry(key.clone())
+        let mut status = sums
+            .entry(key.clone())
             .or_insert(IPVSBackendStatus::default());
 
         status.active_conn += backend.active_conn;
@@ -81,7 +104,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
     for (k, status) in &sums {
         let kv = match label_values.get(k) {
             Some(kv) => kv,
-            None => continue
+            None => continue,
         };
 
         let mut tags = BTreeMap::new();
@@ -142,7 +165,9 @@ async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
 
     let stat_fields = lines[2].split_ascii_whitespace().collect::<Vec<_>>();
     if stat_fields.len() != 5 {
-        return Err(Error::new_invalid("ip_vs_stats corrupt: unexpected number of fields"));
+        return Err(Error::new_invalid(
+            "ip_vs_stats corrupt: unexpected number of fields",
+        ));
     }
 
     let connections = u64::from_str_radix(stat_fields[0], 16)?;
@@ -291,7 +316,7 @@ fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
 
                 std::net::Ipv6Addr::new(p1, p2, p3, p4, p5, p6, p7, p8).to_string()
             }
-            _ => return Err(Error::new_invalid("unexpected IP:Port"))
+            _ => return Err(Error::new_invalid("unexpected IP:Port")),
         }
     };
 

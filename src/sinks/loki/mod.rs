@@ -1,9 +1,9 @@
 mod config;
-mod sink;
-mod healthcheck;
 mod event;
-mod service;
+mod healthcheck;
 mod request_builder;
+mod service;
+mod sink;
 
 pub use config::valid_label_name;
 

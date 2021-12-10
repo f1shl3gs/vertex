@@ -4,32 +4,25 @@
 /// Deserialize(vertex) or Serialize(journalctl) we should get a better
 /// performance.
 use std::collections::{BTreeMap, HashSet};
-use std::{io, path::PathBuf, cmp, time::Duration};
 use std::io::SeekFrom;
 use std::path::Path;
 use std::process::Stdio;
+use std::{cmp, io, path::PathBuf, time::Duration};
 
-use serde::{Deserialize, Serialize};
-use log_schema::log_schema;
-use bytes::{BytesMut, Buf};
+use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
 use event::{Event, Value};
-use tokio_util::codec::{Decoder, FramedRead};
-use tokio::{
-    process::Command,
-    time::sleep,
-};
-use futures::{
-    SinkExt,
-    StreamExt,
-    stream::BoxStream,
-};
+use futures::{stream::BoxStream, SinkExt, StreamExt};
+use log_schema::log_schema;
 use nix::{
     sys::signal::{kill, Signal},
     unistd::Pid,
 };
+use serde::{Deserialize, Serialize};
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
+use tokio::{process::Command, time::sleep};
+use tokio_util::codec::{Decoder, FramedRead};
 
 use crate::config::{DataType, SourceConfig, SourceContext};
 use crate::pipeline::Pipeline;
@@ -64,30 +57,31 @@ pub struct JournaldConfig {
     pub batch_size: Option<usize>,
     pub journalctl_path: Option<PathBuf>,
     pub journal_directory: Option<PathBuf>,
-
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.global.make_subdir(&ctx.name)
-            .map_err(|err| {
-                warn!("create sub dir failed {:?}", err);
-                err
-            })?;
+        let data_dir = ctx.global.make_subdir(&ctx.name).map_err(|err| {
+            warn!("create sub dir failed {:?}", err);
+            err
+        })?;
 
-        let includes = self.units
+        let includes = self
+            .units
             .iter()
             .map(|s| fixup_unit(s))
             .collect::<HashSet<_>>();
-        let excludes = self.excludes
+        let excludes = self
+            .excludes
             .iter()
             .map(|s| fixup_unit(s))
             .collect::<HashSet<_>>();
 
         let checkpointer = Checkpointer::new(data_dir.join(CHECKPOINT_FILENAME)).await?;
-        let journalctl_path = self.journalctl_path
+        let journalctl_path = self
+            .journalctl_path
             .clone()
             .unwrap_or_else(|| JOURNALCTL.clone());
         let journal_dir = self.journal_directory.clone();
@@ -111,7 +105,11 @@ impl SourceConfig for JournaldConfig {
             start_journalctl(&mut command)
         });
 
-        Ok(Box::pin(src.run_shutdown(checkpointer, ctx.shutdown, start)))
+        Ok(Box::pin(src.run_shutdown(
+            checkpointer,
+            ctx.shutdown,
+            start,
+        )))
     }
 
     fn output_type(&self) -> DataType {
@@ -159,12 +157,7 @@ impl JournaldSource {
         };
 
         let mut on_stop = None;
-        let run = Box::pin(self.run(
-            &mut checkpointer,
-            &mut cursor,
-            &mut on_stop,
-            start,
-        ));
+        let run = Box::pin(self.run(&mut checkpointer, &mut cursor, &mut on_stop, start));
 
         info!("start selecting");
         futures::future::select(run, shutdown).await;
@@ -294,10 +287,7 @@ impl JournaldSource {
         !self.includes.contains(unit)
     }
 
-    async fn save_checkpoint(
-        checkpointer: &mut Checkpointer,
-        cursor: &Option<String>,
-    ) {
+    async fn save_checkpoint(checkpointer: &mut Checkpointer, cursor: &Option<String>) {
         if let Some(cursor) = cursor {
             if let Err(err) = checkpointer.set(cursor).await {
                 error!(
@@ -330,18 +320,12 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
                 (timestamp / 1_000_000) as i64,
                 (timestamp % 1_000_000) as u32 * 1_000,
             );
-            log.insert_field(
-                log_schema().timestamp_key(),
-                Value::Timestamp(timestamp),
-            );
+            log.insert_field(log_schema().timestamp_key(), Value::Timestamp(timestamp));
         }
     }
 
     // Add source type
-    log.insert_field(
-        log_schema().source_type_key(),
-        "journald",
-    );
+    log.insert_field(log_schema().source_type_key(), "journald");
 
     log.into()
 }
@@ -353,11 +337,12 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
 /// but we need this type to implement fake journald source in testing
 type StartJournalctlFn = Box<
     dyn Fn(
-        &Option<String>,
-    ) -> crate::Result<(
-        BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
-        StopJournalctlFn,
-    )> + Send + Sync,
+            &Option<String>,
+        ) -> crate::Result<(
+            BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
+            StopJournalctlFn,
+        )> + Send
+        + Sync,
 >;
 
 type StopJournalctlFn = Box<dyn FnOnce() + Send>;
@@ -369,7 +354,8 @@ fn create_command(
     cursor: &Option<String>,
 ) -> Command {
     let mut command = Command::new(path);
-    command.stdout(Stdio::piped())
+    command
+        .stdout(Stdio::piped())
         .arg("--follow")
         .arg("--output=export");
 
@@ -398,10 +384,7 @@ fn start_journalctl(
     StopJournalctlFn,
 )> {
     let mut child = command.spawn()?;
-    let stream = FramedRead::new(
-        child.stdout.take().unwrap(),
-        EntryCodec::new(),
-    ).boxed();
+    let stream = FramedRead::new(child.stdout.take().unwrap(), EntryCodec::new()).boxed();
 
     let pid = Pid::from_raw(child.id().unwrap() as _);
     let stop = Box::new(move || {
@@ -425,16 +408,12 @@ impl Checkpointer {
             .open(&path)
             .await?;
 
-        Ok(Self {
-            file,
-            path,
-        })
+        Ok(Self { file, path })
     }
 
     async fn set(&mut self, token: &str) -> Result<(), io::Error> {
         self.file.seek(SeekFrom::Start(0)).await?;
-        self.file.write_all(token.as_bytes())
-            .await?;
+        self.file.write_all(token.as_bytes()).await?;
         Ok(())
     }
 
@@ -451,7 +430,6 @@ impl Checkpointer {
         }
     }
 }
-
 
 /// Codec for Journal Export format
 /// https://www.freedesktop.org/wiki/Software/systemd/export/
@@ -491,9 +469,7 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
     }
 
     let key = String::from_utf8(buf[0..pos - 1].to_vec())
-        .map_err(|err| {
-            io::Error::new(io::ErrorKind::InvalidData, err)
-        })?;
+        .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))?;
 
     return match key.as_ref() {
         "PRIORITY" => {
@@ -524,9 +500,8 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
             Ok((key, ts.into()))
         }
         _ => {
-            let value = String::from_utf8(buf[pos..length].to_vec()).map_err(|err| {
-                io::Error::new(io::ErrorKind::InvalidData, err)
-            })?;
+            let value = String::from_utf8(buf[pos..length].to_vec())
+                .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))?;
             if key == MESSAGE {
                 Ok(("message".to_string(), value.into()))
             } else {
@@ -544,9 +519,7 @@ impl Decoder for EntryCodec {
         loop {
             //
             let read_to = cmp::min(self.max_length, buf.len());
-            let newline_pos = buf[0..read_to]
-                .iter()
-                .position(|b| *b == b'\n');
+            let newline_pos = buf[0..read_to].iter().position(|b| *b == b'\n');
 
             match (self.discarding, newline_pos) {
                 (true, Some(offset)) => {
@@ -608,31 +581,25 @@ impl Decoder for EntryCodec {
 
 #[cfg(test)]
 mod checkpoints_tests {
-    use tempfile::tempdir;
     use super::*;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_checkpoints() {
         let tempdir = tempdir().unwrap();
         let mut filename = tempdir.path().to_path_buf();
         filename.push(CHECKPOINT_FILENAME);
-        let mut checkpointer = Checkpointer::new(filename)
-            .await
-            .unwrap();
+        let mut checkpointer = Checkpointer::new(filename).await.unwrap();
 
         // read nothing
         assert_eq!(checkpointer.get().await.unwrap().is_none(), true);
 
         // read first write
-        checkpointer.set("foo")
-            .await
-            .unwrap();
+        checkpointer.set("foo").await.unwrap();
         assert_eq!(checkpointer.get().await.unwrap(), Some("foo".to_string()));
 
         // read more
-        checkpointer.set("bar")
-            .await
-            .unwrap();
+        checkpointer.set("bar").await.unwrap();
         assert_eq!(checkpointer.get().await.unwrap(), Some("bar".to_string()))
     }
 }
@@ -640,14 +607,12 @@ mod checkpoints_tests {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::{
-        io::{Cursor},
-    };
     use chrono::TimeZone;
+    use event::Event;
+    use std::io::Cursor;
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout, Duration};
     use tokio_stream::StreamExt;
-    use event::Event;
 
     #[test]
     fn test_decode_kv() {
@@ -667,7 +632,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_codec() {
-        let reader = tokio::fs::File::open("../../tests/fixtures/journal_export.txt").await.unwrap();
+        let reader = tokio::fs::File::open("../../tests/fixtures/journal_export.txt")
+            .await
+            .unwrap();
         let mut stream = FramedRead::new(reader, EntryCodec::new());
 
         let mut count = 0;
@@ -688,7 +655,6 @@ mod tests {
     }
 
     struct TestJournal {}
-
 
     impl TestJournal {
         fn new(
@@ -773,7 +739,7 @@ MESSAGE=audit log
         while let Some(result) = stream.next().await {
             match result {
                 Ok(entry) => println!("entry: {:?}", entry),
-                Err(err) => println!("err: {:?}", err)
+                Err(err) => println!("err: {:?}", err),
             }
         }
     }
@@ -783,7 +749,11 @@ MESSAGE=audit log
         units
     }
 
-    async fn run_with_units(includes: &[&str], excludes: &[&str], cursor: Option<&str>) -> Vec<Event> {
+    async fn run_with_units(
+        includes: &[&str],
+        excludes: &[&str],
+        cursor: Option<&str>,
+    ) -> Vec<Event> {
         let includes = create_unit_matches(includes.to_vec());
         let excludes = create_unit_matches(excludes.to_vec());
         run_journal(includes, excludes, cursor).await
@@ -817,7 +787,6 @@ MESSAGE=audit log
             output: tx,
         };
 
-
         tokio::spawn(source.run_shutdown(
             checkpointer,
             shutdown,
@@ -826,7 +795,9 @@ MESSAGE=audit log
 
         sleep(Duration::from_millis(200)).await;
         drop(trigger);
-        timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>()).await.unwrap()
+        timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>())
+            .await
+            .unwrap()
     }
 
     fn test_journal(includes: &[&str], excludes: &[&str]) -> JournaldSource {
@@ -898,7 +869,7 @@ MESSAGE=audit log
                 let s = String::from_utf8_lossy(s);
                 s.parse::<i64>().unwrap()
             }
-            _ => panic!("unexpected timestamp type")
+            _ => panic!("unexpected timestamp type"),
         };
 
         Value::Timestamp(chrono::Utc.timestamp_nanos(ns * 1000))

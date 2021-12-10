@@ -1,19 +1,18 @@
 use std::task::{Context, Poll};
 
+use buffers::Ackable;
 use bytes::Bytes;
+use event::{EventFinalizers, EventStatus, Finalizable};
 use futures_util::future::BoxFuture;
+use internal::{BytesSent, EventsSent};
 use rdkafka::error::KafkaError;
 use rdkafka::message::OwnedHeaders;
 use rdkafka::producer::{FutureProducer, FutureRecord};
 use rdkafka::util::Timeout;
 use tower::Service;
-use buffers::Ackable;
-use event::{EventFinalizers, EventStatus, Finalizable};
-use internal::{BytesSent, EventsSent};
 
 use crate::common::kafka::KafkaStatisticsContext;
 use crate::stream::DriverResponse;
-
 
 pub struct KafkaRequestMetadata {
     pub finalizers: EventFinalizers,
@@ -66,9 +65,7 @@ pub struct KafkaService {
 
 impl KafkaService {
     pub const fn new(producer: FutureProducer<KafkaStatisticsContext>) -> KafkaService {
-        KafkaService {
-            producer
-        }
+        KafkaService { producer }
     }
 }
 
@@ -85,8 +82,7 @@ impl Service<KafkaRequest> for KafkaService {
         let producer = self.producer.clone();
 
         Box::pin(async move {
-            let mut record = FutureRecord::to(&req.metadata.topic)
-                .payload(&req.body);
+            let mut record = FutureRecord::to(&req.metadata.topic).payload(&req.body);
             if let Some(key) = &req.metadata.key {
                 record = record.key(&key[..]);
             }
@@ -109,7 +105,7 @@ impl Service<KafkaRequest> for KafkaService {
                         event_byte_size: req.event_byte_size,
                     })
                 }
-                Err((err, _original_record)) => Err(err)
+                Err((err, _original_record)) => Err(err),
             }
         })
     }

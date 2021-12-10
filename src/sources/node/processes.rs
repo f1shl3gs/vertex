@@ -1,9 +1,8 @@
+use event::{tags, Metric};
 use std::collections::HashMap;
 use std::path::Path;
-use event::{Metric, tags};
 
-use super::{read_to_string, read_into, Error};
-
+use super::{read_into, read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let root = Path::new(proc_path);
@@ -68,17 +67,13 @@ impl Stats {
     }
 
     fn clear(&mut self) {
-        self.0
-            .iter_mut()
-            .for_each(|(_, v)| {
-                *v = 0;
-            })
+        self.0.iter_mut().for_each(|(_, v)| {
+            *v = 0;
+        })
     }
 
     fn total(&self) -> usize {
-        self.0
-            .iter()
-            .fold(0usize, |mut acc, (_, v)| acc + *v)
+        self.0.iter().fold(0usize, |mut acc, (_, v)| acc + *v)
     }
 
     fn append(&mut self, s: &str) {
@@ -99,14 +94,12 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
     while let Some(entry) = dirs.next_entry().await? {
         let path = entry.path().join("stat");
         match read_to_string(path).await {
-            Ok(content) => {
-                match parse_state(&content) {
-                    Some(state) => procs.append(state),
-                    None => continue,
-                }
-            }
+            Ok(content) => match parse_state(&content) {
+                Some(state) => procs.append(state),
+                None => continue,
+            },
 
-            Err(_) => continue
+            Err(_) => continue,
         }
 
         match tokio::fs::read_dir(entry.path().join("task")).await {
@@ -117,11 +110,11 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
                             Some(state) => threads.append(state),
                             None => continue,
                         },
-                        Err(_) => continue
+                        Err(_) => continue,
                     }
                 }
             }
-            Err(_) => continue
+            Err(_) => continue,
         }
     }
 
@@ -162,9 +155,7 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
     };
 
     let (_, s) = content.split_at(index + 1);
-    let list = s.trim()
-        .split_ascii_whitespace()
-        .collect::<Vec<_>>();
+    let list = s.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
     let state = match list.get(0) {
         Some(s) => *s,
@@ -184,8 +175,8 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
     use super::*;
+    use std::path::PathBuf;
 
     #[test]
     fn test_proc_stats() {

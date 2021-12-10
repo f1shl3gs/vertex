@@ -1,9 +1,8 @@
+use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
-use event::{Metric, tags};
 
 use super::{Error, QueryFailed};
-
 
 const INNODB_CMP_QUERY: &str = r#"SELECT page_size, compress_ops, compress_ops_ok, compress_time, uncompress_ops, uncompress_time FROM information_schema.innodb_cmp"#;
 
@@ -21,7 +20,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let records = sqlx::query_as::<_, Record>(INNODB_CMP_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed { query: INNODB_CMP_QUERY })?;
+        .context(QueryFailed {
+            query: INNODB_CMP_QUERY,
+        })?;
 
     let mut metrics = Vec::with_capacity(5 * records.len());
 
@@ -77,8 +78,8 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
+    use crate::sources::mysqld::test_utils::setup_and_run;
 
     #[tokio::test]
     async fn test_info_schema_innodb_cmp_gather() {

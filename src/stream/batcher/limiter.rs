@@ -2,7 +2,6 @@ use event::ByteSizeOf;
 
 use super::data::BatchData;
 
-
 pub trait BatchLimiter<T, B> {
     type ItemMetadata;
 
@@ -42,15 +41,14 @@ pub struct SizeLimit<I> {
 }
 
 impl<T, B, I> BatchLimiter<T, B> for SizeLimit<I>
-    where
-        B: BatchData<T>,
-        I: ItemBatchSize<T>,
+where
+    B: BatchData<T>,
+    I: ItemBatchSize<T>,
 {
     type ItemMetadata = usize;
 
     fn is_batch_full(&self, batch: &B) -> bool {
-        batch.len() >= self.batch_item_limit ||
-            self.current_size >= self.batch_size_limit
+        batch.len() >= self.batch_item_limit || self.current_size >= self.batch_size_limit
     }
 
     fn item_fits_in_batch(&self, item: &T, batch: &B) -> (bool, Self::ItemMetadata) {
@@ -87,8 +85,8 @@ impl<T: ByteSizeOf> ItemBatchSize<T> for ByteSizeOfItemSize {
 }
 
 impl<T, F> ItemBatchSize<T> for F
-    where
-        F: Fn(&T) -> usize,
+where
+    F: Fn(&T) -> usize,
 {
     fn size(&self, item: &T) -> usize {
         (self)(item)

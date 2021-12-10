@@ -1,13 +1,12 @@
-use crc::Crc;
-use std::io::{Write, SeekFrom, Seek, Read};
-use std::path::{Path, PathBuf};
-use std::{io, fs};
-use std::fs::{File, metadata};
-use std::collections::HashSet;
 use crate::events::InternalEvents;
-use serde::{Deserialize, Serialize};
 use crate::metadata_ext::PortableFileExt;
-
+use crc::Crc;
+use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
+use std::fs::{metadata, File};
+use std::io::{Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
+use std::{fs, io};
 
 const FINGERPRINT_CRC: Crc<u64> = Crc::<u64>::new(&crc::CRC_64_ECMA_182);
 const LEGACY_FINGERPRINT_CRC: Crc<u64> = Crc::<u64>::new(&crc::CRC_64_XZ);
@@ -56,7 +55,7 @@ impl Fingerprint {
                 buf.write_all(&ino.to_be_bytes()).expect("writing to array");
                 FINGERPRINT_CRC.checksum(&buf[..])
             }
-            Fingerprint::Unknown(c) => *c
+            Fingerprint::Unknown(c) => *c,
         }
     }
 }
@@ -88,7 +87,8 @@ impl Fingerprinter {
                 ignored_header_bytes,
                 bytes: _,
                 lines,
-            } | FingerprintStrategy::FirstLinesChecksum {
+            }
+            | FingerprintStrategy::FirstLinesChecksum {
                 ignored_header_bytes,
                 lines,
             } => {
@@ -129,9 +129,7 @@ impl Fingerprinter {
                         emitter.emit_file_fingerprint_read_failed(path, err)
                     }
                 }
-                _ => {
-                    emitter.emit_file_fingerprint_read_failed(path, err)
-                }
+                _ => emitter.emit_file_fingerprint_read_failed(path, err),
             })
             .ok()
             .flatten()
@@ -156,10 +154,9 @@ impl Fingerprinter {
                 Ok(Some(Fingerprint::BytesChecksum(fp)))
             }
 
-            _ => Ok(None)
+            _ => Ok(None),
         }
     }
-
 
     /// Remove this when i figure out how this works
     pub fn get_legacy_checksum(
@@ -172,7 +169,8 @@ impl Fingerprinter {
                 ignored_header_bytes,
                 bytes: _,
                 lines,
-            } | FingerprintStrategy::FirstLinesChecksum {
+            }
+            | FingerprintStrategy::FirstLinesChecksum {
                 ignored_header_bytes,
                 lines,
             } => {
@@ -184,7 +182,7 @@ impl Fingerprinter {
                 Ok(Some(Fingerprint::FirstLinesChecksum(fp)))
             }
 
-            _ => Ok(None)
+            _ => Ok(None),
         }
     }
 }
@@ -225,10 +223,9 @@ fn fingerprinter_read_until(
     Ok(())
 }
 
-
 #[cfg(test)]
 mod test {
-    use super::{InternalEvents, FingerprintStrategy, Fingerprinter};
+    use super::{FingerprintStrategy, Fingerprinter, InternalEvents};
     use std::{collections::HashSet, fs, io::Error, path::Path, time::Duration};
     use tempfile::tempdir;
 

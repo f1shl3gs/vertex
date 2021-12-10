@@ -14,8 +14,8 @@ impl<R1, R2> MapLayer<R1, R2> {
 }
 
 impl<S, R1, R2> Layer<S> for MapLayer<R1, R2>
-    where
-        S: Service<R2>
+where
+    S: Service<R2>,
 {
     type Service = Map<S, R1, R2>;
 
@@ -33,8 +33,8 @@ pub struct Map<S, R1, R2> {
 }
 
 impl<S, R1, R2> Service<R1> for Map<S, R1, R2>
-    where
-        S: Service<R2>
+where
+    S: Service<R2>,
 {
     type Response = S::Response;
     type Error = S::Error;
@@ -51,8 +51,8 @@ impl<S, R1, R2> Service<R1> for Map<S, R1, R2>
 }
 
 impl<S, R1, R2> Clone for Map<S, R1, R2>
-    where
-        S: Clone
+where
+    S: Clone,
 {
     fn clone(&self) -> Self {
         Self {
@@ -63,12 +63,10 @@ impl<S, R1, R2> Clone for Map<S, R1, R2>
 }
 
 impl<S, R1, R2> Debug for Map<S, R1, R2>
-    where
-        S: Debug
+where
+    S: Debug,
 {
     fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
-        fmt.debug_struct("Map")
-            .field("inner", &self.inner)
-            .finish()
+        fmt.debug_struct("Map").field("inner", &self.inner).finish()
     }
 }

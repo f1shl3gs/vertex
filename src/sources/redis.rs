@@ -1,27 +1,26 @@
 use std::collections::{BTreeMap, BTreeSet};
 
+use event::{tags, Metric};
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
-use tokio_stream::wrappers::IntervalStream;
-use event::{tags, Metric};
 use snafu::Snafu;
+use tokio_stream::wrappers::IntervalStream;
 
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    SourceConfig, SourceContext, SourceDescription,
+};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use crate::config::{
-    DataType, SourceConfig, SourceContext, deserialize_duration,
-    serialize_duration, default_interval, GenerateConfig, SourceDescription,
-};
-
 
 lazy_static!(
     static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {
         let mut m = BTreeMap::new();
         // # Server
-		m.insert("uptime_in_seconds".to_string(), "uptime_in_seconds");
-		m.insert("process_id".to_string(),        "process_id");
+        m.insert("uptime_in_seconds".to_string(), "uptime_in_seconds");
+        m.insert("process_id".to_string(),        "process_id");
 
         // # Clients
         m.insert("connected_clients".to_string(), "connected_clients");
@@ -182,9 +181,7 @@ lazy_static!(
 #[derive(Debug, Snafu)]
 enum Error {
     #[snafu(display("Invalid data: {}", desc))]
-    InvalidData {
-        desc: String
-    },
+    InvalidData { desc: String },
 
     #[snafu(display("Invalid slave line"))]
     InvalidSlaveLine,
@@ -196,42 +193,30 @@ enum Error {
     InvalidKeyspaceLine,
 
     #[snafu(display("Redis error: {}", source))]
-    RedisError {
-        source: redis::RedisError
-    },
+    RedisError { source: redis::RedisError },
 
     #[snafu(display("Parse integer error: {}", source))]
-    ParseIntError {
-        source: std::num::ParseIntError,
-    },
+    ParseIntError { source: std::num::ParseIntError },
 
     #[snafu(display("Parse float error: {}", source))]
-    ParseFloatError {
-        source: std::num::ParseFloatError,
-    },
+    ParseFloatError { source: std::num::ParseFloatError },
 }
 
 impl From<redis::RedisError> for Error {
     fn from(source: redis::RedisError) -> Self {
-        Self::RedisError {
-            source,
-        }
+        Self::RedisError { source }
     }
 }
 
 impl From<std::num::ParseIntError> for Error {
     fn from(source: std::num::ParseIntError) -> Self {
-        Self::ParseIntError {
-            source,
-        }
+        Self::ParseIntError { source }
     }
 }
 
 impl From<std::num::ParseFloatError> for Error {
     fn from(source: std::num::ParseFloatError) -> Self {
-        Self::ParseFloatError {
-            source
-        }
+        Self::ParseFloatError { source }
     }
 }
 
@@ -242,7 +227,10 @@ pub struct RedisSourceConfig {
     url: String,
 
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 
     #[serde(default = "default_namespace")]
@@ -263,7 +251,8 @@ impl GenerateConfig for RedisSourceConfig {
             namespace: None,
             user: None,
             password: Some("some_password".to_string()),
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -316,13 +305,9 @@ impl RedisSource {
         }
     }
 
-    async fn run(
-        self,
-        mut output: Pipeline,
-        shutdown: ShutdownSignal,
-    ) -> Result<(), ()> {
-        let mut ticker = IntervalStream::new(tokio::time::interval(self.interval))
-            .take_until(shutdown);
+    async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> Result<(), ()> {
+        let mut ticker =
+            IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);
 
         while let Some(_) = ticker.next().await {
             let metrics = match self.gather().await {
@@ -350,16 +335,15 @@ impl RedisSource {
             };
 
             let timestamp = chrono::Utc::now();
-            let mut stream = futures::stream::iter(metrics)
-                .map(|mut m| {
-                    m.timestamp = Some(timestamp);
-                    m.tags.insert("instance".to_string(), self.url.to_owned());
-                    if let Some(ref namespace) = self.namespace {
-                        m.name = format!("{}_{}", namespace, m.name)
-                    }
+            let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                m.timestamp = Some(timestamp);
+                m.tags.insert("instance".to_string(), self.url.to_owned());
+                if let Some(ref namespace) = self.namespace {
+                    m.name = format!("{}_{}", namespace, m.name)
+                }
 
-                    Ok(m.into())
-                });
+                Ok(m.into())
+            });
             output.send_all(&mut stream).await;
         }
 
@@ -384,10 +368,7 @@ impl RedisSource {
         let mut db_count = match query_databases(&mut conn).await {
             Ok(n) => n,
             Err(err) => {
-                debug!(
-                    message = "redis config get failed",
-                    ?err
-                );
+                debug!(message = "redis config get failed", ?err);
                 0
             }
         };
@@ -417,15 +398,14 @@ impl RedisSource {
             metrics.extend(ms);
         }
 
-
-//      Redis exporter provide this feature, but
-//      do we need it too? Under the hood, SELECT is used, which might
-//      hurt the performance of redis
-//
-//      if let Ok(ms) = extract_count_keys_metrics(&mut conn).await {
-//          metrics.extend(ms);
-//      }
-//
+        //      Redis exporter provide this feature, but
+        //      do we need it too? Under the hood, SELECT is used, which might
+        //      hurt the performance of redis
+        //
+        //      if let Ok(ms) = extract_count_keys_metrics(&mut conn).await {
+        //          metrics.extend(ms);
+        //      }
+        //
 
         // TODO： implement this
         // if infos.contains("# Sentinel") {
@@ -481,17 +461,10 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
         .await
     {
         Ok(length) => {
-            metrics.push(Metric::gauge(
-                "slowlog_length",
-                "Total slowlog",
-                length,
-            ));
+            metrics.push(Metric::gauge("slowlog_length", "Total slowlog", length));
         }
         Err(err) => {
-            warn!(
-                message = "slowlog length query failed",
-                ?err
-            );
+            warn!(message = "slowlog length query failed", ?err);
         }
     }
 
@@ -511,16 +484,12 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
     }
 
     metrics.extend_from_slice(&[
-        Metric::gauge(
-            "slowlog_last_id",
-            "Last id of slowlog",
-            last_id as f64,
-        ),
+        Metric::gauge("slowlog_last_id", "Last id of slowlog", last_id as f64),
         Metric::gauge(
             "last_slow_execution_duration_seconds",
             "The amount of time needed for last slow execution, in seconds",
             last_slow_execution_second as f64,
-        )
+        ),
     ]);
 
     Ok(metrics)
@@ -529,8 +498,7 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
 // https://redis.io/commands/latency-latest
 async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
     conn: &mut C,
-) -> Result<Vec<Metric>, Error>
-{
+) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
     let values: Vec<Vec<String>> = redis::cmd("LATENCY")
         .arg("LATEST")
@@ -559,7 +527,7 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
                 tags!(
                     "event_name" => event
                 ),
-            )
+            ),
         ]);
     }
 
@@ -570,10 +538,7 @@ async fn scrap(url: &str) -> Result<String, Error> {
     let cli = redis::Client::open(url)?;
     let mut conn = cli.get_async_connection().await?;
 
-    let resp = redis::cmd("INFO")
-        .arg("ALL")
-        .query_async(&mut conn)
-        .await?;
+    let resp = redis::cmd("INFO").arg("ALL").query_async(&mut conn).await?;
 
     Ok(resp)
 }
@@ -587,7 +552,13 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
     let mut master_host = String::new();
     let mut master_port = String::new();
     let mut field_class = String::new();
-    let instance_info_fields = ["role", "redis_version", "redis_build_id", "redis_mode", "os"];
+    let instance_info_fields = [
+        "role",
+        "redis_version",
+        "redis_build_id",
+        "redis_mode",
+        "os",
+    ];
     let slave_info_fields = ["master_host", "master_port", "slave_read_only"];
 
     for line in infos.lines() {
@@ -662,7 +633,8 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                             tags!(
                                 "db" => key
                             ),
-                        ).into(),
+                        )
+                        .into(),
                         Metric::gauge_with_tags(
                             "db_keys_expiring",
                             "Total number of expiring keys by DB",
@@ -670,18 +642,22 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                             tags!(
                                 "db" => key
                             ),
-                        ).into(),
+                        )
+                        .into(),
                     ]);
 
                     if avg_ttl > -1.0 {
-                        metrics.push(Metric::gauge_with_tags(
-                            "db_avg_ttl_seconds",
-                            "Avg TTL in seconds",
-                            avg_ttl,
-                            tags!(
-                                "db" => key
-                            ),
-                        ).into());
+                        metrics.push(
+                            Metric::gauge_with_tags(
+                                "db_avg_ttl_seconds",
+                                "Avg TTL in seconds",
+                                avg_ttl,
+                                tags!(
+                                    "db" => key
+                                ),
+                            )
+                            .into(),
+                        );
                     }
 
                     handled_dbs.insert(dbname.clone());
@@ -712,7 +688,8 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                     tags!(
                         "db" => name.as_str()
                     ),
-                ).into(),
+                )
+                .into(),
                 Metric::gauge_with_tags(
                     "db_keys_expiring",
                     "Total number of expiring keys by DB",
@@ -720,33 +697,39 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                     tags!(
                         "db" => name.as_str()
                     ),
-                ).into()
+                )
+                .into(),
             ])
         }
     }
 
-    let role = instance_infos.get("slave_info")
-        .map_or("", |v| *v);
+    let role = instance_infos.get("slave_info").map_or("", |v| *v);
 
-    metrics.push(Metric::gauge_with_tags(
-        "instance_info",
-        "Information about the Redis instance",
-        1,
-        tags!(
-            "role" => instance_infos.get("role").map_or("", |v| v),
-            "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
-            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
-            "os" => instance_infos.get("os").map_or("", |v| *v)
-        ),
-    ).into());
+    metrics.push(
+        Metric::gauge_with_tags(
+            "instance_info",
+            "Information about the Redis instance",
+            1,
+            tags!(
+                "role" => instance_infos.get("role").map_or("", |v| v),
+                "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
+                "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
+                "os" => instance_infos.get("os").map_or("", |v| *v)
+            ),
+        )
+        .into(),
+    );
 
     if role == "slave" {
-        metrics.push(Metric::gauge_with_tags(
-            "slave_info",
-            "Information about the Redis slave",
-            1,
-            slave_infos,
-        ).into())
+        metrics.push(
+            Metric::gauge_with_tags(
+                "slave_info",
+                "Information about the Redis slave",
+                1,
+                slave_infos,
+            )
+            .into(),
+        )
     }
 
     Ok(metrics)
@@ -766,7 +749,7 @@ fn parse_and_generate(key: &str, value: &str) -> Result<Metric, Error> {
     let mut val = match value {
         "ok" | "true" => 1.0,
         "err" | "fail" | "false" => 0.0,
-        _ => value.parse().unwrap_or(0.0)
+        _ => value.parse().unwrap_or(0.0),
     };
 
     if name == "latest_fork_usec" {
@@ -801,12 +784,17 @@ fn sanitize_metric_name(name: &str) -> String {
     String::from_utf8(bytes).unwrap_or_default()
 }
 
-fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) -> Result<Vec<Metric>, Error> {
+fn handle_replication_metrics(
+    host: &str,
+    port: &str,
+    key: &str,
+    value: &str,
+) -> Result<Vec<Metric>, Error> {
     // only slaves have this field
     if key == "master_link_status" {
         let v = match value {
             "up" => 1,
-            _ => 0
+            _ => 0,
         };
 
         return Ok(vec![Metric::gauge_with_tags(
@@ -814,26 +802,24 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
             "",
             v,
             tags!(
-                    "master_host" => host,
-                    "master_port" => port
-                ),
+                "master_host" => host,
+                "master_port" => port
+            ),
         )]);
     }
 
     match key {
         "master_last_io_seconds_ago" | "slave_repl_offset" | "master_sync_in_progress" => {
             let v = value.parse::<i32>()?;
-            return Ok(vec![
-                Metric::gauge_with_tags(
-                    key,
-                    "",
-                    v,
-                    tags!(
-                        "master_host" => host,
-                        "master_port" => port
-                    ),
-                )
-            ]);
+            return Ok(vec![Metric::gauge_with_tags(
+                key,
+                "",
+                v,
+                tags!(
+                    "master_host" => host,
+                    "master_port" => port
+                ),
+            )]);
         }
 
         _ => {}
@@ -878,7 +864,10 @@ fn handle_replication_metrics(host: &str, port: &str, key: &str, value: &str) ->
 /// slave0:ip=10.254.11.1,port=6379,state=online,offset=1751844676,lag=0
 /// slave1:ip=10.254.11.2,port=6379,state=online,offset=1751844222,lag=0
 /// ```
-fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64, &'a str, &'a str, &'a str, f64), Error> {
+fn parse_connected_slave_string<'a>(
+    slave: &'a str,
+    kvs: &'a str,
+) -> Result<(f64, &'a str, &'a str, &'a str, f64), Error> {
     let mut connected_kvs = BTreeMap::new();
 
     if !validate_slave_line(slave) {
@@ -886,8 +875,7 @@ fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64
     }
 
     for part in kvs.split(',') {
-        let kv = part.split('=')
-            .collect::<Vec<_>>();
+        let kv = part.split('=').collect::<Vec<_>>();
         if kv.len() != 2 {
             return Err(Error::InvalidSlaveLine);
         }
@@ -895,21 +883,19 @@ fn parse_connected_slave_string<'a>(slave: &'a str, kvs: &'a str) -> Result<(f64
         connected_kvs.insert(kv[0].to_string(), kv[1]);
     }
 
-    let offset = connected_kvs.get("offset")
+    let offset = connected_kvs
+        .get("offset")
         .map(|v| v.parse::<f64>().unwrap_or(0.0))
         .unwrap();
 
     let lag = match connected_kvs.get("lag") {
         Some(text) => text.parse()?,
-        _ => -1.0
+        _ => -1.0,
     };
 
-    let ip = connected_kvs.get("ip")
-        .unwrap_or(&"");
-    let port = connected_kvs.get("port")
-        .unwrap_or(&"");
-    let state = connected_kvs.get("state")
-        .unwrap_or(&"");
+    let ip = connected_kvs.get("ip").unwrap_or(&"");
+    let port = connected_kvs.get("port").unwrap_or(&"");
+    let state = connected_kvs.get("state").unwrap_or(&"");
 
     Ok((offset, ip, port, state, lag))
 }
@@ -934,15 +920,16 @@ fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
 
     let uptime = value.parse::<f64>()?;
     let now = std::time::SystemTime::now();
-    let elapsed = now.duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64();
+    let elapsed = now
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs_f64();
 
-    Ok(vec![
-        Metric::gauge(
-            "start_time_seconds",
-            "Start time of the Redis instance since unix epoch in seconds.",
-            elapsed - uptime,
-        )
-    ])
+    Ok(vec![Metric::gauge(
+        "start_time_seconds",
+        "Start time of the Redis instance since unix epoch in seconds.",
+        elapsed - uptime,
+    )])
 }
 
 /*
@@ -956,16 +943,17 @@ fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
         return Err(Error::InvalidCommandStats);
     }
 
-    let values = value.split(',')
-        .collect::<Vec<_>>();
+    let values = value.split(',').collect::<Vec<_>>();
     if values.len() < 3 {
         return Err(Error::InvalidCommandStats);
     }
 
-    let calls = values[0].strip_prefix("calls=")
+    let calls = values[0]
+        .strip_prefix("calls=")
         .ok_or(Error::InvalidCommandStats)?
         .parse::<f64>()?;
-    let usec = values[1].strip_prefix("usec=")
+    let usec = values[1]
+        .strip_prefix("usec=")
         .ok_or(Error::InvalidCommandStats)?
         .parse::<f64>()?;
 
@@ -999,21 +987,23 @@ fn parse_db_keyspace(key: &str, value: &str) -> Result<(f64, f64, f64), Error> {
         return Err(Error::InvalidKeyspaceLine);
     }
 
-    let kvs = value.split(',')
-        .collect::<Vec<_>>();
+    let kvs = value.split(',').collect::<Vec<_>>();
     if kvs.len() != 3 && kvs.len() != 2 {
         return Err(Error::InvalidKeyspaceLine);
     }
 
-    let keys = kvs[0].strip_prefix("keys=")
+    let keys = kvs[0]
+        .strip_prefix("keys=")
         .ok_or(Error::InvalidKeyspaceLine)?
         .parse::<f64>()?;
-    let expires = kvs[1].strip_prefix("expires=")
+    let expires = kvs[1]
+        .strip_prefix("expires=")
         .ok_or(Error::InvalidKeyspaceLine)?
         .parse::<f64>()?;
     let mut avg_ttl = -1.0;
     if kvs.len() > 2 {
-        avg_ttl = kvs[2].strip_prefix("avg_ttl=")
+        avg_ttl = kvs[2]
+            .strip_prefix("avg_ttl=")
             .ok_or(Error::InvalidKeyspaceLine)?
             .parse::<f64>()?;
 
@@ -1054,7 +1044,9 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         .await?;
 
     if resp.len() % 2 != 0 {
-        return Err(Error::InvalidData { desc: "config response".to_string() });
+        return Err(Error::InvalidData {
+            desc: "config response".to_string(),
+        });
     }
 
     for pos in 0..resp.len() / 2 {
@@ -1062,10 +1054,9 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         let value = resp[2 * pos + 1].as_str();
 
         if key == "databases" {
-            return value.parse()
-                .map_err(|err| Error::InvalidData {
-                    desc: value.to_string(),
-                });
+            return value.parse().map_err(|err| Error::InvalidData {
+                desc: value.to_string(),
+            });
         }
     }
 
@@ -1073,19 +1064,13 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
 }
 
 async fn cluster_info<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
-    let resp = redis::cmd("CLUSTER")
-        .arg("INFO")
-        .query_async(conn)
-        .await?;
+    let resp = redis::cmd("CLUSTER").arg("INFO").query_async(conn).await?;
 
     Ok(resp)
 }
 
 async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
-    let resp = redis::cmd("INFO")
-        .arg("ALL")
-        .query_async(conn)
-        .await?;
+    let resp = redis::cmd("INFO").arg("ALL").query_async(conn).await?;
 
     Ok(resp)
 }
@@ -1093,9 +1078,7 @@ async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<Stri
 // https://redis.io/commands/ping
 async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64, Error> {
     let start = std::time::Instant::now();
-    let _s: String = redis::cmd("PING")
-        .query_async(conn)
-        .await?;
+    let _s: String = redis::cmd("PING").query_async(conn).await?;
 
     let elapsed = start.elapsed().as_secs_f64();
 
@@ -1131,7 +1114,7 @@ mod tests {
 mod integration_tests {
     use super::*;
     use redis::ToRedisArgs;
-    use testcontainers::{Docker, images::redis::Redis};
+    use testcontainers::{images::redis::Redis, Docker};
 
     const REDIS_PORT: u16 = 6379;
 
@@ -1168,7 +1151,6 @@ mod integration_tests {
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-
 
         let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_async_connection().await.unwrap();

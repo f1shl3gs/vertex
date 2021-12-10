@@ -1,21 +1,16 @@
+use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::iter::Peekable;
-use std::cmp::Ordering;
 
-use crate::log::path_iter::{PathIter, PathComponent};
+use crate::log::path_iter::{PathComponent, PathIter};
 use crate::Value;
 
 /// Removes field value specified by the given path and return its value.
 ///
 /// A special case worth mentioning: if there is a nested array and an item is
 /// removed from the middle of this array, then it is just replaced by `Value::Null`
-pub fn remove(
-    fields: &mut BTreeMap<String, Value>,
-    path: &str,
-    prune: bool,
-) -> Option<Value> {
-    remove_map(fields, PathIter::new(path).peekable(), prune)
-        .map(|(value, _)| value)
+pub fn remove(fields: &mut BTreeMap<String, Value>, path: &str, prune: bool) -> Option<Value> {
+    remove_map(fields, PathIter::new(path).peekable(), prune).map(|(value, _)| value)
 }
 
 fn remove_map(
@@ -27,7 +22,8 @@ fn remove_map(
         PathComponent::Key(key) => match path.peek() {
             None => fields.remove(key.as_ref()).map(|v| (v, fields.is_empty())),
             Some(_) => {
-                let (result, empty) = fields.get_mut(key.as_ref())
+                let (result, empty) = fields
+                    .get_mut(key.as_ref())
                     .and_then(|value| remove_recursively(value, path, prune))?;
                 if prune && empty {
                     fields.remove(key.as_ref());
@@ -36,7 +32,7 @@ fn remove_map(
                 Some((result, fields.is_empty()))
             }
         },
-        _ => None
+        _ => None,
     }
 }
 
@@ -50,9 +46,9 @@ fn remove_array(
             None => array_remove(array, index).map(|v| (v, array.is_empty())),
             Some(_) => array
                 .get_mut(index)
-                .and_then(|value| remove_recursively(value, path, prune))
+                .and_then(|value| remove_recursively(value, path, prune)),
         },
-        _ => None
+        _ => None,
     }
 }
 
@@ -60,17 +56,21 @@ fn array_remove(values: &mut Vec<Value>, index: usize) -> Option<Value> {
     match (index + 1).cmp(&values.len()) {
         Ordering::Less => Some(std::mem::replace(&mut values[index], Value::Null)),
         Ordering::Equal => values.pop(),
-        Ordering::Greater => None
+        Ordering::Greater => None,
     }
 }
 
 /// Recursively iterate throught the path, and remove the last path element.
 /// This is the top-level function which can remove from any type of `Value`
-fn remove_recursively(value: &mut Value, path: Peekable<PathIter>, prune: bool) -> Option<(Value, bool)> {
+fn remove_recursively(
+    value: &mut Value,
+    path: Peekable<PathIter>,
+    prune: bool,
+) -> Option<(Value, bool)> {
     match value {
         Value::Map(map) => remove_map(map, path, prune),
         Value::Array(array) => remove_array(array, path, prune),
-        _ => None
+        _ => None,
     }
 }
 
@@ -98,14 +98,8 @@ mod tests {
         let mut fields = fields_from_json(json!({
             "field": 123
         }));
-        assert_eq!(
-            remove(&mut fields, "field", false),
-            Some(Value::Int64(123))
-        );
-        assert_eq!(
-            remove(&mut fields, "field", false),
-            None
-        )
+        assert_eq!(remove(&mut fields, "field", false), Some(Value::Int64(123)));
+        assert_eq!(remove(&mut fields, "field", false), None)
     }
 
     #[test]
@@ -137,22 +131,12 @@ mod tests {
             ("a.x", None, None),
             ("z", None, None),
             (".123", None, None),
-            ("", None, None)
+            ("", None, None),
         ];
 
         for (path, first, second) in tests {
-            assert_eq!(
-                remove(&mut fields, path, false),
-                first,
-                "{}",
-                path
-            );
-            assert_eq!(
-                remove(&mut fields, path, false),
-                second,
-                "{}",
-                path
-            )
+            assert_eq!(remove(&mut fields, path, false), first, "{}", path);
+            assert_eq!(remove(&mut fields, path, false), second, "{}", path)
         }
 
         assert_eq!(
@@ -195,9 +179,6 @@ mod tests {
         );
 
         assert_eq!(remove(&mut fields, "a.b.c[0]", true), Some(Value::Int64(5)));
-        assert_eq!(
-            fields,
-            fields_from_json(json!({}))
-        )
+        assert_eq!(fields, fields_from_json(json!({})))
     }
 }

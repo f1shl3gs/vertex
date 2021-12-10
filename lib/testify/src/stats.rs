@@ -2,7 +2,6 @@ use std::fmt::{Display, Formatter};
 use std::ops::Deref;
 use std::time::Instant;
 
-
 /// A WeightedSum contains an averaging mechanism that accepts a varying weight at each
 /// point to be averaged, and biases the mean based on those weights
 #[derive(Clone, Copy, Debug, Default)]
@@ -37,12 +36,11 @@ impl WeightedSum {
     }
 
     pub fn stats(&self) -> Option<WeightedSumStats> {
-        self.mean()
-            .map(|mean| WeightedSumStats {
-                mean,
-                min: self.min.unwrap(),
-                max: self.max.unwrap(),
-            })
+        self.mean().map(|mean| WeightedSumStats {
+            mean,
+            min: self.min.unwrap(),
+            max: self.max.unwrap(),
+        })
     }
 }
 
@@ -63,7 +61,7 @@ fn opt_max(opt: Option<f64>, value: f64) -> f64 {
     match opt {
         None => value,
         Some(v) if v > value => v,
-        _ => value
+        _ => value,
     }
 }
 
@@ -71,7 +69,7 @@ fn opt_min(opt: Option<f64>, value: f64) -> f64 {
     match opt {
         None => value,
         Some(v) if v < value => v,
-        _ => value
+        _ => value,
     }
 }
 
@@ -105,31 +103,28 @@ impl Histogram {
     }
 
     pub fn stats(&self) -> Option<HistogramStats> {
-        let (min, max, mode, sum) = self.totals
-            .iter()
-            .enumerate()
-            .fold(
-                (None, None, None, WeightedSum::default()),
-                |(mut min, mut max, mut mode, mut sum), (i, &total)| {
-                    if total > 0.0 {
-                        min = min.or(Some(i));
-                        max = Some(i);
-                        mode = Some(match mode {
-                            None => (i, total),
-                            Some((index, value)) => {
-                                if value > total {
-                                    (index, value)
-                                } else {
-                                    (i, total)
-                                }
+        let (min, max, mode, sum) = self.totals.iter().enumerate().fold(
+            (None, None, None, WeightedSum::default()),
+            |(mut min, mut max, mut mode, mut sum), (i, &total)| {
+                if total > 0.0 {
+                    min = min.or(Some(i));
+                    max = Some(i);
+                    mode = Some(match mode {
+                        None => (i, total),
+                        Some((index, value)) => {
+                            if value > total {
+                                (index, value)
+                            } else {
+                                (i, total)
                             }
-                        });
-                    }
+                        }
+                    });
+                }
 
-                    sum.add(i as f64, total);
-                    (min, max, mode, sum)
-                },
-            );
+                sum.add(i as f64, total);
+                (min, max, mode, sum)
+            },
+        );
 
         min.map(|_| HistogramStats {
             min: min.unwrap(),
@@ -149,7 +144,7 @@ impl Display for Histogram {
                 fmt,
                 "[min={}, max={}, mode={}, mean={}, total={}]",
                 stats.min, stats.max, stats.mode, stats.mean, stats.total
-            )
+            ),
         }
     }
 }

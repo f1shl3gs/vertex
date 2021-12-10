@@ -1,19 +1,15 @@
-use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
 use event::Event;
+use futures::{stream::BoxStream, FutureExt};
+use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
-use futures::{
-    FutureExt,
-    stream::{ BoxStream }
-};
 
 use crate::{
     buffers::Acker,
+    config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
     impl_generate_config_from_default,
-    config::{SinkConfig, SinkContext, DataType, HealthCheck, SinkDescription},
-    sinks::{Sink, StreamSink}
+    sinks::{Sink, StreamSink},
 };
-
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -34,7 +30,6 @@ impl SinkConfig for StdoutConfig {
             futures::future::ok(()).boxed(),
         ))
     }
-
 
     fn input_type(&self) -> DataType {
         DataType::Any
@@ -58,7 +53,7 @@ impl StreamSink for StdoutSink {
             match event {
                 Event::Metric(m) => {
                     println!("{:?}", m)
-                },
+                }
 
                 Event::Log(l) => {
                     println!("{:?}", l)

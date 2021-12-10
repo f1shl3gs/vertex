@@ -1056,10 +1056,7 @@ mod integration_tests {
         let stats = stats_settings(&addr).await.unwrap();
         assert_eq!(stats.get("temporary_ttl").unwrap(), "61");
         assert_eq!(stats.get("warm_max_factor").unwrap(), "2.00");
-        assert_eq!(
-            stats.get("binding_protocol").unwrap(),
-            "auto-negotiate"
-        );
+        assert_eq!(stats.get("binding_protocol").unwrap(), "auto-negotiate");
         assert_eq!(stats.get("ext_wbuf_size").unwrap(), "4194304");
     }
 }

@@ -20,12 +20,10 @@ pub fn kernel_version() -> Option<String> {
 pub fn os_version() -> Option<String> {
     let content = match std::fs::read_to_string("/etc/os-release") {
         Ok(content) => content,
-        Err(_) => {
-            match std::fs::read_to_string("/etc/lsb-release") {
-                Ok(content) => content,
-                Err(_) => return None
-            }
-        }
+        Err(_) => match std::fs::read_to_string("/etc/lsb-release") {
+            Ok(content) => content,
+            Err(_) => return None,
+        },
     };
 
     let mut name = String::new();

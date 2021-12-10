@@ -516,7 +516,8 @@ mod test {
     #[test]
     fn from_options_inline_ca() {
         let ca =
-            String::from_utf8(include_bytes!("../../tests/fixtures/tls/Vertex_CA.crt").to_vec()).unwrap();
+            String::from_utf8(include_bytes!("../../tests/fixtures/tls/Vertex_CA.crt").to_vec())
+                .unwrap();
         let options = TlsOptions {
             ca_file: Some(ca.into()),
             ..Default::default()

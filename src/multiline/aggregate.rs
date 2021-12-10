@@ -1,17 +1,17 @@
-use std::collections::{HashMap, hash_map::Entry};
+use std::collections::{hash_map::Entry, HashMap};
 use std::hash::Hash;
 use std::pin::Pin;
-use std::time::Duration;
 use std::task::{Context, Poll};
+use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
 use futures::Stream;
+use futures::StreamExt;
+use pin_project::pin_project;
 use regex::bytes::Regex;
 use serde::{Deserialize, Serialize};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
-use futures::StreamExt;
-use pin_project::pin_project;
 
 /// The mode of operation of the line aggregator
 #[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
@@ -106,9 +106,9 @@ impl<K, C> Logic<K, C> {
 }
 
 impl<T, K, C> LineAgg<T, K, C>
-    where
-        T: Stream<Item=(K, Bytes, C)> + Unpin,
-        K: Hash + Eq + Clone
+where
+    T: Stream<Item = (K, Bytes, C)> + Unpin,
+    K: Hash + Eq + Clone,
 {
     /// Create a new `LineAgg` using the specified `inner` stream and preconfigured `logic`
     pub fn new(inner: T, logic: Logic<K, C>) -> Self {
@@ -122,9 +122,9 @@ impl<T, K, C> LineAgg<T, K, C>
 }
 
 impl<T, K, C> Stream for LineAgg<T, K, C>
-    where
-        T: Stream<Item=(K, Bytes, C)> + Unpin,
-        K: Hash + Eq + Clone,
+where
+    T: Stream<Item = (K, Bytes, C)> + Unpin,
+    K: Hash + Eq + Clone,
 {
     /// `K` - file name, or other line source,
     /// `Bytes` - the line data,
@@ -152,14 +152,15 @@ impl<T, K, C> Stream for LineAgg<T, K, C>
                 return match to_drain.pop() {
                     Some(val) => Poll::Ready(Some(val)),
                     _ => Poll::Ready(None),
-                }
+                };
             }
 
             match this.inner.poll_next_unpin(cx) {
                 Poll::Ready(Some((src, line, context))) => {
                     // Handle the incoming line we got from `inner`. If the handler gave us
                     // something - return it, otherwise continue with the flow.
-                    if let Some(val) = Self::handle_line_and_stashing(&mut this, src, line, context) {
+                    if let Some(val) = Self::handle_line_and_stashing(&mut this, src, line, context)
+                    {
                         return Poll::Ready(Some(val));
                     }
                 }
@@ -182,7 +183,9 @@ impl<T, K, C> Stream for LineAgg<T, K, C>
                 Poll::Pending => {
                     // We didn't get any lines from `inner`, so we just give a line from keys
                     // that have hit their timeout.
-                    while let Poll::Ready(Some(Ok(expired_key))) = this.logic.timeouts.poll_expired(cx) {
+                    while let Poll::Ready(Some(Ok(expired_key))) =
+                        this.logic.timeouts.poll_expired(cx)
+                    {
                         let key = expired_key.into_inner();
                         if let Some((_, aggregate)) = this.logic.buffers.remove(&key) {
                             let (line, context) = aggregate.merge();
@@ -198,9 +201,9 @@ impl<T, K, C> Stream for LineAgg<T, K, C>
 }
 
 impl<T, K, C> LineAgg<T, K, C>
-    where
-        T: Stream<Item=(K, Bytes, C)> + Unpin,
-        K: Hash + Eq + Clone,
+where
+    T: Stream<Item = (K, Bytes, C)> + Unpin,
+    K: Hash + Eq + Clone,
 {
     /// Handle line and do stashing of extra emitted lines.
     /// Requires that the `stashed` item is empty(i.e. entry is vacant). This invariant has
@@ -248,8 +251,8 @@ enum Decision {
 }
 
 impl<K, C> Logic<K, C>
-    where
-        K: Hash + Eq + Clone,
+where
+    K: Hash + Eq + Clone,
 {
     /// Handle line, if we have something to output - return it.
     pub fn handle_line(
@@ -276,7 +279,7 @@ impl<K, C> Logic<K, C>
                     // All consecutive lines, up to and including the first line matching this
                     // pattern, are included in the group
                     (Mode::HaltWith, true) => Decision::EndInclude,
-                    (Mode::HaltWith, false) => Decision::Continue
+                    (Mode::HaltWith, false) => Decision::Continue,
                 };
 
                 match decision {
@@ -304,7 +307,8 @@ impl<K, C> Logic<K, C>
                 if self.config.start_pattern.is_match(line.as_ref()) {
                     // It was indeed a new line we need to filter. Set the timeout
                     // buffer this line.
-                    let key = self.timeouts
+                    let key = self
+                        .timeouts
                         .insert(entry.key().clone(), self.config.timeout);
                     entry.insert((key, Aggregate::new(line, context)));
                     None
@@ -335,9 +339,7 @@ impl<C> Aggregate<C> {
     }
 
     fn merge(self) -> (Bytes, C) {
-        let capacity = self.lines.iter()
-            .map(|line| line.len() + 1)
-            .sum::<usize>() - 1;
+        let capacity = self.lines.iter().map(|line| line.len() + 1).sum::<usize>() - 1;
         let mut bytes_mut = BytesMut::with_capacity(capacity);
         let mut first = true;
         for line in self.lines {
@@ -356,27 +358,33 @@ impl<C> Aggregate<C> {
 
 #[cfg(test)]
 mod tests {
-    use tokio_stream::StreamExt;
     use super::*;
+    use tokio_stream::StreamExt;
 
     type Filename = String;
 
-    fn stream_from_lines<'a>(lines: &'a [&'static str]) -> impl Stream<Item=(Filename, Bytes, ())> + 'a {
-        futures::stream::iter(lines.iter().map(|line| (
-            "test.log".to_owned(),
-            Bytes::from_static(line.as_bytes()),
-            (),
-        )))
+    fn stream_from_lines<'a>(
+        lines: &'a [&'static str],
+    ) -> impl Stream<Item = (Filename, Bytes, ())> + 'a {
+        futures::stream::iter(lines.iter().map(|line| {
+            (
+                "test.log".to_owned(),
+                Bytes::from_static(line.as_bytes()),
+                (),
+            )
+        }))
     }
 
     fn assert_results(actual: Vec<(Filename, Bytes, ())>, expected: &[&str]) {
         let expected_mapped: Vec<(Filename, Bytes, ())> = expected
             .iter()
-            .map(|line| (
-                "test.log".to_owned(),
-                Bytes::copy_from_slice(line.as_bytes()),
-                (),
-            ))
+            .map(|line| {
+                (
+                    "test.log".to_owned(),
+                    Bytes::copy_from_slice(line.as_bytes()),
+                    (),
+                )
+            })
             .collect();
 
         assert_eq!(
@@ -419,8 +427,8 @@ mod tests {
             concat!("first part\n", " second part\n", " last part"),
             "another normal message",
             concat!(
-            "finishing message\n",
-            " last part of the incomplete finishing message"
+                "finishing message\n",
+                " last part of the incomplete finishing message"
             ),
         ];
     }

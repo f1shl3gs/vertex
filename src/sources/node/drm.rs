@@ -4,12 +4,12 @@
 /// amdgpu is the only driver which exposes this information through DRM.
 ///
 /// https://github.com/prometheus/node_exporter/pull/1998
-
 use super::{read_into, read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = class_drm_card_amdgpu_stats(sys_path).await
+    let stats = class_drm_card_amdgpu_stats(sys_path)
+        .await
         .context("read drm amdgpu stats failed")?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
@@ -88,17 +88,18 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 tags!(
                     "card" => card,
                 ),
-            )
+            ),
         ])
     }
 
     Ok(metrics)
 }
 
-async fn class_drm_card_amdgpu_stats(sys_path: &str) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
+async fn class_drm_card_amdgpu_stats(
+    sys_path: &str,
+) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
     let pattern = format!("{}/class/drm/card[0-9]", sys_path);
-    let paths = glob::glob(&pattern)
-        .context("glob drm failed")?;
+    let paths = glob::glob(&pattern).context("glob drm failed")?;
 
     let mut stats = Vec::new();
     for path in paths {
@@ -120,7 +121,6 @@ async fn read_drm_card_field(card: &str, field: &str) -> Result<u64, Error> {
     let path = format!("{}/device/{}", card, field);
     read_into(path).await
 }
-
 
 /// ClassDRMCardAMDGPUStats contains info from files in
 /// /sys/class/drm/card<card>/device for a single amdgpu card.
@@ -171,26 +171,43 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
     }
 
     let name = &card[card.len() - 5..];
-    let gpu_busy_percent = read_drm_card_field(card, "gpu_busy_percent").await.unwrap_or(0);
-    let memory_gtt_size = read_drm_card_field(card, "mem_info_gtt_total").await.unwrap_or(0);
-    let memory_gtt_used = read_drm_card_field(card, "mem_info_gtt_used").await.unwrap_or(0);
-    let memory_visible_vram_size = read_drm_card_field(card, "mem_info_vis_vram_total").await.unwrap_or(0);
-    let memory_visible_vram_used = read_drm_card_field(card, "mem_info_vis_vram_used").await.unwrap_or(0);
-    let memory_vram_size = read_drm_card_field(card, "mem_info_vram_total").await.unwrap_or(0);
-    let memory_vram_used = read_drm_card_field(card, "mem_info_vram_used").await.unwrap_or(0);
+    let gpu_busy_percent = read_drm_card_field(card, "gpu_busy_percent")
+        .await
+        .unwrap_or(0);
+    let memory_gtt_size = read_drm_card_field(card, "mem_info_gtt_total")
+        .await
+        .unwrap_or(0);
+    let memory_gtt_used = read_drm_card_field(card, "mem_info_gtt_used")
+        .await
+        .unwrap_or(0);
+    let memory_visible_vram_size = read_drm_card_field(card, "mem_info_vis_vram_total")
+        .await
+        .unwrap_or(0);
+    let memory_visible_vram_used = read_drm_card_field(card, "mem_info_vis_vram_used")
+        .await
+        .unwrap_or(0);
+    let memory_vram_size = read_drm_card_field(card, "mem_info_vram_total")
+        .await
+        .unwrap_or(0);
+    let memory_vram_used = read_drm_card_field(card, "mem_info_vram_used")
+        .await
+        .unwrap_or(0);
 
     let path = format!("{}/device/mem_info_vram_vendor", card);
-    let memory_vram_vendor = read_to_string(path).await
+    let memory_vram_vendor = read_to_string(path)
+        .await
         .unwrap_or("".to_string())
         .trim()
         .to_string();
     let path = format!("{}/device/power_dpm_force_performance_level", card);
-    let power_dpm_force_performance_level = read_to_string(path).await
+    let power_dpm_force_performance_level = read_to_string(path)
+        .await
         .unwrap_or("".to_string())
         .trim()
         .to_string();
     let path = format!("{}/device/unique_id", card);
-    let unique_id = read_to_string(path).await
+    let unique_id = read_to_string(path)
+        .await
         .unwrap_or("".to_string())
         .trim()
         .to_string();
@@ -210,7 +227,6 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
     })
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -222,18 +238,21 @@ mod tests {
         let stats = class_drm_card_amdgpu_stats(path).await.unwrap();
 
         assert_eq!(stats.len(), 1);
-        assert_eq!(stats[0], ClassDRMCardAMDGPUStats {
-            name: "card0".to_string(),
-            gpu_busy_percent: 4,
-            memory_gtt_size: 8573157376,
-            memory_gtt_used: 144560128,
-            memory_visible_vram_size: 8573157376,
-            memory_visible_vram_used: 1490378752,
-            memory_vram_size: 8573157376,
-            memory_vram_used: 1490378752,
-            memory_vram_vendor: "samsung".to_string(),
-            power_dpm_force_performance_level: "manual".to_string(),
-            unique_id: "0123456789abcdef".to_string(),
-        })
+        assert_eq!(
+            stats[0],
+            ClassDRMCardAMDGPUStats {
+                name: "card0".to_string(),
+                gpu_busy_percent: 4,
+                memory_gtt_size: 8573157376,
+                memory_gtt_used: 144560128,
+                memory_visible_vram_size: 8573157376,
+                memory_visible_vram_used: 1490378752,
+                memory_vram_size: 8573157376,
+                memory_vram_used: 1490378752,
+                memory_vram_vendor: "samsung".to_string(),
+                power_dpm_force_performance_level: "manual".to_string(),
+                unique_id: "0123456789abcdef".to_string(),
+            }
+        )
     }
 }

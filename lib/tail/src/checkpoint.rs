@@ -1,6 +1,6 @@
-use std::io;
-use std::fs;
 use std::collections::BTreeSet;
+use std::fs;
+use std::io;
 use std::os::unix::fs::MetadataExt;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
@@ -17,7 +17,7 @@ pub type Position = u64;
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(tag = "version", rename_all = "snake_case")]
 enum State {
-    V1 { checkpoints: BTreeSet<Checkpoint> }
+    V1 { checkpoints: BTreeSet<Checkpoint> },
 }
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, Hash, Eq, PartialEq, Ord, PartialOrd)]
@@ -62,9 +62,7 @@ impl CheckpointsView {
     }
 
     pub fn get(&self, fp: Fingerprint) -> Option<Position> {
-        self.checkpoints
-            .get(&fp)
-            .map(|r| *r.value())
+        self.checkpoints.get(&fp).map(|r| *r.value())
     }
 
     pub fn set_dead(&self, fp: Fingerprint) {
@@ -91,7 +89,8 @@ impl CheckpointsView {
         // Collect all of the expired keys. Removing them while iterating can
         // lead to deadlocks, the set should be small, and this is not a
         // performance-sensitive path
-        let to_remove = self.removed_times
+        let to_remove = self
+            .removed_times
             .iter()
             .filter(|entry| {
                 let ts = entry.value();
@@ -110,7 +109,8 @@ impl CheckpointsView {
 
     fn get_state(&self) -> State {
         State::V1 {
-            checkpoints: self.checkpoints
+            checkpoints: self
+                .checkpoints
                 .iter()
                 .map(|entry| {
                     let fp = entry.key();
@@ -118,13 +118,14 @@ impl CheckpointsView {
                     Checkpoint {
                         fingerprint: *fp,
                         position: *pos,
-                        modified: self.modified_times
+                        modified: self
+                            .modified_times
                             .get(fp)
                             .map(|r| *r.value())
                             .unwrap_or_else(Utc::now),
                     }
                 })
-                .collect()
+                .collect(),
         }
     }
 }

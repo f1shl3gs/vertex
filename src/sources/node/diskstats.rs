@@ -1,18 +1,20 @@
+use super::{Error, ErrorContext};
+use crate::config::{deserialize_regex, serialize_regex};
+use event::{tags, Metric};
 /// Exposes disk I/O statistics
 ///
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
-
 use serde::{Deserialize, Serialize};
-use crate::config::{deserialize_regex, serialize_regex};
-use super::{Error, ErrorContext};
-use event::{tags, Metric};
-use tokio::io::{AsyncBufReadExt};
+use tokio::io::AsyncBufReadExt;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct DiskStatsConfig {
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     #[serde(default = "default_ignored")]
     pub ignored: regex::Regex,
 }
@@ -20,7 +22,7 @@ pub struct DiskStatsConfig {
 impl Default for DiskStatsConfig {
     fn default() -> Self {
         Self {
-            ignored: default_ignored()
+            ignored: default_ignored(),
         }
     }
 }
@@ -33,7 +35,8 @@ impl DiskStatsConfig {
     pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, Error> {
         let mut metrics = Vec::new();
         let path = &format!("{}/diskstats", root);
-        let f = tokio::fs::File::open(path).await
+        let f = tokio::fs::File::open(path)
+            .await
             .context("open diskstats failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
@@ -204,7 +207,7 @@ mod tests {
     async fn test_gather() {
         let proc_path = "tests/fixtures/proc";
         let collector = DiskStatsConfig {
-            ignored: default_ignored()
+            ignored: default_ignored(),
         };
 
         let result = collector.gather(proc_path).await.unwrap();

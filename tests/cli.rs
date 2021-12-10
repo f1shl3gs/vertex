@@ -1,28 +1,24 @@
-use std::process::ExitStatus;
 use assert_cmd::Command;
+use std::process::ExitStatus;
 
 fn run_command(args: Vec<&str>) -> (Vec<u8>, ExitStatus) {
-    let mut cmd = Command::cargo_bin("vertex")
-        .unwrap();
+    let mut cmd = Command::cargo_bin("vertex").unwrap();
     for arg in args {
         cmd.arg(arg);
     }
 
-    let output = cmd.output()
-        .expect("Failed to execute process");
+    let output = cmd.output().expect("Failed to execute process");
 
     (output.stdout, output.status)
 }
 
 fn assert_no_log_lines(output: Vec<u8>) {
-    let output = String::from_utf8(output)
-        .expect("Output is not a valid utf8 string");
+    let output = String::from_utf8(output).expect("Output is not a valid utf8 string");
 
     // Assert there are no lines with keywords
     let keywords = ["ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
     for line in output.lines() {
-        let present = keywords.iter()
-            .any(|word| line.contains(word));
+        let present = keywords.iter().any(|word| line.contains(word));
         assert!(!present, "Log detected in output line: {:?}", line);
     }
 }

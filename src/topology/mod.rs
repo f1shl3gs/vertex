@@ -1,35 +1,26 @@
-mod fanout;
 mod builder;
+mod fanout;
 mod task;
 
+use crate::buffers::EventStream;
+use crate::config::{Config, ConfigDiff, HealthcheckOptions, Resource};
+use crate::shutdown::ShutdownCoordinator;
+use crate::topology::fanout::{ControlChannel, ControlMessage};
+use crate::topology::task::Task;
+use crate::trigger::DisabledTrigger;
+use crate::{buffers, topology::builder::Pieces};
+use event::Event;
+use futures::{future, Future, FutureExt, SinkExt};
+use std::panic::AssertUnwindSafe;
 use std::{
     collections::{HashMap, HashSet},
-    sync::{
-        Arc, Mutex,
-    },
     pin::Pin,
+    sync::{Arc, Mutex},
     time::Duration,
 };
 use task::TaskOutput;
-use crate::config::{Resource, Config, ConfigDiff, HealthcheckOptions};
-use crate::{
-    topology::builder::{
-        Pieces
-    },
-    buffers,
-};
-use tokio::{
-    sync::{mpsc}
-};
-use futures::{future, FutureExt, Future, SinkExt};
-use crate::topology::fanout::{ControlChannel, ControlMessage};
-use crate::shutdown::ShutdownCoordinator;
-use tokio::time::{Instant, sleep_until};
-use crate::topology::task::Task;
-use std::panic::AssertUnwindSafe;
-use crate::trigger::DisabledTrigger;
-use crate::buffers::EventStream;
-use event::Event;
+use tokio::sync::mpsc;
+use tokio::time::{sleep_until, Instant};
 
 type BuiltBuffer = (
     buffers::BufferInputCloner<Event>,
@@ -88,7 +79,7 @@ impl Topology {
     /// map. This map gets moved into the returned future and is used to poll
     /// for when the tasks have completed. Once the returned future is dropped
     /// then everything from this Topology instance is fully dropped.
-    pub fn stop(self) -> impl futures::Future<Output=()> {
+    pub fn stop(self) -> impl futures::Future<Output = ()> {
         // Create handy handles collections of all tasks for the subsequent
         // operations.
         let mut wait_handles = Vec::new();
@@ -98,10 +89,7 @@ impl Topology {
 
         // We need to give some time to the sources to gracefully shutdown, so
         // we will merge them with other tasks.
-        for (id, task) in self.tasks
-            .into_iter()
-            .chain(self.source_tasks.into_iter())
-        {
+        for (id, task) in self.tasks.into_iter().chain(self.source_tasks.into_iter()) {
             let task = task.map(|_| ()).shared();
             wait_handles.push(task.clone());
             check_handles.entry(id).or_default().push(task);
@@ -158,10 +146,8 @@ impl Topology {
             }
         };
 
-
         // Finishes once all tasks have shutdown.
-        let success = futures::future::join_all(wait_handles)
-            .map(|_| ());
+        let success = futures::future::join_all(wait_handles).map(|_| ());
 
         // Aggregate future that ends once anything detects that all tasks
         // have shutdown
@@ -172,20 +158,16 @@ impl Topology {
         ]);
 
         // Now kick off the shutdown process by shutting down the sources.
-        let source_shutdown_complete = self.shutdown_coordinator
-            .shutdown_all(deadline);
+        let source_shutdown_complete = self.shutdown_coordinator.shutdown_all(deadline);
 
-        futures::future::join(source_shutdown_complete, shutdown_complete_future)
-            .map(|_| ())
+        futures::future::join(source_shutdown_complete, shutdown_complete_future).map(|_| ())
     }
 
     /// On Error, topology is in invalid state. May change components
     /// even if reload fails.
     pub async fn reload_config_and_respawn(&mut self, new_config: Config) -> Result<bool, ()> {
         if self.config.global != new_config.global {
-            error!(
-                "Global options can't be changed while reloading config file; reload aborted."
-            );
+            error!("Global options can't be changed while reloading config file; reload aborted.");
 
             return Ok(false);
         }
@@ -196,8 +178,12 @@ impl Topology {
         let buffers = self.shutdown_diff(&diff, &new_config).await;
 
         // Now let's actually build the new pieces.
-        if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await {
-            if self.run_healthchecks(&diff, &mut new_pieces, new_config.health_checks).await {
+        if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await
+        {
+            if self
+                .run_healthchecks(&diff, &mut new_pieces, new_config.health_checks)
+                .await
+            {
                 self.connect_diff(&diff, &mut new_pieces).await;
                 self.spawn_diff(&diff, new_pieces);
                 self.config = new_config;
@@ -210,7 +196,10 @@ impl Topology {
         info!("rebuilding old configuration");
         let diff = diff.flip();
         if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
-            if self.run_healthchecks(&diff, &mut new_pieces, new_config.health_checks).await {
+            if self
+                .run_healthchecks(&diff, &mut new_pieces, new_config.health_checks)
+                .await
+            {
                 self.connect_diff(&diff, &mut new_pieces).await;
                 self.spawn_diff(&diff, new_pieces);
                 // We have successfully returned to old config
@@ -280,10 +269,7 @@ impl Topology {
 
         let deadline = Instant::now() + timeout;
         for id in &diff.sources.to_remove {
-            info!(
-                message = "Removing source",
-                ?id
-            );
+            info!(message = "Removing source", ?id);
 
             let previous = self.tasks.remove(id).unwrap();
             drop(previous); // detach and forget
@@ -321,10 +307,7 @@ impl Topology {
 
         // Transforms
         for id in &diff.transforms.to_remove {
-            info!(
-                message = "Removing transform",
-                ?id
-            );
+            info!(message = "Removing transform", ?id);
 
             let previous = self.tasks.remove(id).unwrap();
             drop(previous); // detach and forget
@@ -355,14 +338,11 @@ impl Topology {
         let conflicts = Resource::conflicts(
             remove_sink
                 .map(|(k, v)| ((true, k), v))
-                .chain(
-                    add_sink
-                        .chain(add_source)
-                        .map(|(k, v)| ((false, k), v)))
+                .chain(add_sink.chain(add_source).map(|(k, v)| ((false, k), v))),
         )
-            .into_iter()
-            .flat_map(|(_, components)| components)
-            .collect::<HashSet<_>>();
+        .into_iter()
+        .flat_map(|(_, components)| components)
+        .collect::<HashSet<_>>();
 
         // Existing conflicting sinks
         let conflicting_sinks = conflicts
@@ -387,10 +367,7 @@ impl Topology {
         // First pass
         // Detach removed sinks
         for id in &diff.sinks.to_remove {
-            info!(
-                message = "removing sink",
-                ?id,
-            );
+            info!(message = "removing sink", ?id,);
             self.remove_inputs(id).await;
         }
 
@@ -413,10 +390,7 @@ impl Topology {
         for id in &diff.sinks.to_remove {
             let prev = self.tasks.remove(id).unwrap();
             if wait_for_sinks.contains(id) {
-                debug!(
-                    message = "waiting for sink to shutdown",
-                    ?id,
-                );
+                debug!(message = "waiting for sink to shutdown", ?id,);
                 prev.await.unwrap().unwrap();
             } else {
                 drop(prev); // detach and forget
@@ -428,10 +402,7 @@ impl Topology {
         for id in &diff.sinks.to_change {
             if wait_for_sinks.contains(id) {
                 let prev = self.tasks.remove(id).unwrap();
-                debug!(
-                    message = "waiting for sink to shutdown",
-                    ?id
-                );
+                debug!(message = "waiting for sink to shutdown", ?id);
                 let buffer = prev.await.unwrap().unwrap();
 
                 if reuse_buffers.contains(id) {
@@ -485,69 +456,45 @@ impl Topology {
     pub fn spawn_diff(&mut self, diff: &ConfigDiff, mut new_pieces: Pieces) {
         // Sources
         for id in &diff.sources.to_change {
-            info!(
-                message = "rebuilding source",
-                ?id
-            );
+            info!(message = "rebuilding source", ?id);
             self.spawn_source(id, &mut new_pieces);
         }
 
         for id in &diff.sources.to_add {
-            info!(
-                message = "Starting source",
-                ?id,
-            );
+            info!(message = "Starting source", ?id,);
             self.spawn_source(id, &mut new_pieces);
         }
 
         // Transforms
         for id in &diff.transforms.to_change {
-            info!(
-                message = "Rebuilding transform",
-                ?id
-            );
+            info!(message = "Rebuilding transform", ?id);
             self.spawn_transform(id, &mut new_pieces);
         }
 
         for id in &diff.transforms.to_add {
-            info!(
-                message = "Staring transform",
-                ?id
-            );
+            info!(message = "Staring transform", ?id);
             self.spawn_transform(id, &mut new_pieces);
         }
 
         // Sinks
         for id in &diff.sinks.to_change {
-            info!(
-                message = "Rebuilding sink",
-                ?id,
-            );
+            info!(message = "Rebuilding sink", ?id,);
             self.spawn_sink(id, &mut new_pieces);
         }
 
         for id in &diff.sinks.to_add {
-            info!(
-                message = "Starting sink",
-                ?id
-            );
+            info!(message = "Starting sink", ?id);
             self.spawn_sink(id, &mut new_pieces);
         }
 
         // Extensions
         for id in &diff.extensions.to_change {
-            info!(
-                message = "Rebuilding extension",
-                ?id
-            );
+            info!(message = "Rebuilding extension", ?id);
             self.spawn_extension(id, &mut new_pieces);
         }
 
         for id in &diff.extensions.to_add {
-            info!(
-                message = "Starting extension",
-                ?id
-            );
+            info!(message = "Starting extension", ?id);
             self.spawn_extension(id, &mut new_pieces);
         }
     }
@@ -664,10 +611,10 @@ impl Topology {
         }
 
         self.inputs.insert(id.clone().into(), tx);
-        new_peices
-            .detach_triggers
-            .remove(id)
-            .map(|trigger| self.detach_triggers.insert(id.clone().into(), trigger.into()));
+        new_peices.detach_triggers.remove(id).map(|trigger| {
+            self.detach_triggers
+                .insert(id.clone().into(), trigger.into())
+        });
     }
 
     async fn replace_inputs(&mut self, id: &str, new_pieces: &mut builder::Pieces) {
@@ -710,10 +657,10 @@ impl Topology {
         }
 
         self.inputs.insert(id.clone().into(), tx);
-        new_pieces
-            .detach_triggers
-            .remove(id)
-            .map(|trigger| self.detach_triggers.insert(id.clone().into(), trigger.into()));
+        new_pieces.detach_triggers.remove(id).map(|trigger| {
+            self.detach_triggers
+                .insert(id.clone().into(), trigger.into())
+        });
     }
 
     async fn detach_inputs(&mut self, id: &str) {
@@ -749,7 +696,10 @@ pub async fn start_validate(
     let (abort_tx, abort_rx) = mpsc::unbounded_channel();
     let mut topology = Topology::new(config, abort_tx);
 
-    if !topology.run_healthchecks(&diff, &mut pieces, topology.config.health_checks).await {
+    if !topology
+        .run_healthchecks(&diff, &mut pieces, topology.config.health_checks)
+        .await
+    {
         return None;
     }
 
@@ -774,16 +724,12 @@ fn retain<T>(vec: &mut Vec<T>, mut retain_filter: impl FnMut(&mut T) -> bool) {
 pub fn take_healthchecks(diff: &ConfigDiff, pieces: &mut Pieces) -> Vec<(String, Task)> {
     (&diff.sinks.to_change | &diff.sinks.to_add)
         .into_iter()
-        .filter_map(|id|
-            pieces.health_checks
-                .remove(&id)
-                .map(move |task| (id, task))
-        )
+        .filter_map(|id| pieces.health_checks.remove(&id).map(move |task| (id, task)))
         .collect()
 }
 
 async fn handle_errors(
-    task: impl Future<Output=Result<TaskOutput, ()>>,
+    task: impl Future<Output = Result<TaskOutput, ()>>,
     abort_tx: mpsc::UnboundedSender<()>,
 ) -> Result<TaskOutput, ()> {
     AssertUnwindSafe(task)
@@ -813,11 +759,9 @@ pub async fn build_or_log_errors(
 
             None
         }
-        Ok(pieces) => Some(pieces)
+        Ok(pieces) => Some(pieces),
     }
 }
 
 #[cfg(test)]
-mod tests {
-
-}
+mod tests {}

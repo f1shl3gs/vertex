@@ -6,19 +6,18 @@ use futures::Stream;
 use hyper::Body;
 use indexmap::IndexMap;
 use md5::Digest;
-use url::Url;
 use serde::{Deserialize, Serialize};
-use sysinfo::unix::{kernel_version, os_version, machine_id};
+use sysinfo::unix::{kernel_version, machine_id, os_version};
+use url::Url;
 
+use crate::config::{
+    default_interval, deserialize_duration, provider::ProviderConfig, serialize_duration, Builder,
+    GenerateConfig, ProviderDescription, ProxyConfig,
+};
 use crate::http::HttpClient;
-use crate::SignalHandler;
 use crate::signal;
 use crate::tls::{TlsOptions, TlsSettings};
-use crate::config::{
-    ProviderDescription, Builder, ProxyConfig, provider::ProviderConfig,
-    deserialize_duration, serialize_duration, GenerateConfig, default_interval,
-};
-
+use crate::SignalHandler;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct RequestConfig {
@@ -31,7 +30,10 @@ pub struct RequestConfig {
 pub struct HttpConfig {
     url: Option<Url>,
     request: RequestConfig,
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
     tls: Option<TlsOptions>,
     proxy: ProxyConfig,
@@ -56,7 +58,9 @@ impl Default for HttpConfig {
 #[typetag::serde(name = "http")]
 impl ProviderConfig for HttpConfig {
     async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
-        let url = self.url.take()
+        let url = self
+            .url
+            .take()
             .ok_or_else(|| vec!["URL is required for http provider".to_owned()])?;
 
         let tls_options = self.tls.take();
@@ -64,8 +68,9 @@ impl ProviderConfig for HttpConfig {
         let request = self.request.clone();
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
         let attrs = build_attributes();
-        let (builder, _) = http_request_to_config_builder(&url, &tls_options, &request.headers, &proxy, attrs)
-            .await?;
+        let (builder, _) =
+            http_request_to_config_builder(&url, &tls_options, &request.headers, &proxy, attrs)
+                .await?;
 
         // Poll for changes to remote configuration
         signal_handler.add(poll_http(
@@ -99,7 +104,8 @@ impl GenerateConfig for HttpConfig {
             tls: None,
             proxy: Default::default(),
             persist: None,
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -144,17 +150,15 @@ async fn http_request(
     proxy: &ProxyConfig,
     attrs: IndexMap<String, String>,
 ) -> std::result::Result<bytes::Bytes, &'static str> {
-    let tls_settings = TlsSettings::from_options(tls)
-        .map_err(|_| "Invalid TLS options")?;
-    let client = HttpClient::<Body>::new(tls_settings, proxy)
-        .map_err(|_| "Invalid TLS settings")?;
+    let tls_settings = TlsSettings::from_options(tls).map_err(|_| "Invalid TLS options")?;
+    let client =
+        HttpClient::<Body>::new(tls_settings, proxy).map_err(|_| "Invalid TLS settings")?;
 
     let url = Url::parse_with_params(&url.to_string(), attrs.iter().map(|(k, v)| (k, v)))
         .map_err(|_| "Invalid URL Params")?;
 
     // Build HTTP request
-    let mut builder = http::request::Builder::new()
-        .uri(url.to_string());
+    let mut builder = http::request::Builder::new().uri(url.to_string());
 
     // Augment with headers. These may be required e.g. for authentication to
     // private endpoints.
@@ -162,27 +166,25 @@ async fn http_request(
         builder = builder.header(header.as_str(), value.as_str());
     }
 
-    let request = builder.body(Body::empty())
+    let request = builder
+        .body(Body::empty())
         .map_err(|_| "Couldn't create HTTP request")?;
-
 
     debug!(
         message = "Attempting to retrieve configuration",
         url = ?url.as_str()
     );
 
-    let resp = client.send(request)
-        .await
-        .map_err(|err| {
-            let message = "HTTP error";
-            error!(
-                message,
-                ?err,
-                url = ?url.as_str()
-            );
+    let resp = client.send(request).await.map_err(|err| {
+        let message = "HTTP error";
+        error!(
+            message,
+            ?err,
+            url = ?url.as_str()
+        );
 
-            message
-        })?;
+        message
+    })?;
 
     debug!(
         message = "Response received",
@@ -214,10 +216,10 @@ fn build_attributes() -> IndexMap<String, String> {
         Err(err) => {
             let uid = uuid::Uuid::new_v4().to_string();
             warn!(
-                    message = "Read uid from /etc/machine-id failed, using ephemeral uuid",
-                    ?err,
-                    ?uid,
-                );
+                message = "Read uid from /etc/machine-id failed, using ephemeral uuid",
+                ?err,
+                ?uid,
+            );
 
             attrs.insert("uid".to_string(), uid);
             attrs.insert("epheral_uid".to_string(), "true".to_string());
@@ -242,11 +244,8 @@ fn poll_http(
     tls_options: Option<TlsOptions>,
     headers: IndexMap<String, String>,
     proxy: ProxyConfig,
-) -> impl Stream<Item=crate::signal::SignalTo> {
-    let mut interval = tokio::time::interval_at(
-        tokio::time::Instant::now() + interval,
-        interval,
-    );
+) -> impl Stream<Item = crate::signal::SignalTo> {
+    let mut interval = tokio::time::interval_at(tokio::time::Instant::now() + interval, interval);
 
     stream! {
         let mut digest = String::new();

@@ -1,6 +1,6 @@
 use http::{Request, Response, StatusCode};
-use hyper::{Body, Server};
 use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Server};
 
 async fn dump_request(mut req: Request<Body>) -> hyper::Result<Response<Body>> {
     println!("{:?} {} {}", req.version(), req.method(), req.uri());
@@ -21,7 +21,10 @@ async fn dump_request(mut req: Request<Body>) -> hyper::Result<Response<Body>> {
         println!("{}\n", body);
     }
 
-    Ok(Response::builder().status(StatusCode::OK).body(Body::empty()).unwrap())
+    Ok(Response::builder()
+        .status(StatusCode::OK)
+        .body(Body::empty())
+        .unwrap())
 }
 
 // Note: this is not a test actually, it is used to test some http api
@@ -33,13 +36,8 @@ async fn start_echo_server() {
     }
 
     let addr = "127.0.0.1:9010".parse().unwrap();
-    let service = make_service_fn(|_| async {
-        Ok::<_, hyper::Error>(service_fn(dump_request))
-    });
+    let service = make_service_fn(|_| async { Ok::<_, hyper::Error>(service_fn(dump_request)) });
 
     println!("Listening on http://{}", addr);
-    Server::bind(&addr)
-        .serve(service)
-        .await
-        .unwrap();
+    Server::bind(&addr).serve(service).await.unwrap();
 }

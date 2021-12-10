@@ -1,10 +1,10 @@
-use crate::invalid_error;
 use super::Error;
-use tokio::io::AsyncBufReadExt;
-use std::convert::TryFrom;
-use std::path::Path;
-use std::convert::TryInto;
+use crate::invalid_error;
 use event::{tags, Metric};
+use std::convert::TryFrom;
+use std::convert::TryInto;
+use std::path::Path;
+use tokio::io::AsyncBufReadExt;
 
 /// Network models the "net" line.
 #[derive(Debug, Default, PartialEq)]
@@ -316,7 +316,6 @@ impl ClientRPC {
     }
 }
 
-
 /// ClientRPCStats models all stats from /proc/net/rpc/nfs
 #[derive(Debug, Default, PartialEq)]
 pub struct ClientRPCStats {
@@ -335,10 +334,7 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
 
     let mut stats = ClientRPCStats::default();
     while let Some(line) = lines.next_line().await? {
-        let parts = line
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {
             return invalid_error!("invalid NFS metric line, {}", line);
@@ -380,7 +376,7 @@ macro_rules! procedure_metric {
             tags! {
                 "proto" => $proto.to_string(),
                 "method" => $name.to_string()
-            }
+            },
         )
     };
 }
@@ -413,7 +409,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "node_nfs_connections_total",
             "Total number of NFSd TCP connections.",
             stats.network.net_count as f64,
-        )
+        ),
     ]);
 
     // collect statistics for kernel server RPCs
@@ -498,7 +494,11 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         procedure_metric!("4", "FsInfo", stats.client_v4_stats.fs_info),
         procedure_metric!("4", "Renew", stats.client_v4_stats.renew),
         procedure_metric!("4", "SetClientID", stats.client_v4_stats.set_client_id),
-        procedure_metric!("4", "SetClientIDConfirm", stats.client_v4_stats.set_client_id_confirm),
+        procedure_metric!(
+            "4",
+            "SetClientIDConfirm",
+            stats.client_v4_stats.set_client_id_confirm
+        ),
         procedure_metric!("4", "Lock", stats.client_v4_stats.lock),
         procedure_metric!("4", "Lockt", stats.client_v4_stats.lockt),
         procedure_metric!("4", "Locku", stats.client_v4_stats.locku),
@@ -520,7 +520,11 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         procedure_metric!("4", "GetACL", stats.client_v4_stats.get_acl),
         procedure_metric!("4", "SetACL", stats.client_v4_stats.set_acl),
         procedure_metric!("4", "FsLocations", stats.client_v4_stats.fs_locations),
-        procedure_metric!("4", "ReleaseLockowner", stats.client_v4_stats.release_lockowner),
+        procedure_metric!(
+            "4",
+            "ReleaseLockowner",
+            stats.client_v4_stats.release_lockowner
+        ),
         procedure_metric!("4", "Secinfo", stats.client_v4_stats.secinfo),
         procedure_metric!("4", "FsidPresent", stats.client_v4_stats.fsid_present),
         procedure_metric!("4", "ExchangeID", stats.client_v4_stats.exchange_id),
@@ -528,7 +532,11 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         procedure_metric!("4", "DestroySession", stats.client_v4_stats.destroy_session),
         procedure_metric!("4", "Sequence", stats.client_v4_stats.sequence),
         procedure_metric!("4", "GetLeaseTime", stats.client_v4_stats.get_lease_time),
-        procedure_metric!("4", "ReclaimComplete", stats.client_v4_stats.reclaim_complete),
+        procedure_metric!(
+            "4",
+            "ReclaimComplete",
+            stats.client_v4_stats.reclaim_complete
+        ),
         procedure_metric!("4", "LayoutGet", stats.client_v4_stats.layout_get),
         procedure_metric!("4", "GetDeviceInfo", stats.client_v4_stats.get_device_info),
         procedure_metric!("4", "LayoutCommit", stats.client_v4_stats.layout_commit),
@@ -537,8 +545,16 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         procedure_metric!("4", "TestStateID", stats.client_v4_stats.test_state_id),
         procedure_metric!("4", "FreeStateID", stats.client_v4_stats.free_state_id),
         procedure_metric!("4", "GetDeviceList", stats.client_v4_stats.get_device_list),
-        procedure_metric!("4", "BindConnToSession", stats.client_v4_stats.bind_conn_to_session),
-        procedure_metric!("4", "DestroyClientID", stats.client_v4_stats.destroy_client_id),
+        procedure_metric!(
+            "4",
+            "BindConnToSession",
+            stats.client_v4_stats.bind_conn_to_session
+        ),
+        procedure_metric!(
+            "4",
+            "DestroyClientID",
+            stats.client_v4_stats.destroy_client_id
+        ),
         procedure_metric!("4", "Seek", stats.client_v4_stats.seek),
         procedure_metric!("4", "Allocate", stats.client_v4_stats.allocate),
         procedure_metric!("4", "DeAllocate", stats.client_v4_stats.deallocate),

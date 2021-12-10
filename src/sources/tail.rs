@@ -4,16 +4,19 @@ use chrono::Duration;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
-use crate::sources::Source;
 use crate::config::{
-    DataType, deserialize_duration, GenerateConfig,
-    serialize_duration, SourceConfig, SourceContext, SourceDescription
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
+    SourceContext, SourceDescription,
 };
+use crate::sources::Source;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TailConfig {
     #[serde(default = "default_ignore_older_than")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     ignore_older_than: Duration,
 
     host_key: Option<String>,
@@ -22,7 +25,10 @@ struct TailConfig {
     exclude: Vec<PathBuf>,
 
     #[serde(default = "default_glob_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     glob_interval: Duration,
 }
 
@@ -36,19 +42,14 @@ fn default_glob_interval() -> Duration {
 
 impl GenerateConfig for TailConfig {
     fn generate_config() -> Value {
-        serde_yaml::to_value(
-            Self {
-                ignore_older_than: default_ignore_older_than(),
-                host_key: None,
-                include: vec![
-                    "/path/to/include/*.log".into()
-                ],
-                exclude: vec![
-                    "/path/to/exclude/noop.log".into()
-                ],
-                glob_interval: default_glob_interval(),
-            }
-        ).unwrap()
+        serde_yaml::to_value(Self {
+            ignore_older_than: default_ignore_older_than(),
+            host_key: None,
+            include: vec!["/path/to/include/*.log".into()],
+            exclude: vec!["/path/to/exclude/noop.log".into()],
+            glob_interval: default_glob_interval(),
+        })
+        .unwrap()
     }
 }
 
@@ -63,9 +64,7 @@ impl SourceConfig for TailConfig {
         // add the source name as a subdir, so that multiple sources can operate
         // within the same given data_dir(e.g. the global one) without the file
         // servers' checkpointers interfering with each other
-        let data_dir = ctx.global
-            .make_subdir(&ctx.name)?;
-
+        let data_dir = ctx.global.make_subdir(&ctx.name)?;
 
         todo!()
     }

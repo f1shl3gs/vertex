@@ -1,31 +1,25 @@
-use std::collections::{BTreeMap, HashSet};
-use chrono::{DateTime, Utc};
-use bytes::{Bytes};
-use std::{
-    cmp,
-    fs,
-    time::{self, Duration},
-    sync::Arc,
-};
-use std::fs::remove_file;
-use std::path::PathBuf;
-use futures::{
-    future::{
-        select, Either, FutureExt,
-    },
-    stream,
-    Future,
-    Sink,
-    SinkExt,
-};
-use tracing::{debug, Instrument, info, error};
-use indexmap::map::IndexMap;
 use crate::checkpointer::{Checkpointer, CheckpointsView};
 use crate::events::InternalEvents;
 use crate::fingerprinter::{Fingerprint, Fingerprinter};
 use crate::provider::Provider;
-use crate::ReadFrom;
 use crate::watcher::Watcher;
+use crate::ReadFrom;
+use bytes::Bytes;
+use chrono::{DateTime, Utc};
+use futures::{
+    future::{select, Either, FutureExt},
+    stream, Future, Sink, SinkExt,
+};
+use indexmap::map::IndexMap;
+use std::collections::{BTreeMap, HashSet};
+use std::fs::remove_file;
+use std::path::PathBuf;
+use std::{
+    cmp, fs,
+    sync::Arc,
+    time::{self, Duration},
+};
+use tracing::{debug, error, info, Instrument};
 
 /// `Server` is a Source which coopeatively schedules reads over files,
 /// converting the lines of said files into `LogLine` structures. As
@@ -66,9 +60,9 @@ pub struct Server<P: Provider, E: InternalEvents> {
 /// Specific operating systems support evented interfaces that correct this
 /// problem but your intrepid authors know of no generic solution
 impl<P, E> Server<P, E>
-    where
-        P: Provider,
-        E: InternalEvents,
+where
+    P: Provider,
+    E: InternalEvents,
 {
     pub fn run<C, S>(
         self,
@@ -76,11 +70,11 @@ impl<P, E> Server<P, E>
         shutdown: S,
         mut checkpointer: Checkpointer,
     ) -> Result<Shutdown, <C as Sink<Vec<Line>>>::Error>
-        where
-            C: Sink<Vec<Line>> + Unpin,
-            <C as Sink<Vec<Line>>>::Error: std::error::Error,
-            S: Future + Unpin + Send + 'static,
-            <S as Future>::Output: Clone + Send + Sync,
+    where
+        C: Sink<Vec<Line>> + Unpin,
+        <C as Sink<Vec<Line>>>::Error: std::error::Error,
+        S: Future + Unpin + Send + 'static,
+        <S as Future>::Output: Clone + Send + Sync,
     {
         let mut fingerprint_buffer = Vec::new();
         // let mut fps: IndexMap<Fingerprint, Watcher> = Default::default();
@@ -112,12 +106,7 @@ impl<P, E> Server<P, E>
 
         let checkpoints = checkpointer.view();
         for (path, fp) in existing_files {
-            checkpointer.maybe_upgrade(
-                &path,
-                fp,
-                &self.fingerprinter,
-                &mut fingerprint_buffer,
-            );
+            checkpointer.maybe_upgrade(&path, fp, &self.fingerprinter, &mut fingerprint_buffer);
 
             self.watch_new_file(path, fp, &mut fps, &checkpoints, true);
         }
@@ -151,7 +140,9 @@ impl<P, E> Server<P, E>
                         Ok(count) => emitter.emit_file_checkpointed(count, start.elapsed()),
                         Err(err) => emitter.emit_file_checkpoint_write_failed(err),
                     }
-                }).await.ok();
+                })
+                .await
+                .ok();
             }
         });
 
@@ -211,7 +202,7 @@ impl<P, E> Server<P, E>
                                     let (old, new) = (&watcher.path, &path);
                                     if let (Ok(old_modified_time), Ok(new_modified_time)) = (
                                         fs::metadata(&old).and_then(|m| m.modified()),
-                                        fs::metadata(&new).and_then(|m| m.modified())
+                                        fs::metadata(&new).and_then(|m| m.modified()),
                                     ) {
                                         if old_modified_time < new_modified_time {
                                             info!(
@@ -307,9 +298,7 @@ impl<P, E> Server<P, E>
             let start = time::Instant::now();
             let to_send = std::mem::take(&mut lines);
             let mut stream = stream::once(futures::future::ok(to_send));
-            let result = self.handle.block_on(
-                chans.send_all(&mut stream)
-            );
+            let result = self.handle.block_on(chans.send_all(&mut stream));
 
             match result {
                 Ok(()) => {}
@@ -347,7 +336,8 @@ impl<P, E> Server<P, E>
             futures::pin_mut!(sleep);
             match self.handle.block_on(select(shutdown, sleep)) {
                 Either::Left((_, _)) => {
-                    let checkpointer = self.handle
+                    let checkpointer = self
+                        .handle
                         .block_on(checkpoint_task_handle)
                         .expect("checkpoint task has panicked");
                     if let Err(err) = checkpointer.write_checkpoints() {
@@ -360,7 +350,7 @@ impl<P, E> Server<P, E>
                     return Ok(Shutdown);
                 }
 
-                Either::Right((_, future)) => shutdown = future
+                Either::Right((_, future)) => shutdown = future,
             }
 
             stats.record("sleeping", start.elapsed());
@@ -393,7 +383,8 @@ impl<P, E> Server<P, E>
         // them from the k8s metadata, so we now just always use the checkpoints unless opted
         // out. https://github.com/timberio/vector/issues/7139
         let read_from = if !self.ignore_checkpoints {
-            checkpoints.get(fp)
+            checkpoints
+                .get(fp)
                 .map(ReadFrom::Checkpoint)
                 .unwrap_or(fallback)
         } else {
@@ -417,7 +408,7 @@ impl<P, E> Server<P, E>
                 watcher.set_file_findable(true);
                 fps.insert(fp, watcher);
             }
-            Err(err) => self.emitter.emit_file_watch_failed(&path, err)
+            Err(err) => self.emitter.emit_file_watch_failed(&path, err),
         }
     }
 }
@@ -452,7 +443,8 @@ impl TimingStats {
         let total = self.started_at.elapsed();
         let counted = self.segments.values().sum();
         let other = self.started_at.elapsed() - counted;
-        let mut ratios = self.segments
+        let mut ratios = self
+            .segments
             .iter()
             .map((|(k, v)| (*k, v.as_secs_f32() / total.as_secs_f32())))
             .collect::<BTreeMap<_, _>>();
@@ -467,7 +459,11 @@ impl TimingStats {
             (0, 0)
         };
 
-        debug!("event throughput {}, bytes throughput {}", scale(event_throughput), scale(bytes_throughput))
+        debug!(
+            "event throughput {}, bytes throughput {}",
+            scale(event_throughput),
+            scale(bytes_throughput)
+        )
     }
 }
 

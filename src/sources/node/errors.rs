@@ -1,21 +1,16 @@
 use std::{
-    error,
-    io,
-    fmt::{self, Formatter},
     borrow::Cow,
-    num,
-    path::{PathBuf},
+    error,
+    fmt::{self, Formatter},
+    io, num,
+    path::PathBuf,
     string::ParseError,
 };
 
 #[derive(Debug)]
 pub enum Context {
-    File {
-        path: PathBuf
-    },
-    Message {
-        text: Cow<'static, str>,
-    },
+    File { path: PathBuf },
+    Message { text: Cow<'static, str> },
 }
 
 impl From<PathBuf> for Context {
@@ -63,8 +58,8 @@ impl Error {
     }
 
     pub fn new_invalid<T>(msg: T) -> Self
-        where
-            T: Into<Cow<'static, str>>
+    where
+        T: Into<Cow<'static, str>>,
     {
         Self {
             source: io::Error::from(io::ErrorKind::InvalidData),
@@ -100,13 +95,14 @@ impl Error {
 impl fmt::Display for Error {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match &self.context {
-            Some(Context::File { ref path }) => {
-                f.write_fmt(format_args!("Unable to parse {}, unsupported format", path.display()))
-            }
+            Some(Context::File { ref path }) => f.write_fmt(format_args!(
+                "Unable to parse {}, unsupported format",
+                path.display()
+            )),
 
             Some(Context::Message { text }) => f.write_str(text.as_ref()),
 
-            None => return fmt::Display::fmt(&self.source, f)
+            None => return fmt::Display::fmt(&self.source, f),
         }?;
 
         f.write_str(": ")?;
@@ -166,8 +162,8 @@ impl From<glob::PatternError> for Error {
 }
 
 pub trait ErrorContext<T, E>
-    where
-        E: Into<Error>
+where
+    E: Into<Error>,
 {
     /// Adds some context to the error
     fn context<C: ToString>(self, ctx: C) -> Result<T, Error>;
@@ -178,13 +174,15 @@ pub trait ErrorContext<T, E>
 }
 
 impl<T, E> ErrorContext<T, E> for Result<T, E>
-    where
-        E: Into<Error>
+where
+    E: Into<Error>,
 {
     fn context<C: ToString>(self, ctx: C) -> Result<T, Error> {
         self.map_err(|err| {
             let mut err = err.into();
-            err.context = Some(Context::Message { text: ctx.to_string().into() });
+            err.context = Some(Context::Message {
+                text: ctx.to_string().into(),
+            });
 
             err
         })

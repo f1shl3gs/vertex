@@ -1,7 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::str::Chars;
 use substring::Substring;
-use serde::{Deserialize, Serialize};
 
 enum State {
     Start,
@@ -37,7 +37,7 @@ impl<'a> PathComponent<'a> {
         match self {
             PathComponent::Key(k) => PathComponent::<'static>::Key(k.into_owned().into()),
             PathComponent::Index(u) => PathComponent::<'static>::Index(u),
-            PathComponent::Invalid => PathComponent::Invalid
+            PathComponent::Invalid => PathComponent::Invalid,
         }
     }
 }
@@ -78,7 +78,7 @@ impl<'a> Iterator for PathIter<'a> {
                 State::Start => match c {
                     Some('.') | Some('[') | Some(']') | None => State::Invalid,
                     Some('\\') => State::Escape,
-                    Some(_) => State::Key(self.pos)
+                    Some(_) => State::Key(self.pos),
                 },
                 State::Key(start) => match c {
                     Some('.') | Some('[') | None => {
@@ -92,7 +92,7 @@ impl<'a> Iterator for PathIter<'a> {
                         self.temp.push_str(self.path.substring(start, self.pos));
                         State::Escape
                     }
-                    Some(_) => State::Key(start)
+                    Some(_) => State::Key(start),
                 },
                 State::EscapedKey => match c {
                     Some('.') | Some('[') | None => {
@@ -107,14 +107,14 @@ impl<'a> Iterator for PathIter<'a> {
                         self.temp.push(c);
                         State::EscapedKey
                     }
-                }
+                },
                 State::Escape => match c {
                     Some(c) if c == '.' || c == '[' || c == ']' || c == '\\' => {
                         self.temp.push(c);
                         State::EscapedKey
                     }
-                    _ => State::Invalid
-                }
+                    _ => State::Invalid,
+                },
                 State::Index(i) => match c {
                     Some(c) if ('0'..'9').contains(&c) => {
                         State::Index(10 * i + (c as usize - '0' as usize))
@@ -124,20 +124,20 @@ impl<'a> Iterator for PathIter<'a> {
                         res = Some(Some(PathComponent::Index(i)));
                         State::ClosingBracket
                     }
-                    _ => State::Invalid
-                }
+                    _ => State::Invalid,
+                },
                 State::Dot => match c {
                     Some('.') | Some('[') | Some(']') | None => State::Invalid,
                     Some('\\') => State::Escape,
-                    Some(_) => State::Key(self.pos)
-                }
+                    Some(_) => State::Key(self.pos),
+                },
                 State::OpeningBracket => match c {
                     Some(c) if ('0'..='9').contains(&c) => State::Index(c as usize - '0' as usize),
-                    _ => State::Invalid
-                }
+                    _ => State::Invalid,
+                },
                 State::ClosingBracket => match c {
                     Some('.') | Some('[') | None => char_to_state(c),
-                    _ => State::Invalid
+                    _ => State::Invalid,
                 },
                 State::End => {
                     res = Some(None);
@@ -162,7 +162,7 @@ fn char_to_state(c: Option<char>) -> State {
         Some(']') => State::ClosingBracket,
         Some('\\') => State::Escape,
         None => State::End,
-        _ => State::Invalid
+        _ => State::Invalid,
     }
 }
 
@@ -189,7 +189,7 @@ mod tests {
                     Key("squirrels".into()),
                     Key("are".into()),
                     Key("everywhere".into()),
-                ]
+                ],
             ),
             (
                 "flying.squirrel[123][0].tail",
@@ -199,7 +199,7 @@ mod tests {
                     Index(123),
                     Index(0),
                     Key("tail".into()),
-                ]
+                ],
             ),
             (
                 "flying[0].squirrel[1]",
@@ -207,17 +207,17 @@ mod tests {
                     Key("flying".into()),
                     Index(0),
                     Key("squirrel".into()),
-                    Index(1)
-                ]
+                    Index(1),
+                ],
             ),
             (
                 "flying\\[0\\]\\.squirrel[1].\\\\tail\\\\",
                 vec![
                     Key("flying[0].squirrel".into()),
                     Index(1),
-                    Key("\\tail\\".into())
-                ]
-            )
+                    Key("\\tail\\".into()),
+                ],
+            ),
         ];
 
         for (input, want) in tests {
@@ -236,7 +236,7 @@ mod tests {
             ".",
             ".flying[0]",
             "",
-            "invalid\\ escaping"
+            "invalid\\ escaping",
         ];
 
         for input in inputs {

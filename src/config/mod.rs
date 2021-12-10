@@ -1,58 +1,50 @@
-mod format;
-mod loading;
-mod diff;
-mod helper;
-mod provider;
 mod builder;
-mod resource;
-mod validation;
-mod global;
-mod proxy;
 mod component;
+mod diff;
+mod format;
+mod global;
+mod helper;
+mod loading;
+mod provider;
+mod proxy;
+mod resource;
 mod uri;
+mod validation;
 
 // re-export
-pub use proxy::ProxyConfig;
-pub use helper::*;
-pub use diff::ConfigDiff;
-pub use format::{Format, FormatHint};
-pub use component::{ComponentDescription, ExampleError, GenerateConfig};
-pub use loading::load;
-pub use provider::ProviderDescription;
-pub use uri::*;
 #[cfg(test)]
 pub use component::test_generate_config;
+pub use component::{ComponentDescription, ExampleError, GenerateConfig};
+pub use diff::ConfigDiff;
+pub use format::{Format, FormatHint};
+pub use helper::*;
+pub use loading::load;
+pub use provider::ProviderDescription;
+pub use proxy::ProxyConfig;
+pub use uri::*;
 
-use std::path::PathBuf;
 use async_trait::async_trait;
+use std::path::PathBuf;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
-use indexmap::IndexMap;
 use ::serde::{Deserialize, Serialize};
+use indexmap::IndexMap;
 
-use crate::{
-    pipeline::Pipeline,
-    sinks,
-    sources,
-    transforms,
-};
 use crate::shutdown::ShutdownSignal;
+use crate::{pipeline::Pipeline, sinks, sources, transforms};
 
-pub use resource::{
-    Protocol,
-    Resource,
-};
+pub use resource::{Protocol, Resource};
 
 pub use builder::Builder;
 
-pub use helper::{
-    deserialize_duration, deserialize_regex, serialize_duration,
-    serialize_regex, skip_serializing_if_default,
-};
-pub use loading::load_from_paths_with_provider;
-use futures::future::BoxFuture;
+pub use crate::config::global::GlobalOptions;
 use crate::extensions::Extension;
 use buffers::Acker;
-pub use crate::config::global::GlobalOptions;
+use futures::future::BoxFuture;
+pub use helper::{
+    deserialize_duration, deserialize_regex, serialize_duration, serialize_regex,
+    skip_serializing_if_default,
+};
+pub use loading::load_from_paths_with_provider;
 
 pub type HealthCheck = BoxFuture<'static, crate::Result<()>>;
 
@@ -201,7 +193,6 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
     }
 }
 
-
 #[derive(Debug, Default, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
@@ -272,7 +263,9 @@ pub trait TransformConfig: core::fmt::Debug + Send + Sync + dyn_clone::DynClone 
     /// Allows a transform configuration to expand itself into multiple "child"
     /// transformations to replace it. this allows a transform to act as a
     /// macro for various patterns
-    fn expand(&mut self) -> crate::Result<Option<(IndexMap<String, Box<dyn TransformConfig>>, ExpandType)>> {
+    fn expand(
+        &mut self,
+    ) -> crate::Result<Option<(IndexMap<String, Box<dyn TransformConfig>>, ExpandType)>> {
         Ok(None)
     }
 }
@@ -333,7 +326,9 @@ pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
 
     fn extension_type(&self) -> &'static str;
 
-    fn resources(&self) -> Vec<Resource> { Vec::new() }
+    fn resources(&self) -> Vec<Resource> {
+        Vec::new()
+    }
 }
 
 pub type SourceDescription = ComponentDescription<Box<dyn SourceConfig>>;

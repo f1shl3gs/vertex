@@ -1,5 +1,5 @@
-use crate::invalid_error;
 use super::{read_to_string, Error, ErrorContext};
+use crate::invalid_error;
 use event::{tags, Metric};
 use std::path::{Path, PathBuf};
 
@@ -597,7 +597,8 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
     }
 
     let pp = path.clone().join("ports");
-    let mut dirs = tokio::fs::read_dir(pp).await
+    let mut dirs = tokio::fs::read_dir(pp)
+        .await
         .context("failed to list InfiniBand ports")?;
     while let Some(entry) = dirs.next_entry().await? {
         let port = parse_infiniband_port(&name, entry.path()).await?;
@@ -606,7 +607,6 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
 
     Ok(device)
 }
-
 
 /// parse_infiniband_port scans predefined files in /sys/class/infiniband/<device>/ports/<port>
 /// directory and gets their contents
@@ -647,9 +647,7 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 
 // Parse InfiniBand state. Expected format: "<id>: <string-representation>"
 fn parse_state(s: &str) -> Result<(u32, String), Error> {
-    let parts = s.split(":")
-        .map(|p| p.trim())
-        .collect::<Vec<_>>();
+    let parts = s.split(":").map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
         return invalid_error!("failed to split {} into 'ID: Name'", s);
     }
@@ -662,8 +660,7 @@ fn parse_state(s: &str) -> Result<(u32, String), Error> {
 
 // Parse rate (example: "100 Gb/sec (4X EDR)") and return it as bytes/second
 fn parse_rate(s: &str) -> Result<u64, Error> {
-    let parts = s.splitn(2, " ")
-        .collect::<Vec<_>>();
+    let parts = s.splitn(2, " ").collect::<Vec<_>>();
     if parts.len() != 2 {
         return invalid_error!("failed to split {}", s);
     }
@@ -828,13 +825,16 @@ mod tests {
         let root = PathBuf::from("tests/fixtures/sys/class/infiniband");
         let devs = infiniband_class(root).await.unwrap();
 
-        assert_eq!(devs[0], InfiniBandDevice {
-            name: "hfi1_0".to_string(),
-            board_id: "HPE 100Gb 1-port OP101 QSFP28 x16 PCIe Gen3 with Intel Omni-Path Adapter".to_string(),
-            fw_ver: "1.27.0".to_string(),
-            hca_type: "".to_string(),
-            ports: vec![
-                InfiniBandPort {
+        assert_eq!(
+            devs[0],
+            InfiniBandDevice {
+                name: "hfi1_0".to_string(),
+                board_id:
+                    "HPE 100Gb 1-port OP101 QSFP28 x16 PCIe Gen3 with Intel Omni-Path Adapter"
+                        .to_string(),
+                fw_ver: "1.27.0".to_string(),
+                hca_type: "".to_string(),
+                ports: vec![InfiniBandPort {
                     name: "hfi1_0".to_string(),
                     port: 1,
                     state: "ACTIVE".to_string(),
@@ -874,99 +874,102 @@ mod tests {
                         unicast_xmit_packets: None,
                         vl15_dropped: Some(0),
                     },
-                }
-            ],
-        });
+                }],
+            }
+        );
 
-        assert_eq!(devs[1], InfiniBandDevice {
-            name: "mlx4_0".to_string(),
-            board_id: "SM_1141000001000".to_string(),
-            fw_ver: "2.31.5050".to_string(),
-            hca_type: "MT4099".to_string(),
-            ports: vec![
-                InfiniBandPort {
-                    name: "mlx4_0".to_string(),
-                    port: 1,
-                    state: "ACTIVE".to_string(),
-                    state_id: 4,
-                    phys_state: "LinkUp".to_string(),
-                    phys_state_id: 5,
-                    rate: 5000000000,
-                    counters: InfiniBandCounters {
-                        port_multicast_rcv_packets: None,
-                        port_multicast_xmit_packets: None,
-                        port_rcv_data_64: None,
-                        port_rcv_packets_64: None,
-                        port_unicast_rcv_packets: None,
-                        port_unicast_xmit_packets: None,
-                        port_xmit_data_64: None,
-                        port_xmit_packets_64: None,
-                        excessive_buffer_overrun_errors: Some(0),
-                        link_downed: Some(0),
-                        link_error_recovery: Some(0),
-                        local_link_integrity_errors: Some(0),
-                        multicast_rcv_packets: None,
-                        multicast_xmit_packets: None,
-                        port_rcv_constraint_errors: Some(0),
-                        port_rcv_data: Some(8884894436),
-                        port_rcv_discards: None,
-                        port_rcv_errors: Some(0),
-                        port_rcv_packets: Some(87169372),
-                        port_rcv_remote_physical_errors: Some(0),
-                        port_rcv_switch_relay_errors: Some(0),
-                        port_xmit_constraint_errors: Some(0),
-                        port_xmit_data: Some(106036453180),
-                        port_xmit_discards: Some(0),
-                        port_xmit_packets: Some(85734114),
-                        port_xmit_wait: Some(3599),
-                        symbol_error: Some(0),
-                        unicast_rcv_packets: None,
-                        unicast_xmit_packets: None,
-                        vl15_dropped: Some(0),
+        assert_eq!(
+            devs[1],
+            InfiniBandDevice {
+                name: "mlx4_0".to_string(),
+                board_id: "SM_1141000001000".to_string(),
+                fw_ver: "2.31.5050".to_string(),
+                hca_type: "MT4099".to_string(),
+                ports: vec![
+                    InfiniBandPort {
+                        name: "mlx4_0".to_string(),
+                        port: 1,
+                        state: "ACTIVE".to_string(),
+                        state_id: 4,
+                        phys_state: "LinkUp".to_string(),
+                        phys_state_id: 5,
+                        rate: 5000000000,
+                        counters: InfiniBandCounters {
+                            port_multicast_rcv_packets: None,
+                            port_multicast_xmit_packets: None,
+                            port_rcv_data_64: None,
+                            port_rcv_packets_64: None,
+                            port_unicast_rcv_packets: None,
+                            port_unicast_xmit_packets: None,
+                            port_xmit_data_64: None,
+                            port_xmit_packets_64: None,
+                            excessive_buffer_overrun_errors: Some(0),
+                            link_downed: Some(0),
+                            link_error_recovery: Some(0),
+                            local_link_integrity_errors: Some(0),
+                            multicast_rcv_packets: None,
+                            multicast_xmit_packets: None,
+                            port_rcv_constraint_errors: Some(0),
+                            port_rcv_data: Some(8884894436),
+                            port_rcv_discards: None,
+                            port_rcv_errors: Some(0),
+                            port_rcv_packets: Some(87169372),
+                            port_rcv_remote_physical_errors: Some(0),
+                            port_rcv_switch_relay_errors: Some(0),
+                            port_xmit_constraint_errors: Some(0),
+                            port_xmit_data: Some(106036453180),
+                            port_xmit_discards: Some(0),
+                            port_xmit_packets: Some(85734114),
+                            port_xmit_wait: Some(3599),
+                            symbol_error: Some(0),
+                            unicast_rcv_packets: None,
+                            unicast_xmit_packets: None,
+                            vl15_dropped: Some(0),
+                        },
                     },
-                },
-                InfiniBandPort {
-                    name: "mlx4_0".to_string(),
-                    port: 2,
-                    state: "ACTIVE".to_string(),
-                    state_id: 4,
-                    phys_state: "LinkUp".to_string(),
-                    phys_state_id: 5,
-                    rate: 5000000000,
-                    counters: InfiniBandCounters {
-                        port_multicast_rcv_packets: None,
-                        port_multicast_xmit_packets: None,
-                        port_rcv_data_64: None,
-                        port_rcv_packets_64: None,
-                        port_unicast_rcv_packets: None,
-                        port_unicast_xmit_packets: None,
-                        port_xmit_data_64: None,
-                        port_xmit_packets_64: None,
-                        excessive_buffer_overrun_errors: Some(0),
-                        link_downed: Some(0),
-                        link_error_recovery: Some(0),
-                        local_link_integrity_errors: Some(0),
-                        multicast_rcv_packets: None,
-                        multicast_xmit_packets: None,
-                        port_rcv_constraint_errors: Some(0),
-                        port_rcv_data: Some(9841747136),
-                        port_rcv_discards: None,
-                        port_rcv_errors: Some(0),
-                        port_rcv_packets: Some(89332064),
-                        port_rcv_remote_physical_errors: Some(0),
-                        port_rcv_switch_relay_errors: Some(0),
-                        port_xmit_constraint_errors: Some(0),
-                        port_xmit_data: Some(106161427560),
-                        port_xmit_discards: Some(0),
-                        port_xmit_packets: Some(88622850),
-                        port_xmit_wait: Some(3846),
-                        symbol_error: Some(0),
-                        unicast_rcv_packets: None,
-                        unicast_xmit_packets: None,
-                        vl15_dropped: Some(0),
+                    InfiniBandPort {
+                        name: "mlx4_0".to_string(),
+                        port: 2,
+                        state: "ACTIVE".to_string(),
+                        state_id: 4,
+                        phys_state: "LinkUp".to_string(),
+                        phys_state_id: 5,
+                        rate: 5000000000,
+                        counters: InfiniBandCounters {
+                            port_multicast_rcv_packets: None,
+                            port_multicast_xmit_packets: None,
+                            port_rcv_data_64: None,
+                            port_rcv_packets_64: None,
+                            port_unicast_rcv_packets: None,
+                            port_unicast_xmit_packets: None,
+                            port_xmit_data_64: None,
+                            port_xmit_packets_64: None,
+                            excessive_buffer_overrun_errors: Some(0),
+                            link_downed: Some(0),
+                            link_error_recovery: Some(0),
+                            local_link_integrity_errors: Some(0),
+                            multicast_rcv_packets: None,
+                            multicast_xmit_packets: None,
+                            port_rcv_constraint_errors: Some(0),
+                            port_rcv_data: Some(9841747136),
+                            port_rcv_discards: None,
+                            port_rcv_errors: Some(0),
+                            port_rcv_packets: Some(89332064),
+                            port_rcv_remote_physical_errors: Some(0),
+                            port_rcv_switch_relay_errors: Some(0),
+                            port_xmit_constraint_errors: Some(0),
+                            port_xmit_data: Some(106161427560),
+                            port_xmit_discards: Some(0),
+                            port_xmit_packets: Some(88622850),
+                            port_xmit_wait: Some(3846),
+                            symbol_error: Some(0),
+                            unicast_rcv_packets: None,
+                            unicast_xmit_packets: None,
+                            vl15_dropped: Some(0),
+                        },
                     },
-                },
-            ],
-        })
+                ],
+            }
+        )
     }
 }

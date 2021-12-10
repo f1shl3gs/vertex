@@ -1,17 +1,16 @@
 use async_trait::async_trait;
+use buffers::Acker;
 use event::Event;
-use futures::FutureExt;
 use futures::prelude::stream::BoxStream;
+use futures::FutureExt;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
-use buffers::Acker;
 
 use crate::{
+    config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
     impl_generate_config_from_default,
-    config::{SinkConfig, SinkContext, DataType, HealthCheck, SinkDescription},
-    sinks::{Sink, StreamSink}
+    sinks::{Sink, StreamSink},
 };
-
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -50,9 +49,7 @@ struct BlackholeSink {
 
 impl BlackholeSink {
     pub fn new(acker: Acker) -> Self {
-        Self {
-            acker
-        }
+        Self { acker }
     }
 }
 

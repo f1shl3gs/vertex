@@ -1,9 +1,8 @@
+use serde::{Deserializer, Serializer};
 use std::borrow::Cow;
 use std::num::ParseFloatError;
-use serde::{Deserializer, Serializer};
 
-use snafu::{Snafu, ResultExt};
-
+use snafu::{ResultExt, Snafu};
 
 // ICE Sizes, kibis of bits
 const BYTE: usize = 1 << (0 * 10);
@@ -75,8 +74,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         tn = num.replace(",", "");
     }
 
-    let f = tn.parse::<f64>()
-        .context(ParseFloatFailed)?;
+    let f = tn.parse::<f64>().context(ParseFloatFailed)?;
     let extra = &s[last_digit..];
     let extra = extra.trim().to_lowercase();
 
@@ -94,12 +92,18 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         "pb" | "p" => PBYTE,
         "eib" | "ei" => EIBYTE,
         "eb" | "e" => EBYTE,
-        _ => return Err(ParseBytesError::UnknownUnit { unit: extra.clone() })
+        _ => {
+            return Err(ParseBytesError::UnknownUnit {
+                unit: extra.clone(),
+            })
+        }
     };
 
     let f = (f * m as f64) as usize;
     if f > usize::MAX {
-        return Err(ParseBytesError::TooLarge { input: s.to_string() });
+        return Err(ParseBytesError::TooLarge {
+            input: s.to_string(),
+        });
     }
 
     Ok(f as usize)
@@ -137,22 +141,6 @@ pub fn serialize_bytes<S: Serializer>(u: &usize, s: S) -> Result<S::Ok, S::Error
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_bytes() {
-        let input = 82854982usize;
-
-        let s = bytes(input);
-        println!("{}", s);
-    }
-
-    #[test]
-    fn test_ibytes() {
-        let input = 82854982usize;
-
-        let s = ibytes(input);
-        println!("{}", s);
-    }
 
     #[test]
     fn test_parse_bytes() {

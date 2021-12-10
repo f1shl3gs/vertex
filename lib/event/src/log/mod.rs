@@ -1,22 +1,22 @@
-mod insert;
 mod contains;
 mod get;
+mod insert;
+mod keys;
 pub mod path_iter;
 mod remove;
-mod keys;
 
 use std::collections::BTreeMap;
 use std::fmt::Debug;
 
-use serde::{Deserialize, Serialize};
 use bytes::Bytes;
 use chrono::Utc;
+use serde::{Deserialize, Serialize};
 use tracing::field::Field;
 
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
+use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -142,11 +142,7 @@ impl LogRecord {
         insert::insert(&mut self.fields, key.as_ref(), value.into())
     }
 
-    pub fn try_insert_field(
-        &mut self,
-        key: impl AsRef<str>,
-        value: impl Into<Value> + Debug,
-    ) {
+    pub fn try_insert_field(&mut self, key: impl AsRef<str>, value: impl Into<Value> + Debug) {
         let key = key.as_ref();
         if !self.contains(key) {
             self.insert_field(key, value);
@@ -157,33 +153,23 @@ impl LogRecord {
         contains::contains(&self.fields, key.as_ref())
     }
 
-    pub fn get_field(
-        &self,
-        key: impl AsRef<str>,
-    ) -> Option<&Value> {
+    pub fn get_field(&self, key: impl AsRef<str>) -> Option<&Value> {
         get::get(&self.fields, key.as_ref())
     }
 
-    pub fn remove_field(
-        &mut self,
-        key: impl AsRef<str>,
-    ) -> Option<Value> {
+    pub fn remove_field(&mut self, key: impl AsRef<str>) -> Option<Value> {
         remove::remove(&mut self.fields, key.as_ref(), false)
     }
 
-    pub fn remove_field_prune(
-        &mut self,
-        key: impl AsRef<str>,
-        prune: bool,
-    ) -> Option<Value> {
+    pub fn remove_field_prune(&mut self, key: impl AsRef<str>, prune: bool) -> Option<Value> {
         remove::remove(&mut self.fields, key.as_ref(), prune)
     }
 
-    pub fn keys<'a>(&'a self) -> impl Iterator<Item=String> + 'a {
+    pub fn keys<'a>(&'a self) -> impl Iterator<Item = String> + 'a {
         keys::keys(&self.fields)
     }
 
-    pub fn all_fields(&self) -> impl Iterator<Item=(String, &Value)> + Serialize {
+    pub fn all_fields(&self) -> impl Iterator<Item = (String, &Value)> + Serialize {
         all_fields(&self.fields)
     }
 
@@ -196,6 +182,6 @@ impl LogRecord {
 pub fn fields_from_json(json_value: serde_json::Value) -> BTreeMap<String, Value> {
     match Value::from(json_value) {
         Value::Map(map) => map,
-        sth => panic!("Expected a map, got {:?}", sth)
+        sth => panic!("Expected a map, got {:?}", sth),
     }
 }

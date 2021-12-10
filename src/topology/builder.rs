@@ -5,25 +5,22 @@ use std::{
 };
 
 use crate::{
-    transforms::Transform,
+    buffers,
+    config::{Config, ConfigDiff, DataType, SinkContext, SourceContext},
+    pipeline::Pipeline,
+    shutdown::ShutdownCoordinator,
     topology::fanout::Fanout,
-    config::{
-        Config, SourceContext, ConfigDiff,
-        SinkContext, DataType,
-    }, shutdown::ShutdownCoordinator, pipeline::Pipeline, topology::task::{
-        TaskOutput,
-        Task,
-    }, buffers,
+    topology::task::{Task, TaskOutput},
+    transforms::Transform,
 };
 
-use stream_cancel::{Trigger, Tripwire};
-use futures::{StreamExt, SinkExt, TryFutureExt, FutureExt};
-use event::Event;
-use internal::{EventsReceived, EventsSent};
+use super::BuiltBuffer;
 use crate::config::{ExtensionContext, ProxyConfig};
 use crate::topology::fanout::ControlChannel;
-use super::{BuiltBuffer};
-
+use event::Event;
+use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use internal::{EventsReceived, EventsSent};
+use stream_cancel::{Trigger, Tripwire};
 
 const DEFAULT_CHANNEL_BUFFER_SIZE: usize = 1024;
 
@@ -56,11 +53,12 @@ pub async fn build_pieces(
     // Build extensions
     for (name, extension) in config
         .extensions
-        .iter().
-        filter(|(name, _)| diff.extensions.contains_new(name))
+        .iter()
+        .filter(|(name, _)| diff.extensions.contains_new(name))
     {
         let typetag = extension.extension_type();
-        let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_extension(name);
+        let (shutdown_signal, force_shutdown_tripwire) =
+            shutdown_coordinator.register_extension(name);
         let ctx = ExtensionContext {
             name: name.to_string(),
             global: config.global.clone(),
@@ -70,23 +68,18 @@ pub async fn build_pieces(
         let ext = match extension.build(ctx).await {
             Ok(ext) => ext,
             Err(err) => {
-                errors.push(
-                    format!("Extension {}: {}", name, err)
-                );
+                errors.push(format!("Extension {}: {}", name, err));
 
                 continue;
             }
         };
 
         let task = Task::new(name, typetag, async {
-            match futures::future::try_select(
-                ext,
-                force_shutdown_tripwire.unit_error().boxed(),
-            ).await {
-                Ok(_) => {
-                    Ok(TaskOutput::Source)
-                }
-                Err(_) => Err(())
+            match futures::future::try_select(ext, force_shutdown_tripwire.unit_error().boxed())
+                .await
+            {
+                Ok(_) => Ok(TaskOutput::Source),
+                Err(_) => Err(()),
             }
         });
 
@@ -115,18 +108,13 @@ pub async fn build_pieces(
         let src = match source.inner.build(ctx).await {
             Ok(s) => s,
             Err(err) => {
-                errors.push(
-                    format!("Source {}: {}", name, err)
-                );
+                errors.push(format!("Source {}: {}", name, err));
                 continue;
             }
         };
 
         let (output, control) = Fanout::new();
-        let pump = rx
-            .map(Ok)
-            .forward(output)
-            .map_ok(|_| TaskOutput::Source);
+        let pump = rx.map(Ok).forward(output).map_ok(|_| TaskOutput::Source);
         let pump = Task::new(name, typetag, pump);
 
         // The force_shutdown_tripwire is a Future that when it resolves means
@@ -137,11 +125,11 @@ pub async fn build_pieces(
         // resolves while the server Task is still running the Task will simply
         // be dropped on the floor.
         let task = async {
-            match futures::future::try_select(src, force_shutdown_tripwire.unit_error().boxed()).await {
-                Ok(_) => {
-                    Ok(TaskOutput::Source)
-                }
-                Err(_) => Err(())
+            match futures::future::try_select(src, force_shutdown_tripwire.unit_error().boxed())
+                .await
+            {
+                Ok(_) => Ok(TaskOutput::Source),
+                Err(_) => Err(()),
             }
         };
         let task = Task::new(name, typetag, task);
@@ -163,13 +151,10 @@ pub async fn build_pieces(
         let transform = match transform.inner.build(&config.global).await {
             Ok(t) => t,
             Err(err) => {
-                errors.push(
-                    format!("Transform {}, {}", name, err)
-                );
+                errors.push(format!("Transform {}, {}", name, err));
                 continue;
             }
         };
-
 
         let (input_tx, input_rx, _) = crate::buffers::BufferConfig::default()
             .build(&config.global.data_dir, "")
@@ -188,7 +173,7 @@ pub async fn build_pieces(
                 .flat_map(move |events| {
                     let mut output = Vec::with_capacity(events.len());
                     let mut buf = Vec::with_capacity(4); // also an arbitrary,
-                    // smallish constant
+                                                         // smallish constant
                     for v in events {
                         t.transform(&mut buf, v);
                         output.append(&mut buf);
@@ -223,9 +208,7 @@ pub async fn build_pieces(
                     .boxed()
             }
         }
-            .map_ok(|_| {
-                TaskOutput::Transform
-            });
+        .map_ok(|_| TaskOutput::Transform);
 
         let task = Task::new(name, typetag, transform);
         inputs.insert(name.clone(), (input_tx, trans_inputs.clone()));
@@ -289,16 +272,16 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|event| ready(filter_event_type(event, input_type)))
-                    .inspect(|ev| emit!(&EventsReceived {
-                        count: 1,
-                        byte_size: ev.size_of(),
-                    }))
+                    .inspect(|ev| {
+                        emit!(&EventsReceived {
+                            count: 1,
+                            byte_size: ev.size_of(),
+                        })
+                    })
                     .take_until(tripwire),
             )
-                .await
-                .map(|_| {
-                    TaskOutput::Sink(rx, acker)
-                })
+            .await
+            .map(|_| TaskOutput::Sink(rx, acker))
         };
 
         let task = Task::new(name, typetag, sink);
@@ -309,12 +292,7 @@ pub async fn build_pieces(
                 tokio::time::timeout(duration, health_check)
                     .map(|result| match result {
                         Ok(Ok(_)) => {
-                            info!(
-                                message = "Health check passed",
-                                kind = "sink",
-                                typetag,
-                                ?id,
-                            );
+                            info!(message = "Health check passed", kind = "sink", typetag, ?id,);
                             Ok(TaskOutput::HealthCheck)
                         }
 
@@ -340,7 +318,8 @@ pub async fn build_pieces(
 
                             Err(())
                         }
-                    }).await
+                    })
+                    .await
             } else {
                 info!("Health check disabled");
                 Ok(TaskOutput::HealthCheck)
@@ -375,6 +354,6 @@ fn filter_event_type(event: &Event, data_type: DataType) -> bool {
         DataType::Log => matches!(event, Event::Log(_)),
         DataType::Metric => matches!(event, Event::Metric(_)),
         // DataType::Trace => matches!(event, Event::)
-        _ => panic!("unknown event type")
+        _ => panic!("unknown event type"),
     }
 }

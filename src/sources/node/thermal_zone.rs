@@ -1,9 +1,7 @@
-/// Exposes thermal zone & cooling device statistics from /sys/class/thermal
-
-use std::path::PathBuf;
+use super::{read_into, read_to_string, Error};
 use event::{tags, Metric};
-use super::{Error, read_to_string, read_into};
-
+/// Exposes thermal zone & cooling device statistics from /sys/class/thermal
+use std::path::PathBuf;
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>
@@ -44,9 +42,10 @@ async fn thermal_zone_stats(root: &str) -> Result<Vec<ThermalZoneStats>, Error> 
 
 async fn parse_thermal_zone(root: &PathBuf) -> Result<ThermalZoneStats, Error> {
     let name = root.file_name().unwrap();
-    let name = name.to_str()
-        .unwrap().
-        strip_prefix("thermal_zone")
+    let name = name
+        .to_str()
+        .unwrap()
+        .strip_prefix("thermal_zone")
         .unwrap()
         .to_string();
 
@@ -64,9 +63,9 @@ async fn parse_thermal_zone(root: &PathBuf) -> Result<ThermalZoneStats, Error> {
         Ok(content) => match content.as_str() {
             "enabled" => Some(true),
             "disabled" => Some(false),
-            _ => None
-        }
-        Err(_) => None
+            _ => None,
+        },
+        Err(_) => None,
     };
 
     let path = root.join("passive");
@@ -119,9 +118,10 @@ async fn cooling_device_stats(root: &str) -> Result<Vec<CoolingDeviceStats>, Err
 
 async fn parse_cooling_device_stats(root: &PathBuf) -> Result<CoolingDeviceStats, Error> {
     let name = root.file_name().unwrap();
-    let name = name.to_str()
-        .unwrap().
-        strip_prefix("cooling_device")
+    let name = name
+        .to_str()
+        .unwrap()
+        .strip_prefix("cooling_device")
         .unwrap()
         .to_string();
 
@@ -195,43 +195,49 @@ mod tests {
     async fn test_thermal_zone_stats() {
         let root = "tests/fixtures/sys";
         let stats = thermal_zone_stats(root).await.unwrap();
-        assert_eq!(stats, vec![
-            ThermalZoneStats {
-                name: "0".to_string(),
-                typ: "bcm2835_thermal".to_string(),
-                policy: "step_wise".to_string(),
-                temp: 49925,
-                mode: None,
-                passive: None,
-            },
-            ThermalZoneStats {
-                name: "1".to_string(),
-                typ: "acpitz".to_string(),
-                policy: "step_wise".to_string(),
-                temp: -44000,
-                mode: Some(true),
-                passive: Some(0),
-            },
-        ]);
+        assert_eq!(
+            stats,
+            vec![
+                ThermalZoneStats {
+                    name: "0".to_string(),
+                    typ: "bcm2835_thermal".to_string(),
+                    policy: "step_wise".to_string(),
+                    temp: 49925,
+                    mode: None,
+                    passive: None,
+                },
+                ThermalZoneStats {
+                    name: "1".to_string(),
+                    typ: "acpitz".to_string(),
+                    policy: "step_wise".to_string(),
+                    temp: -44000,
+                    mode: Some(true),
+                    passive: Some(0),
+                },
+            ]
+        );
     }
 
     #[tokio::test]
     async fn test_cooling_device_stats() {
         let root = "tests/fixtures/sys";
         let stats = cooling_device_stats(root).await.unwrap();
-        assert_eq!(stats, vec![
-            CoolingDeviceStats {
-                name: "0".to_string(),
-                typ: "Processor".to_string(),
-                max_state: 50,
-                cur_state: 0,
-            },
-            CoolingDeviceStats {
-                name: "1".to_string(),
-                typ: "intel_powerclamp".to_string(),
-                max_state: 27,
-                cur_state: -1,
-            },
-        ])
+        assert_eq!(
+            stats,
+            vec![
+                CoolingDeviceStats {
+                    name: "0".to_string(),
+                    typ: "Processor".to_string(),
+                    max_state: 50,
+                    cur_state: 0,
+                },
+                CoolingDeviceStats {
+                    name: "1".to_string(),
+                    typ: "intel_powerclamp".to_string(),
+                    max_state: 27,
+                    cur_state: -1,
+                },
+            ]
+        )
     }
 }

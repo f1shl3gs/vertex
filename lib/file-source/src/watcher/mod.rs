@@ -2,21 +2,17 @@ use std::{
     fs,
     io::{self, BufRead, Seek},
     path::PathBuf,
-    time::{
-        Duration,
-        Instant,
-    },
+    time::{Duration, Instant},
 };
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
-use tracing::{debug};
 use flate2::bufread::MultiGzDecoder;
+use tracing::debug;
 
-use crate::{Position, ReadFrom};
 use crate::buffer::read_until_with_max_size;
 use crate::metadata_ext::PortableFileExt;
-
+use crate::{Position, ReadFrom};
 
 /// The `Watcher` struct defines the polling based state machine which reads
 /// from a file path, transparently updating the underlying file descriptor
@@ -62,8 +58,7 @@ impl Watcher {
         let too_old = if let (Some(ignore_before), Ok(modified_time)) = (
             ignore_before,
             metadata.modified().map(DateTime::<Utc>::from),
-        )
-        {
+        ) {
             modified_time < ignore_before
         } else {
             false
@@ -74,13 +69,19 @@ impl Watcher {
         // Determine the actual position at which we should start reading
         let (reader, position): (Box<dyn BufRead>, Position) = match (gzipped, too_old, read_from) {
             (true, true, _) => {
-                debug!("not reading gzipped file older than `ignore_older` {:?}", path);
+                debug!(
+                    "not reading gzipped file older than `ignore_older` {:?}",
+                    path
+                );
                 // TODO: why null_reader is needed?
                 (Box::new(null_reader()), 0)
             }
 
             (true, _, ReadFrom::Checkpoint(pos)) => {
-                debug!("Not re-reading gzipped file with existing stored offset, {:?} at {}", path, pos);
+                debug!(
+                    "Not re-reading gzipped file with existing stored offset, {:?} at {}",
+                    path, pos
+                );
                 (Box::new(null_reader()), pos)
             }
 
@@ -89,7 +90,10 @@ impl Watcher {
             // compressed file from the beginning even when `read_from = end` ( implicitly
             // via default or explicitly via config)?
             (true, _, ReadFrom::End) => {
-                debug!("Can't read from the end of already-compressed file, {:?}", path);
+                debug!(
+                    "Can't read from the end of already-compressed file, {:?}",
+                    path
+                );
                 (Box::new(null_reader()), 0)
             }
 
@@ -118,7 +122,8 @@ impl Watcher {
             }
         };
 
-        let ts = metadata.modified()
+        let ts = metadata
+            .modified()
             .ok()
             .and_then(|mtime| mtime.elapsed().ok())
             .and_then(|diff| Instant::now().checked_sub(diff))
@@ -252,8 +257,8 @@ impl Watcher {
 
     #[inline]
     pub fn should_read(&self) -> bool {
-        self.last_read_success.elapsed() < Duration::from_secs(10) ||
-            self.last_read_attempt.elapsed() > Duration::from_secs(10)
+        self.last_read_success.elapsed() < Duration::from_secs(10)
+            || self.last_read_attempt.elapsed() > Duration::from_secs(10)
     }
 }
 

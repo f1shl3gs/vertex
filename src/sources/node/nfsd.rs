@@ -1,11 +1,10 @@
-use crate::invalid_error;
 use super::Error;
+use crate::invalid_error;
 use crate::sources::node::nfs::{Network, V2Stats, V3Stats};
+use event::{tags, Metric};
+use std::convert::{TryFrom, TryInto};
 use std::path::Path;
 use tokio::io::AsyncBufReadExt;
-use std::convert::{TryFrom, TryInto};
-use event::{Metric, tags};
-
 
 // ReplyCache models the "rc" line.
 #[derive(Debug, Default, PartialEq)]
@@ -293,7 +292,6 @@ struct ServerRPCStats {
     v4_ops: V4Ops,
 }
 
-
 async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Error> {
     let f = tokio::fs::File::open(path).await?;
     let reader = tokio::io::BufReader::new(f);
@@ -301,10 +299,7 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
 
     let mut stats = ServerRPCStats::default();
     while let Some(line) = lines.next_line().await? {
-        let parts = line
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {
             return invalid_error!("invalid NFSd metric line {}", line);
@@ -326,7 +321,7 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
             _ => parts[1..]
                 .iter()
                 .map(|p| (*p).parse::<u64>().unwrap_or(0))
-                .collect::<Vec<_>>()
+                .collect::<Vec<_>>(),
         };
 
         let metric_line = parts[0];
@@ -342,7 +337,7 @@ async fn server_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ServerRPCStats, Err
             "proc3" => stats.v3_stats = values.try_into()?,
             "proc4" => stats.server_v4_stats = values.try_into()?,
             "proc4ops" => stats.v4_ops = values.try_into()?,
-            _ => return invalid_error!("errors parsing NFSd metric line {}", line)
+            _ => return invalid_error!("errors parsing NFSd metric line {}", line),
         }
     }
 
@@ -358,7 +353,7 @@ macro_rules! rpc_metric {
             tags! {
                 "proto" => $proto.to_string(),
                 "method" => $name.to_string()
-            }
+            },
         )
     };
 }
@@ -383,7 +378,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd Reply Cache non-idempotent operations (rename/delete/…).",
             stats.reply_cache.no_cache as f64,
         ),
-
         // collects statistics for the file handles
         // NOTE: Other FileHandles entries are unused in the kernel
         Metric::sum(
@@ -391,7 +385,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd stale file handles",
             stats.file_handles.stale as f64,
         ),
-
         // collects statistics for the bytes in/out
         Metric::sum(
             "node_nfsd_disk_bytes_read_total",
@@ -403,14 +396,12 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total NFSd bytes written.",
             stats.input_output.write as f64,
         ),
-
         // collects statistics for kernel server threads
         Metric::gauge(
             "node_nfsd_server_threads",
             "Total number of NFSd kernel threads that are running.",
             stats.threads.threads as f64,
         ),
-
         // collects statistics for the read ahead cache.
         Metric::gauge(
             "node_nfsd_read_ahead_cache_size_blocks",
@@ -422,7 +413,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd read ahead cache not found.",
             stats.read_ahead_cache.not_found as f64,
         ),
-
         // collects statistics for network packets/connections.
         Metric::sum_with_tags(
             "node_nfsd_packets_total",
@@ -445,7 +435,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd TCP connections.",
             stats.network.tcp_connect as f64,
         ),
-
         // collects statistics for kernel server RPCs.
         Metric::sum_with_tags(
             "node_nfsd_rpc_errors_total",
@@ -476,7 +465,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             "Total number of NFSd RPCs.",
             stats.server_rpc.rpc_count as f64,
         ),
-
         // collects statistics for NFSv2 requests
         rpc_metric!("2", "GetAttr", stats.v2_stats.get_attr),
         rpc_metric!("2", "SetAttr", stats.v2_stats.set_attr),
@@ -494,7 +482,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         rpc_metric!("2", "MkDir", stats.v2_stats.mkdir),
         rpc_metric!("2", "ReadDir", stats.v2_stats.read_dir),
         rpc_metric!("2", "FsStat", stats.v2_stats.fs_stat),
-
         // collects statistics for NFSv3 requests
         rpc_metric!("3", "GetAttr", stats.v3_stats.get_attr),
         rpc_metric!("3", "SetAttr", stats.v3_stats.set_attr),
@@ -517,7 +504,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         rpc_metric!("3", "FsInfo", stats.v3_stats.fs_info),
         rpc_metric!("3", "PathConf", stats.v3_stats.path_conf),
         rpc_metric!("3", "Commit", stats.v3_stats.commit),
-
         // collects statistics for NFSv4 requests
         rpc_metric!("4", "Access", stats.v4_ops.access),
         rpc_metric!("4", "Close", stats.v4_ops.close),
@@ -558,8 +544,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use tempfile::tempdir;
     use super::*;
+    use tempfile::tempdir;
 
     #[tokio::test]
     async fn test_server_rpc_stats() {

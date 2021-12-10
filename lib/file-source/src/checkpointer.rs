@@ -1,15 +1,14 @@
-use std::collections::BTreeSet;
+use crate::fingerprinter::{Fingerprint, Fingerprinter};
 use crate::Position;
-use std::{
-    io,
-    fs,
-    path::{Path, PathBuf},
-};
-use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Utc};
 use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
-use crate::fingerprinter::{Fingerprint, Fingerprinter};
+use std::collections::BTreeSet;
+use std::sync::{Arc, Mutex};
+use std::{
+    fs, io,
+    path::{Path, PathBuf},
+};
 use tracing::{error, info, warn};
 
 const TMP_FILE_NAME: &str = "checkpoints.new.json";
@@ -23,9 +22,7 @@ const STABLE_FILE_NAME: &str = "checkpoints.json";
 #[serde(tag = "version", rename_all = "snake_case")]
 enum State {
     #[serde(rename = "1")]
-    V1 {
-        checkpoints: BTreeSet<Checkpoint>
-    }
+    V1 { checkpoints: BTreeSet<Checkpoint> },
 }
 
 /// A simple JSON-friendly struct of the fingerprint/position pair, since
@@ -97,7 +94,8 @@ impl CheckpointsView {
         // Collect all of the expired keys. Removing them whil iteration can
         // lead to deadlocks, the set should be small, and this is not a
         // performance-sensitive path.
-        let to_remove = self.removed_times
+        let to_remove = self
+            .removed_times
             .iter()
             .filter(|entry| {
                 let ts = entry.value();
@@ -137,7 +135,8 @@ impl CheckpointsView {
 
     fn get_state(&self) -> State {
         State::V1 {
-            checkpoints: self.checkpoints
+            checkpoints: self
+                .checkpoints
                 .iter()
                 .map(|entry| {
                     let fp = entry.key();
@@ -146,13 +145,14 @@ impl CheckpointsView {
                     Checkpoint {
                         fingerprint: *fp,
                         position: *pos,
-                        modified: self.modified_times
+                        modified: self
+                            .modified_times
                             .get(fp)
                             .map(|r| *r.value())
                             .unwrap_or_else(Utc::now),
                     }
                 })
-                .collect()
+                .collect(),
         }
     }
 
@@ -167,7 +167,8 @@ impl CheckpointsView {
             self.update_key(old_checksum, fp);
         }
 
-        if let Some((_, pos)) = self.checkpoints
+        if let Some((_, pos)) = self
+            .checkpoints
             .remove(&Fingerprint::Unknown(fp.as_legacy()))
         {
             self.update(fp, pos);
@@ -217,7 +218,7 @@ impl Checkpointer {
             BytesChecksum(c) => format!("g{:x}.{}", c, pos),
             FirstLinesChecksum(c) => format!("h{:x}.{}", c, pos),
             DevInode(dev, ino) => format!("i{:x}.{:x}.{}", dev, ino, pos),
-            Unknown(x) => format!("{:x}.{}", x, pos)
+            Unknown(x) => format!("{:x}.{}", x, pos),
         };
 
         self.directory.join(path)
@@ -245,7 +246,8 @@ impl Checkpointer {
             }
 
             'i' => {
-                let (dev, ino, pos) = scan_fmt!(filename, "i{x}.{x}.{}", [hex u64], [hex u64], Position).unwrap();
+                let (dev, ino, pos) =
+                    scan_fmt!(filename, "i{x}.{x}.{}", [hex u64], [hex u64], Position).unwrap();
                 (DevInode(dev, ino), pos)
             }
 
@@ -357,7 +359,10 @@ impl Checkpointer {
             }
 
             Err(err) => {
-                error!("Unable to recover checkpoint data from interrupted process, err: {}", err)
+                error!(
+                    "Unable to recover checkpoint data from interrupted process, err: {}",
+                    err
+                )
             }
         }
 
@@ -417,14 +422,13 @@ impl Checkpointer {
     }
 }
 
-
 #[cfg(test)]
 mod test {
+    use super::*;
+    use crate::fingerprinter::FingerprintStrategy;
     use chrono::{Duration, Utc};
     use pretty_assertions::assert_eq;
     use tempfile::tempdir;
-    use crate::fingerprinter::FingerprintStrategy;
-    use super::*;
 
     #[test]
     fn test_checkpointer_basics() {
@@ -827,7 +831,7 @@ mod test {
             data_dir.path().join("checkpoints.json"),
             serialized_checkpoints,
         )
-            .unwrap();
+        .unwrap();
 
         chkptr.read_checkpoints(None);
 

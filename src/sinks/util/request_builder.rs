@@ -1,10 +1,9 @@
 use std::io;
 
-use event::encoding::Encoder;
 use crate::sinks::util::compressor::Compressor;
+use event::encoding::Encoder;
 
 use super::buffer::Compression;
-
 
 /// Generalized interface for defining how a batch of events will be turned into a request.
 pub trait RequestBuilder<Input> {
@@ -29,8 +28,7 @@ pub trait RequestBuilder<Input> {
 
     fn encode_events(&self, events: Self::Events) -> Result<Self::Payload, Self::Error> {
         let mut compressor = Compressor::from(self.compression());
-        let _ = self.encoder()
-            .encode(events, &mut compressor)?;
+        let _ = self.encoder().encode(events, &mut compressor)?;
 
         Ok(compressor.into_inner().into())
     }
@@ -58,7 +56,10 @@ pub trait IncrementalRequestBuilder<Input> {
     type Error;
 
     /// Incrementally encodes the given input, potentially generating multiple payloads.
-    fn encode_events_incremental(&mut self, input: Input) -> Vec<Result<(Self::Metadata, Self::Payload), Self::Error>>;
+    fn encode_events_incremental(
+        &mut self,
+        input: Input,
+    ) -> Vec<Result<(Self::Metadata, Self::Payload), Self::Error>>;
 
     /// Builds a request for the given metadata and payload
     fn build_request(&mut self, metadata: Self::Metadata, payload: Self::Payload) -> Self::Request;

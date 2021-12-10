@@ -1,11 +1,10 @@
 use std::collections::BTreeMap;
 
+use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
-use event::{Metric, tags};
 
-use super::{QueryFailed, valid_name};
-
+use super::{valid_name, QueryFailed};
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
@@ -21,7 +20,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
     let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed { query: GLOBAL_STATUS_QUERY })?;
+        .context(QueryFailed {
+            query: GLOBAL_STATUS_QUERY,
+        })?;
 
     let mut metrics = vec![];
     let mut text_items = BTreeMap::new();
@@ -154,15 +155,41 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
     // mysql_galera_evs_repl_latency
     if text_items.get("wsrep_evs_repl_latency").unwrap() != "" {
         let mut evs = [
-            ("min_seconds", 0f64, 0usize, "PXC/Galera group communication latency. Min value."),
-            ("avg_seconds", 0f64, 1usize, "PXC/Galera group communication latency. Avg value."),
-            ("max_seconds", 0f64, 2usize, "PXC/Galera group communication latency. Max value."),
-            ("stdev", 0f64, 3usize, "PXC/Galera group communication latency. Standard Deviation."),
-            ("sample_size", 0f64, 4usize, "PXC/Galera group communication latency. Sample Size.")
+            (
+                "min_seconds",
+                0f64,
+                0usize,
+                "PXC/Galera group communication latency. Min value.",
+            ),
+            (
+                "avg_seconds",
+                0f64,
+                1usize,
+                "PXC/Galera group communication latency. Avg value.",
+            ),
+            (
+                "max_seconds",
+                0f64,
+                2usize,
+                "PXC/Galera group communication latency. Max value.",
+            ),
+            (
+                "stdev",
+                0f64,
+                3usize,
+                "PXC/Galera group communication latency. Standard Deviation.",
+            ),
+            (
+                "sample_size",
+                0f64,
+                4usize,
+                "PXC/Galera group communication latency. Sample Size.",
+            ),
         ];
 
         let mut parsing_success = true;
-        let values = text_items.get("wsrep_evs_repl_latency")
+        let values = text_items
+            .get("wsrep_evs_repl_latency")
             .unwrap()
             .split("/")
             .collect::<Vec<_>>();
@@ -172,7 +199,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
                 let index = *index;
                 match values[index].parse::<f64>() {
                     Ok(v) => *value = v,
-                    Err(_) => parsing_success = false
+                    Err(_) => parsing_success = false,
                 }
             }
 
@@ -198,7 +225,7 @@ fn is_global_status(name: &str) -> bool {
         "connection_errors_",
         "innodb_buffer_pool_pages_",
         "innodb_rows_",
-        "performance_schema_"
+        "performance_schema_",
     ];
 
     GLOBAL_STATUS_PREFIXES.contains(&name)
@@ -206,8 +233,8 @@ fn is_global_status(name: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
+    use crate::sources::mysqld::test_utils::setup_and_run;
 
     #[tokio::test]
     async fn test_gather() {

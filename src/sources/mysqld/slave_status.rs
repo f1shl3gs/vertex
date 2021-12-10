@@ -1,13 +1,12 @@
 use std::collections::BTreeMap;
 
 use chrono::NaiveDateTime;
-use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};
-use sqlx::mysql::MySqlRow;
-use event::{Metric, tags};
+use event::{tags, Metric};
 use regex::Regex;
+use sqlx::mysql::MySqlRow;
+use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};
 
 use crate::sources::mysqld::Error;
-
 
 #[derive(Default, Debug)]
 struct Record {
@@ -33,7 +32,9 @@ impl<'r> FromRow<'r, MySqlRow> for Record {
                 // MySQL & Percona
                 "Channel_Name" => record.channel_name = row.try_get::<'r, String, _>(index)?,
                 // MariaDB
-                "Connection_name" => record.connection_name = row.try_get::<'r, String, _>(index)?,
+                "Connection_name" => {
+                    record.connection_name = row.try_get::<'r, String, _>(index)?
+                }
                 _ => {
                     // TODO: this implement is ugly, it could be simple and clear if we can
                     //   access the value of `raw`'s value([u8]), but it is defined with "pub(crate)"
@@ -64,10 +65,7 @@ impl<'r> FromRow<'r, MySqlRow> for Record {
                         continue;
                     }
 
-                    debug!(
-                        message = "unknown column type from slave status",
-                        name,
-                    );
+                    debug!(message = "unknown column type from slave status", name,);
                 }
             }
         }
@@ -93,7 +91,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
                             record = Some(r);
                             break 'outer;
                         }
-                        _ => continue
+                        _ => continue,
                     }
                 }
             }
@@ -172,9 +170,9 @@ fn parse_status(val: &str) -> Option<f64> {
 
 #[cfg(test)]
 mod tests {
-    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
+    use crate::sources::mysqld::test_utils::setup_and_run;
+    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 
     #[tokio::test]
     async fn test_local_gather() {
@@ -207,12 +205,14 @@ mod tests {
             ("xfdaf.123f", None),
             ("Something_Unexpect", None),
             ("100", Some(100.0)),
-            ("123.4", Some(123.4))
+            ("123.4", Some(123.4)),
         ] {
             assert_eq!(
                 parse_status(input),
                 want,
-                "input: {}, want: {:?}", input, want,
+                "input: {}, want: {:?}",
+                input,
+                want,
             );
         }
     }

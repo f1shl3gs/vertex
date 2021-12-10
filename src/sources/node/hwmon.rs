@@ -1,60 +1,56 @@
 use std::collections::BTreeMap;
-use std::path::{Path};
+use std::path::Path;
 
 use event::{tags, Metric};
 use regex::Regex;
 
-use super::{Error, ErrorContext, read_to_string};
-
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let entries = std::fs::read_dir(format!("{}/class/hwmon", sys_path))?
         .collect::<Result<Vec<_>, std::io::Error>>()?;
 
-    let tasks = entries
-        .into_iter()
-        .map(|entry| {
-            tokio::spawn(async move {
-                let meta = entry.metadata()?;
-                let meta = match meta.file_type().is_symlink() {
-                    true => {
-                        match tokio::fs::canonicalize(entry.path()).await {
-                            Ok(p) => p.metadata()?,
-                            Err(err) => return Err(err)
-                        }
-                    }
-                    false => meta
-                };
+    let tasks = entries.into_iter().map(|entry| {
+        tokio::spawn(async move {
+            let meta = entry.metadata()?;
+            let meta = match meta.file_type().is_symlink() {
+                true => match tokio::fs::canonicalize(entry.path()).await {
+                    Ok(p) => p.metadata()?,
+                    Err(err) => return Err(err),
+                },
+                false => meta,
+            };
 
-                if !meta.is_dir() {
-                    return Ok(vec![]);
+            if !meta.is_dir() {
+                return Ok(vec![]);
+            }
+
+            let ep = entry.path();
+            let dir = ep.to_str().unwrap();
+            match hwmon_metrics(dir).await {
+                Ok(metrics) => Ok(metrics),
+                Err(err) => {
+                    warn!(
+                        message = "hwmon_metrics error {}",
+                        %err,
+                    );
+
+                    Ok(vec![])
                 }
+            }
+        })
+    });
 
-                let ep = entry.path();
-                let dir = ep.to_str().unwrap();
-                match hwmon_metrics(dir).await {
-                    Ok(metrics) => Ok(metrics),
-                    Err(err) => {
-                        warn!(
-                                message = "hwmon_metrics error {}",
-                                %err,
-                            );
-
-                        Ok(vec![])
-                    }
-                }
-            })
-        });
-
-    let metrics = futures::future::join_all(tasks).await
-        .iter()
-        .fold(Vec::<Metric>::new(), |mut metrics, result| {
+    let metrics = futures::future::join_all(tasks).await.iter().fold(
+        Vec::<Metric>::new(),
+        |mut metrics, result| {
             if let Ok(Ok(ms)) = result {
                 metrics.extend_from_slice(ms.as_slice())
             }
 
             metrics
-        });
+        },
+    );
 
     Ok(metrics)
 }
@@ -81,7 +77,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             tags!(
                 "chip" => chip,
                 "chip_name" => chip_name,
-            )
+            ),
         ));
     }
 
@@ -102,18 +98,16 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
         match props.get("label") {
             Some(v) => {
                 if v != "" {
-                    metrics.push(
-                        Metric::gauge_with_tags(
-                             "node_hwmon_sensor_label",
-                             "Label for given chip and sensor",
-                             1f64,
-                             tags!(
-                                "label" => v,
-                                "chip" => chip,
-                                "sensor" => sensor,
-                             ),
-                         )
-                    );
+                    metrics.push(Metric::gauge_with_tags(
+                        "node_hwmon_sensor_label",
+                        "Label for given chip and sensor",
+                        1f64,
+                        tags!(
+                           "label" => v,
+                           "chip" => chip,
+                           "sensor" => sensor,
+                        ),
+                    ));
                 }
             }
             _ => {}
@@ -154,7 +148,9 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                     pr.unwrap()
                 }
 
-                None => { continue; }
+                None => {
+                    continue;
+                }
             };
 
             metrics.push(Metric::gauge_with_tags(
@@ -208,7 +204,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
             let pv = match value.parse::<f64>() {
                 Ok(v) => v,
-                _ => continue
+                _ => continue,
             };
 
             // special key, fault, alarm & beep should be handed out without units
@@ -217,28 +213,28 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let desc = &format!("Hardware sensor {} status ({})", sensor, sensor_type);
 
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        ),
-                    ));
+                    name,
+                    desc,
+                    pv,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
             if element == "beep" {
                 let name = name + "_enabled";
                 metrics.push(Metric::gauge_with_tags(
-                        &name,
-                        "Hardware monitor sensor has beeping enabled",
-                        pv,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    &name,
+                    "Hardware monitor sensor has beeping enabled",
+                    pv,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -248,14 +244,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let desc = &format!("Hardware monitor for voltage ({})", element);
 
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv * 0.001,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    name,
+                    desc,
+                    pv * 0.001,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -268,14 +264,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &format!("{}_celsius", name);
                 let desc = &format!("Hardware monitor for temperature ({})", element);
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv * 0.001,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    name,
+                    desc,
+                    pv * 0.001,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -283,14 +279,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &format!("{}_amps", name);
                 let desc = &format!("Hardware monitor for current ({})", sensor);
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv * 0.001,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    name,
+                    desc,
+                    pv * 0.001,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -298,14 +294,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &format!("{}_joule_total", name);
                 let desc = &format!("Hardware monitor for joules used so far ({})", sensor);
                 metrics.push(Metric::sum_with_tags(
-                        name,
-                        desc,
-                        pv / 1000000.0,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    name,
+                    desc,
+                    pv / 1000000.0,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -313,29 +309,33 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &name;
                 let desc = "Hardware monitor power meter accuracy, as a ratio";
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv / 1000000.0,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        ),
-                    ));
+                    name,
+                    desc,
+                    pv / 1000000.0,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
-            if sensor_type == "power" && (element == "average_interval" || element == "average_interval_min" || element == "average_interval_max") {
+            if sensor_type == "power"
+                && (element == "average_interval"
+                    || element == "average_interval_min"
+                    || element == "average_interval_max")
+            {
                 let name = &format!("{}_seconds", name);
                 let desc = &format!("Hardware monitor power usage update interval ({})", element);
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv * 0.001,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        ),
-                    ));
+                    name,
+                    desc,
+                    pv * 0.001,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -343,14 +343,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &(name + "_watt");
                 let desc = &format!("Hardware monitor for power usage in watts ({})", element);
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv /1000000.0,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        ),
-                    ));
+                    name,
+                    desc,
+                    pv / 1000000.0,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -358,29 +358,37 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
                 let name = &name;
                 let desc = &format!("Hardware monitor for humidity, as a ratio (multiply with 100.0 to get the humidity as a percentage) ({})", element);
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv /1000000.0,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        )
-                    ));
+                    name,
+                    desc,
+                    pv / 1000000.0,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
-            if sensor_type == "fan" && (element == "input" || element == "min" || element == "max" || element == "target") {
+            if sensor_type == "fan"
+                && (element == "input"
+                    || element == "min"
+                    || element == "max"
+                    || element == "target")
+            {
                 let name = &(name + "_rpm");
-                let desc = &format!("hardware monitor for fan revolutions per minute ({})", element);
+                let desc = &format!(
+                    "hardware monitor for fan revolutions per minute ({})",
+                    element
+                );
                 metrics.push(Metric::gauge_with_tags(
-                        name,
-                        desc,
-                        pv,
-                        tags!(
-                            "chip" => chip,
-                            "sensor" => sensor,
-                        ),
-                    ));
+                    name,
+                    desc,
+                    pv,
+                    tags!(
+                        "chip" => chip,
+                        "sensor" => sensor,
+                    ),
+                ));
                 continue;
             }
 
@@ -388,14 +396,14 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             let name = &name;
             let desc = &format!("Hardware monitor {} element {}", sensor_type, element);
             metrics.push(Metric::gauge_with_tags(
-                    name,
-                    desc,
-                    pv,
-                    tags!(
-                        "chip" => chip,
-                        "sensor" => sensor,
-                    )
-                ));
+                name,
+                desc,
+                pv,
+                tags!(
+                    "chip" => chip,
+                    "sensor" => sensor,
+                ),
+            ));
         }
     }
 
@@ -403,7 +411,9 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 }
 
 // This function can be optimized by parallelling sensors
-async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
+async fn collect_sensor_data<P: AsRef<Path>>(
+    dir: P,
+) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
     let mut dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
 
@@ -412,7 +422,9 @@ async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, 
             Ok(entry) => {
                 let filename = entry.file_name();
 
-                if let Ok((sensor, num, property)) = explode_sensor_filename(filename.to_str().unwrap()) {
+                if let Ok((sensor, num, property)) =
+                    explode_sensor_filename(filename.to_str().unwrap())
+                {
                     if !is_hwmon_sensor(sensor) {
                         continue;
                     }
@@ -427,7 +439,7 @@ async fn collect_sensor_data<P: AsRef<Path>>(dir: P) -> Result<BTreeMap<String, 
                             let props = stats.get_mut(&sensor).unwrap();
                             props.insert(property.to_string(), v);
                         }
-                        _ => continue
+                        _ => continue,
                     }
                 }
             }
@@ -482,7 +494,11 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
         return Err(());
     }
 
-    Ok((&name[0..typ_end], &name[typ_end..num_end], &name[num_end + 1..]))
+    Ok((
+        &name[0..typ_end],
+        &name[typ_end..num_end],
+        &name[num_end + 1..],
+    ))
 }
 
 // human_readable_name is similar to the methods in
@@ -510,7 +526,8 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     let ap = path.as_ref().clone().join("device");
     match tokio::fs::read_link(&ap).await {
         Ok(dev_path) => {
-            let dev_path = tokio::fs::canonicalize(ap).await
+            let dev_path = tokio::fs::canonicalize(ap)
+                .await
                 .context("canonicalize failed")?;
             let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
             let dev_prefix = dev_path.parent().unwrap();
@@ -537,7 +554,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
         Err(err) => debug!(
             message = "read device name failed",
             %err
-        )
+        ),
     }
 
     // it looks bad, name and device don't provide enough information
@@ -548,9 +565,22 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 }
 
 fn is_hwmon_sensor(s: &str) -> bool {
-    ["vrm", "beep_enable", "update_interval", "in", "cpu", "fan",
-        "pwm", "temp", "curr", "power", "energy", "humidity",
-        "intrusion", ].contains(&s)
+    [
+        "vrm",
+        "beep_enable",
+        "update_interval",
+        "in",
+        "cpu",
+        "fan",
+        "pwm",
+        "temp",
+        "curr",
+        "power",
+        "energy",
+        "humidity",
+        "intrusion",
+    ]
+    .contains(&s)
 }
 
 lazy_static! {

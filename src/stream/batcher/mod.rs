@@ -8,12 +8,11 @@ pub use config::BatchConfig;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use futures::ready;
 use futures::stream::{Fuse, Stream};
 use futures::{Future, StreamExt};
 use pin_project::pin_project;
 use tokio::time::Sleep;
-use futures::ready;
-
 
 #[pin_project]
 pub struct Batcher<S, C> {
@@ -35,9 +34,9 @@ pub enum Maybe<T> {
 }
 
 impl<S, C> Batcher<S, C>
-    where
-        S: Stream,
-        C: BatchConfig<S::Item>
+where
+    S: Stream,
+    C: BatchConfig<S::Item>,
 {
     pub fn new(stream: S, state: C) -> Self {
         Self {
@@ -49,9 +48,9 @@ impl<S, C> Batcher<S, C>
 }
 
 impl<S, C> Stream for Batcher<S, C>
-    where
-        S: Stream,
-        C: BatchConfig<S::Item>,
+where
+    S: Stream,
+    C: BatchConfig<S::Item>,
 {
     type Item = C::Batch;
 
@@ -76,7 +75,8 @@ impl<S, C> Stream for Batcher<S, C>
                             this.timer.set(Maybe::None);
                             return Poll::Ready(Some(this.state.take_batch()));
                         } else if this.state.len() == 1 {
-                            this.timer.set(Maybe::Some(tokio::time::sleep(this.state.timeout())));
+                            this.timer
+                                .set(Maybe::Some(tokio::time::sleep(this.state.timeout())));
                         }
                     } else {
                         let output = Poll::Ready(Some(this.state.take_batch()));
@@ -91,10 +91,7 @@ impl<S, C> Stream for Batcher<S, C>
                     return if let MaybeProj::Some(timer) = this.timer.as_mut().project() {
                         ready!(timer.poll(cx));
                         this.timer.set(Maybe::None);
-                        debug_assert!(
-                            this.state.len() != 0,
-                            "Timer should have been cancelled"
-                        );
+                        debug_assert!(this.state.len() != 0, "Timer should have been cancelled");
 
                         Poll::Ready(Some(this.state.take_batch()))
                     } else {
@@ -144,7 +141,7 @@ mod tests {
                 NonZeroUsize::new(5).unwrap(),
                 NonZeroUsize::new(100).unwrap(),
             )
-                .into_item_size_config(|x: &u32| *x as usize),
+            .into_item_size_config(|x: &u32| *x as usize),
         );
 
         let batches: Vec<_> = batcher.collect().await;
@@ -167,15 +164,15 @@ mod tests {
         tokio::time::pause();
 
         let timeout = Duration::from_millis(100);
-        let stream = stream::iter([1, 2])
-            .chain(stream::pending());
+        let stream = stream::iter([1, 2]).chain(stream::pending());
         let batcher = Batcher::new(
             stream,
             BatcherSettings::new(
                 timeout,
                 NonZeroUsize::new(5).unwrap(),
-                NonZeroUsize::new(100).unwrap()
-            ).into_item_size_config(|x: &u32| *x as usize),
+                NonZeroUsize::new(100).unwrap(),
+            )
+            .into_item_size_config(|x: &u32| *x as usize),
         );
 
         tokio::pin!(batcher);

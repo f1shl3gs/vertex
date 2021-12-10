@@ -1,6 +1,6 @@
-use super::{read_to_string, ErrorContext, Error};
-use std::path::PathBuf;
+use super::{read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
+use std::path::PathBuf;
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {
@@ -107,9 +107,22 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
     let mut host = FibreChannelHost::default();
     host.name = root.file_name().unwrap().to_str().unwrap().to_string();
 
-    for sub in vec!["speed", "port_state", "port_type", "node_name", "port_id", "port_name", "fabric_name", "dev_loss_tmo", "symbolic_name", "supported_classes", "supported_speeds"] {
+    for sub in vec![
+        "speed",
+        "port_state",
+        "port_type",
+        "node_name",
+        "port_id",
+        "port_name",
+        "fabric_name",
+        "dev_loss_tmo",
+        "symbolic_name",
+        "supported_classes",
+        "supported_speeds",
+    ] {
         let name = root.join(sub);
-        let value = read_to_string(name).await
+        let value = read_to_string(name)
+            .await
             .context("failed to read sub file")?
             .trim_end()
             .to_string();
@@ -118,22 +131,30 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
             "speed" => host.speed = value,
             "port_state" => host.port_state = value,
             "port_type" => host.port_type = value,
-            "node_name" => host.node_name = match value.len() {
-                v if v > 2 => value[2..].to_string(),
-                _ => value,
-            },
-            "port_id" => host.port_id = match value.len() {
-                v if v > 2 => value[2..].to_string(),
-                _ => value
-            },
-            "port_name" => host.port_name = match value.len() {
-                v if v > 2 => value[2..].to_string(),
-                _ => value
-            },
-            "fabric_name" => host.fabric_name = match value.len() {
-                v if v > 2 => value[2..].to_string(),
-                _ => value
-            },
+            "node_name" => {
+                host.node_name = match value.len() {
+                    v if v > 2 => value[2..].to_string(),
+                    _ => value,
+                }
+            }
+            "port_id" => {
+                host.port_id = match value.len() {
+                    v if v > 2 => value[2..].to_string(),
+                    _ => value,
+                }
+            }
+            "port_name" => {
+                host.port_name = match value.len() {
+                    v if v > 2 => value[2..].to_string(),
+                    _ => value,
+                }
+            }
+            "fabric_name" => {
+                host.fabric_name = match value.len() {
+                    v if v > 2 => value[2..].to_string(),
+                    _ => value,
+                }
+            }
             "dev_loss_tmo" => host.dev_loss_tmo = value,
             "supported_classes" => host.supported_classes = value,
             "supported_speeds" => host.supported_speeds = value,
@@ -148,7 +169,8 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
 }
 
 async fn read_hex(path: PathBuf) -> Result<u64, Error> {
-    let content = read_to_string(path).await?
+    let content = read_to_string(path)
+        .await?
         .trim_end()
         .strip_prefix("0x")
         .unwrap()
@@ -167,7 +189,7 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
     for dir in std::fs::read_dir(path)? {
         let ent = match dir {
             Ok(ent) => ent,
-            _ => continue
+            _ => continue,
         };
 
         let name = ent.file_name();
@@ -184,7 +206,9 @@ async fn parse_fibre_channel_statistics(root: PathBuf) -> Result<FibreChannelCou
             "nos_count" => counters.nos_count = read_hex(path).await?,
             "rx_frames" => counters.rx_frames = read_hex(path).await?,
             "rx_words" => counters.rx_words = read_hex(path).await?,
-            "seconds_since_last_reset" => counters.seconds_since_last_reset = read_hex(path).await?,
+            "seconds_since_last_reset" => {
+                counters.seconds_since_last_reset = read_hex(path).await?
+            }
             "tx_frames" => counters.tx_frames = read_hex(path).await?,
             "tx_words" => counters.tx_words = read_hex(path).await?,
             _ => {}
@@ -221,7 +245,6 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     "dev_loss_tmo" => host.dev_loss_tmo
                 ),
             ),
-
             // the counters
             Metric::sum_with_tags(
                 "node_fibrechannel_dumped_frames_total",
@@ -334,7 +357,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                 tags!(
                     "fc_host" => name
                 ),
-            )
+            ),
         ]);
     }
 
@@ -356,7 +379,10 @@ mod tests {
         assert_eq!(host.port_state, "Online");
         assert_eq!(host.port_type, "Point-To-Point (direct nport connection)");
         assert_eq!(host.port_name, "1000e0071bce95f2");
-        assert_eq!(host.symbolic_name, "Emulex SN1100E2P FV12.4.270.3 DV12.4.0.0. HN:gotest. OS:Linux");
+        assert_eq!(
+            host.symbolic_name,
+            "Emulex SN1100E2P FV12.4.270.3 DV12.4.0.0. HN:gotest. OS:Linux"
+        );
         assert_eq!(host.node_name, "2000e0071bce95f2");
         assert_eq!(host.port_id, "000002");
         assert_eq!(host.fabric_name, "0");

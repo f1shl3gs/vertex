@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 use std::io::Write;
 
-use serde::{Serialize, Serializer, ser::SerializeSeq};
-use event::{ByteSizeOf, EventFinalizers, Finalizable};
 use event::encoding::Encoder;
-
+use event::{ByteSizeOf, EventFinalizers, Finalizable};
+use serde::{ser::SerializeSeq, Serialize, Serializer};
 
 pub type Labels = Vec<(String, String)>;
 
@@ -20,8 +19,8 @@ impl ByteSizeOf for LokiRecord {
     fn allocated_bytes(&self) -> usize {
         self.partition.allocated_bytes()
             + self.labels.iter().fold(0, |acc, (k, v)| {
-            acc + k.allocated_bytes() + v.allocated_bytes()
-        })
+                acc + k.allocated_bytes() + v.allocated_bytes()
+            })
             + self.event.allocated_bytes()
     }
 }
@@ -31,7 +30,6 @@ impl Finalizable for LokiRecord {
         std::mem::take(&mut self.finalizers)
     }
 }
-
 
 #[derive(Hash, Eq, PartialEq, Clone, Debug)]
 pub struct PartitionKey {
@@ -57,8 +55,7 @@ impl PartitionKey {
         labels.sort();
         PartitionKey {
             tenant,
-            labels: labels.iter()
-                .flat_map(|(k, v)| [k, "→", v, "∇"]).collect(),
+            labels: labels.iter().flat_map(|(k, v)| [k, "→", v, "∇"]).collect(),
         }
     }
 }
@@ -77,7 +74,8 @@ impl ByteSizeOf for LokiEvent {
 
 impl Serialize for LokiEvent {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where S: Serializer
+    where
+        S: Serializer,
     {
         let mut seq = serializer.serialize_seq(Some(2))?;
         seq.serialize_element(&self.timestamp.to_string())?;
@@ -99,7 +97,8 @@ pub struct LokiBatch {
 
 impl From<Vec<LokiRecord>> for LokiBatch {
     fn from(records: Vec<LokiRecord>) -> Self {
-        let mut batch = records.into_iter()
+        let mut batch = records
+            .into_iter()
             .fold(Self::default(), |mut batch, mut record| {
                 batch.finalizers.merge(record.take_finalizers());
                 batch.stream.extend(record.labels.into_iter());
@@ -118,9 +117,8 @@ pub struct LokiBatchEncoder;
 impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
     fn encode(&self, input: Vec<LokiRecord>, writer: &mut dyn Write) -> std::io::Result<usize> {
         let batch = LokiBatch::from(input);
-        let body = serde_json::json!({"stream": [batch]});
+        let body = serde_json::json!({ "stream": [batch] });
         let body = serde_json::to_vec(&body)?;
         writer.write(&body)
     }
 }
-

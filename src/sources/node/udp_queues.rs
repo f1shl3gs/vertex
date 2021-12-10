@@ -1,6 +1,6 @@
-use tokio::io::AsyncBufReadExt;
-use event::{tags, Metric};
 use super::Error;
+use event::{tags, Metric};
+use tokio::io::AsyncBufReadExt;
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`
@@ -26,7 +26,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                     "queue" => "rx",
                     "ip" => "v4"
                 },
-            )
+            ),
         ]);
     }
 
@@ -49,7 +49,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                     "queue" => "rx",
                     "ip" => "v6"
                 },
-            )
+            ),
         ]);
     }
 
@@ -123,7 +123,8 @@ fn parse_net_ip_socket_queues(line: &str) -> Result<(u64, u64), Error> {
     // the content looks like
     // sl  local_address rem_address   st tx_queue rx_queue tr tm->when retrnsmt   uid  timeout inode ref pointer drops
     //    73: 0100007F:0143 00000000:0000 07 00000000:00000000 00:00000000 00000000     0        0 36799 2 0000000000000000 0
-    let fields = line.split_ascii_whitespace()
+    let fields = line
+        .split_ascii_whitespace()
         .nth(4)
         .ok_or(Error::new_invalid("invalid field"))?;
 

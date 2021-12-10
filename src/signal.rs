@@ -1,6 +1,6 @@
+use crate::config::Builder;
 use tokio::sync::{broadcast, mpsc};
 use tokio_stream::{Stream, StreamExt};
-use crate::config::Builder;
 
 pub type ShutdownTx = broadcast::Sender<()>;
 pub type SignalTx = mpsc::Sender<SignalTo>;
@@ -38,7 +38,7 @@ impl SignalHandler {
                 tx,
                 shutdown_txs: vec![],
             },
-            rx
+            rx,
         )
     }
 
@@ -50,9 +50,9 @@ impl SignalHandler {
     /// Takes a stream who's elements are convertible to `SignalTo`, and
     /// spawns a permanent takes for transmitting to the receiver.
     pub fn forever<T, S>(&mut self, stream: S)
-        where
-            T: Into<SignalTo> + Send + Sync,
-            S: Stream<Item=T> + 'static + Send,
+    where
+        T: Into<SignalTo> + Send + Sync,
+        S: Stream<Item = T> + 'static + Send,
     {
         let tx = self.tx.clone();
 
@@ -73,9 +73,9 @@ impl SignalHandler {
     /// subscribe to cancellation, or trigger it. Useful for providers that
     /// may need to do both.
     pub fn add<T, S>(&mut self, stream: S)
-        where
-            T: Into<SignalTo> + Send,
-            S: Stream<Item=T> + 'static + Send,
+    where
+        T: Into<SignalTo> + Send,
+        S: Stream<Item = T> + 'static + Send,
     {
         let (shutdown_tx, mut shutdown_rx) = broadcast::channel::<()>(2);
         let tx = self.tx.clone();
@@ -115,7 +115,7 @@ impl SignalHandler {
 }
 
 /// Signals from OS/user
-pub fn os_signals() -> impl Stream<Item=SignalTo> {
+pub fn os_signals() -> impl Stream<Item = SignalTo> {
     use tokio::signal::unix::{signal, SignalKind};
 
     let mut sigint = signal(SignalKind::interrupt()).expect("Signal handlers should not panic");

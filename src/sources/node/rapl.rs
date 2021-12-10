@@ -1,3 +1,5 @@
+use super::{read_into, read_to_string, Error};
+use event::{tags, Metric};
 use std::collections::BTreeMap;
 /// Expose various statistics from /sys/class/powercap
 ///
@@ -9,10 +11,7 @@ use std::collections::BTreeMap;
 /// - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
 /// - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
 /// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
-
 use std::path::PathBuf;
-use event::{tags, Metric};
-use super::{Error, read_into, read_to_string};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]
@@ -44,7 +43,7 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
         let path = entry.path().join("name");
         let name = match read_to_string(path).await {
             Ok(c) => c,
-            _ => continue
+            _ => continue,
         };
 
         let (name, index) = match get_name_and_index(&name) {

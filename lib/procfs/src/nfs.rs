@@ -1,5 +1,3 @@
 use crate::ProcFS;
 
-impl ProcFS {
-
-}
+impl ProcFS {}

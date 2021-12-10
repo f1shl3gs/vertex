@@ -7,11 +7,10 @@ use futures_util::future::BoxFuture;
 use tokio::sync::OwnedSemaphorePermit;
 use tower::Service;
 
+use super::controller::Controller;
 use super::future::ResponseFuture;
 use super::AdaptiveConcurrencySettings;
-use super::controller::Controller;
 use crate::sinks::util::retries::RetryLogic;
-
 
 enum State {
     Waiting(BoxFuture<'static, OwnedSemaphorePermit>),
@@ -45,10 +44,10 @@ impl<S, L> AdaptiveConcurrencyLimit<S, L> {
 }
 
 impl<S, L, R> Service<R> for AdaptiveConcurrencyLimit<S, L>
-    where
-        S: Service<R>,
-        S::Error: Into<crate::Error>,
-        L: RetryLogic<Response=S::Response>
+where
+    S: Service<R>,
+    S::Error: Into<crate::Error>,
+    L: RetryLogic<Response = S::Response>,
 {
     type Response = S::Response;
     type Error = crate::Error;
@@ -86,9 +85,9 @@ impl<S, L, R> Service<R> for AdaptiveConcurrencyLimit<S, L>
 }
 
 impl<S, L> Clone for AdaptiveConcurrencyLimit<S, L>
-    where
-        S: Clone,
-        L: Clone,
+where
+    S: Clone,
+    L: Clone,
 {
     fn clone(&self) -> Self {
         Self {
@@ -102,44 +101,43 @@ impl<S, L> Clone for AdaptiveConcurrencyLimit<S, L>
 impl Debug for State {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            State::Waiting(_) => f.debug_tuple("State::Waiting")
+            State::Waiting(_) => f
+                .debug_tuple("State::Waiting")
                 .field(&format_args!("..."))
                 .finish(),
-            State::Ready(ref r) => f.debug_tuple("State::Ready")
-                .field(&r)
-                .finish(),
-            State::Empty => f.debug_tuple("State::Empty").finish()
+            State::Ready(ref r) => f.debug_tuple("State::Ready").field(&r).finish(),
+            State::Empty => f.debug_tuple("State::Empty").finish(),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use super::super::controller::Inner;
+    use super::*;
+    use crate::sinks::util::adaptive_concurrency::controller::ControllerStatistics;
+    use crate::sinks::util::adaptive_concurrency::layer::AdaptiveConcurrencyLimitLayer;
+    use snafu::Snafu;
     use std::sync::{Mutex, MutexGuard};
     use std::time::Duration;
-    use tokio_test::{assert_pending, assert_ready_ok};
-    use super::*;
-    use super::super::controller::Inner;
-    use snafu::Snafu;
     use tokio::time::advance;
+    use tokio_test::{assert_pending, assert_ready_ok};
     use tower_test::{
         assert_request_eq,
         mock::{
             self, future::ResponseFuture as MockResponseFuture, Handle, Mock, SendResponse, Spawn,
         },
     };
-    use crate::sinks::util::adaptive_concurrency::controller::ControllerStatistics;
-    use crate::sinks::util::adaptive_concurrency::layer::AdaptiveConcurrencyLimitLayer;
 
     #[macro_export]
     macro_rules! assert_downcast_matches {
-    ($e:expr, $t:ty, $v:pat) => {{
-        match $e.downcast_ref::<$t>() {
-            Some($v) => (),
-            got => panic!("Assertion failed: got wrong error variant {:?}", got),
-        }
-    }};
-}
+        ($e:expr, $t:ty, $v:pat) => {{
+            match $e.downcast_ref::<$t>() {
+                Some($v) => (),
+                got => panic!("Assertion failed: got wrong error variant {:?}", got),
+            }
+        }};
+    }
 
     #[derive(Clone, Copy, Debug, Snafu)]
     enum TestError {
@@ -216,9 +214,9 @@ mod tests {
         }
 
         async fn run<F, R>(doit: F) -> ControllerStatistics
-            where
-                F: FnOnce(Self) -> R,
-                R: Future<Output=()>,
+        where
+            F: FnOnce(Self) -> R,
+            R: Future<Output = ()>,
         {
             let svc = Self::start();
             let stats = Arc::clone(&svc.stats);
@@ -227,9 +225,7 @@ mod tests {
 
             doit(svc).await;
 
-            Arc::try_unwrap(stats).unwrap()
-                .into_inner()
-                .unwrap()
+            Arc::try_unwrap(stats).unwrap().into_inner().unwrap()
         }
 
         async fn send(&mut self, is_ready: bool) -> Send {
@@ -252,9 +248,7 @@ mod tests {
         }
 
         fn inner(&self) -> MutexGuard<Inner> {
-            self.inner
-                .lock()
-                .unwrap()
+            self.inner.lock().unwrap()
         }
     }
 
@@ -264,7 +258,8 @@ mod tests {
             // Concurrency starts at 1
             assert_eq!(svc.inner().current_limit, 1);
             svc.send(false).await;
-        }).await;
+        })
+        .await;
     }
 
     #[tokio::test]
@@ -284,7 +279,8 @@ mod tests {
 
             // After a constant speed measurement, concurrency is increased
             assert_eq!(svc.inner().current_limit, 2);
-        }).await;
+        })
+        .await;
 
         let inflight = stats.inflight.stats().unwrap();
         assert_eq!(inflight.max, 1);
@@ -312,7 +308,8 @@ mod tests {
             advance(Duration::from_secs(1)).await;
             req.defer().await;
             assert_eq!(svc.inner().current_limit, 1);
-        }).await;
+        })
+        .await;
     }
 
     #[tokio::test]
@@ -342,7 +339,7 @@ mod tests {
             req.defer().await;
 
             assert_eq!(svc.inner().current_limit, 2);
-        }).await;
+        })
+        .await;
     }
 }
-

@@ -1,22 +1,25 @@
-use std::collections::BTreeMap;
-use crate::config::{deserialize_regex, serialize_regex};
 use super::{Error, ErrorContext};
-use tokio::io::AsyncBufReadExt;
+use crate::config::{deserialize_regex, serialize_regex};
+use event::Metric;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use event::Metric;
+use std::collections::BTreeMap;
+use tokio::io::AsyncBufReadExt;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
     #[serde(default = "default_fields")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     fields: regex::Regex,
 }
 
 impl Default for NetstatConfig {
     fn default() -> Self {
         Self {
-            fields: default_fields()
+            fields: default_fields(),
         }
     }
 }
@@ -27,15 +30,16 @@ fn default_fields() -> Regex {
 
 pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/netstat", proc_path);
-    let mut net_stats = get_net_stats(&path).await
-        .context("read netstat failed")?;
+    let mut net_stats = get_net_stats(&path).await.context("read netstat failed")?;
 
     let path = format!("{}/net/snmp", proc_path);
-    let snmp_stats = get_net_stats(&path).await
+    let snmp_stats = get_net_stats(&path)
+        .await
         .context("read snmp stats failed")?;
 
     let path = format!("{}/net/snmp6", proc_path);
-    let snmp6_stats = get_snmp6_stats(&path).await
+    let snmp6_stats = get_snmp6_stats(&path)
+        .await
         .context("read snmp6 stats failed")?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
@@ -53,7 +57,7 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
             let key = format!("{}_{}", protocol, name);
             let v = match value.parse::<f64>() {
                 Ok(v) => v,
-                _ => continue
+                _ => continue,
             };
 
             if !conf.fields.is_match(&key) {
@@ -63,7 +67,7 @@ pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>
             metrics.push(Metric::gauge(
                 format!("node_netstat_{}", key),
                 format!("Statistic {}{}", protocol, name),
-                v
+                v,
             ));
         }
     }
@@ -78,16 +82,13 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
 
     while let Some(line) = lines.next_line().await? {
-        let names = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let names = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         let line = match lines.next_line().await? {
             Some(line) => line,
-            None => break
+            None => break,
         };
-        let values = line
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let values = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         // remove trailing :
         let protocol = names[0].strip_suffix(":").unwrap();
@@ -116,8 +117,7 @@ async fn get_snmp6_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String,
     let mut stats: BTreeMap<String, BTreeMap<String, String>> = BTreeMap::new();
 
     while let Some(line) = lines.next_line().await? {
-        let stat = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let stat = line.split_ascii_whitespace().collect::<Vec<_>>();
         if stat.len() < 2 {
             continue;
         }
@@ -125,7 +125,7 @@ async fn get_snmp6_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String,
         // Expect to have 6 in metric name, skip line otherwise
         let index = match stat[0].find('6') {
             Some(i) => i,
-            _ => continue
+            _ => continue,
         };
 
         let protocol = &stat[0][..index + 1];

@@ -1,11 +1,11 @@
 use std::fs::DirBuilder;
 use std::path::PathBuf;
 
-use snafu::{ResultExt, Snafu};
-use serde::{Deserialize, Serialize};
 use log_schema::LogSchema;
+use serde::{Deserialize, Serialize};
+use snafu::{ResultExt, Snafu};
 
-use crate::config::{ProxyConfig, skip_serializing_if_default};
+use crate::config::{skip_serializing_if_default, ProxyConfig};
 use crate::timezone;
 
 #[derive(Debug, Snafu)]
@@ -13,18 +13,16 @@ pub enum DataDirError {
     #[snafu(display("data_dir option required, but not given here or globally"))]
     MissingDataDir,
     #[snafu(display("data_dir {:?} does not exist", path))]
-    NotExist {
-        path: PathBuf
-    },
+    NotExist { path: PathBuf },
 
     #[snafu(display("data_dir {:?} is not writable", path))]
-    NotWritable {
-        path: PathBuf
-    },
+    NotWritable { path: PathBuf },
 
     #[snafu(display(
-    "could not create sub dir {:?} inside of data dir {:?}: {}",
-    subdir, data_dir, source
+        "could not create sub dir {:?} inside of data dir {:?}: {}",
+        subdir,
+        data_dir,
+        source
     ))]
     CouldNotCreate {
         subdir: PathBuf,
@@ -61,11 +59,8 @@ impl GlobalOptions {
     /// # Errors
     ///
     /// Function will error if it is unable to make data directory
-    pub fn validate_data_dir(
-        &self,
-    ) -> Result<PathBuf, DataDirError> {
-        let dir = self.data_dir
-            .clone();
+    pub fn validate_data_dir(&self) -> Result<PathBuf, DataDirError> {
+        let dir = self.data_dir.clone();
 
         if !dir.exists() {
             return Err(DataDirError::NotExist { path: dir });
@@ -86,10 +81,7 @@ impl GlobalOptions {
     /// # Errors
     ///
     /// Function will error if it is unable to make data subdirectory
-    pub fn make_subdir(
-        &self,
-        subdir: &str,
-    ) -> Result<PathBuf, DataDirError> {
+    pub fn make_subdir(&self, subdir: &str) -> Result<PathBuf, DataDirError> {
         let root = self.validate_data_dir()?;
         let subdir = root.clone().join(subdir);
         let rt = subdir.clone();
@@ -97,7 +89,10 @@ impl GlobalOptions {
         DirBuilder::new()
             .recursive(true)
             .create(&subdir)
-            .with_context(|| CouldNotCreate { subdir, data_dir: root })?;
+            .with_context(|| CouldNotCreate {
+                subdir,
+                data_dir: root,
+            })?;
 
         Ok(rt)
     }

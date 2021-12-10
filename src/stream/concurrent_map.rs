@@ -3,32 +3,31 @@ use std::num::NonZeroUsize;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::{ready, Stream, StreamExt};
 use futures::stream::{Fuse, FuturesOrdered};
+use futures::{ready, Stream, StreamExt};
 use tokio::task::JoinHandle;
-
 
 #[pin_project::pin_project]
 pub struct ConcurrentMap<S, T>
-    where
-        S: Stream,
-        T: Send + 'static,
+where
+    S: Stream,
+    T: Send + 'static,
 {
     #[pin]
     stream: Fuse<S>,
     limit: Option<NonZeroUsize>,
     inflight: FuturesOrdered<JoinHandle<T>>,
-    f: Box<dyn Fn(S::Item) -> Pin<Box<dyn Future<Output=T> + Send + 'static>> + Send>,
+    f: Box<dyn Fn(S::Item) -> Pin<Box<dyn Future<Output = T> + Send + 'static>> + Send>,
 }
 
 impl<S, T> ConcurrentMap<S, T>
-    where
-        S: Stream,
-        T: Send + 'static,
+where
+    S: Stream,
+    T: Send + 'static,
 {
     pub fn new<F>(stream: S, limit: Option<NonZeroUsize>, f: F) -> Self
-        where
-            F: Fn(S::Item) -> Pin<Box<dyn Future<Output=T> + Send + 'static>> + Send + 'static,
+    where
+        F: Fn(S::Item) -> Pin<Box<dyn Future<Output = T> + Send + 'static>> + Send + 'static,
     {
         Self {
             stream: stream.fuse(),
@@ -40,9 +39,9 @@ impl<S, T> ConcurrentMap<S, T>
 }
 
 impl<S, T> Stream for ConcurrentMap<S, T>
-    where
-        S: Stream,
-        T: Send + 'static,
+where
+    S: Stream,
+    T: Send + 'static,
 {
     type Item = T;
 
@@ -92,7 +91,7 @@ impl<S, T> Stream for ConcurrentMap<S, T>
                         panic!("concurrent map task cancelled outside of our control");
                     }
                 }
-            }
+            },
         }
     }
 }

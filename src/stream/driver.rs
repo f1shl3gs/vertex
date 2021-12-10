@@ -1,20 +1,19 @@
 use std::cmp::Ordering;
 use std::collections::{BinaryHeap, VecDeque};
-use std::num::NonZeroUsize;
 use std::fmt;
+use std::num::NonZeroUsize;
 use std::task::Poll;
 
 use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
-use internal::EventsSent;
-use futures::{Stream, StreamExt, poll, TryFutureExt, FutureExt};
+use futures::{poll, FutureExt, Stream, StreamExt, TryFutureExt};
 use futures_util::future::poll_fn;
+use internal::EventsSent;
 use tokio::{pin, select};
 use tower::Service;
 use tracing::Instrument;
 
 use super::futures_unordered_chunked::FuturesUnorderedChunked;
-
 
 /// Newtype wrapper around sequence numbers to enforce misuse resistance.
 #[derive(Debug, Eq, Ord, PartialOrd, PartialEq)]
@@ -54,7 +53,8 @@ impl PartialOrd for PendingAcknowledgement {
 
 impl Ord for PendingAcknowledgement {
     fn cmp(&self, other: &Self) -> Ordering {
-        other.partial_cmp(self)
+        other
+            .partial_cmp(self)
             .expect("PendingAcknowledgement should always return a valid comparison")
     }
 }
@@ -110,7 +110,8 @@ impl AcknowledgementTracker {
         // Drain any out-of-order acknowledgements that can now be ordered correctly.
         while let Some(ack) = self.out_of_order.peek() {
             if ack.seq_num.0 == self.seq_tail {
-                let PendingAcknowledgement { ack_size, .. } = self.out_of_order
+                let PendingAcknowledgement { ack_size, .. } = self
+                    .out_of_order
                     .pop()
                     .expect("should not be here unless self.out_of_order is non-empty");
 
@@ -167,13 +168,13 @@ impl<I, S> Driver<I, S> {
 }
 
 impl<I, S> Driver<I, S>
-    where
-        I: Stream,
-        I::Item: Ackable + Finalizable,
-        S: Service<I::Item>,
-        S::Error: fmt::Debug + 'static,
-        S::Future: Send + 'static,
-        S::Response: DriverResponse
+where
+    I: Stream,
+    I::Item: Ackable + Finalizable,
+    S: Service<I::Item>,
+    S::Error: fmt::Debug + 'static,
+    S::Future: Send + 'static,
+    S::Response: DriverResponse,
 {
     /// Runs the driver until the input stream is exhausted.
     ///
@@ -189,7 +190,11 @@ impl<I, S> Driver<I, S>
         let mut ack_tracker = AcknowledgementTracker::default();
         let mut next_batch: Option<VecDeque<I::Item>> = None;
 
-        let Self { input, mut service, acker } = self;
+        let Self {
+            input,
+            mut service,
+            acker,
+        } = self;
         let batched_input = input.ready_chunks(1024);
         pin!(batched_input);
 
@@ -334,25 +339,25 @@ impl<I, S> Driver<I, S>
 
 #[cfg(test)]
 mod tests {
-    use std::sync::atomic::Ordering;
+    use super::*;
+    use event::EventFinalizers;
+    use futures::ready;
+    use proptest::prelude::Strategy;
+    use proptest::{prop_assert_eq, proptest};
+    use rand::rngs::StdRng;
+    use rand::SeedableRng;
+    use rand_distr::Distribution;
+    use rand_distr::Pareto;
     use std::future::Future;
     use std::iter::repeat_with;
     use std::pin::Pin;
+    use std::sync::atomic::Ordering;
     use std::sync::Arc;
     use std::task::{Context, Poll};
     use std::time::Duration;
-    use futures::ready;
-    use proptest::{prop_assert_eq, proptest};
-    use proptest::prelude::Strategy;
-    use rand::rngs::StdRng;
-    use rand::SeedableRng;
-    use rand_distr::Pareto;
     use tokio::sync::{OwnedSemaphorePermit, Semaphore};
     use tokio::time::sleep;
     use tokio_util::sync::PollSemaphore;
-    use event::EventFinalizers;
-    use super::*;
-    use rand_distr::{Distribution};
 
     struct DelayRequest(usize);
 
@@ -406,8 +411,7 @@ mod tests {
             Self {
                 semaphore: PollSemaphore::new(Arc::new(Semaphore::new(permits))),
                 permit: None,
-                jitter: Pareto::new(1.0, 1.0)
-                    .expect("distribution should be valid"),
+                jitter: Pareto::new(1.0, 1.0).expect("distribution should be valid"),
                 jitter_gen: StdRng::from_seed([
                     3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 9, 7, 9, 3, 2, 3, 8, 4, 6, 2, 6, 4, 3, 3,
                     8, 3, 2, 7, 9, 5,
@@ -436,7 +440,8 @@ mod tests {
     impl Service<DelayRequest> for DelayService {
         type Response = DelayResponse;
         type Error = ();
-        type Future = Pin<Box<dyn Future<Output=Result<Self::Response, Self::Error>> + Send + Sync>>;
+        type Future =
+            Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync>>;
 
         fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
             if self.permit.is_some() {
@@ -452,7 +457,8 @@ mod tests {
         }
 
         fn call(&mut self, req: DelayRequest) -> Self::Future {
-            let permit = self.permit
+            let permit = self
+                .permit
                 .take()
                 .expect("calling `call` without successful `poll_ready` is invalid");
             let sleep_dur = self.get_sleep_dur();
@@ -469,9 +475,9 @@ mod tests {
         }
     }
 
-    fn arb_shuffled_seq_num<S>(selector: S) -> impl Strategy<Value=Vec<u64>>
-        where
-            S: Strategy<Value=usize>,
+    fn arb_shuffled_seq_num<S>(selector: S) -> impl Strategy<Value = Vec<u64>>
+    where
+        S: Strategy<Value = usize>,
     {
         selector
             .prop_map(|len| (0..len).into_iter().map(|n| n as u64).collect())
@@ -608,8 +614,7 @@ mod tests {
         // between bursts of messages, similar to real sources.
 
         // Set up our driver input stream, service, etc
-        let input_requests = (0..2048).into_iter()
-            .collect::<Vec<_>>();
+        let input_requests = (0..2048).into_iter().collect::<Vec<_>>();
         let input_total: usize = input_requests.iter().sum();
         let input_stream = futures::stream::iter(input_requests.into_iter().map(DelayRequest));
         let service = DelayService::new(10, Duration::from_millis(5), Duration::from_millis(150));
@@ -619,7 +624,7 @@ mod tests {
         // Now actually run the driver, consuming all of the input
         match driver.run().await {
             Ok(()) => assert_eq!(input_total, counter.load(Ordering::SeqCst)),
-            Err(()) => panic!("driver unexpectedly returned with error")
+            Err(()) => panic!("driver unexpectedly returned with error"),
         }
     }
 }

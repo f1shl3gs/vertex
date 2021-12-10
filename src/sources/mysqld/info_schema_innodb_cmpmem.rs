@@ -1,9 +1,8 @@
+use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
-use event::{Metric, tags};
 
 use super::{Error, QueryFailed};
-
 
 const INNODB_CMP_MEMORY_QUERY: &str = r#"SELECT page_size, buffer_pool_instance, pages_used, pages_free, relocation_ops, relocation_time FROM information_schema.innodb_cmpmem"#;
 
@@ -21,7 +20,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let records = sqlx::query_as::<_, Record>(INNODB_CMP_MEMORY_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed { query: INNODB_CMP_MEMORY_QUERY })?;
+        .context(QueryFailed {
+            query: INNODB_CMP_MEMORY_QUERY,
+        })?;
 
     let mut metrics = Vec::with_capacity(records.len() * 4);
     for Record {
@@ -30,8 +31,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         pages_used,
         pages_free,
         relocation_ops,
-        relocation_time
-    } in records {
+        relocation_time,
+    } in records
+    {
         let page_size = &page_size.to_string();
         let buffer_pool = &buffer_pool_instance.to_string();
 
@@ -80,8 +82,8 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::mysqld::test_utils::setup_and_run;
     use super::*;
+    use crate::sources::mysqld::test_utils::setup_and_run;
 
     #[tokio::test]
     async fn test_gather() {

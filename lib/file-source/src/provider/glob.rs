@@ -1,7 +1,7 @@
-use std::path::PathBuf;
-use glob::Pattern;
 use crate::events::InternalEvents;
 use crate::provider::Provider;
+use glob::Pattern;
+use std::path::PathBuf;
 
 /// A glob-based path provider
 ///
@@ -17,15 +17,13 @@ impl<E: InternalEvents> Glob<E> {
     /// Create a new [`Glob`]
     ///
     /// Returns `None` if patterns aren't valid
-    pub fn new(
-        include: &[PathBuf],
-        exclude: &[PathBuf],
-        emitter: E,
-    ) -> Option<Self> {
-        let include = include.iter()
+    pub fn new(include: &[PathBuf], exclude: &[PathBuf], emitter: E) -> Option<Self> {
+        let include = include
+            .iter()
             .map(|path| path.to_str().map(ToOwned::to_owned))
             .collect::<Option<_>>()?;
-        let exclude = exclude.iter()
+        let exclude = exclude
+            .iter()
             .map(|path| path.to_str().map(|path| Pattern::new(path).ok()))
             .flatten()
             .collect::<Option<_>>()?;
@@ -52,7 +50,7 @@ impl<E: InternalEvents> Provider for Glob<E> {
                             self.emitter
                                 .emit_path_globbing_failed(err.path(), err.error());
                         })
-                            .ok()
+                        .ok()
                     })
             })
             .filter(|candidate: &PathBuf| -> bool {
