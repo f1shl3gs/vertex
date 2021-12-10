@@ -53,11 +53,11 @@ impl Server {
         shutdown: S,
         mut checkpointer: Checkpointer,
     ) -> Result<Shutdown, <C as Sink<Vec<Line>>>::Error>
-        where
-            C: Sink<Vec<Line>> + Unpin,
-            <C as Sink<Vec<Line>>>::Error: std::error::Error,
-            S: Future + Unpin + Send + 'static,
-            <S as Future>::Output: Clone + Send + Sync,
+    where
+        C: Sink<Vec<Line>> + Unpin,
+        <C as Sink<Vec<Line>>>::Error: std::error::Error,
+        S: Future + Unpin + Send + 'static,
+        <S as Future>::Output: Clone + Send + Sync,
     {
         let handle = tokio::runtime::Handle::current();
         let mut fps: BTreeMap<Fingerprint, Watcher> = BTreeMap::new();
@@ -153,16 +153,15 @@ impl Server {
             self.line_delimiter.clone(),
         ) {
             Ok(mut watcher) => {
-                if let ReadFrom::Checkpoint(pos) = read_from {} else {}
+                if let ReadFrom::Checkpoint(pos) = read_from {
+                } else {
+                }
 
                 watcher.set_findable(true);
                 fps.insert(fp, watcher);
             }
             Err(err) => {
-                warn!(
-                    message = "Create new file watcher failed",
-                    ?err
-                )
+                warn!(message = "Create new file watcher failed", ?err)
             }
         }
     }

@@ -17,3 +17,23 @@ jobs:
       - run: bash scripts/environment/prepare.sh
       - run: cargo clean
       - run: cargo check
+
+  style:
+    name: "Style Checks"
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        name: Cache Cargo registry + index
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+      - name: Check style
+        run:  cargo clippy --workspace --all-targets  -- -A warnings
+      - name: Check shell
+        run:  ./ci/check-scritps.sh
+      - name: Check fmt
+        run:  cargo fmt -- --check
