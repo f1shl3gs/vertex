@@ -325,6 +325,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn scrape_honor_labels() {
         todo!()
     }
