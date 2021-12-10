@@ -20,7 +20,7 @@ members = [
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
-    "lib/tail",
+    # "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",

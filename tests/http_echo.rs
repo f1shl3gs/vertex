@@ -29,6 +29,7 @@ async fn dump_request(mut req: Request<Body>) -> hyper::Result<Response<Body>> {
 
 // Note: this is not a test actually, it is used to test some http api
 #[tokio::test]
+#[ignore = "This is a handy tool for dumping http request"]
 async fn start_echo_server() {
     match std::env::var("CI") {
         Ok(val) if val == "true" => return,

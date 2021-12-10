@@ -4018,26 +4018,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tail"
-version = "0.1.0"
-dependencies = [
- "bstr",
- "bytes",
- "chrono",
- "dashmap",
- "flate2",
- "futures",
- "glob",
- "quickcheck",
- "serde",
- "serde_json",
- "tempfile",
- "tokio",
- "tokio-stream",
- "tracing",
-]
-
-[[package]]
 name = "take_mut"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

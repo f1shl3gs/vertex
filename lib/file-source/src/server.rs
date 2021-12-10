@@ -446,7 +446,7 @@ impl TimingStats {
         let mut ratios = self
             .segments
             .iter()
-            .map((|(k, v)| (*k, v.as_secs_f32() / total.as_secs_f32())))
+            .map(|(k, v)| (*k, v.as_secs_f32() / total.as_secs_f32()))
             .collect::<BTreeMap<_, _>>();
 
         ratios.insert("other", other.as_secs_f32() / total.as_secs_f32());
