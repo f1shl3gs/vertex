@@ -65,5 +65,9 @@ integration-test-memcached:
 integration-test-haproxy:
 	cargo test -p vertex --lib sources::haproxy::integration_tests:: --features integration-tests-haproxy --no-fail-fast
 
+.PHONY: test
+test:
+	cargo test --workspace --no-fail-fast
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30
