@@ -8,10 +8,9 @@ on:
 env:
   CI: true
   PROFILE: debug
-  RUSTFLAGS: "-D warnings"
+  # RUSTFLAGS: "-D warnings"
   VERBOSE: true
   RUST_BACKTRACE: full
-  CROSS_CONTAINER_ENGINE: podman
 
 jobs:
   cancel-previous:

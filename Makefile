@@ -28,7 +28,7 @@ target/artifacts/vector-${VERSION}:
 
 
 build_x86_64-unknown-linux-musl:
-	podman build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
+	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
 	cross build \
 		--release \
 		--no-default-features \
@@ -36,7 +36,7 @@ build_x86_64-unknown-linux-musl:
 		--features target-x86_64-unknown-linux-musl
 
 build_x86_64-unknown-linux-gnu: artifacts-dir
-	podman build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
+	docker build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
 	cross build \
 		--release \
 		--no-default-features \
