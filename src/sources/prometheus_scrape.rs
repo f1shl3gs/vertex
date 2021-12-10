@@ -316,7 +316,13 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::config::test_generate_config;
+    use crate::sources::prometheus_scrape::PrometheusScrapeConfig;
+
+    #[test]
+    fn generate_config() {
+        test_generate_config::<PrometheusScrapeConfig>();
+    }
 
     #[tokio::test]
     async fn scrape_honor_labels() {

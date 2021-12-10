@@ -7,11 +7,6 @@ mod service;
 #[cfg(test)]
 mod tests;
 
-pub(crate) use layer::AdaptiveConcurrencyLimitLayer;
-pub(crate) use service::AdaptiveConcurrencyLimit;
-
-use std::time::Duration;
-
 use serde::{Deserialize, Serialize};
 
 pub(self) const MAX_CONCURRENCY: usize = 256;

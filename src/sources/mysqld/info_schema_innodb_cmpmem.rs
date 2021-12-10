@@ -79,19 +79,3 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
     Ok(metrics)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::sources::mysqld::test_utils::setup_and_run;
-
-    #[tokio::test]
-    async fn test_gather() {
-        async fn wrapper(pool: MySqlPool) {
-            let metrics = gather(&pool).await.unwrap();
-            assert_ne!(metrics.len(), 0)
-        }
-
-        setup_and_run(wrapper).await;
-    }
-}

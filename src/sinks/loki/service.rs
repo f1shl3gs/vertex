@@ -4,7 +4,7 @@ use crate::config::UriSerde;
 use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use futures_util::future::BoxFuture;
-use http::{StatusCode, Uri};
+use http::StatusCode;
 use internal::EventsSent;
 use snafu::Snafu;
 use tower::Service;

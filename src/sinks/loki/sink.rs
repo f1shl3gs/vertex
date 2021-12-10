@@ -1,15 +1,14 @@
 use std::collections::HashMap;
-use std::io::{Error, Write};
+use std::io::Error;
 use std::num::NonZeroUsize;
 
 use buffers::Acker;
-use event::encoding::{Encoder, EncodingConfig, EncodingConfiguration};
+use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::{ByteSizeOf, Event, EventFinalizers, Finalizable, Value};
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
 use snafu::Snafu;
 
-use crate::batch::BatchSettings;
 use crate::common::events::TemplateRenderingFailed;
 use crate::config::SinkContext;
 use crate::http::HttpClient;
@@ -19,7 +18,7 @@ use crate::sinks::loki::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfO
 use crate::sinks::loki::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use crate::sinks::loki::service::{LokiRequest, LokiService};
 use crate::sinks::util::builder::SinkBuilderExt;
-use crate::sinks::util::{Compression, Compressor, RequestBuilder};
+use crate::sinks::util::{Compression, RequestBuilder};
 use crate::sinks::StreamSink;
 use crate::stream::BatcherSettings;
 use crate::template::Template;

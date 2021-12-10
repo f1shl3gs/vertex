@@ -3,14 +3,6 @@ VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 artifacts-dir:
 	mkdir -p target/artifacts
 
-build:
-	cargo build --release
-	# striping is not enabled in stable Cargo, so here we are
-	strip target/release/vertex
-
-build-musl:
-	cargo build --release --target=x86_64-unknown-linux-musl
-
 build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
@@ -20,12 +12,12 @@ bloat:
 lines:
 	@./scripts/lines.sh
 
-static:
-	docker run --rm -it -v "/home/f1shl3gs/Workspaces/clion/vertex/docker/builder/cargo-config.toml:/opt/rust/cargo/config" -v "$$(pwd)":/home/rust/src musl-builder cargo build --release
-
 # archives
 target/artifacts/vector-${VERSION}:
 
+.PHONY: fmt
+fmt:
+	cargo fmt
 
 build_x86_64-unknown-linux-musl:
 	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
@@ -64,6 +56,10 @@ integration-test-memcached:
 .PHONY: integration-test-haproxy
 integration-test-haproxy:
 	cargo test -p vertex --lib sources::haproxy::integration_tests:: --features integration-tests-haproxy --no-fail-fast
+
+.PHONY: integration-test-mysql
+integration-test-mysql:
+	cargo test -p vertex --lib sources::mysqld::integration_tests --features integration-tests-mysql --no-fail-fast
 
 .PHONY: test
 test:

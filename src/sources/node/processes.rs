@@ -176,7 +176,6 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
 
     #[test]
     fn test_proc_stats() {

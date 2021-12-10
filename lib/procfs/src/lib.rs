@@ -30,6 +30,23 @@ pub struct ProcFS {
     root: String,
 }
 
+impl Default for ProcFS {
+    fn default() -> Self {
+        Self {
+            root: "/proc".into(),
+        }
+    }
+}
+
+impl ProcFS {
+    #[cfg(test)]
+    pub fn test_procfs() -> Self {
+        Self {
+            root: "../../tests/fixtures/proc".into(),
+        }
+    }
+}
+
 pub struct SysFS {
     root: String,
 }

@@ -12,9 +12,8 @@ use futures::{Sink, Stream};
 use pin_project::pin_project;
 use snafu::Snafu;
 
-use crate::disk::reader::Reader;
 use crate::usage::BufferUsageData;
-use crate::{Acker, DecodeBytes, EncodeBytes};
+use crate::{DecodeBytes, EncodeBytes};
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {

@@ -1,4 +1,4 @@
-use std::fmt::{write, Debug, Display, Formatter};
+use std::fmt::{Debug, Display, Formatter};
 
 use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
@@ -166,8 +166,6 @@ impl ser::Serialize for Compression {
     where
         S: Serializer,
     {
-        use ser::Serializer;
-
         let mut map = serializer.serialize_map(None)?;
 
         match self {
@@ -191,7 +189,6 @@ impl ser::Serialize for Compression {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde::{Deserialize, Serialize};
 
     #[test]
     fn deserialization_yaml() {

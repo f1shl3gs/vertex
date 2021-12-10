@@ -247,7 +247,7 @@ mod tests {
     #[test]
     fn protocol_endpoint_parses_urls() {
         let tests = [
-            ("http://example.com", "http", "http://example.com"),
+            ("http://example.com/", "http", "http://example.com/"),
             (
                 "https://user:pass@example.org:123/path?query",
                 "https",

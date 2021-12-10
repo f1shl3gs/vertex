@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use std::future::Future;
 use std::time::Instant;
 
 use event::{tags, Event, Metric};
@@ -898,7 +897,6 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use testcontainers::Docker;
 
     #[tokio::test]
     async fn test_parse_stats() {

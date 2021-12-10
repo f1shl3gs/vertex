@@ -2,8 +2,6 @@ use std::sync::atomic::{AtomicU64, AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use crate::WhenFull;
-
 pub struct BufferUsageData {
     received_events: AtomicU64,
     received_bytes: AtomicUsize,

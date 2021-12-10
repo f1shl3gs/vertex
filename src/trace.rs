@@ -2,7 +2,8 @@ use std::any::TypeId;
 use std::sync::{Mutex, MutexGuard};
 
 use event::LogRecord;
-use metrics_tracing_context::MetricsLayer;
+// TODO: enable this if this crate update
+// use metrics_tracing_context::MetricsLayer;
 use once_cell::sync::OnceCell;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tracing::level_filters::LevelFilter;

@@ -1,6 +1,5 @@
 use event::Event;
 use futures_util::StreamExt;
-use hyper_proxy::Proxy;
 
 use crate::config::ProxyConfig;
 use crate::http::HttpClient;

@@ -13,7 +13,7 @@ use super::events::{
 };
 use super::semaphore::ShrinkableSemaphore;
 use super::AdaptiveConcurrencySettings;
-use super::{AdaptiveConcurrencyLimit, MAX_CONCURRENCY};
+use super::MAX_CONCURRENCY;
 use crate::http::HttpError;
 use crate::sinks::util::retries::{RetryAction, RetryLogic};
 use crate::stats::{EwmaVar, Mean, MeanVariance};

@@ -1,9 +1,8 @@
-use futures_util::FutureExt;
-use http::Uri;
 use std::collections::HashMap;
 use std::time::Duration;
 
 use event::encoding::EncodingConfig;
+use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
@@ -16,7 +15,7 @@ use crate::sinks::util::service::{Concurrency, RequestConfig};
 use crate::sinks::util::Compression;
 use crate::sinks::Sink;
 use crate::template::Template;
-use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
+use crate::tls::{TlsOptions, TlsSettings};
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]

@@ -102,10 +102,6 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         }
     }
 
-    if record.is_none() {
-        return Err(Error::QuerySlaveStatusFailed);
-    }
-
     return match record {
         Some(record) => {
             let mut metrics = Vec::with_capacity(record.values.len());
@@ -126,7 +122,9 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
             Ok(metrics)
         }
-        None => Err(Error::QuerySlaveStatusFailed),
+
+        // Replication is not enabled
+        None => return Ok(vec![])
     };
 }
 
@@ -171,21 +169,6 @@ fn parse_status(val: &str) -> Option<f64> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::sources::mysqld::test_utils::setup_and_run;
-    use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-
-    #[tokio::test]
-    async fn test_local_gather() {
-        let opt = MySqlConnectOptions::default()
-            .host("127.0.0.1")
-            .port(9151)
-            .username("root")
-            .password("password")
-            .ssl_mode(MySqlSslMode::Disabled);
-        let pool = MySqlPool::connect_with(opt).await.unwrap();
-
-        let results = gather(&pool).await.unwrap();
-    }
 
     #[test]
     fn test_parse_status() {
@@ -215,15 +198,5 @@ mod tests {
                 want,
             );
         }
-    }
-
-    #[tokio::test]
-    async fn test_gather() {
-        async fn test(pool: MySqlPool) {
-            let result = gather(&pool).await.unwrap();
-            println!("{:#?}", result);
-        }
-
-        setup_and_run(test).await;
     }
 }

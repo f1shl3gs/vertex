@@ -37,7 +37,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_arp_entries() {
-        let procfs = crate::test_procfs();
+        let cd = std::env::current_dir().unwrap();
+        println!("{:?}", cd);
+
+        let procfs = ProcFS::test_procfs();
         let entries = procfs.arp_entries().await.unwrap();
     }
 }

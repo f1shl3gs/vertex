@@ -444,8 +444,7 @@ mod test {
         let events: Arc<Mutex<Vec<String>>> = Default::default();
 
         let recorder = RecordingLayer::new(Arc::clone(&events));
-        let sub =
-            tracing_subscriber::registry::Registry::default().with(RateLimitedLayer::new(recorder));
+        let sub = tracing_subscriber::Registry::default().with(RateLimitedLayer::new(recorder));
         tracing::subscriber::with_default(sub, || {
             for _ in 0..21 {
                 info!(message = "Hello world!", internal_log_rate_secs = 1);

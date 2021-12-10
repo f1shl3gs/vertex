@@ -3,9 +3,9 @@ mod global_variables;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
+#[cfg(all(test, feature = "integration-tests-mysql"))]
+mod integration_tests;
 mod slave_status;
-#[cfg(test)]
-mod test_utils;
 
 use chrono::Utc;
 use event::{tags, Event, Metric};
@@ -340,7 +340,7 @@ pub fn valid_name(s: &str) -> String {
         .to_lowercase()
 }
 
-async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
+pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
         .await
@@ -373,21 +373,4 @@ async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     };
 
     Ok(version)
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::sources::mysqld::test_utils::setup_and_run;
-
-    #[tokio::test]
-    async fn test_parse_version() {
-        async fn test(pool: MySqlPool) {
-            let version = get_mysql_version(&pool).await.unwrap();
-
-            assert_eq!(version, 5.7)
-        }
-
-        setup_and_run(test).await;
-    }
 }
