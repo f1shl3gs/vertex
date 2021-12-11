@@ -172,9 +172,6 @@ fn adjtimex() -> Result<(Timex, i32), Error> {
     let result = unsafe {
         let mut tx = std::mem::zeroed();
         let r = libc::adjtimex(&mut tx);
-        if r != 0 {
-            return Err(Error::from(std::io::Error::last_os_error()));
-        }
 
         (Timex::from(tx), r as i32)
     };
@@ -187,17 +184,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn adjtimex() {
-        let ctx = Timex::default();
-
-        unsafe {
-            let mut tx = std::mem::zeroed();
-            if libc::adjtimex(&mut tx) != 0 {
-                panic!(
-                    "syscall adjtimex failed, {}",
-                    std::io::Error::last_os_error()
-                );
-            }
-        }
+    fn test_adjtimex() {
+        let result = adjtimex();
+        let (tx, eno) = result.unwrap();
+        assert!(eno == 0 || eno == libc::TIME_ERROR)
     }
 }
