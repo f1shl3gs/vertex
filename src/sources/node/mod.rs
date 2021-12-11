@@ -90,12 +90,13 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub conntrack: bool,
 
+    #[serde(default = "default_cpu_config")]
     pub cpu: Option<Arc<CPUConfig>>,
 
     #[serde(default = "default_true")]
     pub cpufreq: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_diskstats_config")]
     pub diskstats: Option<Arc<DiskStatsConfig>>,
 
     #[serde(default)]
@@ -113,7 +114,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub filefd: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_filesystem_config")]
     pub filesystem: Option<Arc<filesystem::FileSystemConfig>>,
 
     #[serde(default = "default_true")]
@@ -122,7 +123,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub infiniband: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_ipvs_config")]
     pub ipvs: Option<Arc<IPVSConfig>>,
 
     #[serde(default = "default_true")]
@@ -134,13 +135,13 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub memory: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_netclass_config")]
     pub netclass: Option<Arc<netclass::NetClassConfig>>,
 
-    #[serde(default)]
+    #[serde(default = "default_netdev_config")]
     pub netdev: Option<Arc<netdev::NetdevConfig>>,
 
-    #[serde(default)]
+    #[serde(default = "default_netstat_config")]
     pub netstat: Option<Arc<netstat::NetstatConfig>>,
 
     #[serde(default = "default_true")]
@@ -155,7 +156,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub os_release: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_powersupply_config")]
     pub power_supply: Option<Arc<powersupplyclass::PowerSupplyConfig>>,
 
     #[serde(default = "default_true")]
@@ -197,6 +198,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub uname: bool,
 
+    #[serde(default = "default_vmstat_config")]
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
 
     #[serde(default = "default_true")]
@@ -206,6 +208,42 @@ struct Collectors {
     pub zfs: bool,
 }
 
+fn default_cpu_config() -> Option<Arc<CPUConfig>> {
+    Some(Arc::new(CPUConfig::default()))
+}
+
+fn default_diskstats_config() -> Option<Arc<DiskStatsConfig>> {
+    Some(Arc::new(DiskStatsConfig::default()))
+}
+
+fn default_filesystem_config() -> Option<Arc<filesystem::FileSystemConfig>> {
+    Some(Arc::new(filesystem::FileSystemConfig::default()))
+}
+
+fn default_ipvs_config() -> Option<Arc<IPVSConfig>> {
+    Some(Arc::new(ipvs::IPVSConfig::default()))
+}
+
+fn default_netclass_config() -> Option<Arc<netclass::NetClassConfig>> {
+    Some(Arc::new(NetClassConfig::default()))
+}
+
+fn default_netdev_config() -> Option<Arc<netdev::NetdevConfig>> {
+    Some(Arc::new(NetdevConfig::default()))
+}
+
+fn default_netstat_config() -> Option<Arc<netstat::NetstatConfig>> {
+    Some(Arc::new(NetstatConfig::default()))
+}
+
+fn default_powersupply_config() -> Option<Arc<powersupplyclass::PowerSupplyConfig>> {
+    Some(Arc::new(powersupplyclass::PowerSupplyConfig::default()))
+}
+
+fn default_vmstat_config() -> Option<Arc<vmstat::VMStatConfig>> {
+    Some(Arc::new(VMStatConfig::default()))
+}
+
 impl Default for Collectors {
     fn default() -> Self {
         Self {
@@ -213,29 +251,29 @@ impl Default for Collectors {
             btrfs: default_true(),
             bonding: default_true(),
             conntrack: default_true(),
-            cpu: Some(Arc::new(CPUConfig::default())),
+            cpu: default_cpu_config(),
             cpufreq: true,
-            diskstats: Some(Arc::new(DiskStatsConfig::default())),
+            diskstats: default_diskstats_config(),
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
             fibrechannel: default_true(),
             filefd: default_true(),
-            filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
+            filesystem: default_filesystem_config(),
             hwmon: default_true(),
             infiniband: default_true(),
-            ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
+            ipvs: default_ipvs_config(),
             loadavg: default_true(),
             mdadm: default_true(),
             memory: default_true(),
-            netclass: Some(Arc::new(NetClassConfig::default())),
-            netdev: Some(Arc::new(NetdevConfig::default())),
-            netstat: Some(Arc::new(NetstatConfig::default())),
+            netclass: default_netclass_config(),
+            netdev: default_netdev_config(),
+            netstat: default_netstat_config(),
             nfs: default_true(),
             nfsd: default_true(),
             nvme: default_true(),
             os_release: default_true(),
-            power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
+            power_supply: default_powersupply_config(),
             pressure: default_true(),
             processes: default_false(),
             rapl: default_true(),
@@ -249,7 +287,7 @@ impl Default for Collectors {
             thermal_zone: default_true(),
             udp_queues: default_true(),
             uname: default_true(),
-            vmstat: Some(Arc::new(VMStatConfig::default())),
+            vmstat: default_vmstat_config(),
             xfs: default_true(),
             zfs: default_true(),
         }
