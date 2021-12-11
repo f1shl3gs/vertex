@@ -1,5 +1,5 @@
-#[cfg(test)]
-mod integrations {
+#[cfg(all(test, feature = "integration-tests-kafka"))]
+mod integration_tests {
     use testify::random::random_string;
 
     #[tokio::test]
