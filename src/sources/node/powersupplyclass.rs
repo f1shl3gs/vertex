@@ -567,7 +567,14 @@ mod tests {
     #[tokio::test]
     async fn test_power_supply_class() {
         let root = "tests/fixtures/sys";
-        let pss = power_supply_class(root).await.unwrap();
+        let mut pss = power_supply_class(root).await.unwrap();
+
+        // The readdir_r is not guaranteed to return in any specific order.
+        // And the order of Github CI and Centos Stream is different, so it must be sorted
+        // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
+        pss.sort_by(|a, b| {
+            a.name.cmp(&b.name)
+        });
 
         assert_eq!(pss.len(), 2);
         assert_eq!(

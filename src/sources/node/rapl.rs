@@ -46,8 +46,6 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
             _ => continue,
         };
 
-        println!("GRZ: {}", name);
-
         let (name, index) = match get_name_and_index(&name) {
             Some(vs) => vs,
             None => {
@@ -123,9 +121,17 @@ mod tests {
     #[tokio::test]
     async fn test_get_rapl_zones() {
         let root = "tests/fixtures/sys";
-        let zones = get_rapl_zones(root).await.unwrap();
+        let mut zones = get_rapl_zones(root).await.unwrap();
+
+        // The readdir_r is not guaranteed to return in any specific order.
+        // And the order of Github CI and Centos Stream is different, so it must be sorted
+        // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
+        zones.sort_by(|a, b| {
+            a.name.cmp(&b.name)
+        });
+
         assert_eq!(zones.len(), 3);
-        assert_eq!(zones[0].microjoules, 240422366267);
+        assert_eq!(zones[1].microjoules, 240422366267);
         assert_eq!(zones[2].index, 10);
     }
 }
