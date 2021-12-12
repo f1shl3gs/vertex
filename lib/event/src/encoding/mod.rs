@@ -53,6 +53,7 @@ impl MaybeAsLogMut for Event {
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 pub enum TimestampFormat {
     Unix,
     RFC3339,
@@ -221,7 +222,6 @@ mod tests {
     use crate::Value;
     use indoc::indoc;
     use log_schema::log_schema;
-    use serde_yaml::Value as YamlValue;
     use std::collections::BTreeMap;
 
     #[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Clone)]
@@ -372,8 +372,9 @@ mod tests {
     }
 
     const YAML_TIMESTAMP_FORMAT: &str = indoc! {r#"
-        encoding.codec = "Snoot"
-        encoding.timestamp_format = "unix"
+        encoding:
+            codec: "Snoot"
+            timestamp_format: "unix"
     "#};
 
     #[test]

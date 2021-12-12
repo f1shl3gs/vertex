@@ -16,7 +16,6 @@ members = [
     "lib/buffers",
     "lib/event",
     "lib/procfs",
-    "lib/file-source",
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
