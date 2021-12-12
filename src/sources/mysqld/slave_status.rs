@@ -124,7 +124,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         }
 
         // Replication is not enabled
-        None => return Ok(vec![])
+        None => return Ok(vec![]),
     };
 }
 

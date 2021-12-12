@@ -1,3 +1,4 @@
+use futures_util::FutureExt;
 use std::collections::HashMap;
 
 use event::encoding::{EncodingConfig, StandardEncodings};
@@ -10,6 +11,7 @@ use crate::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, HealthCheck, SinkConfig,
     SinkContext,
 };
+use crate::sinks::kafka::sink::health_check;
 use crate::sinks::Sink;
 
 pub const QUEUE_MIN_MESSAGES: u64 = 100000;
@@ -201,7 +203,9 @@ impl GenerateConfig for KafkaSinkConfig {
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
     async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        todo!()
+        let sink = super::sink::KafkaSink::new(self.clone(), ctx.acker())?;
+        let hc = health_check(self.clone()).boxed();
+        Ok((Sink::Stream(Box::new(sink)), hc))
     }
 
     fn input_type(&self) -> DataType {

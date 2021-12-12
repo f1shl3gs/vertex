@@ -4,7 +4,6 @@ use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
 use serde::Deserializer;
 use serde::{de, ser, Serializer};
-use serde_json::Value;
 
 pub const GZIP_NONE: u32 = 0;
 pub const GZIP_FAST: u32 = 1;
@@ -67,6 +66,11 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
     {
         struct StringOrMap;
 
+        enum Algorithm {
+            None,
+            Gzip,
+        }
+
         impl<'de> serde::de::Visitor<'de> for StringOrMap {
             type Value = Compression;
 
@@ -95,23 +99,32 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                 let mut algorithm = None;
                 let mut level = None;
 
-                while let Some(key) = map.next_key()? {
-                    match key {
+                while let Some(key) = map.next_key::<String>()? {
+                    match key.as_str() {
                         "algorithm" => {
                             if algorithm.is_some() {
                                 return Err(de::Error::duplicate_field("algorithm"));
                             }
 
-                            algorithm = Some(map.next_value::<&str>()?);
+                            let value = map.next_value::<String>()?;
+                            algorithm = match value.as_str() {
+                                "none" => Some(Algorithm::None),
+                                "gzip" => Some(Algorithm::Gzip),
+                                _ => {
+                                    return Err(de::Error::unknown_variant(
+                                        &value,
+                                        &["none", "gzip"],
+                                    ))
+                                }
+                            };
                         }
                         "level" => {
                             if level.is_some() {
                                 return Err(de::Error::duplicate_field("level"));
                             }
-
-                            level = Some(match map.next_value::<Value>()? {
-                                Value::Number(level) => match level.as_u64() {
-                                    Some(value) if value <= 9 => {
+                            level = Some(match map.next_value::<serde_json::Value>()? {
+                                serde_json::Value::Number(level) => match level.as_u64() {
+                                    Some(value) if value <= 9 && value >= 0 => {
                                         flate2::Compression::new(value as u32)
                                     }
                                     Some(_) | None => {
@@ -121,7 +134,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                                         ));
                                     }
                                 },
-                                Value::String(level) => match level.as_str() {
+                                serde_json::Value::String(level) => match level.as_str() {
                                     "none" => flate2::Compression::none(),
                                     "fast" => flate2::Compression::fast(),
                                     "default" => flate2::Compression::default(),
@@ -141,18 +154,16 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                                 }
                             });
                         }
-
-                        _ => return Err(de::Error::unknown_field(key, &["algorithm", "level"])),
+                        _ => return Err(de::Error::unknown_field(&key, &["algorithm", "level"])),
                     };
                 }
 
                 match algorithm.ok_or_else(|| de::Error::missing_field("algorithm"))? {
-                    "none" => match level {
+                    Algorithm::None => match level {
                         Some(_) => Err(de::Error::unknown_field("level", &[])),
                         None => Ok(Compression::None),
                     },
-                    "gzip" => Ok(Compression::Gzip(level.unwrap_or_default())),
-                    algorithm => Err(de::Error::unknown_variant(algorithm, &["none", "gzip"])),
+                    Algorithm::Gzip => Ok(Compression::Gzip(level.unwrap_or_default())),
                 }
             }
         }
@@ -194,7 +205,7 @@ mod tests {
     fn deserialization_yaml() {
         let tests = [
             ("none", Compression::None),
-            ("algorithm: gzip\nlevel: 3", Compression::None),
+            ("algorithm: none", Compression::None),
             ("algorithm: \"gzip\"", Compression::gzip_default()),
             (
                 "algorithm: gzip\nlevel: fast",
@@ -207,6 +218,14 @@ mod tests {
             (
                 "algorithm: gzip\nlevel: best",
                 Compression::Gzip(flate2::Compression::best()),
+            ),
+            (
+                "algorithm: gzip\nlevel: 2",
+                Compression::Gzip(flate2::Compression::new(2)),
+            ),
+            (
+                "algorithm: gzip\nlevel: 7",
+                Compression::Gzip(flate2::Compression::new(7)),
             ),
         ];
 
@@ -236,13 +255,16 @@ mod tests {
                 Compression::Gzip(flate2::Compression::best()),
             ),
             (
-                r#"{"algorithm": "gzip", "level": 8}"#,
+                r#"{
+  "algorithm": "gzip",
+  "level": 8
+}"#,
                 Compression::Gzip(flate2::Compression::new(8)),
             ),
         ];
-        for (sources, result) in fixtures_valid.iter() {
-            let deserialized: Result<Compression, _> = serde_json::from_str(sources);
-            assert_eq!(deserialized.expect("valid source"), *result);
+        for (input, result) in fixtures_valid {
+            let deserialized: Result<Compression, _> = serde_json::from_str(input);
+            assert_eq!(deserialized.expect("valid source"), result);
         }
 
         let fixtures_invalid = [
@@ -279,10 +301,10 @@ mod tests {
                 r#"unknown field `key`, expected `algorithm` or `level` at line 1 column 47"#,
             ),
         ];
-        for (source, result) in fixtures_invalid.iter() {
-            let deserialized: Result<Compression, _> = serde_json::from_str(source);
-            let error = deserialized.expect_err("invalid source");
-            assert_eq!(error.to_string().as_str(), *result);
+        for (input, result) in fixtures_invalid {
+            let deserialized: Result<Compression, _> = serde_json::from_str(input);
+            let err = deserialized.expect_err("invalid source");
+            assert_eq!(err.to_string().as_str(), result);
         }
     }
 }

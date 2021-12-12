@@ -7,7 +7,7 @@ use crate::sources::mysqld::get_mysql_version;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
 use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-use testcontainers::{ Docker};
+use testcontainers::Docker;
 
 #[tokio::test]
 async fn gather() {

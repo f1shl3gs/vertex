@@ -17,6 +17,8 @@ const MICROSECONDS: f64 = 1000000.0;
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let (tx, status) = adjtimex().context("syscall adjtimex failed")?;
 
+    // TIME_ERROR is not an actually error, see
+    // https://man7.org/linux/man-pages/man2/adjtimex.2.html#top_of_page
     let sync_status = match status {
         TIME_ERROR => 0,
         _ => 1,
