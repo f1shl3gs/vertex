@@ -211,11 +211,14 @@ mod tests {
 
     #[test]
     fn test_boot_time() {
-        let ns = boot_time("/proc/uptime").unwrap();
-        println!("{}", ns);
+        // NOTE: the value returned is not constant, so assert_eq! will not help
+        boot_time("tests/fixtures/proc/uptime").unwrap();
     }
 
+    // TODO: The runner `sudo -E` is a proper way to run this, may we should
+    //   move this test to `integration_tests`
     #[tokio::test]
+    #[ignore]
     async fn test_read() {
         let f = tokio::fs::File::open("/dev/kmsg").await.unwrap();
         let mut reader = tokio::io::BufReader::new(f);
