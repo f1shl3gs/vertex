@@ -46,6 +46,8 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
             _ => continue,
         };
 
+        println!("GRZ: {}", name);
+
         let (name, index) = match get_name_and_index(&name) {
             Some(vs) => vs,
             None => {
