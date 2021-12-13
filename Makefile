@@ -15,9 +15,6 @@ lines:
 hooks:
 	ln -sf ../../scripts/pre-commit.sh .git/hooks/pre-commit
 
-# archives
-target/artifacts/vector-${VERSION}:
-
 .PHONY: fmt
 fmt:
 	cargo fmt
