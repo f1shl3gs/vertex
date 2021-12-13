@@ -5,11 +5,12 @@ use crate::config::{
     Config, ExpandType, ExtensionConfig, GlobalOptions, HealthcheckOptions, SinkOuter, SourceOuter,
     TransformOuter,
 };
-#[cfg(test)]
-use crate::config::{SinkConfig, SourceConfig, TransformConfig};
 use glob;
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
+
+#[cfg(test)]
+use crate::config::{SinkConfig, SourceConfig, TransformConfig};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
