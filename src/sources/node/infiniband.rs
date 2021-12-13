@@ -829,9 +829,7 @@ mod tests {
         // And the order of Github CI and Centos Stream is different, so it must be sorted
         // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
         devs.iter_mut()
-            .for_each(|dev| {
-                dev.ports.sort_by(|a, b| a.port.cmp(&b.port))
-            });
+            .for_each(|dev| dev.ports.sort_by(|a, b| a.port.cmp(&b.port)));
 
         assert_eq!(
             devs[0],
