@@ -46,16 +46,7 @@ target-x86_64-unknown-linux-musl = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "openssl/vendored",
-    # For some reason, once we enable "sources-kafka" the build will fail,
-    # and it looks like cross cannot link openss. The confused part is that
-    # "rdkafka" is already built due to "sinks-kafka" is enabled.
-    #
-    # Vertex is not ready for production yet, all i can do now is waiting,
-    # maybe new version of "rdkafka" or "openssl" can fix this.
-    # "sources-kafka",
-    "rdkafka/gssapi-vendored",
-    "rdkafka/ssl-vendored",
+    "vendor-all"
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -65,9 +56,7 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "openssl/vendored",
-    "rdkafka/gssapi-vendored",
-    "sources-kafka"
+    "vendor-all"
 ]
 
 # Integration tests
@@ -101,7 +90,7 @@ sources = [
     "sources-generator",
     "sources-node_metrics",
     "sources-ntp",
-    # "sources-kafka",
+    "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
     "sources-selfstat",
@@ -202,9 +191,9 @@ rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
 unix = []
 
 # These are **very** useful on Cross compilations!
-# vendor-all = ["vendor-openssl"]
-# vendor-sasl = ["rdkafka/gssapi-vendored"]
-# vendor-openssl = ["openssl/vendored"]
+vendor-all = ["vendor-openssl"]
+vendor-sasl = ["rdkafka/gssapi-vendored"]
+vendor-openssl = ["openssl/vendored"]
 
 [[bench]]
 name = "loki"
@@ -337,7 +326,7 @@ exitcode = { version = "1.1.2" }
 clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
-rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "ssl"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.109", optional = true }
 nom = { version = "7.1.0", default-features = false }
