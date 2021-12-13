@@ -126,11 +126,9 @@ mod tests {
         // The readdir_r is not guaranteed to return in any specific order.
         // And the order of Github CI and Centos Stream is different, so it must be sorted
         // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
-        zones.sort_by(|a, b| {
-            match a.name.cmp(&b.name) {
-                std::cmp::Ordering::Equal => a.index.cmp(&b.index),
-                order => order
-            }
+        zones.sort_by(|a, b| match a.name.cmp(&b.name) {
+            std::cmp::Ordering::Equal => a.index.cmp(&b.index),
+            order => order,
         });
 
         assert_eq!(zones.len(), 3);
