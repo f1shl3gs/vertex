@@ -63,38 +63,3 @@ macro_rules! update_counter {
         }
     }};
 }
-
-#[cfg(test)]
-mod tests {
-    #[macro_export]
-    macro_rules! emit2 {
-        // metrics only
-        (
-            [
-                // [$($name:expr, $type:ident, $value:expr,  $($label_key:expr => $label_value:literal),* ), *],*
-                $( [ $name:expr, $type:ident, $value:expr, $( $label_key:expr => $label_value:expr),* ] ),*
-            ]
-        ) => {
-            $(  $type!(
-                $name,
-                $value,
-                // workable expr
-                $($label_key => $label_value,)*
-            );)*
-        };
-
-        // metrics and logs
-        // todo
-    }
-
-    #[test]
-    fn test() {
-        emit2!(
-            [
-                ["metric_1", counter, 1,],
-                ["metric_2", counter, 2, "foo" => "bar"],
-                ["metric_3", counter, 3, "foo" => "bar", "key" => "value"]
-            ]
-        );
-    }
-}
