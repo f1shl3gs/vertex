@@ -1,4 +1,4 @@
-FROM gcr.cn/distroless/cc-debian10
+FROM gcr.io/distroless/cc-debian10
 
 COPY vertex /usr/bin/vertex
 COPY vertex.yml /etc/vertex/vertex.yml
