@@ -24,18 +24,18 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          target: "${{ matrix.target }}"
+          target: x86_64-unknown-linux-musl
       - uses: actions-rs/cargo@v1
         with:
           use-cross: true
           command: build
-          args: --target ${{ matrix.target }} --release --no-default-features --features target-${{ matrix.target }}
-      - run: cp target/${{ matrix.target }}/release/vertex distribution/docker
+          args: --target x86_64-unknown-linux-musl --release --no-default-features --features target-x86_64-unknown-linux-musl
+      - run: cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
       - uses: docker/build-push-action@v2
         with:
           context: distribution/docker
           push: true
-          tags: f1shl3gs/vertex:nightly-alpine-${{ matrix.target }}
+          tags: f1shl3gs/vertex:nightly-alpine-x86_64-unknown-linux-musl
           file: distribution/docker/alpine/Dockerfile
 
   x86_64-unknown-linux-gnu:
