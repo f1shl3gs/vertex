@@ -603,7 +603,8 @@ impl Topology {
 
         for input in inputs {
             // This can only fail if we are disconnected, which is a valid situation
-            let _ = self.outputs
+            let _ = self
+                .outputs
                 .get_mut(&input)
                 .unwrap()
                 .send(ControlMessage::Add(id.clone().into(), tx.get()))
@@ -640,7 +641,8 @@ impl Topology {
 
         for input in inputs_to_add {
             // This can only fail if we are disconnected, which is a valid situation
-            let _ = self.outputs
+            let _ = self
+                .outputs
                 .get_mut(input)
                 .unwrap()
                 .send(ControlMessage::Add(id.clone().into(), tx.get()))
@@ -649,7 +651,8 @@ impl Topology {
 
         for &input in inputs_to_replace {
             // This can only fail if we are disconnected, which is a valid situation
-            let _ = self.outputs
+            let _ = self
+                .outputs
                 .get_mut(input)
                 .unwrap()
                 .send(ControlMessage::Replace(id.clone().into(), Some(tx.get())))
@@ -674,7 +677,8 @@ impl Topology {
         for input in old_inputs {
             // This can only fail if we are disconnected, which is a valid
             // situation
-            let _ = self.outputs
+            let _ = self
+                .outputs
                 .get_mut(input)
                 .unwrap()
                 .send(ControlMessage::Replace(id.clone().into(), None))
