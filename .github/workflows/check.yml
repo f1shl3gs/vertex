@@ -13,8 +13,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash scripts/environment/prepare.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
       - run: cargo clean
       - run: cargo check
 

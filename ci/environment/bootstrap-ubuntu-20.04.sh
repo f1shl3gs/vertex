@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
-
-set -euo pipefail
-
+#! /usr/bin/env bash
+set -e -o verbose
 
 export DEBIAN_FRONTEND=noninteractive
 export ACCEPT_EULA=Y
@@ -45,13 +43,13 @@ locale-gen en_US.UTF-8
 dpkg-reconfigure locales
 
 if ! command -v rustup ; then
-  # Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04 images _and_
-  # by our own Ubuntu 20.04 images
+  # Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04,
+  # so this is really just make sure the path is configured.
   curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
 fi
 
-# Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04 images _and_
-# by our own Ubuntu 20.04 images, so this is really just make sure the path is configured.
+# Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04,
+# so this is really just make sure the path is configured.
 if [ -n "${CI-}" ] ; then
     echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
 else
@@ -60,10 +58,3 @@ fi
 
 # Apt cleanup
 apt clean
-
-rustup show # causes installation of version from rust-toolchain.toml
-rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
-rustup run stable cargo install cross --version 0.2.1
-
-# Make sure our release build settings are present.
-. scripts/environment/release-flags.sh
