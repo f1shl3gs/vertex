@@ -1,6 +1,7 @@
 name: Nightly
 
 on:
+  push: {}
   workflow_dispatch: {}
   schedule:
     - cron: "0 2 * * *"
@@ -11,7 +12,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         target:
@@ -19,21 +20,15 @@ jobs:
           # - x86_64-unknown-linux-gnu
     steps:
       - uses: actions/checkout@v2
+      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash scripts/environment/prepare.sh
       - uses: docker/login-action@v1
         with:
           registry: docker.io
           username: f1shl3gs
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - run: docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
-      - uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: "${{ matrix.target }}"
-      - uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --target ${{ matrix.target }} --release --no-default-features --features target-${{ matrix.target }}
+      - run: make build_${{ matrix.target }}
       - run: cp target/${{ matrix.target }}/release/vertex distribution/docker
       - uses: docker/build-push-action@v2
         with:

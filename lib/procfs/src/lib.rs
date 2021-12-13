@@ -5,29 +5,31 @@ mod nfs;
 mod read;
 
 pub(crate) use read::*;
+use std::ops::Deref;
 
 use snafu::Snafu;
+use std::path::{Path, PathBuf};
 
 #[derive(Debug, Snafu)]
 pub enum Error {
-    #[snafu(display("open file {} failed, {}", path, source))]
+    #[snafu(display("Open file {} failed, {}", path.display(), source))]
     FileOpenFailed {
-        path: String,
+        path: PathBuf,
         source: std::io::Error,
     },
 
-    #[snafu(display("read file {} failed, {}", path, source))]
+    #[snafu(display("Read file {} failed, {}", path.display(), source))]
     FileReadFailed {
-        path: String,
+        path: PathBuf,
         source: std::io::Error,
     },
 
-    #[snafu(display("other io error, {}", source))]
+    #[snafu(display("Other io error, {}", source))]
     OtherErr { source: std::io::Error },
 }
 
 pub struct ProcFS {
-    root: String,
+    root: PathBuf,
 }
 
 impl Default for ProcFS {
@@ -48,5 +50,5 @@ impl ProcFS {
 }
 
 pub struct SysFS {
-    root: String,
+    root: Path,
 }
