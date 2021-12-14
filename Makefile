@@ -20,9 +20,12 @@ fmt:
 	cargo fmt
 
 build_x86_64-unknown-linux-musl:
-	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
-	cross build --target x86_64-unknown-linux-musl --release --no-default-features --features target-x86_64-unknown-linux-musl
-	# cross build --target x86_64-unknown-linux-musl --release --no-default-features --features target-x86_64-unknown-linux-musl
+	@docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
+	@cross build \
+		--release \
+		--target x86_64-unknown-linux-musl \
+		--no-default-features \
+		--features target-x86_64-unknown-linux-musl
 
 build_x86_64-unknown-linux-gnu: artifacts-dir
 	docker build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
