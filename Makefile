@@ -62,5 +62,20 @@ integration-test-mysql:
 test:
 	cargo test --workspace --no-fail-fast
 
+.PHONY: check_style
+check_style:
+	@cargo clippy --workspace --all-targets  -- -A warnings
+
+.PHONY: check_shell
+check_shell:
+	@bash ci/check-scripts.sh
+
+.PHONY: check_fmt
+check_fmt:
+	@cargo fmt -- --check
+
+.PHONY: check
+check: check_shell check_shell check_fmt
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30
