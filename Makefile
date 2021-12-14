@@ -80,5 +80,9 @@ check_fmt:
 .PHONY: check
 check: check_shell check_clippy check_fmt
 
+.PHONY: bench
+bench:
+	RUSTFLAGS="-A warnings" cargo bench --features bench --no-default-features
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

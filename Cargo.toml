@@ -13,7 +13,6 @@ debug = false
 
 [profile.bench]
 debug = true
-lto = true
 
 [workspace]
 members = [
@@ -197,6 +196,12 @@ sinks-clickhouse = []
 # extensions
 extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+
+bench = [
+    "sinks-loki",
+    "sources-haproxy",
+    "sources-node_metrics",
+]
 
 # Enables `rdkafka` dependency.
 # This feature is more portable, but requires `cmake` as build dependency. Use it if `rdkafka-plain` doesn't work.
