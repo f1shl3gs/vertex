@@ -340,7 +340,7 @@ url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
-libc = { version = "0.2.111", optional = true }
+libc = { version = "0.2.112", optional = true }
 nom = { version = "7.1.0", default-features = false }
 snafu = { version = "0.6.10" }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
