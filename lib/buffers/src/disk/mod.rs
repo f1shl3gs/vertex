@@ -73,8 +73,8 @@ where
 pub fn open<'a, T>(
     dir: &Path,
     name: &str,
-    max_size: usize,
-    buffer_usage_data: Arc<BufferUsageData>,
+    _max_size: usize,
+    _buffer_usage_data: Arc<BufferUsageData>,
 ) -> Result<
     (
         Writer<T>,

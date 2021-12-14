@@ -4,9 +4,6 @@ mod fibre_channel;
 mod nfs;
 mod read;
 
-pub(crate) use read::*;
-use std::ops::Deref;
-
 use snafu::Snafu;
 use std::path::{Path, PathBuf};
 
