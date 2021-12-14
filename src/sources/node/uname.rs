@@ -71,6 +71,6 @@ mod tests {
         };
 
         let v = unsafe { libc::uname(&mut u) };
-        assert_ne!(v, 0);
+        assert_eq!(v, 0);
     }
 }
