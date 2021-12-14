@@ -9,7 +9,7 @@ env:
   RUST_TEST_THREADS: 1
   RUST_BACKTRACE: full
   PROFILE: debug
-  RUSTFLAGS: "-D warnings"
+  # RUSTFLAGS: "-D warnings"
 
 jobs:
   check:
@@ -40,4 +40,4 @@ jobs:
       - name: Check shell
         run:  bash ci/check-scripts.sh
       - name: Check fmt
-        run:  cargo fmt -- --check
+        run:  make fmt
