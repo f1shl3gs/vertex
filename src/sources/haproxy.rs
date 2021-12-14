@@ -283,32 +283,38 @@ macro_rules! try_push_metric {
     ($metrics:expr, $row:expr, $index:expr, $name:expr, $desc:expr, $typ:expr, $tags:expr) => {
         if $index <= $row.len() - 1 {
             let text = $row[$index];
-            let value = match $index {
-                STATUS_FIELD => Some(parse_status_field(text)),
-                CHECK_DURATION_FIELD | QTIME_MS_FIELD | CTIME_MS_FIELD | RTIME_MS_FIELD
-                | TTIME_MS_FIELD => match text.parse::<f64>() {
-                    Ok(v) => Some(v / 1000.0),
-                    Err(err) => {
-                        warn!(message = "Can't parse CSV field value", value = text, ?err);
+            if text != "" {
+                let value = match $index {
+                    STATUS_FIELD => Some(parse_status_field(text)),
+                    CHECK_DURATION_FIELD | QTIME_MS_FIELD | CTIME_MS_FIELD | RTIME_MS_FIELD
+                    | TTIME_MS_FIELD => match text.parse::<f64>() {
+                        Ok(v) => Some(v / 1000.0),
+                        Err(err) => {
+                            warn!(message = "Can't parse CSV field value", value = text, ?err);
 
-                        None
+                            None
+                        }
+                    },
+                    _ => match text.parse() {
+                        Ok(v) => Some(v),
+                        Err(err) => {
+                            warn!(message = "Can't parse CSV failed value", value = text, ?err);
+
+                            None
+                        }
+                    },
+                };
+
+                if let Some(value) = value {
+                    match $typ {
+                        "gauge" => {
+                            $metrics.push(Metric::gauge_with_tags($name, $desc, value, $tags))
+                        }
+                        "counter" => {
+                            $metrics.push(Metric::sum_with_tags($name, $desc, value, $tags))
+                        }
+                        _ => unreachable!(),
                     }
-                },
-                _ => match text.parse() {
-                    Ok(v) => Some(v),
-                    Err(err) => {
-                        warn!(message = "Can't parse CSV failed value", value = text, ?err);
-
-                        None
-                    }
-                },
-            };
-
-            if let Some(value) = value {
-                match $typ {
-                    "gauge" => $metrics.push(Metric::gauge_with_tags($name, $desc, value, $tags)),
-                    "counter" => $metrics.push(Metric::sum_with_tags($name, $desc, value, $tags)),
-                    _ => unreachable!(),
                 }
             }
         }
