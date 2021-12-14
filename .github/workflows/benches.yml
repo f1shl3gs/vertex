@@ -1,0 +1,47 @@
+name: Benchmark
+
+on:
+  pull_request: {}
+  push: {}
+  workflow_dispatch: {}
+
+env:
+  CI: true
+
+jobs:
+  cancel-previous:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true # can cancel workflows scheduled later
+
+  bench:
+    name: Bench - ${{ matrix.target }}
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        target:
+          - bench
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+        - run: bash ci/environment/prepare.sh
+        - run: cargo bench | tee bench_results.txt
+        - name: Store bench results
+          uses: benchmark-action/github-action-benchmark@v1
+          with:
+            name: Vertex
+            tool: cargo
+            output-file-path: bench_results.txt
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            auto-push: true
