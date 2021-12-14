@@ -1,13 +1,8 @@
-use std::path::{Path, PathBuf};
-use crate::{
-    config::{deserialize_regex, serialize_regex},
-};
-use super::{
-    read_to_string,
-    Error,
-};
-use serde::{Deserialize, Serialize};
+use super::{read_to_string, Error};
+use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 
 /// PowerSupply contains info from files in /sys/class/power_supply for
 /// a single power supply
@@ -187,8 +182,6 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                     continue;
                 }
 
-                println!("{:?}", entry.path());
-
                 return Err(err.into());
             }
         };
@@ -263,7 +256,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
             "voltage_min_design" => ps.voltage_min_design = content.parse().ok(),
             "voltage_now" => ps.voltage_now = content.parse().ok(),
             "voltage_ocv" => ps.voltage_ocv = content.parse().ok(),
-            _ => continue
+            _ => continue,
         }
     }
 
@@ -272,14 +265,17 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PowerSupplyConfig {
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub ignored: regex::Regex,
 }
 
 impl Default for PowerSupplyConfig {
     fn default() -> Self {
         Self {
-            ignored: regex::Regex::new("^$").unwrap()
+            ignored: regex::Regex::new("^$").unwrap(),
         }
     }
 }
@@ -292,9 +288,9 @@ macro_rules! power_supply_metric {
                 "node_power_supply_".to_string() + $name,
                 "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
                 v as f64,
-                tags!{
+                tags! {
                     "power_supply" => $power_supply
-                }
+                },
             ))
         }
     };
@@ -307,9 +303,9 @@ macro_rules! power_supply_metric_divide_e6 {
                 "node_power_supply_".to_string() + $name,
                 "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
                 v as f64 / 1e6,
-                tags!{
+                tags! {
                     "power_supply" => $power_supply
-                }
+                },
             ))
         }
     };
@@ -322,9 +318,9 @@ macro_rules! power_supply_metric_divide_10 {
                 "node_power_supply_".to_string() + $name,
                 "value of /sys/class/power_supply/<power_supply>/".to_string() + $name,
                 v as f64 / 10.0,
-                tags!{
+                tags! {
                     "power_supply" => $power_supply
-                }
+                },
             ))
         }
     };
@@ -338,55 +334,169 @@ pub async fn gather(sys_path: &str, conf: &PowerSupplyConfig) -> Result<Vec<Metr
             continue;
         }
 
-
         power_supply_metric!(metrics, &ps.name, "authentic", ps.authentic);
         power_supply_metric!(metrics, &ps.name, "calibrate", ps.calibrate);
-        power_supply_metric!(metrics, &ps.name, "capacity_alert_max", ps.capacity_alert_max);
-        power_supply_metric!(metrics, &ps.name, "capacity_alert_min", ps.capacity_alert_min);
+        power_supply_metric!(
+            metrics,
+            &ps.name,
+            "capacity_alert_max",
+            ps.capacity_alert_max
+        );
+        power_supply_metric!(
+            metrics,
+            &ps.name,
+            "capacity_alert_min",
+            ps.capacity_alert_min
+        );
         power_supply_metric!(metrics, &ps.name, "cyclecount", ps.cycle_count);
         power_supply_metric!(metrics, &ps.name, "online", ps.online);
         power_supply_metric!(metrics, &ps.name, "present", ps.present);
-        power_supply_metric!(metrics, &ps.name, "time_to_empty_seconds", ps.time_to_empty_now);
-        power_supply_metric!(metrics, &ps.name, "time_to_full_seconds", ps.time_to_full_now);
+        power_supply_metric!(
+            metrics,
+            &ps.name,
+            "time_to_empty_seconds",
+            ps.time_to_empty_now
+        );
+        power_supply_metric!(
+            metrics,
+            &ps.name,
+            "time_to_full_seconds",
+            ps.time_to_full_now
+        );
 
         power_supply_metric_divide_e6!(metrics, &ps.name, "current_boot", ps.current_boot);
         power_supply_metric_divide_e6!(metrics, &ps.name, "current_max", ps.current_max);
         power_supply_metric_divide_e6!(metrics, &ps.name, "current_ampere", ps.current_now);
         power_supply_metric_divide_e6!(metrics, &ps.name, "energy_empty", ps.energy_empty);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "energy_empty_design", ps.energy_empty_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "energy_empty_design",
+            ps.energy_empty_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "energy_full", ps.energy_full);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "energy_full_design", ps.energy_full_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "energy_full_design",
+            ps.energy_full_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "energy_watthour", ps.energy_now);
         power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_boot", ps.voltage_boot);
         power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_max", ps.voltage_max);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_max_design", ps.voltage_max_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "voltage_max_design",
+            ps.voltage_max_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_min", ps.voltage_min);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_min_design", ps.voltage_min_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "voltage_min_design",
+            ps.voltage_min_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_volt", ps.voltage_now);
         power_supply_metric_divide_e6!(metrics, &ps.name, "voltage_ocv", ps.voltage_ocv);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_control_limit", ps.charge_control_limit);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_control_limit_max", ps.charge_control_limit_max);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "charge_control_limit",
+            ps.charge_control_limit
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "charge_control_limit_max",
+            ps.charge_control_limit_max
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "charge_counter", ps.charge_counter);
         power_supply_metric_divide_e6!(metrics, &ps.name, "charge_empty", ps.charge_empty);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_empty_design", ps.charge_empty_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "charge_empty_design",
+            ps.charge_empty_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "charge_full", ps.charge_full);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_full_design", ps.charge_full_design);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "charge_full_design",
+            ps.charge_full_design
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "charge_ampere", ps.charge_now);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "charge_term_current", ps.charge_term_current);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "constant_charge_current", ps.constant_charge_current);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "constant_charge_current_max", ps.constant_charge_current_max);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "constant_charge_voltage", ps.constant_charge_voltage);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "constant_charge_voltage_max", ps.constant_charge_voltage_max);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "precharge_current", ps.precharge_current);
-        power_supply_metric_divide_e6!(metrics, &ps.name, "input_current_limit", ps.input_current_limit);
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "charge_term_current",
+            ps.charge_term_current
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "constant_charge_current",
+            ps.constant_charge_current
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "constant_charge_current_max",
+            ps.constant_charge_current_max
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "constant_charge_voltage",
+            ps.constant_charge_voltage
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "constant_charge_voltage_max",
+            ps.constant_charge_voltage_max
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "precharge_current",
+            ps.precharge_current
+        );
+        power_supply_metric_divide_e6!(
+            metrics,
+            &ps.name,
+            "input_current_limit",
+            ps.input_current_limit
+        );
         power_supply_metric_divide_e6!(metrics, &ps.name, "power_watt", ps.power_now);
 
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_celsius", ps.temp);
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_alert_max_celsius", ps.temp_alert_max);
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_alert_min_celsius", ps.temp_alert_min);
+        power_supply_metric_divide_10!(
+            metrics,
+            &ps.name,
+            "temp_alert_max_celsius",
+            ps.temp_alert_max
+        );
+        power_supply_metric_divide_10!(
+            metrics,
+            &ps.name,
+            "temp_alert_min_celsius",
+            ps.temp_alert_min
+        );
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_ambient_celsius", ps.temp_ambient);
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_ambient_max_celsius", ps.temp_ambient_max);
-        power_supply_metric_divide_10!(metrics, &ps.name, "temp_ambient_min_celsius", ps.temp_ambient_min);
+        power_supply_metric_divide_10!(
+            metrics,
+            &ps.name,
+            "temp_ambient_max_celsius",
+            ps.temp_ambient_max
+        );
+        power_supply_metric_divide_10!(
+            metrics,
+            &ps.name,
+            "temp_ambient_min_celsius",
+            ps.temp_ambient_min
+        );
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_max_celsius", ps.temp_max);
         power_supply_metric_divide_10!(metrics, &ps.name, "temp_min_celsius", ps.temp_min);
 
@@ -455,149 +565,160 @@ mod tests {
     #[tokio::test]
     async fn test_power_supply_class() {
         let root = "tests/fixtures/sys";
-        let pss = power_supply_class(root).await.unwrap();
+        let mut pss = power_supply_class(root).await.unwrap();
+
+        // The readdir_r is not guaranteed to return in any specific order.
+        // And the order of Github CI and Centos Stream is different, so it must be sorted
+        // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
+        pss.sort_by(|a, b| a.name.cmp(&b.name));
 
         assert_eq!(pss.len(), 2);
-        assert_eq!(pss[0], PowerSupply {
-            name: "AC".to_string(),
-            authentic: None,
-            calibrate: None,
-            capacity: None,
-            capacity_alert_max: None,
-            capacity_alert_min: None,
-            capacity_level: "".to_string(),
-            charge_avg: None,
-            charge_control_limit: None,
-            charge_control_limit_max: None,
-            charge_counter: None,
-            charge_empty: None,
-            charge_empty_design: None,
-            charge_full: None,
-            charge_full_design: None,
-            charge_now: None,
-            charge_term_current: None,
-            charge_type: "".to_string(),
-            constant_charge_current: None,
-            constant_charge_current_max: None,
-            constant_charge_voltage: None,
-            constant_charge_voltage_max: None,
-            current_avg: None,
-            current_boot: None,
-            current_max: None,
-            current_now: None,
-            cycle_count: None,
-            energy_avg: None,
-            energy_empty: None,
-            energy_empty_design: None,
-            energy_full: None,
-            energy_full_design: None,
-            energy_now: None,
-            health: "".to_string(),
-            input_current_limit: None,
-            manufacturer: "".to_string(),
-            typ: "Mains".to_string(),
-            usb_type: "".to_string(),
-            voltage_avg: None,
-            voltage_boot: None,
-            voltage_max: None,
-            voltage_max_design: None,
-            voltage_min: None,
-            voltage_min_design: None,
-            voltage_now: None,
-            online: Some(0),
-            power_avg: None,
-            power_now: None,
-            precharge_current: None,
-            present: None,
-            scope: "".to_string(),
-            serial_number: "".to_string(),
-            status: "".to_string(),
-            technology: "".to_string(),
-            temp: None,
-            temp_alert_max: None,
-            temp_alert_min: None,
-            temp_ambient: None,
-            temp_ambient_max: None,
-            temp_ambient_min: None,
-            temp_max: None,
-            temp_min: None,
-            time_to_empty_avg: None,
-            time_to_empty_now: None,
-            time_to_full_avg: None,
-            model_name: "".to_string(),
-            time_to_full_now: None,
-            voltage_ocv: None,
-        });
+        assert_eq!(
+            pss[0],
+            PowerSupply {
+                name: "AC".to_string(),
+                authentic: None,
+                calibrate: None,
+                capacity: None,
+                capacity_alert_max: None,
+                capacity_alert_min: None,
+                capacity_level: "".to_string(),
+                charge_avg: None,
+                charge_control_limit: None,
+                charge_control_limit_max: None,
+                charge_counter: None,
+                charge_empty: None,
+                charge_empty_design: None,
+                charge_full: None,
+                charge_full_design: None,
+                charge_now: None,
+                charge_term_current: None,
+                charge_type: "".to_string(),
+                constant_charge_current: None,
+                constant_charge_current_max: None,
+                constant_charge_voltage: None,
+                constant_charge_voltage_max: None,
+                current_avg: None,
+                current_boot: None,
+                current_max: None,
+                current_now: None,
+                cycle_count: None,
+                energy_avg: None,
+                energy_empty: None,
+                energy_empty_design: None,
+                energy_full: None,
+                energy_full_design: None,
+                energy_now: None,
+                health: "".to_string(),
+                input_current_limit: None,
+                manufacturer: "".to_string(),
+                typ: "Mains".to_string(),
+                usb_type: "".to_string(),
+                voltage_avg: None,
+                voltage_boot: None,
+                voltage_max: None,
+                voltage_max_design: None,
+                voltage_min: None,
+                voltage_min_design: None,
+                voltage_now: None,
+                online: Some(0),
+                power_avg: None,
+                power_now: None,
+                precharge_current: None,
+                present: None,
+                scope: "".to_string(),
+                serial_number: "".to_string(),
+                status: "".to_string(),
+                technology: "".to_string(),
+                temp: None,
+                temp_alert_max: None,
+                temp_alert_min: None,
+                temp_ambient: None,
+                temp_ambient_max: None,
+                temp_ambient_min: None,
+                temp_max: None,
+                temp_min: None,
+                time_to_empty_avg: None,
+                time_to_empty_now: None,
+                time_to_full_avg: None,
+                model_name: "".to_string(),
+                time_to_full_now: None,
+                voltage_ocv: None,
+            }
+        );
 
-        assert_eq!(pss[1], PowerSupply {
-            name: "BAT0".to_string(),
-            authentic: None,
-            calibrate: None,
-            capacity: Some(98),
-            capacity_alert_max: None,
-            capacity_alert_min: None,
-            capacity_level: "Normal".to_string(),
-            charge_avg: None,
-            charge_control_limit: None,
-            charge_control_limit_max: None,
-            charge_counter: None,
-            charge_empty: None,
-            charge_empty_design: None,
-            charge_full: None,
-            charge_full_design: None,
-            charge_now: None,
-            charge_term_current: None,
-            charge_type: "".to_string(),
-            constant_charge_current: None,
-            constant_charge_current_max: None,
-            constant_charge_voltage: None,
-            constant_charge_voltage_max: None,
-            current_avg: None,
-            current_boot: None,
-            current_max: None,
-            current_now: None,
-            cycle_count: Some(0),
-            energy_avg: None,
-            energy_empty: None,
-            energy_empty_design: None,
-            energy_full: Some(50060000),
-            energy_full_design: Some(47520000),
-            energy_now: Some(49450000),
-            health: "".to_string(),
-            input_current_limit: None,
-            manufacturer: "LGC".to_string(),
-            model_name: "LNV-45N1".to_string(),
-            online: None,
-            power_avg: None,
-            power_now: Some(4830000),
-            precharge_current: None,
-            present: Some(1),
-            scope: "".to_string(),
-            serial_number: "38109".to_string(),
-            status: "Discharging".to_string(),
-            technology: "Li-ion".to_string(),
-            temp: None,
-            temp_alert_max: None,
-            temp_alert_min: None,
-            temp_ambient: None,
-            temp_ambient_max: None,
-            temp_ambient_min: None,
-            temp_max: None,
-            temp_min: None,
-            time_to_empty_avg: None,
-            time_to_empty_now: None,
-            time_to_full_avg: None,
-            time_to_full_now: None,
-            typ: "Battery".to_string(),
-            usb_type: "".to_string(),
-            voltage_avg: None,
-            voltage_boot: None,
-            voltage_max: None,
-            voltage_max_design: None,
-            voltage_min: None,
-            voltage_min_design: Some(10800000),
-            voltage_now: Some(12229000),
-            voltage_ocv: None,
-        })
+        assert_eq!(
+            pss[1],
+            PowerSupply {
+                name: "BAT0".to_string(),
+                authentic: None,
+                calibrate: None,
+                capacity: Some(98),
+                capacity_alert_max: None,
+                capacity_alert_min: None,
+                capacity_level: "Normal".to_string(),
+                charge_avg: None,
+                charge_control_limit: None,
+                charge_control_limit_max: None,
+                charge_counter: None,
+                charge_empty: None,
+                charge_empty_design: None,
+                charge_full: None,
+                charge_full_design: None,
+                charge_now: None,
+                charge_term_current: None,
+                charge_type: "".to_string(),
+                constant_charge_current: None,
+                constant_charge_current_max: None,
+                constant_charge_voltage: None,
+                constant_charge_voltage_max: None,
+                current_avg: None,
+                current_boot: None,
+                current_max: None,
+                current_now: None,
+                cycle_count: Some(0),
+                energy_avg: None,
+                energy_empty: None,
+                energy_empty_design: None,
+                energy_full: Some(50060000),
+                energy_full_design: Some(47520000),
+                energy_now: Some(49450000),
+                health: "".to_string(),
+                input_current_limit: None,
+                manufacturer: "LGC".to_string(),
+                model_name: "LNV-45N1".to_string(),
+                online: None,
+                power_avg: None,
+                power_now: Some(4830000),
+                precharge_current: None,
+                present: Some(1),
+                scope: "".to_string(),
+                serial_number: "38109".to_string(),
+                status: "Discharging".to_string(),
+                technology: "Li-ion".to_string(),
+                temp: None,
+                temp_alert_max: None,
+                temp_alert_min: None,
+                temp_ambient: None,
+                temp_ambient_max: None,
+                temp_ambient_min: None,
+                temp_max: None,
+                temp_min: None,
+                time_to_empty_avg: None,
+                time_to_empty_now: None,
+                time_to_full_avg: None,
+                time_to_full_now: None,
+                typ: "Battery".to_string(),
+                usb_type: "".to_string(),
+                voltage_avg: None,
+                voltage_boot: None,
+                voltage_max: None,
+                voltage_max_design: None,
+                voltage_min: None,
+                voltage_min_design: Some(10800000),
+                voltage_now: Some(12229000),
+                voltage_ocv: None,
+            }
+        )
     }
 }

@@ -38,8 +38,8 @@ pub struct BatchReduce<F, S> {
 }
 
 impl<F, S> BatchReduce<F, S>
-    where
-        S: Default
+where
+    S: Default,
 {
     pub fn new(reducer: F) -> BatchReduce<F, S> {
         BatchReduce {
@@ -51,9 +51,9 @@ impl<F, S> BatchReduce<F, S>
 }
 
 impl<F, S, T> BatchData<T> for BatchReduce<F, S>
-    where
-        F: FnMut(&mut S, T),
-        S: Default
+where
+    F: FnMut(&mut S, T),
+    S: Default,
 {
     type Batch = S;
 

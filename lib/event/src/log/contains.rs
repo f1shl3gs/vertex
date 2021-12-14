@@ -1,6 +1,6 @@
-use std::collections::BTreeMap;
 use super::Value;
-use crate::log::path_iter::{PathIter, PathComponent};
+use crate::log::path_iter::{PathComponent, PathIter};
+use std::collections::BTreeMap;
 
 /// Checks whether a field specified by a given path is present
 pub fn contains(fields: &BTreeMap<String, Value>, path: &str) -> bool {
@@ -9,32 +9,28 @@ pub fn contains(fields: &BTreeMap<String, Value>, path: &str) -> bool {
     match path_iter.next() {
         Some(PathComponent::Key(key)) => match fields.get(key.as_ref()) {
             None => false,
-            Some(value) => value_contains(value, path_iter)
+            Some(value) => value_contains(value, path_iter),
         },
-        _ => false
+        _ => false,
     }
 }
 
 fn value_contains<'a, I>(mut value: &Value, mut path_iter: I) -> bool
-    where
-        I: Iterator<Item=PathComponent<'a>>
+where
+    I: Iterator<Item = PathComponent<'a>>,
 {
     loop {
         value = match (path_iter.next(), value) {
             (None, _) => return true,
-            (Some(PathComponent::Key(key)), Value::Map(map)) => {
-                match map.get(key.as_ref()) {
-                    None => return false,
-                    Some(nested) => nested
-                }
-            }
-            (Some(PathComponent::Index(index)), Value::Array(array)) => {
-                match array.get(index) {
-                    None => return false,
-                    Some(nested) => nested
-                }
-            }
-            _ => return false
+            (Some(PathComponent::Key(key)), Value::Map(map)) => match map.get(key.as_ref()) {
+                None => return false,
+                Some(nested) => nested,
+            },
+            (Some(PathComponent::Index(index)), Value::Array(array)) => match array.get(index) {
+                None => return false,
+                Some(nested) => nested,
+            },
+            _ => return false,
         }
     }
 }
@@ -50,7 +46,6 @@ mod tests {
         let fields = fields_from_json(json!({
             "field": 123
         }));
-        println!("{:?}", fields);
 
         assert!(contains(&fields, "field"))
     }
@@ -88,10 +83,7 @@ mod tests {
         ];
 
         for (path, want) in tests {
-            assert_eq!(
-                contains(&fields, path),
-                want
-            );
+            assert_eq!(contains(&fields, path), want);
         }
     }
 }

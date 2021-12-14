@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::sinks::util::service::Concurrency;
+use serde::{Deserialize, Serialize};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -33,7 +33,7 @@ struct LimitParams {
 
     // The action specifies how over-limit requests will be denied.
     #[serde(default)]
-    action: Action
+    action: Action,
 }
 
 impl LimitParams {
@@ -49,9 +49,10 @@ impl LimitParams {
                 .map(|knee| {
                     self.knee_exp
                         .unwrap_or_else(|| self.scale + 1.0)
-                        .powf(level.saturating_sub(knee) as f64) - 1.0
+                        .powf(level.saturating_sub(knee) as f64)
+                        - 1.0
                 })
-                .unwrap_or(0.0)
+                .unwrap_or(0.0),
         )
     }
 }
@@ -84,7 +85,9 @@ struct TestParams {
     concurrency: Concurrency,
 }
 
-const fn default_interval() -> f64 { 0.0 }
+const fn default_interval() -> f64 {
+    0.0
+}
 
 const fn default_concurrency() -> Concurrency {
     Concurrency::Adaptive

@@ -4,16 +4,16 @@ use std::net::SocketAddr;
 
 use futures::FutureExt;
 use http::Request;
-use hyper::{Body, Method, Response, Server, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Method, Response, Server, StatusCode};
+use jemalloc_ctl::{stats, Access, AsName};
 use serde::{Deserialize, Serialize};
-use jemalloc_ctl::{AsName, Access, stats};
 
-use crate::impl_generate_config_from_default;
 use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
-use crate::extensions::Extension;
-use crate::shutdown::ShutdownSignal;
 use crate::duration::{duration_to_string, parse_duration};
+use crate::extensions::Extension;
+use crate::impl_generate_config_from_default;
+use crate::shutdown::ShutdownSignal;
 
 const OUTPUT: &str = "profile.out";
 const PROF_ACTIVE: &'static [u8] = b"prof.active\0";
@@ -40,7 +40,7 @@ struct JemallocConfig {
 impl Default for JemallocConfig {
     fn default() -> Self {
         Self {
-            listen: default_listen()
+            listen: default_listen(),
         }
     }
 }
@@ -65,7 +65,7 @@ impl ExtensionConfig for JemallocConfig {
                     return Err(BuildError::ProfileNotEnabled.into());
                 }
             }
-            Err(err) => return Err(BuildError::EnvNotSet { source: err }.into())
+            Err(err) => return Err(BuildError::EnvNotSet { source: err }.into()),
         }
 
         Ok(Box::pin(run(self.listen, ctx.shutdown)))
@@ -77,9 +77,7 @@ impl ExtensionConfig for JemallocConfig {
 }
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async {
-        Ok::<_, Infallible>(service_fn(handler))
-    });
+    let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handler)) });
 
     let server = Server::bind(&addr)
         .serve(service)
@@ -106,13 +104,12 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
             let body = format!(
                 "allocated: {}\nactive: {}\nmetadata: {}\nresident: {}\nmapped: {}\nretained: {}\n",
-                allocated, active, metadata, resident, mapped, retained);
+                allocated, active, metadata, resident, mapped, retained
+            );
             Ok(Response::new(Body::from(body)))
         }
 
-        (&Method::GET, "/profile") => {
-            profiling(req).await
-        }
+        (&Method::GET, "/profile") => profiling(req).await,
 
         _ => {
             let mut resp = Response::new(Body::empty());
@@ -123,7 +120,8 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 }
 
 async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let params: HashMap<String, String> = req.uri()
+    let params: HashMap<String, String> = req
+        .uri()
         .query()
         .map(|v| {
             url::form_urlencoded::parse(v.as_bytes())
@@ -135,7 +133,7 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let default = chrono::Duration::seconds(30);
     let wait = match params.get("seconds") {
         Some(value) => parse_duration(value).unwrap_or(default),
-        _ => default
+        _ => default,
     };
 
     info!(
@@ -146,16 +144,14 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     tokio::time::sleep(wait.to_std().unwrap()).await;
     set_prof_active(false);
     dump_profile();
-    let data = std::fs::read_to_string(OUTPUT)
-        .expect("Read dumped profile failed");
+    let data = std::fs::read_to_string(OUTPUT).expect("Read dumped profile failed");
 
     Ok(Response::new(Body::from(data)))
 }
 
 fn set_prof_active(active: bool) {
     let name = PROF_ACTIVE.name();
-    name.write(active)
-        .expect("Should succeed to set profile");
+    name.write(active).expect("Should succeed to set profile");
 }
 
 fn dump_profile() {

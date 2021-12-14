@@ -1,9 +1,9 @@
-use serde::{Deserialize, Serialize};
-use bloom::{ASMS, BloomFilter};
+use crate::config::{DataType, GlobalOptions, TransformConfig};
+use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
-use crate::config::{TransformConfig, GlobalOptions, DataType};
-use crate::transforms::{Transform, FunctionTransform};
+use bloom::{BloomFilter, ASMS};
 use event::Event;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};
 
@@ -19,7 +19,6 @@ impl Default for LimitExceededAction {
         Self::DropEvent
     }
 }
-
 
 #[derive(Copy, Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
@@ -131,10 +130,8 @@ impl Cardinality {
     /// key, and the configured limit_execeed_action should be taken.
     fn try_accept_tag(&mut self, key: &str, value: &str) -> bool {
         if !self.accepted_tags.contains_key(key) {
-            self.accepted_tags.insert(
-                key.to_string(),
-                TagValueSet::new(self.limit),
-            );
+            self.accepted_tags
+                .insert(key.to_string(), TagValueSet::new(self.limit));
         }
 
         let set = self.accepted_tags.get_mut(key).unwrap();
@@ -211,7 +208,5 @@ mod tests {
     }
 
     #[test]
-    fn test_tag_key_limit() {
-
-    }
+    fn test_tag_key_limit() {}
 }

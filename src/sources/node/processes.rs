@@ -1,9 +1,8 @@
+use event::{tags, Metric};
 use std::collections::HashMap;
 use std::path::Path;
-use event::{Metric, tags};
 
-use super::{read_to_string, read_into, Error};
-
+use super::{read_into, read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let root = Path::new(proc_path);
@@ -68,17 +67,13 @@ impl Stats {
     }
 
     fn clear(&mut self) {
-        self.0
-            .iter_mut()
-            .for_each(|(_, v)| {
-                *v = 0;
-            })
+        self.0.iter_mut().for_each(|(_, v)| {
+            *v = 0;
+        })
     }
 
     fn total(&self) -> usize {
-        self.0
-            .iter()
-            .fold(0usize, |mut acc, (_, v)| acc + *v)
+        self.0.iter().fold(0usize, |mut acc, (_, v)| acc + *v)
     }
 
     fn append(&mut self, s: &str) {
@@ -99,14 +94,12 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
     while let Some(entry) = dirs.next_entry().await? {
         let path = entry.path().join("stat");
         match read_to_string(path).await {
-            Ok(content) => {
-                match parse_state(&content) {
-                    Some(state) => procs.append(state),
-                    None => continue,
-                }
-            }
+            Ok(content) => match parse_state(&content) {
+                Some(state) => procs.append(state),
+                None => continue,
+            },
 
-            Err(_) => continue
+            Err(_) => continue,
         }
 
         match tokio::fs::read_dir(entry.path().join("task")).await {
@@ -117,11 +110,11 @@ async fn get_procs_and_threads(root: impl AsRef<Path>) -> Result<(Stats, Stats),
                             Some(state) => threads.append(state),
                             None => continue,
                         },
-                        Err(_) => continue
+                        Err(_) => continue,
                     }
                 }
             }
-            Err(_) => continue
+            Err(_) => continue,
         }
     }
 
@@ -141,16 +134,6 @@ fn parse_state(content: &str) -> Option<&str> {
     content.get(index + 2..index + 3)
 }
 
-#[test]
-fn test_parse_state() {
-    let input = r#"26231 (vim) R 5392 7446 5392 34835 7446 4218880 32533 309516 26 82 1677 44 158 99 20 0 1 0 82375 56274944 1981 18446744073709551615 4194304 6294284 140736914091744 140736914087944 139965136429984 0 0 12288 1870679807 0 0 0 17 0 0 0 31 0 0 8391624 8481048 16420864 140736914093252 140736914093279 140736914093279 140736914096107 0"#;
-
-    let index = input.rfind(')').unwrap();
-    let c = input.get(index + 2..index + 3);
-
-    println!("{:?}", c);
-}
-
 // Check the following resources for the details about the particular stat
 // fields and their data types:
 // * https://man7.org/linux/man-pages/man5/proc.5.html
@@ -162,9 +145,7 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
     };
 
     let (_, s) = content.split_at(index + 1);
-    let list = s.trim()
-        .split_ascii_whitespace()
-        .collect::<Vec<_>>();
+    let list = s.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
     let state = match list.get(0) {
         Some(s) => *s,
@@ -184,7 +165,6 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
     use super::*;
 
     #[test]
@@ -205,5 +185,15 @@ mod tests {
         stats.clear();
         assert_eq!(stats.total(), 0);
         assert_eq!(stats.0.len(), 2);
+    }
+
+    #[test]
+    fn test_parse_state() {
+        let input = r#"26231 (vim) R 5392 7446 5392 34835 7446 4218880 32533 309516 26 82 1677 44 158 99 20 0 1 0 82375 56274944 1981 18446744073709551615 4194304 6294284 140736914091744 140736914087944 139965136429984 0 0 12288 1870679807 0 0 0 17 0 0 0 31 0 0 8391624 8481048 16420864 140736914093252 140736914093279 140736914093279 140736914096107 0"#;
+
+        let index = input.rfind(')').unwrap();
+        let c = input.get(index + 2..index + 3);
+
+        assert_eq!(c, Some("R"));
     }
 }

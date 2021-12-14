@@ -15,8 +15,8 @@ static LOG_SCHEMA: OnceCell<LogSchema> = OnceCell::new();
 ///
 /// If deny is set, will panic if schema has already been set
 pub fn init_log_schema<F>(builder: F, deny_if_set: bool) -> Result<(), Vec<String>>
-    where
-        F: FnOnce() -> Result<LogSchema, Vec<String>>
+where
+    F: FnOnce() -> Result<LogSchema, Vec<String>>,
 {
     let log_schema = builder()?;
     if LOG_SCHEMA.set(log_schema).is_err() && deny_if_set {

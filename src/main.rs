@@ -15,19 +15,18 @@ extern crate chrono_tz;
 
 use std::collections::HashMap;
 
-use clap::{Parser};
+use clap::Parser;
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
-use tracing::{info, warn, error};
+use tracing::{error, info, warn};
 use vertex::{
-    signal::{self, SignalTo},
     config::{self, ConfigPath, FormatHint},
+    signal::{self, SignalTo},
     topology,
 };
 
 use crate::commands::Commands;
-
 
 #[derive(Parser, Debug)]
 #[clap(version = "0.1.0")]
@@ -35,7 +34,12 @@ struct Opts {
     #[clap(short, long, default_value = "/etc/vertex/vertex.yml")]
     pub config: String,
 
-    #[clap(short, long, env = "VERTEX_THREADS", about = "Specify how many threads used for the async runtime")]
+    #[clap(
+        short,
+        long,
+        env = "VERTEX_THREADS",
+        about = "Specify how many threads used for the async runtime"
+    )]
     threads: Option<usize>,
 
     #[clap(subcommand)]
@@ -57,9 +61,7 @@ fn main() {
         return;
     }
 
-    let threads = opts.threads.unwrap_or_else(|| {
-        num_cpus::get()
-    });
+    let threads = opts.threads.unwrap_or_else(|| num_cpus::get());
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(threads)
@@ -211,10 +213,7 @@ fn main() {
 
 pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
     for err in errors {
-        error!(
-            message = "configuration error",
-            ?err
-        );
+        error!(message = "configuration error", ?err);
     }
 
     exitcode::CONFIG
@@ -222,5 +221,8 @@ pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
 
 // TODO: implement it
 fn config_paths_with_formats(path: &str) -> Vec<config::ConfigPath> {
-    vec![ConfigPath::File(path.into(), FormatHint::from(config::Format::YAML))]
+    vec![ConfigPath::File(
+        path.into(),
+        FormatHint::from(config::Format::YAML),
+    )]
 }

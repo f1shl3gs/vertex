@@ -2,30 +2,32 @@
 
 use std::collections::BTreeMap;
 
-use futures::{SinkExt, StreamExt};
 use event::{tags, Metric};
+use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
 
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    SourceConfig, SourceContext, SourceDescription,
+};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
 use crate::Error;
-use crate::config::{
-    DataType, SourceConfig, SourceContext, deserialize_duration,
-    serialize_duration, default_interval, GenerateConfig, SourceDescription
-};
-
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ZookeeperConfig {
     endpoint: String,
 
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     #[serde(default = "default_interval")]
     interval: chrono::Duration,
 }
@@ -35,7 +37,8 @@ impl GenerateConfig for ZookeeperConfig {
         serde_yaml::to_value(Self {
             endpoint: "127.0.0.1:9092".to_string(),
             interval: default_interval(),
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -50,7 +53,7 @@ struct ZookeeperSource {
 impl ZookeeperSource {
     fn from(conf: &ZookeeperConfig) -> Self {
         Self {
-            endpoint: conf.endpoint.clone()
+            endpoint: conf.endpoint.clone(),
         }
     }
 
@@ -61,8 +64,7 @@ impl ZookeeperSource {
         shutdown: ShutdownSignal,
     ) -> Result<(), ()> {
         let interval = tokio::time::interval(interval);
-        let mut ticker = IntervalStream::new(interval)
-            .take_until(shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         let endpoint = self.endpoint.as_str();
         while let Some(_) = ticker.next().await {
@@ -95,37 +97,44 @@ impl ZookeeperSource {
                                 "state" => state,
                                 "instance" => endpoint
                             ),
-                        )
+                        ),
                     ]);
 
                     for (key, value) in stats {
-                        metrics.push(Metric::gauge_with_tags(
-                            key.as_str(),
-                            format!("{} value of mntr", key),
-                            value,
-                            tags!(
-                                "instance" => endpoint
-                            ),
-                        ).into());
+                        metrics.push(
+                            Metric::gauge_with_tags(
+                                key.as_str(),
+                                format!("{} value of mntr", key),
+                                value,
+                                tags!(
+                                    "instance" => endpoint
+                                ),
+                            )
+                            .into(),
+                        );
                     }
 
                     let now = chrono::Utc::now();
-                    let mut stream = futures::stream::iter(metrics)
-                        .map(|mut m| {
-                            m.timestamp = Some(now);
-                            Ok(m.into())
-                        });
+                    let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                        m.timestamp = Some(now);
+                        Ok(m.into())
+                    });
                     output.send_all(&mut stream).await;
                 }
                 Err(err) => {
-                    output.send(Metric::gauge_with_tags(
-                        "zk_up",
-                        "",
-                        0,
-                        tags!(
-                            "instance" => endpoint
-                        ),
-                    ).into()).await;
+                    output
+                        .send(
+                            Metric::gauge_with_tags(
+                                "zk_up",
+                                "",
+                                0,
+                                tags!(
+                                    "instance" => endpoint
+                                ),
+                            )
+                            .into(),
+                        )
+                        .await;
                 }
             }
         }
@@ -157,10 +166,7 @@ impl SourceConfig for ZookeeperConfig {
 
 fn parse_version(input: &str) -> String {
     let input = input.strip_prefix("zk_version").unwrap();
-    let version = input.trim_start()
-        .split(',')
-        .nth(0)
-        .unwrap_or("");
+    let version = input.trim_start().split(',').nth(0).unwrap_or("");
 
     version.to_string()
 }
@@ -233,9 +239,9 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
+    use super::fetch_stats;
     use testcontainers::Docker;
     use zk::Zookeeper;
-    use super::fetch_stats;
 
     mod zk {
         use std::collections::HashMap;
@@ -319,10 +325,7 @@ mod integration_tests {
                 let mut envs = self.envs.clone();
                 envs.insert(key.to_string(), value.to_string());
 
-                Zookeeper {
-                    envs,
-                    ..self
-                }
+                Zookeeper { envs, ..self }
             }
         }
     }
@@ -330,8 +333,7 @@ mod integration_tests {
     #[tokio::test]
     async fn test_fetch_stats() {
         let docker = testcontainers::clients::Cli::default();
-        let image = Zookeeper::default()
-            .with_env("ALLOW_ANONYMOUS_LOGIN", "yes");
+        let image = Zookeeper::default().with_env("ALLOW_ANONYMOUS_LOGIN", "yes");
 
         let service = docker.run(image);
         let host_port = service.get_host_port(2181).unwrap();

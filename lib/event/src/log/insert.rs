@@ -1,7 +1,7 @@
+use super::Value;
+use crate::log::path_iter::{PathComponent, PathIter};
 use std::collections::BTreeMap;
 use std::iter::Peekable;
-use crate::log::path_iter::{PathComponent, PathIter};
-use super::Value;
 
 /// Inserts fields value using a path specified using `a.b[1].c` notation.
 pub fn insert(fields: &mut BTreeMap<String, Value>, path: &str, value: Value) -> Option<Value> {
@@ -13,8 +13,8 @@ fn map_insert<'a, I>(
     mut path_iter: Peekable<I>,
     value: Value,
 ) -> Option<Value>
-    where
-        I: Iterator<Item=PathComponent<'a>>
+where
+    I: Iterator<Item = PathComponent<'a>>,
 {
     match (path_iter.next(), path_iter.peek()) {
         (Some(PathComponent::Key(current)), None) => fields.insert(current.into_owned(), value),
@@ -36,7 +36,7 @@ fn map_insert<'a, I>(
                 fields.insert(current.into_owned(), Value::Array(array))
             }
         }
-        _ => None
+        _ => None,
     }
 }
 
@@ -45,8 +45,8 @@ fn array_insert<'a, I>(
     mut path_iter: Peekable<I>,
     value: Value,
 ) -> Option<Value>
-    where
-        I: Iterator<Item=PathComponent<'a>>
+where
+    I: Iterator<Item = PathComponent<'a>>,
 {
     match (path_iter.next(), path_iter.peek()) {
         (Some(PathComponent::Index(current)), None) => {
@@ -79,19 +79,22 @@ fn array_insert<'a, I>(
                 while array.len() <= current {
                     array.push(Value::Null)
                 }
-                Some(std::mem::replace(&mut array[current], Value::Array(temp_array)))
+                Some(std::mem::replace(
+                    &mut array[current],
+                    Value::Array(temp_array),
+                ))
             }
         }
 
-        _ => None
+        _ => None,
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
     use crate::log::fields_from_json;
+    use serde_json::json;
 
     #[test]
     fn test_insert() {
@@ -105,7 +108,7 @@ mod tests {
                             "c": 3
                         }
                     }
-                })
+                }),
             ),
             (
                 "a.b[0].c[2]",
@@ -122,8 +125,8 @@ mod tests {
                             }
                         ]
                     }
-                })
-            )
+                }),
+            ),
         ];
 
         for (path, value, want) in tests {

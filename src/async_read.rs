@@ -6,13 +6,13 @@ use tokio::io::{AsyncRead, ReadBuf};
 pub trait VecAsyncReadExt: AsyncRead {
     /// Read data from this reader until the give future resolves
     fn allow_read_until<F>(self, until: F) -> AllowReadUntil<Self, F>
-        where
-            Self: Sized,
-            F: Future<Output = ()>
+    where
+        Self: Sized,
+        F: Future<Output = ()>,
     {
         AllowReadUntil {
             reader: self,
-            until
+            until,
         }
     }
 }
@@ -26,7 +26,7 @@ pub struct AllowReadUntil<S, F> {
     #[pin]
     reader: S,
     #[pin]
-    until: F
+    until: F,
 }
 
 impl<S, F> AllowReadUntil<S, F> {
@@ -42,27 +42,31 @@ impl<S, F> AllowReadUntil<S, F> {
 impl<S, F> AsyncRead for AllowReadUntil<S, F>
 where
     S: AsyncRead,
-    F: Future<Output = ()>
+    F: Future<Output = ()>,
 {
-    fn poll_read(self: Pin<&mut Self>, cx: &mut Context<'_>, buf: &mut ReadBuf<'_>) -> Poll<std::io::Result<()>> {
+    fn poll_read(
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+        buf: &mut ReadBuf<'_>,
+    ) -> Poll<std::io::Result<()>> {
         let this = self.project();
 
         match this.until.poll(cx) {
             Poll::Ready(_) => Poll::Ready(Ok(())),
-            Poll::Pending => this.reader.poll_read(cx, buf)
+            Poll::Pending => this.reader.poll_read(cx, buf),
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::fs::remove_file;
+    use super::*;
+    use crate::shutdown::ShutdownSignal;
     use futures::FutureExt;
+    use std::fs::remove_file;
+    use testify::temp::temp_file;
     use tokio::fs::File;
     use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader, BufWriter};
-    use testify::temp::temp_file;
-    use crate::shutdown::ShutdownSignal;
-    use super::*;
 
     #[tokio::test]
     async fn test_read_line_without_shutdown() {

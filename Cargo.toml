@@ -8,19 +8,21 @@ exclude = [
     "tests/fixtures"
 ]
 
-# [profile.release]
-# lto = true
+[profile.release]
+debug = false
+
+[profile.bench]
+debug = true
 
 [workspace]
 members = [
     "lib/buffers",
     "lib/event",
     "lib/procfs",
-    "lib/file-source",
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
-    "lib/tail",
+    # "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",
@@ -47,16 +49,7 @@ target-x86_64-unknown-linux-musl = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "openssl/vendored",
-    # For some reason, once we enable "sources-kafka" the build will fail,
-    # and it looks like cross cannot link openss. The confused part is that
-    # "rdkafka" is already built due to "sinks-kafka" is enabled.
-    #
-    # Vertex is not ready for production yet, all i can do now is waiting,
-    # maybe new version of "rdkafka" or "openssl" can fix this.
-    # "sources-kafka",
-    "rdkafka/gssapi-vendored",
-    "rdkafka/ssl-vendored",
+    "vendor-all"
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -66,13 +59,23 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "openssl/vendored",
-    "rdkafka/gssapi-vendored",
-    "sources-kafka"
+    "vendor-all"
 ]
 
 # Integration tests
-integration-tests = []
+all-integration-tests = [
+    "integration-tests-nginx_stub",
+    "integration-tests-redis",
+    "integration-tests-mysql",
+    "integration-tests-zookeeper",
+    "integration-tests-kafka",
+    "integration-tests-loki",
+    "integration-tests-haproxy",
+    "integration-tests-memcached",
+    "integration-tests-ntp",
+    "integration-tests-prometheus_scrape",
+    "integration-tests-prometheus_exporter",
+]
 
 integration-tests-nginx_stub = []
 integration-tests-redis = []
@@ -102,7 +105,7 @@ sources = [
     "sources-generator",
     "sources-node_metrics",
     "sources-ntp",
-    # "sources-kafka",
+    "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
     "sources-selfstat",
@@ -203,9 +206,9 @@ rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
 unix = []
 
 # These are **very** useful on Cross compilations!
-# vendor-all = ["vendor-openssl"]
-# vendor-sasl = ["rdkafka/gssapi-vendored"]
-# vendor-openssl = ["openssl/vendored"]
+vendor-all = ["vendor-openssl"]
+vendor-sasl = ["rdkafka/gssapi-vendored"]
+vendor-openssl = ["openssl/vendored"]
 
 [[bench]]
 name = "loki"
@@ -232,7 +235,7 @@ prost-build = { version = "0.9" }
 [dev-dependencies]
 tokio = { version = "1.14.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
-criterion = { version = "0.3", features = ["async_tokio", "html_reports"] }
+criterion = { version = "0.3", default-features = false, features = ["async_tokio", "html_reports", "cargo_bench_support"] }
 pprof = { version = "0.6.1", default-features = false, features = ["flamegraph", "criterion"] }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
@@ -282,7 +285,7 @@ tracing = { version = "0.1.28", default-features = false }
 tracing-core = { version = "0.1.21", default-features = false }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
-tracing-subscriber = { version = "0.3.3", default-features = false, features = ["env-filter", "json", "ansi"] }
+tracing-subscriber = { version = "0.2.25", default-features = false, features = ["env-filter", "json", "ansi"] }
 
 # HTTP
 hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
@@ -338,7 +341,7 @@ exitcode = { version = "1.1.2" }
 clap = { version = "3.0.0-beta.5" }
 url = { version = "2.2.2", features = ["serde"] }
 glob = { version = "0.3.0" }
-rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "ssl", "zstd", "libz-static", "sasl"] }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 libc = { version = "0.2.112", optional = true }
 nom = { version = "7.1.0", default-features = false }

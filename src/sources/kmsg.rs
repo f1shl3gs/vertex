@@ -1,24 +1,22 @@
 /// Collect messages from /dev/kmsg
 ///
 /// https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
-
 use std::{
     io::{self, Read},
     time,
 };
 
-use chrono::{Utc, TimeZone};
+use chrono::{TimeZone, Utc};
+use event::{fields, LogRecord};
 use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::io::AsyncReadExt;
-use event::{LogRecord, fields};
 
 use crate::{
+    config::{DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription},
     sources::Source,
-    config::{DataType, SourceConfig, SourceContext, GenerateConfig, SourceDescription},
 };
-
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -149,8 +147,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     }
 
     let msg = buf[consumed..size].to_vec();
-    let msg = String::from_utf8(msg)
-        .map_err(|_| ())?;
+    let msg = String::from_utf8(msg).map_err(|_| ())?;
 
     Ok((priority, seq, ts, msg))
 }
@@ -198,26 +195,30 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
     let now = time::SystemTime::now();
     let elapsed = time::Duration::from_micros(ms + sec * 1000 * 1000);
     match now.checked_sub(elapsed) {
-        Some(boot) => boot.duration_since(time::SystemTime::UNIX_EPOCH)
+        Some(boot) => boot
+            .duration_since(time::SystemTime::UNIX_EPOCH)
             .map_err(|_| io::Error::from(io::ErrorKind::InvalidData))
             .map(|d| d.as_nanos() as u64),
 
-        None => Err(io::Error::from(io::ErrorKind::InvalidData))
+        None => Err(io::Error::from(io::ErrorKind::InvalidData)),
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use tokio::io::{AsyncReadExt};
     use super::*;
+    use tokio::io::AsyncReadExt;
 
     #[test]
     fn test_boot_time() {
-        let ns = boot_time("/proc/uptime").unwrap();
-        println!("{}", ns);
+        // NOTE: the value returned is not constant, so assert_eq! will not help
+        boot_time("tests/fixtures/proc/uptime").unwrap();
     }
 
+    // TODO: The runner `sudo -E` is a proper way to run this, may we should
+    //   move this test to `integration_tests`
     #[tokio::test]
+    #[ignore]
     async fn test_read() {
         let f = tokio::fs::File::open("/dev/kmsg").await.unwrap();
         let mut reader = tokio::io::BufReader::new(f);
@@ -225,17 +226,14 @@ mod tests {
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
 
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
 
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
     }
 
     #[test]
@@ -246,6 +244,9 @@ mod tests {
         assert_eq!(priority, 4);
         assert_eq!(seq, 334322);
         assert_eq!(ts, 8544044980);
-        assert_eq!(msg, r#"RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000007"#)
+        assert_eq!(
+            msg,
+            r#"RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000007"#
+        )
     }
 }

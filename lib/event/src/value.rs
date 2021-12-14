@@ -1,12 +1,11 @@
 use std::collections::BTreeMap;
 use std::convert::TryInto;
 
-use serde::{Deserialize, Serialize, Serializer};
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, SecondsFormat, Utc};
+use serde::{Deserialize, Serialize, Serializer};
 
 use crate::ByteSizeOf;
-
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
 pub enum Value {
@@ -32,7 +31,7 @@ impl Value {
             Value::Array(arr) => serde_json::to_string(arr).expect("Cannot serialize array"),
             Value::Boolean(b) => format!("{}", b),
             Value::Map(m) => serde_json::to_string(m).expect("Cannot serialize map"),
-            Value::Null => "<null>".to_string()
+            Value::Null => "<null>".to_string(),
         }
     }
 
@@ -46,18 +45,16 @@ impl Value {
                 Bytes::from(serde_json::to_vec(arr).expect("Cannot serialize array"))
             }
             Value::Boolean(b) => Bytes::from(format!("{}", b)),
-            Value::Map(m) => {
-                Bytes::from(serde_json::to_vec(m).expect("Cannot serialize map"))
-            }
+            Value::Map(m) => Bytes::from(serde_json::to_vec(m).expect("Cannot serialize map")),
             Value::Timestamp(ts) => Bytes::from(timestamp_to_string(ts)),
-            Value::Null => Bytes::from("<null>")
+            Value::Null => Bytes::from("<null>"),
         }
     }
 
     pub fn as_timestamp(&self) -> Option<&DateTime<Utc>> {
         match &self {
             Value::Timestamp(ts) => Some(ts),
-            _ => None
+            _ => None,
         }
     }
 
@@ -73,7 +70,7 @@ impl Value {
                 *self_bytes = bytes.freeze();
             }
 
-            (current, other) => *current = other
+            (current, other) => *current = other,
         }
     }
 
@@ -88,7 +85,7 @@ impl Value {
             | Value::Int64(_) => false,
             Value::Null => true,
             Value::Map(m) => m.is_empty(),
-            Value::Array(arr) => arr.is_empty()
+            Value::Array(arr) => arr.is_empty(),
         }
     }
 }
@@ -101,7 +98,7 @@ impl ByteSizeOf for Value {
                 .iter()
                 .fold(0, |acc, (k, v)| acc + k.len() + v.size_of()),
             Value::Array(arr) => arr.iter().fold(0, |acc, v| acc + v.size_of()),
-            _ => 0
+            _ => 0,
         }
     }
 }
@@ -112,8 +109,8 @@ fn timestamp_to_string(timestamp: &DateTime<Utc>) -> String {
 
 impl Serialize for Value {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer
+    where
+        S: Serializer,
     {
         match &self {
             Value::Uint64(u) => serializer.serialize_u64(*u),
@@ -125,7 +122,7 @@ impl Serialize for Value {
             Value::Array(arr) => serializer.collect_seq(arr),
             Value::Map(m) => serializer.collect_map(m),
             Value::Null => serializer.serialize_none(),
-            Value::Int64(v) => serializer.serialize_i64(*v)
+            Value::Int64(v) => serializer.serialize_i64(*v),
         }
     }
 }
@@ -151,7 +148,7 @@ impl From<serde_json::Value> for Value {
             serde_json::Value::Array(arr) => {
                 Value::Array(arr.into_iter().map(Value::from).collect())
             }
-            serde_json::Value::Null => Value::Null
+            serde_json::Value::Null => Value::Null,
         }
     }
 }
@@ -173,7 +170,7 @@ impl TryInto<serde_json::Value> for Value {
             Value::Array(v) => Ok(serde_json::to_value(v)?),
             Value::Map(v) => Ok(serde_json::to_value(v)?),
             Value::Timestamp(v) => Ok(serde_json::Value::from(timestamp_to_string(&v))),
-            Value::Null => Ok(serde_json::Value::Null)
+            Value::Null => Ok(serde_json::Value::Null),
         }
     }
 }
@@ -258,20 +255,21 @@ impl From<u32> for Value {
 
 impl<T: Into<Value>> From<Vec<T>> for Value {
     fn from(value: Vec<T>) -> Self {
-        value.into_iter()
+        value
+            .into_iter()
             .map(::std::convert::Into::into)
             .collect::<Self>()
     }
 }
 
 impl FromIterator<Value> for Value {
-    fn from_iter<T: IntoIterator<Item=Value>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = Value>>(iter: T) -> Self {
         Value::Array(iter.into_iter().collect::<Vec<Value>>())
     }
 }
 
 impl FromIterator<(String, Value)> for Value {
-    fn from_iter<T: IntoIterator<Item=(String, Value)>>(iter: T) -> Self {
+    fn from_iter<T: IntoIterator<Item = (String, Value)>>(iter: T) -> Self {
         Value::Map(iter.into_iter().collect::<BTreeMap<String, Value>>())
     }
 }
@@ -292,21 +290,15 @@ impl From<serde_yaml::Value> for Value {
             serde_yaml::Value::Null => Self::Null,
             serde_yaml::Value::Bool(b) => Self::from(b),
             serde_yaml::Value::Sequence(seq) => {
-                let arr = seq.into_iter()
-                    .map(Value::from)
-                    .collect::<Vec<_>>();
+                let arr = seq.into_iter().map(Value::from).collect::<Vec<_>>();
 
                 Self::from(arr)
             }
             serde_yaml::Value::Mapping(map) => {
                 let mut fmap = BTreeMap::new();
-                map.iter()
-                    .for_each(|(k, v)| {
-                        fmap.insert(
-                            k.as_str().unwrap().to_owned(),
-                            Self::from(v.clone()),
-                        );
-                    });
+                map.iter().for_each(|(k, v)| {
+                    fmap.insert(k.as_str().unwrap().to_owned(), Self::from(v.clone()));
+                });
 
                 Self::from(fmap)
             }
@@ -354,14 +346,14 @@ impl TryFrom<serde_yaml::Value> for Value {
 */
 #[cfg(test)]
 mod tests {
+    use super::*;
     use std::io::Read;
     use std::path::Path;
-    use super::*;
 
     fn parse_artifact(path: impl AsRef<Path>) -> std::io::Result<Vec<u8>> {
         let mut f = match std::fs::File::open(path) {
             Ok(file) => file,
-            Err(err) => return Err(err)
+            Err(err) => return Err(err),
         };
 
         let mut buf = Vec::new();
@@ -379,47 +371,45 @@ mod tests {
             .for_each(|ent| match ent {
                 Ok(type_name) => {
                     let path = type_name.path();
-                    std::fs::read_dir(path)
-                        .unwrap()
-                        .for_each(|ent| match ent {
-                            Ok(file) => {
-                                let path = file.path();
-                                let buf = parse_artifact(&path).unwrap();
+                    std::fs::read_dir(path).unwrap().for_each(|ent| match ent {
+                        Ok(file) => {
+                            let path = file.path();
+                            let buf = parse_artifact(&path).unwrap();
 
-                                let serde_value: serde_json::Value =
-                                    serde_json::from_slice(&*buf).unwrap();
-                                let value = Value::from(serde_value);
+                            let serde_value: serde_json::Value =
+                                serde_json::from_slice(&*buf).unwrap();
+                            let value = Value::from(serde_value);
 
-                                // Valid type
-                                let expected_type = type_name
-                                    .path()
-                                    .file_name()
-                                    .unwrap()
-                                    .to_string_lossy()
-                                    .to_string();
+                            // Valid type
+                            let expected_type = type_name
+                                .path()
+                                .file_name()
+                                .unwrap()
+                                .to_string_lossy()
+                                .to_string();
 
-                                let is_match = match value {
-                                    Value::Boolean(_) => expected_type.eq("boolean"),
-                                    Value::Int64(_) => expected_type.eq("integer"),
-                                    Value::Uint64(_) => expected_type.eq("integer"),
-                                    Value::Bytes(_) => expected_type.eq("bytes"),
-                                    Value::Map(_) => expected_type.eq("map"),
-                                    Value::Array(_) => expected_type.eq("array"),
-                                    Value::Null => expected_type.eq("null"),
-                                    _ => unreachable!("You need to add a new type handler here.")
-                                };
+                            let is_match = match value {
+                                Value::Boolean(_) => expected_type.eq("boolean"),
+                                Value::Int64(_) => expected_type.eq("integer"),
+                                Value::Uint64(_) => expected_type.eq("integer"),
+                                Value::Bytes(_) => expected_type.eq("bytes"),
+                                Value::Map(_) => expected_type.eq("map"),
+                                Value::Array(_) => expected_type.eq("array"),
+                                Value::Null => expected_type.eq("null"),
+                                _ => unreachable!("You need to add a new type handler here."),
+                            };
 
-                                assert!(
-                                    is_match,
-                                    "Typecheck failure. Wanted {}, got {:?}.",
-                                    expected_type, value
-                                );
-                                let _v: serde_json::Value = value.try_into().unwrap();
-                            }
-                            _ => panic!("This test should never read Err test fixtures.")
-                        });
+                            assert!(
+                                is_match,
+                                "Typecheck failure. Wanted {}, got {:?}.",
+                                expected_type, value
+                            );
+                            let _v: serde_json::Value = value.try_into().unwrap();
+                        }
+                        _ => panic!("This test should never read Err test fixtures."),
+                    });
                 }
-                _ => panic!("This test should never read Err type folders.")
+                _ => panic!("This test should never read Err type folders."),
             })
     }
 }

@@ -8,9 +8,8 @@ use futures::ready;
 use pin_project::pin_project;
 use tokio::sync::OwnedSemaphorePermit;
 
-use super::controller::{Controller, instant_now};
+use super::controller::{instant_now, Controller};
 use crate::sinks::util::retries::RetryLogic;
-
 
 /// Future for the `AdaptiveConcurrencyLimit` service.
 ///
@@ -32,11 +31,7 @@ pub struct ResponseFuture<F, L> {
 }
 
 impl<F, L> ResponseFuture<F, L> {
-    pub fn new(
-        inner: F,
-        _permit: OwnedSemaphorePermit,
-        controller: Arc<Controller<L>>,
-    ) -> Self {
+    pub fn new(inner: F, _permit: OwnedSemaphorePermit, controller: Arc<Controller<L>>) -> Self {
         Self {
             inner,
             _permit,
@@ -47,17 +42,16 @@ impl<F, L> ResponseFuture<F, L> {
 }
 
 impl<F, L, E> Future for ResponseFuture<F, L>
-    where
-        F: Future<Output=Result<L::Response, E>>,
-        L: RetryLogic,
-        E: Into<crate::Error>
+where
+    F: Future<Output = Result<L::Response, E>>,
+    L: RetryLogic,
+    E: Into<crate::Error>,
 {
     type Output = Result<L::Response, crate::Error>;
 
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let fut = self.project();
-        let output = ready!(fut.inner.poll(cx))
-            .map_err(Into::into);
+        let output = ready!(fut.inner.poll(cx)).map_err(Into::into);
         fut.controller.adjust_to_response(*fut.start, &output);
         Poll::Ready(output)
     }

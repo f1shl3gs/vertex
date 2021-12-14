@@ -1,4 +1,4 @@
-use chrono::{DateTime, Local, Utc, ParseError, TimeZone as _};
+use chrono::{DateTime, Local, ParseError, TimeZone as _, Utc};
 use chrono_tz::Tz;
 use derivative::Derivative;
 
@@ -49,7 +49,7 @@ pub mod ser_de {
         fn visit_str<E: de::Error>(self, s: &str) -> Result<Self::Value, E> {
             match TimeZone::parse(s) {
                 Some(tz) => Ok(tz),
-                None => Err(de::Error::custom("No such time zone"))
+                None => Err(de::Error::custom("No such time zone")),
             }
         }
     }
@@ -64,7 +64,10 @@ pub mod ser_de {
     }
 
     impl<'de> Deserialize<'de> for TimeZone {
-        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+        fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+        where
+            D: Deserializer<'de>,
+        {
             deserializer.deserialize_str(TimeZoneVisitor)
         }
     }
@@ -72,8 +75,8 @@ pub mod ser_de {
 
 #[cfg(test)]
 mod tests {
+    use chrono_tz::Tz;
     use serde::{Deserialize, Serialize};
-    use chrono_tz::{Tz};
 
     #[test]
     fn deserialize() {
@@ -89,6 +92,6 @@ tz: CET
         let w: TzWrapper = serde_yaml::from_str(input).unwrap();
 
         let tz = w.tz;
-        println!("{:?}", w.tz.name());
+        assert_eq!(w.tz.name(), "CET");
     }
 }

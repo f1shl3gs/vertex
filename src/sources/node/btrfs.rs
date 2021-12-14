@@ -1,6 +1,6 @@
+use super::{read_into, read_to_string, Error, ErrorContext};
+use event::{tags, Metric};
 use std::collections::BTreeMap;
-use event::{Metric, tags};
-use super::{Error, ErrorContext, read_into, read_to_string};
 use std::path::{Path, PathBuf};
 
 const SECTOR_SIZE: u64 = 512;
@@ -119,16 +119,14 @@ fn stats_to_metrics(stats: &Stats) -> Vec<Metric> {
 }
 
 fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
-    let mut metrics = vec![
-        Metric::gauge_with_tags(
-            "node_btrfs_reserved_bytes",
-            "Amount of space reserved for a data type",
-            stats.reserved_bytes as f64,
-            tags!(
-                "block_group_type" => typ
-            ),
-        )
-    ];
+    let mut metrics = vec![Metric::gauge_with_tags(
+        "node_btrfs_reserved_bytes",
+        "Amount of space reserved for a data type",
+        stats.reserved_bytes as f64,
+        tags!(
+            "block_group_type" => typ
+        ),
+    )];
 
     // Add all layout statistics
     for (layout, s) in &stats.layouts {
@@ -201,16 +199,14 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
 }
 
 async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
-    let pattern = format!("{}/fs/btrfs/*-*", root, );
-    let paths = glob::glob(&pattern)
-        .context("find btrfs blocks failed")?;
+    let pattern = format!("{}/fs/btrfs/*-*", root,);
+    let paths = glob::glob(&pattern).context("find btrfs blocks failed")?;
 
     let mut stats = vec![];
     for entry in paths {
         match entry {
             Ok(path) => {
-                let s = get_stats(path).await
-                    .context("get btrfs stats failed")?;
+                let s = get_stats(path).await.context("get btrfs stats failed")?;
 
                 stats.push(s);
             }
@@ -222,10 +218,9 @@ async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
 }
 
 async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
-    let devices = read_device_info(&root).await
-        .with_context(|| {
-            format!("read device info failed, {:#?}", &root)
-        })?;
+    let devices = read_device_info(&root)
+        .await
+        .with_context(|| format!("read device info failed, {:#?}", &root))?;
 
     let path = root.join("label");
     let label = read_to_string(path).await?;
@@ -308,9 +303,12 @@ async fn read_device_info(path: &PathBuf) -> Result<BTreeMap<String, Device>, Er
 
         let size: u64 = read_into(path).await.unwrap_or(0);
 
-        devices.insert(name, Device {
-            size: size * SECTOR_SIZE
-        });
+        devices.insert(
+            name,
+            Device {
+                size: size * SECTOR_SIZE,
+            },
+        );
     }
 
     Ok(devices)
@@ -365,7 +363,10 @@ async fn read_allocation_stats(root: PathBuf, devices: usize) -> Result<Allocati
     })
 }
 
-async fn read_layouts(root: PathBuf, devices: usize) -> Result<BTreeMap<String, LayoutUsage>, Error> {
+async fn read_layouts(
+    root: PathBuf,
+    devices: usize,
+) -> Result<BTreeMap<String, LayoutUsage>, Error> {
     let mut dirs = tokio::fs::read_dir(root).await?;
 
     let mut layouts = BTreeMap::new();
@@ -410,7 +411,7 @@ fn calc_ratio(p: &str, n: usize) -> f64 {
         "dup" | "raid1" | "raid10" => 2f64,
         "raid5" => n as f64 / (n - 1) as f64,
         "raid6" => n as f64 / (n - 2) as f64,
-        _ => 0.0
+        _ => 0.0,
     }
 }
 
@@ -492,19 +493,59 @@ mod tests {
             assert_eq!(got.uuid, want.uuid);
             assert_eq!(got.devices.len(), want.devices);
             assert_eq!(got.features.len(), want.features);
-            assert_eq!(got.allocation.data.as_ref().unwrap().total_bytes, want.data.size);
-            assert_eq!(got.allocation.metadata.as_ref().unwrap().total_bytes, want.meta.size);
-            assert_eq!(got.allocation.system.as_ref().unwrap().total_bytes, want.system.size);
+            assert_eq!(
+                got.allocation.data.as_ref().unwrap().total_bytes,
+                want.data.size
+            );
+            assert_eq!(
+                got.allocation.metadata.as_ref().unwrap().total_bytes,
+                want.meta.size
+            );
+            assert_eq!(
+                got.allocation.system.as_ref().unwrap().total_bytes,
+                want.system.size
+            );
 
-            assert_eq!(got.allocation.data.as_ref().unwrap().layouts.get(&want.data.layout).unwrap().ratio, want.data.ratio);
-            assert_eq!(got.allocation.metadata.as_ref().unwrap().layouts.get(&want.meta.layout).unwrap().ratio, want.meta.ratio);
-            assert_eq!(got.allocation.system.as_ref().unwrap().layouts.get(&want.system.layout).unwrap().ratio, want.system.ratio);
+            assert_eq!(
+                got.allocation
+                    .data
+                    .as_ref()
+                    .unwrap()
+                    .layouts
+                    .get(&want.data.layout)
+                    .unwrap()
+                    .ratio,
+                want.data.ratio
+            );
+            assert_eq!(
+                got.allocation
+                    .metadata
+                    .as_ref()
+                    .unwrap()
+                    .layouts
+                    .get(&want.meta.layout)
+                    .unwrap()
+                    .ratio,
+                want.meta.ratio
+            );
+            assert_eq!(
+                got.allocation
+                    .system
+                    .as_ref()
+                    .unwrap()
+                    .layouts
+                    .get(&want.system.layout)
+                    .unwrap()
+                    .ratio,
+                want.system.ratio
+            );
         }
     }
 
     #[tokio::test]
     async fn test_read_device_info() {
-        let path = PathBuf::from("tests/fixtures/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
+        let path =
+            PathBuf::from("tests/fixtures/sys/fs/btrfs/7f07c59f-6136-449c-ab87-e1cf2328731b");
         let _infos = read_device_info(&path).await.unwrap();
     }
 }

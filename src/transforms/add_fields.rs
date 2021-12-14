@@ -1,11 +1,9 @@
-use crate::{
-    config::{default_true}
-};
-use indexmap::IndexMap;
-use serde::{Deserialize, Serialize};
-use event::Event;
+use crate::config::default_true;
 use crate::config::{DataType, GlobalOptions, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
+use event::Event;
+use indexmap::IndexMap;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

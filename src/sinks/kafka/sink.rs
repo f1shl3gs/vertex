@@ -1,24 +1,23 @@
 use std::time::Duration;
 
-use futures::{StreamExt, stream::BoxStream};
-use rdkafka::ClientConfig;
-use rdkafka::consumer::{BaseConsumer, Consumer};
-use rdkafka::error::KafkaError;
-use rdkafka::producer::FutureProducer;
-use snafu::{Snafu, ResultExt};
-use tower::limit::ConcurrencyLimit;
 use buffers::Acker;
 use event::encoding::{EncodingConfig, StandardEncodings};
 use event::Event;
+use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
+use rdkafka::consumer::{BaseConsumer, Consumer};
+use rdkafka::error::KafkaError;
+use rdkafka::producer::FutureProducer;
+use rdkafka::ClientConfig;
+use snafu::{ResultExt, Snafu};
+use tower::limit::ConcurrencyLimit;
 
 use super::config::{KafkaRole, KafkaSinkConfig, QUEUE_MIN_MESSAGES};
 use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
 use crate::common::kafka::KafkaStatisticsContext;
-use crate::sinks::{StreamSink, util::builder::SinkBuilderExt};
+use crate::sinks::{util::builder::SinkBuilderExt, StreamSink};
 use crate::template::{Template, TemplateParseError};
-
 
 #[derive(Debug, Snafu)]
 pub enum BuildError {
@@ -38,18 +37,17 @@ pub struct KafkaSink {
 }
 
 pub fn create_producer(
-    config: ClientConfig
+    config: ClientConfig,
 ) -> crate::Result<FutureProducer<KafkaStatisticsContext>> {
-    let producer = config.create_with_context(KafkaStatisticsContext)
+    let producer = config
+        .create_with_context(KafkaStatisticsContext)
         .context(KafkaCreateFailed)?;
     Ok(producer)
 }
 
 impl KafkaSink {
     pub fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {
-        let producer = create_producer(
-            config.to_rdkafka(KafkaRole::Producer)?
-        )?;
+        let producer = create_producer(config.to_rdkafka(KafkaRole::Producer)?)?;
 
         Ok(KafkaSink {
             headers_field: config.headers_field,
@@ -81,9 +79,7 @@ impl KafkaSink {
 }
 
 pub async fn health_check(config: KafkaSinkConfig) -> crate::Result<()> {
-    trace!(
-        message = "Health check started",
-    );
+    trace!(message = "Health check started",);
 
     let client = config.to_rdkafka(KafkaRole::Consumer).unwrap();
     let topic = match Template::try_from(config.topic)
@@ -103,16 +99,15 @@ pub async fn health_check(config: KafkaSinkConfig) -> crate::Result<()> {
 
     tokio::task::spawn_blocking(move || {
         let consumer: BaseConsumer = client.create().unwrap();
-        let topic = topic.as_ref()
-            .map(|t| &t[..]);
+        let topic = topic.as_ref().map(|t| &t[..]);
 
-        consumer.fetch_metadata(topic, Duration::from_secs(3))
+        consumer
+            .fetch_metadata(topic, Duration::from_secs(3))
             .map(|_| ())
-    }).await??;
+    })
+    .await??;
 
-    trace!(
-        message = "Health check completed"
-    );
+    trace!(message = "Health check completed");
 
     Ok(())
 }

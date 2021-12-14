@@ -5,18 +5,18 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
+use event::ByteSizeOf;
 use futures::{ready, Stream};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
-use event::ByteSizeOf;
 
-use crate::partition::Partitioner;
-use super::timer::KeyedTimer;
 use super::batcher::{
-    config::BatchConfigParts, data::BatchReduce,
+    config::BatchConfigParts,
+    data::BatchReduce,
     limiter::{ByteSizeOfItemSize, ItemBatchSize, SizeLimit},
 };
-
+use super::timer::KeyedTimer;
+use crate::partition::Partitioner;
 
 /// A `KeyedTimer` based on `DelayQueue`
 pub struct ExpirationQueue<K> {
@@ -55,8 +55,8 @@ impl<K> ExpirationQueue<K> {
 }
 
 impl<K> KeyedTimer<K> for ExpirationQueue<K>
-    where
-        K: Eq + Hash + Clone
+where
+    K: Eq + Hash + Clone,
 {
     fn clear(&mut self) {
         self.expirations.clear();
@@ -94,7 +94,7 @@ impl<K> KeyedTimer<K> for ExpirationQueue<K>
                     assert!(self.expiration_map.remove(expiration.get_ref()).is_some());
                     Poll::Ready(Some(expiration.into_inner()))
                 }
-            }
+            },
         }
     }
 }
@@ -122,8 +122,8 @@ impl<I> ByteSizeOf for Batch<I> {
 }
 
 impl<I> Batch<I>
-    where
-        I: ByteSizeOf
+where
+    I: ByteSizeOf,
 {
     /// Create a new Batch instance
     ///
@@ -184,7 +184,7 @@ impl<I> Batch<I>
     fn has_space(&self, value: &I) -> bool {
         let too_many_elements = self.elementes.len() + 1 > self.element_limit;
         let too_many_bytes = self.allocated_bytes + value.size_of() > self.allocation_limit;
-        !(too_many_bytes || too_many_bytes)
+        !(too_many_bytes || too_many_elements)
     }
 
     /// Push an element into the batch
@@ -232,15 +232,17 @@ impl BatcherSettings {
 
     /// A Batcher config using the `ByteSizeOf` trait to determine batch sizes. The output is a
     /// Vec<T>
-    pub fn into_byte_size_config<T: ByteSizeOf>(self) -> BatchConfigParts<SizeLimit<ByteSizeOfItemSize>, Vec<T>> {
+    pub fn into_byte_size_config<T: ByteSizeOf>(
+        self,
+    ) -> BatchConfigParts<SizeLimit<ByteSizeOfItemSize>, Vec<T>> {
         self.into_item_size_config(ByteSizeOfItemSize)
     }
 
     /// A batcher config using the `ItemBatchSize` trait to determine batch sizes.
     /// The output is a Vec<T>
     pub fn into_item_size_config<T, I>(self, item_size: I) -> BatchConfigParts<SizeLimit<I>, Vec<T>>
-        where
-            I: ItemBatchSize<T>,
+    where
+        I: ItemBatchSize<T>,
     {
         BatchConfigParts {
             batch_limiter: SizeLimit {
@@ -261,10 +263,10 @@ impl BatcherSettings {
         item_size: I,
         reducer: F,
     ) -> BatchConfigParts<SizeLimit<I>, BatchReduce<F, S>>
-        where
-            I: ItemBatchSize<T>,
-            F: FnMut(&mut S, T),
-            S: Default
+    where
+        I: ItemBatchSize<T>,
+        F: FnMut(&mut S, T),
+        S: Default,
     {
         BatchConfigParts {
             batch_limiter: SizeLimit {
@@ -281,8 +283,8 @@ impl BatcherSettings {
 
 #[pin_project::pin_project]
 pub struct PartitionedBatcher<S, P, T>
-    where
-        P: Partitioner,
+where
+    P: Partitioner,
 {
     /// The total number of bytes a single batch in this struct is allowed to hold
     batch_allocation_limit: usize,
@@ -304,11 +306,11 @@ pub struct PartitionedBatcher<S, P, T>
 }
 
 impl<S, P> PartitionedBatcher<S, P, ExpirationQueue<P::Key>>
-    where
-        S: Stream<Item=P::Item>,
-        P: Partitioner + Unpin,
-        P::Key: Eq + Hash + Clone,
-        P::Item: ByteSizeOf,
+where
+    S: Stream<Item = P::Item>,
+    P: Partitioner + Unpin,
+    P::Key: Eq + Hash + Clone,
+    P::Item: ByteSizeOf,
 {
     pub fn new(stream: S, partitioner: P, settings: BatcherSettings) -> Self {
         Self {
@@ -324,11 +326,11 @@ impl<S, P> PartitionedBatcher<S, P, ExpirationQueue<P::Key>>
 }
 
 impl<S, P, T> PartitionedBatcher<S, P, T>
-    where
-        S: Stream<Item=P::Item>,
-        P: Partitioner + Unpin,
-        P::Key: Eq + Hash + Clone,
-        P::Item: ByteSizeOf,
+where
+    S: Stream<Item = P::Item>,
+    P: Partitioner + Unpin,
+    P::Key: Eq + Hash + Clone,
+    P::Item: ByteSizeOf,
 {
     pub fn with_timer(
         stream: S,
@@ -350,12 +352,12 @@ impl<S, P, T> PartitionedBatcher<S, P, T>
 }
 
 impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
-    where
-        S: Stream<Item=P::Item>,
-        P: Partitioner + Unpin,
-        P::Key: Eq + Hash + Clone,
-        P::Item: ByteSizeOf,
-        T: KeyedTimer<P::Key>,
+where
+    S: Stream<Item = P::Item>,
+    P: Partitioner + Unpin,
+    P::Key: Eq + Hash + Clone,
+    P::Item: ByteSizeOf,
+    T: KeyedTimer<P::Key>,
 {
     type Item = (P::Key, Vec<P::Item>);
 
@@ -373,7 +375,8 @@ impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
                     // usable later if more entries are added.
                     Poll::Pending | Poll::Ready(None) => return Poll::Pending,
                     Poll::Ready(Some(item_key)) => {
-                        let batch = this.batches
+                        let batch = this
+                            .batches
                             .remove(&item_key)
                             .expect("batch should exist if it is set to expire");
 
@@ -412,8 +415,7 @@ impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
                             // loop back around.
                             batch.push(item);
                         } else {
-                            let new_batch = Batch::new(item_limit, alloc_limit)
-                                .with(item);
+                            let new_batch = Batch::new(item_limit, alloc_limit).with(item);
                             let batch = std::mem::replace(batch, new_batch);
 
                             // The batch for this partition key was set to expire, but now it's
@@ -426,8 +428,7 @@ impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
                         // We have no batch yet for this partition key, so create one and create the
                         // expiration entries as well. This allows the batch to expire before
                         // filling up, and vise versa.
-                        let batch = Batch::new(item_limit, alloc_limit)
-                            .with(item);
+                        let batch = Batch::new(item_limit, alloc_limit).with(item);
                         this.batches.insert(item_key.clone(), batch);
                         this.timer.insert(item_key);
                     }
@@ -443,14 +444,14 @@ impl<S, P, T> Stream for PartitionedBatcher<S, P, T>
 
 #[cfg(test)]
 mod tests {
-    use std::collections::HashSet;
-    use std::num::NonZeroU8;
+    use super::*;
+    use crate::partition::Partitioner;
     use proptest::arbitrary::Arbitrary;
     use proptest::prelude::Strategy;
     use proptest::proptest;
+    use std::collections::HashSet;
+    use std::num::NonZeroU8;
     use tokio::time::advance;
-    use crate::partition::Partitioner;
-    use super::*;
 
     /// A test keyed Timer
     ///
@@ -496,7 +497,7 @@ mod tests {
         }
     }
 
-    fn arb_timer() -> impl Strategy<Value=TestTimer> {
+    fn arb_timer() -> impl Strategy<Value = TestTimer> {
         // The timer always returns a `Poll::Ready` and never a `Poll::Pending`.
         Vec::<(bool, u8)>::arbitrary()
             .prop_map(|v| {
@@ -533,9 +534,9 @@ mod tests {
         }
     }
 
-    fn arb_partitioner() -> impl Strategy<Value=TestPartitioner> {
-        (1..u8::MAX, ).prop_map(|(ks, )| TestPartitioner {
-            key_space: NonZeroU8::new(ks).unwrap()
+    fn arb_partitioner() -> impl Strategy<Value = TestPartitioner> {
+        (1..u8::MAX,).prop_map(|(ks,)| TestPartitioner {
+            key_space: NonZeroU8::new(ks).unwrap(),
         })
     }
 
@@ -615,7 +616,8 @@ mod tests {
         stream: Vec<u64>,
         partitioner: &TestPartitioner,
     ) -> HashMap<u8, Vec<u64>> {
-        let mut map = stream.into_iter()
+        let mut map = stream
+            .into_iter()
             .map(|item| {
                 let key = partitioner.partition(&item);
                 (key, item)
@@ -623,8 +625,7 @@ mod tests {
             .fold(
                 HashMap::default(),
                 |mut acc: HashMap<u8, Vec<u64>>, (key, item)| {
-                    let arr: &mut Vec<u64> = acc.entry(key)
-                        .or_insert_with(Vec::default);
+                    let arr: &mut Vec<u64> = acc.entry(key).or_insert_with(Vec::default);
                     arr.push(item);
                     acc
                 },
@@ -726,8 +727,8 @@ mod tests {
     }
 
     fn single_poll<T, F>(mut f: F) -> Poll<T>
-        where
-            F: FnMut(&mut Context<'_>) -> Poll<T>
+    where
+        F: FnMut(&mut Context<'_>) -> Poll<T>,
     {
         let noop_waker = futures::task::noop_waker();
         let mut cx = Context::from_waker(&noop_waker);

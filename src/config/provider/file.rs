@@ -1,11 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::config::{provider::ProviderConfig, Builder};
 use crate::SignalHandler;
-use crate::config::{
-    Builder,
-    provider::ProviderConfig
-};
-
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FileConfig {

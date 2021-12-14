@@ -1,18 +1,12 @@
+use crate::buffers::EventStream;
+use buffers::Acker;
+use futures::future::{BoxFuture, Future, FutureExt};
 use pin_project::pin_project;
-use std::{
-    pin::Pin
-};
-use futures::future::{
-    BoxFuture,
-    FutureExt,
-    Future,
-};
+use std::pin::Pin;
 use std::{
     fmt,
     task::{Context, Poll},
 };
-use crate::buffers::EventStream;
-use buffers::Acker;
 
 pub enum TaskOutput {
     Source,
@@ -33,10 +27,10 @@ pub struct Task {
 
 impl Task {
     pub fn new<S1, S2, Fut>(name: S1, typetag: S2, inner: Fut) -> Self
-        where
-            S1: Into<String>,
-            S2: Into<String>,
-            Fut: Future<Output=Result<TaskOutput, ()>> + Send + 'static,
+    where
+        S1: Into<String>,
+        S2: Into<String>,
+        Fut: Future<Output = Result<TaskOutput, ()>> + Send + 'static,
     {
         Self {
             inner: inner.boxed(),

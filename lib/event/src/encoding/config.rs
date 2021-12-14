@@ -1,11 +1,10 @@
+use serde::de::{DeserializeOwned, Error, IntoDeserializer, MapAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
-use serde::{Deserialize, Deserializer, Serialize};
-use serde::de::{DeserializeOwned, Error, IntoDeserializer, MapAccess, Visitor};
 
 use crate::encoding::{EncodingConfiguration, TimestampFormat};
 use crate::log::path_iter::{PathComponent, PathIter};
-
 
 // Deduplicate codes
 #[inline]
@@ -81,10 +80,13 @@ pub struct Inner<E> {
 }
 
 impl<'de, E> Deserialize<'de> for EncodingConfig<E>
-    where
-        E: DeserializeOwned + Serialize + Debug + Clone + PartialEq + Eq,
+where
+    E: DeserializeOwned + Serialize + Debug + Clone + PartialEq + Eq,
 {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
         // This is a Visitor that forwards string types to T's `FromStr` impl and forwards
         // map types to T's `Deserialize` impl. The `PhantomData` is to keep the compiler
         // from complaining about T being an unused generic type parameter. We need T in
@@ -94,8 +96,8 @@ impl<'de, E> Deserialize<'de> for EncodingConfig<E>
         );
 
         impl<'de, T> Visitor<'de> for StringOrStruct<T>
-            where
-                T: DeserializeOwned + Serialize + Debug + Eq + PartialEq + Clone,
+        where
+            T: DeserializeOwned + Serialize + Debug + Eq + PartialEq + Clone,
         {
             type Value = Inner<T>;
 
@@ -103,7 +105,10 @@ impl<'de, E> Deserialize<'de> for EncodingConfig<E>
                 formatter.write_str("string or map")
             }
 
-            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E> where E: Error {
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
                 Ok(Self::Value {
                     codec: T::deserialize(v.into_deserializer())?,
                     schema: Default::default(),
@@ -113,7 +118,10 @@ impl<'de, E> Deserialize<'de> for EncodingConfig<E>
                 })
             }
 
-            fn visit_map<A>(self, map: A) -> Result<Self::Value, A::Error> where A: MapAccess<'de> {
+            fn visit_map<A>(self, map: A) -> Result<Self::Value, A::Error>
+            where
+                A: MapAccess<'de>,
+            {
                 // `MapAccessDeserializer` is a wrapper that turns a `MapAccess` into a `Deserializer`,
                 // allowing it to be used as the input to T's `Deserializer` implementation. T then
                 // deserializes itself using the entries from the map visitor.
@@ -127,7 +135,8 @@ impl<'de, E> Deserialize<'de> for EncodingConfig<E>
             schema: inner.schema,
 
             only_fields: inner.only_fields.map(|fields| {
-                fields.iter()
+                fields
+                    .iter()
                     .map(|only| {
                         PathIter::new(only)
                             .map(|component| component.into_static())
@@ -139,8 +148,7 @@ impl<'de, E> Deserialize<'de> for EncodingConfig<E>
             timestamp_format: inner.timestamp_format,
         };
 
-        concrete.validate()
-            .map_err(serde::de::Error::custom)?;
+        concrete.validate().map_err(serde::de::Error::custom)?;
         Ok(concrete)
     }
 }

@@ -1,13 +1,13 @@
 mod line;
 
-use std::collections::BTreeMap;
-use std::convert::TryFrom;
 use indexmap::IndexMap;
 use snafu::ResultExt;
+use std::collections::BTreeMap;
+use std::convert::TryFrom;
 
 // Re-export
-pub use line::ErrorKind;
 use crate::line::{Line, Metric, MetricKind};
+pub use line::ErrorKind;
 
 pub const METRIC_NAME_LABEL: &str = "__name__";
 
@@ -48,12 +48,10 @@ pub enum ParserError {
     #[snafu(display("error parsing label value: {}", err))]
     ParseLabelValue {
         #[snafu(source)]
-        err: ErrorKind
+        err: ErrorKind,
     },
     #[snafu(display("expected value in range [0, {}], found: {}", u32::MAX, value))]
-    ValueOutOfRange {
-        value: f64
-    },
+    ValueOutOfRange { value: f64 },
 
     #[snafu(display("multiple metric kinds given for metric name `{}`", name))]
     MultipleMetricKinds { name: String },
@@ -132,7 +130,7 @@ impl GroupKind {
             Self::Gauge { .. } => kind == MetricKind::Gauge,
             Self::Histogram { .. } => kind == MetricKind::Histogram,
             Self::Summary { .. } => kind == MetricKind::Summary,
-            Self::Untyped { .. } => true
+            Self::Untyped { .. } => true,
         }
     }
 
@@ -169,9 +167,7 @@ impl GroupKind {
 
             Self::Histogram(ref mut metrics) => match suffix {
                 "_bucket" => {
-                    let bucket = key.labels
-                        .remove("le")
-                        .ok_or(ParserError::ExpectedLeTag)?;
+                    let bucket = key.labels.remove("le").ok_or(ParserError::ExpectedLeTag)?;
                     let (_, bucket) = line::Metric::parse_value(&bucket)
                         .map_err(Into::into)
                         .context(ParseLabelValue)?;
@@ -238,8 +234,7 @@ impl GroupKind {
 }
 
 fn matching_group<T: Default>(values: &mut MetricMap<T>, group: GroupKey) -> &mut T {
-    values.entry(group)
-        .or_insert_with(T::default)
+    values.entry(group).or_insert_with(T::default)
 }
 
 fn try_f64_to_u32(f: f64) -> Result<u32, ParserError> {
@@ -259,10 +254,7 @@ pub struct MetricGroup {
 impl MetricGroup {
     fn new(name: String, kind: MetricKind) -> Self {
         let metrics = GroupKind::new(kind);
-        MetricGroup {
-            name,
-            metrics,
-        }
+        MetricGroup { name, metrics }
     }
 
     // For cases where a metric group was not defined with `# TYPE ...`.
@@ -271,7 +263,7 @@ impl MetricGroup {
             name,
             labels,
             value,
-            timestamp
+            timestamp,
         } = metric;
 
         let key = GroupKey { timestamp, labels };
@@ -299,8 +291,9 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, ParserError> {
     let mut groups = Vec::new();
 
     for line in input.lines() {
-        let line = Line::parse(line)
-            .with_context(|| WithLine { line: line.to_owned() })?;
+        let line = Line::parse(line).with_context(|| WithLine {
+            line: line.to_owned(),
+        })?;
         if let Some(line) = line {
             match line {
                 Line::Header(header) => {
@@ -339,7 +332,8 @@ impl MetricGroupSet {
         } else if name.ends_with("_count") && self.0.contains_key(&name[..len - 6]) {
             &name[..len - 6]
         } else {
-            self.0.insert(name.into(), GroupKind::new(MetricKind::Untyped));
+            self.0
+                .insert(name.into(), GroupKind::new(MetricKind::Untyped));
             name
         };
 
@@ -405,7 +399,7 @@ impl From<proto::MetricType> for MetricKind {
             Histogram => MetricKind::Histogram,
             Gaugehistogram => MetricKind::Histogram,
             Summary => MetricKind::Summary,
-            _ => MetricKind::Untyped
+            _ => MetricKind::Untyped,
         }
     }
 }
@@ -671,7 +665,7 @@ mod tests {
         assert!(matches!(
             err,
             ParserError::WithLine {
-                kind: ErrorKind::ExpectedChar { expected: '"', ..},
+                kind: ErrorKind::ExpectedChar { expected: '"', .. },
                 ..
             }
         ));
@@ -739,7 +733,8 @@ mod tests {
         let parsed = parse_request(write_request!(
             [],
             [ [__name__ => "one", big => "small"] => [ 123 @ 1395066367500 ]]
-        )).unwrap();
+        ))
+        .unwrap();
 
         assert_eq!(parsed.len(), 1);
         match_group!(parsed[0], "one", Untyped => |metrics: &MetricMap<SimpleMetric>| {
@@ -759,7 +754,8 @@ mod tests {
                 [__name__ => "one"] => [ 12 @ 1395066367600, 14 @ 1395066367800 ],
                 [__name__ => "two"] => [ 13 @ 1395066367700 ]
             ]
-        )).unwrap();
+        ))
+        .unwrap();
 
         assert_eq!(parsed.len(), 2);
         match_group!(parsed[0], "one", Gauge => |metrics: &MetricMap<SimpleMetric>| {
@@ -793,7 +789,8 @@ mod tests {
                 [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
                 [__name__ => "one_total"] => [24 @ 1395066367700]
             ]
-        )).unwrap();
+        ))
+        .unwrap();
 
         assert_eq!(parsed.len(), 2);
         match_group!(parsed[0], "one", Histogram => |metrics: &MetricMap<HistogramMetric>| {
@@ -825,7 +822,6 @@ mod tests {
         })
     }
 
-
     #[test]
     fn parse_request_summary() {
         let parsed = parse_request(write_request!(
@@ -837,7 +833,8 @@ mod tests {
                 [__name__ => "one_sum"] => [ 12 @ 1395066367700 ],
                 [__name__ => "one_total"] => [24 @ 1395066367700]
             ]
-        )).unwrap();
+        ))
+        .unwrap();
 
         assert_eq!(parsed.len(), 2);
         match_group!(parsed[0], "one", Summary => |metrics: &MetricMap<SummaryMetric>| {

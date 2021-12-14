@@ -1,27 +1,37 @@
 mod arp;
+mod bcache;
 mod bonding;
 mod btrfs;
+mod conntrack;
+mod cpu;
 mod cpufreq;
 mod diskstats;
+mod drm;
 mod edac;
 mod entropy;
+mod errors;
 mod fibrechannel;
 mod filefd;
 mod filesystem;
 pub mod hwmon;
 mod infiniband;
 mod ipvs;
+mod lnstat;
 mod loadavg;
 mod mdadm;
 mod meminfo;
 mod netclass;
 mod netdev;
 mod netstat;
+mod network_route;
 mod nfs;
 mod nfsd;
 mod nvme;
+mod os_release;
 mod powersupplyclass;
 mod pressure;
+mod processes;
+mod protocols;
 mod rapl;
 mod schedstat;
 mod sockstat;
@@ -35,49 +45,35 @@ mod timex;
 mod udp_queues;
 mod uname;
 mod vmstat;
+mod wifi;
 mod xfs;
 mod zfs;
-mod cpu;
-mod conntrack;
-mod errors;
-mod os_release;
-mod drm;
-mod lnstat;
-mod protocols;
-mod network_route;
-mod wifi;
-mod bcache;
-mod processes;
 
 use std::io::Read;
 use std::str::FromStr;
-use std::{
-    sync::Arc,
-    path::Path,
-};
+use std::{path::Path, sync::Arc};
 
-use typetag;
+use event::{tags, Event, Metric};
+use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
-use futures::{StreamExt, SinkExt};
-use event::{Event, tags, Metric};
+use typetag;
 
-use self::netdev::NetdevConfig;
-use self::vmstat::VMStatConfig;
-use self::netclass::NetClassConfig;
-use self::netstat::NetstatConfig;
-use self::ipvs::IPVSConfig;
 use self::cpu::CPUConfig;
 use self::diskstats::DiskStatsConfig;
 use self::errors::{Error, ErrorContext};
-use crate::config::{SourceConfig, SourceContext, DataType, deserialize_duration, serialize_duration, default_true, default_false};
-use crate::shutdown::ShutdownSignal;
-use crate::pipeline::Pipeline;
-use crate::{
-    sources::Source,
-    config::SourceDescription,
-    impl_generate_config_from_default,
+use self::ipvs::IPVSConfig;
+use self::netclass::NetClassConfig;
+use self::netdev::NetdevConfig;
+use self::netstat::NetstatConfig;
+use self::vmstat::VMStatConfig;
+use crate::config::{
+    default_false, default_true, deserialize_duration, serialize_duration, DataType, SourceConfig,
+    SourceContext,
 };
+use crate::pipeline::Pipeline;
+use crate::shutdown::ShutdownSignal;
+use crate::{config::SourceDescription, impl_generate_config_from_default, sources::Source};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -94,12 +90,13 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub conntrack: bool,
 
+    #[serde(default = "default_cpu_config")]
     pub cpu: Option<Arc<CPUConfig>>,
 
     #[serde(default = "default_true")]
     pub cpufreq: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_diskstats_config")]
     pub diskstats: Option<Arc<DiskStatsConfig>>,
 
     #[serde(default)]
@@ -117,7 +114,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub filefd: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_filesystem_config")]
     pub filesystem: Option<Arc<filesystem::FileSystemConfig>>,
 
     #[serde(default = "default_true")]
@@ -126,7 +123,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub infiniband: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_ipvs_config")]
     pub ipvs: Option<Arc<IPVSConfig>>,
 
     #[serde(default = "default_true")]
@@ -138,13 +135,13 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub memory: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_netclass_config")]
     pub netclass: Option<Arc<netclass::NetClassConfig>>,
 
-    #[serde(default)]
+    #[serde(default = "default_netdev_config")]
     pub netdev: Option<Arc<netdev::NetdevConfig>>,
 
-    #[serde(default)]
+    #[serde(default = "default_netstat_config")]
     pub netstat: Option<Arc<netstat::NetstatConfig>>,
 
     #[serde(default = "default_true")]
@@ -159,7 +156,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub os_release: bool,
 
-    #[serde(default)]
+    #[serde(default = "default_powersupply_config")]
     pub power_supply: Option<Arc<powersupplyclass::PowerSupplyConfig>>,
 
     #[serde(default = "default_true")]
@@ -201,6 +198,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub uname: bool,
 
+    #[serde(default = "default_vmstat_config")]
     pub vmstat: Option<Arc<vmstat::VMStatConfig>>,
 
     #[serde(default = "default_true")]
@@ -210,6 +208,42 @@ struct Collectors {
     pub zfs: bool,
 }
 
+fn default_cpu_config() -> Option<Arc<CPUConfig>> {
+    Some(Arc::new(CPUConfig::default()))
+}
+
+fn default_diskstats_config() -> Option<Arc<DiskStatsConfig>> {
+    Some(Arc::new(DiskStatsConfig::default()))
+}
+
+fn default_filesystem_config() -> Option<Arc<filesystem::FileSystemConfig>> {
+    Some(Arc::new(filesystem::FileSystemConfig::default()))
+}
+
+fn default_ipvs_config() -> Option<Arc<IPVSConfig>> {
+    Some(Arc::new(ipvs::IPVSConfig::default()))
+}
+
+fn default_netclass_config() -> Option<Arc<netclass::NetClassConfig>> {
+    Some(Arc::new(NetClassConfig::default()))
+}
+
+fn default_netdev_config() -> Option<Arc<netdev::NetdevConfig>> {
+    Some(Arc::new(NetdevConfig::default()))
+}
+
+fn default_netstat_config() -> Option<Arc<netstat::NetstatConfig>> {
+    Some(Arc::new(NetstatConfig::default()))
+}
+
+fn default_powersupply_config() -> Option<Arc<powersupplyclass::PowerSupplyConfig>> {
+    Some(Arc::new(powersupplyclass::PowerSupplyConfig::default()))
+}
+
+fn default_vmstat_config() -> Option<Arc<vmstat::VMStatConfig>> {
+    Some(Arc::new(VMStatConfig::default()))
+}
+
 impl Default for Collectors {
     fn default() -> Self {
         Self {
@@ -217,29 +251,29 @@ impl Default for Collectors {
             btrfs: default_true(),
             bonding: default_true(),
             conntrack: default_true(),
-            cpu: Some(Arc::new(CPUConfig::default())),
+            cpu: default_cpu_config(),
             cpufreq: true,
-            diskstats: Some(Arc::new(DiskStatsConfig::default())),
+            diskstats: default_diskstats_config(),
             drm: default_true(),
             edac: default_true(),
             entropy: default_true(),
             fibrechannel: default_true(),
             filefd: default_true(),
-            filesystem: Some(Arc::new(filesystem::FileSystemConfig::default())),
+            filesystem: default_filesystem_config(),
             hwmon: default_true(),
             infiniband: default_true(),
-            ipvs: Some(Arc::new(ipvs::IPVSConfig::default())),
+            ipvs: default_ipvs_config(),
             loadavg: default_true(),
             mdadm: default_true(),
             memory: default_true(),
-            netclass: Some(Arc::new(NetClassConfig::default())),
-            netdev: Some(Arc::new(NetdevConfig::default())),
-            netstat: Some(Arc::new(NetstatConfig::default())),
+            netclass: default_netclass_config(),
+            netdev: default_netdev_config(),
+            netstat: default_netstat_config(),
             nfs: default_true(),
             nfsd: default_true(),
             nvme: default_true(),
             os_release: default_true(),
-            power_supply: Some(Arc::new(powersupplyclass::PowerSupplyConfig::default())),
+            power_supply: default_powersupply_config(),
             pressure: default_true(),
             processes: default_false(),
             rapl: default_true(),
@@ -253,7 +287,7 @@ impl Default for Collectors {
             thermal_zone: default_true(),
             udp_queues: default_true(),
             uname: default_true(),
-            vmstat: Some(Arc::new(VMStatConfig::default())),
+            vmstat: default_vmstat_config(),
             xfs: default_true(),
             zfs: default_true(),
         }
@@ -263,7 +297,11 @@ impl Default for Collectors {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct NodeMetricsConfig {
-    #[serde(default = "default_interval", deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        default = "default_interval",
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 
     #[serde(default = "default_proc_path")]
@@ -344,10 +382,10 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
 }
 
 pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
-    where
-        P: AsRef<Path>,
-        T: FromStr<Err=E>,
-        Error: From<E>
+where
+    P: AsRef<Path>,
+    T: FromStr<Err = E>,
+    Error: From<E>,
 {
     let content = read_to_string(path).await?;
     Ok(<T as FromStr>::from_str(content.as_str())?)
@@ -394,8 +432,7 @@ macro_rules! record_gather {
 impl NodeMetrics {
     async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
         let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval)
-            .take_until(shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
             let mut tasks = Vec::new();
@@ -554,7 +591,10 @@ impl NodeMetrics {
                 let sys_path = self.sys_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("netclass", netclass::gather(conf.as_ref(), sys_path.as_ref()))
+                    record_gather!(
+                        "netclass",
+                        netclass::gather(conf.as_ref(), sys_path.as_ref())
+                    )
                 }))
             }
 
@@ -572,7 +612,10 @@ impl NodeMetrics {
                 let proc_path = self.proc_path.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("netstat", netstat::gather(conf.as_ref(), proc_path.as_ref()))
+                    record_gather!(
+                        "netstat",
+                        netstat::gather(conf.as_ref(), proc_path.as_ref())
+                    )
                 }))
             }
 
@@ -609,7 +652,10 @@ impl NodeMetrics {
                 let conf = conf.clone();
 
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("powersupplyclass", powersupplyclass::gather(sys_path.as_ref(), conf.as_ref()))
+                    record_gather!(
+                        "powersupplyclass",
+                        powersupplyclass::gather(sys_path.as_ref(), conf.as_ref())
+                    )
                 }))
             }
 
@@ -728,7 +774,8 @@ impl NodeMetrics {
                 }))
             }
 
-            let metrics = futures::future::join_all(tasks).await
+            let metrics = futures::future::join_all(tasks)
+                .await
                 .iter()
                 .flatten()
                 .fold(Vec::new(), |mut metrics, ms| {
@@ -782,16 +829,13 @@ mod tests {
 
     #[test]
     fn test_deserialize() {
-        let cs: Collectors = serde_yaml::from_str(r#"
+        let cs: Collectors = serde_yaml::from_str(
+            r#"
         arp: true
-        "#).unwrap();
+        "#,
+        )
+        .unwrap();
 
-        println!("{:?}", cs);
-    }
-
-    #[test]
-    fn test_pwd() {
-        let pwd = std::env::current_dir().unwrap();
-        println!("{:?}", pwd);
+        assert_eq!(cs.arp, true);
     }
 }

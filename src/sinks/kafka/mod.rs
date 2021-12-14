@@ -6,7 +6,6 @@ mod sink;
 #[cfg(test)]
 mod tests;
 
-
 use crate::config::SinkDescription;
 use config::KafkaSinkConfig;
 

@@ -1,8 +1,8 @@
 use std::{
-    net::SocketAddr,
     collections::{HashMap, HashSet},
     fmt::{Display, Formatter},
     hash::Hash,
+    net::SocketAddr,
 };
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
@@ -15,7 +15,7 @@ impl Display for Protocol {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             Protocol::Tcp => write!(f, "tcp"),
-            Protocol::Udp => write!(f, "udp")
+            Protocol::Udp => write!(f, "udp"),
         }
     }
 }
@@ -39,7 +39,7 @@ impl Resource {
     /// From given components returns all that have a resource conflict
     /// with any other component
     pub fn conflicts<K: Eq + Hash + Clone>(
-        components: impl IntoIterator<Item=(K, Vec<Resource>)>,
+        components: impl IntoIterator<Item = (K, Vec<Resource>)>,
     ) -> HashMap<Resource, HashSet<K>> {
         let mut resource_map = HashMap::<Resource, HashSet<K>>::new();
         let mut unspecified = Vec::new();

@@ -4,9 +4,8 @@ use std::fmt::{Display, Formatter, Write};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable};
 use crate::metadata::EventMetadata;
-
+use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -94,7 +93,8 @@ pub struct Metric {
 
 impl ByteSizeOf for Metric {
     fn allocated_bytes(&self) -> usize {
-        let s1 = self.tags
+        let s1 = self
+            .tags
             .iter()
             .fold(0, |acc, (k, v)| acc + k.len() + v.len());
 
@@ -153,9 +153,7 @@ impl Display for Metric {
             MetricValue::Sum(v) | MetricValue::Gauge(v) => {
                 write!(fmt, " {}", v)
             }
-            _ => {
-                Ok(())
-            }
+            _ => Ok(()),
         }
     }
 }
@@ -220,10 +218,10 @@ impl Metric {
 
     #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            V: IntoF64
+    where
+        N: Into<String>,
+        D: Into<String>,
+        V: IntoF64,
     {
         Self {
             name: name.into(),
@@ -237,11 +235,16 @@ impl Metric {
     }
 
     #[inline]
-    pub fn gauge_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            V: IntoF64
+    pub fn gauge_with_tags<N, D, V>(
+        name: N,
+        desc: D,
+        value: V,
+        tags: BTreeMap<String, String>,
+    ) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        V: IntoF64,
     {
         Self {
             name: name.into(),
@@ -256,10 +259,10 @@ impl Metric {
 
     #[inline]
     pub fn sum<N, D, V>(name: N, desc: D, v: V) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            V: Into<f64>
+    where
+        N: Into<String>,
+        D: Into<String>,
+        V: Into<f64>,
     {
         Self {
             name: name.into(),
@@ -273,11 +276,16 @@ impl Metric {
     }
 
     #[inline]
-    pub fn sum_with_tags<N, D, V>(name: N, desc: D, value: V, tags: BTreeMap<String, String>) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            V: IntoF64
+    pub fn sum_with_tags<N, D, V>(
+        name: N,
+        desc: D,
+        value: V,
+        tags: BTreeMap<String, String>,
+    ) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        V: IntoF64,
     {
         Self {
             name: name.into(),
@@ -291,18 +299,12 @@ impl Metric {
     }
 
     #[inline]
-    pub fn histogram<N, D, C, S>(
-        name: N,
-        desc: D,
-        count: C,
-        sum: S,
-        buckets: Vec<Bucket>,
-    ) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            C: Into<u64>,
-            S: IntoF64
+    pub fn histogram<N, D, C, S>(name: N, desc: D, count: C, sum: S, buckets: Vec<Bucket>) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        C: Into<u64>,
+        S: IntoF64,
     {
         Self {
             name: name.into(),
@@ -327,11 +329,11 @@ impl Metric {
         sum: S,
         quantiles: Vec<Quantile>,
     ) -> Metric
-        where
-            N: Into<String>,
-            D: Into<String>,
-            C: Into<u64>,
-            S: IntoF64
+    where
+        N: Into<String>,
+        D: Into<String>,
+        C: Into<u64>,
+        S: IntoF64,
     {
         Self {
             name: name.into(),
@@ -378,15 +380,12 @@ impl Metric {
 
     #[inline]
     pub fn tag_value(&self, name: &str) -> Option<String> {
-        self.tags
-            .get(name)
-            .map(|v| v.to_string())
+        self.tags.get(name).map(|v| v.to_string())
     }
 
     #[inline]
     pub fn insert_tag(&mut self, name: impl ToString, value: impl ToString) -> Option<String> {
-        self.tags
-            .insert(name.to_string(), value.to_string())
+        self.tags.insert(name.to_string(), value.to_string())
     }
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {

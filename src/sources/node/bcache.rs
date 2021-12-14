@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-use event::Metric;
 use super::Error;
+use event::Metric;
+use serde::{Deserialize, Serialize};
 
 #[derive(Default, Deserialize, Serialize)]
 pub struct BCacheConfig {

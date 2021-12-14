@@ -1,14 +1,12 @@
-use crate::{
-    transforms::FunctionTransform,
-};
+use crate::transforms::FunctionTransform;
 use event::Event;
+use futures::channel::mpsc;
 use std::{
     collections::VecDeque,
     fmt,
     pin::Pin,
     task::{Context, Poll},
 };
-use futures::channel::mpsc;
 
 #[derive(Debug)]
 pub struct ClosedError;
@@ -47,7 +45,7 @@ impl Pipeline {
         // here because it gives us a chance to allow the natural batching
         // of `Pipeline` to kick in
         if self.outstanding > 0 {
-            emit!(&internal::EventsSent{
+            emit!(&internal::EventsSent {
                 count: self.outstanding,
                 byte_size: self.bytes_outstanding
             });
@@ -78,23 +76,21 @@ impl Pipeline {
 
                 Err(_) => {
                     return Poll::Ready(Err(ClosedError));
-                }
-
-                // Tokio's channel doesn't have those features
-                //
-                // Err(err) if err.is_full() => {
-                //     // We only try to send after a successful call to poll_ready,
-                //     // which reserves space for us in the channel. That makes this
-                //     // branch unreachable as long as the channel implementation fulfills
-                //     // its own contract.
-                //     panic!("Channel was both ready and full; this is a bug")
-                // }
-//
-                // Err(err) if err.is_disconnected() => {
-                //     return Poll::Ready(Err(ClosedError));
-                // }
-//
-                // Err(_) => unreachable!()
+                } // Tokio's channel doesn't have those features
+                  //
+                  // Err(err) if err.is_full() => {
+                  //     // We only try to send after a successful call to poll_ready,
+                  //     // which reserves space for us in the channel. That makes this
+                  //     // branch unreachable as long as the channel implementation fulfills
+                  //     // its own contract.
+                  //     panic!("Channel was both ready and full; this is a bug")
+                  // }
+                  //
+                  // Err(err) if err.is_disconnected() => {
+                  //     return Poll::Ready(Err(ClosedError));
+                  // }
+                  //
+                  // Err(_) => unreachable!()
             }
         }
 
@@ -117,7 +113,10 @@ impl Pipeline {
         }
     }
 
-    pub fn new_with_buffer(n: usize, inlines: Vec<Box<dyn FunctionTransform>>) -> (Self, mpsc::Receiver<Event>) {
+    pub fn new_with_buffer(
+        n: usize,
+        inlines: Vec<Box<dyn FunctionTransform>>,
+    ) -> (Self, mpsc::Receiver<Event>) {
         let (tx, rx) = mpsc::channel(n);
         (Self::from_sender(tx, inlines), rx)
     }
@@ -164,14 +163,12 @@ impl futures::Sink<Event> for Pipeline {
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
     use super::*;
     use event::Metric;
-    use futures::{SinkExt, StreamExt};
     use futures::task::noop_waker_ref;
-    use tokio::time::{
-        sleep, timeout,
-    };
+    use futures::{SinkExt, StreamExt};
+    use std::time::Duration;
+    use tokio::time::{sleep, timeout};
 
     #[derive(Clone)]
     struct AddTag {
@@ -190,7 +187,8 @@ mod tests {
     }
 
     async fn collect_ready<S>(mut rx: S) -> Vec<S::Item>
-        where S: futures::Stream + Unpin
+    where
+        S: futures::Stream + Unpin,
     {
         let waker = noop_waker_ref();
         let mut cx = Context::from_waker(waker);
@@ -225,15 +223,17 @@ mod tests {
         });
 
         sleep(Duration::from_millis(100)).await;
-        let es = timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>()).await.unwrap();
+        let es = timeout(Duration::from_secs(1), rx.collect::<Vec<Event>>())
+            .await
+            .unwrap();
         assert_eq!(es.len(), 10);
     }
 
     #[tokio::test]
-    async fn multiple_transforms() -> Result<(), crate::Error> {
+    async fn multiple_transforms() {
         let t1 = AddTag {
             k: "k1".into(),
-            v: "k2".into(),
+            v: "v1".into(),
         };
 
         let t2 = AddTag {
@@ -241,28 +241,15 @@ mod tests {
             v: "v2".into(),
         };
 
-        let (mut pipeline, mut receiver) = Pipeline::new_with_buffer(100, vec![Box::new(t1), Box::new(t2)]);
+        let (mut pipeline, mut receiver) =
+            Pipeline::new_with_buffer(100, vec![Box::new(t1), Box::new(t2)]);
 
-        let event = Event::Metric(Metric::gauge(
-            "foo",
-            "",
-            0.1
-        ));
-
-
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}", closed);
+        let event = Event::Metric(Metric::gauge("foo", "", 0.1));
 
         pipeline.send(event).await.unwrap();
+        let out = collect_ready(receiver).await;
 
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}", closed);
-
-        let _out = collect_ready(receiver).await;
-
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}, received: {}", closed, _out.len());
-
-        Ok(())
+        assert_eq!(out[0].as_metric().tags.get("k1").unwrap(), "v1");
+        assert_eq!(out[0].as_metric().tags.get("k2").unwrap(), "v2");
     }
 }

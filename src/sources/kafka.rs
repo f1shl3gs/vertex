@@ -3,24 +3,23 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
+use event::{LogRecord, Value};
 use futures::{FutureExt, SinkExt, StreamExt};
-use rdkafka::{ClientConfig, Message, TopicPartitionList};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
+use rdkafka::{ClientConfig, Message, TopicPartitionList};
 use serde::{Deserialize, Serialize};
-use event::{LogRecord, Value};
-use snafu::{Snafu, ResultExt};
+use snafu::{ResultExt, Snafu};
 
+use crate::common::kafka::{KafkaAuthConfig, KafkaEventReceived, KafkaStatisticsContext};
 use crate::config::{
-    DataType, SourceConfig, SourceContext, deserialize_duration,
-    serialize_duration, GenerateConfig, SourceDescription,
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
+    SourceContext, SourceDescription,
 };
-use crate::Error;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext, KafkaEventReceived};
-
+use crate::Error;
 
 fn default_auto_offset_reset() -> String {
     "largest".to_string()
@@ -70,16 +69,28 @@ struct KafkaSourceConfig {
     #[serde(default = "default_auto_offset_reset")]
     auto_offset_reset: String,
     #[serde(default = "default_session_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     session_timeout: chrono::Duration,
     #[serde(default = "default_socket_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     socket_timeout: chrono::Duration,
     #[serde(default = "default_fetch_wait_max")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     fetch_wait_max: chrono::Duration,
     #[serde(default = "default_commit_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     commit_interval: chrono::Duration,
     #[serde(default = "default_key_field")]
     key_field: String,
@@ -101,9 +112,7 @@ impl GenerateConfig for KafkaSourceConfig {
     fn generate_config() -> serde_yaml::Value {
         serde_yaml::to_value(Self {
             bootstrap_servers: "".to_string(),
-            topics: vec![
-                "topic_1".to_string()
-            ],
+            topics: vec!["topic_1".to_string()],
             group: "foo".to_string(),
             auto_offset_reset: "".to_string(),
             session_timeout: default_session_timeout(),
@@ -117,7 +126,8 @@ impl GenerateConfig for KafkaSourceConfig {
             headers_key: default_headers_key(),
             auth: Default::default(),
             librdkafka_options: None,
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -136,16 +146,27 @@ enum BuildError {
 impl KafkaSourceConfig {
     fn create_consumer(&self) -> Result<StreamConsumer<KafkaStatisticsContext>, Error> {
         let mut conf = ClientConfig::new();
-        conf
-            .set("group.id", self.group.to_string())
+        conf.set("group.id", self.group.to_string())
             .set("bootstrap.servers", self.bootstrap_servers.to_string())
             .set("auto.offset.reset", self.auto_offset_reset.to_string())
-            .set("session.timeout.ms", self.session_timeout.num_milliseconds().to_string())
-            .set("socket.timeout.ms", self.socket_timeout.num_milliseconds().to_string())
-            .set("fetch.wait.max.ms", self.fetch_wait_max.num_milliseconds().to_string())
+            .set(
+                "session.timeout.ms",
+                self.session_timeout.num_milliseconds().to_string(),
+            )
+            .set(
+                "socket.timeout.ms",
+                self.socket_timeout.num_milliseconds().to_string(),
+            )
+            .set(
+                "fetch.wait.max.ms",
+                self.fetch_wait_max.num_milliseconds().to_string(),
+            )
             .set("enable.partition.eof", "false")
             .set("enable.auto.commit", "true")
-            .set("auto.commit.interval.ms", self.commit_interval.num_milliseconds().to_string())
+            .set(
+                "auto.commit.interval.ms",
+                self.commit_interval.num_milliseconds().to_string(),
+            )
             .set("enable.auto.offset.store", "false")
             .set("statistics.interval.ms", "1000")
             .set("client.id", "vertex");
@@ -161,12 +182,8 @@ impl KafkaSourceConfig {
         let consumer = conf
             .create_with_context::<_, StreamConsumer<_>>(KafkaStatisticsContext)
             .context(KafkaCreateError)?;
-        let topics: Vec<&str> = self.topics
-            .iter()
-            .map(|s| s.as_str())
-            .collect();
-        consumer.subscribe(&topics)
-            .context(KafkaSubscribeError)?;
+        let topics: Vec<&str> = self.topics.iter().map(|s| s.as_str()).collect();
+        consumer.subscribe(&topics).context(KafkaSubscribeError)?;
 
         Ok(consumer)
     }
@@ -189,9 +206,7 @@ impl<'a> From<BorrowedMessage<'a>> for FinalizerEntry {
     }
 }
 
-fn mark_done(
-    consumer: Arc<StreamConsumer<KafkaStatisticsContext>>,
-) -> impl Fn(FinalizerEntry) {
+fn mark_done(consumer: Arc<StreamConsumer<KafkaStatisticsContext>>) -> impl Fn(FinalizerEntry) {
     move |entry| {
         // Would like to use `consumer.store_offset` here, but types don't allow it
         let mut tpl = TopicPartitionList::new();
@@ -200,10 +215,7 @@ fn mark_done(
             .expect("Setting offset failed");
 
         if let Err(err) = consumer.store_offsets(&tpl) {
-            warn!(
-                message = "Unable to update consumer offset",
-                ?err
-            );
+            warn!(message = "Unable to update consumer offset", ?err);
         }
     }
 }
@@ -248,17 +260,13 @@ async fn drain(
     let consumer = Arc::new(consumer);
     let shutdown = shutdown.shared();
     // let mut finalizer = acknoledgements
-//            .then(|| OrderedFinalizer::new(shutdown.clone(), mark_done(Arc::clone(&consumer))));
-    let mut stream = consumer.stream()
-        .take_until(shutdown);
+    //            .then(|| OrderedFinalizer::new(shutdown.clone(), mark_done(Arc::clone(&consumer))));
+    let mut stream = consumer.stream().take_until(shutdown);
 
     while let Some(msg) = stream.next().await {
         match msg {
             Err(err) => {
-                warn!(
-                        message = "Failed to read message",
-                        ?err
-                    );
+                warn!(message = "Failed to read message", ?err);
             }
 
             Ok(msg) => {
@@ -268,24 +276,28 @@ async fn drain(
 
                 let payload = match msg.payload() {
                     Some(payload) => payload,
-                    None => continue
+                    None => continue,
                 };
                 let mut log = LogRecord::default();
                 log.fields.insert("message".to_string(), payload.into());
-                let timestamp = msg.timestamp()
+                let timestamp = msg
+                    .timestamp()
                     .to_millis()
                     .and_then(|millis| Utc.timestamp_millis_opt(millis).latest())
                     .unwrap_or_else(Utc::now);
                 log.fields.insert("timestamp".to_string(), timestamp.into());
                 // Add source type
                 log.fields.insert("source_type".to_string(), "kafka".into());
-                let msg_key = msg.key()
+                let msg_key = msg
+                    .key()
                     .map(|key| Value::from(String::from_utf8_lossy(key).to_string()))
                     .unwrap_or(Value::Null);
                 log.fields.insert(key_field.to_owned(), msg_key);
                 log.fields.insert(topic_key.to_owned(), msg.topic().into());
-                log.fields.insert(partition_key.to_owned(), msg.partition().into());
-                log.fields.insert(offset_key.to_owned(), msg.offset().into());
+                log.fields
+                    .insert(partition_key.to_owned(), msg.partition().into());
+                log.fields
+                    .insert(offset_key.to_owned(), msg.offset().into());
 
                 let mut headers = BTreeMap::new();
                 if let Some(msg_headers) = msg.headers() {
@@ -312,10 +324,7 @@ async fn drain(
                         // }
                     }
                     Err(err) => {
-                        warn!(
-                            message = "Error sending to sink",
-                            ?err
-                        );
+                        warn!(message = "Error sending to sink", ?err);
                     }
                 }
             }

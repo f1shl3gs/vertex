@@ -4,8 +4,8 @@ mod disk;
 mod usage;
 
 // re-export
-pub use acker::{Acker, Ackable};
 pub use crate::bytes::{DecodeBytes, EncodeBytes};
+pub use acker::{Ackable, Acker};
 
 use serde::{Deserialize, Serialize};
 
@@ -21,4 +21,3 @@ impl Default for WhenFull {
         Self::Block
     }
 }
-

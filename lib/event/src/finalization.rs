@@ -1,18 +1,17 @@
+use std::future::Future;
+use std::iter;
+use std::mem;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::Poll;
-use std::iter;
-use std::mem;
-use std::future::Future;
 
-use futures::future::FutureExt;
 use atomig::{Atom, Atomic, Ordering};
+use futures::future::FutureExt;
+use serde::{Deserialize, Serialize};
 use tokio::sync::oneshot;
 use tracing::error;
-use serde::{Deserialize, Serialize};
 
 use crate::ByteSizeOf;
-
 
 type ImmutVec<T> = Box<[T]>;
 
@@ -58,7 +57,7 @@ impl EventStatus {
             // `Errored` overrides `Delivered`
             (Self::Errored, _) | (_, Self::Errored) => Self::Errored,
             // No change for `Delivered`
-            (Self::Delivered, Self::Delivered) => Self::Delivered
+            (Self::Delivered, Self::Delivered) => Self::Delivered,
         }
     }
 }
@@ -92,8 +91,8 @@ impl Eq for EventFinalizers {}
 
 impl PartialEq for EventFinalizers {
     fn eq(&self, other: &Self) -> bool {
-        self.0.len() == other.0.len() &&
-            (self.0.iter())
+        self.0.len() == other.0.len()
+            && (self.0.iter())
                 .zip(other.0.iter())
                 .all(|(a, b)| Arc::ptr_eq(a, b))
     }
@@ -111,8 +110,7 @@ impl PartialOrd for EventFinalizers {
 
 impl ByteSizeOf for EventFinalizers {
     fn allocated_bytes(&self) -> usize {
-        self.0.iter()
-            .fold(0, |acc, arc| acc + arc.size_of())
+        self.0.iter().fold(0, |acc, arc| acc + arc.size_of())
     }
 }
 
@@ -135,8 +133,8 @@ impl EventFinalizers {
     }
 
     fn add_generic<I>(&mut self, items: I)
-        where
-            I: ExactSizeIterator<Item=Arc<EventFinalizer>>,
+    where
+        I: ExactSizeIterator<Item = Arc<EventFinalizer>>,
     {
         if self.0.is_empty() {
             self.0 = items.collect::<Vec<_>>().into();
@@ -310,10 +308,7 @@ impl EventFinalizer {
     /// Create a new event in a batch
     pub fn new(batch: Arc<BatchNotifier>) -> Self {
         let status = Atomic::new(EventStatus::Dropped);
-        Self {
-            status,
-            batch,
-        }
+        Self { status, batch }
     }
 
     /// Update this finalizer's status in place with the given `EventStatus`
@@ -328,7 +323,8 @@ impl EventFinalizer {
     /// Update the batch for this event with this finalizer's status, and
     /// mark this eent as no longer requiring update.
     pub fn update_batch(&self) {
-        let status = self.status
+        let status = self
+            .status
             .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |_| {
                 Some(EventStatus::Recorded)
             })
@@ -497,13 +493,7 @@ mod tests {
 
     #[test]
     fn event_status_updates() {
-        use EventStatus::{
-            Dropped,
-            Delivered,
-            Errored,
-            Failed,
-            Recorded,
-        };
+        use EventStatus::{Delivered, Dropped, Errored, Failed, Recorded};
 
         assert_eq!(Dropped.update(Dropped), Dropped);
         assert_eq!(Dropped.update(Delivered), Delivered);

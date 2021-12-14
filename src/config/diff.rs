@@ -1,5 +1,5 @@
-use std::collections::{HashSet};
 use indexmap::map::IndexMap;
+use std::collections::HashSet;
 
 use super::Config;
 
@@ -11,7 +11,8 @@ pub struct Difference {
 
 impl Difference {
     fn new<C>(old: &IndexMap<String, C>, new: &IndexMap<String, C>) -> Self
-        where C: serde::Serialize + serde::Deserialize<'static>
+    where
+        C: serde::Serialize + serde::Deserialize<'static>,
     {
         let old_names = old.keys().cloned().collect::<HashSet<_>>();
         let new_names = new.keys().cloned().collect::<HashSet<_>>();
@@ -45,11 +46,11 @@ impl Difference {
         self.to_add.contains(name) || self.to_change.contains(name)
     }
 
-    pub fn changed_and_added(&self) -> impl Iterator<Item=&String> {
+    pub fn changed_and_added(&self) -> impl Iterator<Item = &String> {
         self.to_change.iter().chain(self.to_add.iter())
     }
 
-    pub fn remove_and_changed(&self) -> impl Iterator<Item=&String> {
+    pub fn remove_and_changed(&self) -> impl Iterator<Item = &String> {
         self.to_change.iter().chain(self.to_remove.iter())
     }
 

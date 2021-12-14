@@ -1,6 +1,5 @@
 use std::borrow::Cow;
 
-
 pub enum RetryAction {
     /// Indicate that this request should be retried with a reason
     Retry(Cow<'static, str>),

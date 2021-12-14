@@ -3,18 +3,12 @@ use std::path::PathBuf;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use futures::{
-    channel::mpsc,
-    Sink,
-    SinkExt,
-    Stream,
-};
+use futures::{channel::mpsc, Sink, SinkExt, Stream};
 use pin_project::pin_project;
 use serde::{Deserialize, Serialize};
 
 pub use buffers::{Acker, DecodeBytes, EncodeBytes};
 use event::Event;
-
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -38,10 +32,7 @@ pub struct DropWhenFull<S> {
 
 impl<S> DropWhenFull<S> {
     pub fn new(inner: S) -> Self {
-        Self {
-            inner,
-            drop: false,
-        }
+        Self { inner, drop: false }
     }
 }
 
@@ -83,10 +74,10 @@ impl<T, S: Sink<T> + Unpin> futures::Sink<T> for DropWhenFull<S> {
 
 #[derive(Clone)]
 pub enum BufferInputCloner<T>
-    where
-        T: Send + Sync + Unpin + Clone + EncodeBytes<T> + DecodeBytes<T>,
-        <T as EncodeBytes<T>>::Error: Debug,
-        <T as DecodeBytes<T>>::Error: Debug,
+where
+    T: Send + Sync + Unpin + Clone + EncodeBytes<T> + DecodeBytes<T>,
+    <T as EncodeBytes<T>>::Error: Debug,
+    <T as DecodeBytes<T>>::Error: Debug,
 {
     Memory(mpsc::Sender<T>, WhenFull),
     #[cfg(feature = "disk-buffer")]
@@ -94,16 +85,15 @@ pub enum BufferInputCloner<T>
 }
 
 impl<'a, T> BufferInputCloner<T>
-    where
-        T: 'a + Send + Sync + Unpin + Clone + EncodeBytes<T> + DecodeBytes<T>,
-        <T as EncodeBytes<T>>::Error: Debug,
-        <T as DecodeBytes<T>>::Error: Debug + Display,
+where
+    T: 'a + Send + Sync + Unpin + Clone + EncodeBytes<T> + DecodeBytes<T>,
+    <T as EncodeBytes<T>>::Error: Debug,
+    <T as DecodeBytes<T>>::Error: Debug + Display,
 {
-    pub fn get(&self) -> Box<dyn Sink<T, Error=()> + 'a + Send + Unpin> {
+    pub fn get(&self) -> Box<dyn Sink<T, Error = ()> + 'a + Send + Unpin> {
         match self {
             BufferInputCloner::Memory(tx, when_full) => {
-                let inner = tx.clone()
-                    .sink_map_err(|err| {});
+                let inner = tx.clone().sink_map_err(|err| {});
 
                 if when_full == &WhenFull::DropNewest {
                     Box::new(DropWhenFull::new(inner))
@@ -145,7 +135,7 @@ impl Default for BufferConfig {
     }
 }
 
-pub(crate) type EventStream = Box<dyn Stream<Item=Event> + Unpin + Send>;
+pub(crate) type EventStream = Box<dyn Stream<Item = Event> + Unpin + Send>;
 
 impl BufferConfig {
     #[inline]
@@ -178,13 +168,12 @@ impl BufferConfig {
     // pub fn resources(&self, name: &str) -> Vec<Resource> {
     //     match self {
     //         BufferConfig::Memory { .. } => Vec::new(),
-//
+    //
     //         #[cfg(feature = "disk-buffer")]
     //         BufferConfig::Disk { .. } => vec![Resource::DiskBuffer(name.to_string())]
     //     }
     // }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -212,24 +201,26 @@ memory: {}
             },
         );
 
-        check(r#"
+        check(
+            r#"
         memory:
             max_events: 100
         "#,
-              BufferConfig::Memory {
-                  max_events: 100,
-                  when_full: WhenFull::Block,
-              },
+            BufferConfig::Memory {
+                max_events: 100,
+                when_full: WhenFull::Block,
+            },
         );
 
-        check(r#"
+        check(
+            r#"
         memory:
             when_full: drop_newest
         "#,
-              BufferConfig::Memory {
-                  max_events: 512,
-                  when_full: WhenFull::DropNewest,
-              },
+            BufferConfig::Memory {
+                max_events: 512,
+                when_full: WhenFull::DropNewest,
+            },
         )
     }
 
@@ -254,6 +245,7 @@ memory: {}
             assert_eq!(rx.as_mut().poll_next(cx), Poll::Ready(Some(2)));
             assert_eq!(rx.as_mut().poll_next(cx), Poll::Ready(Some(3)));
             assert_eq!(rx.as_mut().poll_next(cx), Poll::Pending);
-        }).await;
+        })
+        .await;
     }
 }

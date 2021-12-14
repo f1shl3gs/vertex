@@ -1,15 +1,14 @@
 use std::path::{Path, PathBuf};
 
-use rdkafka::{ClientConfig, ClientContext, Statistics};
+use internal::{update_counter, InternalEvent};
+use metrics::{counter, gauge};
 use rdkafka::consumer::ConsumerContext;
-use snafu::Snafu;
+use rdkafka::{ClientConfig, ClientContext, Statistics};
 use serde::{Deserialize, Serialize};
-use metrics::{gauge, counter};
-use internal::{InternalEvent, update_counter};
+use snafu::Snafu;
 
-use crate::Error;
 use crate::tls::TlsOptions;
-
+use crate::Error;
 
 #[derive(Debug, Snafu)]
 enum KafkaError {
@@ -63,14 +62,8 @@ pub struct KafkaAuthConfig {
 
 impl KafkaAuthConfig {
     pub fn apply(&self, client: &mut ClientConfig) -> Result<(), Error> {
-        let sasl_enabled = self.sasl
-            .as_ref()
-            .and_then(|s| s.enabled)
-            .unwrap_or(false);
-        let tls_enabled = self.tls
-            .as_ref()
-            .and_then(|s| s.enabled)
-            .unwrap_or(false);
+        let sasl_enabled = self.sasl.as_ref().and_then(|s| s.enabled).unwrap_or(false);
+        let tls_enabled = self.tls.as_ref().and_then(|s| s.enabled).unwrap_or(false);
 
         let protocol = match (sasl_enabled, tls_enabled) {
             (false, false) => "plaintext",
@@ -122,12 +115,13 @@ pub struct KafkaStatisticsContext;
 
 impl ClientContext for KafkaStatisticsContext {
     fn stats(&self, statistics: Statistics) {
-        emit!(&KafkaStatisticsReceived { statistics: &statistics })
+        emit!(&KafkaStatisticsReceived {
+            statistics: &statistics
+        })
     }
 }
 
 impl ConsumerContext for KafkaStatisticsContext {}
-
 
 pub struct KafkaStatisticsReceived<'a> {
     statistics: &'a rdkafka::Statistics,
@@ -136,15 +130,36 @@ pub struct KafkaStatisticsReceived<'a> {
 impl InternalEvent for KafkaStatisticsReceived<'_> {
     fn emit_metrics(&self) {
         gauge!("kafka_queue_messages", self.statistics.msg_cnt as f64);
-        gauge!("kafka_queue_messages_bytes", self.statistics.msg_size as f64);
+        gauge!(
+            "kafka_queue_messages_bytes",
+            self.statistics.msg_size as f64
+        );
         update_counter!("kafka_requests_total", self.statistics.tx as u64);
-        update_counter!("kafka_requests_bytes_total", self.statistics.tx_bytes as u64);
+        update_counter!(
+            "kafka_requests_bytes_total",
+            self.statistics.tx_bytes as u64
+        );
         update_counter!("kafka_responses_total", self.statistics.rx as u64);
-        update_counter!("kafka_responses_bytes_total", self.statistics.rx_bytes as u64);
-        update_counter!("kafka_produced_messages_total", self.statistics.txmsgs as u64);
-        update_counter!("kafka_produced_messages_bytes_total", self.statistics.txmsg_bytes as u64);
-        update_counter!("kafka_consumed_messages_total", self.statistics.rxmsgs as u64);
-        update_counter!("kafka_consumed_messages_bytes_total", self.statistics.rxmsg_bytes as u64);
+        update_counter!(
+            "kafka_responses_bytes_total",
+            self.statistics.rx_bytes as u64
+        );
+        update_counter!(
+            "kafka_produced_messages_total",
+            self.statistics.txmsgs as u64
+        );
+        update_counter!(
+            "kafka_produced_messages_bytes_total",
+            self.statistics.txmsg_bytes as u64
+        );
+        update_counter!(
+            "kafka_consumed_messages_total",
+            self.statistics.rxmsgs as u64
+        );
+        update_counter!(
+            "kafka_consumed_messages_bytes_total",
+            self.statistics.rxmsg_bytes as u64
+        );
     }
 }
 
@@ -176,7 +191,6 @@ impl InternalEvent for KafkaEventReceived {
         counter!("processed_bytes_total", self.byte_size as u64);
     }
 }
-
 
 pub struct KafkaEventFailed {}
 

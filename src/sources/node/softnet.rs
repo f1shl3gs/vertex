@@ -1,3 +1,5 @@
+use super::{Error, ErrorContext};
+use event::{tags, Metric};
 /// Exposes statistics from /proc/net/softnet_stat
 ///
 /// For the proc file format details,
@@ -5,13 +7,10 @@
 /// * Linux 2.6.23 https://elixir.bootlin.com/linux/v2.6.23/source/net/core/dev.c#L2343
 /// * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
 /// and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
-
 use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
-use event::{tags, Metric};
-use super::{Error, ErrorContext};
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {
@@ -27,14 +26,17 @@ struct SoftnetStat {
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/softnet_stat", proc_path);
-    let f = fs::File::open(path).await
+    let f = fs::File::open(path)
+        .await
         .context("open softnet_stat failed")?;
     let r = io::BufReader::new(f);
     let mut lines = r.lines();
 
     let mut metrics = Vec::new();
     let mut n = 0;
-    while let Some(line) = lines.next_line().await
+    while let Some(line) = lines
+        .next_line()
+        .await
         .context("read softnet_stat lines failed")?
     {
         match parse_softnet(&line) {
@@ -79,8 +81,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 fn parse_softnet(s: &str) -> Result<SoftnetStat, Error> {
     const MIN_COLUMNS: usize = 9;
-    let parts = s.split_ascii_whitespace()
-        .collect::<Vec<_>>();
+    let parts = s.split_ascii_whitespace().collect::<Vec<_>>();
 
     if parts.len() < MIN_COLUMNS {
         return Err(Error::new_invalid(format!(
@@ -104,9 +105,9 @@ fn parse_softnet(s: &str) -> Result<SoftnetStat, Error> {
 #[inline]
 fn hex_u32(input: &[u8]) -> u32 {
     input
-        .iter().
-        rev().
-        enumerate()
+        .iter()
+        .rev()
+        .enumerate()
         .map(|(k, &v)| {
             let digit = v as char;
             (digit.to_digit(16).unwrap_or(0)) << (k * 4)

@@ -1,3 +1,5 @@
+use super::{read_into, read_to_string, Error};
+use event::{tags, Metric};
 use std::collections::BTreeMap;
 /// Expose various statistics from /sys/class/powercap
 ///
@@ -9,10 +11,7 @@ use std::collections::BTreeMap;
 /// - Using the perf_event interface with Linux 3.14 or newer. This requires root or a paranoid less than 1 (as do all system wide measurements with -a) sudo perf stat -a -e "power/energy-cores/" /bin/ls Available events can be found via perf list or under /sys/bus/event_source/devices/power/events/
 /// - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
 /// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
-
 use std::path::PathBuf;
-use event::{tags, Metric};
-use super::{Error, read_into, read_to_string};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]
@@ -44,7 +43,7 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
         let path = entry.path().join("name");
         let name = match read_to_string(path).await {
             Ok(c) => c,
-            _ => continue
+            _ => continue,
         };
 
         let (name, index) = match get_name_and_index(&name) {
@@ -122,9 +121,18 @@ mod tests {
     #[tokio::test]
     async fn test_get_rapl_zones() {
         let root = "tests/fixtures/sys";
-        let zones = get_rapl_zones(root).await.unwrap();
+        let mut zones = get_rapl_zones(root).await.unwrap();
+
+        // The readdir_r is not guaranteed to return in any specific order.
+        // And the order of Github CI and Centos Stream is different, so it must be sorted
+        // See: https://utcc.utoronto.ca/~cks/space/blog/unix/ReaddirOrder
+        zones.sort_by(|a, b| match a.name.cmp(&b.name) {
+            std::cmp::Ordering::Equal => a.index.cmp(&b.index),
+            order => order,
+        });
+
         assert_eq!(zones.len(), 3);
-        assert_eq!(zones[0].microjoules, 240422366267);
+        assert_eq!(zones[1].microjoules, 240422366267);
         assert_eq!(zones[2].index, 10);
     }
 }

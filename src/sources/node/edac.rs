@@ -1,21 +1,26 @@
 /// Exposes error detection and correction statistics
-
 use super::{read_into, Error, ErrorContext};
 use event::{tags, Metric};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
-    let paths = glob::glob(&pattern)
-        .context("find mc paths failed")?;
+    let paths = glob::glob(&pattern).context("find mc paths failed")?;
 
     let mut metrics = Vec::new();
     for entry in paths {
         match entry {
             Ok(path) => {
-                let controller = path.file_name().unwrap().to_str().unwrap().strip_prefix("mc").unwrap();
+                let controller = path
+                    .file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .strip_prefix("mc")
+                    .unwrap();
                 let path = path.as_os_str().to_str().unwrap();
 
-                let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await
+                let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path)
+                    .await
                     .context("read edac stats failed")?;
 
                 metrics.push(Metric::sum_with_tags(
@@ -61,7 +66,13 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
                     match csrow {
                         Ok(path) => {
                             // looks horrible
-                            let num = path.file_name().unwrap().to_str().unwrap().strip_prefix("csrow").unwrap();
+                            let num = path
+                                .file_name()
+                                .unwrap()
+                                .to_str()
+                                .unwrap()
+                                .strip_prefix("csrow")
+                                .unwrap();
                             let path = path.to_str().unwrap();
 
                             match read_edac_csrow_stats(path).await {
@@ -125,7 +136,8 @@ mod tests {
     #[tokio::test]
     async fn test_read_edac_stats() {
         let path = "tests/fixtures/sys/devices/system/edac/mc/mc0";
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path).await.unwrap();
+        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) =
+            read_edac_stats(path).await.unwrap();
 
         assert_eq!(ce_count, 1);
         assert_eq!(ce_noinfo_count, 2);

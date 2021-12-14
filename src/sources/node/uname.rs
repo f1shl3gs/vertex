@@ -1,8 +1,7 @@
-/// Exposes system information as provided by the uname systemc call
-
-use libc::c_char;
-use event::{tags, Metric};
 use super::Error;
+use event::{tags, Metric};
+/// Exposes system information as provided by the uname systemc call
+use libc::c_char;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {
@@ -27,21 +26,19 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     let nodename = &to_string(u.nodename);
     let domainname = &to_string(u.domainname);
 
-    Ok(vec![
-        Metric::gauge_with_tags(
-            "node_uname_info",
-            "Labeled system information as provided by the uname system call.",
-            1f64,
-            tags!(
-                "sysname" => sysname,
-                "release" => release,
-                "version" => version,
-                "machine" => machine,
-                "nodename" => nodename,
-                "domainname" => domainname,
-            ),
-        )
-    ])
+    Ok(vec![Metric::gauge_with_tags(
+        "node_uname_info",
+        "Labeled system information as provided by the uname system call.",
+        1f64,
+        tags!(
+            "sysname" => sysname,
+            "release" => release,
+            "version" => version,
+            "machine" => machine,
+            "nodename" => nodename,
+            "domainname" => domainname,
+        ),
+    )])
 }
 
 fn to_string(cs: [libc::c_char; 65]) -> String {
@@ -74,10 +71,6 @@ mod tests {
         };
 
         let v = unsafe { libc::uname(&mut u) };
-        if v != 0 {
-            println!("error")
-        }
-
-        println!("sysname {:?}", to_string(u.sysname));
+        assert_eq!(v, 0);
     }
 }

@@ -2,8 +2,8 @@
 mod add_fields;
 #[cfg(feature = "transforms-add_tags")]
 mod add_tags;
-mod ansii_striper;
 mod aggregate;
+mod ansii_striper;
 
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
@@ -20,9 +20,9 @@ mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;
 
-use std::pin::Pin;
-use futures::Stream;
 use event::Event;
+use futures::Stream;
+use std::pin::Pin;
 
 /// Transforms that are simple, and don't require attention to coordination.
 /// You can run them as simple functions over events in any order
@@ -43,8 +43,8 @@ dyn_clone::clone_trait_object!(FunctionTransform);
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item=Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item=Event> + Send>>;
+        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
 }
 
 /// Transforms come in two variants. Functions or tasks.
@@ -83,11 +83,12 @@ impl Transform {
 /// If `ft` attempts to emit more than one `Event` on transform this function
 /// will panic.
 #[cfg(test)]
-pub fn transform_one(ft: &mut dyn FunctionTransform, event: impl Into<event::Event>) -> Option<Event>
-{
+pub fn transform_one(
+    ft: &mut dyn FunctionTransform,
+    event: impl Into<event::Event>,
+) -> Option<Event> {
     let mut buf = Vec::with_capacity(1);
     ft.transform(&mut buf, event.into());
     assert!(buf.len() < 2);
-    buf.into_iter()
-        .next()
+    buf.into_iter().next()
 }

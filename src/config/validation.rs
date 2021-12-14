@@ -1,21 +1,30 @@
 use super::builder::Builder;
-use std::collections::HashMap;
 use crate::config::{DataType, Resource};
+use std::collections::HashMap;
 
 pub fn warnings(builder: &Builder) -> Vec<String> {
     let mut warnings = vec![];
-    let source_names = builder.sources
-        .keys().
-        map(|name| ("source", name.clone()));
-    let transform_names = builder.transforms
+    let source_names = builder.sources.keys().map(|name| ("source", name.clone()));
+    let transform_names = builder
+        .transforms
         .keys()
         .map(|name| ("transform", name.clone()));
 
     for (input_type, name) in transform_names.chain(source_names) {
-        if !builder.transforms.iter().any(|(_, transform)| transform.inputs.contains(&name)) &&
-            !builder.sinks.iter().any(|(_, sink)| sink.inputs.contains(&name))
+        if !builder
+            .transforms
+            .iter()
+            .any(|(_, transform)| transform.inputs.contains(&name))
+            && !builder
+                .sinks
+                .iter()
+                .any(|(_, sink)| sink.inputs.contains(&name))
         {
-            warnings.push(format!("{} \"{}\" has no consumers", capitalize(input_type), name));
+            warnings.push(format!(
+                "{} \"{}\" has no consumers",
+                capitalize(input_type),
+                name
+            ));
         }
     }
 
@@ -36,15 +45,14 @@ pub fn check_shape(builder: &Builder) -> Result<(), Vec<String>> {
     // helper for below
     fn tagged<'a>(
         tag: &'static str,
-        iter: impl Iterator<Item=&'a String>,
-    ) -> impl Iterator<Item=(&'static str, &'a String)> {
+        iter: impl Iterator<Item = &'a String>,
+    ) -> impl Iterator<Item = (&'static str, &'a String)> {
         iter.map(move |x| (tag, x))
     }
 
     // Check for non-unique names across sources, sinks, and transforms
     let mut ids = HashMap::<String, Vec<&'static str>>::new();
-    for (ctype, id) in
-    tagged("source", builder.sources.keys())
+    for (ctype, id) in tagged("source", builder.sources.keys())
         .chain(tagged("transform", builder.transforms.keys()))
         .chain(tagged("sink", builder.sinks.keys()))
     {
@@ -82,9 +90,7 @@ pub fn check_shape(builder: &Builder) -> Result<(), Vec<String>> {
             if !builder.sources.contains_key(&input) && !builder.transforms.contains_key(&input) {
                 errors.push(format!(
                     "Input \"{}\" for {} \"{}\" doesn't exists",
-                    input,
-                    output_type,
-                    id,
+                    input, output_type, id,
                 ));
             }
         }
@@ -114,23 +120,24 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
         .extensions
         .iter()
         .map(|(id, config)| (id, config.resources()));
-    let conflicting_components =
-        Resource::conflicts(source_resources.chain(sink_resources).chain(extension_resources));
+    let conflicting_components = Resource::conflicts(
+        source_resources
+            .chain(sink_resources)
+            .chain(extension_resources),
+    );
 
     if conflicting_components.is_empty() {
         Ok(())
     } else {
-        Err(
-            conflicting_components
-                .into_iter()
-                .map(|(resource, components)| {
-                    format!(
-                        "Resource \"{}\" is claimed by multiple components: {:?}",
-                        resource, components,
-                    )
-                })
-                .collect()
-        )
+        Err(conflicting_components
+            .into_iter()
+            .map(|(resource, components)| {
+                format!(
+                    "Resource \"{}\" is claimed by multiple components: {:?}",
+                    resource, components,
+                )
+            })
+            .collect())
     }
 }
 
@@ -179,24 +186,17 @@ impl Graph {
         );
     }
 
-    fn add_sink<I: Into<String>>(
-        &mut self,
-        id: I,
-        ty: DataType,
-        inputs: Vec<impl Into<String>>,
-    ) {
+    fn add_sink<I: Into<String>>(&mut self, id: I, ty: DataType, inputs: Vec<impl Into<String>>) {
         let inputs = self.clean_inputs(inputs);
 
-        self.nodes.insert(id.into(), Node::Sink {
-            ty,
-            inputs,
-        });
+        self.nodes.insert(id.into(), Node::Sink { ty, inputs });
     }
 
     fn paths(&self) -> Result<Vec<Vec<String>>, Vec<String>> {
         let mut errors = Vec::new();
 
-        let nodes = self.nodes
+        let nodes = self
+            .nodes
             .iter()
             .filter_map(|(name, node)| match node {
                 Node::Sink { .. } => Some(name),
@@ -235,9 +235,26 @@ impl Graph {
 
                 match (self.nodes[x].clone(), self.nodes[y].clone()) {
                     (Node::Source { ty: ty1 }, Node::Sink { ty: ty2, .. })
-                    | (Node::Source { ty: ty1 }, Node::Transform { input_type: ty2, .. })
-                    | (Node::Transform { output_type: ty1, .. }, Node::Transform { input_type: ty2, .. })
-                    | (Node::Transform { output_type: ty1, .. }, Node::Sink { ty: ty2, .. }) => {
+                    | (
+                        Node::Source { ty: ty1 },
+                        Node::Transform {
+                            input_type: ty2, ..
+                        },
+                    )
+                    | (
+                        Node::Transform {
+                            output_type: ty1, ..
+                        },
+                        Node::Transform {
+                            input_type: ty2, ..
+                        },
+                    )
+                    | (
+                        Node::Transform {
+                            output_type: ty1, ..
+                        },
+                        Node::Sink { ty: ty2, .. },
+                    ) => {
                         if ty1 != ty2 && ty1 != DataType::Any && ty2 != DataType::Any {
                             errors.push(format!(
                                 "Data type mismatch between {} ({:?}) and {} ({:?})",
@@ -246,7 +263,7 @@ impl Graph {
                         }
                     }
 
-                    (Node::Sink { .. }, _) | (_, Node::Source { .. }) => unreachable!()
+                    (Node::Sink { .. }, _) | (_, Node::Source { .. }) => unreachable!(),
                 }
             }
         }
@@ -280,11 +297,7 @@ impl From<&Builder> for Graph {
         }
 
         for (id, config) in builder.sinks.iter() {
-            graph.add_sink(
-                id.clone(),
-                config.inner.input_type(),
-                config.inputs.clone(),
-            );
+            graph.add_sink(id.clone(), config.inner.input_type(), config.inputs.clone());
         }
 
         graph
@@ -390,12 +403,7 @@ mod tests {
 
         let mut graph = Graph::default();
         graph.add_source("in", DataType::Log);
-        graph.add_transform(
-            "in",
-            DataType::Log,
-            DataType::Log,
-            vec!["in"],
-        );
+        graph.add_transform("in", DataType::Log, DataType::Log, vec!["in"]);
         graph.add_sink("out", DataType::Log, vec!["in"]);
 
         // This isn't really a cyclic dependency but let me have this one.

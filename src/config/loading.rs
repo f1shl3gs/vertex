@@ -1,10 +1,10 @@
-use std::collections::HashMap;
 use regex::{Captures, Regex};
+use std::collections::HashMap;
 use std::fs::File;
 
-use crate::config::{FormatHint, Config, Builder, Format, format, ConfigPath};
+use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
-use std::path::{Path};
+use std::path::Path;
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider
@@ -39,9 +39,7 @@ pub fn load_builder_from_paths(
         match path {
             ConfigPath::File(path, format) => {
                 if let Some(file) = open_config(path) {
-                    inputs.push(
-                        (file, format.or_else(move || Format::from_path(&path).ok()))
-                    );
+                    inputs.push((file, format.or_else(move || Format::from_path(&path).ok())));
                 } else {
                     errors.push(format!("Config file not found in path: {:?}", path))
                 };
@@ -59,21 +57,18 @@ pub fn load_builder_from_paths(
                                     }
                                 }
                             }
-                            Err(err) => {
-                                errors.push(
-                                    format!("Could not read file in config dir: {:?}, {}", path, err)
-                                )
-                            }
+                            Err(err) => errors.push(format!(
+                                "Could not read file in config dir: {:?}, {}",
+                                path, err
+                            )),
                         }
                     }
                 }
 
                 Err(err) => {
-                    errors.push(
-                        format!("Could not read config dir: {:?}, {}", path, err)
-                    );
+                    errors.push(format!("Could not read config dir: {:?}, {}", path, err));
                 }
-            }
+            },
         }
     }
 
@@ -89,28 +84,32 @@ fn open_config(path: &Path) -> Option<File> {
         Ok(f) => Some(f),
         Err(err) => {
             if let std::io::ErrorKind::NotFound = err.kind() {
-                None
+                error!(message = "Config file not found in path", ?path);
             } else {
-                None
+                error!(
+                    message = "Error opening config file",
+                    %err,
+                    ?path
+                );
             }
+
+            None
         }
     }
 }
 
 fn load_from_inputs(
-    inputs: impl IntoIterator<Item=(impl std::io::Read, FormatHint)>,
+    inputs: impl IntoIterator<Item = (impl std::io::Read, FormatHint)>,
 ) -> Result<(Builder, Vec<String>), Vec<String>> {
     let mut builder = Builder::new();
     let mut errors = Vec::new();
     let mut warnings = Vec::new();
 
     for (input, format) in inputs {
-        if let Err(errs) = load(input, format)
-            .and_then(|(n, mut load_warnings)| {
-                warnings.append(&mut load_warnings);
-                builder.append(n)
-            })
-        {
+        if let Err(errs) = load(input, format).and_then(|(n, mut load_warnings)| {
+            warnings.append(&mut load_warnings);
+            builder.append(n)
+        }) {
             // TODO; add back paths
             errors.extend(errs.iter().map(|e| e.to_string()));
         }
@@ -128,7 +127,8 @@ pub fn load(
     format: FormatHint,
 ) -> Result<(Builder, Vec<String>), Vec<String>> {
     let mut ss = String::new();
-    input.read_to_string(&mut ss)
+    input
+        .read_to_string(&mut ss)
         .map_err(|err| vec![err.to_string()])?;
 
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
@@ -153,8 +153,7 @@ fn load_from_str(content: String) -> Result<(Config, Vec<String>), Vec<String>> 
 
     let (with_vars, warnings) = interpolate(&content, &vars);
 
-    format::deserialize(&with_vars, Some(Format::YAML))
-        .map(|config| (config, warnings))
+    format::deserialize(&with_vars, Some(Format::YAML)).map(|config| (config, warnings))
 }
 
 pub fn get_hostname() -> std::io::Result<String> {
@@ -180,7 +179,8 @@ fn interpolate(input: &str, vars: &HashMap<String, String>) -> (String, Vec<Stri
                 })
                 .unwrap_or("$")
                 .to_string()
-        }).into_owned();
+        })
+        .into_owned();
 
     (interpolated, warnings)
 }

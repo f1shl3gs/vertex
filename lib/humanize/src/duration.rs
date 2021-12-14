@@ -26,7 +26,8 @@ impl Display for ParseDurationError {
 /// leading_int consumes the leading [0-9]* from s
 fn leading_int(s: &[u8]) -> Result<(i64, &[u8]), ParseDurationError> {
     let mut consumed = 0;
-    let o = s.iter()
+    let o = s
+        .iter()
         .take_while(|c| **c >= b'0' && **c <= b'9')
         .try_fold(0i64, |x, &c| {
             consumed += 1;
@@ -40,7 +41,7 @@ fn leading_int(s: &[u8]) -> Result<(i64, &[u8]), ParseDurationError> {
 
     match o {
         Some(v) => Ok((v, &s[consumed..])),
-        None => Err(ParseDurationError::BadInteger)
+        None => Err(ParseDurationError::BadInteger),
     }
 }
 
@@ -52,7 +53,8 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
     let mut scale = 1.0;
     let mut overflow = false;
 
-    let o = s.iter()
+    let o = s
+        .iter()
         .take_while(|c| **c >= b'0' && **c <= b'9')
         .try_fold(0, |x, &c| {
             consumed += 1;
@@ -74,7 +76,8 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
 
             scale *= 10.0;
             Some(y)
-        }).unwrap();
+        })
+        .unwrap();
 
     (o, scale, &s[consumed..])
 }
@@ -213,27 +216,25 @@ pub fn duration_to_string(d: &chrono::Duration) -> String {
     let d = d.num_nanoseconds().unwrap();
     let mut u = d as u64;
     let neg = d < 0;
-/*    if neg {
+    /*    if neg {
         u = -u;
     }*/
 
     if u < SECOND as u64 {
         // Special case: if duration is smaller thant a second,
         // use smaller units, like 1.2ms
-        let mut prec = 0;
         w -= 1;
         buf[w] = b's';
         w -= 1;
 
-        if u == 0 {
+        let prec = if u == 0 {
             return "0s".to_string();
         } else if u < MICROSECOND as u64 {
             // print nanoseconds
-            prec = 0;
             buf[w] = b'n';
+            0
         } else if u < MILLISECOND as u64 {
             // print microseconds
-            prec = 3;
             /*
             // U+00B5 'µ' micro sign == 0xC2 0xB5
             w -= 1; // Need room for two bytes
@@ -241,11 +242,12 @@ pub fn duration_to_string(d: &chrono::Duration) -> String {
             buf[w + 2] = 0xB5;
             */
             buf[w] = b'u';
+            3
         } else {
             // print milliseconds
-            prec = 6;
             buf[w] = b'm';
-        }
+            6
+        };
 
         let (_w, _u) = fmt_frac(&mut buf[..w], u, prec);
         w = _w;
@@ -296,7 +298,7 @@ fn fmt_frac(buf: &mut [u8], mut v: u64, prec: i32) -> (usize, u64) {
     // Omit trailing zeros up to and including decimal point
     let mut w = buf.len();
     let mut print = false;
-    for i in 0..prec {
+    for _i in 0..prec {
         let digit = v % 10;
         print = print || digit != 0;
         if print {
@@ -330,19 +332,13 @@ fn fmt_int(buf: &mut [u8], mut v: u64) -> usize {
         }
     }
 
-    return w;
+    w
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use chrono::Duration;
-
-    #[test]
-    fn test_leading_int() {
-        let (x, remain) = leading_int("12h".as_bytes()).unwrap();
-        println!("{} {}", x, String::from_utf8_lossy(remain));
-    }
 
     #[test]
     fn test_leading_int_overflow() {
@@ -359,48 +355,158 @@ mod tests {
     fn test_parse_duration() {
         let tests = [
             // simple
-            ParseDurationTest { input: "0", want: 0 },
-            ParseDurationTest { input: "5s", want: 5 * SECOND },
-            ParseDurationTest { input: "30s", want: 30 * SECOND },
-            ParseDurationTest { input: "1478s", want: 1478 * SECOND },
+            ParseDurationTest {
+                input: "0",
+                want: 0,
+            },
+            ParseDurationTest {
+                input: "5s",
+                want: 5 * SECOND,
+            },
+            ParseDurationTest {
+                input: "30s",
+                want: 30 * SECOND,
+            },
+            ParseDurationTest {
+                input: "1478s",
+                want: 1478 * SECOND,
+            },
             // sign
-            ParseDurationTest { input: "-5s", want: -5 * SECOND },
-            ParseDurationTest { input: "+5s", want: 5 * SECOND },
-            ParseDurationTest { input: "-0", want: 0 },
-            ParseDurationTest { input: "+0", want: 0 },
+            ParseDurationTest {
+                input: "-5s",
+                want: -5 * SECOND,
+            },
+            ParseDurationTest {
+                input: "+5s",
+                want: 5 * SECOND,
+            },
+            ParseDurationTest {
+                input: "-0",
+                want: 0,
+            },
+            ParseDurationTest {
+                input: "+0",
+                want: 0,
+            },
             // decimal
-            ParseDurationTest { input: "5.0s", want: 5 * SECOND },
-            ParseDurationTest { input: "5.6s", want: 5 * SECOND + 600 * MILLISECOND },
-            ParseDurationTest { input: "5.s", want: 5 * SECOND },
-            ParseDurationTest { input: ".5s", want: 500 * MILLISECOND },
-            ParseDurationTest { input: "1.0s", want: 1 * SECOND },
-            ParseDurationTest { input: "1.00s", want: 1 * SECOND },
-            ParseDurationTest { input: "1.004s", want: 1 * SECOND + 4 * MILLISECOND },
-            ParseDurationTest { input: "1.0040s", want: 1 * SECOND + 4 * MILLISECOND },
-            ParseDurationTest { input: "100.00100s", want: 100 * SECOND + 1 * MILLISECOND },
+            ParseDurationTest {
+                input: "5.0s",
+                want: 5 * SECOND,
+            },
+            ParseDurationTest {
+                input: "5.6s",
+                want: 5 * SECOND + 600 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "5.s",
+                want: 5 * SECOND,
+            },
+            ParseDurationTest {
+                input: ".5s",
+                want: 500 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "1.0s",
+                want: 1 * SECOND,
+            },
+            ParseDurationTest {
+                input: "1.00s",
+                want: 1 * SECOND,
+            },
+            ParseDurationTest {
+                input: "1.004s",
+                want: 1 * SECOND + 4 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "1.0040s",
+                want: 1 * SECOND + 4 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "100.00100s",
+                want: 100 * SECOND + 1 * MILLISECOND,
+            },
             // different units
-            ParseDurationTest { input: "10ns", want: 10 * NANOSECOND },
-            ParseDurationTest { input: "11us", want: 11 * MICROSECOND },
-            ParseDurationTest { input: "12µs", want: 12 * MICROSECOND }, // U+00B5
-            ParseDurationTest { input: "12µs10ns", want: 12 * MICROSECOND + 10 * NANOSECOND }, // U+00B5
-            ParseDurationTest { input: "12μs", want: 12 * MICROSECOND }, // U+03BC
-            ParseDurationTest { input: "12μs10ns", want: 12 * MICROSECOND + 10 * NANOSECOND }, // U+03BC
-            ParseDurationTest { input: "13ms", want: 13 * MILLISECOND },
-            ParseDurationTest { input: "14s", want: 14 * SECOND },
-            ParseDurationTest { input: "15m", want: 15 * MINUTE },
-            ParseDurationTest { input: "16h", want: 16 * HOUR },
+            ParseDurationTest {
+                input: "10ns",
+                want: 10 * NANOSECOND,
+            },
+            ParseDurationTest {
+                input: "11us",
+                want: 11 * MICROSECOND,
+            },
+            ParseDurationTest {
+                input: "12µs",
+                want: 12 * MICROSECOND,
+            }, // U+00B5
+            ParseDurationTest {
+                input: "12µs10ns",
+                want: 12 * MICROSECOND + 10 * NANOSECOND,
+            }, // U+00B5
+            ParseDurationTest {
+                input: "12μs",
+                want: 12 * MICROSECOND,
+            }, // U+03BC
+            ParseDurationTest {
+                input: "12μs10ns",
+                want: 12 * MICROSECOND + 10 * NANOSECOND,
+            }, // U+03BC
+            ParseDurationTest {
+                input: "13ms",
+                want: 13 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "14s",
+                want: 14 * SECOND,
+            },
+            ParseDurationTest {
+                input: "15m",
+                want: 15 * MINUTE,
+            },
+            ParseDurationTest {
+                input: "16h",
+                want: 16 * HOUR,
+            },
             // composite durations
-            ParseDurationTest { input: "3h30m", want: 3 * HOUR + 30 * MINUTE },
-            ParseDurationTest { input: "10.5s4m", want: 4 * MINUTE + 10 * SECOND + 500 * MILLISECOND },
-            ParseDurationTest { input: "-2m3.4s", want: -(2 * MINUTE + 3 * SECOND + 400 * MILLISECOND) },
-            ParseDurationTest { input: "1h2m3s4ms5us6ns", want: 1 * HOUR + 2 * MINUTE + 3 * SECOND + 4 * MILLISECOND + 5 * MICROSECOND + 6 * NANOSECOND },
-            ParseDurationTest { input: "39h9m14.425s", want: 39 * HOUR + 9 * MINUTE + 14 * SECOND + 425 * MILLISECOND },
+            ParseDurationTest {
+                input: "3h30m",
+                want: 3 * HOUR + 30 * MINUTE,
+            },
+            ParseDurationTest {
+                input: "10.5s4m",
+                want: 4 * MINUTE + 10 * SECOND + 500 * MILLISECOND,
+            },
+            ParseDurationTest {
+                input: "-2m3.4s",
+                want: -(2 * MINUTE + 3 * SECOND + 400 * MILLISECOND),
+            },
+            ParseDurationTest {
+                input: "1h2m3s4ms5us6ns",
+                want: 1 * HOUR
+                    + 2 * MINUTE
+                    + 3 * SECOND
+                    + 4 * MILLISECOND
+                    + 5 * MICROSECOND
+                    + 6 * NANOSECOND,
+            },
+            ParseDurationTest {
+                input: "39h9m14.425s",
+                want: 39 * HOUR + 9 * MINUTE + 14 * SECOND + 425 * MILLISECOND,
+            },
             // large value
-            ParseDurationTest { input: "52763797000ns", want: 52763797000 * NANOSECOND },
+            ParseDurationTest {
+                input: "52763797000ns",
+                want: 52763797000 * NANOSECOND,
+            },
             // more than 9 digits after decimal point, see https://golang.org/issue/6617
-            ParseDurationTest { input: "0.3333333333333333333h", want: 20 * MINUTE },
+            ParseDurationTest {
+                input: "0.3333333333333333333h",
+                want: 20 * MINUTE,
+            },
             // 9007199254740993 = 1<<53+1 cannot be stored precisely in a float64
-            ParseDurationTest { input: "9007199254740993ns", want: (1 << 53 + 1) * NANOSECOND },
+            // ParseDurationTest {
+            //     input: "9007199254740993ns",
+            //     want: (1 << 53 + 1) * NANOSECOND,
+            // },
             // largest duration that can be represented by int64 in nanoseconds
             // ParseDurationTest { input: "9223372036854775807ns", want: i64::MAX * NANOSECOND },
             // ParseDurationTest { input: "9223372036854775.807us", want: i64::MAX * NANOSECOND },
@@ -408,9 +514,15 @@ mod tests {
             // large negative value
             // todo: ParseDurationTest { input: "-9223372036854775807ns", want: -1 << 63 + 1 * NANOSECOND },
             // huge string; issue 15011.
-            ParseDurationTest { input: "0.100000000000000000000h", want: 6 * MINUTE },
+            ParseDurationTest {
+                input: "0.100000000000000000000h",
+                want: 6 * MINUTE,
+            },
             // This value tests the first overflow check in leadingFraction.
-            ParseDurationTest { input: "0.830103483285477580700h", want: 49 * MINUTE + 48 * SECOND + 372539827 * NANOSECOND }
+            ParseDurationTest {
+                input: "0.830103483285477580700h",
+                want: 49 * MINUTE + 48 * SECOND + 372539827 * NANOSECOND,
+            },
         ];
 
         for test in tests {
@@ -424,22 +536,15 @@ mod tests {
         let input = "12µs"; // U+00B5
         let d = parse_duration(input).unwrap();
 
-
         let input = "12μs"; // U+03BC
         let d = parse_duration(input).unwrap();
-    }
-
-    #[test]
-    fn test_second_with_mill() {
-        let d = parse_duration("5.6s").unwrap();
-        println!("{}", d)
     }
 
     #[test]
     fn test_leading_fraction() {
         let (f, scale, r) = leading_fraction("6s".as_bytes());
         assert_eq!(6, f);
-        assert_eq!(10.0, scale);
+        assert_eq!(10.0 as f64, scale);
         assert_eq!(r, "s".as_bytes());
     }
 

@@ -1,0 +1,96 @@
+name: Test
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+env:
+  CI: true
+  PROFILE: debug
+  # RUSTFLAGS: "-D warnings"
+  VERBOSE: true
+  RUST_BACKTRACE: full
+
+jobs:
+  cancel-previous:
+    name: Cancel redundant jobs
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true
+
+  changes:
+    name: Changes
+    runs-on: ubuntu-20.04
+    # Set job outputs to values from filter step
+    outputs:
+      source: ${{ steps.filter.outputs.source }}
+      dependencies: ${{ steps.filter.outputs.dependencies }}
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            source:
+              - ".github/workflows/test.yml"
+              - ".cargo/**"
+              - "lib/**"
+              - "src/**"
+              - "tests/**"
+              - "build.rs"
+              - "Cargo.toml"
+              - "Cargo.lock"
+              - "Makefile"
+              - "rust-toolchain"
+              - ".cargo/**"
+              - "scripts/**"
+              - "ci/**"
+
+  cross:
+    name: Cross - ${{ matrix.target }}
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: ${{ needs.changes.outputs.source == 'true' }}
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        name: Cache Cargo registry + index
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - run: make build_${{ matrix.target }}
+
+  test:
+    name: Cargo test
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: ${{ needs.changes.outputs.source == 'true' }}
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        name: Cache Cargo registry + index
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - run: cargo test --workspace --no-fail-fast

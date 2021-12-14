@@ -1,36 +1,37 @@
 mod global_status;
 mod global_variables;
-mod slave_status;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
-#[cfg(test)]
-mod test_utils;
+#[cfg(all(test, feature = "integration-tests-mysql"))]
+mod integration_tests;
+mod slave_status;
 
 use chrono::Utc;
+use event::{tags, Event, Metric};
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
+use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySqlPool};
-use snafu::{ResultExt, Snafu};
-use event::{Event, Metric, tags};
 
+use crate::config::{
+    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
+    ticker_from_duration, DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+};
 use crate::sources::Source;
 use crate::tls::TlsConfig;
-use crate::config::{
-    GenerateConfig, SourceDescription, default_false, default_true,
-    SourceConfig, SourceContext, DataType, ticker_from_duration, default_interval,
-    deserialize_duration, serialize_duration,
-};
-
 
 const VERSION_QUERY: &str = "SELECT @@version";
 
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
-    QueryFailed { source: sqlx::Error, query: &'static str },
+    QueryFailed {
+        source: sqlx::Error,
+        query: &'static str,
+    },
     #[snafu(display("get server version failed, err: {}", source))]
     GetServerVersionFailed { source: sqlx::Error },
     #[snafu(display("parse mysql version failed, version: {}", version))]
@@ -87,7 +88,10 @@ struct MysqldConfig {
     ssl: Option<TlsConfig>,
 
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 }
 
@@ -131,26 +135,25 @@ impl MysqldConfig {
 
 impl GenerateConfig for MysqldConfig {
     fn generate_config() -> Value {
-        serde_yaml::to_value(
-            Self {
-                global_status: default_true(),
-                global_variables: default_true(),
-                slave_status: default_true(),
-                auto_increment_columns: default_false(),
-                binlog_size: default_false(),
-                info_schema: InfoSchemaConfig {
-                    innodb_cmp: default_true(),
-                    innodb_cmpmem: default_true(),
-                    query_response_time: default_true(),
-                },
-                host: default_host(),
-                port: default_port(),
-                username: Some("foo".to_string()),
-                password: Some("some_password".to_string()),
-                ssl: None,
-                interval: default_interval(),
-            }
-        ).unwrap()
+        serde_yaml::to_value(Self {
+            global_status: default_true(),
+            global_variables: default_true(),
+            slave_status: default_true(),
+            auto_increment_columns: default_false(),
+            binlog_size: default_false(),
+            info_schema: InfoSchemaConfig {
+                innodb_cmp: default_true(),
+                innodb_cmpmem: default_true(),
+                query_response_time: default_true(),
+            },
+            host: default_host(),
+            port: default_port(),
+            username: Some("foo".to_string()),
+            password: Some("some_password".to_string()),
+            ssl: None,
+            interval: default_interval(),
+        })
+        .unwrap()
     }
 }
 
@@ -162,7 +165,8 @@ inventory::submit! {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).unwrap()
+        let mut ticker = ticker_from_duration(self.interval)
+            .unwrap()
             .take_until(ctx.shutdown);
         let options = self.connect_options();
         let mut output = ctx.out;
@@ -182,16 +186,21 @@ impl SourceConfig for MysqldConfig {
                             %err
                         );
 
-                        output.send(Metric::gauge_with_tags(
-                            "mysql_up",
-                            "Whether the MySQL server is up.",
-                            0,
-                            tags!(
-                                 "instance" => instance
-                             ),
-                        ).into()).await;
+                        output
+                            .send(
+                                Metric::gauge_with_tags(
+                                    "mysql_up",
+                                    "Whether the MySQL server is up.",
+                                    0,
+                                    tags!(
+                                        "instance" => instance
+                                    ),
+                                )
+                                .into(),
+                            )
+                            .await;
 
-                        continue
+                        continue;
                     }
                 };
 
@@ -199,16 +208,14 @@ impl SourceConfig for MysqldConfig {
 
                 if version >= 5.1 {
                     let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        global_status::gather(&p).await
-                    }));
+                    tasks.push(tokio::spawn(async move { global_status::gather(&p).await }));
                 }
 
                 if version >= 5.1 {
                     let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        global_variables::gather(&p).await
-                    }));
+                    tasks.push(tokio::spawn(
+                        async move { global_variables::gather(&p).await },
+                    ));
                 }
 
                 if version >= 5.5 {
@@ -234,9 +241,7 @@ impl SourceConfig for MysqldConfig {
 
                 if version >= 5.1 {
                     let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        slave_status::gather(&p).await
-                    }));
+                    tasks.push(tokio::spawn(async move { slave_status::gather(&p).await }));
                 }
 
                 // When `try_join_all` works with `JoinHandle`, the behavior does not match
@@ -248,29 +253,27 @@ impl SourceConfig for MysqldConfig {
                             %err
                         );
 
-                        vec![
-                            Metric::gauge_with_tags(
-                                "mysql_up",
-                                "Whether the MySQL server is up.",
-                                0,
-                                tags!(
-                                    "instance" => instance
-                                ),
-                            )
-                        ]
+                        vec![Metric::gauge_with_tags(
+                            "mysql_up",
+                            "Whether the MySQL server is up.",
+                            0,
+                            tags!(
+                                "instance" => instance
+                            ),
+                        )]
                     }
                     Ok(results) => {
-                        let merged = results.iter()
-                            .fold(Ok(vec![]), |acc, part| {
-                                match (acc, part) {
+                        let merged =
+                            results
+                                .iter()
+                                .fold(Ok(vec![]), |acc, part| match (acc, part) {
                                     (Ok(mut acc), Ok(part)) => {
                                         acc.extend_from_slice(part);
                                         Ok(acc)
                                     }
                                     (Ok(_), Err(err)) => Err(err),
                                     (Err(err), _) => Err(err),
-                                }
-                            });
+                                });
 
                         match merged {
                             Ok(mut metrics) => {
@@ -291,16 +294,14 @@ impl SourceConfig for MysqldConfig {
                                     %err
                                 );
 
-                                vec![
-                                    Metric::gauge_with_tags(
-                                        "mysql_up",
-                                        "Whether the MySQL server is up.",
-                                        0,
-                                        tags!(
-                                            "instance" => instance
-                                        ),
-                                    )
-                                ]
+                                vec![Metric::gauge_with_tags(
+                                    "mysql_up",
+                                    "Whether the MySQL server is up.",
+                                    0,
+                                    tags!(
+                                        "instance" => instance
+                                    ),
+                                )]
                             }
                         }
                     }
@@ -334,27 +335,24 @@ impl SourceConfig for MysqldConfig {
 
 pub fn valid_name(s: &str) -> String {
     s.chars()
-        .map(|x| {
-            if x.is_alphanumeric() {
-                x
-            } else {
-                '_'
-            }
-        })
+        .map(|x| if x.is_alphanumeric() { x } else { '_' })
         .collect::<String>()
         .to_lowercase()
 }
 
-async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
+pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
         .await
-        .context(QueryFailed { query: VERSION_QUERY })?;
+        .context(QueryFailed {
+            query: VERSION_QUERY,
+        })?;
 
-    let nums = version.split('.')
-        .collect::<Vec<_>>();
+    let nums = version.split('.').collect::<Vec<_>>();
     if nums.len() < 2 {
-        return Err(Error::ParseMysqlVersionFailed { version: version.clone()});
+        return Err(Error::ParseMysqlVersionFailed {
+            version: version.clone(),
+        });
     }
 
     let version = match (nums[0].parse::<f64>(), nums[1].parse::<f64>()) {
@@ -362,12 +360,12 @@ async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
             loop {
                 minor /= 10.0;
                 if minor < 1.0 {
-                    break
+                    break;
                 }
             }
 
             major + minor
-        },
+        }
         _ => {
             // If we can't match/parse the version, set it some big value that matches all versions.
             1000.0
@@ -375,21 +373,4 @@ async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     };
 
     Ok(version)
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::sources::mysqld::test_utils::setup_and_run;
-    use super::*;
-
-    #[tokio::test]
-    async fn test_parse_version() {
-        async fn test(pool: MySqlPool) {
-            let version = get_mysql_version(&pool).await.unwrap();
-
-            assert_eq!(version, 5.7)
-        }
-
-        setup_and_run(test).await;
-    }
 }

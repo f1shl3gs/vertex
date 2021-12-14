@@ -1,16 +1,18 @@
+use futures_util::FutureExt;
 use std::collections::HashMap;
 
+use event::encoding::{EncodingConfig, StandardEncodings};
 use rdkafka::ClientConfig;
 use serde::{Deserialize, Serialize};
-use event::encoding::{EncodingConfig, StandardEncodings};
 
 use crate::batch::{BatchConfig, NoDefaultBatchSettings};
 use crate::common::kafka::{KafkaAuthConfig, KafkaCompression};
-use crate::sinks::Sink;
 use crate::config::{
-    DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext,
-    deserialize_duration, serialize_duration
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, HealthCheck, SinkConfig,
+    SinkContext,
 };
+use crate::sinks::kafka::sink::health_check;
+use crate::sinks::Sink;
 
 pub const QUEUE_MIN_MESSAGES: u64 = 100000;
 
@@ -29,10 +31,16 @@ pub struct KafkaSinkConfig {
 
     pub auth: KafkaAuthConfig,
     #[serde(default = "default_socket_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     pub socket_timeout: chrono::Duration,
     #[serde(default = "default_message_timeout")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     pub message_timeout: chrono::Duration,
     #[serde(default)]
     pub librdkafka_options: HashMap<String, String>,
@@ -63,8 +71,14 @@ impl KafkaSinkConfig {
         config
             .set("bootstrap.servers", &self.bootstrap_servers)
             .set("compression.codec", &to_string(self.compression))
-            .set("socket.timeout.ms", &self.socket_timeout.num_milliseconds().to_string())
-            .set("message.timeout.ms", &self.message_timeout.num_milliseconds().to_string())
+            .set(
+                "socket.timeout.ms",
+                &self.socket_timeout.num_milliseconds().to_string(),
+            )
+            .set(
+                "message.timeout.ms",
+                &self.message_timeout.num_milliseconds().to_string(),
+            )
             .set("statistics.inerval.ms", "1000")
             .set("queue.min.messages", QUEUE_MIN_MESSAGES.to_string());
 
@@ -105,8 +119,10 @@ impl KafkaSinkConfig {
                     return Err(format!(
                         "Batching setting `batch.max_events` sets `librdkafka_options.{}={}`.\
                         The config already sets this as `librdkafka_options.batch.num.messages={}`.\
-                        Please delete one.", key, value, val
-                    ).into());
+                        Please delete one.",
+                        key, value, val
+                    )
+                    .into());
                 }
 
                 debug!(
@@ -129,8 +145,10 @@ impl KafkaSinkConfig {
                     return Err(format!(
                         "Batching setting `batch.max_bytes` sets `librdkafka_options.{}={}`.\
                         The config already sets this as `librdkafka_options.batch.size={}`.\
-                        Please delete one", key, value, val
-                    ).into());
+                        Please delete one",
+                        key, value, val
+                    )
+                    .into());
                 }
 
                 debug!(
@@ -158,8 +176,7 @@ impl KafkaSinkConfig {
 }
 
 fn to_string(value: impl serde::Serialize) -> String {
-    let value = serde_json::to_value(value)
-        .unwrap();
+    let value = serde_json::to_value(value).unwrap();
     value.as_str().unwrap().into()
 }
 
@@ -177,7 +194,8 @@ impl GenerateConfig for KafkaSinkConfig {
             message_timeout: default_message_timeout(),
             librdkafka_options: Default::default(),
             headers_field: None,
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -185,7 +203,9 @@ impl GenerateConfig for KafkaSinkConfig {
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
     async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        todo!()
+        let sink = super::sink::KafkaSink::new(self.clone(), ctx.acker())?;
+        let hc = health_check(self.clone()).boxed();
+        Ok((Sink::Stream(Box::new(sink)), hc))
     }
 
     fn input_type(&self) -> DataType {
@@ -197,11 +217,10 @@ impl SinkConfig for KafkaSinkConfig {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use crate::config::test_generate_config;
     use super::*;
+    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {

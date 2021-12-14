@@ -1,9 +1,9 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use metrics::{GaugeValue, Key, Recorder, Unit};
-use metrics_util::{MetricKind, MetricKindMask, Tracked, Recency};
 use event::{Bucket, Metric, MetricValue};
+use metrics::{GaugeValue, Key, Recorder, Unit};
+use metrics_util::{MetricKind, MetricKindMask, Recency, Tracked};
 use quanta::Clock;
 
 use super::handle::Handle;
@@ -34,7 +34,7 @@ impl InternalRecorder {
     }
 
     /// Take a snapshot of all gathered metrics and expose them as metric
-    pub fn capture_metrics(&self) -> impl Iterator<Item=Metric> {
+    pub fn capture_metrics(&self) -> impl Iterator<Item = Metric> {
         let handlers = self.registry.get_handles();
         let mut metrics = Vec::with_capacity(handlers.len());
 
@@ -55,7 +55,8 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
         Handle::Counter(counter) => MetricValue::Sum(counter.count() as f64),
         Handle::Gauge(gauge) => MetricValue::Gauge(gauge.gauge()),
         Handle::Histogram(histogram) => {
-            let buckets: Vec<Bucket> = histogram.buckets()
+            let buckets: Vec<Bucket> = histogram
+                .buckets()
                 .map(|(upper, count)| Bucket { upper, count })
                 .collect();
 
@@ -67,7 +68,8 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
         }
     };
 
-    let tags = key.labels()
+    let tags = key
+        .labels()
         .map(|label| (String::from(label.key()), String::from(label.value())))
         .collect::<BTreeMap<String, String>>();
 
@@ -76,35 +78,41 @@ fn metric_from_kv(key: &metrics::Key, handle: &Handle) -> Metric {
 
 impl Recorder for InternalRecorder {
     fn register_counter(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.registry.op(MetricKind::Counter, key, |_| {}, Handle::counter)
+        self.registry
+            .op(MetricKind::Counter, key, |_| {}, Handle::counter)
     }
 
     fn register_gauge(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.registry.op(MetricKind::Gauge, key, |_| {}, Handle::gauge)
+        self.registry
+            .op(MetricKind::Gauge, key, |_| {}, Handle::gauge)
     }
 
-    fn register_histogram(&self, key: &Key, _unit: Option<Unit>, _description: Option<&'static str>) {
-        self.registry.op(MetricKind::Histogram, key, |_| {}, Handle::histogram)
+    fn register_histogram(
+        &self,
+        key: &Key,
+        _unit: Option<Unit>,
+        _description: Option<&'static str>,
+    ) {
+        self.registry
+            .op(MetricKind::Histogram, key, |_| {}, Handle::histogram)
     }
 
     fn increment_counter(&self, key: &Key, value: u64) {
-        self.registry
-            .op(
-                MetricKind::Counter,
-                key,
-                |h| h.increment_counter(value),
-                Handle::counter,
-            );
+        self.registry.op(
+            MetricKind::Counter,
+            key,
+            |h| h.increment_counter(value),
+            Handle::counter,
+        );
     }
 
     fn update_gauge(&self, key: &Key, value: GaugeValue) {
-        self.registry
-            .op(
-                MetricKind::Gauge,
-                key,
-                |handle| handle.update_gauge(value),
-                Handle::gauge,
-            );
+        self.registry.op(
+            MetricKind::Gauge,
+            key,
+            |handle| handle.update_gauge(value),
+            Handle::gauge,
+        );
     }
 
     fn record_histogram(&self, key: &Key, value: f64) {

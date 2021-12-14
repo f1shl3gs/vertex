@@ -1,5 +1,7 @@
+use criterion::{
+    criterion_group, criterion_main, measurement::WallTime, BenchmarkGroup, Criterion, Throughput,
+};
 use std::time::Duration;
-use criterion::{BenchmarkGroup, Criterion, criterion_group, criterion_main, measurement::WallTime, Throughput};
 
 pub fn parse_haproxy_csv(c: &mut Criterion) {
     let input = include_str!("../tests/fixtures/haproxy/stats.csv");

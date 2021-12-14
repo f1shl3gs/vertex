@@ -9,7 +9,7 @@ use tokio::net::TcpStream;
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TcpKeepaliveConfig {
-    pub time_secs: Option<u64>
+    pub time_secs: Option<u64>,
 }
 
 // This function will be obsolete after tokio/mio internally use `socket2` and expose the

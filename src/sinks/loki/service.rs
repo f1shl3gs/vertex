@@ -1,19 +1,18 @@
 use std::task::{Context, Poll};
 
-use futures_util::future::BoxFuture;
-use http::{StatusCode, Uri};
-use tower::Service;
-use tracing::Instrument;
+use crate::config::UriSerde;
 use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
+use futures_util::future::BoxFuture;
+use http::StatusCode;
 use internal::EventsSent;
 use snafu::Snafu;
-use crate::config::UriSerde;
+use tower::Service;
+use tracing::Instrument;
 
 use crate::http::{Auth, HttpClient};
 use crate::sinks::util::Compression;
 use crate::stream::DriverResponse;
-
 
 #[derive(Debug, Snafu)]
 pub enum LokiError {
@@ -71,10 +70,13 @@ pub struct LokiService {
 
 impl LokiService {
     pub fn new(client: HttpClient, endpoint: UriSerde, auth: Option<Auth>) -> crate::Result<Self> {
-        let endpoint = endpoint.append_path("loki/api/v1/push")?
-            .with_auth(auth);
+        let endpoint = endpoint.append_path("loki/api/v1/push")?.with_auth(auth);
 
-        Ok(Self { client, endpoint, compression: Compression::gzip_default() })
+        Ok(Self {
+            client,
+            endpoint,
+            compression: Compression::gzip_default(),
+        })
     }
 }
 
@@ -88,8 +90,8 @@ impl Service<LokiRequest> for LokiService {
     }
 
     fn call(&mut self, request: LokiRequest) -> Self::Future {
-        let mut builder = http::Request::post(&self.endpoint.uri)
-            .header("Content-Type", "application/json");
+        let mut builder =
+            http::Request::post(&self.endpoint.uri).header("Content-Type", "application/json");
 
         if let Some(ce) = self.compression.content_encoding() {
             builder = builder.header(http::header::CONTENT_ENCODING, ce);
@@ -125,7 +127,7 @@ impl Service<LokiRequest> for LokiService {
                     }
                 }
 
-                Err(err) => Err(LokiError::HttpError { source: err })
+                Err(err) => Err(LokiError::HttpError { source: err }),
             }
         })
     }

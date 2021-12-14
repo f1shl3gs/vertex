@@ -1,13 +1,10 @@
 /// Exposes various statistics from /proc/stat. This includes boot time, forks and interrupts.
-
 use event::Metric;
 
 use super::{read_to_string, Error, ErrorContext};
 
-
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat = read_stat(proc_path).await
-        .context("read stat failed")?;
+    let stat = read_stat(proc_path).await.context("read stat failed")?;
 
     Ok(vec![
         Metric::sum(
@@ -28,17 +25,17 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "node_boot_time_seconds",
             "Node boot time, in unixtime.",
-            stat.btime as f64
+            stat.btime as f64,
         ),
         Metric::gauge(
             "node_procs_running",
             "Number of processes in runnable state.",
-            stat.procs_running as f64
+            stat.procs_running as f64,
         ),
         Metric::gauge(
             "node_procs_blocked",
             "Number of processes blocked waiting for I/O to complete.",
-            stat.procs_blocked as f64
+            stat.procs_blocked as f64,
         ),
     ])
 }
@@ -60,23 +57,18 @@ async fn read_stat(proc_path: &str) -> Result<Stat, Error> {
     let mut stat = Stat::default();
     for line in content.lines() {
         if line.starts_with("ctxt ") {
-            stat.ctxt = line.strip_prefix("ctxt ")
-                .unwrap()
-                .parse()
-                .unwrap_or(0u64);
+            stat.ctxt = line.strip_prefix("ctxt ").unwrap().parse().unwrap_or(0u64);
             continue;
         }
 
         if line.starts_with("btime ") {
-            stat.btime = line.strip_prefix("btime ")
-                .unwrap()
-                .parse()
-                .unwrap_or(0);
+            stat.btime = line.strip_prefix("btime ").unwrap().parse().unwrap_or(0);
             continue;
         }
 
         if line.starts_with("processes ") {
-            stat.forks = line.strip_prefix("processes ")
+            stat.forks = line
+                .strip_prefix("processes ")
                 .unwrap()
                 .parse()
                 .unwrap_or(0);
@@ -84,7 +76,8 @@ async fn read_stat(proc_path: &str) -> Result<Stat, Error> {
         }
 
         if line.starts_with("procs_running ") {
-            stat.procs_running = line.strip_prefix("procs_running ")
+            stat.procs_running = line
+                .strip_prefix("procs_running ")
                 .unwrap()
                 .parse()
                 .unwrap_or(0);
@@ -92,7 +85,8 @@ async fn read_stat(proc_path: &str) -> Result<Stat, Error> {
         }
 
         if line.starts_with("procs_blocked ") {
-            stat.procs_blocked = line.strip_prefix("procs_blocked ")
+            stat.procs_blocked = line
+                .strip_prefix("procs_blocked ")
                 .unwrap()
                 .parse()
                 .unwrap_or(0);

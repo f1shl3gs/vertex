@@ -1,10 +1,10 @@
-use serde::{Deserialize, Serialize};
 use crate::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BulkConfig {
     action: Option<String>,
-    index: Option<String>
+    index: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
@@ -31,6 +31,5 @@ pub struct ElasticsearchConfig {
     pub mode: ElasticsearchMode,
     // #[serde(default)]
     // pub compression: Compression,
-
-    pub batch: BatchConfig<RealtimeSizeBasedDefaultBatchSettings>
+    pub batch: BatchConfig<RealtimeSizeBasedDefaultBatchSettings>,
 }

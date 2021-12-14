@@ -28,7 +28,6 @@ use crate::{
     tls::{tls_connector_builder, MaybeTlsSettings, TlsError},
 };
 
-
 #[derive(Debug, Snafu)]
 #[snafu(visibility = "pub(crate)")]
 pub enum HttpError {
@@ -52,10 +51,10 @@ pub struct HttpClient<B = Body> {
 }
 
 impl<B> HttpClient<B>
-    where
-        B: fmt::Debug + HttpBody + Send + 'static,
-        B::Data: Send,
-        B::Error: Into<crate::Error>,
+where
+    B: fmt::Debug + HttpBody + Send + 'static,
+    B::Data: Send,
+    B::Error: Into<crate::Error>,
 {
     pub fn new(
         tls_settings: impl Into<MaybeTlsSettings>,
@@ -142,7 +141,7 @@ impl<B> HttpClient<B>
             });
             Ok(response)
         }
-            .instrument(span.clone());
+        .instrument(span.clone());
 
         Box::pin(fut)
     }
@@ -165,10 +164,10 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
 }
 
 impl<B> Service<Request<B>> for HttpClient<B>
-    where
-        B: fmt::Debug + HttpBody + Send + 'static,
-        B::Data: Send,
-        B::Error: Into<crate::Error> + Send,
+where
+    B: fmt::Debug + HttpBody + Send + 'static,
+    B::Data: Send,
+    B::Error: Into<crate::Error> + Send,
 {
     type Response = http::Response<Body>;
     type Error = HttpError;

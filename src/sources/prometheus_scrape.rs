@@ -1,22 +1,21 @@
 use chrono::{DateTime, TimeZone, Utc};
+use event::{Bucket, Event, Metric, Quantile};
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use prometheus::{GroupKind, MetricGroup};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::ResultExt;
-use event::{Bucket, Event, Metric, Quantile};
-use prometheus::{MetricGroup, GroupKind};
 
+use crate::config::{
+    default_false, default_interval, deserialize_duration, serialize_duration,
+    ticker_from_duration, DataType, GenerateConfig, ProxyConfig, SourceConfig, SourceContext,
+    SourceDescription,
+};
 use crate::http::{Auth, HttpClient};
-use crate::tls::{TlsOptions, TlsSettings};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
-use crate::config::{
-    serialize_duration, deserialize_duration, default_interval, default_false,
-    SourceConfig, SourceContext, DataType, ticker_from_duration,
-    ProxyConfig, GenerateConfig, SourceDescription,
-};
-
+use crate::tls::{TlsOptions, TlsSettings};
 
 // pulled up, and split over multiple lines, because the long lines trip up rustfmt such that it
 // gave up trying to format, but reported no error
@@ -30,7 +29,10 @@ static NOT_FOUND_NO_PATH: &str = "No path is set on the endpoint and we got a 40
 struct PrometheusScrapeConfig {
     endpoints: Vec<String>,
     #[serde(default = "default_interval")]
-    #[serde(serialize_with = "serialize_duration", deserialize_with = "deserialize_duration")]
+    #[serde(
+        serialize_with = "serialize_duration",
+        deserialize_with = "deserialize_duration"
+    )]
     interval: chrono::Duration,
     #[serde(default = "default_false")]
     honor_labels: bool,
@@ -49,7 +51,8 @@ impl GenerateConfig for PrometheusScrapeConfig {
             honor_labels: false,
             tls: None,
             auth: None,
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -61,9 +64,13 @@ inventory::submit! {
 #[typetag::serde(name = "prometheus_scrape")]
 impl SourceConfig for PrometheusScrapeConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let urls = self.endpoints
+        let urls = self
+            .endpoints
             .iter()
-            .map(|s| s.parse::<http::Uri>().context(crate::sources::UriParseError))
+            .map(|s| {
+                s.parse::<http::Uri>()
+                    .context(crate::sources::UriParseError)
+            })
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
         let tls = TlsSettings::from_options(&self.tls)?;
         Ok(scrape(
@@ -109,7 +116,8 @@ fn scrape(
     let ticker = ticker_from_duration(interval).unwrap();
 
     Box::pin(
-        ticker.take_until(shutdown)
+        ticker
+            .take_until(shutdown)
             .map(move |_| futures::stream::iter(urls.clone()))
             .flatten()
             .map(move |url| {
@@ -120,15 +128,15 @@ fn scrape(
                         url.port_u16().unwrap_or_else(|| match url.scheme() {
                             Some(scheme) if scheme == &http::uri::Scheme::HTTP => 80,
                             Some(scheme) if scheme == &http::uri::Scheme::HTTPS => 443,
-                            _ => 0
+                            _ => 0,
                         })
                     );
 
                     instance
                 });
 
-                let client = HttpClient::new(tls.clone(), &proxy)
-                    .expect("Building HTTP client failed");
+                let client =
+                    HttpClient::new(tls.clone(), &proxy).expect("Building HTTP client failed");
                 let mut req = http::Request::get(&url)
                     .body(hyper::body::Body::empty())
                     .expect("error creating request");
@@ -136,7 +144,8 @@ fn scrape(
                     auth.apply(&mut req);
                 }
 
-                client.send(req)
+                client
+                    .send(req)
                     .map_err(crate::Error::from)
                     .and_then(|resp| async move {
                         let (header, body) = resp.into_parts();
@@ -192,7 +201,9 @@ fn scrape(
                             }
 
                             Ok((header, _)) => {
-                                if header.status == hyper::StatusCode::NOT_FOUND && url.path() == "/" {
+                                if header.status == hyper::StatusCode::NOT_FOUND
+                                    && url.path() == "/"
+                                {
                                     warn!(
                                         message = NOT_FOUND_NO_PATH,
                                         endpoint = %url
@@ -217,7 +228,7 @@ fn scrape(
             })
             .flatten()
             .forward(output)
-            .inspect(|_| info!("Finished sending"))
+            .inspect(|_| info!("Finished sending")),
     )
 }
 
@@ -230,11 +241,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
         match group.metrics {
             GroupKind::Counter(map) => {
                 for (key, metric) in map {
-                    let counter = Metric::sum(
-                        name,
-                        "",
-                        metric.value,
-                    )
+                    let counter = Metric::sum(name, "", metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
                         .with_tags(key.labels);
 
@@ -243,11 +250,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
             }
             GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
                 for (key, metric) in metrics {
-                    let gauge = Metric::gauge(
-                        name,
-                        "",
-                        metric.value,
-                    )
+                    let gauge = Metric::gauge(name, "", metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
                         .with_tags(key.labels);
 
@@ -261,10 +264,16 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                         "",
                         metric.count,
                         metric.sum,
-                        metric.quantiles.iter()
-                            .map(|q| Quantile { upper: q.quantile, value: q.value })
+                        metric
+                            .quantiles
+                            .iter()
+                            .map(|q| Quantile {
+                                upper: q.quantile,
+                                value: q.value,
+                            })
                             .collect::<Vec<_>>(),
-                    ).with_timestamp(utc_timestamp(key.timestamp, start));
+                    )
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
 
                     events.push(m.into());
                 }
@@ -276,11 +285,16 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                         "",
                         metric.count,
                         metric.sum,
-                        metric.buckets
+                        metric
+                            .buckets
                             .iter()
-                            .map(|b| Bucket { upper: b.bucket, count: b.count })
+                            .map(|b| Bucket {
+                                upper: b.bucket,
+                                count: b.count,
+                            })
                             .collect::<Vec<_>>(),
-                    ).with_timestamp(utc_timestamp(key.timestamp, start));
+                    )
+                    .with_timestamp(utc_timestamp(key.timestamp, start));
 
                     events.push(m.into());
                 }
@@ -294,18 +308,24 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
 fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
     match timestamp {
         None => Some(default),
-        Some(timestamp) => {
-            Utc.timestamp_opt(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
-                .latest()
-        }
+        Some(timestamp) => Utc
+            .timestamp_opt(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
+            .latest(),
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::config::test_generate_config;
+    use crate::sources::prometheus_scrape::PrometheusScrapeConfig;
+
+    #[test]
+    fn generate_config() {
+        test_generate_config::<PrometheusScrapeConfig>();
+    }
 
     #[tokio::test]
+    #[ignore]
     async fn scrape_honor_labels() {
         todo!()
     }

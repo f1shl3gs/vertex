@@ -1,22 +1,21 @@
-mod stat;
 mod inotify;
+mod stat;
 #[cfg(test)]
 mod tests;
 
+use std::fs;
 use std::io::{self, BufRead, BufReader, Seek};
 use std::os::unix::fs::MetadataExt;
 use std::path::PathBuf;
-use std::time::{Instant};
-use std::fs;
+use std::time::Instant;
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
-use tracing::debug;
 use flate2::bufread::MultiGzDecoder;
+use tracing::debug;
 
-use crate::{Position, ReadFrom};
 use crate::buffer::read_until_with_max_size;
-
+use crate::{Position, ReadFrom};
 
 /// The `Watcher` struct defines the polling based state machine which reads from a file
 /// path, transparently updating the underlying file descriptor when the file has been rolled
@@ -40,7 +39,6 @@ pub struct Watcher {
     buf: BytesMut,
 }
 
-
 impl Watcher {
     /// Create a new `Watcher`
     ///
@@ -62,7 +60,7 @@ impl Watcher {
 
         let too_old = if let (Some(ignore_before), Ok(modified_time)) = (
             ignore_before,
-            metadata.modified().map(DateTime::<Utc>::from)
+            metadata.modified().map(DateTime::<Utc>::from),
         ) {
             modified_time < ignore_before
         } else {
@@ -73,12 +71,9 @@ impl Watcher {
 
         // Determine the actual position at which we should start reading
         let (reader, position): (Box<dyn BufRead>, Position) = match (gzipped, too_old, read_from) {
-            (true, true, _) => {
-                debug!(
-                    message = "Not reading gzipped file older than `ignore_older`"
-                )
-                    (Box::new(null_reader()), 0)
-            }
+            (true, true, _) => debug!(
+                message = "Not reading gzipped file older than `ignore_older`"
+            )(Box::new(null_reader()), 0),
             (true, _, ReadFrom::Checkpoint(position)) => {
                 debug!(
                     message = "Not re-reading gzipped frile with existing stored offset",
@@ -120,7 +115,8 @@ impl Watcher {
             }
         };
 
-        let ts = metadata.modified()
+        let ts = metadata
+            .modified()
             .ok()
             .and_then(|mtime| mtime.elapsed().ok())
             .and_then(|diff| Instant::now().checked_sub(diff))
@@ -168,9 +164,7 @@ impl Watcher {
             &mut self.buf,
             self.max_line_bytes,
         ) {
-            Ok(Some(_)) => {
-                Ok(Some(self.buf.split().freeze()))
-            }
+            Ok(Some(_)) => Ok(Some(self.buf.split().freeze())),
             Ok(None) => {
                 if !self.findable {
                     self.dead = true;

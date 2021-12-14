@@ -7,17 +7,16 @@ use tokio::time::error::Elapsed;
 #[cfg(test)]
 use testify::stats::{TimeHistogram, TimeWeightedSum};
 
-use super::{AdaptiveConcurrencyLimit, MAX_CONCURRENCY};
+use super::events::{
+    AdaptiveConcurrencyAverageRtt, AdaptiveConcurrencyInflight, AdaptiveConcurrencyLimitChanged,
+    AdaptiveConcurrencyObservedRtt,
+};
 use super::semaphore::ShrinkableSemaphore;
 use super::AdaptiveConcurrencySettings;
-use super::events::{
-    AdaptiveConcurrencyObservedRtt, AdaptiveConcurrencyInflight,
-    AdaptiveConcurrencyAverageRtt, AdaptiveConcurrencyLimitChanged,
-};
+use super::MAX_CONCURRENCY;
 use crate::http::HttpError;
+use crate::sinks::util::retries::{RetryAction, RetryLogic};
 use crate::stats::{EwmaVar, Mean, MeanVariance};
-use crate::sinks::util::retries::{RetryLogic, RetryAction};
-
 
 /// Shared class for `tokio::sync::Semaphore` that manages adjusting the
 /// semaphore size and other associated data.
@@ -83,23 +82,18 @@ impl<L> Controller<L> {
         }
     }
 
-    pub fn acquire(&self) -> impl Future<Output=OwnedSemaphorePermit> + Send + 'static {
+    pub fn acquire(&self) -> impl Future<Output = OwnedSemaphorePermit> + Send + 'static {
         Arc::clone(&self.semaphore).acquire()
     }
 
     pub fn start_request(&self) {
-        let mut inner = self.inner
-            .lock()
-            .expect("Controller mutex is poisoned");
+        let mut inner = self.inner.lock().expect("Controller mutex is poisoned");
 
         #[cfg(test)]
-            {
-                let mut stats = self.stats
-                    .lock()
-                    .expect("Stats mutex is poisoned");
-                stats.inflight
-                    .add(inner.inflight, instant_now());
-            }
+        {
+            let mut stats = self.stats.lock().expect("Stats mutex is poisoned");
+            stats.inflight.add(inner.inflight, instant_now());
+        }
 
         inner.inflight += 1;
         if inner.inflight >= inner.current_limit {
@@ -115,15 +109,11 @@ impl<L> Controller<L> {
     /// and if it should be used as a valid RTT measurement.
     fn adjust_to_response_inner(&self, start: Instant, is_back_pressure: bool, use_rtt: bool) {
         let now = instant_now();
-        let mut inner = self.inner
-            .lock()
-            .expect("Controller mutex is poisoned");
+        let mut inner = self.inner.lock().expect("Controller mutex is poisoned");
 
         let rtt = now.saturating_duration_since(start);
         if use_rtt {
-            emit!(&AdaptiveConcurrencyObservedRtt {
-                rtt
-            });
+            emit!(&AdaptiveConcurrencyObservedRtt { rtt });
         }
 
         let rtt = rtt.as_secs_f64();
@@ -132,18 +122,16 @@ impl<L> Controller<L> {
         }
 
         #[cfg(test)]
-            let mut stats = self.stats
-            .lock()
-            .expect("Stats mutex is poisoned");
+        let mut stats = self.stats.lock().expect("Stats mutex is poisoned");
 
         #[cfg(test)]
-            {
-                if use_rtt {
-                    stats.observed_rtt.add(rtt, now);
-                }
-
-                stats.inflight.add(inner.inflight, now);
+        {
+            if use_rtt {
+                stats.observed_rtt.add(rtt, now);
             }
+
+            stats.inflight.add(inner.inflight, now);
+        }
 
         inner.inflight -= 1;
         emit!(&AdaptiveConcurrencyInflight {
@@ -161,7 +149,7 @@ impl<L> Controller<L> {
         // due to the high side falling outside of the calculated deviance. Rounding these values
         // forces the differences to zero.
         #[cfg(test)]
-            let current_rtt = current_rtt.map(|c| (c * 1000000.0).round() / 1000000.0);
+        let current_rtt = current_rtt.map(|c| (c * 1000000.0).round() / 1000000.0);
 
         match inner.past_rtt.state() {
             None => {
@@ -178,14 +166,14 @@ impl<L> Controller<L> {
                 }
 
                 #[cfg(test)]
-                    {
-                        if let Some(current_rtt) = current_rtt {
-                            stats.averaged_rtt.add(current_rtt, now);
-                        }
-
-                        stats.concurrency_limit.add(inner.current_limit, now);
-                        drop(stats); // Drop the stats lock a little earlier on this path
+                {
+                    if let Some(current_rtt) = current_rtt {
+                        stats.averaged_rtt.add(current_rtt, now);
                     }
+
+                    stats.concurrency_limit.add(inner.current_limit, now);
+                    drop(stats); // Drop the stats lock a little earlier on this path
+                }
 
                 if let Some(current_rtt) = current_rtt {
                     emit!(&AdaptiveConcurrencyAverageRtt {
@@ -256,18 +244,13 @@ impl<L> Controller<L> {
 }
 
 impl<L> Controller<L>
-    where
-        L: RetryLogic,
+where
+    L: RetryLogic,
 {
-    pub fn adjust_to_response(
-        &self,
-        start: Instant,
-        resp: &Result<L::Response, crate::Error>,
-    ) {
+    pub fn adjust_to_response(&self, start: Instant, resp: &Result<L::Response, crate::Error>) {
         // It would be better to avoid generating the string in Retry(_) just to throw it away
         // here, but it's probably not worth the effort.
-        let response_action = resp.as_ref()
-            .map(|resp| self.logic.should_retry_resp(resp));
+        let response_action = resp.as_ref().map(|resp| self.logic.should_retry_resp(resp));
         let is_back_pressure = match &response_action {
             Ok(action) => matches!(action, RetryAction::Retry(_)),
             Err(err) => {

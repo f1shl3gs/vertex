@@ -62,7 +62,7 @@ fn ask_free_tcp_port(ip: IpAddr) -> Option<Port> {
 
 /// Picks an available port that is available on both TCP and UDP
 /// ```rust
-/// use portpicker::pick_unused_port;
+/// use testify::pick_unused_port;
 /// use std::net::{IpAddr, Ipv4Addr};
 /// let port: u16 = pick_unused_port(IpAddr::V4(Ipv4Addr::LOCALHOST));
 /// ```

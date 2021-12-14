@@ -1,9 +1,8 @@
-/// Exposes ZFS performance statistics
-
-use tokio::io::AsyncBufReadExt;
-use std::collections::BTreeMap;
-use event::{tags, Metric};
 use super::{read_to_string, Error};
+use event::{tags, Metric};
+use std::collections::BTreeMap;
+/// Exposes ZFS performance statistics
+use tokio::io::AsyncBufReadExt;
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
@@ -61,8 +60,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = path.to_str().unwrap();
         let kvs = parse_pool_objset_file(path).await?;
         for (k, v) in kvs {
-            let fields = k.split(".")
-                .collect::<Vec<_>>();
+            let fields = k.split(".").collect::<Vec<_>>();
             let k = fields[0];
             let pool_name = fields[1];
             let dataset = fields[2];
@@ -72,8 +70,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 k,
                 v as f64,
                 tags!(
-                    "zpool" => pool_name.clone(),
-                    "dataset" => dataset.clone()
+                    "zpool" => pool_name,
+                    "dataset" => dataset
                 ),
             ));
         }
@@ -103,7 +101,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         }
     }
 
-
     Ok(metrics)
 }
 
@@ -115,12 +112,14 @@ async fn parse_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Error> {
 
     let mut parse = false;
     while let Some(line) = lines.next_line().await? {
-        let fields = line
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
-        if !parse && fields.len() == 3 && fields[0] == "name" && fields[1] == "type" && fields[2] == "data" {
+        if !parse
+            && fields.len() == 3
+            && fields[0] == "name"
+            && fields[1] == "type"
+            && fields[2] == "data"
+        {
             // start parsing from here.
             parse = true;
             continue;
@@ -145,11 +144,12 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
 
-    let zps = path.split("/")
-        .collect::<Vec<_>>();
+    let zps = path.split("/").collect::<Vec<_>>();
     let length = zps.len();
     if length < 2 {
-        return Err(Error::new_invalid("zpool path did not return at least two elements"));
+        return Err(Error::new_invalid(
+            "zpool path did not return at least two elements",
+        ));
     }
 
     let zpool_file = zps[length - 1];
@@ -157,10 +157,7 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let mut parse = false;
     let mut headers = vec![];
     while let Some(line) = lines.next_line().await? {
-        let fields = line
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let fields = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if !parse && fields.len() >= 12 && fields[0] == "nread" {
             // start parsing from here
@@ -195,12 +192,14 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let mut pool_name = String::new();
     let mut dataset_name = String::new();
     while let Some(line) = lines.next_line().await? {
-        let parts = line
-            .trim()
-            .split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
-        if !parse && parts.len() == 3 && parts[0] == "name" && parts[1] == "type" && parts[2] == "data" {
+        if !parse
+            && parts.len() == 3
+            && parts[0] == "name"
+            && parts[1] == "type"
+            && parts[2] == "data"
+        {
             parse = true;
             continue;
         }
@@ -229,10 +228,10 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
 }
 
 async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Error> {
-    let stats = ["online", "degraded", "faulted", "offline", "removed", "unavail"];
-    let actual_state = read_to_string(path).await?
-        .trim()
-        .to_lowercase();
+    let stats = [
+        "online", "degraded", "faulted", "offline", "removed", "unavail",
+    ];
+    let actual_state = read_to_string(path).await?.trim().to_lowercase();
 
     let mut kvs = BTreeMap::new();
 
@@ -247,11 +246,12 @@ async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Err
 }
 
 fn parse_pool_name(path: &str) -> Result<String, Error> {
-    let elements = path.split("/")
-        .collect::<Vec<_>>();
+    let elements = path.split("/").collect::<Vec<_>>();
     let length = elements.len();
     if length < 2 {
-        return Err(Error::new_invalid("zpool path did not return at least two elements"));
+        return Err(Error::new_invalid(
+            "zpool path did not return at least two elements",
+        ));
     }
 
     let name = elements[length - 2];
@@ -293,7 +293,9 @@ mod tests {
     async fn test_parse_pool_objset_file() {
         let paths = glob("tests/fixtures/proc/spl/kstat/zfs/*/objset-*").unwrap();
         for path in paths.filter_map(Result::ok) {
-            let kvs = parse_pool_objset_file(path.to_str().unwrap()).await.unwrap();
+            let kvs = parse_pool_objset_file(path.to_str().unwrap())
+                .await
+                .unwrap();
 
             assert_ne!(kvs.len(), 0);
             for (k, v) in kvs {
@@ -319,7 +321,6 @@ mod tests {
             let kvs = parse_pool_state_file(path).await.unwrap();
             assert_ne!(kvs.len(), 0);
 
-            println!("{}", pool_name);
             for (state, active) in kvs {
                 if pool_name == "pool1" {
                     if !active && state == "online" {

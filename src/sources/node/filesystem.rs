@@ -1,22 +1,24 @@
-use std::{
-    path::Path,
-    ffi::CString,
-};
-use crate::config::{deserialize_regex, serialize_regex};
 use super::{Error, ErrorContext};
+use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
-use tokio::io::AsyncBufReadExt;
 use serde::{Deserialize, Serialize};
-
+use std::{ffi::CString, path::Path};
+use tokio::io::AsyncBufReadExt;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct FileSystemConfig {
     #[serde(default = "default_mount_points_exclude")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub mount_points_exclude: regex::Regex,
 
     #[serde(default = "default_fs_type_exclude")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub fs_type_exclude: regex::Regex,
 }
 
@@ -42,13 +44,17 @@ fn default_fs_type_exclude() -> regex::Regex {
 impl FileSystemConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = format!("{}/mounts", proc_path);
-        let stats = self.get_stats(path).await
-            .context("read fs stats failed")?;
+        let stats = self.get_stats(path).await.context("read fs stats failed")?;
 
         let mut metrics = Vec::new();
 
         for stat in &stats {
-            let Stat { device, mount_point, fs_type, .. } = stat;
+            let Stat {
+                device,
+                mount_point,
+                fs_type,
+                ..
+            } = stat;
             if stat.device_error == 1 {
                 metrics.push(Metric::gauge_with_tags(
                     "node_filesystem_device_error",
@@ -124,15 +130,14 @@ impl FileSystemConfig {
 
     async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
         let mut stats = Vec::new();
-        let f = tokio::fs::File::open(path).await
+        let f = tokio::fs::File::open(path)
+            .await
             .context("open mounts failed")?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 
         while let Some(line) = lines.next_line().await? {
-            let parts = line
-                .split_ascii_whitespace()
-                .collect::<Vec<_>>();
+            let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
             if parts.len() < 4 {
                 continue;
@@ -153,7 +158,8 @@ impl FileSystemConfig {
                 continue;
             }
 
-            let ro = options.split(',')
+            let ro = options
+                .split(',')
                 .find(|&flag| flag == "ro")
                 .map_or(0u64, |_| 1u64);
 
@@ -204,8 +210,8 @@ impl FileSystemConfig {
 }
 
 async fn statfs(path: &str) -> Result<Usage, std::io::Error> {
-    let path = CString::new(path)
-        .map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
+    let path =
+        CString::new(path).map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
 
     let mut vfs = std::mem::MaybeUninit::<libc::statvfs>::uninit();
     let result = unsafe { libc::statvfs(path.as_ptr(), vfs.as_mut_ptr()) };
@@ -274,9 +280,6 @@ mod tests {
         let path = PathBuf::from("tests/fixtures/proc/mounts");
         let conf = FileSystemConfig::default();
         let stats = conf.get_stats(path).await.unwrap();
-
-        println!("{:?}", stats);
-
         assert_ne!(stats.len(), 0);
     }
 }

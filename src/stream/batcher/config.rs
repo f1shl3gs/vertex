@@ -3,7 +3,6 @@ use std::time::Duration;
 use super::data::BatchData;
 use super::limiter::BatchLimiter;
 
-
 pub struct BatchConfigParts<L, D> {
     pub batch_limiter: L,
     pub batch_data: D,
@@ -44,9 +43,9 @@ pub trait BatchConfig<T> {
 }
 
 impl<T, L, B> BatchConfig<T> for BatchConfigParts<L, B>
-    where
-        L: BatchLimiter<T, B>,
-        B: BatchData<T>,
+where
+    L: BatchLimiter<T, B>,
+    B: BatchData<T>,
 {
     type ItemMetadata = L::ItemMetadata;
     type Batch = B::Batch;

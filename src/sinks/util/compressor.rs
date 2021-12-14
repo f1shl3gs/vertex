@@ -1,5 +1,5 @@
-use std::io::Write;
 use flate2::write::{GzEncoder, ZlibEncoder};
+use std::io::Write;
 
 use super::buffer::Compression;
 
@@ -64,7 +64,7 @@ impl Compressor {
         let buf = Vec::with_capacity(BUFFER_SIZE);
 
         Self {
-            inner: Writer::Zlib(ZlibEncoder::new(buf, flate2::Compression::default()))
+            inner: Writer::Zlib(ZlibEncoder::new(buf, flate2::Compression::default())),
         }
     }
 
@@ -100,10 +100,12 @@ impl Compressor {
     pub fn into_inner(self) -> Vec<u8> {
         match self.inner {
             Writer::Plain(buf) => buf,
-            Writer::Gzip(writer) => writer.finish()
+            Writer::Gzip(writer) => writer
+                .finish()
                 .expect("gzip writer should not fail to finish"),
-            Writer::Zlib(writer) => writer.finish()
-                .expect("zlib writer should not fail to finish")
+            Writer::Zlib(writer) => writer
+                .finish()
+                .expect("zlib writer should not fail to finish"),
         }
     }
 }
@@ -121,7 +123,7 @@ impl Write for Compressor {
 impl From<Compression> for Compressor {
     fn from(compression: Compression) -> Self {
         Compressor {
-            inner: compression.into()
+            inner: compression.into(),
         }
     }
 }

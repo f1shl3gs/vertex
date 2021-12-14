@@ -1,16 +1,19 @@
-use std::path::PathBuf;
 use super::{read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
+use std::path::PathBuf;
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);
     path.push("class/nvme");
 
     let mut metrics = Vec::new();
-    let mut readdir = tokio::fs::read_dir(path).await
+    let mut readdir = tokio::fs::read_dir(path)
+        .await
         .context("read nvme root dir failed")?;
 
-    while let Some(dir) = readdir.next_entry().await
+    while let Some(dir) = readdir
+        .next_entry()
+        .await
         .context("readdir nvme dir entries failed")?
     {
         let infos = read_nvme_device(dir.path()).await?;
@@ -48,12 +51,7 @@ async fn read_nvme_device(root: PathBuf) -> Result<Vec<String>, std::io::Error> 
     path.push("firmware_rev");
     let firmware = read_to_string(path).await?.trim_end().to_string();
 
-    Ok(vec![
-        serial,
-        model,
-        state,
-        firmware,
-    ])
+    Ok(vec![serial, model, state, firmware])
 }
 
 #[cfg(test)]
@@ -65,9 +63,12 @@ mod tests {
         let path = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
         let mut rd = tokio::fs::read_dir(path).await.unwrap();
 
+        let mut count = 0;
         while let Some(dir) = rd.next_entry().await.unwrap() {
-            println!("{:?}", dir);
+            count += 1;
         }
+
+        assert_eq!(count, 4);
     }
 
     #[tokio::test]

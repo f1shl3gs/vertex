@@ -1,9 +1,9 @@
-use std::time::Duration;
 use http::{header, HeaderMap, HeaderValue, Request, Response};
 use hyper::body::HttpBody;
 use hyper::Error;
-use metrics::{counter, histogram};
 use internal::InternalEvent;
+use metrics::{counter, histogram};
+use std::time::Duration;
 
 fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> {
     let mut headers = headers.clone();
@@ -11,7 +11,7 @@ fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> 
         header::AUTHORIZATION,
         header::PROXY_AUTHORIZATION,
         header::COOKIE,
-        header::SET_COOKIE
+        header::SET_COOKIE,
     ] {
         if let Some(value) = headers.get_mut(name) {
             value.set_sensitive(true);
@@ -20,7 +20,6 @@ fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> 
 
     headers
 }
-
 
 /// Newtype placeholder to provide a formatter for the request and response body.
 struct FormatBody<'a, B>(&'a B);
@@ -90,9 +89,7 @@ impl<'a, T: HttpBody> InternalEvent for GotHttpResponse<'a, T> {
             1,
             "status" => self.response.status().as_u16().to_string()
         );
-        histogram!(
-            "http_client_rtt_seconds", self.roundtrip
-        );
+        histogram!("http_client_rtt_seconds", self.roundtrip);
         histogram!(
             "http_client_response_rtt_seconds",
             self.roundtrip,

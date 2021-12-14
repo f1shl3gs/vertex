@@ -1,17 +1,17 @@
 use std::fmt::Debug;
 use std::pin::Pin;
-use std::sync::Arc;
 use std::sync::atomic::AtomicUsize;
+use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::Sink;
 
-use crate::{DecodeBytes, EncodeBytes};
 use crate::usage::BufferUsageData;
+use crate::{DecodeBytes, EncodeBytes};
 
 pub struct Writer<T>
 where
-    T: Send + Sync + Unpin + EncodeBytes<T>  + DecodeBytes<T>,
+    T: Send + Sync + Unpin + EncodeBytes<T> + DecodeBytes<T>,
     <T as EncodeBytes<T>>::Error: Debug,
     <T as DecodeBytes<T>>::Error: Debug,
 {
@@ -32,7 +32,7 @@ where
         Self {
             offset: self.offset.clone(),
             slot: None,
-            usage: self.usage.clone()
+            usage: self.usage.clone(),
         }
     }
 }

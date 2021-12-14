@@ -1,31 +1,25 @@
-/// Collect metrics from /proc/meminfo
-
-use std::{
-    path::PathBuf,
-    collections::HashMap,
-};
-use super::{read_to_string, ErrorContext, Error};
+use super::{read_to_string, Error, ErrorContext};
 use event::Metric;
+/// Collect metrics from /proc/meminfo
+use std::{collections::HashMap, path::PathBuf};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);
-    let infos = get_mem_info(root).await
-        .context("get meminfo failed")?;
+    let infos = get_mem_info(root).await.context("get meminfo failed")?;
 
     let mut metrics = Vec::new();
     for (k, v) in infos {
-
         if k.ends_with("_total") {
-            metrics.push(Metric::gauge(
+            metrics.push(Metric::sum(
                 format!("node_memory_{}", k),
                 format!("Memory information field {}", k),
-                v
+                v,
             ));
         } else {
             metrics.push(Metric::gauge(
                 format!("node_memory_{}", k),
                 format!("Memory information field {}", k),
-                v
+                v,
             ));
         }
     }
@@ -44,10 +38,10 @@ async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Er
     let lines = content.lines();
 
     for line in lines {
-        let parts = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
-        let mut fv = parts[1].parse::<f64>()
+        let mut fv = parts[1]
+            .parse::<f64>()
             .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
 
         let mut key = parts[0]
@@ -66,7 +60,7 @@ async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Er
                     key += "_bytes";
                 }
             }
-            _ => unreachable!()
+            _ => unreachable!(),
         }
 
         infos.insert(key, fv);
@@ -85,7 +79,10 @@ mod tests {
         let infos = get_mem_info(root).await.unwrap();
 
         assert_eq!(infos.get("MemTotal_bytes").unwrap(), &(15666184.0 * 1024.0));
-        assert_eq!(infos.get("DirectMap2M_bytes").unwrap(), &(16039936.0 * 1024.0));
+        assert_eq!(
+            infos.get("DirectMap2M_bytes").unwrap(),
+            &(16039936.0 * 1024.0)
+        );
         assert_eq!(infos.get("HugePages_Total").unwrap(), &0.0);
     }
 }

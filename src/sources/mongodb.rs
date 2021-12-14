@@ -1,20 +1,20 @@
 use serde::{Deserialize, Serialize};
 
-use crate::sources::Source;
-use crate::{
-    config::{
-        default_interval, deserialize_duration, serialize_duration,
-        DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription
-    }
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    SourceConfig, SourceContext, SourceDescription,
 };
-
+use crate::sources::Source;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct MongodbConfig {
     endpoints: Vec<String>,
     #[serde(default = "default_interval")]
-    #[serde(deserialize_with = "deserialize_duration", serialize_with = "serialize_duration")]
+    #[serde(
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
     interval: chrono::Duration,
 }
 
@@ -25,12 +25,10 @@ inventory::submit! {
 impl GenerateConfig for MongodbConfig {
     fn generate_config() -> serde_yaml::Value {
         serde_yaml::to_value(Self {
-            endpoints: vec![
-                "1.1.1.1:1234".into(),
-                "2.2.2.2:1234".into(),
-            ],
+            endpoints: vec!["1.1.1.1:1234".into(), "2.2.2.2:1234".into()],
             interval: default_interval(),
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
@@ -49,4 +47,3 @@ impl SourceConfig for MongodbConfig {
         "mongodb"
     }
 }
-

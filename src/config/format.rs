@@ -1,5 +1,5 @@
+use serde::de;
 use std::path::Path;
-use serde::{de};
 
 /// The format used to represent the configuration data.
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
@@ -30,8 +30,8 @@ pub type FormatHint = Option<Format>;
 /// If the format is unknown - fallback to the default format and attempt
 /// parsing using that.
 pub fn deserialize<T>(content: &str, format: FormatHint) -> Result<T, Vec<String>>
-    where
-        T: de::DeserializeOwned,
+where
+    T: de::DeserializeOwned,
 {
     match format.unwrap_or_default() {
         Format::YAML => serde_yaml::from_str(content).map_err(|e| vec![e.to_string()]),

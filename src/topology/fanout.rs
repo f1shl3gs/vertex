@@ -1,14 +1,11 @@
-use std::{
-    pin::Pin,
-    fmt,
-};
+use std::{fmt, pin::Pin};
 
-use futures::{Sink, stream, channel::mpsc, Stream, StreamExt, future};
+use futures::{channel::mpsc, future, stream, Sink, Stream, StreamExt};
 
 use event::Event;
 use std::task::{Context, Poll};
 
-pub type RouterSink = Box<dyn Sink<Event, Error=()> + 'static + Send>;
+pub type RouterSink = Box<dyn Sink<Event, Error = ()> + 'static + Send>;
 
 pub enum ControlMessage {
     Add(String, RouterSink),
@@ -106,8 +103,8 @@ impl Fanout {
     }
 
     fn poll_sinks<F>(&mut self, cx: &mut Context<'_>, poll: F) -> Poll<Result<(), ()>>
-        where
-            F: Fn(&mut Pin<RouterSink>, &mut Context<'_>) -> Poll<Result<(), ()>>,
+    where
+        F: Fn(&mut Pin<RouterSink>, &mut Context<'_>) -> Poll<Result<(), ()>>,
     {
         self.process_control_messages(cx);
 
@@ -195,16 +192,17 @@ impl Sink<Event> for Fanout {
 mod tests {
     use super::{ControlMessage, Fanout};
     use event::Event;
+    use futures::task::noop_waker_ref;
     use futures::{channel::mpsc, stream, FutureExt, Sink, SinkExt, StreamExt};
     use std::{
         pin::Pin,
         task::{Context, Poll},
     };
     use tokio::time::{sleep, Duration};
-    use futures::task::noop_waker_ref;
 
     async fn collect_ready<S>(mut rx: S) -> Vec<S::Item>
-        where S: futures::Stream + Unpin
+    where
+        S: futures::Stream + Unpin,
     {
         let waker = noop_waker_ref();
         let mut cx = Context::from_waker(waker);

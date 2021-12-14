@@ -1,4 +1,4 @@
-use criterion::{Criterion, criterion_main, criterion_group, Throughput};
+use criterion::{criterion_group, criterion_main, Criterion, Throughput};
 use pprof::criterion::{Output, PProfProfiler};
 
 const INPUT: &str = r##"# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
@@ -1878,7 +1878,6 @@ promhttp_metric_handler_requests_in_flight 1
 promhttp_metric_handler_requests_total{code="200"} 0
 promhttp_metric_handler_requests_total{code="500"} 0
 promhttp_metric_handler_requests_total{code="503"} 0"##;
-
 
 fn bench_parse_text(c: &mut Criterion) {
     let mut group = c.benchmark_group("parse");

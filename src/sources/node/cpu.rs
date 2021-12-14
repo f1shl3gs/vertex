@@ -1,14 +1,12 @@
 /// Collect metrics from `/proc/stat`
-
 use std::path::PathBuf;
 
-use tokio::io::AsyncBufReadExt;
-use serde::{Deserialize, Serialize};
 use event::{tags, Metric};
+use serde::{Deserialize, Serialize};
+use tokio::io::AsyncBufReadExt;
 
 use super::Error;
-use crate::config::{serialize_regex, deserialize_regex, default_false, default_true};
-
+use crate::config::{default_false, default_true, deserialize_regex, serialize_regex};
 
 const USER_HZ: f64 = 100.0;
 
@@ -36,11 +34,17 @@ pub struct CPUConfig {
     pub info: bool,
 
     #[serde(default = "default_flags_include")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub flags_include: regex::Regex,
 
     #[serde(default = "default_bugs_include")]
-    #[serde(deserialize_with = "deserialize_regex", serialize_with = "serialize_regex")]
+    #[serde(
+        deserialize_with = "deserialize_regex",
+        serialize_with = "serialize_regex"
+    )]
     pub bugs_include: regex::Regex,
 }
 
@@ -159,7 +163,7 @@ async fn get_cpu_stat(proc_path: PathBuf) -> Result<Vec<CPUStat>, Error> {
                 8 => stat.steal = v,
                 9 => stat.guest = v,
                 10 => stat.guest_nice = v,
-                _ => unreachable!()
+                _ => unreachable!(),
             }
         }
 

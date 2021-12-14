@@ -1,13 +1,14 @@
-/// Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
-
-use event::Metric;
 use super::{read_to_string, Error, ErrorContext};
+/// Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
+use event::Metric;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(&proc_path).await
+    let stat4 = sockstat4(&proc_path)
+        .await
         .context("read sockstat failed")?;
 
-    let stat6 = sockstat6(&proc_path).await
+    let stat6 = sockstat6(&proc_path)
+        .await
         .context("read sockstat6 failed")?;
 
     let mut metrics = stat4.metrics(false);
@@ -50,68 +51,44 @@ impl NetSockstat {
             metrics.push(Metric::gauge(
                 "node_sockstat_sockets_used",
                 "Number of IPv4 sockets in use.",
-                v
+                v,
             ));
         }
 
         for nsp in &self.protocols {
             let name = &format!("node_sockstat_{}_inuse", nsp.protocol);
             let desc = &format!("Number of {} sockets in stat inuse", nsp.protocol);
-            metrics.push(Metric::gauge(
-                name,
-                desc,
-                nsp.inuse
-            ));
+            metrics.push(Metric::gauge(name, desc, nsp.inuse));
 
             if let Some(v) = nsp.orphan {
                 let name = &format!("node_sockstat_{}_orphan", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat orphan", nsp.protocol);
-                metrics.push(Metric::gauge(
-                    name,
-                    desc,
-                    v
-                ));
+                metrics.push(Metric::gauge(name, desc, v));
             }
 
             if let Some(v) = nsp.tw {
                 let name = &format!("node_sockstat_{}_tw", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat tw", nsp.protocol);
-                metrics.push(Metric::gauge(
-                    name,
-                    desc,
-                    v
-                ));
+                metrics.push(Metric::gauge(name, desc, v));
             }
 
             if let Some(v) = nsp.alloc {
                 let name = &format!("node_sockstat_{}_alloc", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat alloc", nsp.protocol);
-                metrics.push(Metric::gauge(
-                    name,
-                    desc,
-                    v
-                ));
+                metrics.push(Metric::gauge(name, desc, v));
             }
 
             if let Some(v) = nsp.mem {
                 let v = v as f64 * PAGESIZE;
                 let name = &format!("node_sockstat_{}_mem_bytes", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat mem", nsp.protocol);
-                metrics.push(Metric::gauge(
-                    name,
-                    desc,
-                    v
-                ));
+                metrics.push(Metric::gauge(name, desc, v));
             }
 
             if let Some(v) = nsp.memory {
                 let name = &format!("node_sockstat_{}_memory", nsp.protocol);
                 let desc = &format!("Number of {} sockets in stat memory", nsp.protocol);
-                metrics.push(Metric::gauge(
-                    name,
-                    desc,
-                    v as f64
-                ))
+                metrics.push(Metric::gauge(name, desc, v as f64))
             }
         }
 
@@ -139,8 +116,7 @@ fn parse_sockstat(content: &str) -> Result<NetSockstat, Error> {
     let mut stat = NetSockstat::default();
 
     for line in content.lines() {
-        let fields = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
         let size = fields.len();
 
         if size < 3 || size % 2 != 1 {

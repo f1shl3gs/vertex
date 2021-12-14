@@ -1,16 +1,15 @@
 /// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
-
 use std::path::Path;
 
+use super::{read_to_string, Error, ErrorContext};
+use event::{tags, Metric};
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take_while};
 use nom::character::complete::{digit1, multispace0};
 use nom::combinator::{map_res, recognize};
-use nom::IResult;
 use nom::number::complete::double;
+use nom::IResult;
 use regex::Regex;
-use event::{tags, Metric};
-use super::{read_to_string, Error, ErrorContext};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -57,24 +56,25 @@ struct MDStat {
 
 async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
     let content = read_to_string(path).await?;
-    let lines = content.split("\n")
-        .collect::<Vec<_>>();
+    let lines = content.split("\n").collect::<Vec<_>>();
 
     let mut stats = vec![];
     let line_count = lines.len();
     for (i, &line) in lines.iter().enumerate() {
-        if line.is_empty() ||
-            line.starts_with("Personalities") ||
-            line.starts_with("unused") ||
-            line.starts_with(" ")
+        if line.is_empty()
+            || line.starts_with("Personalities")
+            || line.starts_with("unused")
+            || line.starts_with(" ")
         {
             continue;
         }
 
-        let parts = line.split_ascii_whitespace()
-            .collect::<Vec<_>>();
+        let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() < 3 {
-            let msg = format!("not enough fields in mdline(expect at least 3), line: {}", line);
+            let msg = format!(
+                "not enough fields in mdline(expect at least 3), line: {}",
+                line
+            );
             return Err(Error::new_invalid(msg));
         }
 
@@ -89,8 +89,8 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         // failed disks have the suffix(F) & Spare disks have the suffix (S)
         let fail = line.matches("(F)").count() as i64;
         let spare = line.matches("(S)").count() as i64;
-        let (active, total, down, size) = eval_status_line(lines[i], lines[i + 1])
-            .context("parse md device lines failed")?;
+        let (active, total, down, size) =
+            eval_status_line(lines[i], lines[i + 1]).context("parse md device lines failed")?;
 
         let mut sync_line_index = i + 2;
         if lines[i + 2].contains("bitmap") {
@@ -119,13 +119,13 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
             }
 
             // Handle case when resync=PENDING or resync=DELAYED.
-            if lines[sync_line_index].contains("PENDING") ||
-                lines[sync_line_index].contains("DELAYED")
+            if lines[sync_line_index].contains("PENDING")
+                || lines[sync_line_index].contains("DELAYED")
             {
                 synced_blocks = 0;
             } else {
-                let (_, (_pct, _synced_blocks, _finish, _speed)) = recovery_line(lines[sync_line_index])
-                    .map_err(|err| {
+                let (_, (_pct, _synced_blocks, _finish, _speed)) =
+                    recovery_line(lines[sync_line_index]).map_err(|err| {
                         let msg = format!("parse recovery line failed, err: {}", err);
                         Error::new_invalid(msg)
                     })?;
@@ -182,7 +182,8 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
         return None;
     }
 
-    fields.iter()
+    fields
+        .iter()
         .skip(4)
         .map(|s| parse_device_name(s))
         .filter(|o| o.is_some())
@@ -191,13 +192,13 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
 }
 
 lazy_static! {
-    static ref STATUS_LINE_RE: Regex = Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap();
+    static ref STATUS_LINE_RE: Regex =
+        Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap();
 }
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
     let size_str = status_line.split_ascii_whitespace().nth(0).unwrap();
-    let size = size_str.parse()
-        .context("unexpected status line")?;
+    let size = size_str.parse().context("unexpected status line")?;
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {
         // In the device deviceLine, only disks have a number associated with them in []
@@ -210,10 +211,11 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
     }
 
     let caps = match STATUS_LINE_RE.captures(status_line) {
-        Some(caps) => caps.iter()
+        Some(caps) => caps
+            .iter()
             .map(|m| m.unwrap().as_str())
             .collect::<Vec<&str>>(),
-        None => vec![]
+        None => vec![],
     };
 
     if caps.len() != 5 {
@@ -232,13 +234,10 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 // [=>...................]  recovery =  8.5% (16775552/195310144) finish=17.0min speed=259783K/sec
 fn recovery_line(input: &str) -> IResult<&str, (f64, i64, f64, f64)> {
     let input = input.trim();
-    let (input, _) = take_while(|c| c == '[' || c == '=' || c == '>' || c == '.' || c == ']')(input)?;
+    let (input, _) =
+        take_while(|c| c == '[' || c == '=' || c == '>' || c == '.' || c == ']')(input)?;
     let (input, _) = multispace0(input)?;
-    let (input, _) = alt((
-        tag("recovery = "),
-        tag("resync = "),
-        tag("check = ")
-    ))(input)?;
+    let (input, _) = alt((tag("recovery = "), tag("resync = "), tag("check = ")))(input)?;
     let (input, _) = multispace0(input)?;
     let (input, pct) = double(input)?;
     let (input, _) = take_while(|c: char| c == ' ' || c == '%' || c == '(')(input)?;
@@ -365,7 +364,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 tags!(
                     "device" => device
                 ),
-            )
+            ),
         ]);
     }
 
@@ -392,322 +391,301 @@ mod tests {
         let path = Path::new("tests/fixtures/proc/mdstat");
         let stats = parse_mdstat(path).await.unwrap();
 
-        assert_eq!(stats, vec![
-            MDStat {
-                name: "md3".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 8,
-                disks_total: 8,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 2,
-                blocks_total: 5853468288,
-                blocks_synced: 5853468288,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sda1".to_string(),
-                    "sdh1".to_string(),
-                    "sdg1".to_string(),
-                    "sdf1".to_string(),
-                    "sde1".to_string(),
-                    "sdd1".to_string(),
-                    "sdc1".to_string(),
-                    "sdb1".to_string(),
-                    "sdd1".to_string(),
-                    "sdd2".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md127".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 312319552,
-                blocks_synced: 312319552,
-                blocks_synced_pct: 0f64,
-                blocks_synced_finish_time: 0f64,
-                blocks_synced_speed: 0f64,
-                devices: vec!["sdi2".to_string(), "sdj2".to_string()],
-            },
-            MDStat {
-                name: "md0".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 248896,
-                blocks_synced: 248896,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec!["sdi1".to_string(), "sdj1".to_string()],
-            },
-            MDStat {
-                name: "md4".to_string(),
-                activity_state: "inactive".to_string(),
-                disks_active: 0,
-                disks_total: 0,
-                disks_failed: 1,
-                disk_down: 0,
-                disks_spare: 1,
-                blocks_total: 4883648,
-                blocks_synced: 4883648,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec!["sda3".to_string(), "sdb3".to_string()],
-            },
-            MDStat {
-                name: "md6".to_string(),
-                activity_state: "recovering".to_string(),
-                disks_active: 1,
-                disks_total: 2,
-                disks_failed: 1,
-                disk_down: 1,
-                disks_spare: 1,
-                blocks_total: 195310144,
-                blocks_synced: 16775552,
-                blocks_synced_pct: 8.5,
-                blocks_synced_finish_time: 17.0,
-                blocks_synced_speed: 259783.0,
-                devices: vec!["sdb2".to_string(), "sdc".to_string(), "sda2".to_string()],
-            },
-            MDStat {
-                name: "md8".to_string(),
-                activity_state: "resyncing".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 2,
-                blocks_total: 195310144,
-                blocks_synced: 16775552,
-                blocks_synced_pct: 8.5,
-                blocks_synced_finish_time: 17.0,
-                blocks_synced_speed: 259783.0,
-                devices: vec![
-                    "sdb1".to_string(),
-                    "sda1".to_string(),
-                    "sdc".to_string(),
-                    "sde".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md201".to_string(),
-                activity_state: "checking".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 1993728,
-                blocks_synced: 114176,
-                blocks_synced_pct: 5.7,
-                blocks_synced_finish_time: 0.2,
-                blocks_synced_speed: 114176.0,
-                devices: vec![
-                    "sda3".to_string(),
-                    "sdb3".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md7".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 3,
-                disks_total: 4,
-                disks_failed: 1,
-                disk_down: 1,
-                disks_spare: 0,
-                blocks_total: 7813735424,
-                blocks_synced: 7813735424,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdb1".to_string(),
-                    "sde1".to_string(),
-                    "sdd1".to_string(),
-                    "sdc1".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md9".to_string(),
-                activity_state: "resyncing".to_string(),
-                disks_active: 4,
-                disks_total: 4,
-                disks_spare: 1,
-                disk_down: 0,
-                disks_failed: 2,
-                blocks_total: 523968,
-                blocks_synced: 0,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdc2".to_string(),
-                    "sdd2".to_string(),
-                    "sdb2".to_string(),
-                    "sda2".to_string(),
-                    "sde".to_string(),
-                    "sdf".to_string(),
-                    "sdg".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md10".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 314159265,
-                blocks_synced: 314159265,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sda1".to_string(),
-                    "sdb1".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md11".to_string(),
-                activity_state: "resyncing".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 1,
-                disk_down: 0,
-                disks_spare: 2,
-                blocks_total: 4190208,
-                blocks_synced: 0,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdb2".to_string(),
-                    "sdc2".to_string(),
-                    "sdc3".to_string(),
-                    "hda".to_string(),
-                    "ssdc2".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md12".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_spare: 0,
-                disk_down: 0,
-                disks_failed: 0,
-                blocks_total: 3886394368,
-                blocks_synced: 3886394368,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdc2".to_string(),
-                    "sdd2".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md126".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 1855870976,
-                blocks_synced: 1855870976,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdb".to_string(),
-                    "sdc".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md219".to_string(),
-                activity_state: "inactive".to_string(),
-                disks_total: 0,
-                disks_failed: 0,
-                disks_active: 0,
-                disk_down: 0,
-                disks_spare: 3,
-                blocks_total: 7932,
-                blocks_synced: 7932,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdc".to_string(),
-                    "sda".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md00".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 1,
-                disks_total: 1,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 4186624,
-                blocks_synced: 4186624,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "xvdb".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md120".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 2,
-                disks_total: 2,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 2095104,
-                blocks_synced: 2095104,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sda1".to_string(),
-                    "sdb1".to_string(),
-                ],
-            },
-            MDStat {
-                name: "md101".to_string(),
-                activity_state: "active".to_string(),
-                disks_active: 3,
-                disks_total: 3,
-                disks_failed: 0,
-                disk_down: 0,
-                disks_spare: 0,
-                blocks_total: 322560,
-                blocks_synced: 322560,
-                blocks_synced_pct: 0.0,
-                blocks_synced_finish_time: 0.0,
-                blocks_synced_speed: 0.0,
-                devices: vec![
-                    "sdb".to_string(),
-                    "sdd".to_string(),
-                    "sdc".to_string(),
-                ],
-            },
-        ]);
+        assert_eq!(
+            stats,
+            vec![
+                MDStat {
+                    name: "md3".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 8,
+                    disks_total: 8,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 2,
+                    blocks_total: 5853468288,
+                    blocks_synced: 5853468288,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec![
+                        "sda1".to_string(),
+                        "sdh1".to_string(),
+                        "sdg1".to_string(),
+                        "sdf1".to_string(),
+                        "sde1".to_string(),
+                        "sdd1".to_string(),
+                        "sdc1".to_string(),
+                        "sdb1".to_string(),
+                        "sdd1".to_string(),
+                        "sdd2".to_string(),
+                    ],
+                },
+                MDStat {
+                    name: "md127".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 312319552,
+                    blocks_synced: 312319552,
+                    blocks_synced_pct: 0f64,
+                    blocks_synced_finish_time: 0f64,
+                    blocks_synced_speed: 0f64,
+                    devices: vec!["sdi2".to_string(), "sdj2".to_string()],
+                },
+                MDStat {
+                    name: "md0".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 248896,
+                    blocks_synced: 248896,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sdi1".to_string(), "sdj1".to_string()],
+                },
+                MDStat {
+                    name: "md4".to_string(),
+                    activity_state: "inactive".to_string(),
+                    disks_active: 0,
+                    disks_total: 0,
+                    disks_failed: 1,
+                    disk_down: 0,
+                    disks_spare: 1,
+                    blocks_total: 4883648,
+                    blocks_synced: 4883648,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sda3".to_string(), "sdb3".to_string()],
+                },
+                MDStat {
+                    name: "md6".to_string(),
+                    activity_state: "recovering".to_string(),
+                    disks_active: 1,
+                    disks_total: 2,
+                    disks_failed: 1,
+                    disk_down: 1,
+                    disks_spare: 1,
+                    blocks_total: 195310144,
+                    blocks_synced: 16775552,
+                    blocks_synced_pct: 8.5,
+                    blocks_synced_finish_time: 17.0,
+                    blocks_synced_speed: 259783.0,
+                    devices: vec!["sdb2".to_string(), "sdc".to_string(), "sda2".to_string()],
+                },
+                MDStat {
+                    name: "md8".to_string(),
+                    activity_state: "resyncing".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 2,
+                    blocks_total: 195310144,
+                    blocks_synced: 16775552,
+                    blocks_synced_pct: 8.5,
+                    blocks_synced_finish_time: 17.0,
+                    blocks_synced_speed: 259783.0,
+                    devices: vec![
+                        "sdb1".to_string(),
+                        "sda1".to_string(),
+                        "sdc".to_string(),
+                        "sde".to_string(),
+                    ],
+                },
+                MDStat {
+                    name: "md201".to_string(),
+                    activity_state: "checking".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 1993728,
+                    blocks_synced: 114176,
+                    blocks_synced_pct: 5.7,
+                    blocks_synced_finish_time: 0.2,
+                    blocks_synced_speed: 114176.0,
+                    devices: vec!["sda3".to_string(), "sdb3".to_string(),],
+                },
+                MDStat {
+                    name: "md7".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 3,
+                    disks_total: 4,
+                    disks_failed: 1,
+                    disk_down: 1,
+                    disks_spare: 0,
+                    blocks_total: 7813735424,
+                    blocks_synced: 7813735424,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec![
+                        "sdb1".to_string(),
+                        "sde1".to_string(),
+                        "sdd1".to_string(),
+                        "sdc1".to_string(),
+                    ],
+                },
+                MDStat {
+                    name: "md9".to_string(),
+                    activity_state: "resyncing".to_string(),
+                    disks_active: 4,
+                    disks_total: 4,
+                    disks_spare: 1,
+                    disk_down: 0,
+                    disks_failed: 2,
+                    blocks_total: 523968,
+                    blocks_synced: 0,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec![
+                        "sdc2".to_string(),
+                        "sdd2".to_string(),
+                        "sdb2".to_string(),
+                        "sda2".to_string(),
+                        "sde".to_string(),
+                        "sdf".to_string(),
+                        "sdg".to_string(),
+                    ],
+                },
+                MDStat {
+                    name: "md10".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 314159265,
+                    blocks_synced: 314159265,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sda1".to_string(), "sdb1".to_string(),],
+                },
+                MDStat {
+                    name: "md11".to_string(),
+                    activity_state: "resyncing".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 1,
+                    disk_down: 0,
+                    disks_spare: 2,
+                    blocks_total: 4190208,
+                    blocks_synced: 0,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec![
+                        "sdb2".to_string(),
+                        "sdc2".to_string(),
+                        "sdc3".to_string(),
+                        "hda".to_string(),
+                        "ssdc2".to_string(),
+                    ],
+                },
+                MDStat {
+                    name: "md12".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_spare: 0,
+                    disk_down: 0,
+                    disks_failed: 0,
+                    blocks_total: 3886394368,
+                    blocks_synced: 3886394368,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sdc2".to_string(), "sdd2".to_string(),],
+                },
+                MDStat {
+                    name: "md126".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 1855870976,
+                    blocks_synced: 1855870976,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sdb".to_string(), "sdc".to_string(),],
+                },
+                MDStat {
+                    name: "md219".to_string(),
+                    activity_state: "inactive".to_string(),
+                    disks_total: 0,
+                    disks_failed: 0,
+                    disks_active: 0,
+                    disk_down: 0,
+                    disks_spare: 3,
+                    blocks_total: 7932,
+                    blocks_synced: 7932,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sdc".to_string(), "sda".to_string(),],
+                },
+                MDStat {
+                    name: "md00".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 1,
+                    disks_total: 1,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 4186624,
+                    blocks_synced: 4186624,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["xvdb".to_string(),],
+                },
+                MDStat {
+                    name: "md120".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 2,
+                    disks_total: 2,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 2095104,
+                    blocks_synced: 2095104,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sda1".to_string(), "sdb1".to_string(),],
+                },
+                MDStat {
+                    name: "md101".to_string(),
+                    activity_state: "active".to_string(),
+                    disks_active: 3,
+                    disks_total: 3,
+                    disks_failed: 0,
+                    disk_down: 0,
+                    disks_spare: 0,
+                    blocks_total: 322560,
+                    blocks_synced: 322560,
+                    blocks_synced_pct: 0.0,
+                    blocks_synced_finish_time: 0.0,
+                    blocks_synced_speed: 0.0,
+                    devices: vec!["sdb".to_string(), "sdd".to_string(), "sdc".to_string(),],
+                },
+            ]
+        );
     }
 
     #[test]
@@ -729,18 +707,21 @@ mod tests {
             "sdd2[11](S)",
         ]);
 
-        assert_eq!(devices, vec![
-            "sda1".to_string(),
-            "sdh1".to_string(),
-            "sdg1".to_string(),
-            "sdf1".to_string(),
-            "sde1".to_string(),
-            "sdd1".to_string(),
-            "sdc1".to_string(),
-            "sdb1".to_string(),
-            "sdd1".to_string(),
-            "sdd2".to_string(),
-        ])
+        assert_eq!(
+            devices,
+            vec![
+                "sda1".to_string(),
+                "sdh1".to_string(),
+                "sdg1".to_string(),
+                "sdf1".to_string(),
+                "sde1".to_string(),
+                "sdd1".to_string(),
+                "sdc1".to_string(),
+                "sdb1".to_string(),
+                "sdd1".to_string(),
+                "sdd2".to_string(),
+            ]
+        )
     }
 
     #[test]

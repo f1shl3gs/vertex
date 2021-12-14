@@ -8,7 +8,6 @@ use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 
-
 /// Wrapper for `tokio::sync::Semaphore` that allows for shrinking the semaphore safely
 #[derive(Debug)]
 pub struct ShrinkableSemaphore {
@@ -24,15 +23,13 @@ impl ShrinkableSemaphore {
         }
     }
 
-    pub fn acquire(
-        self: Arc<Self>,
-    ) -> impl Future<Output=OwnedSemaphorePermit> + Send + 'static {
+    pub fn acquire(self: Arc<Self>) -> impl Future<Output = OwnedSemaphorePermit> + Send + 'static {
         MaybeForgetFuture {
             master: Arc::clone(&self),
             future: Box::pin(
                 Arc::clone(&self.semaphore)
                     .acquire_owned()
-                    .map(|r| r.expect("Semaphore has been closed"))
+                    .map(|r| r.expect("Semaphore has been closed")),
             ),
         }
     }
@@ -40,7 +37,8 @@ impl ShrinkableSemaphore {
     pub fn forget_permits(&self, count: usize) {
         // When forgetting permits, there may not be enough immediately available.
         // If so, just increase the count we need to forget later and finish.
-        let mut to_forget = self.to_forget
+        let mut to_forget = self
+            .to_forget
             .lock()
             .expect("ShrinkableSemaphore mutex is poisoned");
 
@@ -53,7 +51,8 @@ impl ShrinkableSemaphore {
     }
 
     pub fn add_permits(&self, count: usize) {
-        let mut to_forget = self.to_forget
+        let mut to_forget = self
+            .to_forget
             .lock()
             .expect("ShrinkableSemaphore mutex is poisoned");
 
@@ -78,7 +77,8 @@ impl Future for MaybeForgetFuture {
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         let master = Arc::clone(&self.master);
-        let mut to_forget = master.to_forget
+        let mut to_forget = master
+            .to_forget
             .lock()
             .expect("Shrinkable semaphore mutex is poisoned");
 

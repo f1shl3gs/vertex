@@ -1,40 +1,35 @@
 use std::{
-    fmt::Write,
-    net::{SocketAddr, IpAddr, Ipv4Addr},
-    sync::{Arc, RwLock},
-    hash::Hasher,
-    ops::{Deref, DerefMut},
     convert::Infallible,
+    fmt::Write,
+    hash::Hasher,
+    net::{IpAddr, Ipv4Addr, SocketAddr},
+    ops::{Deref, DerefMut},
+    sync::{Arc, RwLock},
 };
 
-use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
+use chrono::Utc;
+use event::MetricValue;
 use event::{Event, Metric};
 use futures::prelude::stream::BoxStream;
-use stream_cancel::{Trigger, Tripwire};
-use chrono::Utc;
-use indexmap::set::IndexSet;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Request, Body, Method, Response, StatusCode, Server};
-use futures::{StreamExt, FutureExt};
-use event::MetricValue;
+use futures::{FutureExt, StreamExt};
 use hyper::http::HeaderValue;
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use indexmap::set::IndexSet;
+use serde::{Deserialize, Serialize};
+use stream_cancel::{Trigger, Tripwire};
 
+use crate::stream::tripwire_handler;
 use crate::{
     buffers::Acker,
-    sinks::{
-        Sink,
-        StreamSink,
-    },
     config::{
-        default_false, SinkDescription, SinkConfig, SinkContext,
-        DataType, Resource, HealthCheck,
+        default_false, DataType, HealthCheck, Resource, SinkConfig, SinkContext, SinkDescription,
     },
-    tls::TlsConfig,
     impl_generate_config_from_default,
+    sinks::{Sink, StreamSink},
+    tls::TlsConfig,
 };
-use crate::stream::tripwire_handler;
-
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -161,29 +156,29 @@ macro_rules! write_metric {
                     .collect::<Vec<String>>()
                     .join(","),
                 $value
-            ).unwrap();
+            )
+            .unwrap();
         }
-    }
+    };
 }
 
-fn handle(
-    req: Request<Body>,
-    metrics: &IndexSet<ExpiringEntry>,
-    now: i64,
-) -> Response<Body> {
+fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Response<Body> {
     let mut resp = Response::new(Body::empty());
 
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
-            let s = metrics
-                .iter()
-                .filter(|ent| ent.expired_at > now)
-                .fold(String::new(), |mut result, ent| {
+            let s = metrics.iter().filter(|ent| ent.expired_at > now).fold(
+                String::new(),
+                |mut result, ent| {
                     match ent.metric.value {
                         MetricValue::Gauge(v) | MetricValue::Sum(v) => {
                             write_metric!(result, ent.name, ent.tags, v);
                         }
-                        MetricValue::Summary { ref quantiles, sum, count } => {
+                        MetricValue::Summary {
+                            ref quantiles,
+                            sum,
+                            count,
+                        } => {
                             for q in quantiles {
                                 let mut tags = ent.tags.clone();
                                 tags.insert("quantile".to_string(), q.upper.to_string());
@@ -193,7 +188,11 @@ fn handle(
                             write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
                             write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
                         }
-                        MetricValue::Histogram { ref buckets, sum, count } => {
+                        MetricValue::Histogram {
+                            ref buckets,
+                            sum,
+                            count,
+                        } => {
                             for b in buckets {
                                 let mut tags = ent.tags.clone();
                                 tags.insert("le".to_string(), b.upper.to_string());
@@ -206,9 +205,13 @@ fn handle(
                     }
 
                     result
-                });
+                },
+            );
 
-            resp.headers_mut().insert("Content-Type", HeaderValue::from_static("text/plain; charset=utf-8"));
+            resp.headers_mut().insert(
+                "Content-Type",
+                HeaderValue::from_static("text/plain; charset=utf-8"),
+            );
 
             *resp.body_mut() = Body::from(s);
         }
@@ -266,16 +269,21 @@ impl PrometheusExporter {
                             .map_err(|err| warn!(message = "Server bind error: {}", err))?;
             */
             /*Server::builder()
-                .serve(new_service)
-                .with_graceful_shutdown(tripwire.then(tripwire_handler))
-                .await
-                .map_err(|err| warn!(message = "Server error", ?err))?;
-*/
+                            .serve(new_service)
+                            .with_graceful_shutdown(tripwire.then(tripwire_handler))
+                            .await
+                            .map_err(|err| warn!(message = "Server error", ?err))?;
+            */
             Server::bind(&address)
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
                 .await
-                .map_err(|err| eprintln!("Server error: {}", err))?;
+                .map_err(|err| {
+                    error!(
+                        message = "Server error",
+                        %err
+                    );
+                })?;
 
             Ok::<(), ()>(())
         });
@@ -328,11 +336,7 @@ mod tests {
     #[test]
     fn test_metrics_insert() {
         let mut set = IndexSet::new();
-        let m1 = Metric::gauge(
-            "foo",
-            "",
-            0.1,
-        );
+        let m1 = Metric::gauge("foo", "", 0.1);
         let mut m2 = m1.clone();
         m2.value = MetricValue::Gauge(0.2);
 
@@ -354,6 +358,9 @@ mod tests {
         set.insert(ent);
 
         assert_eq!(set.len(), 1);
-        assert_eq!(set.iter().enumerate().nth(0).unwrap().1.expired_at, now + 60);
+        assert_eq!(
+            set.iter().enumerate().nth(0).unwrap().1.expired_at,
+            now + 60
+        );
     }
 }

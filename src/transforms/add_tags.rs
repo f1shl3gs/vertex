@@ -1,9 +1,11 @@
-use std::collections::BTreeMap;
-use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
-use crate::config::{TransformConfig, GlobalOptions, DataType, GenerateConfig, TransformDescription};
-use crate::transforms::{Transform, FunctionTransform};
+use crate::config::{
+    DataType, GenerateConfig, GlobalOptions, TransformConfig, TransformDescription,
+};
+use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -106,15 +108,16 @@ impl GenerateConfig for AddTagsConfig {
         serde_yaml::to_value(Self {
             tags,
             overwrite: default_overwrite(),
-        }).unwrap()
+        })
+        .unwrap()
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use event::{Metric, tags};
-    use crate::transforms::transform_one;
     use super::*;
+    use crate::transforms::transform_one;
+    use event::{tags, Metric};
 
     #[test]
     fn add_tags() {
@@ -144,7 +147,8 @@ mod tests {
                     "k1" => "v1",
                     "k2" => "v2"
                 ),
-            ).into()
+            )
+            .into()
         )
     }
 
@@ -174,7 +178,8 @@ mod tests {
                     "k1" => "v1_new",
                     "k2" => "v2"
                 ),
-            ).into()
+            )
+            .into()
         );
     }
 }

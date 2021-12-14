@@ -1,16 +1,16 @@
+use bytes::Bytes;
 use std::borrow::Cow;
 use std::fmt::Formatter;
 use std::path::PathBuf;
-use bytes::Bytes;
 
 use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
-use snafu::Snafu;
+use event::{EventRef, Metric, Value};
+use log_schema::log_schema;
 use regex::{Captures, Regex};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use event::{EventRef, Metric, Value};
-use log_schema::log_schema;
+use snafu::Snafu;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap();
@@ -32,7 +32,7 @@ pub enum TemplateParseError {
 #[derive(Clone, Debug, Eq, PartialEq, Snafu)]
 pub enum TemplateRenderingError {
     #[snafu(display("Missing fields on event: {:?}", missing_keys))]
-    MissingKeys { missing_keys: Vec<String> }
+    MissingKeys { missing_keys: Vec<String> },
 }
 
 impl TryFrom<&str> for Template {
@@ -90,7 +90,7 @@ const fn is_dynamic(item: &Item) -> bool {
         Item::Numeric(_, _) => true,
         Item::Error => false,
         Item::Space(_) | Item::OwnedSpace(_) => false,
-        Item::Literal(_) | Item::OwnedLiteral(_) => false
+        Item::Literal(_) | Item::OwnedLiteral(_) => false,
     }
 }
 
@@ -99,8 +99,7 @@ impl Template {
         &self,
         event: impl Into<EventRef<'a>>,
     ) -> Result<Bytes, TemplateRenderingError> {
-        self.render_string(event.into())
-            .map(Into::into)
+        self.render_string(event.into()).map(Into::into)
     }
 
     pub fn render_string<'a>(
@@ -156,7 +155,8 @@ fn render_fields<'a>(src: &str, event: EventRef<'a>) -> Result<String, TemplateR
             match event {
                 EventRef::Log(log) => log.get_field(&key).map(|val| val.to_string_lossy()),
                 EventRef::Metric(metric) => render_metric_field(key, metric),
-            }.unwrap_or_else(|| {
+            }
+            .unwrap_or_else(|| {
                 missing_keys.push(key.to_owned());
                 String::new()
             })
@@ -174,12 +174,8 @@ fn render_metric_field(key: &str, metric: &Metric) -> Option<String> {
     match key {
         "name" => Some(metric.name().into()),
         // "namespace" => Some()
-        _ if key.starts_with("tags.") => {
-            metric.tags
-                .get(&key[5..])
-                .map(Into::into)
-        }
-        _ => None
+        _ if key.starts_with("tags.") => metric.tags.get(&key[5..]).map(Into::into),
+        _ => None,
     }
 }
 
@@ -200,7 +196,10 @@ fn render_timestamp(src: &str, event: EventRef<'_>) -> String {
 }
 
 impl<'de> Deserialize<'de> for Template {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error> where D: Deserializer<'de> {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
         deserializer.deserialize_str(TemplateVisitor)
     }
 }
@@ -214,14 +213,19 @@ impl<'de> Visitor<'de> for TemplateVisitor {
         write!(formatter, "a string")
     }
 
-    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E> where E: Error {
-        Template::try_from(v)
-            .map_err(serde::de::Error::custom)
+    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+    where
+        E: Error,
+    {
+        Template::try_from(v).map_err(serde::de::Error::custom)
     }
 }
 
 impl Serialize for Template {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error> where S: Serializer {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
         // TODO: determine if we should serialize this as a struct or just the str
         serializer.serialize_str(&self.src)
     }
@@ -229,23 +233,24 @@ impl Serialize for Template {
 
 #[cfg(test)]
 mod tests {
-    use chrono::TimeZone;
     use super::*;
-    use event::{Event, tags};
+    use chrono::TimeZone;
+    use event::{tags, Event};
 
     #[test]
     fn get_fields() {
         let tests = vec![
             ("{{ foo }}", Some(vec!["foo".to_string()])),
-            ("{{ foo }}-{{ bar }}", Some(vec!["foo".to_string(), "bar".to_string()])),
+            (
+                "{{ foo }}-{{ bar }}",
+                Some(vec!["foo".to_string(), "bar".to_string()]),
+            ),
             ("nofield", None),
             ("%F", None),
         ];
 
         for (input, want) in tests {
-            let fields = Template::try_from(input)
-                .unwrap()
-                .get_fields();
+            let fields = Template::try_from(input).unwrap().get_fields();
 
             assert_eq!(fields, want)
         }
@@ -264,7 +269,8 @@ mod tests {
             assert_eq!(
                 Template::try_from(input).unwrap().is_dynamic(),
                 want,
-                "input: {}", input,
+                "input: {}",
+                input,
             );
         }
     }
@@ -280,9 +286,7 @@ mod tests {
     #[test]
     fn render_log_dynamic() {
         let mut event = Event::from("hello world");
-        event
-            .as_mut_log()
-            .insert_field("log_stream", "stream");
+        event.as_mut_log().insert_field("log_stream", "stream");
 
         let template = Template::try_from("{{ log_stream }}").unwrap();
         assert_eq!(Ok(Bytes::from("stream")), template.render(&event))
@@ -291,8 +295,7 @@ mod tests {
     #[test]
     fn render_log_dyanmic_with_prefix() {
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("log_stream", "stream");
+        event.as_mut_log().insert_field("log_stream", "stream");
         let template = Template::try_from("abcd-{{log_stream}}").unwrap();
 
         assert_eq!(Ok(Bytes::from("abcd-stream")), template.render(&event));
@@ -301,8 +304,7 @@ mod tests {
     #[test]
     fn render_log_dynamic_with_suffix() {
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("log_stream", "stream");
+        event.as_mut_log().insert_field("log_stream", "stream");
         let template = Template::try_from("{{ log_stream }}-suffix").unwrap();
         assert_eq!(Ok(Bytes::from("stream-suffix")), template.render(&event));
     }
@@ -323,12 +325,9 @@ mod tests {
     #[test]
     fn render_log_dynamic_multiple_keys() {
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("foo", "bar");
-        event.as_mut_log()
-            .insert_field("baz", "quux");
-        let template = Template::try_from("stream-{{foo}}-{{baz}}.log")
-            .unwrap();
+        event.as_mut_log().insert_field("foo", "bar");
+        event.as_mut_log().insert_field("baz", "quux");
+        let template = Template::try_from("stream-{{foo}}-{{baz}}.log").unwrap();
 
         assert_eq!(
             Ok(Bytes::from("stream-bar-quux.log")),
@@ -339,12 +338,9 @@ mod tests {
     #[test]
     fn render_log_dynamic_weird_junk() {
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("foo", "bar");
-        event.as_mut_log()
-            .insert_field("baz", "quux");
-        let template = Template::try_from(r"{stream}{\{{}}}-{{foo}}-{{baz}}.log")
-            .unwrap();
+        event.as_mut_log().insert_field("foo", "bar");
+        event.as_mut_log().insert_field("baz", "quux");
+        let template = Template::try_from(r"{stream}{\{{}}}-{{foo}}-{{baz}}.log").unwrap();
 
         assert_eq!(
             Ok(Bytes::from(r"{stream}{\{{}}}-bar-quux.log")),
@@ -354,24 +350,19 @@ mod tests {
 
     #[test]
     fn render_log_timestamp_strftime_style() {
-        let ts = Utc.ymd(2001, 2, 3)
-            .and_hms(4, 5, 6);
+        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("timestamp", ts);
-        let template = Template::try_from("abcd-%F")
-            .unwrap();
+        event.as_mut_log().insert_field("timestamp", ts);
+        let template = Template::try_from("abcd-%F").unwrap();
 
         assert_eq!(Ok(Bytes::from("abcd-2001-02-03")), template.render(&event));
     }
 
     #[test]
     fn render_log_timestamp_multiple_strftime_style() {
-        let ts = Utc.ymd(2001, 2, 3)
-            .and_hms(4, 5, 6);
+        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("timestamp", ts);
+        event.as_mut_log().insert_field("timestamp", ts);
         let template = Template::try_from("abcd-%F_%T").unwrap();
 
         assert_eq!(
@@ -382,13 +373,10 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_strftime() {
-        let ts = Utc.ymd(2001, 2, 3)
-            .and_hms(4, 5, 6);
+        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("foo", "butts");
-        event.as_mut_log()
-            .insert_field("timestamp", ts);
+        event.as_mut_log().insert_field("foo", "butts");
+        event.as_mut_log().insert_field("timestamp", ts);
 
         let template = Template::try_from("{{ foo }}-%F_%T").unwrap();
 
@@ -400,13 +388,10 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_nested_strftime() {
-        let ts = Utc.ymd(2001, 2, 3)
-            .and_hms(4, 5, 6);
+        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("format", "%F");
-        event.as_mut_log()
-            .insert_field("timestamp", ts);
+        event.as_mut_log().insert_field("format", "%F");
+        event.as_mut_log().insert_field("timestamp", ts);
 
         let template = Template::try_from("nested {{ format }} %T").unwrap();
 
@@ -418,13 +403,10 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_reverse_nested_strftime() {
-        let ts = Utc.ymd(2001, 2, 3)
-            .and_hms(4, 5, 6);
+        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
         let mut event = Event::from("hello world");
-        event.as_mut_log()
-            .insert_field("%F", "foo");
-        event.as_mut_log()
-            .insert_field("timestamp", ts);
+        event.as_mut_log().insert_field("%F", "foo");
+        event.as_mut_log().insert_field("timestamp", ts);
 
         let template = Template::try_from("nested {{ %F }} %T").unwrap();
 
@@ -435,17 +417,12 @@ mod tests {
     }
 
     fn sample_metric() -> Metric {
-        Metric::sum(
-            "a-counter",
-            "",
-            1,
-        ).with_timestamp(Some(Utc.ymd(2002, 3, 4).and_hms(5, 6, 7)))
+        Metric::sum("a-counter", "", 1).with_timestamp(Some(Utc.ymd(2002, 3, 4).and_hms(5, 6, 7)))
     }
 
     #[test]
     fn render_metric_timestamp() {
-        let template = Template::try_from("timestamp %F %T")
-            .unwrap();
+        let template = Template::try_from("timestamp %F %T").unwrap();
 
         assert_eq!(
             Ok(Bytes::from("timestamp 2002-03-04 05:06:07")),
@@ -456,11 +433,10 @@ mod tests {
     #[test]
     fn render_metric_with_tags() {
         let template = Template::try_from("name={{name}} component={{tags.component}}").unwrap();
-        let metric = sample_metric()
-            .with_tags(tags!(
-                "test" => "true",
-                "component" => "template"
-            ));
+        let metric = sample_metric().with_tags(tags!(
+            "test" => "true",
+            "component" => "template"
+        ));
 
         assert_eq!(
             Ok(Bytes::from("name=a-counter component=template")),
@@ -470,8 +446,7 @@ mod tests {
 
     #[test]
     fn render_metric_missing_key() {
-        let template = Template::try_from("name={{name}} component={{tags.component}}")
-            .unwrap();
+        let template = Template::try_from("name={{name}} component={{tags.component}}").unwrap();
 
         assert_eq!(
             Err(TemplateRenderingError::MissingKeys {

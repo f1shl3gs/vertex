@@ -1,43 +1,37 @@
-use std::collections::BTreeMap;
-use crate::log::path_iter::{PathIter, PathComponent};
 use super::Value;
+use crate::log::path_iter::{PathComponent, PathIter};
+use std::collections::BTreeMap;
 
 /// Returns a reference to a field value specified by the given path.
 pub fn get<'a>(fields: &'a BTreeMap<String, Value>, path: &str) -> Option<&'a Value> {
     let mut path_iter = PathIter::new(path);
 
     match path_iter.next() {
-        Some(PathComponent::Key(key)) => {
-            match fields.get(key.as_ref()) {
-                None => None,
-                Some(value) => get_value(value, path_iter),
-            }
-        }
-        _ => None
+        Some(PathComponent::Key(key)) => match fields.get(key.as_ref()) {
+            None => None,
+            Some(value) => get_value(value, path_iter),
+        },
+        _ => None,
     }
 }
 
 /// Returns a reference to a field value specified by a path iter.
 fn get_value<'a, I>(mut value: &Value, mut path_iter: I) -> Option<&Value>
-    where
-        I: Iterator<Item=PathComponent<'a>>
+where
+    I: Iterator<Item = PathComponent<'a>>,
 {
     loop {
         match (path_iter.next(), value) {
             (None, _) => return Some(value),
-            (Some(PathComponent::Key(key)), Value::Map(map)) => {
-                match map.get(key.as_ref()) {
-                    None => return None,
-                    Some(nested) => value = nested
-                }
-            }
-            (Some(PathComponent::Index(index)), Value::Array(array)) => {
-                match array.get(index) {
-                    None => return None,
-                    Some(nested) => value = nested
-                }
-            }
-            _ => return None
+            (Some(PathComponent::Key(key)), Value::Map(map)) => match map.get(key.as_ref()) {
+                None => return None,
+                Some(nested) => value = nested,
+            },
+            (Some(PathComponent::Index(index)), Value::Array(array)) => match array.get(index) {
+                None => return None,
+                Some(nested) => value = nested,
+            },
+            _ => return None,
         }
     }
 }
@@ -85,15 +79,11 @@ mod tests {
             ("a.x", None),
             ("z", None),
             (".123", None),
-            ("", None)
+            ("", None),
         ];
 
         for (path, want) in tests {
-            assert_eq!(
-                get(&fields, path),
-                want.as_ref(),
-                "{}", path
-            )
+            assert_eq!(get(&fields, path), want.as_ref(), "{}", path)
         }
     }
 }

@@ -3,17 +3,16 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 
 use futures::FutureExt;
-use serde::{Deserialize, Serialize};
 use hyper::{
-    Body, Request, Response, Server,
     service::{make_service_fn, service_fn},
+    Body, Request, Response, Server,
 };
+use serde::{Deserialize, Serialize};
 
 use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
 use crate::extensions::Extension;
-use crate::shutdown::ShutdownSignal;
 use crate::impl_generate_config_from_default;
-
+use crate::shutdown::ShutdownSignal;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -24,7 +23,7 @@ pub struct PProfConfig {
 impl Default for PProfConfig {
     fn default() -> Self {
         Self {
-            listen: "0.0.0.0:10910".parse().unwrap()
+            listen: "0.0.0.0:10910".parse().unwrap(),
         }
     }
 }
@@ -42,9 +41,7 @@ impl ExtensionConfig for PProfConfig {
 }
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async {
-        Ok::<_, Infallible>(service_fn(handle))
-    });
+    let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
 
     let server = Server::bind(&addr)
         .serve(service)
@@ -69,7 +66,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     let seconds = match params.get("seconds") {
         Some(value) => value.parse().unwrap_or(30u64),
-        _ => 30
+        _ => 30,
     };
 
     let guard = pprof::ProfilerGuard::new(100).unwrap();

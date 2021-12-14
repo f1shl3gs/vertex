@@ -1,10 +1,10 @@
-mod watch;
-mod scan;
-mod checkpoint;
 mod buffer;
+mod checkpoint;
+mod scan;
+mod watch;
 
 // re-export
-pub use checkpoint::{Position, Fingerprint};
+pub use checkpoint::{Fingerprint, Position};
 
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -12,8 +12,8 @@ use std::sync::Arc;
 use std::thread::sleep;
 use std::time::{Duration, Instant};
 
-use futures::{Future, FutureExt, Sink, SinkExt, StreamExt};
 use bytes::Bytes;
+use futures::{Future, FutureExt, Sink, SinkExt, StreamExt};
 use tokio_stream::wrappers::IntervalStream;
 use tracing::{error, warn};
 
@@ -43,7 +43,7 @@ pub struct Server {
     read_from: ReadFrom,
     ignore_checkpoints: bool,
     oldest_first: bool,
-    glob_cooldown: Duration
+    glob_cooldown: Duration,
 }
 
 impl Server {
@@ -53,11 +53,11 @@ impl Server {
         shutdown: S,
         mut checkpointer: Checkpointer,
     ) -> Result<Shutdown, <C as Sink<Vec<Line>>>::Error>
-        where
-            C: Sink<Vec<Line>> + Unpin,
-            <C as Sink<Vec<Line>>>::Error: std::error::Error,
-            S: Future + Unpin + Send + 'static,
-            <S as Future>::Output: Clone + Send + Sync,
+    where
+        C: Sink<Vec<Line>> + Unpin,
+        <C as Sink<Vec<Line>>>::Error: std::error::Error,
+        S: Future + Unpin + Send + 'static,
+        <S as Future>::Output: Clone + Send + Sync,
     {
         let handle = tokio::runtime::Handle::current();
         let mut fps: BTreeMap<Fingerprint, Watcher> = BTreeMap::new();
@@ -84,8 +84,7 @@ impl Server {
         let sleep_duration = std::time::Duration::from_secs(1);
         let interval = tokio::time::interval(sleep_duration);
         let checkpoint_task_handle = tokio::spawn(async move {
-            let mut ticker = IntervalStream::new(interval)
-                .take_until(shutdown2);
+            let mut ticker = IntervalStream::new(interval).take_until(shutdown2);
 
             while ticker.next().await.is_some() {
                 // todo: Observability
@@ -111,11 +110,8 @@ impl Server {
             if next_glob_time <= now_time {
                 // Schedule the next glob time.
                 next_glob_time = now_time.checked_add(self.glob_cooldown).unwrap();
-
-
             }
         }
-
     }
 
     fn watch_new_file(
@@ -141,7 +137,8 @@ impl Server {
         // Always prefer the stored checkpoints unless the user has opted out. Previously, the
         // checkpoint was only loaded for new files when server was started up.
         let read_from = if !self.ignore_checkpoints {
-            checkpoints.get(fp)
+            checkpoints
+                .get(fp)
                 .map(ReadFrom::Checkpoint)
                 .unwrap_or(fallback)
         } else {
@@ -156,16 +153,15 @@ impl Server {
             self.line_delimiter.clone(),
         ) {
             Ok(mut watcher) => {
-                if let ReadFrom::Checkpoint(pos) = read_from {} else {}
+                if let ReadFrom::Checkpoint(pos) = read_from {
+                } else {
+                }
 
                 watcher.set_findable(true);
                 fps.insert(fp, watcher);
             }
             Err(err) => {
-                warn!(
-                    message = "Create new file watcher failed",
-                    err
-                )
+                warn!(message = "Create new file watcher failed", ?err)
             }
         }
     }

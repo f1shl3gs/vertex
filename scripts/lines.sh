@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# benchs
+# benches
 BENCH=$(find ./ -name "*.rs" | grep benches | xargs cat | grep -vc '^$')
 
 # docs
@@ -19,4 +19,5 @@ echo "tests: ${TESTS}"
 echo "bench: ${BENCH}"
 echo "doc:   ${DOCS_LINES} (words: ${DOCS_WORDS})"
 echo ""
-echo "total: $(expr ${SRC} + ${LIB} + ${BENCH} + ${TESTS})"
+# shellcheck disable=SC2003
+echo "total: $(expr "${SRC}" + "${LIB}" + "${BENCH}" + "${TESTS}")"

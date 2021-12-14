@@ -6,9 +6,7 @@ pub struct DisabledTrigger {
 
 impl DisabledTrigger {
     pub fn new(t: Trigger) -> Self {
-        Self {
-            trigger: Some(t)
-        }
+        Self { trigger: Some(t) }
     }
 
     pub fn into_inner(mut self) -> Trigger {
@@ -29,4 +27,3 @@ impl From<Trigger> for DisabledTrigger {
         Self::new(t)
     }
 }
-

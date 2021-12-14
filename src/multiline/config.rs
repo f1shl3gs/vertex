@@ -1,26 +1,26 @@
 use std::time::Duration;
 
 use regex::bytes::Regex;
-use snafu::{ResultExt, Snafu};
 use serde::{Deserialize, Serialize};
+use snafu::{ResultExt, Snafu};
 
-use super::aggregate::{Mode, self};
+use super::aggregate::{self, Mode};
 
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display(
-    "unable to parse multiline start pattern from {:?}: {}",
-    start_pattern,
-    source
+        "unable to parse multiline start pattern from {:?}: {}",
+        start_pattern,
+        source
     ))]
     InvalidMultilineStartPattern {
         start_pattern: String,
         source: regex::Error,
     },
     #[snafu(display(
-    "unable to parse multiline condition pattern from {:?}: {}",
-    condition_pattern,
-    source
+        "unable to parse multiline condition pattern from {:?}: {}",
+        condition_pattern,
+        source
     ))]
     InvalidMultilineConditionPattern {
         condition_pattern: String,
@@ -45,7 +45,7 @@ impl TryFrom<&MultilineConfig> for aggregate::Config {
             start_pattern,
             condition_pattern,
             mode,
-            timeout
+            timeout,
         } = config;
 
         let start_pattern = Regex::new(start_pattern)
@@ -62,4 +62,3 @@ impl TryFrom<&MultilineConfig> for aggregate::Config {
         })
     }
 }
-

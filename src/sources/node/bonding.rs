@@ -1,12 +1,13 @@
 use super::read_to_string;
-use event::{tags, Metric};
-use std::path::PathBuf;
-use std::collections::HashMap;
 use super::{Error, ErrorContext};
+use event::{tags, Metric};
+use std::collections::HashMap;
+use std::path::PathBuf;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = PathBuf::from(sys_path);
-    let stats = read_bonding_stats(path).await
+    let stats = read_bonding_stats(path)
+        .await
         .context("read bonding stats failed")?;
 
     let mut metrics = Vec::with_capacity(stats.len() * 2);

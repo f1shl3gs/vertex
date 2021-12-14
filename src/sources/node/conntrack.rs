@@ -1,9 +1,9 @@
 use std::path::PathBuf;
 
-use tokio::io::AsyncBufReadExt;
 use event::Metric;
+use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext, read_into};
+use super::{read_into, Error, ErrorContext};
 
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
@@ -13,14 +13,16 @@ use super::{Error, ErrorContext, read_into};
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_into::<_, u64, _>(path).await
+    let count = read_into::<_, u64, _>(path)
+        .await
         .context("read conntrack count failed")?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path).await?;
 
-    let stats = get_conntrack_statistics(&proc_path).await
+    let stats = get_conntrack_statistics(&proc_path)
+        .await
         .context("get conntrack statistics failed")?;
 
     let statistic = stats
@@ -37,7 +39,6 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
             stat
         });
-
 
     Ok(vec![
         Metric::gauge(
@@ -110,10 +111,15 @@ struct ConntrackStatEntry {
 
 #[inline]
 fn hex_u64(input: &[u8]) -> Result<u64, Error> {
-    let res = input.iter().rev().enumerate().map(|(k, &v)| {
-        let digit = v as char;
-        (digit.to_digit(16).unwrap_or(0) as u64) << (k * 4)
-    }).sum();
+    let res = input
+        .iter()
+        .rev()
+        .enumerate()
+        .map(|(k, &v)| {
+            let digit = v as char;
+            (digit.to_digit(16).unwrap_or(0) as u64) << (k * 4)
+        })
+        .sum();
 
     Ok(res)
 }

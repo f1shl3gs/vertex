@@ -1,7 +1,9 @@
+#![allow(clippy::print_stdout)] // tests
+
 use clap::Parser;
 use vertex::config::{
-    ExtensionDescription, SinkDescription, SourceDescription,
-    TransformDescription, ProviderDescription
+    ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
+    TransformDescription,
 };
 
 #[derive(Debug, Parser)]
@@ -10,7 +12,7 @@ pub enum Commands {
     Transforms(Transforms),
     Sinks(Sinks),
     Extensions(Extensions),
-    Providers(Providers)
+    Providers(Providers),
 }
 
 macro_rules! impl_list_and_example {
@@ -18,13 +20,11 @@ macro_rules! impl_list_and_example {
         impl $typ {
             pub fn run(&self) {
                 match &self.name {
-                    Some(name) => {
-                        match $desc::example(&name) {
-                            Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
-                            Err(err) => {
-                                println!("Generate example failed: {}", err);
-                                std::process::exit(exitcode::UNAVAILABLE);
-                            }
+                    Some(name) => match $desc::example(&name) {
+                        Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                        Err(err) => {
+                            println!("Generate example failed: {}", err);
+                            std::process::exit(exitcode::UNAVAILABLE);
                         }
                     },
 
@@ -75,13 +75,11 @@ pub struct Providers {
 impl Providers {
     pub fn run(&self) {
         match &self.name {
-            Some(name) => {
-                match ProviderDescription::example(&name) {
-                    Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
-                    Err(err) => {
-                        println!("Generate example failed: {:?}", err);
-                        std::process::exit(exitcode::UNAVAILABLE)
-                    }
+            Some(name) => match ProviderDescription::example(&name) {
+                Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                Err(err) => {
+                    println!("Generate example failed: {:?}", err);
+                    std::process::exit(exitcode::UNAVAILABLE)
                 }
             },
             _ => {
@@ -92,5 +90,3 @@ impl Providers {
         }
     }
 }
-
-// impl_list_and_example!(ConfigProviders, ProviderDescription);

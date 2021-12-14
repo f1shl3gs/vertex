@@ -1,11 +1,11 @@
 use std::collections::BTreeMap;
 
+use event::{tags, Metric};
 use nom::branch::alt;
 use nom::bytes::complete::{escaped, tag, take_while};
 use nom::character::complete::none_of;
-use nom::IResult;
 use nom::sequence::{delimited, tuple};
-use event::{tags, Metric};
+use nom::IResult;
 
 use super::{read_to_string, Error, ErrorContext};
 
@@ -14,7 +14,8 @@ const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let path = ETC_OS_RELEASE;
-    let infos = parse_os_release(path).await
+    let infos = parse_os_release(path)
+        .await
         .context("parse os release failed")?;
 
     let dv = &"".to_string();
@@ -78,13 +79,11 @@ async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error>
 
     for line in content.lines() {
         match tuple((
-            take_while(|c: char| {c.is_uppercase() || c == '_'}),
+            take_while(|c: char| c.is_uppercase() || c == '_'),
             tag("="),
-            alt((
-                parse_quoted,
-                parse_none_quoted,
-            ))
-        ))(line) {
+            alt((parse_quoted, parse_none_quoted)),
+        ))(line)
+        {
             Ok((_, (key, _, value))) => {
                 envs.insert(key.to_string(), value.to_string());
             }

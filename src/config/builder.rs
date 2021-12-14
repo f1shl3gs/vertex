@@ -1,12 +1,16 @@
-use serde::{Deserialize, Serialize};
-use crate::config::{GlobalOptions, TransformOuter, SinkOuter, Config, HealthcheckOptions, ExpandType, ExtensionConfig, SourceOuter};
-use indexmap::IndexMap;
-use crate::config::provider::ProviderConfig;
 use super::validation;
-use glob;
 use crate::config::global::default_data_dir;
+use crate::config::provider::ProviderConfig;
+use crate::config::{
+    Config, ExpandType, ExtensionConfig, GlobalOptions, HealthcheckOptions, SinkOuter, SourceOuter,
+    TransformOuter,
+};
+use glob;
+use indexmap::IndexMap;
+use serde::{Deserialize, Serialize};
+
 #[cfg(test)]
-use crate::config::{SourceConfig, SinkConfig, TransformConfig};
+use crate::config::{SinkConfig, SourceConfig, TransformConfig};
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -52,9 +56,12 @@ impl Builder {
 
         self.provider = with.provider;
 
-        if self.global.data_dir.as_os_str().len() == 0 || self.global.data_dir == default_data_dir() {
+        if self.global.data_dir.as_os_str().len() == 0 || self.global.data_dir == default_data_dir()
+        {
             self.global.data_dir = with.global.data_dir;
-        } else if with.global.data_dir != default_data_dir() && self.global.data_dir != with.global.data_dir {
+        } else if with.global.data_dir != default_data_dir()
+            && self.global.data_dir != with.global.data_dir
+        {
             // if two configs both set 'data_dir' and have conflicting values,
             // we consider this an error.
             errors.push("conflicting values for 'data_dir' found".to_owned());
@@ -184,9 +191,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
 
 /// Some component configs can act like macros and expand themselves into multiple
 /// replacement configs. Performs those expansions and records the relevant metadata.
-pub fn expand_macros(
-    builder: &mut Builder,
-) -> Result<IndexMap<String, Vec<String>>, Vec<String>> {
+pub fn expand_macros(builder: &mut Builder) -> Result<IndexMap<String, Vec<String>>, Vec<String>> {
     let mut expanded_transforms = IndexMap::new();
     let mut expansions = IndexMap::new();
     let mut errors = Vec::new();
@@ -294,12 +299,12 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &[String])
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde::{Deserialize, Serialize};
-    use async_trait::async_trait;
-    use crate::config::{SourceContext, DataType, SinkContext, HealthCheck};
+    use crate::config::{DataType, HealthCheck, SinkContext, SourceContext};
+    use crate::sinks::Sink;
     use crate::sources::Source;
     use crate::transforms::Transform;
-    use crate::sinks::Sink;
+    use async_trait::async_trait;
+    use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
     struct MockSourceConfig;
@@ -399,12 +404,7 @@ mod tests {
                 .get("quux")
                 .map(|item| item.inputs.clone())
                 .unwrap(),
-            vec![
-                "foo1",
-                "foo2",
-                "bar",
-                "foos",
-            ]
+            vec!["foo1", "foo2", "bar", "foos",]
         );
 
         assert_eq!(
@@ -413,11 +413,7 @@ mod tests {
                 .get("quix")
                 .map(|item| item.inputs.clone())
                 .unwrap(),
-            vec![
-                "foo1",
-                "foo2",
-                "foos",
-            ]
+            vec!["foo1", "foo2", "foos",]
         )
     }
 }

@@ -11,17 +11,17 @@ env:
 jobs:
   release-build-optimized:
     name: "Release Build (optimized)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash scripts/environment/prepare.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
       - run: cargo clean
       - run: cargo build --release
 
   release-build-normal:
     name: "Release Build (normal)"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       # We're not actually doing a debug build, we're just turning off the logic
       # in release-flags.sh so that we don't override the Cargo "release" profile
@@ -29,28 +29,28 @@ jobs:
       PROFILE: debug
     steps:
       - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash scripts/environment/prepare.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
       - run: cargo clean
       - run: cargo build --release
 
   debug-build:
     name: "Debug Build"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash scripts/environment/prepare.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
       - run: cargo clean
       - run: cargo build
 
   debug-rebuild:
     name: "Debug Rebuild"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash scripts/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash scripts/environment/prepare.sh
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
       - run: cargo clean
       - run: cargo build
       - run: touch src/app.rs
