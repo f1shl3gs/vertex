@@ -34,14 +34,14 @@ jobs:
           ~/.cargo/registry
           ~/.cargo/git
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
-        - run: bash ci/environment/prepare.sh
-        - run: cargo bench | tee bench_results.txt
-        - name: Store bench results
-          uses: benchmark-action/github-action-benchmark@v1
-          with:
-            name: Vertex
-            tool: cargo
-            output-file-path: bench_results.txt
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            auto-push: true
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - run: cargo bench | tee bench_results.txt
+      - name: Store bench results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Vertex
+          tool: cargo
+          output-file-path: bench_results.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
