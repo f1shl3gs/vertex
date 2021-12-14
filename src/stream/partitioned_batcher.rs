@@ -184,7 +184,7 @@ where
     fn has_space(&self, value: &I) -> bool {
         let too_many_elements = self.elementes.len() + 1 > self.element_limit;
         let too_many_bytes = self.allocated_bytes + value.size_of() > self.allocation_limit;
-        !(too_many_bytes || too_many_bytes)
+        !(too_many_bytes || too_many_elements)
     }
 
     /// Push an element into the batch

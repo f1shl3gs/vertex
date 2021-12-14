@@ -418,21 +418,6 @@ impl RedisSource {
     }
 }
 
-async fn extract_sentinel_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
-    let master_details: Vec<String> = redis::cmd("SENTINEL")
-        .arg("MASTERS")
-        .query_async(conn)
-        .await?;
-
-    for detail in master_details {
-        println!("detail {}", detail)
-    }
-
-    todo!()
-}
-
 async fn extract_key_group_metrics<C: redis::aio::ConnectionLike>(
     conn: &mut C,
 ) -> Result<Vec<Metric>, Error> {
@@ -1141,8 +1126,7 @@ mod integration_tests {
         let mut cli = redis::Client::open(url).unwrap();
         let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
 
-        let latency = ping_server(&mut cm).await.unwrap();
-        println!("latency {}s", latency);
+        let _latency = ping_server(&mut cm).await.unwrap();
     }
 
     #[tokio::test]
@@ -1162,7 +1146,7 @@ mod integration_tests {
             .await
             .unwrap();
 
-        println!("{:?}", resp);
+        assert_ne!(resp.len(), 0);
     }
 
     #[tokio::test]

@@ -70,8 +70,8 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 k,
                 v as f64,
                 tags!(
-                    "zpool" => pool_name.clone(),
-                    "dataset" => dataset.clone()
+                    "zpool" => pool_name,
+                    "dataset" => dataset
                 ),
             ));
         }
@@ -321,7 +321,6 @@ mod tests {
             let kvs = parse_pool_state_file(path).await.unwrap();
             assert_ne!(kvs.len(), 0);
 
-            println!("{}", pool_name);
             for (state, active) in kvs {
                 if pool_name == "pool1" {
                     if !active && state == "online" {

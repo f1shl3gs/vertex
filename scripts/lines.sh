@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# benchs
+# benches
 BENCH=$(find ./ -name "*.rs" | grep benches | xargs cat | grep -vc '^$')
 
 # docs

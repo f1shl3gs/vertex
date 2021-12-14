@@ -226,17 +226,14 @@ mod tests {
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
 
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
 
         let mut buf = [0; 256];
         let n = reader.read(&mut buf[..]).await.unwrap();
         let v = buf[..n].to_vec();
-        println!("{}", String::from_utf8(v).unwrap());
     }
 
     #[test]

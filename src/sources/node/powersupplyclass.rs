@@ -182,8 +182,6 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
                     continue;
                 }
 
-                println!("{:?}", entry.path());
-
                 return Err(err.into());
             }
         };

@@ -1,12 +1,12 @@
-use serde::{Deserializer, Serializer};
 use std::borrow::Cow;
 use std::num::ParseFloatError;
 
+use serde::{Deserializer, Serializer};
 use snafu::{ResultExt, Snafu};
 
 // ICE Sizes, kibis of bits
-const BYTE: usize = 1 << (0 * 10);
-const KIBYTE: usize = 1 << (1 * 10);
+const BYTE: usize = 1;
+const KIBYTE: usize = 1 << 10;
 const MIBYTE: usize = 1 << (2 * 10);
 const GIBYTE: usize = 1 << (3 * 10);
 const TIBYTE: usize = 1 << (4 * 10);
@@ -99,14 +99,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         }
     };
 
-    let f = (f * m as f64) as usize;
-    if f > usize::MAX {
-        return Err(ParseBytesError::TooLarge {
-            input: s.to_string(),
-        });
-    }
-
-    Ok(f as usize)
+    Ok((f * m as f64) as usize)
 }
 
 #[inline]

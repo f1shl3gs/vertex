@@ -63,9 +63,12 @@ mod tests {
         let path = PathBuf::from("tests/fixtures/sys/class/nvme/nvme0");
         let mut rd = tokio::fs::read_dir(path).await.unwrap();
 
+        let mut count = 0;
         while let Some(dir) = rd.next_entry().await.unwrap() {
-            println!("{:?}", dir);
+            count += 1;
         }
+
+        assert_eq!(count, 4);
     }
 
     #[tokio::test]

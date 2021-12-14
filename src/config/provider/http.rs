@@ -269,23 +269,3 @@ fn poll_http(
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_os_version() {
-        let v = os_version().unwrap();
-        println!("{}", v);
-        let k = kernel_version().unwrap();
-        println!("{}", k);
-    }
-
-    #[test]
-    fn test_md5() {
-        let digest = md5::compute("abc");
-
-        println!("digest: {:?}", digest);
-    }
-}

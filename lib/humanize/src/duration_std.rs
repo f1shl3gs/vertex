@@ -1,3 +1,5 @@
+// Port from Go's std time package
+
 use std::fmt::{Display, Formatter};
 use std::time::Duration;
 
@@ -88,6 +90,7 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
 /// each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m".
 /// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
 pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
+    // [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
     let mut d = 0u64;
     let mut neg = false;
     let mut s = text.as_bytes();
@@ -190,16 +193,12 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
         if f > 0 {
             // float64 is needed to be nanosecond accurate for fractions of hours.
             // v >= 0 && (f * unit / scale) <= 3.6e+12 (ns/h, h is the largest unit)
-            v += (f as f64 * (unit as f64 / scale)) as u64;
-            if v < 0 {
-                return Err(ParseDurationError::InvalidDuration);
-            }
+            v = v
+                .checked_add((f as f64 * (unit as f64 / scale)) as u64)
+                .ok_or(ParseDurationError::InvalidDuration)?;
         }
 
         d += v;
-        if d < 0 {
-            return Err(ParseDurationError::InvalidDuration);
-        }
     }
 
     Ok(Duration::from_nanos(d))
@@ -216,28 +215,22 @@ pub fn duration_to_string(d: &Duration) -> String {
 
     let d = d.as_nanos() as u64;
     let mut u = d as u64;
-    let neg = d < 0;
-    /*    if neg {
-        u = -u;
-    }*/
 
     if u < SECOND as u64 {
         // Special case: if duration is smaller thant a second,
         // use smaller units, like 1.2ms
-        let mut prec = 0;
         w -= 1;
         buf[w] = b's';
         w -= 1;
 
-        if u == 0 {
+        let prec = if u == 0 {
             return "0s".to_string();
         } else if u < MICROSECOND as u64 {
             // print nanoseconds
-            prec = 0;
             buf[w] = b'n';
+            0
         } else if u < MILLISECOND as u64 {
             // print microseconds
-            prec = 3;
             /*
             // U+00B5 'µ' micro sign == 0xC2 0xB5
             w -= 1; // Need room for two bytes
@@ -245,11 +238,12 @@ pub fn duration_to_string(d: &Duration) -> String {
             buf[w + 2] = 0xB5;
             */
             buf[w] = b'u';
+            3
         } else {
             // print milliseconds
-            prec = 6;
             buf[w] = b'm';
-        }
+            6
+        };
 
         let (_w, _u) = fmt_frac(&mut buf[..w], u, prec);
         w = _w;
@@ -284,11 +278,6 @@ pub fn duration_to_string(d: &Duration) -> String {
         }
     }
 
-    if neg {
-        w -= 1;
-        buf[w] = b'-';
-    }
-
     return String::from_utf8_lossy(&buf[w..]).to_string();
 }
 
@@ -300,7 +289,7 @@ fn fmt_frac(buf: &mut [u8], mut v: u64, prec: i32) -> (usize, u64) {
     // Omit trailing zeros up to and including decimal point
     let mut w = buf.len();
     let mut print = false;
-    for i in 0..prec {
+    for _i in 0..prec {
         let digit = v % 10;
         print = print || digit != 0;
         if print {
@@ -334,7 +323,7 @@ fn fmt_int(buf: &mut [u8], mut v: u64) -> usize {
         }
     }
 
-    return w;
+    w
 }
 
 #[cfg(test)]
@@ -345,7 +334,8 @@ mod tests {
     #[test]
     fn test_leading_int() {
         let (x, remain) = leading_int("12h".as_bytes()).unwrap();
-        println!("{} {}", x, String::from_utf8_lossy(remain));
+        assert_eq!(x, 12u64);
+        assert_eq!(String::from_utf8_lossy(remain), "h".to_string());
     }
 
     #[test]
@@ -533,10 +523,10 @@ mod tests {
     #[test]
     fn parse_us() {
         let input = "12µs"; // U+00B5
-        let d = parse_duration(input).unwrap();
+        let _d = parse_duration(input).unwrap();
 
         let input = "12μs"; // U+03BC
-        let d = parse_duration(input).unwrap();
+        let _d = parse_duration(input).unwrap();
     }
 
     #[test]

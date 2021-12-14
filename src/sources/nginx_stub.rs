@@ -446,8 +446,6 @@ mod integration_tests {
             auth.apply(&mut req);
         }
 
-        println!("{:?}", req);
-
         let resp = cli.send(req).await.unwrap();
 
         let (parts, body) = resp.into_parts();
@@ -455,7 +453,6 @@ mod integration_tests {
         let s = hyper::body::to_bytes(body).await.unwrap();
 
         let s = std::str::from_utf8(&s).unwrap();
-        println!("{}", s);
         let status: NginxStubStatus = s.try_into().unwrap();
     }
 

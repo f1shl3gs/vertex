@@ -2,8 +2,7 @@ use std::any::TypeId;
 use std::sync::{Mutex, MutexGuard};
 
 use event::LogRecord;
-// TODO: enable this if this crate update
-// use metrics_tracing_context::MetricsLayer;
+use metrics_tracing_context::MetricsLayer;
 use once_cell::sync::OnceCell;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tracing::level_filters::LevelFilter;
@@ -175,8 +174,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
 
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
         if metrics_layer_enabled {
-            // TODO: disable MetricsLayer for now
-            // let subscriber = subscriber.with(MetricsLayer::new());
+            let subscriber = subscriber.with(MetricsLayer::new());
             Dispatch::new(BroadcastSubscriber { subscriber })
         } else {
             Dispatch::new(BroadcastSubscriber { subscriber })
@@ -195,8 +193,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
 
         if metrics_layer_enabled {
-            // TODO: disable MetricsLayer for now
-            // let subscriber = subscriber.with(MetricsLayer::new());
+            let subscriber = subscriber.with(MetricsLayer::new());
             Dispatch::new(BroadcastSubscriber { subscriber })
         } else {
             Dispatch::new(BroadcastSubscriber { subscriber })

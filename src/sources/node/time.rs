@@ -51,31 +51,7 @@ fn libc_timezone() -> String {
 
 #[cfg(test)]
 mod tests {
-    use chrono::Local;
-    use chrono_tz::CET;
-
-    #[test]
-    fn test_offset() {
-        let now = Local::now();
-        let cn = now.with_timezone(&CET);
-
-        println!("{}", cn.format("%Z"));
-    }
-
-    use chrono_tz::TZ_VARIANTS;
     use std::ffi::CStr;
-
-    #[test]
-    fn offset() {
-        let local_now = chrono::Local::now();
-        let offset = local_now.offset().local_minus_utc();
-
-        println!("offset: {}", offset);
-
-        for tz in TZ_VARIANTS.iter() {
-            println!("{:?}", tz);
-        }
-    }
 
     #[test]
     fn libc_localtime_r() {
@@ -88,11 +64,9 @@ mod tests {
                 panic!("xx")
             }
 
-            println!("{:?}", out);
-
             let tz: &CStr = CStr::from_ptr(out.tm_zone);
             let tz = tz.to_str().unwrap();
-            println!("{}", tz);
+            assert_eq!("CST", tz);
         }
     }
 }

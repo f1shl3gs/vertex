@@ -183,11 +183,7 @@ async fn gather(
     };
     let elapsed = start.elapsed().as_secs_f64();
     let up = if metrics.len() != 0 { 1 } else { 0 };
-    let instance = format!(
-        "{}:{}",
-        uri.host().unwrap().clone(),
-        uri.port_u16().unwrap()
-    );
+    let instance = format!("{}:{}", uri.host().unwrap(), uri.port_u16().unwrap());
     metrics.extend_from_slice(&[
         Metric::gauge(
             "haproxy_up",
@@ -1100,9 +1096,7 @@ mod tests {
         let reader = BufReader::new(io::Cursor::new(content));
         let metrics = parse_csv(reader).unwrap();
 
-        for m in metrics {
-            println!("{:?}\n", m);
-        }
+        assert!(metrics.len() > 0);
     }
 
     #[test]

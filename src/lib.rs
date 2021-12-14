@@ -1,3 +1,5 @@
+#![allow(clippy::float_cmp)]
+
 mod async_read;
 mod batch;
 mod buffers;

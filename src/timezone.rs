@@ -92,6 +92,6 @@ tz: CET
         let w: TzWrapper = serde_yaml::from_str(input).unwrap();
 
         let tz = w.tz;
-        println!("{:?}", w.tz.name());
+        assert_eq!(w.tz.name(), "CET");
     }
 }

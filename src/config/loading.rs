@@ -84,10 +84,16 @@ fn open_config(path: &Path) -> Option<File> {
         Ok(f) => Some(f),
         Err(err) => {
             if let std::io::ErrorKind::NotFound = err.kind() {
-                None
+                error!(message = "Config file not found in path", ?path);
             } else {
-                None
+                error!(
+                    message = "Error opening config file",
+                    %err,
+                    ?path
+                );
             }
+
+            None
         }
     }
 }

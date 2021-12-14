@@ -46,7 +46,6 @@ mod tests {
         let fields = fields_from_json(json!({
             "field": 123
         }));
-        println!("{:?}", fields);
 
         assert!(contains(&fields, "field"))
     }

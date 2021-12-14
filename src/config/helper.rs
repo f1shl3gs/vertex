@@ -138,6 +138,6 @@ mod tests {
         )
         .unwrap();
 
-        println!("{}", re.re.as_str())
+        assert_eq!(re.re.as_str(), ".*");
     }
 }

@@ -223,20 +223,18 @@ pub fn duration_to_string(d: &chrono::Duration) -> String {
     if u < SECOND as u64 {
         // Special case: if duration is smaller thant a second,
         // use smaller units, like 1.2ms
-        let mut prec = 0;
         w -= 1;
         buf[w] = b's';
         w -= 1;
 
-        if u == 0 {
+        let prec = if u == 0 {
             return "0s".to_string();
         } else if u < MICROSECOND as u64 {
             // print nanoseconds
-            prec = 0;
             buf[w] = b'n';
+            0
         } else if u < MILLISECOND as u64 {
             // print microseconds
-            prec = 3;
             /*
             // U+00B5 'µ' micro sign == 0xC2 0xB5
             w -= 1; // Need room for two bytes
@@ -244,11 +242,12 @@ pub fn duration_to_string(d: &chrono::Duration) -> String {
             buf[w + 2] = 0xB5;
             */
             buf[w] = b'u';
+            3
         } else {
             // print milliseconds
-            prec = 6;
             buf[w] = b'm';
-        }
+            6
+        };
 
         let (_w, _u) = fmt_frac(&mut buf[..w], u, prec);
         w = _w;
@@ -299,7 +298,7 @@ fn fmt_frac(buf: &mut [u8], mut v: u64, prec: i32) -> (usize, u64) {
     // Omit trailing zeros up to and including decimal point
     let mut w = buf.len();
     let mut print = false;
-    for i in 0..prec {
+    for _i in 0..prec {
         let digit = v % 10;
         print = print || digit != 0;
         if print {
@@ -333,7 +332,7 @@ fn fmt_int(buf: &mut [u8], mut v: u64) -> usize {
         }
     }
 
-    return w;
+    w
 }
 
 #[cfg(test)]
@@ -545,7 +544,7 @@ mod tests {
     fn test_leading_fraction() {
         let (f, scale, r) = leading_fraction("6s".as_bytes());
         assert_eq!(6, f);
-        assert_eq!(10.0, scale);
+        assert_eq!(10.0 as f64, scale);
         assert_eq!(r, "s".as_bytes());
     }
 

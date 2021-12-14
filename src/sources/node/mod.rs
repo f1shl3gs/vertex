@@ -836,12 +836,6 @@ mod tests {
         )
         .unwrap();
 
-        println!("{:?}", cs);
-    }
-
-    #[test]
-    fn test_pwd() {
-        let pwd = std::env::current_dir().unwrap();
-        println!("{:?}", pwd);
+        assert_eq!(cs.arp, true);
     }
 }

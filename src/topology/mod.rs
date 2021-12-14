@@ -503,7 +503,7 @@ impl Topology {
         let task = new_pieces.tasks.remove(id).unwrap();
         let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);
-        if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
+        if let Some(prev) = self.tasks.insert(id.to_string(), spawned) {
             drop(prev); // detach and forget
         }
     }
@@ -512,7 +512,7 @@ impl Topology {
         let task = new_pieces.tasks.remove(id).unwrap();
         let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);
-        if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
+        if let Some(prev) = self.tasks.insert(id.to_string(), spawned) {
             drop(prev); // detach and forget
         }
 
@@ -524,7 +524,7 @@ impl Topology {
         let task = new_pieces.tasks.remove(id).unwrap();
         let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);
-        if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
+        if let Some(prev) = self.tasks.insert(id.to_string(), spawned) {
             drop(prev); // detach and forget
         }
     }
@@ -533,7 +533,7 @@ impl Topology {
         let task = new_pieces.tasks.remove(id).unwrap();
         let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);
-        if let Some(prev) = self.tasks.insert(id.clone().into(), spawned) {
+        if let Some(prev) = self.tasks.insert(id.to_string(), spawned) {
             drop(prev); // detach and forget
         }
 
@@ -543,7 +543,7 @@ impl Topology {
         let source_task = new_pieces.source_tasks.remove(id).unwrap();
         let source_task = handle_errors(source_task, self.abort_tx.clone());
         self.source_tasks
-            .insert(id.clone().into(), tokio::spawn(source_task));
+            .insert(id.to_string(), tokio::spawn(source_task));
     }
 
     fn remove_outputs(&mut self, id: &str) {
@@ -562,7 +562,7 @@ impl Topology {
             for input in inputs {
                 if let Some(output) = self.outputs.get_mut(input) {
                     // This can only fail if we are disconnected, which is a valid situation.
-                    let _ = output.send(ControlMessage::Remove(id.clone().into())).await;
+                    let _ = output.send(ControlMessage::Remove(id.to_string())).await;
                 }
             }
         }
@@ -577,7 +577,7 @@ impl Topology {
                 // be present
                 if let Some(input) = self.inputs.get(sid) {
                     let _ = output
-                        .send(ControlMessage::Add(sid.clone().into(), input.get()))
+                        .send(ControlMessage::Add(sid.to_string(), input.get()))
                         .await;
                 }
             }
@@ -589,13 +589,13 @@ impl Topology {
                 // not be present.
                 if let Some(input) = self.inputs.get(tid) {
                     let _ = output
-                        .send(ControlMessage::Add(tid.clone().into(), input.get()))
+                        .send(ControlMessage::Add(tid.to_string(), input.get()))
                         .await;
                 }
             }
         }
 
-        self.outputs.insert(id.clone().into(), output);
+        self.outputs.insert(id.to_string(), output);
     }
 
     async fn setup_inputs(&mut self, id: &str, new_peices: &mut builder::Pieces) {
@@ -607,15 +607,15 @@ impl Topology {
                 .outputs
                 .get_mut(&input)
                 .unwrap()
-                .send(ControlMessage::Add(id.clone().into(), tx.get()))
+                .send(ControlMessage::Add(id.to_string(), tx.get()))
                 .await;
         }
 
-        self.inputs.insert(id.clone().into(), tx);
-        new_peices.detach_triggers.remove(id).map(|trigger| {
-            self.detach_triggers
-                .insert(id.clone().into(), trigger.into())
-        });
+        self.inputs.insert(id.to_string(), tx);
+        new_peices
+            .detach_triggers
+            .remove(id)
+            .map(|trigger| self.detach_triggers.insert(id.to_string(), trigger.into()));
     }
 
     async fn replace_inputs(&mut self, id: &str, new_pieces: &mut builder::Pieces) {
@@ -635,7 +635,7 @@ impl Topology {
         for input in inputs_to_remove {
             if let Some(output) = self.outputs.get_mut(input) {
                 // This can only fail if we are disconnected, which is a valid situation
-                let _ = output.send(ControlMessage::Remove(id.clone().into())).await;
+                let _ = output.send(ControlMessage::Remove(id.to_string())).await;
             }
         }
 
@@ -645,7 +645,7 @@ impl Topology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Add(id.clone().into(), tx.get()))
+                .send(ControlMessage::Add(id.to_string(), tx.get()))
                 .await;
         }
 
@@ -655,15 +655,15 @@ impl Topology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Replace(id.clone().into(), Some(tx.get())))
+                .send(ControlMessage::Replace(id.to_string(), Some(tx.get())))
                 .await;
         }
 
-        self.inputs.insert(id.clone().into(), tx);
-        new_pieces.detach_triggers.remove(id).map(|trigger| {
-            self.detach_triggers
-                .insert(id.clone().into(), trigger.into())
-        });
+        self.inputs.insert(id.to_string(), tx);
+        new_pieces
+            .detach_triggers
+            .remove(id)
+            .map(|trigger| self.detach_triggers.insert(id.to_string(), trigger.into()));
     }
 
     async fn detach_inputs(&mut self, id: &str) {
@@ -681,7 +681,7 @@ impl Topology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Replace(id.clone().into(), None))
+                .send(ControlMessage::Replace(id.to_string(), None))
                 .await;
         }
     }

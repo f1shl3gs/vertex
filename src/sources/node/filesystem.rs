@@ -280,9 +280,6 @@ mod tests {
         let path = PathBuf::from("tests/fixtures/proc/mounts");
         let conf = FileSystemConfig::default();
         let stats = conf.get_stats(path).await.unwrap();
-
-        println!("{:?}", stats);
-
         assert_ne!(stats.len(), 0);
     }
 }

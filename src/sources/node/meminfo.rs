@@ -10,7 +10,7 @@ pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut metrics = Vec::new();
     for (k, v) in infos {
         if k.ends_with("_total") {
-            metrics.push(Metric::gauge(
+            metrics.push(Metric::sum(
                 format!("node_memory_{}", k),
                 format!("Memory information field {}", k),
                 v,

@@ -508,7 +508,7 @@ async fn human_readable_chip_name<P: AsRef<Path>>(dir: P) -> Result<String, Erro
     Ok(content)
 }
 
-async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
+async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
     // generate a name for a sensor path
 
     // sensor numbering depends on the order of linux module loading and
@@ -523,7 +523,8 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
     // preference 1: construct a name based on device name, always unique
 
-    let ap = path.as_ref().clone().join("device");
+    let path = path.as_ref();
+    let ap = path.join("device");
     match tokio::fs::read_link(&ap).await {
         Ok(dev_path) => {
             let dev_path = tokio::fs::canonicalize(ap)
@@ -548,7 +549,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
     }
 
     // preference 2: is there a name file
-    let name_path = path.as_ref().clone().join("name");
+    let name_path = path.join("name");
     match read_to_string(name_path).await {
         Ok(content) => return Ok(content),
         Err(err) => debug!(
@@ -559,7 +560,7 @@ async fn hwmon_name<P: AsRef<Path>>(path: P) -> Result<String, Error> {
 
     // it looks bad, name and device don't provide enough information
     // return a hwmon[0-9]* name
-    let name = path.as_ref().file_name().unwrap().to_str().unwrap();
+    let name = path.file_name().unwrap().to_str().unwrap();
 
     Ok(name.into())
 }
@@ -635,7 +636,8 @@ mod tests {
         let path = "tests/fixtures/sys/class/hwmon/hwmon3";
         let kvs = collect_sensor_data(path).await.unwrap();
 
-        println!("{:?}", kvs);
+        assert_eq!(kvs.get("fan2").unwrap().get("input").unwrap(), "1098");
+        assert_eq!(kvs.get("in0").unwrap().get("max").unwrap(), "1744");
     }
 
     #[tokio::test]

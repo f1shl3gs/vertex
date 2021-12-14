@@ -1,4 +1,4 @@
-use crate::{Error, ProcFS, SysFS};
+use crate::{Error, ProcFS};
 
 use std::collections::BTreeMap;
 

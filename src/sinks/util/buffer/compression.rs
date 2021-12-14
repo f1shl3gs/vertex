@@ -124,7 +124,7 @@ impl<'de> serde::de::Deserialize<'de> for Compression {
                             }
                             level = Some(match map.next_value::<serde_json::Value>()? {
                                 serde_json::Value::Number(level) => match level.as_u64() {
-                                    Some(value) if value <= 9 && value >= 0 => {
+                                    Some(value) if value <= 9 => {
                                         flate2::Compression::new(value as u32)
                                     }
                                     Some(_) | None => {
@@ -230,12 +230,7 @@ mod tests {
         ];
 
         for (input, want) in tests {
-            let compression: Compression = serde_yaml::from_str(input)
-                .map_err(|err| {
-                    println!("input:\n{}", input);
-                    err
-                })
-                .unwrap();
+            let compression: Compression = serde_yaml::from_str(input).unwrap();
 
             assert_eq!(compression, want, "input: {}", input);
         }

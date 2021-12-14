@@ -1,3 +1,6 @@
+#![allow(clippy::print_stdout)] // tests
+#![allow(clippy::print_stderr)] // tests
+
 use http::{Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};

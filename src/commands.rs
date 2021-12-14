@@ -1,3 +1,5 @@
+#![allow(clippy::print_stdout)] // tests
+
 use clap::Parser;
 use vertex::config::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
@@ -88,5 +90,3 @@ impl Providers {
         }
     }
 }
-
-// impl_list_and_example!(ConfigProviders, ProviderDescription);

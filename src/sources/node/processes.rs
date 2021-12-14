@@ -134,16 +134,6 @@ fn parse_state(content: &str) -> Option<&str> {
     content.get(index + 2..index + 3)
 }
 
-#[test]
-fn test_parse_state() {
-    let input = r#"26231 (vim) R 5392 7446 5392 34835 7446 4218880 32533 309516 26 82 1677 44 158 99 20 0 1 0 82375 56274944 1981 18446744073709551615 4194304 6294284 140736914091744 140736914087944 139965136429984 0 0 12288 1870679807 0 0 0 17 0 0 0 31 0 0 8391624 8481048 16420864 140736914093252 140736914093279 140736914093279 140736914096107 0"#;
-
-    let index = input.rfind(')').unwrap();
-    let c = input.get(index + 2..index + 3);
-
-    println!("{:?}", c);
-}
-
 // Check the following resources for the details about the particular stat
 // fields and their data types:
 // * https://man7.org/linux/man-pages/man5/proc.5.html
@@ -195,5 +185,15 @@ mod tests {
         stats.clear();
         assert_eq!(stats.total(), 0);
         assert_eq!(stats.0.len(), 2);
+    }
+
+    #[test]
+    fn test_parse_state() {
+        let input = r#"26231 (vim) R 5392 7446 5392 34835 7446 4218880 32533 309516 26 82 1677 44 158 99 20 0 1 0 82375 56274944 1981 18446744073709551615 4194304 6294284 140736914091744 140736914087944 139965136429984 0 0 12288 1870679807 0 0 0 17 0 0 0 31 0 0 8391624 8481048 16420864 140736914093252 140736914093279 140736914093279 140736914096107 0"#;
+
+        let index = input.rfind(')').unwrap();
+        let c = input.get(index + 2..index + 3);
+
+        assert_eq!(c, Some("R"));
     }
 }

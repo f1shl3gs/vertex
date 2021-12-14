@@ -278,7 +278,12 @@ impl PrometheusExporter {
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
                 .await
-                .map_err(|err| eprintln!("Server error: {}", err))?;
+                .map_err(|err| {
+                    error!(
+                        message = "Server error",
+                        %err
+                    );
+                })?;
 
             Ok::<(), ()>(())
         });

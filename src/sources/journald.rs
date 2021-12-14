@@ -639,15 +639,8 @@ mod tests {
 
         let mut count = 0;
         while let Some(result) = stream.next().await {
-            match result {
-                Ok(fields) => {
-                    count += 1;
-                    println!("fields: {:?}", fields);
-                }
-
-                Err(err) => {
-                    println!("err: {:?}", err)
-                }
+            if result.is_ok() {
+                count += 1;
             }
         }
 
@@ -733,14 +726,11 @@ MESSAGE=audit log
 
     #[tokio::test]
     async fn test_journal_stream() {
-        // let (mut stream, stop) = TestJournal::new(&None);
+        let mut count = 0;
         let mut stream = journal_stream();
-        // let entries = stream.collect::<Vec<_>>();
         while let Some(result) = stream.next().await {
-            match result {
-                Ok(entry) => println!("entry: {:?}", entry),
-                Err(err) => println!("err: {:?}", err),
-            }
+            result.unwrap();
+            count += 1;
         }
     }
 
@@ -828,10 +818,7 @@ MESSAGE=audit log
     #[tokio::test]
     async fn reads_journal() {
         let received = run_with_units(&[], &[], None).await;
-        for ev in &received {
-            println!("{:?}", ev);
-        }
-        // assert_eq!(received.len(), 8);
+        assert_eq!(received.len(), 8);
         assert_eq!(
             message(&received[0]),
             Value::Bytes("System Initialization".into())

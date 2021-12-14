@@ -71,10 +71,6 @@ mod tests {
         };
 
         let v = unsafe { libc::uname(&mut u) };
-        if v != 0 {
-            println!("error")
-        }
-
-        println!("sysname {:?}", to_string(u.sysname));
+        assert_ne!(v, 0);
     }
 }

@@ -6,6 +6,10 @@ on:
 
 env:
   CI: true
+  RUST_TEST_THREADS: 1
+  RUST_BACKTRACE: full
+  PROFILE: debug
+  RUSTFLAGS: "-D warnings"
 
 jobs:
   check:
@@ -32,7 +36,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
       - name: Check style
-        run:  cargo clippy --workspace --all-targets  -- -A warnings
+        run:  make check_clippy
       - name: Check shell
         run:  bash ci/check-scripts.sh
       - name: Check fmt

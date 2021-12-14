@@ -230,10 +230,10 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn multiple_transforms() -> Result<(), crate::Error> {
+    async fn multiple_transforms() {
         let t1 = AddTag {
             k: "k1".into(),
-            v: "k2".into(),
+            v: "v1".into(),
         };
 
         let t2 = AddTag {
@@ -246,19 +246,10 @@ mod tests {
 
         let event = Event::Metric(Metric::gauge("foo", "", 0.1));
 
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}", closed);
-
         pipeline.send(event).await.unwrap();
+        let out = collect_ready(receiver).await;
 
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}", closed);
-
-        let _out = collect_ready(receiver).await;
-
-        let closed = pipeline.inner.is_closed();
-        println!("closed: {}, received: {}", closed, _out.len());
-
-        Ok(())
+        assert_eq!(out[0].as_metric().tags.get("k1").unwrap(), "v1");
+        assert_eq!(out[0].as_metric().tags.get("k2").unwrap(), "v2");
     }
 }

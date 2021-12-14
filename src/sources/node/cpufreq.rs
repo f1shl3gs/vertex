@@ -114,9 +114,7 @@ async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
                 stats.push(stat)
             }
 
-            Err(err) => {
-                println!("err {}", err)
-            }
+            Err(err) => {}
         }
     }
 
@@ -158,7 +156,8 @@ mod tests {
     async fn test_parse_cpu_freq_cpu_info() {
         let cpu_path = "tests/fixtures/sys/devices/system/cpu/cpu0";
         let v = parse_cpu_freq_cpu_info(cpu_path).await.unwrap();
-        println!("{:?}", v);
+        assert_eq!(v.minimum_frequency, Some(800000));
+        assert_eq!(v.maximum_frequency, Some(2400000));
     }
 
     #[tokio::test]

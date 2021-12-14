@@ -438,6 +438,6 @@ sinks:
     #[test]
     fn test_deserialize_duration() {
         let d: WithDuration = serde_yaml::from_str("d: 5m3s").unwrap();
-        println!("{:?}", d.d)
+        assert_eq!(d.d, chrono::Duration::seconds(5 * 60 + 3));
     }
 }

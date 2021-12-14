@@ -160,94 +160,6 @@ mod tests {
     };
     use netlink_sys::{protocols::NETLINK_SOCK_DIAG, Socket, SocketAddr, TokioSocket};
 
-    #[test]
-    fn sync_inet_diag() {
-        let mut socket = Socket::new(NETLINK_SOCK_DIAG).unwrap();
-        let _port = socket.bind_auto().unwrap().port_number();
-        socket.connect(&SocketAddr::new(0, 0)).unwrap();
-        let mut stats = Statistics::default();
-
-        let mut header = NetlinkHeader::default();
-        header.flags = NLM_F_REQUEST | NLM_F_DUMP;
-
-        let mut packet = NetlinkMessage {
-            header,
-            payload: SockDiagMessage::InetRequest(InetRequest {
-                family: AF_INET,
-                protocol: IPPROTO_TCP.into(),
-                extensions: ExtensionFlags::empty(),
-                states: StateFlags::all(),
-                socket_id: SocketId::new_v4(),
-            })
-            .into(),
-        };
-
-        packet.finalize();
-
-        let mut buf = vec![0; packet.header.length as usize];
-
-        // Before calling serialize, it is important to check that the buffer in which we're
-        // emitting is big enough for the packet, other `serialize()` panics.
-        assert_eq!(buf.len(), packet.buffer_len());
-
-        packet.serialize(&mut buf[..]);
-
-        // println!(">>> {:?}", packet);
-        if let Err(e) = socket.send(&buf[..], 0) {
-            println!("SEND ERROR {}", e);
-            return;
-        }
-
-        let mut recv_buf = vec![0; 4096];
-        let mut offset = 0;
-        while let Ok(size) = socket.recv(&mut recv_buf[..], 0) {
-            loop {
-                let bytes = &recv_buf[offset..];
-                let rx_packet = <NetlinkMessage<SockDiagMessage>>::deserialize(bytes).unwrap();
-                // println!("<<< {:?}", rx_packet);
-
-                match rx_packet.payload {
-                    NetlinkPayload::Noop | NetlinkPayload::Ack(_) => {}
-                    NetlinkPayload::InnerMessage(SockDiagMessage::InetResponse(resp)) => {
-                        // println!("{:#?}", resp);
-                        match resp.header.state {
-                            TCP_ESTABLISHED => stats.established += 1,
-                            TCP_SYN_SENT => stats.syn_sent += 1,
-                            TCP_SYN_RECV => stats.syn_recv += 1,
-                            TCP_FIN_WAIT1 => stats.fin_wait1 += 1,
-                            TCP_FIN_WAIT2 => stats.fin_wait2 += 1,
-                            TCP_TIME_WAIT => stats.time_wait += 1,
-                            TCP_CLOSE => stats.close += 1,
-                            TCP_CLOSE_WAIT => stats.close_wait += 1,
-                            TCP_LAST_ACK => stats.last_ack += 1,
-                            TCP_LISTEN => stats.listen += 1,
-                            TCP_CLOSING => stats.closing += 1,
-                            _ => {}
-                        }
-                        /* println!("sock state {}", resp.header.state);
-                        println!("rx_queue {} tx_queue {}",
-                                 resp.header.recv_queue,
-                                 resp.header.send_queue,
-                        );*/
-                    }
-                    NetlinkPayload::Done => {
-                        println!("Done");
-                        println!("xxx {:#?}", stats);
-
-                        return;
-                    }
-                    NetlinkPayload::Error(_) | NetlinkPayload::Overrun(_) | _ => return,
-                }
-
-                offset += rx_packet.header.length as usize;
-                if offset == size || rx_packet.header.length == 0 {
-                    offset = 0;
-                    break;
-                }
-            }
-        }
-    }
-
     #[tokio::test]
     async fn async_inet_diag() {
         let mut stats = Statistics::default();
@@ -290,7 +202,6 @@ mod tests {
                 match rx_packet.payload {
                     NetlinkPayload::Noop | NetlinkPayload::Ack(_) => {}
                     NetlinkPayload::InnerMessage(SockDiagMessage::InetResponse(resp)) => {
-                        // println!("{:#?}", resp);
                         match resp.header.state {
                             TCP_ESTABLISHED => stats.established += 1,
                             TCP_SYN_SENT => stats.syn_sent += 1,
@@ -307,9 +218,8 @@ mod tests {
                         }
                     }
                     NetlinkPayload::Done => {
-                        println!("Done");
-                        println!("{:#?}", stats);
-
+                        // println!("Done");
+                        // println!("{:#?}", stats);
                         return;
                     }
                     NetlinkPayload::Error(_) | NetlinkPayload::Overrun(_) | _ => return,
