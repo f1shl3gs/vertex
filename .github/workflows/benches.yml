@@ -5,6 +5,10 @@ on:
   push: {}
   workflow_dispatch: {}
 
+permissions:
+  deployments: write
+  contents: write
+
 env:
   CI: true
 
