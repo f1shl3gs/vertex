@@ -912,7 +912,14 @@ fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
         "Current number of active servers",
         "gauge"
     );
-    try_push_metric!(metrics, row, 30, "haproxy_backend_server_selected_total", "Total number of times a server was selected, either for new sessions, or when re-dispatching.", "counter");
+    try_push_metric!(
+        metrics,
+        row,
+        30,
+        "haproxy_backend_server_selected_total",
+        "Total number of times a server was selected, either for new sessions, or when re-dispatching.",
+        "counter"
+    );
     try_push_metric!(
         metrics,
         row,
