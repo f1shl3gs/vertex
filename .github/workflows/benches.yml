@@ -29,11 +29,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
       - run: cargo bench | tee bench_results.txt
