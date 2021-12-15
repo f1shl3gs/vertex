@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639559621681,
+  "lastUpdate": 1639559710059,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "bench-prometheus": [
@@ -130,6 +130,72 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 71.514,
+            "unit": "ns/op"
+          }
+        ]
+      }
+    ],
+    "tracing-limit": [
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "2a68e06089093a5700c670c1562b6e80f09fa89f",
+          "message": "add tracing-limit & humanize",
+          "timestamp": "2021-12-15T17:04:34+08:00",
+          "tree_id": "5f8ea7849aeaf32e1044879fd9c6556d9abd5da8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a68e06089093a5700c670c1562b6e80f09fa89f"
+        },
+        "date": 1639559708918,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing",
+            "value": 762.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 75668,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 393070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 772430,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 311.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 32557,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 158040,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 313540,
             "unit": "ns/op"
           }
         ]
