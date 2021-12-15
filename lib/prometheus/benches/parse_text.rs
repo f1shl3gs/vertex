@@ -1885,7 +1885,7 @@ fn bench_parse_text(c: &mut Criterion) {
     group.noise_threshold(0.03);
 
     group.throughput(Throughput::Bytes(INPUT.len() as u64));
-    group.bench_with_input("1", INPUT, |b, input| {
+    group.bench_with_input("parse_text", INPUT, |b, input| {
         b.iter(|| {
             prometheus::parse_text(input).unwrap();
         })
