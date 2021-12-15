@@ -39,8 +39,10 @@ jobs:
     strategy:
       matrix:
         target:
-          - bench
-          - bench-prometheus
+          - vertex
+          - prometheus
+          - tracing-limit
+          - humanize
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7
@@ -51,7 +53,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
-      - run: make ${{ matrix.target }} | tee bench.txt
+      - run: make bench-${{ matrix.target }} | tee bench.txt
       - run: bash ./ci/bench/extract_criterion_results.sh
       - name: Store bench results
         uses: benchmark-action/github-action-benchmark@v1
