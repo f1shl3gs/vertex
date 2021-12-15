@@ -6,6 +6,7 @@ on:
       - ".github/workflows/benches.yml"
       - ".cargo/**"
       - "benches/**"
+      - "ci/bench/**"
       - "lib/**"
       - "src/**"
       - "tests/**"
