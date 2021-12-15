@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639561163164,
+  "lastUpdate": 1639561233014,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56,6 +56,68 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 68.93,
+            "unit": "ns/op"
+          }
+        ]
+      }
+    ],
+    "tracing-limit": [
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "edd8ca6ac9a1f0f7fc23a8abee710af289165e05",
+          "message": "Bench workflow",
+          "timestamp": "2021-12-15T08:25:33Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/52/commits/edd8ca6ac9a1f0f7fc23a8abee710af289165e05"
+        },
+        "date": 1639561232484,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing",
+            "value": 757.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 76490,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 380680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 759900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 304.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 30424,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 152790,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 302140,
             "unit": "ns/op"
           }
         ]
