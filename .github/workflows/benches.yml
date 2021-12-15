@@ -1,0 +1,69 @@
+name: Benchmark
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/benches.yml"
+      - ".cargo/**"
+      - "benches/**"
+      - "ci/bench/**"
+      - "lib/**"
+      - "src/**"
+      - "tests/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain"
+  workflow_dispatch: {}
+
+permissions:
+  deployments: write
+  contents: write
+
+env:
+  CI: true
+
+jobs:
+  cancel-previous:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true # can cancel workflows scheduled later
+
+  bench:
+    name: Bench - ${{ matrix.target }}
+    runs-on: ubuntu-20.04
+    needs:
+      - cancel-previous
+    strategy:
+      matrix:
+        target:
+          - vertex
+          - prometheus
+          - tracing-limit
+          - humanize
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - run: make bench-${{ matrix.target }} | tee bench.txt
+      - run: bash ./ci/bench/extract_criterion_results.sh
+      - name: Store bench results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ${{ matrix.target }}
+          tool: customSmallerIsBetter
+          output-file-path: bench.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          comment-on-alert: true
+          benchmark-data-dir-path: bench

@@ -80,5 +80,21 @@ check_fmt:
 .PHONY: check
 check: check_shell check_clippy check_fmt
 
+.PHONY: bench-vertex
+bench-vertex:
+	cargo bench --features bench --no-default-features
+
+.PHONY: bench-prometheus
+bench-prometheus:
+	cargo bench --manifest-path lib/prometheus/Cargo.toml
+
+.PHONY: bench-tracing-limit
+bench-tracing-limit:
+	cargo bench --manifest-path lib/tracing-limit/Cargo.toml
+
+.PHONY: bench-humanize
+bench-humanize:
+	cargo bench --manifest-path lib/humanize/Cargo.toml
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

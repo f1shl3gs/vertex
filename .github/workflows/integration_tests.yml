@@ -22,6 +22,7 @@ jobs:
   tests:
     name: Integration ${{ matrix.test }}
     runs-on: ubuntu-20.04
+    needs: cancel-previous
     strategy:
       fail-fast: false
       matrix:

@@ -25,6 +25,8 @@ jobs:
   changes:
     name: Changes
     runs-on: ubuntu-20.04
+    needs:
+      - cancel-previous
     # Set job outputs to values from filter step
     outputs:
       source: ${{ steps.filter.outputs.source }}

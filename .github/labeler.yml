@@ -21,6 +21,7 @@ docs:
 
 benches:
   - benches/**/*
+  - ci/bench/**/*
 
 tests:
   - tests/**/*

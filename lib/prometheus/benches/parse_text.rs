@@ -1880,25 +1880,12 @@ promhttp_metric_handler_requests_total{code="500"} 0
 promhttp_metric_handler_requests_total{code="503"} 0"##;
 
 fn bench_parse_text(c: &mut Criterion) {
-    let mut group = c.benchmark_group("parse");
-    group.measurement_time(std::time::Duration::from_secs(10));
-
-    group.bench_function("1", |b| {
-        b.iter(|| {
-            prometheus::parse_text(INPUT).unwrap();
-        })
-    });
-
-    group.finish();
-}
-
-fn bench_throughput(c: &mut Criterion) {
-    let mut group = c.benchmark_group("throughput");
+    let mut group = c.benchmark_group("prometheus");
     group.measurement_time(std::time::Duration::from_secs(10));
     group.noise_threshold(0.03);
 
     group.throughput(Throughput::Bytes(INPUT.len() as u64));
-    group.bench_with_input("1", INPUT, |b, input| {
+    group.bench_with_input("parse_text", INPUT, |b, input| {
         b.iter(|| {
             prometheus::parse_text(input).unwrap();
         })
@@ -1907,9 +1894,5 @@ fn bench_throughput(c: &mut Criterion) {
     group.finish();
 }
 
-criterion_group!(
-    name = benches;
-    config = Criterion::default().with_profiler(PProfProfiler::new(100, Output::Protobuf));
-    targets = bench_parse_text, bench_throughput
-);
+criterion_group!(benches, bench_parse_text);
 criterion_main!(benches);
