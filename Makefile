@@ -84,5 +84,9 @@ check: check_shell check_clippy check_fmt
 bench:
 	RUSTFLAGS="-A warnings" cargo bench --features bench --no-default-features
 
+.PHONY: bench-prometheus
+bench-prometheus:
+	RUSTFLAGS="-A warnings" cargo bench --manifest-path lib/prometheus/Cargo.toml
+
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30
