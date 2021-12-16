@@ -7,7 +7,7 @@ use futures::{channel::mpsc, Sink, SinkExt, Stream};
 use pin_project::pin_project;
 use serde::{Deserialize, Serialize};
 
-pub use buffers::{Acker};
+pub use buffers::Acker;
 use event::{DecodeBytes, EncodeBytes, Event};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]

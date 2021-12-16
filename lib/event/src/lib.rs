@@ -1,3 +1,4 @@
+mod buffer;
 pub mod encoding;
 mod finalization;
 mod log;
@@ -7,14 +8,13 @@ mod metadata;
 mod metric;
 mod trace;
 mod value;
-mod buffer;
 
 // re-export
+pub use buffer::{DecodeBytes, EncodeBytes};
 pub use finalization::*;
 pub use log::LogRecord;
 pub use metric::*;
 pub use value::Value;
-pub use buffer::{DecodeBytes, EncodeBytes};
 
 use std::collections::BTreeMap;
 use std::sync::Arc;

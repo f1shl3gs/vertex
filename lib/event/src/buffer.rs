@@ -20,9 +20,9 @@ pub trait EncodeBytes<T> {
     ///
     /// Function will fail when enconding is not possible for the type instance
     fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error>
-        where
-            B: BufMut,
-            Self: Sized;
+    where
+        B: BufMut,
+        Self: Sized;
 
     /// Return the encoded byte size of `T`
     ///
@@ -44,7 +44,7 @@ pub trait DecodeBytes<T> {
     ///
     /// Function will fail when decoding is not possible from the passed buffer
     fn decode<B>(buffer: B) -> Result<T, Self::Error>
-        where
-            T: Sized,
-            B: Buf;
+    where
+        T: Sized,
+        B: Buf;
 }

@@ -4,8 +4,8 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use futures::Sink;
 use event::{DecodeBytes, EncodeBytes};
+use futures::Sink;
 
 use crate::usage::BufferUsageData;
 
