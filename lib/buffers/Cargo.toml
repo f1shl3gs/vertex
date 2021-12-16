@@ -8,6 +8,6 @@ bytes = { version = "1.0.1", default-features = false }
 futures = { version = "0.3.18", default-features = false, features = ["std"] }
 pin-project = { version = "1.0.8", default-features = false }
 serde = { version = "1.0.131", default-features = false, features = ["derive"] }
-tokio = { version = "1.14.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time"] }
+tokio = { version = "1.15.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time"] }
 snafu = { version = "0.6" }
 memmap = { version = "0.7.0" }

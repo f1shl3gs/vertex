@@ -239,7 +239,7 @@ nix = ">=0.22.2"
 prost-build = { version = "0.9" }
 
 [dev-dependencies]
-tokio = { version = "1.14.0", features = ["test-util"] }
+tokio = { version = "1.15.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 criterion = { version = "0.3", default-features = false, features = ["async_tokio"] }
 pprof = { version = "0.6.1", default-features = false, features = ["flamegraph", "criterion"] }
@@ -270,7 +270,7 @@ jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profi
 jemalloc-ctl = { version = "0.3.3", optional = true }
 
 # futrures & tokio
-tokio = { version = "1.14.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time"] }
 bytes = { version = "1.1.0", features = ["serde"] }
