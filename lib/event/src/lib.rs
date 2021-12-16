@@ -7,18 +7,19 @@ mod metadata;
 mod metric;
 mod trace;
 mod value;
+mod buffer;
 
 // re-export
 pub use finalization::*;
 pub use log::LogRecord;
 pub use metric::*;
 pub use value::Value;
+pub use buffer::{DecodeBytes, EncodeBytes};
 
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::finalization::{BatchNotifier, EventFinalizer};
-use buffers::{DecodeBytes, EncodeBytes};
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
 

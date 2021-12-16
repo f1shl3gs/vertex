@@ -1,10 +1,8 @@
 mod acker;
-mod bytes;
 mod disk;
 mod usage;
 
 // re-export
-pub use crate::bytes::{DecodeBytes, EncodeBytes};
 pub use acker::{Ackable, Acker};
 
 use serde::{Deserialize, Serialize};

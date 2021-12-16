@@ -11,9 +11,9 @@ use std::task::{Context, Poll};
 use futures::{Sink, Stream};
 use pin_project::pin_project;
 use snafu::Snafu;
+use event::{DecodeBytes, EncodeBytes};
 
 use crate::usage::BufferUsageData;
-use crate::{DecodeBytes, EncodeBytes};
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {

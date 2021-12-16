@@ -4,8 +4,7 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use futures::Stream;
-
-use crate::DecodeBytes;
+use event::DecodeBytes;
 
 pub struct Reader<T>
 where

@@ -306,6 +306,7 @@ name = "buffers"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "event",
  "futures",
  "memmap",
  "pin-project",
@@ -889,7 +890,6 @@ name = "event"
 version = "0.1.0"
 dependencies = [
  "atomig",
- "buffers",
  "bytes",
  "chrono",
  "futures",

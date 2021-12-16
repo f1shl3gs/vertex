@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+event = { path = "../event" }
+
 bytes = { version = "1.0.1", default-features = false }
 futures = { version = "0.3.18", default-features = false, features = ["std"] }
 pin-project = { version = "1.0.8", default-features = false }

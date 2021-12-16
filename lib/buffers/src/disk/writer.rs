@@ -5,9 +5,9 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::Sink;
+use event::{DecodeBytes, EncodeBytes};
 
 use crate::usage::BufferUsageData;
-use crate::{DecodeBytes, EncodeBytes};
 
 pub struct Writer<T>
 where

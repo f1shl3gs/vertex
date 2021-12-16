@@ -7,8 +7,8 @@ use futures::{channel::mpsc, Sink, SinkExt, Stream};
 use pin_project::pin_project;
 use serde::{Deserialize, Serialize};
 
-pub use buffers::{Acker, DecodeBytes, EncodeBytes};
-use event::Event;
+pub use buffers::{Acker};
+use event::{DecodeBytes, EncodeBytes, Event};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
