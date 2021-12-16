@@ -4,8 +4,8 @@ use event::Metric;
 use serde::{Deserialize, Serialize};
 
 use crate::config::{
-    default_std_interval, deserialize_std_duration, serialize_std_duration,
-    DataType, SourceConfig, SourceContext,
+    default_std_interval, deserialize_std_duration, serialize_std_duration, DataType, SourceConfig,
+    SourceContext,
 };
 use crate::sources::Source;
 use crate::tls::TlsConfig;

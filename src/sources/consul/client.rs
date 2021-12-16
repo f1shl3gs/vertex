@@ -202,7 +202,10 @@ impl QueryOptions {
             }
 
             if !self.stale_if_error.is_zero() {
-                cc.push(format!("stale-if-error={}", self.stale_if_error.as_secs_f64()))
+                cc.push(format!(
+                    "stale-if-error={}",
+                    self.stale_if_error.as_secs_f64()
+                ))
             }
 
             if cc.len() > 0 {
