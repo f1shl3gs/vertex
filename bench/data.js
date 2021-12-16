@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639629648490,
+  "lastUpdate": 1639629770601,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -258,6 +258,66 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing",
             "value": 315730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "353bcc0239fdc0a353f53e63e204b1c79a4374fd",
+          "message": "chore(deps): bump tokio from 1.14.0 to 1.15.0",
+          "timestamp": "2021-12-15T10:06:53Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/56/commits/353bcc0239fdc0a353f53e63e204b1c79a4374fd"
+        },
+        "date": 1639629770068,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing",
+            "value": 655.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 65731,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 328000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 656030,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 264.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 26251,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 131240,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing",
+            "value": 262970,
             "unit": "ns/op"
           }
         ]
