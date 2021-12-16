@@ -384,6 +384,11 @@ impl MaybeTlsSettings {
         }
     }
 
+    #[inline]
+    pub fn client_config(config: &Option<TlsConfig>) -> Result<Self> {
+        Self::from_config(config, false)
+    }
+
     pub const fn http_protocol_name(&self) -> &'static str {
         match self {
             MaybeTls::Raw(_) => "http",
