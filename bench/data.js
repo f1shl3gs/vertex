@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639629913373,
+  "lastUpdate": 1639629963524,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74,6 +74,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1137900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "353bcc0239fdc0a353f53e63e204b1c79a4374fd",
+          "message": "chore(deps): bump tokio from 1.14.0 to 1.15.0",
+          "timestamp": "2021-12-15T10:06:53Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/56/commits/353bcc0239fdc0a353f53e63e204b1c79a4374fd"
+        },
+        "date": 1639629962615,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1361000,
             "unit": "ns/op"
           }
         ]
