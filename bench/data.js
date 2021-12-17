@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639744522830,
+  "lastUpdate": 1639745142727,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1115,6 +1115,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.536,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "6d2f83793c30da7d68197996a0e68b9a8579ed66",
+          "message": "chore(deps): bump serde from 1.0.131 to 1.0.132",
+          "timestamp": "2021-12-17T12:19:33Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/62/commits/6d2f83793c30da7d68197996a0e68b9a8579ed66"
+        },
+        "date": 1639745141667,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 76049000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1227800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 31.543,
             "unit": "ns/op"
           }
         ]
