@@ -33,6 +33,7 @@ jobs:
           - memcached
           - haproxy
           - mysql
+          - consul
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7

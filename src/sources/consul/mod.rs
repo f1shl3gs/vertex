@@ -7,8 +7,8 @@ use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_std_interval, deserialize_std_duration, serialize_std_duration, DataType, SourceConfig,
-    SourceContext,
+    default_std_interval, deserialize_std_duration, serialize_std_duration, DataType,
+    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::HttpClient;
 use crate::sources::consul::client::{Client, ConsulError};
@@ -16,6 +16,7 @@ use crate::sources::Source;
 use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
     #[serde(default)]
     tls: Option<TlsConfig>,
@@ -30,6 +31,21 @@ struct ConsulSourceConfig {
     interval: std::time::Duration,
 }
 
+impl GenerateConfig for ConsulSourceConfig {
+    fn generate_config() -> serde_yaml::Value {
+        serde_yaml::to_value(Self {
+            tls: None,
+            endpoints: vec!["http://127.0.0.1:8500".to_string()],
+            interval: default_std_interval(),
+        })
+        .unwrap()
+    }
+}
+
+inventory::submit! {
+    SourceDescription::new::<ConsulSourceConfig>("consul")
+}
+
 #[async_trait::async_trait]
 #[typetag::serde(name = "consul")]
 impl SourceConfig for ConsulSourceConfig {
@@ -42,7 +58,7 @@ impl SourceConfig for ConsulSourceConfig {
         let clients = self
             .endpoints
             .iter()
-            .map(|endpoint| Client::new(endpoint.to_string(), http_client))
+            .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
         let mut output = ctx.out.sink_map_err(|err| {
@@ -59,7 +75,7 @@ impl SourceConfig for ConsulSourceConfig {
 
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
-                    .find_or_last()
+                    .flatten()
                     .map(Event::Metric)
                     .map(Ok);
 
@@ -81,22 +97,35 @@ impl SourceConfig for ConsulSourceConfig {
 
 async fn gather(client: &Client) -> Vec<Metric> {
     let start = Instant::now();
-    let mut metrics = match futures::future::try_join_all([
+    let mut metrics = match tokio::try_join!(
         collect_peers_metric(client),
         collect_leader_metric(client),
         collect_nodes_metric(client),
         collect_members_metric(client),
         collect_services_metric(client),
         collect_health_state_metric(client),
-    ])
-    .await
-    {
-        Ok(metrics) => metrics.iter().flatten().map(|m| *m).collect(),
-        Err(_) => vec![Metric::gauge(
-            "consul_up",
-            "Was the last query of Consul successful",
-            0,
-        )],
+    ) {
+        Ok((m1, m2, m3, m4, m5, m6)) => {
+            let mut metrics =
+                Vec::with_capacity(m1.len() + m2.len() + m3.len() + m4.len() + m5.len() + m6.len());
+            metrics.extend(m1);
+            metrics.extend(m2);
+            metrics.extend(m3);
+            metrics.extend(m4);
+            metrics.extend(m5);
+            metrics.extend(m6);
+
+            metrics
+        }
+        Err(err) => {
+            warn!(message = "Collect consul metrics failed", ?err);
+
+            vec![Metric::gauge(
+                "consul_up",
+                "Was the last query of Consul successful",
+                0,
+            )]
+        }
     };
 
     let elapsed = start.elapsed().as_secs_f64();

@@ -1,10 +1,10 @@
+use std::collections::{BTreeMap, HashMap};
+
 use bytes::Buf;
-use http::{HeaderValue, Request, StatusCode, Uri};
+use http::StatusCode;
 use hyper::Body;
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
-use std::collections::{BTreeMap, HashMap};
-use url::Url;
 
 use crate::config::{deserialize_std_duration, serialize_std_duration};
 use crate::http::HttpClient;
@@ -27,29 +27,38 @@ pub enum ConsulError {
 
 // Not all field included, only the field we need
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Node {
+    #[serde(rename = "ID")]
+    pub id: String,
     pub address: String,
 }
 
 // Not all field included, only the field we need
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct AgentMember {
     pub name: String,
     pub status: f64,
+    pub addr: String,
 }
 
 // Not all field included, only the field we need
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct HealthCheck {
     pub name: String,
     pub service_name: String,
     pub status: String,
+    #[serde(rename = "ServiceID")]
     pub service_id: String,
+    #[serde(rename = "CheckID")]
     pub check_id: String,
     pub node: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Service {
     pub id: String,
     pub tags: Vec<String>,
@@ -57,6 +66,7 @@ pub struct Service {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct ServiceEntry {
     pub node: Node,
     pub service: Service,
@@ -297,7 +307,7 @@ impl Client {
         T: serde::de::DeserializeOwned,
     {
         let path = format!("{}{}", self.endpoint, path);
-        let mut builder = match opts {
+        let builder = match opts {
             Some(opts) => opts.builder(&path)?,
             None => http::Request::get(path),
         };
@@ -326,39 +336,58 @@ impl Client {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::config::ProxyConfig;
-    use crate::tls::MaybeTlsSettings;
-
-    #[tokio::test]
-    async fn test_fetch() {
-        let tls = MaybeTlsSettings::client_config(&None).unwrap();
-        let client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
-        let endpoint = "http://127.0.0.1:8500".to_string();
-
-        let client = Client::new(endpoint, client);
-
-        let peers = client.peers().await.unwrap();
-        println!("peers: {:?}", peers);
-    }
-}
-
 #[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
+    use super::*;
+    use crate::config::ProxyConfig;
+    use crate::http::HttpClient;
+    use crate::tls::MaybeTlsSettings;
     use testcontainers::images::generic::{GenericImage, WaitFor};
     use testcontainers::Docker;
 
-    #[test]
-    #[ignore]
-    fn start_local_service() {
+    #[tokio::test]
+    async fn start_local_service() {
         let docker = testcontainers::clients::Cli::default();
         let image = GenericImage::new("consul:1.11.1").with_wait_for(WaitFor::LogMessage {
             message: "Synced node info".to_string(),
-            stream: testcontainers::Stream::StdOut,
+            stream: testcontainers::images::generic::Stream::StdOut,
         });
         let service = docker.run(image);
         let host_port = service.get_host_port(8500).unwrap();
+
+        let tls = MaybeTlsSettings::client_config(&None).unwrap();
+        let client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
+        let endpoint = format!("http://127.0.0.1:{}", host_port);
+        let client = Client::new(endpoint, client);
+
+        let peers = client.peers().await.unwrap();
+        assert_eq!(peers.len(), 1);
+        assert_eq!(peers[0], "127.0.0.1:8300".to_string());
+
+        let leader = client.leader().await.unwrap();
+        assert_eq!(leader, "127.0.0.1:8300".to_string());
+
+        let nodes = client.nodes(None).await.unwrap();
+        assert_eq!(nodes.len(), 1);
+        assert_eq!(nodes[0].address, "127.0.0.1");
+
+        let members = client.members(false).await.unwrap();
+        assert_eq!(members.len(), 1);
+        assert_eq!(members[0].status, 1.0);
+        assert_eq!(members[0].addr, "127.0.0.1".to_string());
+
+        let services = client.services(None).await.unwrap();
+        assert_eq!(services.len(), 1);
+        assert_eq!(services.get("consul").unwrap().len(), 0);
+
+        let entries = client.service("consul", "", None).await.unwrap();
+        assert_eq!(entries.len(), 1);
+        assert_eq!(entries[0].node.address, "127.0.0.1".to_string());
+        assert_eq!(entries[0].service.service, "consul".to_string());
+
+        let health_states = client.health_state(None).await.unwrap();
+        assert_eq!(health_states.len(), 1);
+        assert_eq!(health_states[0].name, "Serf Health Status".to_string());
+        assert_eq!(health_states[0].status, "passing".to_string());
     }
 }
