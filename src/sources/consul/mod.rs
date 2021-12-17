@@ -1,9 +1,9 @@
 mod client;
 
-use std::time::Instant;
 use event::{tags, Event, Metric};
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
+use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
@@ -91,31 +91,25 @@ async fn gather(client: &Client) -> Vec<Metric> {
     ])
     .await
     {
-        Ok(metrics) => {
-            metrics.iter()
-                .flatten()
-                .map(|m| *m)
-                .collect()
-        }
+        Ok(metrics) => metrics.iter().flatten().map(|m| *m).collect(),
         Err(_) => vec![Metric::gauge(
             "consul_up",
             "Was the last query of Consul successful",
             0,
-        )]
+        )],
     };
 
     let elapsed = start.elapsed().as_secs_f64();
     metrics.push(Metric::gauge(
         "consule_scrape_duration_seconds",
         "",
-        elapsed
+        elapsed,
     ));
 
-
-    metrics.iter_mut()
-        .for_each(|m| {
-            m.tags.insert("instance".to_string(), client.endpoint.clone());
-        });
+    metrics.iter_mut().for_each(|m| {
+        m.tags
+            .insert("instance".to_string(), client.endpoint.clone());
+    });
 
     metrics
 }
