@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639749835723,
+  "lastUpdate": 1639749903455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -274,6 +274,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1138100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "f15dedf56ee3028d0caac5834091c9ed68ae1fec",
+          "message": "chore(deps): bump metrics-tracing-context from 0.8.1 to 0.9.0",
+          "timestamp": "2021-12-17T12:51:23Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/58/commits/f15dedf56ee3028d0caac5834091c9ed68ae1fec"
+        },
+        "date": 1639749901381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1337100,
             "unit": "ns/op"
           }
         ]
