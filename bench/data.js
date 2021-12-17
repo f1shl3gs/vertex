@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639716135061,
+  "lastUpdate": 1639716350048,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -301,6 +301,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 81.239,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "52e30c6f733ba9f4e23a533c68e66637798cc726",
+          "message": "chore(deps): bump nix from 0.23.0 to 0.23.1",
+          "timestamp": "2021-12-16T10:32:47Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/59/commits/52e30c6f733ba9f4e23a533c68e66637798cc726"
+        },
+        "date": 1639716349116,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 43.683,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 67.73,
             "unit": "ns/op"
           }
         ]
