@@ -3,11 +3,12 @@ mod client;
 use event::{tags, Event, Metric};
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_std_interval, deserialize_std_duration, serialize_std_duration, DataType,
+    default_std_interval, default_true, deserialize_std_duration, serialize_std_duration, DataType,
     GenerateConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::HttpClient;
@@ -29,6 +30,9 @@ struct ConsulSourceConfig {
         serialize_with = "serialize_std_duration"
     )]
     interval: std::time::Duration,
+
+    #[serde(default = "default_true")]
+    health_summary: bool,
 }
 
 impl GenerateConfig for ConsulSourceConfig {
@@ -37,6 +41,7 @@ impl GenerateConfig for ConsulSourceConfig {
             tls: None,
             endpoints: vec!["http://127.0.0.1:8500".to_string()],
             interval: default_std_interval(),
+            health_summary: default_true(),
         })
         .unwrap()
     }
@@ -55,6 +60,7 @@ impl SourceConfig for ConsulSourceConfig {
         let interval = tokio::time::interval(self.interval.into());
         let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
+        let health_summary = self.health_summary;
         let clients = self
             .endpoints
             .iter()
@@ -70,8 +76,10 @@ impl SourceConfig for ConsulSourceConfig {
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics =
-                    futures::future::join_all(clients.iter().map(|cli| gather(cli))).await;
+                let metrics = futures::future::join_all(
+                    clients.iter().map(|cli| gather(cli, health_summary)),
+                )
+                .await;
 
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
@@ -95,14 +103,14 @@ impl SourceConfig for ConsulSourceConfig {
     }
 }
 
-async fn gather(client: &Client) -> Vec<Metric> {
+async fn gather(client: &Client, health_summary: bool) -> Vec<Metric> {
     let start = Instant::now();
     let mut metrics = match tokio::try_join!(
         collect_peers_metric(client),
         collect_leader_metric(client),
         collect_nodes_metric(client),
         collect_members_metric(client),
-        collect_services_metric(client),
+        collect_services_metric(client, health_summary),
         collect_health_state_metric(client),
     ) {
         Ok((m1, m2, m3, m4, m5, m6)) => {
@@ -191,16 +199,81 @@ async fn collect_members_metric(client: &Client) -> Result<Vec<Metric>, ConsulEr
     Ok(metrics)
 }
 
-async fn collect_services_metric(client: &Client) -> Result<Vec<Metric>, ConsulError> {
+async fn collect_services_metric(
+    client: &Client,
+    health_summary: bool,
+) -> Result<Vec<Metric>, ConsulError> {
     let services = client.services(None).await?;
 
-    // TODO: health summary
-
-    Ok(vec![Metric::gauge(
+    let mut metrics = vec![Metric::gauge(
         "consul_catalog_services",
         "How many services are in the cluster",
         services.len(),
-    )])
+    )];
+
+    if health_summary {
+        futures::future::try_join_all(services.iter().map(|(name, _)| async move {
+            let entries = match client.service(name, "", None).await {
+                Ok(entries) => entries,
+                Err(err) => {
+                    warn!(
+                        message = "Fetch service status failed",
+                        service = ?name.to_owned(),
+                        ?err
+                    );
+
+                    return Err(err);
+                }
+            };
+
+            let mut used = HashSet::new();
+            let mut metrics = vec![];
+
+            for entry in &entries {
+                // We have a Node, a Service, and one or more Checks. Our service-node
+                // combo is passing if all checks have a `status` of "passing".
+                let all_passing = entry.checks.iter().all(|hc| hc.status == "passing");
+
+                metrics.push(Metric::gauge_with_tags(
+                    "consul_catalog_service_node_healthy",
+                    "Is this service healthy on this node",
+                    all_passing,
+                    tags!(
+                        "service_id" => &entry.service.id,
+                        "node" => &entry.node.node,
+                        "service_name" => &entry.service.service
+                    ),
+                ));
+
+                used.clear();
+                for tag in &entry.service.tags {
+                    if used.contains(tag) {
+                        continue;
+                    } else {
+                        used.insert(tag);
+                    }
+
+                    metrics.push(Metric::gauge_with_tags(
+                        "consul_service_tag",
+                        "Tags of a service",
+                        1,
+                        tags!(
+                            "service_id" => &entry.service.id,
+                            "node" => &entry.node.node,
+                            "tag" => tag
+                        ),
+                    ))
+                }
+            }
+
+            Ok(metrics)
+        }))
+        .await?
+        .iter()
+        .for_each(|ms| metrics.extend_from_slice(ms));
+    }
+
+    Ok(metrics)
 }
 
 async fn collect_health_state_metric(client: &Client) -> Result<Vec<Metric>, ConsulError> {

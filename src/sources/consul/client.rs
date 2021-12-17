@@ -32,6 +32,7 @@ pub struct Node {
     #[serde(rename = "ID")]
     pub id: String,
     pub address: String,
+    pub node: String,
 }
 
 // Not all field included, only the field we need
@@ -60,6 +61,7 @@ pub struct HealthCheck {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Service {
+    #[serde(rename = "ID")]
     pub id: String,
     pub tags: Vec<String>,
     pub service: String,
@@ -70,6 +72,7 @@ pub struct Service {
 pub struct ServiceEntry {
     pub node: Node,
     pub service: Service,
+    pub checks: Vec<HealthCheck>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
