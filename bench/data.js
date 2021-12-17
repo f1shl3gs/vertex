@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639717001794,
+  "lastUpdate": 1639717788618,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -760,6 +760,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 31.834,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "52e30c6f733ba9f4e23a533c68e66637798cc726",
+          "message": "chore(deps): bump nix from 0.23.0 to 0.23.1",
+          "timestamp": "2021-12-16T10:32:47Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/59/commits/52e30c6f733ba9f4e23a533c68e66637798cc726"
+        },
+        "date": 1639717787507,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 82122000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1619800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 32.737,
             "unit": "ns/op"
           }
         ]
