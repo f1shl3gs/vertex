@@ -1,5 +1,5 @@
 use bytes::Buf;
-use http::{Request, StatusCode, Uri};
+use http::{HeaderValue, Request, StatusCode, Uri};
 use hyper::Body;
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
@@ -11,6 +11,8 @@ use crate::http::HttpClient;
 
 #[derive(Debug, Snafu)]
 pub enum ConsulError {
+    #[snafu(display("Parse url failed, {}", source))]
+    ParseUrl { source: url::ParseError },
     #[snafu(display("Build request failed, {}", source))]
     BuildRequest { source: http::Error },
     #[snafu(display("Read response body failed, {}", source))]
@@ -25,7 +27,7 @@ pub enum ConsulError {
 
 // Not all field included, only the field we need
 #[derive(Debug, Deserialize, Serialize)]
-pub struct ConsulNode {
+pub struct Node {
     pub address: String,
 }
 
@@ -39,10 +41,25 @@ pub struct AgentMember {
 // Not all field included, only the field we need
 #[derive(Debug, Deserialize, Serialize)]
 pub struct HealthCheck {
-    status: String,
-    service_id: String,
-    check_id: String,
-    node: String,
+    pub name: String,
+    pub service_name: String,
+    pub status: String,
+    pub service_id: String,
+    pub check_id: String,
+    pub node: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Service {
+    pub id: String,
+    pub tags: Vec<String>,
+    pub service: String,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct ServiceEntry {
+    pub node: Node,
+    pub service: Service,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -146,55 +163,58 @@ pub struct QueryOptions {
 }
 
 impl QueryOptions {
-    fn apply<B>(&self, req: &mut Request<B>) {
-        let mut params = vec![];
+    // TODO: less to_string() and to_owned()
+    fn builder(&self, path: &str) -> Result<http::request::Builder, ConsulError> {
+        let mut builder = http::request::Builder::new();
+        let mut headers = builder.headers_mut();
+        let mut params = Vec::with_capacity(16);
 
         if self.namespace != "" {
-            params.push(("ns", self.namespace.as_str()));
+            params.push(("ns", self.namespace.to_owned()));
         }
         if self.datacenter != "" {
-            params.push(("dc", self.datacenter.as_str()));
+            params.push(("dc", self.datacenter.to_owned()));
         }
         if self.allow_stale {
-            params.push(("stale", ""));
+            params.push(("stale", "".to_owned()));
         }
         if self.require_consistent {
-            params.push(("consistent", ""));
+            params.push(("consistent", "".to_owned()));
         }
         if self.wait_index != 0 {
-            params.push(("index", self.wait_index.to_string().as_str()));
+            let n = self.wait_index.to_string();
+            params.push(("index", n));
         }
         if !self.wait_time.is_zero() {
             let ms = self.wait_time.as_millis().to_string() + "ms";
-            params.push(("wait", ms.as_str()));
+            params.push(("wait", ms));
         }
         if self.token != "" {
-            req.headers_mut()
-                .insert("X-Consul-Token", self.token.parse().unwrap());
+            builder = builder.header("X-Consul-Token", self.token.to_owned());
         }
         if self.near != "" {
-            params.push(("near", self.near.as_str()));
+            params.push(("near", self.near.to_owned()));
         }
         if self.filter != "" {
-            params.push(("filter", self.filter.as_str()));
+            params.push(("filter", self.filter.to_owned()));
         }
         if !self.node_meta.is_empty() {
-            for (key, value) in self.node_meta {
-                params.push(("node-meta", format!("{}:{}", key, value).as_str()));
+            for (key, value) in &self.node_meta {
+                params.push(("node-meta", format!("{}:{}", key, value)));
             }
         }
         if self.relay_factor != 0 {
-            params.push(("relay-factor", self.relay_factor.to_string().as_str()));
+            params.push(("relay-factor", self.relay_factor.to_string()));
         }
         if self.local_only {
-            params.push(("local-only", "true"))
+            params.push(("local-only", "true".to_string()))
         }
         if self.connect {
-            params.push(("connect", "true"));
+            params.push(("connect", "true".to_string()));
         }
 
         if self.use_cache && !self.require_consistent {
-            params.push(("cached", ""));
+            params.push(("cached", "".to_string()));
 
             let mut cc = vec![];
             if !self.max_age.is_zero() {
@@ -209,18 +229,20 @@ impl QueryOptions {
             }
 
             if cc.len() > 0 {
-                req.headers_mut()
-                    .insert("Cache-Control", cc.join(",").as_str().parse().unwrap())
+                let value = cc.join(",");
+                builder = builder.header("Cache-Control", value);
             }
         }
 
-        let n = Url::parse_with_params(uri, params);
+        let uri = url::Url::parse_with_params(path, params).context(ParseUrl)?;
+
+        Ok(builder.uri(uri.as_str()))
     }
 }
 
 pub struct Client {
     client: HttpClient,
-    endpoint: String,
+    pub endpoint: String,
 }
 
 impl Client {
@@ -229,41 +251,58 @@ impl Client {
     }
 
     pub async fn peers(&self) -> Result<Vec<String>, ConsulError> {
-        self.fetch("/v1/status/peers").await
+        self.fetch("/v1/status/peers", None).await
     }
 
     pub async fn leader(&self) -> Result<String, ConsulError> {
-        self.fetch("/v1/status/leader").await
+        self.fetch("/v1/status/leader", None).await
     }
 
-    pub async fn nodes(&self, opts: &QueryOptions) -> Result<Vec<ConsulNode>, ConsulError> {
-        self.fetch("/v1/catalog/nodes").await
+    pub async fn nodes(&self, opts: Option<QueryOptions>) -> Result<Vec<Node>, ConsulError> {
+        self.fetch("/v1/catalog/nodes", None).await
     }
 
     pub async fn members(&self, wan: bool) -> Result<Vec<AgentMember>, ConsulError> {
-        self.fetch("/v1/agent/members").await
+        self.fetch("/v1/agent/members", None).await
     }
 
-    // TODO: collect health summary!?
     pub async fn services(
         &self,
-        opts: &QueryOptions,
+        opts: Option<QueryOptions>,
     ) -> Result<BTreeMap<String, Vec<String>>, ConsulError> {
-        self.fetch("/v1/catalog/services").await
+        self.fetch("/v1/catalog/services", opts).await
     }
 
-    pub async fn health_state(&self, opts: &QueryOptions) -> Result<Vec<HealthCheck>, ConsulError> {
-        self.fetch("/v1/health/state/any").await
+    // `service` is used to query health information along with service info for a given service.
+    // It can optionally do server-side filtering on a tag or nodes with passing health checks only.
+    pub async fn service(
+        &self,
+        name: &str,
+        tag: &str,
+        opts: Option<QueryOptions>,
+    ) -> Result<Vec<ServiceEntry>, ConsulError> {
+        let uri = format!("/v1/health/service/{}", name);
+        self.fetch(uri.as_str(), opts).await
     }
 
-    async fn fetch<T>(&self, path: &str) -> Result<T, ConsulError>
+    pub async fn health_state(
+        &self,
+        opts: Option<QueryOptions>,
+    ) -> Result<Vec<HealthCheck>, ConsulError> {
+        self.fetch("/v1/health/state/any", opts).await
+    }
+
+    async fn fetch<T>(&self, path: &str, opts: Option<QueryOptions>) -> Result<T, ConsulError>
     where
         T: serde::de::DeserializeOwned,
     {
-        let uri = format!("{}{}", self.endpoint, path);
-        let req = http::Request::get(uri)
-            .body(Body::empty())
-            .context(BuildRequest)?;
+        let path = format!("{}{}", self.endpoint, path);
+        let mut builder = match opts {
+            Some(opts) => opts.builder(&path)?,
+            None => http::Request::get(path),
+        };
+
+        let req = builder.body(Body::empty()).context(BuildRequest)?;
 
         return match self.client.send(req).await {
             Ok(resp) => {
