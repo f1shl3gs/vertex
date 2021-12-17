@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639749939240,
+  "lastUpdate": 1639751070674,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1265,6 +1265,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 31.543,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "f15dedf56ee3028d0caac5834091c9ed68ae1fec",
+          "message": "chore(deps): bump metrics-tracing-context from 0.8.1 to 0.9.0",
+          "timestamp": "2021-12-17T12:51:23Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/58/commits/f15dedf56ee3028d0caac5834091c9ed68ae1fec"
+        },
+        "date": 1639751069611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 76291000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1334800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 29.109,
             "unit": "ns/op"
           }
         ]
