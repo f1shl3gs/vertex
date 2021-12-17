@@ -283,7 +283,7 @@ async-stream = { version = "0.3.2" }
 console-subscriber = { git = "https://github.com/tokio-rs/console", rev = "f2c30d52c9f22de69bac38009a9183135808806c", optional = true }
 
 # Metrics
-metrics = { version = "0.17.0", default-features = false, features = ["std"] }
+metrics = { version = "0.17.1", default-features = false, features = ["std"] }
 metrics-tracing-context = { version = "0.8.1", default-features = false }
 
 # Tracing
