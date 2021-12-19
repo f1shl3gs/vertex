@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639908608652,
+  "lastUpdate": 1639908645276,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -299,6 +299,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1337100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "2f290e8358d118d47b29a105ba039ab0edb186de",
+          "message": "implement Consul metrics",
+          "timestamp": "2021-12-17T14:27:29Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/64/commits/2f290e8358d118d47b29a105ba039ab0edb186de"
+        },
+        "date": 1639908643771,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1403700,
             "unit": "ns/op"
           }
         ]
