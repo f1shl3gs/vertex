@@ -23,6 +23,10 @@ sources:
     type: consul
     endpoints:
       - http://127.0.0.1:8500
+  tail:
+    type: tail
+    include:
+      - "/home/f1shl3gs/Workspaces/clion/vertex/*.toml"
 
 transforms:
   add_extra_tags:

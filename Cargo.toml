@@ -22,7 +22,7 @@ members = [
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
-    # "lib/tail",
+    "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",
@@ -263,6 +263,7 @@ event = { path = "lib/event" }
 internal = { path = "lib/internal" }
 prometheus = { path = "lib/prometheus" }
 log_schema = { path = "lib/log_schema" }
+tail = { path = "lib/tail" }
 tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 sysinfo = { path = "lib/sysinfo" }

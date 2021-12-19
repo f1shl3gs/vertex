@@ -1,7 +1,7 @@
 mod inotify;
 mod stat;
-#[cfg(test)]
-mod tests;
+// #[cfg(test)]
+// mod tests;
 
 use std::fs;
 use std::io::{self, BufRead, BufReader, Seek};
@@ -71,9 +71,11 @@ impl Watcher {
 
         // Determine the actual position at which we should start reading
         let (reader, position): (Box<dyn BufRead>, Position) = match (gzipped, too_old, read_from) {
-            (true, true, _) => debug!(
-                message = "Not reading gzipped file older than `ignore_older`"
-            )(Box::new(null_reader()), 0),
+            (true, true, _) => {
+                debug!(message = "Not reading gzipped file older than `ignore_older`");
+
+                (Box::new(null_reader()), 0)
+            }
             (true, _, ReadFrom::Checkpoint(position)) => {
                 debug!(
                     message = "Not re-reading gzipped frile with existing stored offset",

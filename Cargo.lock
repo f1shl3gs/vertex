@@ -877,6 +877,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62a61b2faff777e62dbccd7f82541d873f96264d050c5dd7e95194f79fc4de29"
 
 [[package]]
+name = "env_logger"
+version = "0.8.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
+dependencies = [
+ "log",
+ "regex",
+]
+
+[[package]]
 name = "erased-serde"
 version = "0.3.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2953,6 +2963,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "quickcheck"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "588f6378e4dd99458b60ec275b4477add41ce4fa9f64dcba6f15adccb19b50d6"
+dependencies = [
+ "env_logger",
+ "log",
+ "rand",
+]
+
+[[package]]
 name = "quote"
 version = "0.6.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3866,6 +3887,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "tail"
+version = "0.1.0"
+dependencies = [
+ "bstr",
+ "bytes",
+ "chrono",
+ "criterion",
+ "dashmap",
+ "flate2",
+ "futures",
+ "glob",
+ "quickcheck",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+]
+
+[[package]]
 name = "take_mut"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4627,6 +4669,7 @@ dependencies = [
  "sqlx",
  "stream-cancel",
  "sysinfo",
+ "tail",
  "tempfile",
  "testcontainers",
  "testify",
