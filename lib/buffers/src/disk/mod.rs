@@ -8,12 +8,12 @@ use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
+use event::{DecodeBytes, EncodeBytes};
 use futures::{Sink, Stream};
 use pin_project::pin_project;
 use snafu::Snafu;
 
 use crate::usage::BufferUsageData;
-use crate::{DecodeBytes, EncodeBytes};
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {

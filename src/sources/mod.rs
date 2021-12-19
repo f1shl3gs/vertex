@@ -2,6 +2,8 @@
 mod bind;
 mod blackbox;
 mod chrony;
+#[cfg(feature = "sources-consul")]
+mod consul;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
 #[cfg(feature = "sources-fluentd")]

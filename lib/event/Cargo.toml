@@ -8,7 +8,6 @@ indoc = { version = "1" }
 serde_yaml = { version = "0.8" }
 
 [dependencies]
-buffers = { path = "../buffers" }
 log_schema = { path = "../log_schema" }
 
 bytes = { version = "1.0.1", default-features = false, features = ["serde"] }

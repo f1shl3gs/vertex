@@ -4,10 +4,10 @@ use std::sync::atomic::AtomicUsize;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
+use event::{DecodeBytes, EncodeBytes};
 use futures::Sink;
 
 use crate::usage::BufferUsageData;
-use crate::{DecodeBytes, EncodeBytes};
 
 pub struct Writer<T>
 where

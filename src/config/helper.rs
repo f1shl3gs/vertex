@@ -98,6 +98,10 @@ pub fn default_interval() -> chrono::Duration {
     chrono::Duration::seconds(15)
 }
 
+pub fn default_std_interval() -> std::time::Duration {
+    std::time::Duration::from_secs(15)
+}
+
 /// Answers "Is it possible to skip serializing this value, because it's the
 /// default?"
 #[inline]

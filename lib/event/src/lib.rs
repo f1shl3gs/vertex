@@ -1,3 +1,4 @@
+mod buffer;
 pub mod encoding;
 mod finalization;
 mod log;
@@ -9,6 +10,7 @@ mod trace;
 mod value;
 
 // re-export
+pub use buffer::{DecodeBytes, EncodeBytes};
 pub use finalization::*;
 pub use log::LogRecord;
 pub use metric::*;
@@ -18,7 +20,6 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::finalization::{BatchNotifier, EventFinalizer};
-use buffers::{DecodeBytes, EncodeBytes};
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
 

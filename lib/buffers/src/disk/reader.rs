@@ -3,9 +3,8 @@ use std::marker::PhantomData;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use event::DecodeBytes;
 use futures::Stream;
-
-use crate::DecodeBytes;
 
 pub struct Reader<T>
 where

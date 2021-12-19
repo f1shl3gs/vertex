@@ -12,111 +12,32 @@ extensions: {}
   #   type: jemalloc
 
 sources:
-  zookeeper:
-    type: zookeeper
-    endpoint: 127.0.0.1:2181
-  memcached:
-    type: memcached
-    endpoints:
-      - 127.0.0.1:11211
-  redis:
-    type: redis
-    interval: 15s
-    url: redis://localhost:6379
   internal_metrics:
     type: internal_metrics
     interval: 15s
-  kmsg:
-    type: kmsg
-  node:
-    type: node_metrics
-    interval: 15s
-    collectors:
-      processes: true
   selfstat:
     type: selfstat
-  # generator:
-  #   type: generator
-  ntp:
-    type: ntp
-    interval: 15s
-    timeout: 10s
-    pools:
-      - time1.aliyun.com
-      - time2.aliyun.com
-      - time3.aliyun.com
-      - time4.aliyun.com
-      - time5.aliyun.com
-      - time6.aliyun.com
-      - time7.aliyun.com
-#  journald:
-#    type: journald
-#    units: []
-#    excludes: []
-  prometheus_scrape:
-    type: prometheus_scrape
-    endpoints:
-      - http://localhost:9100/metrics
-  nginx:
-    type: nginx_stub
-    endpoints:
-      - http://localhost:10980/basic_status
   internal_logs:
     type: internal_logs
-  mysql:
-    type: mysqld
-    username: root
-    password: password
-    port: 9151
-  nvidia:
-    type: nvidia_smi
+  consul:
+    type: consul
+    endpoints:
+      - http://127.0.0.1:8500
 
 transforms:
   add_extra_tags:
     type: add_tags
     inputs:
-      - generator
-      - ntp
       - internal_logs
     tags:
       hostname: ${HOSTNAME}
 
 sinks:
-  # stdout:
-  #   type: stdout
-  #   inputs:
-  #     - internal_logs
-  blackhole:
-    type: blackhole
-    inputs:
-      - kmsg
-      - node
   prom:
     type: prometheus_exporter
     inputs:
       - add_extra_tags
       - selfstat
       - internal_metrics
-      - redis
-      - zookeeper
-      - memcached
-      - nginx
-      - node
-      # - prometheus_scrape
-      - mysql
-      - nvidia
+      - consul
     listen: 127.0.0.1:9101
-  prom_single:
-    type: prometheus_exporter
-    listen: 127.0.0.1:9102
-    inputs:
-      - nvidia
-  loki:
-    type: loki
-    inputs:
-      - add_extra_tags
-    encoding: json
-    compression: gzip
-    labels:
-      foo: bar
-    endpoint: http://127.0.0.1:9010

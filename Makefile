@@ -61,6 +61,10 @@ integration-test-haproxy:
 integration-test-mysql:
 	cargo test -p vertex --lib sources::mysqld::integration_tests --features integration-tests-mysql --no-fail-fast
 
+.PHONY: integration-test-consul
+integration-test-consul:
+	cargo test -p vertex --lib sources::consul::integration_tests --features integration-tests-consul --no-fail-fast
+
 .PHONY: test
 test:
 	cargo test --workspace --no-fail-fast
