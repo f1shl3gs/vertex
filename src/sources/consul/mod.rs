@@ -436,13 +436,6 @@ mod integration_tests {
     ) -> Result<(), ConsulError> {
         let path = format!("{}/v1/agent/service/register", endpoint);
         let body = serde_json::to_vec(svc).unwrap();
-
-        println!(
-            "path: {}, body: {}",
-            path,
-            String::from_utf8_lossy(body.as_slice())
-        );
-
         let req = http::Request::put(path).body(Body::from(body)).unwrap();
 
         return match client.send(req).await {
