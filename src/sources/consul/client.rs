@@ -3,6 +3,7 @@ use std::collections::{BTreeMap, HashMap};
 use bytes::Buf;
 use http::StatusCode;
 use hyper::Body;
+use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
@@ -23,6 +24,10 @@ pub enum ConsulError {
     DecodeError { source: serde_json::Error },
     #[snafu(display("Unexpected status {}", code))]
     UnexpectedStatusCode { code: u16 },
+    #[snafu(display("Redirection is needed"))]
+    NeedRedirection { location: String },
+    #[snafu(display("Redirection failed"))]
+    RedirectionFailed,
 }
 
 // Not all field included, only the field we need
@@ -75,7 +80,7 @@ pub struct ServiceEntry {
     pub checks: Vec<HealthCheck>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct QueryOptions {
     // Namespace overrides the `default` namespace
@@ -179,7 +184,6 @@ impl QueryOptions {
     // TODO: less to_string() and to_owned()
     fn builder(&self, path: &str) -> Result<http::request::Builder, ConsulError> {
         let mut builder = http::request::Builder::new();
-        let mut headers = builder.headers_mut();
         let mut params = Vec::with_capacity(16);
 
         if self.namespace != "" {
@@ -264,24 +268,24 @@ impl Client {
     }
 
     pub async fn peers(&self) -> Result<Vec<String>, ConsulError> {
-        self.fetch("/v1/status/peers", None).await
+        self.fetch("/v1/status/peers", &None).await
     }
 
     pub async fn leader(&self) -> Result<String, ConsulError> {
-        self.fetch("/v1/status/leader", None).await
+        self.fetch("/v1/status/leader", &None).await
     }
 
-    pub async fn nodes(&self, opts: Option<QueryOptions>) -> Result<Vec<Node>, ConsulError> {
-        self.fetch("/v1/catalog/nodes", None).await
+    pub async fn nodes(&self, opts: &Option<QueryOptions>) -> Result<Vec<Node>, ConsulError> {
+        self.fetch("/v1/catalog/nodes", opts).await
     }
 
-    pub async fn members(&self, wan: bool) -> Result<Vec<AgentMember>, ConsulError> {
-        self.fetch("/v1/agent/members", None).await
+    pub async fn members(&self) -> Result<Vec<AgentMember>, ConsulError> {
+        self.fetch("/v1/agent/members", &None).await
     }
 
     pub async fn services(
         &self,
-        opts: Option<QueryOptions>,
+        opts: &Option<QueryOptions>,
     ) -> Result<BTreeMap<String, Vec<String>>, ConsulError> {
         self.fetch("/v1/catalog/services", opts).await
     }
@@ -291,21 +295,27 @@ impl Client {
     pub async fn service(
         &self,
         name: &str,
-        tag: &str,
-        opts: Option<QueryOptions>,
+        opts: &Option<QueryOptions>,
     ) -> Result<Vec<ServiceEntry>, ConsulError> {
+        let name = percent_encode(name.as_bytes(), NON_ALPHANUMERIC).to_string();
         let uri = format!("/v1/health/service/{}", name);
-        self.fetch(uri.as_str(), opts).await
+        match self.fetch(uri.as_str(), opts).await {
+            Ok(entries) => Ok(entries),
+            Err(err) => match err {
+                ConsulError::NeedRedirection { location } => self.fetch(&location, opts).await,
+                _ => Err(err),
+            },
+        }
     }
 
     pub async fn health_state(
         &self,
-        opts: Option<QueryOptions>,
+        opts: &Option<QueryOptions>,
     ) -> Result<Vec<HealthCheck>, ConsulError> {
         self.fetch("/v1/health/state/any", opts).await
     }
 
-    async fn fetch<T>(&self, path: &str, opts: Option<QueryOptions>) -> Result<T, ConsulError>
+    async fn fetch<T>(&self, path: &str, opts: &Option<QueryOptions>) -> Result<T, ConsulError>
     where
         T: serde::de::DeserializeOwned,
     {
@@ -329,6 +339,14 @@ impl Client {
 
                         Ok(body)
                     }
+                    StatusCode::MOVED_PERMANENTLY => {
+                        return match parts.headers.get("Location") {
+                            Some(redirect) => Err(ConsulError::NeedRedirection {
+                                location: redirect.to_str().unwrap().to_string(),
+                            }),
+                            None => Err(ConsulError::RedirectionFailed),
+                        };
+                    }
                     status => Err(ConsulError::UnexpectedStatusCode {
                         code: status.as_u16(),
                     }),
@@ -336,61 +354,5 @@ impl Client {
             }
             Err(err) => Err(ConsulError::HttpErr { source: err }),
         };
-    }
-}
-
-#[cfg(all(test, feature = "integration-tests-consul"))]
-mod integration_tests {
-    use super::*;
-    use crate::config::ProxyConfig;
-    use crate::http::HttpClient;
-    use crate::tls::MaybeTlsSettings;
-    use testcontainers::images::generic::{GenericImage, WaitFor};
-    use testcontainers::Docker;
-
-    #[tokio::test]
-    async fn start_local_service() {
-        let docker = testcontainers::clients::Cli::default();
-        let image = GenericImage::new("consul:1.11.1").with_wait_for(WaitFor::LogMessage {
-            message: "Synced node info".to_string(),
-            stream: testcontainers::images::generic::Stream::StdOut,
-        });
-        let service = docker.run(image);
-        let host_port = service.get_host_port(8500).unwrap();
-
-        let tls = MaybeTlsSettings::client_config(&None).unwrap();
-        let client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
-        let endpoint = format!("http://127.0.0.1:{}", host_port);
-        let client = Client::new(endpoint, client);
-
-        let peers = client.peers().await.unwrap();
-        assert_eq!(peers.len(), 1);
-        assert_eq!(peers[0], "127.0.0.1:8300".to_string());
-
-        let leader = client.leader().await.unwrap();
-        assert_eq!(leader, "127.0.0.1:8300".to_string());
-
-        let nodes = client.nodes(None).await.unwrap();
-        assert_eq!(nodes.len(), 1);
-        assert_eq!(nodes[0].address, "127.0.0.1");
-
-        let members = client.members(false).await.unwrap();
-        assert_eq!(members.len(), 1);
-        assert_eq!(members[0].status, 1.0);
-        assert_eq!(members[0].addr, "127.0.0.1".to_string());
-
-        let services = client.services(None).await.unwrap();
-        assert_eq!(services.len(), 1);
-        assert_eq!(services.get("consul").unwrap().len(), 0);
-
-        let entries = client.service("consul", "", None).await.unwrap();
-        assert_eq!(entries.len(), 1);
-        assert_eq!(entries[0].node.address, "127.0.0.1".to_string());
-        assert_eq!(entries[0].service.service, "consul".to_string());
-
-        let health_states = client.health_state(None).await.unwrap();
-        assert_eq!(health_states.len(), 1);
-        assert_eq!(health_states[0].name, "Serf Health Status".to_string());
-        assert_eq!(health_states[0].status, "passing".to_string());
     }
 }
