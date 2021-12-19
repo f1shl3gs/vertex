@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1639908645276,
+  "lastUpdate": 1639909721135,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1415,6 +1415,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.109,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "2f290e8358d118d47b29a105ba039ab0edb186de",
+          "message": "implement Consul metrics",
+          "timestamp": "2021-12-17T14:27:29Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/64/commits/2f290e8358d118d47b29a105ba039ab0edb186de"
+        },
+        "date": 1639909720119,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 77716000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1156700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 30.842,
             "unit": "ns/op"
           }
         ]
