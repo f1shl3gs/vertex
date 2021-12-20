@@ -2718,7 +2718,6 @@ dependencies = [
  "indexmap",
  "nom 7.1.0",
  "num_enum",
- "pprof",
  "prost 0.9.0",
  "prost-build 0.9.0",
  "snafu",
