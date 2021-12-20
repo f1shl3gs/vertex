@@ -9,7 +9,7 @@ harness = false
 path = "benches/duration.rs"
 
 [dev-dependencies]
-criterion = { version = "0.3.5", features = ["html_reports"] }
+criterion = { version = "0.3.5" }
 
 [dependencies]
 snafu = { version = "0.6.10" }
