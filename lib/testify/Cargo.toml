@@ -7,4 +7,4 @@ edition = "2021"
 rand = "0.8.4"
 
 # futures
-futures = { version = "0.3.18" }
+futures = { version = "0.3.19" }
