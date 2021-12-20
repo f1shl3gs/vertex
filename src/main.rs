@@ -13,9 +13,8 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
+use crate::commands::{Commands, RootCommand};
 use std::collections::HashMap;
-
-use clap::Parser;
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
@@ -26,30 +25,10 @@ use vertex::{
     topology,
 };
 
-use crate::commands::Commands;
-
-#[derive(Parser, Debug)]
-#[clap(version = "0.1.0")]
-struct Opts {
-    #[clap(short, long, default_value = "/etc/vertex/vertex.yml")]
-    pub config: String,
-
-    #[clap(
-        short,
-        long,
-        env = "VERTEX_THREADS",
-        about = "Specify how many threads used for the async runtime"
-    )]
-    threads: Option<usize>,
-
-    #[clap(subcommand)]
-    commands: Option<Commands>,
-}
-
 fn main() {
-    let opts: Opts = Opts::parse();
+    let opts: RootCommand = argh::from_env();
 
-    if let Some(commands) = opts.commands {
+    if let Some(commands) = opts.sub_commands {
         match commands {
             Commands::Sources(sources) => sources.run(),
             Commands::Transforms(transforms) => transforms.run(),

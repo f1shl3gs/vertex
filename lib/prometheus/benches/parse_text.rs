@@ -1,5 +1,4 @@
 use criterion::{criterion_group, criterion_main, Criterion, Throughput};
-use pprof::criterion::{Output, PProfProfiler};
 
 const INPUT: &str = r##"# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
 # TYPE go_gc_duration_seconds summary
