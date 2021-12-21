@@ -8,7 +8,9 @@ use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Utc};
 use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
+use tracing::{error, info, warn};
 
+const STATE_VERSION: &str = "v1";
 const TMP_FILE_NAME: &str = "checkpoints.new.json";
 const STABLE_FILE_NAME: &str = "checkpoints.json";
 
@@ -16,8 +18,9 @@ pub type Position = u64;
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(tag = "version", rename_all = "snake_case")]
-enum State {
-    V1 { checkpoints: BTreeSet<Checkpoint> },
+struct State {
+    version: String,
+    checkpoints: BTreeSet<Checkpoint>,
 }
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize, Hash, Eq, PartialEq, Ord, PartialOrd)]
@@ -108,7 +111,8 @@ impl CheckpointsView {
     }
 
     fn get_state(&self) -> State {
-        State::V1 {
+        State {
+            version: STATE_VERSION.to_string(),
             checkpoints: self
                 .checkpoints
                 .iter()
@@ -128,6 +132,23 @@ impl CheckpointsView {
                 .collect(),
         }
     }
+
+    fn load(&self, checkpoint: Checkpoint) {
+        self.checkpoints
+            .insert(checkpoint.fingerprint, checkpoint.position);
+    }
+
+    fn set_state(&self, state: State, ignore_before: Option<DateTime<Utc>>) {
+        for checkpoint in state.checkpoints {
+            if let Some(ignore_before) = ignore_before {
+                if checkpoint.modified < ignore_before {
+                    continue;
+                }
+
+                self.load(checkpoint);
+            }
+        }
+    }
 }
 
 pub struct Checkpointer {
@@ -135,7 +156,7 @@ pub struct Checkpointer {
     tmp_file_path: PathBuf,
     stable_file_path: PathBuf,
 
-    view: Arc<CheckpointsView>,
+    checkpoints: Arc<CheckpointsView>,
     last: Mutex<Option<State>>,
 }
 
@@ -149,25 +170,25 @@ impl Checkpointer {
             dir,
             tmp_file_path,
             stable_file_path,
-            view: Arc::new(CheckpointsView::default()),
+            checkpoints: Arc::new(CheckpointsView::default()),
             last: Mutex::new(None),
         }
     }
 
     pub fn view(&self) -> Arc<CheckpointsView> {
-        Arc::clone(&self.view)
+        Arc::clone(&self.checkpoints)
     }
 
     /// Persist the current checkpoints state to disk, makeing our best effort to
     /// do so in an atomic way that allow for recovering the previous state in
     /// the event of a crash
-    pub fn persist(&self) -> Result<usize, io::Error> {
+    pub fn write_checkpoints(&self) -> Result<usize, io::Error> {
         // First drop any checkpoints for files that were removed more than 60s
         // ago. This keeps our working set as small as possible and makes sure we
         // don't spend time and IO writing checkpoints that don't matter anymore.
-        self.view.remove_expired();
+        self.checkpoints.remove_expired();
 
-        let current = self.view.get_state();
+        let current = self.checkpoints.get_state();
 
         // Fetch last written state
         let mut last = self.last.lock().expect("Data poisoned");
@@ -190,6 +211,68 @@ impl Checkpointer {
             *last = Some(current);
         }
 
-        Ok(self.view.checkpoints.len())
+        Ok(self.checkpoints.checkpoints.len())
+    }
+
+    /// Read persisted checkpoints from disk
+    pub fn read_checkpoints(&mut self, ignore_before: Option<DateTime<Utc>>) {
+        // First try reading from the tmp file location. If this works, it means that
+        // the previous process was interrupted in the process of checkpointing and
+        // the temp file should contain more recent data that should be preferred.
+        match self.read_checkpoints_file(&self.tmp_file_path) {
+            Ok(state) => {
+                info!(message = "Recovered checkpoint data from interrupted process");
+
+                self.checkpoints.set_state(state, ignore_before);
+
+                // Try to move this tmp file to the stable location so we don't
+                // immediately overwrite it when we next persist checkpoints.
+                if let Err(err) = fs::rename(&self.tmp_file_path, &self.stable_file_path) {
+                    warn!(
+                        message = "Error persisting recovered checkpoint file",
+                        %err
+                    );
+                }
+
+                return;
+            }
+            Err(err) if err.kind() == io::ErrorKind::NotFound => {
+                // This is expected, so no warning needed
+            }
+            Err(err) => {
+                error!(
+                    message = "Unable to recover checkpoint data from interrupted process",
+                    %err
+                );
+            }
+        }
+
+        // Next, attempt to read checkpoints from the stable file location. This is the expected
+        // location, so warn more aggressively if something goes wrong.
+        match self.read_checkpoints_file(&self.stable_file_path) {
+            Ok(state) => {
+                info!(message = "Loaded checkpoint data",);
+
+                self.checkpoints.set_state(state, ignore_before);
+                return;
+            }
+            Err(err) if err.kind() == io::ErrorKind::NotFound => {
+                // This is expected, so no warning needed
+            }
+            Err(err) => {
+                warn!(
+                    message = "Unable to load checkpoint data",
+                    %err
+                );
+
+                return;
+            }
+        }
+    }
+
+    fn read_checkpoints_file(&self, path: &Path) -> Result<State, io::Error> {
+        let reader = io::BufReader::new(fs::File::open(path)?);
+        serde_json::from_reader(reader)
+            .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))
     }
 }

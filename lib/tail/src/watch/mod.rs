@@ -24,7 +24,7 @@ use crate::{Position, ReadFrom};
 /// The `Watcher` is expected to live for the lifetime of the file path. `Server` is
 /// responsible for clearing away `Watchers` which no longer exist
 pub struct Watcher {
-    path: PathBuf,
+    pub(crate) path: PathBuf,
 
     findable: bool,
     reader: Box<dyn BufRead>,

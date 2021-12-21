@@ -1,5 +1,6 @@
 mod buffer;
 mod checkpoint;
+mod harvester;
 pub mod provider;
 mod watch;
 
@@ -26,12 +27,4 @@ pub enum ReadFrom {
     Beginning,
     End,
     Checkpoint(Position),
-}
-
-#[derive(Debug)]
-pub struct Line {
-    pub text: Bytes,
-    pub filename: String,
-    pub fingerprint: Fingerprint,
-    pub offset: u64,
 }
