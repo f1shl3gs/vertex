@@ -122,8 +122,6 @@ where
             }
         });
 
-        //
-
         loop {
             // Collect lines by polling files
             let mut bytes_read = 0usize;

@@ -1,9 +1,10 @@
+use bytes::Bytes;
+use event::{fields, tags, Event, LogRecord};
 use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use humanize::{deserialize_bytes, serialize_bytes};
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::time::Duration;
-
-use event::{fields, tags, Event, LogRecord};
-use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 
 use crate::config::{
@@ -12,6 +13,21 @@ use crate::config::{
 };
 use crate::sources::utils::OrderedFinalizer;
 use crate::sources::Source;
+
+#[derive(Debug, Deserialize, Serialize)]
+pub enum ReadFromConfig {
+    Beginning,
+    End,
+}
+
+impl From<ReadFromConfig> for ReadFrom {
+    fn from(c: ReadFromConfig) -> Self {
+        match c {
+            ReadFromConfig::Beginning => ReadFrom::Beginning,
+            ReadFromConfig::End => ReadFrom::End,
+        }
+    }
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 struct TailConfig {
@@ -27,6 +43,21 @@ struct TailConfig {
     include: Vec<PathBuf>,
     #[serde(default)]
     exclude: Vec<PathBuf>,
+
+    read_from: Option<ReadFromConfig>,
+    #[serde(
+        default = "default_max_line_bytes",
+        deserialize_with = "deserialize_bytes",
+        serialize_with = "serialize_bytes"
+    )]
+    max_line_bytes: usize,
+    #[serde(
+        default = "default_max_read_bytes",
+        deserialize_with = "deserialize_bytes",
+        serialize_with = "serialize_bytes"
+    )]
+    max_read_bytes: usize,
+    line_delimiter: String,
 
     #[serde(default = "default_glob_interval")]
     #[serde(
@@ -44,6 +75,14 @@ fn default_glob_interval() -> Duration {
     Duration::from_secs(3)
 }
 
+fn default_max_read_bytes() -> usize {
+    16 * 1024
+}
+
+fn default_max_line_bytes() -> usize {
+    100 * 1024 // 100kb
+}
+
 impl GenerateConfig for TailConfig {
     fn generate_config() -> serde_yaml::Value {
         serde_yaml::to_value(Self {
@@ -51,6 +90,10 @@ impl GenerateConfig for TailConfig {
             host_key: None,
             include: vec!["/path/to/include/*.log".into()],
             exclude: vec!["/path/to/exclude/noop.log".into()],
+            read_from: Some(ReadFromConfig::End),
+            max_line_bytes: default_max_line_bytes(),
+            max_read_bytes: default_max_read_bytes(),
+            line_delimiter: "\n".to_string(),
             glob_interval: default_glob_interval(),
         })
         .unwrap()
@@ -75,6 +118,14 @@ impl SourceConfig for TailConfig {
         // within the same given data_dir(e.g. the global one) without the file
         // servers' checkpointers interfering with each other
         let data_dir = ctx.global.make_subdir(&ctx.name)?;
+        let glob = tail::provider::Glob::new(&self.include, &self.exclude)
+            .ok_or("glob provider create failed")?;
+
+        let read_from = if self.read_from.is_some() {
+            self.read_from.map(Into::into).unwrap_or_default()
+        } else {
+            ReadFrom::default()
+        };
 
         let mut output = ctx.out;
         let include = self.include.clone();
@@ -89,16 +140,14 @@ impl SourceConfig for TailConfig {
         //     })
         // });
 
-        let glob = tail::provider::Glob::new(&self.include, &self.exclude)
-            .ok_or("glob provider create failed")?;
         let harvester = Harvester {
             provider: glob,
-            read_from: ReadFrom::Beginning,
-            max_read_bytes: 16 * 1024,
+            read_from,
+            max_read_bytes: self.max_read_bytes,
             handle: tokio::runtime::Handle::current(),
             ignore_before: None,
-            max_line_bytes: 1024,
-            line_delimiter: "\n".into(),
+            max_line_bytes: self.max_line_bytes,
+            line_delimiter: Bytes::from(self.line_delimiter.clone()),
         };
 
         Ok(Box::pin(async move {

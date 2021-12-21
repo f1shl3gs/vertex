@@ -15,3 +15,9 @@ pub enum ReadFrom {
     End,
     Checkpoint(Position),
 }
+
+impl Default for ReadFrom {
+    fn default() -> Self {
+        ReadFrom::Beginning
+    }
+}
