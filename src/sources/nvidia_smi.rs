@@ -1,7 +1,7 @@
 use std::borrow::Cow;
-use std::io::ErrorKind;
 use std::path::PathBuf;
 use std::process::Command;
+use std::time::Instant;
 
 use event::{tags, Event, Metric};
 use futures::{SinkExt, StreamExt};
@@ -94,22 +94,19 @@ impl SourceConfig for NvidiaSmiConfig {
 }
 
 async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
-    let command = format!("{}", path.to_str().unwrap());
+    let start = Instant::now();
+    let output = Command::new(path).args(["-q", "-x"]).output()?;
+    let reader = std::io::Cursor::new(output.stdout);
+    let smi: SMI = serde_xml_rs::from_reader(reader)?;
+    let elapsed = start.elapsed();
 
-    let mut command = Command::new(command);
-    command.args(["-q", "-x"]);
+    let mut metrics = Vec::with_capacity(smi.gpus.len() * 24 + 1);
+    metrics.push(Metric::gauge(
+        "nvidia_scrape_duration_seconds",
+        "",
+        elapsed.as_secs_f64(),
+    ));
 
-    // Pipe out stdout to the process
-    command.stdout(std::process::Stdio::piped());
-
-    let mut child = command.spawn()?;
-
-    let stdout = child.stdout.take().ok_or_else(|| {
-        std::io::Error::new(ErrorKind::Other, "Unable to take stdout of spawned process")
-    })?;
-    let smi: SMI = serde_xml_rs::from_reader(stdout)?;
-
-    let mut metrics = Vec::with_capacity(smi.gpus.len() * 24);
     for (index, gpu) in smi.gpus.iter().enumerate() {
         let pstate = gpu.pstat()?;
         let tags = tags!(
