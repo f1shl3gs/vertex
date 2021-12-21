@@ -17,7 +17,6 @@ const STABLE_FILE_NAME: &str = "checkpoints.json";
 pub type Position = u64;
 
 #[derive(Debug, Deserialize, Serialize, PartialEq, Eq)]
-#[serde(tag = "version", rename_all = "snake_case")]
 struct State {
     version: String,
     checkpoints: BTreeSet<Checkpoint>,
@@ -144,15 +143,14 @@ impl CheckpointsView {
                 if checkpoint.modified < ignore_before {
                     continue;
                 }
-
-                self.load(checkpoint);
             }
+
+            self.load(checkpoint);
         }
     }
 }
 
 pub struct Checkpointer {
-    dir: PathBuf,
     tmp_file_path: PathBuf,
     stable_file_path: PathBuf,
 
@@ -162,12 +160,10 @@ pub struct Checkpointer {
 
 impl Checkpointer {
     pub fn new(data_dir: &Path) -> Self {
-        let dir = data_dir.join("checkpoints");
         let tmp_file_path = data_dir.join(TMP_FILE_NAME);
         let stable_file_path = data_dir.join(STABLE_FILE_NAME);
 
         Checkpointer {
-            dir,
             tmp_file_path,
             stable_file_path,
             checkpoints: Arc::new(CheckpointsView::default()),
@@ -274,5 +270,44 @@ impl Checkpointer {
         let reader = io::BufReader::new(fs::File::open(path)?);
         serde_json::from_reader(reader)
             .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    #[test]
+    fn simple_set_and_get() {
+        let fp = Fingerprint { dev: 1, inode: 2 };
+
+        let dir = tempdir().unwrap();
+        let mut checkpointer = Checkpointer::new(dir.path());
+        let checkpoints = checkpointer.checkpoints;
+
+        checkpoints.update(fp, 3);
+        let got = checkpoints.get(Fingerprint { dev: 1, inode: 2 }).unwrap();
+
+        assert_eq!(got, 3)
+    }
+
+    #[test]
+    fn checkpointer_restart() {
+        let position = 12345;
+        let dir = tempdir().unwrap();
+        let fp = Fingerprint { dev: 1, inode: 2 };
+
+        {
+            // checkpointer will be dropped once this block is done.
+            let mut checkpointer = Checkpointer::new(dir.path());
+            checkpointer.checkpoints.update(fp, position);
+            checkpointer.write_checkpoints().unwrap();
+        }
+
+        let mut checkpointer = Checkpointer::new(dir.path());
+        assert!(checkpointer.checkpoints.get(fp).is_none());
+        checkpointer.read_checkpoints(None);
+        assert_eq!(checkpointer.checkpoints.get(fp).unwrap(), position);
     }
 }

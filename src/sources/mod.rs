@@ -57,6 +57,7 @@ mod selfstat;
 mod syslog;
 #[cfg(feature = "sources-tail")]
 mod tail;
+mod utils;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 

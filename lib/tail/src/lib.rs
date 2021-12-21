@@ -6,21 +6,8 @@ mod watch;
 
 // re-export
 pub use buffer::*;
-pub use checkpoint::{Fingerprint, Position};
-
-use std::collections::BTreeMap;
-use std::path::{Path, PathBuf};
-use std::sync::Arc;
-use std::thread::sleep;
-use std::time::{Duration, Instant};
-
-use bytes::Bytes;
-use futures::{Future, FutureExt, Sink, SinkExt, StreamExt};
-use tokio_stream::wrappers::IntervalStream;
-use tracing::{error, warn};
-
-use crate::checkpoint::{Checkpointer, CheckpointsView};
-use crate::watch::Watcher;
+pub use checkpoint::{Checkpointer, Fingerprint, Position};
+pub use harvester::{Harvester, Line};
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub enum ReadFrom {

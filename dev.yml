@@ -12,36 +12,15 @@ extensions: {}
   #   type: jemalloc
 
 sources:
-  internal_metrics:
-    type: internal_metrics
-    interval: 15s
-  selfstat:
-    type: selfstat
-  internal_logs:
-    type: internal_logs
-  consul:
-    type: consul
-    endpoints:
-      - http://127.0.0.1:8500
   tail:
     type: tail
     include:
       - "/home/f1shl3gs/Workspaces/clion/vertex/*.toml"
 
-transforms:
-  add_extra_tags:
-    type: add_tags
-    inputs:
-      - internal_logs
-    tags:
-      hostname: ${HOSTNAME}
+transforms: {}
 
 sinks:
-  prom:
-    type: prometheus_exporter
+  stdout:
+    type: stdout
     inputs:
-      - add_extra_tags
-      - selfstat
-      - internal_metrics
-      - consul
-    listen: 127.0.0.1:9101
+      - tail

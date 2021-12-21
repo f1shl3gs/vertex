@@ -1,7 +1,5 @@
-mod inotify;
-mod stat;
-// #[cfg(test)]
-// mod tests;
+#[cfg(test)]
+mod tests;
 
 use std::fs;
 use std::io::{self, BufRead, BufReader, Seek};
@@ -138,10 +136,6 @@ impl Watcher {
             line_delimiter,
             buf: BytesMut::new(),
         })
-    }
-
-    pub fn update_path(&mut self, path: PathBuf) -> io::Result<()> {
-        todo!()
     }
 
     #[inline]

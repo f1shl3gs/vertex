@@ -3,15 +3,16 @@ use chrono::{DateTime, Utc};
 use futures::future::{select, Either, FutureExt};
 use futures::{stream, Sink, SinkExt};
 use std::collections::BTreeMap;
-use std::fs::metadata;
 use std::future::Future;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tracing::{debug, error, warn};
 
+use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
+use super::watch::Watcher;
 use crate::provider::Provider;
-use crate::{Checkpointer, CheckpointsView, Fingerprint, ReadFrom, Watcher};
+use crate::ReadFrom;
 
 /// A sentinel type to signal that file server was gracefully shut down.
 ///
@@ -70,7 +71,11 @@ where
         for path in self.provider.scan() {
             match Fingerprint::try_from(&path) {
                 Ok(fp) => existing.push((path, fp)),
-                Err(err) => continue,
+                Err(err) => {
+                    warn!(message = "Convert fingerprint from file failed", ?err);
+
+                    continue;
+                }
             }
         }
 
@@ -121,7 +126,6 @@ where
 
         loop {
             // Collect lines by polling files
-            let mut global_bytes_read = 0usize;
             let mut bytes_read = 0usize;
             let mut maxed_out_reading_single_file = false;
             for (&fingerprint, watcher) in &mut watchers {
