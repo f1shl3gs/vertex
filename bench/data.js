@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640062441690,
+  "lastUpdate": 1640073122455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1071,6 +1071,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 74.273,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "2441d1af1f7b1313dd402acdb9328fa028240405",
+          "message": "fix the way we invoke nvidia_smi, no more zombie process will left",
+          "timestamp": "2021-12-21T06:24:28Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/73/commits/2441d1af1f7b1313dd402acdb9328fa028240405"
+        },
+        "date": 1640073121566,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 34.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 54.626,
             "unit": "ns/op"
           }
         ]
