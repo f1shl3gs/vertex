@@ -1,5 +1,6 @@
+use crate::encoding_transcode::{Decoder, Encoder};
 use bytes::Bytes;
-use event::{fields, tags, Event, LogRecord};
+use event::{fields, tags, BatchNotifier, Event, LogRecord};
 use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use serde::{Deserialize, Serialize};
@@ -30,6 +31,7 @@ impl From<ReadFromConfig> for ReadFrom {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 struct TailConfig {
     #[serde(default = "default_ignore_older_than")]
     #[serde(
@@ -65,6 +67,9 @@ struct TailConfig {
         serialize_with = "serialize_std_duration"
     )]
     glob_interval: Duration,
+    #[serde(default)]
+    acknowledgement: bool,
+    pub charset: Option<&'static encoding_rs::Encoding>,
 }
 
 fn default_ignore_older_than() -> Duration {
@@ -76,7 +81,7 @@ fn default_glob_interval() -> Duration {
 }
 
 fn default_max_read_bytes() -> usize {
-    16 * 1024
+    2 * 1024
 }
 
 fn default_max_line_bytes() -> usize {
@@ -95,6 +100,8 @@ impl GenerateConfig for TailConfig {
             max_read_bytes: default_max_read_bytes(),
             line_delimiter: "\n".to_string(),
             glob_interval: default_glob_interval(),
+            acknowledgement: Default::default(),
+            charset: None,
         })
         .unwrap()
     }
@@ -121,10 +128,12 @@ impl SourceConfig for TailConfig {
         let glob = tail::provider::Glob::new(&self.include, &self.exclude)
             .ok_or("glob provider create failed")?;
 
-        let read_from = if self.read_from.is_some() {
-            self.read_from.map(Into::into).unwrap_or_default()
-        } else {
-            ReadFrom::default()
+        let read_from = match &self.read_from {
+            Some(read_from) => match read_from {
+                ReadFromConfig::Beginning => ReadFrom::Beginning,
+                ReadFromConfig::End => ReadFrom::End,
+            },
+            None => ReadFrom::default(),
         };
 
         let mut output = ctx.out;
@@ -133,12 +142,18 @@ impl SourceConfig for TailConfig {
         let shutdown = ctx.shutdown.shared();
         let checkpointer = Checkpointer::new(&data_dir);
         let checkpoints = checkpointer.view();
-        // let finalizer = Some({
-        //     let checkpoints = checkpointer.view();
-        //     OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
-        //         checkpoints.update(entry.fingerprint, entry.offset)
-        //     })
-        // });
+        let finalizer = self.acknowledgement.then(|| {
+            let checkpoints = checkpointer.view();
+            OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
+                checkpoints.update(entry.fingerprint, entry.offset)
+            })
+        });
+
+        let charset = self.charset.clone();
+        let line_delimiter = match charset {
+            Some(e) => Encoder::new(&e).encode_from_utf8(&self.line_delimiter),
+            None => Bytes::from(self.line_delimiter.clone()),
+        };
 
         let harvester = Harvester {
             provider: glob,
@@ -147,7 +162,7 @@ impl SourceConfig for TailConfig {
             handle: tokio::runtime::Handle::current(),
             ignore_before: None,
             max_line_bytes: self.max_line_bytes,
-            line_delimiter: Bytes::from(self.line_delimiter.clone()),
+            line_delimiter,
         };
 
         Ok(Box::pin(async move {
@@ -157,20 +172,30 @@ impl SourceConfig for TailConfig {
                 exclude = ?exclude,
             );
 
+            let mut encoding_decoder = charset.map(Decoder::new);
+
             // sizing here is just a guess
             let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
             let rx = rx
                 .map(futures::stream::iter)
                 .flatten()
-                .map(move |mut line| line); // TODO: transcode each line from the file's encoding charset to utf8
+                .map(move |mut line| {
+                    // transcode each line from the file's encoding charset to utf8
+                    line.text = match encoding_decoder.as_mut() {
+                        Some(decoder) => decoder.decode_to_utf8(line.text),
+                        None => line.text,
+                    };
 
-            let message = Box::new(rx);
+                    line
+                });
+
+            // TODO: impl line aggregation like fluent bit does
 
             // Once harvester ends this will run until it has finished processing remaining
             // logs in the queue
-            let mut messages = message
+            let mut messages = Box::new(rx)
                 .map(move |line| {
-                    let event: Event = LogRecord::new(
+                    let mut event: Event = LogRecord::new(
                         tags!(
                             "filename" => line.filename,
                         ),
@@ -181,19 +206,20 @@ impl SourceConfig for TailConfig {
                     )
                     .into();
 
-                    /*if let Some(finalizer) = &finalizer {
-                        let (batch, receiver) = BatchNotifier::new_with_reciever();
+                    if let Some(finalizer) = &finalizer {
+                        let (batch, receiver) = BatchNotifier::new_with_receiver();
                         event = event.with_batch_notifier(&batch);
 
-                        finalizer.add( FinalizerEntry {
-                            fingerprint: line.fingerprint,
-                            offset: line.offset,
-                        }, receiver);
+                        finalizer.add(
+                            FinalizerEntry {
+                                fingerprint: line.fingerprint,
+                                offset: line.offset,
+                            },
+                            receiver,
+                        );
                     } else {
-
-                    }*/
-
-                    checkpoints.update(line.fingerprint, line.offset);
+                        checkpoints.update(line.fingerprint, line.offset);
+                    }
 
                     event
                 })

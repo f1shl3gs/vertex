@@ -5,6 +5,7 @@ mod batch;
 mod buffers;
 mod common;
 pub mod config;
+pub mod encoding_transcode;
 mod extensions;
 mod http;
 mod multiline;

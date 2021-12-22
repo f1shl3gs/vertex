@@ -341,6 +341,7 @@ pprof = { version = "0.6.0", default-features = false, optional = true, features
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
+encoding_rs = { version = "0.8.30", features = ["serde"]}
 lazy_static = { version = "1.4.0" }
 derivative = { version = "2.2.0" }
 typetag = { version = "0.1.8" }

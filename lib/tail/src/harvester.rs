@@ -7,7 +7,7 @@ use std::future::Future;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use tracing::{debug, error, warn};
+use tracing::{debug, error, info, trace, warn};
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
 use super::watch::Watcher;
@@ -44,6 +44,20 @@ where
     pub line_delimiter: Bytes,
 }
 
+/// `Harvester` as Source
+///
+/// The `run` of `Harvester` performs the cooperative scheduling of reads over `Harvester`'s
+/// configured files. Much care has been taking to make this scheduling `fair`, meaning busy
+/// files do not drown out quiet files or vice versa but there's no one perfect approach.
+/// Very fast files _will_ be lost if your system aggressively rolls log files. `Harvester` will
+/// keep a file handler open but should your system move so quickly that a file disappears
+/// before `Harvester` is able to open it the contents will be lost. This should be a race
+/// occurrence.
+///
+/// Specific operation systems support evented interfaces that correct this problem but your
+/// intrepid authors know of no generic solution
+///
+/// `Note`: rotate by `truncating` is not a good solution, so `Truncation is not supporter`.
 impl<P> Harvester<P>
 where
     P: Provider,
@@ -63,6 +77,7 @@ where
         checkpointer.read_checkpoints(self.ignore_before);
 
         // stats
+        let mut backoff_cap = 1usize;
         let mut existing = Vec::new();
         let mut watchers: BTreeMap<Fingerprint, Watcher> = Default::default();
         let mut lines = vec![];
@@ -122,15 +137,78 @@ where
             }
         });
 
+        let mut next_scan = Instant::now();
         loop {
+            // Find files to follow, but not too often
+            let now = Instant::now();
+            if next_scan <= now {
+                // Schedule the next scan time.
+                next_scan = now.checked_add(Duration::from_secs(1)).unwrap();
+
+                // Start scan
+                for (_fp, watcher) in &mut watchers {
+                    watcher.set_findable(false); // assume not findable until found
+                }
+
+                for path in self.provider.scan() {
+                    if let Ok(fp) = Fingerprint::try_from(&path) {
+                        if let Some(watcher) = watchers.get_mut(&fp) {
+                            // file fingerprint matches a watched file
+                            let was_found_this_cycle = watcher.file_findable();
+                            watcher.set_findable(true);
+                            if watcher.path == path {
+                                trace!(
+                                    message = "Continue watching file",
+                                    path = ?path
+                                );
+                            } else {
+                                // matches a file with a different path
+                                if !was_found_this_cycle {
+                                    info!(
+                                        message = "Watched file has been renamed",
+                                        path = ?path,
+                                        old_path = ?watcher.path
+                                    );
+
+                                    // ok if this fails: it might be fixed next cycle
+                                    watcher.update_path(path).ok();
+                                } else {
+                                    info!(
+                                        message = "More than one file has the same fingerprint",
+                                        path = ?path,
+                                        old_path = ?watcher.path
+                                    );
+
+                                    let (old, new) = (&watcher.path, &path);
+                                    if let (Ok(old_modified_time), Ok(new_modified_time)) = (
+                                        std::fs::metadata(&old).and_then(|m| m.modified()),
+                                        std::fs::metadata(&new).and_then(|m| m.modified()),
+                                    ) {
+                                        if old_modified_time < new_modified_time {
+                                            info!(
+                                                message = "Switching to watch most recently modified file",
+                                                new_modified_time = ?new_modified_time,
+                                                old_modified_time = ?old_modified_time
+                                            );
+
+                                            // ok if this fails: it might be fix next cycle
+                                            watcher.update_path(path).ok();
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            // untracked file fingerprint
+                            self.watch_new_file(path, fp, &mut watchers, &checkpoints, false);
+                        }
+                    }
+                }
+            }
+
             // Collect lines by polling files
             let mut bytes_read = 0usize;
             let mut maxed_out_reading_single_file = false;
             for (&fingerprint, watcher) in &mut watchers {
-                if !watcher.should_read() {
-                    continue;
-                }
-
                 while let Ok(Some(line)) = watcher.read_line() {
                     bytes_read += line.len();
                     lines.push(Line {
@@ -162,7 +240,9 @@ where
                 }
             });
 
+            // TODO: avoid sending empty lines
             let sending = std::mem::take(&mut lines);
+
             let mut stream = stream::once(futures::future::ok(sending));
             if let Err(err) = self.handle.block_on(chans.send_all(&mut stream)) {
                 error!(
@@ -173,9 +253,21 @@ where
                 return Err(err);
             }
 
-            // TODO: implement backoff
-            let backoff = 500; // 500ms
+            // When no lines have been read we kick the backup_cap up by twice,
+            // limited by the hard-coded cap. Else, we set the backup_cap to its
+            // minimum on the assumption that next time through there will be more
+            // lines to read promptly.
+            backoff_cap = if bytes_read == 0 {
+                std::cmp::min(2048, backoff_cap.saturating_mul(2))
+            } else {
+                1
+            };
+            let backoff = backoff_cap.saturating_sub(bytes_read);
 
+            // This works only if run inside tokio context since we are using tokio's timer.
+            // Outside of such context, this will panic on the first call. Also since we are using
+            // block_on here and in the above code, this should be run in its own thread.
+            // `spawn_blocking` fulfills all of these requirements.
             let sleep = async move {
                 if backoff > 0 {
                     tokio::time::sleep(Duration::from_millis(backoff as u64)).await;
@@ -235,6 +327,7 @@ where
             Ok(mut watcher) => {
                 watcher.set_findable(true);
                 watchers.insert(fp, watcher);
+                debug!(message = "Staring watch file", path = ?path);
             }
             Err(err) => {
                 error!(

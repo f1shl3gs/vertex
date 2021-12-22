@@ -14,8 +14,11 @@ extensions: {}
 sources:
   tail:
     type: tail
+    line_delimiter: "\n"
     include:
-      - "/home/f1shl3gs/Workspaces/clion/vertex/*.toml"
+      - "/home/f1shl3gs/Workspaces/clion/vertex/tmp.txt"
+  selfstat:
+    type: selfstat
 
 transforms: {}
 
@@ -24,3 +27,7 @@ sinks:
     type: stdout
     inputs:
       - tail
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - selfstat

@@ -7,6 +7,7 @@ mod remove;
 
 use std::collections::BTreeMap;
 use std::fmt::Debug;
+use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
@@ -16,7 +17,7 @@ use tracing::field::Field;
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{BatchNotifier, ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -183,6 +184,11 @@ impl LogRecord {
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
+    }
+
+    pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier(batch);
+        self
     }
 }
 

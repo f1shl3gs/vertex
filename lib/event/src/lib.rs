@@ -11,17 +11,17 @@ mod value;
 
 // re-export
 pub use buffer::{DecodeBytes, EncodeBytes};
-pub use finalization::*;
+pub use finalization::{
+    BatchNotifier, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
+};
 pub use log::LogRecord;
 pub use metric::*;
 pub use value::Value;
 
-use std::collections::BTreeMap;
-use std::sync::Arc;
-
-use crate::finalization::{BatchNotifier, EventFinalizer};
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
+use std::collections::BTreeMap;
+use std::sync::Arc;
 
 pub trait ByteSizeOf {
     /// Returns the in-memory size of this type
@@ -170,6 +170,13 @@ impl Event {
         match self {
             Self::Log(log) => log.add_finalizer(finalizer),
             Self::Metric(metric) => metric.add_finalizer(finalizer),
+        }
+    }
+
+    pub fn with_batch_notifier(self, batch: &Arc<BatchNotifier>) -> Self {
+        match self {
+            Self::Log(log) => log.with_batch_notifier(batch).into(),
+            Self::Metric(metric) => metric.with_batch_notifier(batch).into(),
         }
     }
 }

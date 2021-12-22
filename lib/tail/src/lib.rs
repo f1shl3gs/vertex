@@ -4,6 +4,9 @@ mod harvester;
 pub mod provider;
 mod watch;
 
+#[cfg(test)]
+mod tests;
+
 // re-export
 pub use buffer::*;
 pub use checkpoint::{Checkpointer, Fingerprint, Position};
