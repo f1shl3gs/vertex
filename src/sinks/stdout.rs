@@ -100,7 +100,10 @@ impl StreamSink for StdoutSink {
         while let Some(mut event) = input.next().await {
             self.acker.ack(1);
 
-            if let Some(text) = encode_event(event, &encoding) {
+            if let Some(mut text) = encode_event(event, &encoding) {
+                // Without the new line char, the latest line will be buffered
+                // rather than flush to terminal immediately.
+                text.push('\n');
                 stdout.write_all(text.as_bytes()).map_err(|err| {
                     error!(
                         message = "Write event to stdout failed",
