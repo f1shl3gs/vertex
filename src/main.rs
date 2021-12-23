@@ -13,7 +13,7 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
-use crate::commands::{Commands, RootCommand};
+use crate::commands::RootCommand;
 use std::collections::HashMap;
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -28,15 +28,13 @@ use vertex::{
 fn main() {
     let opts: RootCommand = argh::from_env();
 
-    if let Some(commands) = opts.sub_commands {
-        match commands {
-            Commands::Sources(sources) => sources.run(),
-            Commands::Transforms(transforms) => transforms.run(),
-            Commands::Sinks(sinks) => sinks.run(),
-            Commands::Extensions(extensions) => extensions.run(),
-            Commands::Providers(providers) => providers.run(),
-        }
+    if opts.version {
+        opts.show_version();
+        return;
+    }
 
+    if let Some(commands) = opts.sub_commands {
+        commands.run();
         return;
     }
 

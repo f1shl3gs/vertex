@@ -5,10 +5,14 @@ use vertex::config::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
     TransformDescription,
 };
+use vertex::get_version;
 
 #[derive(FromArgs)]
-#[argh(description = "Vertex is an All-in-one collector for metrics, logs and traces")]
+#[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
 pub struct RootCommand {
+    #[argh(switch, short = 'v', description = "show version")]
+    pub version: bool,
+
     #[argh(
         option,
         short = 'c',
@@ -28,6 +32,12 @@ pub struct RootCommand {
     pub sub_commands: Option<Commands>,
 }
 
+impl RootCommand {
+    pub fn show_version(&self) {
+        println!("{}", get_version());
+    }
+}
+
 #[derive(Debug, FromArgs)]
 #[argh(subcommand)]
 pub enum Commands {
@@ -36,6 +46,18 @@ pub enum Commands {
     Sinks(Sinks),
     Extensions(Extensions),
     Providers(Providers),
+}
+
+impl Commands {
+    pub fn run(&self) {
+        match self {
+            Commands::Sources(sources) => sources.run(),
+            Commands::Transforms(transforms) => transforms.run(),
+            Commands::Sinks(sinks) => sinks.run(),
+            Commands::Extensions(extensions) => extensions.run(),
+            Commands::Providers(providers) => providers.run(),
+        }
+    }
 }
 
 macro_rules! impl_list_and_example {
@@ -61,18 +83,6 @@ macro_rules! impl_list_and_example {
         }
     };
 }
-
-/*struct Component<T, D> {
-
-    _t: PhantomData<T>,
-    _p: PhantomData<D>,
-}
-
-impl<T, D> Component<T, D> {
-    fn run() {
-
-    }
-}*/
 
 #[derive(Debug, FromArgs)]
 #[argh(subcommand, name = "sources", description = "supported sources")]
