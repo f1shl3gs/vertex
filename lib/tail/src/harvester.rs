@@ -240,17 +240,17 @@ where
                 }
             });
 
-            // TODO: avoid sending empty lines
-            let sending = std::mem::take(&mut lines);
+            if lines.len() > 0 {
+                let sending = std::mem::take(&mut lines);
+                let mut stream = stream::once(futures::future::ok(sending));
+                if let Err(err) = self.handle.block_on(chans.send_all(&mut stream)) {
+                    error!(
+                        message = "Output channel closed",
+                        %err
+                    );
 
-            let mut stream = stream::once(futures::future::ok(sending));
-            if let Err(err) = self.handle.block_on(chans.send_all(&mut stream)) {
-                error!(
-                    message = "Output channel closed",
-                    %err
-                );
-
-                return Err(err);
+                    return Err(err);
+                }
             }
 
             // When no lines have been read we kick the backup_cap up by twice,
