@@ -50,13 +50,7 @@ pub mod built_info {
 }
 
 pub fn get_version() -> String {
-    #[cfg(feature = "nightly")]
-    let version = format!("{}-nightly", built_info::PKG_VERSION);
-
-    #[cfg(not(feature = "nightly"))]
-    let version = format!("{}-stable", built_info::PKG_VERSION);
-
-    version
+    built_info::PKG_VERSION.to_string()
 }
 
 pub fn hostname() -> std::io::Result<String> {
