@@ -1,8 +1,10 @@
 use crate::encoding_transcode::{Decoder, Encoder};
 use bytes::Bytes;
+use chrono::Utc;
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
 use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
+use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::time::Duration;
@@ -12,6 +14,7 @@ use crate::config::{
     deserialize_std_duration, serialize_std_duration, DataType, GenerateConfig, SourceConfig,
     SourceContext, SourceDescription,
 };
+use crate::hostname;
 use crate::sources::utils::OrderedFinalizer;
 use crate::sources::Source;
 
@@ -142,6 +145,13 @@ impl SourceConfig for TailConfig {
         let shutdown = ctx.shutdown.shared();
         let checkpointer = Checkpointer::new(&data_dir);
         let checkpoints = checkpointer.view();
+        let host_key = self
+            .host_key
+            .clone()
+            .unwrap_or(log_schema().host_key().to_string());
+        let hostname = hostname().unwrap();
+        let timestamp_key = log_schema().timestamp_key();
+        let source_type_key = log_schema().source_type_key();
         let finalizer = self.acknowledgement.then(|| {
             let checkpoints = checkpointer.view();
             OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
@@ -198,10 +208,13 @@ impl SourceConfig for TailConfig {
                     let mut event: Event = LogRecord::new(
                         tags!(
                             "filename" => line.filename,
+                            &host_key => &hostname,
+                            source_type_key => "file"
                         ),
                         fields!(
                             "message" => line.text,
-                            "offset" => line.offset
+                            "offset" => line.offset,
+                            timestamp_key =>  Utc::now()
                         ),
                     )
                     .into();
