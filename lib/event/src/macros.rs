@@ -16,6 +16,7 @@ macro_rules! tags {
 
 #[macro_export]
 macro_rules! fields {
+    // Done without trailing comma
     ( $($x:expr => $y:expr),* ) => ({
         let mut _map: std::collections::BTreeMap<String, event::Value> = std::collections::BTreeMap::new();
         $(
@@ -24,4 +25,8 @@ macro_rules! fields {
         _map
     });
 
+    // Done with trailing comma
+    ( $($x:expr => $y:expr,)* ) => (
+        fields!{$($x => $y),*}
+    );
 }
