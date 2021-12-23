@@ -11,6 +11,7 @@ use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
+use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tracing::field::Field;
 
@@ -55,9 +56,8 @@ impl From<Bytes> for LogRecord {
     fn from(bs: Bytes) -> Self {
         let mut log = LogRecord::default();
 
-        // TODO: log schema should be used here
-        log.insert_field("message", bs);
-        log.insert_field("timestamp", Utc::now());
+        log.insert_field(log_schema().message_key(), bs);
+        log.insert_field(log_schema().timestamp_key(), Utc::now());
 
         log
     }
