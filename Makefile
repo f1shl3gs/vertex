@@ -82,7 +82,7 @@ check_fmt:
 	cargo fmt -- --check
 
 .PHONY: check
-check: check_shell check_clippy check_fmt
+check: check_shell check_fmt check_clippy
 
 .PHONY: bench-vertex
 bench-vertex:

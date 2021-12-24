@@ -1,5 +1,7 @@
 mod charset;
+mod regex;
 
+pub use self::regex::*;
 use humanize::{duration_to_string, parse_duration};
 use serde::{Deserialize, Deserializer, Serializer};
 use std::borrow::Cow;
@@ -77,17 +79,6 @@ pub fn serialize_std_duration_option<S: Serializer>(
     }
 }
 
-pub fn deserialize_regex<'de, D: Deserializer<'de>>(
-    deserializer: D,
-) -> Result<::regex::Regex, D::Error> {
-    let s: String = serde::Deserialize::deserialize(deserializer)?;
-    ::regex::Regex::new(&s).map_err(serde::de::Error::custom)
-}
-
-pub fn serialize_regex<S: Serializer>(re: &::regex::Regex, s: S) -> Result<S::Ok, S::Error> {
-    s.serialize_str(re.as_str())
-}
-
 pub const fn default_true() -> bool {
     true
 }
@@ -119,31 +110,4 @@ pub fn ticker_from_duration(duration: chrono::Duration) -> Result<IntervalStream
     let duration = duration.to_std().map_err(|_| ())?;
     let interval = tokio::time::interval(duration.into());
     Ok(IntervalStream::new(interval))
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use serde::{Deserialize, Serialize};
-
-    #[derive(Deserialize, Serialize)]
-    struct RE {
-        #[serde(
-            deserialize_with = "deserialize_regex",
-            serialize_with = "serialize_regex"
-        )]
-        re: ::regex::Regex,
-    }
-
-    #[test]
-    fn test_regex_serde() {
-        let re: RE = serde_yaml::from_str(
-            r#"
-        re: .*
-        "#,
-        )
-        .unwrap();
-
-        assert_eq!(re.re.as_str(), ".*");
-    }
 }

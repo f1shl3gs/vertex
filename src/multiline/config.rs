@@ -6,6 +6,7 @@ use snafu::{ResultExt, Snafu};
 
 use super::aggregate::{self, Mode};
 
+/*
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display(
@@ -62,3 +63,4 @@ impl TryFrom<&MultilineConfig> for aggregate::Config {
         })
     }
 }
+*/
