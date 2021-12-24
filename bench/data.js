@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640320633111,
+  "lastUpdate": 1640320669143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1236,6 +1236,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 62.589,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "e7b6fcb0571576765d4798e1c6071ce0fbc5233c",
+          "message": "chore(deps): bump tracing-subscriber from 0.3.3 to 0.3.4",
+          "timestamp": "2021-12-23T08:52:47Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/76/commits/e7b6fcb0571576765d4798e1c6071ce0fbc5233c"
+        },
+        "date": 1640320668599,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 49.346,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 82.414,
             "unit": "ns/op"
           }
         ]
