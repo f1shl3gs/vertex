@@ -80,6 +80,9 @@ pub struct LineAgg<T, R, K, C> {
     draining: Option<Vec<(K, Bytes, C)>>,
 }
 
+/// Rule is extract from core logic, so we can implement preset easily and, implement it
+/// as we wish, the performance of regex is not good, so we can implement by something like
+/// `contains`, it should be blazing fast.
 pub trait Rule {
     fn is_start(&self, line: &Bytes) -> bool;
     fn is_condition(&self, line: &Bytes) -> bool;

@@ -70,7 +70,6 @@ impl TryFrom<&MultilineConfig> for aggregate::Config {
 #[derive(Debug)]
 struct DockerRule {}
 
-
 ///
 /// With type
 /// ```yaml
