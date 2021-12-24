@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640320595872,
+  "lastUpdate": 1640320633111,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -549,6 +549,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1142100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "4a7815c26da5b93417d60ad17fa793ea195f5bb9",
+          "message": "chore(deps): bump pprof from 0.6.1 to 0.6.2",
+          "timestamp": "2021-12-23T08:52:47Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/75/commits/4a7815c26da5b93417d60ad17fa793ea195f5bb9"
+        },
+        "date": 1640320632579,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1134300,
             "unit": "ns/op"
           }
         ]
