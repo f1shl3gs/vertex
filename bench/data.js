@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640579849766,
+  "lastUpdate": 1640579872063,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2493,6 +2493,66 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 271560,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "6c26edca1d93e02f6d880ac705cab4259b06353e",
+          "message": "chore(deps): bump twox-hash from 1.6.1 to 1.6.2",
+          "timestamp": "2021-12-25T12:47:30Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/78/commits/6c26edca1d93e02f6d880ac705cab4259b06353e"
+        },
+        "date": 1640579871110,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 643.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 64199,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 338930,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 643700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 281.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 27056,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 143880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 286680,
             "unit": "ns/op"
           }
         ]
