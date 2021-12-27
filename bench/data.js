@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640579872063,
+  "lastUpdate": 1640579918313,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -599,6 +599,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1332300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "8e4634018c3a5def6677f013ffe3a280283b5a37",
+          "message": "chore(deps): bump pin-project from 1.0.8 to 1.0.9",
+          "timestamp": "2021-12-25T12:47:30Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/77/commits/8e4634018c3a5def6677f013ffe3a280283b5a37"
+        },
+        "date": 1640579917748,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1137200,
             "unit": "ns/op"
           }
         ]
