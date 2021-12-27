@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640579982965,
+  "lastUpdate": 1640581320342,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3305,6 +3305,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.727,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "6c26edca1d93e02f6d880ac705cab4259b06353e",
+          "message": "chore(deps): bump twox-hash from 1.6.1 to 1.6.2",
+          "timestamp": "2021-12-25T12:47:30Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/78/commits/6c26edca1d93e02f6d880ac705cab4259b06353e"
+        },
+        "date": 1640581248706,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 80607000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1459500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 39.546,
             "unit": "ns/op"
           }
         ]
