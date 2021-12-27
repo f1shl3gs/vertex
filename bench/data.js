@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640322092152,
+  "lastUpdate": 1640579753960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1291,6 +1291,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 82.414,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "6c26edca1d93e02f6d880ac705cab4259b06353e",
+          "message": "chore(deps): bump twox-hash from 1.6.1 to 1.6.2",
+          "timestamp": "2021-12-25T12:47:30Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/78/commits/6c26edca1d93e02f6d880ac705cab4259b06353e"
+        },
+        "date": 1640579753453,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 39.285,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 61.938,
             "unit": "ns/op"
           }
         ]
