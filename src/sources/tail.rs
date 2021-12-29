@@ -2,6 +2,7 @@ use crate::encoding_transcode::{Decoder, Encoder};
 use bytes::Bytes;
 use chrono::Utc;
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
+use futures::Stream;
 use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
@@ -15,6 +16,7 @@ use crate::config::{
     SourceContext, SourceDescription,
 };
 use crate::hostname;
+use crate::multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use crate::sources::utils::OrderedFinalizer;
 use crate::sources::Source;
 
@@ -72,7 +74,8 @@ struct TailConfig {
     glob_interval: Duration,
     #[serde(default)]
     acknowledgement: bool,
-    pub charset: Option<&'static encoding_rs::Encoding>,
+    charset: Option<&'static encoding_rs::Encoding>,
+    multiline: Option<MultilineConfig>,
 }
 
 fn default_ignore_older_than() -> Duration {
@@ -105,6 +108,7 @@ impl GenerateConfig for TailConfig {
             glob_interval: default_glob_interval(),
             acknowledgement: Default::default(),
             charset: None,
+            multiline: None,
         })
         .unwrap()
     }
@@ -142,6 +146,7 @@ impl SourceConfig for TailConfig {
         let mut output = ctx.out;
         let include = self.include.clone();
         let exclude = self.exclude.clone();
+        let multiline = self.multiline.clone();
         let shutdown = ctx.shutdown.shared();
         let checkpointer = Checkpointer::new(&data_dir);
         let checkpoints = checkpointer.view();
@@ -199,11 +204,58 @@ impl SourceConfig for TailConfig {
                     line
                 });
 
-            // TODO: impl line aggregation like fluent bit does
+            let messages: Box<dyn Stream<Item = Line> + Send + std::marker::Unpin> =
+                if let Some(ref conf) = multiline {
+                    // This match looks ugly, but it does not need `dyn`
+                    match conf.parser {
+                        Parser::Cri => {
+                            let logic = Logic::new(crate::multiline::preset::Cri, conf.timeout);
+                            Box::new(
+                                LineAgg::new(
+                                    rx.map(|line| {
+                                        (line.filename, line.text, (line.fingerprint, line.offset))
+                                    }),
+                                    logic,
+                                )
+                                .map(
+                                    |(filename, text, (fingerprint, offset))| Line {
+                                        text,
+                                        filename,
+                                        fingerprint,
+                                        offset,
+                                    },
+                                ),
+                            )
+                        }
+                        Parser::NoIndent => {
+                            let logic =
+                                Logic::new(crate::multiline::preset::NoIndent, conf.timeout);
+                            Box::new(
+                                LineAgg::new(
+                                    rx.map(|line| {
+                                        (line.filename, line.text, (line.fingerprint, line.offset))
+                                    }),
+                                    logic,
+                                )
+                                .map(
+                                    |(filename, text, (fingerprint, offset))| Line {
+                                        text,
+                                        filename,
+                                        fingerprint,
+                                        offset,
+                                    },
+                                ),
+                            )
+                        }
+                        _ => unreachable!(),
+                    }
+                } else {
+                    Box::new(rx)
+                };
 
             // Once harvester ends this will run until it has finished processing remaining
             // logs in the queue
-            let mut messages = Box::new(rx)
+            let mut messages = messages
                 .map(move |line| {
                     let mut event: Event = LogRecord::new(
                         tags!(

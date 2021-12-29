@@ -6,7 +6,6 @@ use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek};
 use std::os::unix::fs::MetadataExt;
 use std::path::PathBuf;
-use std::time::Instant;
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
@@ -113,13 +112,6 @@ impl Watcher {
                 (Box::new(reader), pos)
             }
         };
-
-        let ts = metadata
-            .modified()
-            .ok()
-            .and_then(|mtime| mtime.elapsed().ok())
-            .and_then(|diff| Instant::now().checked_sub(diff))
-            .unwrap_or_else(Instant::now);
 
         Ok(Self {
             path,

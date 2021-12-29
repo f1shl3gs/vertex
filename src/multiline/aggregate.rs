@@ -478,6 +478,6 @@ mod tests {
             ),
         ];
 
-        run_and_assert(&lines, rule, &expected);
+        run_and_assert(&lines, rule, &expected).await;
     }
 }

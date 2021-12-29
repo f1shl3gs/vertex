@@ -15,6 +15,7 @@ sources:
   tail:
     type: tail
     line_delimiter: "\n"
+    multiline: noindent
     include:
       - "/home/f1shl3gs/Workspaces/clion/vertex/tmp.txt"
   selfstat:
