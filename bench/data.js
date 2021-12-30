@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640848924614,
+  "lastUpdate": 1640849686146,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4320,6 +4320,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.904,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "b76a617855e61b6db51696565423d3ba794576ca",
+          "message": "chore(deps): bump rtnetlink from 0.8.1 to 0.9.0",
+          "timestamp": "2021-12-30T06:56:49Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/83/commits/b76a617855e61b6db51696565423d3ba794576ca"
+        },
+        "date": 1640849685091,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 72596000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1133500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.627,
             "unit": "ns/op"
           }
         ]
