@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640855852103,
+  "lastUpdate": 1640856871158,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4470,6 +4470,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.627,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "71ab6893ee779cede28b48b9e19b3c424a665a75",
+          "message": "chore(deps): bump netlink-sys from 0.7.0 to 0.8.1",
+          "timestamp": "2021-12-30T06:56:49Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/82/commits/71ab6893ee779cede28b48b9e19b3c424a665a75"
+        },
+        "date": 1640856869946,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 81588000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1326900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 30.733,
             "unit": "ns/op"
           }
         ]
