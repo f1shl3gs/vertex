@@ -362,7 +362,7 @@ seahash = { version = "4.1.0", default-features = false, optional = true }
 inventory = { version = "0.1.11" }
 num_cpus = { version = "1.13.1" }
 once_cell = { version = "1.9", default-features = false }
-sqlx = { version = "0.5.6", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 uuid = { version = "0.8", default-features = false, features = ["v4"] }
 md5 = { version = "0.7" }
 mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
