@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640839182149,
+  "lastUpdate": 1640839369674,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1456,6 +1456,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.587,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "c22346d2684ef936e351ba49975d80caa8f19057",
+          "message": "chore(deps): bump sqlx from 0.5.9 to 0.5.10",
+          "timestamp": "2021-12-28T14:20:21Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/80/commits/c22346d2684ef936e351ba49975d80caa8f19057"
+        },
+        "date": 1640839369149,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 38.423,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 67.086,
             "unit": "ns/op"
           }
         ]
