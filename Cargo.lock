@@ -2125,7 +2125,7 @@ dependencies = [
  "futures",
  "log",
  "netlink-packet-core 0.2.4",
- "netlink-sys",
+ "netlink-sys 0.7.0",
  "tokio",
  "tokio-util",
 ]
@@ -2136,6 +2136,19 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f48ea34ea0678719815c3753155067212f853ad2d8ef4a49167bae7f7c254188"
 dependencies = [
+ "futures",
+ "libc",
+ "log",
+ "tokio",
+]
+
+[[package]]
+name = "netlink-sys"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed51a4602bb956eefef0ebc15f478bf9732fa3cc706e0a37112e654f41c5b92c"
+dependencies = [
+ "bytes",
  "futures",
  "libc",
  "log",
@@ -4598,7 +4611,7 @@ dependencies = [
  "mimalloc",
  "mongodb",
  "netlink-packet-sock-diag",
- "netlink-sys",
+ "netlink-sys 0.8.1",
  "nix 0.23.1",
  "no-proxy",
  "nom 7.1.0",
