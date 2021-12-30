@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640847669064,
+  "lastUpdate": 1640847670135,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -724,6 +724,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1695000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "bcaeb5436a40176f8bba9f00371a8e82fe2d056d",
+          "message": "chore(deps): bump rtnetlink from 0.8.1 to 0.9.0",
+          "timestamp": "2021-12-30T06:54:08Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/83/commits/bcaeb5436a40176f8bba9f00371a8e82fe2d056d"
+        },
+        "date": 1640847669580,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1140600,
             "unit": "ns/op"
           }
         ]
