@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640839050012,
+  "lastUpdate": 1640839097019,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -624,6 +624,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1137200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "cb785aee1ca7959c97eaabe98f12fceb7c6cd5ce",
+          "message": "chore(deps): bump netlink-packet-sock-diag from 0.1.0 to 0.3.0",
+          "timestamp": "2021-12-28T14:20:21Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/79/commits/cb785aee1ca7959c97eaabe98f12fceb7c6cd5ce"
+        },
+        "date": 1640839096455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1136800,
             "unit": "ns/op"
           }
         ]
