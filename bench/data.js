@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640847691761,
+  "lastUpdate": 1640848196185,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1651,6 +1651,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 73.515,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "da28fd9e8a9a91df7ba7563d53fa63a694137584",
+          "message": "chore(deps): bump netlink-sys from 0.7.0 to 0.8.1",
+          "timestamp": "2021-12-30T06:56:49Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/82/commits/da28fd9e8a9a91df7ba7563d53fa63a694137584"
+        },
+        "date": 1640848195656,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 42.774,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 67.086,
             "unit": "ns/op"
           }
         ]
