@@ -4652,6 +4652,16 @@ dependencies = [
  "typetag",
  "url",
  "uuid",
+ "virt",
+]
+
+[[package]]
+name = "virt"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "06ce5cd536aa559d1088ddc531bbf3e55edc5db8ec0a5329dfb17f83a5b469ca"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
