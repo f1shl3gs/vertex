@@ -5,7 +5,7 @@ use regex::bytes::Regex;
 use serde::de::{Error, MapAccess};
 use serde::{de, Deserializer, Serializer};
 
-use super::aggregate::{Mode};
+use super::aggregate::Mode;
 
 const CRI_PARSER: &str = "cri";
 const DOCKER_PARSER: &str = "docker";
