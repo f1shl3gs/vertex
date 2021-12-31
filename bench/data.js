@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640926564891,
+  "lastUpdate": 1640927171440,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4885,6 +4885,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.717,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "0010a2ce5172839975226ead063ad78e82bcb15a",
+          "message": "chore(deps): bump dashmap from 4.0.2 to 5.0.0",
+          "timestamp": "2021-12-30T15:06:54Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/86/commits/0010a2ce5172839975226ead063ad78e82bcb15a"
+        },
+        "date": 1640927170473,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 70068000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1078400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.959,
             "unit": "ns/op"
           }
         ]
