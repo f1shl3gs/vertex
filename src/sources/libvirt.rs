@@ -263,9 +263,7 @@ mod schema {
 }
 
 fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::error::Error> {
-    let dom =  unsafe {
-        virt::domain::Domain::new((*stat.ptr).dom)
-    };
+    let dom = unsafe { virt::domain::Domain::new((*stat.ptr).dom) };
     let name = dom.get_name()?;
     let uuid = dom.get_uuid_string()?;
     let info = dom.get_info()?;
@@ -349,34 +347,33 @@ fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::
 
     // TODO: network interface
 
-
-
-
     Ok(metrics)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn get_all_domain_stats() {
         let uri = "qemu:///system";
         let conn = virt::connect::Connect::open(uri).unwrap();
 
-        let stats = conn.get_all_domain_stats(
-            (DomainStatsTypes::VIR_DOMAIN_STATS_STATE
-                | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL
-                | DomainStatsTypes::VIR_DOMAIN_STATS_INTERFACE
-                | DomainStatsTypes::VIR_DOMAIN_STATS_BALLOON
-                | DomainStatsTypes::VIR_DOMAIN_STATS_BLOCK
-                | DomainStatsTypes::VIR_DOMAIN_STATS_PERF
-                | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL)
-                .bits(),
-            (DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_RUNNING
-                | DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_SHUTOFF)
-                .bits(),
-        ).unwrap();
+        let stats = conn
+            .get_all_domain_stats(
+                (DomainStatsTypes::VIR_DOMAIN_STATS_STATE
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_INTERFACE
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_BALLOON
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_BLOCK
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_PERF
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL)
+                    .bits(),
+                (DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_RUNNING
+                    | DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_SHUTOFF)
+                    .bits(),
+            )
+            .unwrap();
 
         for stat in stats {
             // let domain = virt::domain::Domain::new(stat.ptr.dom);
