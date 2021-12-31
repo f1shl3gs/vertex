@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640926068290,
+  "lastUpdate": 1640926134296,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -849,6 +849,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1136300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "0010a2ce5172839975226ead063ad78e82bcb15a",
+          "message": "chore(deps): bump dashmap from 4.0.2 to 5.0.0",
+          "timestamp": "2021-12-30T15:06:54Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/86/commits/0010a2ce5172839975226ead063ad78e82bcb15a"
+        },
+        "date": 1640926133774,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1135800,
             "unit": "ns/op"
           }
         ]
