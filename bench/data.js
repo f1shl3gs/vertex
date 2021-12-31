@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640927171440,
+  "lastUpdate": 1640927294154,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4920,6 +4920,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.959,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "ad3191373707f6a0198db1c3631cfe2d7a82ebad",
+          "message": "chore(deps): bump atomig from 0.3.2 to 0.3.3",
+          "timestamp": "2021-12-30T15:06:54Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/85/commits/ad3191373707f6a0198db1c3631cfe2d7a82ebad"
+        },
+        "date": 1640927293055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 82163000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1416000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 31.834,
             "unit": "ns/op"
           }
         ]
