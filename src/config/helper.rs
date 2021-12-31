@@ -119,6 +119,11 @@ pub fn ticker_from_duration(duration: chrono::Duration) -> Result<IntervalStream
     Ok(IntervalStream::new(interval))
 }
 
+pub fn ticker_from_std_duration(duration: std::time::Duration) -> IntervalStream {
+    let interval = tokio::time::interval(duration.into());
+    IntervalStream::new(interval)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

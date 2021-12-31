@@ -4558,6 +4558,7 @@ dependencies = [
  "async-stream",
  "async-trait",
  "atty",
+ "bitflags",
  "bloom",
  "buffers",
  "bytes",
@@ -4658,8 +4659,7 @@ dependencies = [
 [[package]]
 name = "virt"
 version = "0.2.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "06ce5cd536aa559d1088ddc531bbf3e55edc5db8ec0a5329dfb17f83a5b469ca"
+source = "git+https://github.com/libvirt/libvirt-rust?rev=10456b6e59ec73e8ef418cf0a29a9bf33be8ded6#10456b6e59ec73e8ef418cf0a29a9bf33be8ded6"
 dependencies = [
  "libc",
 ]

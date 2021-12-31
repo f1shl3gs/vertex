@@ -156,7 +156,7 @@ sources-memcached = []
 sources-fluentd = []
 sources-syslog = []
 sources-tail = []
-sources-libvirt = ["virt"]
+sources-libvirt = ["virt", "bitflags"]
 sources-mysqld = ["sqlx"]
 sources-nvidia_smi = ["serde-xml-rs"]
 sources-mongodb = ["mongodb/tokio-runtime"]
@@ -339,6 +339,7 @@ pprof = { version = "0.6.2", default-features = false, optional = true, features
 # External libs
 argh = { version = "0.1.7" }
 chrono = { version = "0.4.19", features = ["serde"] }
+bitflags = { version = "1.3.2", default-features = false, optional = true }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }
@@ -370,4 +371,4 @@ rand_distr = { version = "0.4.2", default-features = false }
 twox-hash = { version = "1.6.2", default-features = false }
 flate2 = { version = "1.0.21" }
 percent-encoding = { version = "2.1.0", default-features = false }
-virt = { version = "0.2.11", default-features = false, optional = true }
+virt = { git = "https://github.com/libvirt/libvirt-rust", rev = "10456b6e59ec73e8ef418cf0a29a9bf33be8ded6", optional = true }
