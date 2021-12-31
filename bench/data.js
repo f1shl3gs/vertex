@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640925578092,
+  "lastUpdate": 1640926068290,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1871,6 +1871,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 72.176,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "ad3191373707f6a0198db1c3631cfe2d7a82ebad",
+          "message": "chore(deps): bump atomig from 0.3.2 to 0.3.3",
+          "timestamp": "2021-12-30T15:06:54Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/85/commits/ad3191373707f6a0198db1c3631cfe2d7a82ebad"
+        },
+        "date": 1640926067745,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 38.428,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 66.376,
             "unit": "ns/op"
           }
         ]
