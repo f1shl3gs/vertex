@@ -19,7 +19,7 @@ serde_yaml = { version = "0.8.23" }
 substring = { version = "1.4.5" }
 tracing = { version = "0.1.29", default-features = false }
 atomig = { version = "0.3.3", features = ["derive", "serde"] }
-pin-project = { version = "1.0.9", default-features = false }
+pin-project = { version = "1.0.10", default-features = false }
 
 tokio = { version = "1.15.0", default-features = false, features = ["sync"] }
 futures = { version = "0.3.19", default-features = false, features = ["std"] }
