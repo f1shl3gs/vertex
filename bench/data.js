@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640966933252,
+  "lastUpdate": 1641184434707,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2091,6 +2091,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 67.267,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "9236391f8c9197ec9be9a3f4f9e2db02fa0f2175",
+          "message": "chore(deps): bump serde from 1.0.132 to 1.0.133",
+          "timestamp": "2022-01-01T10:41:13Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/87/commits/9236391f8c9197ec9be9a3f4f9e2db02fa0f2175"
+        },
+        "date": 1641184434134,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 38.401,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 64.91,
             "unit": "ns/op"
           }
         ]
