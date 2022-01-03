@@ -8,7 +8,7 @@ event = { path = "../event" }
 
 bytes = { version = "1.0.1", default-features = false }
 futures = { version = "0.3.19", default-features = false, features = ["std"] }
-pin-project = { version = "1.0.9", default-features = false }
+pin-project = { version = "1.0.10", default-features = false }
 serde = { version = "1.0.132", default-features = false, features = ["derive"] }
 tokio = { version = "1.15.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time"] }
 snafu = { version = "0.6" }
