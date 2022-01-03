@@ -922,7 +922,8 @@ impl DomainStatsRecord {
                 return Err(Error::new());
             }
 
-            let params = libc::malloc(std::mem::size_of::<virTypedParameter>() * (nparams as usize)) as virTypedParameterPtr;
+            let params = libc::malloc(std::mem::size_of::<virTypedParameter>() * (nparams as usize))
+                as virTypedParameterPtr;
             // let params = &mut virTypedParameter::default();
             let ret = virDomainGetBlockIoTune(
                 (*self.ptr).dom,
@@ -935,6 +936,7 @@ impl DomainStatsRecord {
                 return Err(Error::new());
             }
 
+            // TODO: free params properly
             let tune = DomainBlockIoTuneParameters {
                 total_bytes_sec: get_u64(params, nparams, "total_bytes_sec")?,
                 read_bytes_sec: get_u64(params, nparams, "read_bytes_sec")?,
