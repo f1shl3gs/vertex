@@ -4658,8 +4658,7 @@ dependencies = [
 
 [[package]]
 name = "virt"
-version = "0.2.11"
-source = "git+https://github.com/libvirt/libvirt-rust?rev=10456b6e59ec73e8ef418cf0a29a9bf33be8ded6#10456b6e59ec73e8ef418cf0a29a9bf33be8ded6"
+version = "0.1.0"
 dependencies = [
  "libc",
 ]

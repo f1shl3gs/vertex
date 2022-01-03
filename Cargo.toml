@@ -26,7 +26,8 @@ members = [
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",
-    "lib/sysinfo"
+    "lib/sysinfo",
+    "lib/virt"
 ]
 
 [features]
@@ -266,6 +267,7 @@ log_schema = { path = "lib/log_schema" }
 tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 sysinfo = { path = "lib/sysinfo" }
+virt = { path = "lib/virt", optional = true }
 
 # Allocation
 mimalloc = { version = "0.1.27", default-features = false, optional = true }
@@ -371,4 +373,3 @@ rand_distr = { version = "0.4.2", default-features = false }
 twox-hash = { version = "1.6.2", default-features = false }
 flate2 = { version = "1.0.21" }
 percent-encoding = { version = "2.1.0", default-features = false }
-virt = { git = "https://github.com/libvirt/libvirt-rust", rev = "10456b6e59ec73e8ef418cf0a29a9bf33be8ded6", optional = true }

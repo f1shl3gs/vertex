@@ -1,8 +1,12 @@
+mod stats;
+mod virt_v2;
+
 use crate::config::{
     default_std_interval, deserialize_std_duration, serialize_std_duration, ticker_from_duration,
     ticker_from_std_duration, DataType, GenerateConfig, SourceConfig, SourceContext,
     SourceDescription,
 };
+use crate::sources::libvirt::schema::Disk;
 use crate::sources::Source;
 use bitflags::bitflags;
 use event::{tags, Metric};
@@ -10,7 +14,8 @@ use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use std::time::Duration;
-use virt::domain::DomainStatsRecord;
+use virt::common::{get_int, get_u32, get_u64};
+use virt::domain::{DomainStatsBalloonStats, DomainStatsRecord};
 use virt::error::ErrorLevel;
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainStatsTypes
@@ -159,18 +164,39 @@ fn gather(uri: &str) -> Result<Vec<Metric>, virt::error::Error> {
 mod schema {
     use serde::{Deserialize, Serialize};
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
     pub struct DiskTarget {
         pub dev: String,
         pub bus: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    pub struct DiskSource {
+        pub file: String,
+        #[serde(default)]
+        pub name: String,
+    }
+
+    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    pub struct DiskDriver {
+        #[serde(rename = "type")]
+        pub typ: String,
+        #[serde(default)]
+        pub cache: String,
+        #[serde(default)]
+        pub discard: String,
+    }
+
+    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
     pub struct Disk {
         pub device: String,
         #[serde(rename = "type")]
         pub disk_type: String,
         pub target: DiskTarget,
+        pub source: DiskSource,
+        #[serde(default)]
+        pub serial: String,
+        pub driver: DiskDriver,
     }
 
     #[derive(Debug, Deserialize, Serialize)]
@@ -181,7 +207,7 @@ mod schema {
 
     #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct InterfaceTarget {
-        pub device: String,
+        pub dev: String,
     }
 
     #[derive(Debug, Default, Deserialize, Serialize)]
@@ -212,37 +238,37 @@ mod schema {
         pub interfaces: Vec<Interface>,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Flavor {
         pub name: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct User {
         pub name: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Project {
         pub name: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Owner {
         pub user: User,
         pub project: Project,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Root {
         #[serde(rename = "type")]
         pub typ: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Instance {
         pub flavor: Flavor,
         pub owner: Owner,
@@ -250,7 +276,7 @@ mod schema {
         pub root: Root,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize, Serialize)]
     pub struct Metadata {
         pub instance: Instance,
     }
@@ -258,11 +284,46 @@ mod schema {
     #[derive(Debug, Deserialize, Serialize)]
     pub struct Domain {
         pub devices: Devices,
+        #[serde(default)]
         pub metadata: Metadata,
+    }
+
+    #[derive(Debug, Default)]
+    pub struct MemoryStats {
+        pub major_fault: u64,
+        pub minor_fault: u64,
+        pub unused: u64,
+        pub available: u64,
+        pub actual_balloon: u64,
+        pub rss: u64,
+        pub usable: u64,
+        pub disk_caches: u64,
+    }
+
+    impl From<Vec<virt::domain::MemoryStats>> for MemoryStats {
+        fn from(array: Vec<virt::domain::MemoryStats>) -> Self {
+            let mut stats = Self::default();
+
+            for s in &array {
+                match s.tag {
+                    2 => stats.major_fault = s.val,
+                    3 => stats.minor_fault = s.val,
+                    4 => stats.unused = s.val,
+                    5 => stats.available = s.val,
+                    6 => stats.actual_balloon = s.val,
+                    7 => stats.rss = s.val,
+                    8 => stats.usable = s.val,
+                    10 => stats.disk_caches = s.val,
+                    _ => { /* do nothing */ }
+                }
+            }
+
+            stats
+        }
     }
 }
 
-fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::error::Error> {
+fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt::error::Error> {
     let dom = unsafe { virt::domain::Domain::new((*stat.ptr).dom) };
     let name = dom.get_name()?;
     let uuid = dom.get_uuid_string()?;
@@ -313,7 +374,7 @@ fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::
             info.memory * 1024,
             tags!(
                 "domain" => &name
-            )
+            ),
         ),
         Metric::gauge_with_tags(
             "libvirt_domain_info_virtual_cpus",
@@ -321,15 +382,15 @@ fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::
             info.nr_virt_cpu,
             tags!(
                 "domain" => &name,
-            )
+            ),
         ),
         Metric::sum_with_tags(
             "libvirt_domain_info_cpu_time_seconds_total",
             "Amount of CPU time used by the domain, in seconds",
-            info.cpu_time /1000/1000/1000, // From ns to s
+            info.cpu_time / 1000 / 1000 / 1000, // From ns to s
             tags!(
                 "domain" => &name,
-            )
+            ),
         ),
         Metric::gauge_with_tags(
             "libvirt_domain_info_vstate",
@@ -337,15 +398,574 @@ fn domain_stat_to_metrics(stat: DomainStatsRecord) -> Result<Vec<Metric>, virt::
             info.state as u32,
             tags!(
                 "domain" => &name,
-            )
-        )
+            ),
+        ),
     ];
 
-    // TODO: vcpu
+    // Report vcpus
+    let vcpus = dom.get_vcpus()?;
+    for vcpu in vcpus {
+        let vcpu_num = vcpu.number.to_string();
 
-    // TODO: block devices
+        // There is no Wait in GetVcpus(), But there's no cpu number in
+        // DomainStats Time and State are present in both structs.
+        // So, let's take Wait here
+        let (wait, delay) = stat.vcpu_wait_and_delay(vcpu.number)?;
 
-    // TODO: network interface
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "libvirt_domain_vcpu_state",
+                "VCPU state. 0: offline, 1: running, 2: blocked",
+                vcpu.state,
+                tags!(
+                    "domain" => &name,
+                    "vcpu" => &vcpu_num,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_vcpu_time_seconds_total",
+                "Amount of CPU time used by the domain's VCPU, in seconds",
+                vcpu.cpu_time / 1000 / 1000 / 1000, // From ns to s
+                tags!(
+                    "domain" => &name,
+                    "vcpu" => &vcpu_num
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_domain_vcpu_cpu",
+                "Real CPU number, or one of the values from virVcpuHostCpuState",
+                vcpu.cpu,
+                tags!(
+                    "domain" => &name,
+                    "vcpu" => &vcpu_num
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_vcpu_wait_seconds_total",
+                "Vcpu's wait_sum metrics. CONFIG_SCHEDSTATS has to be enabled",
+                wait / 1000 / 1000 / 1000,
+                tags!(
+                    "domain" => &name,
+                    "vcpu" => &vcpu_num,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_vcpu_delay_seconds_total",
+                "Amount of CPU time used by the domain's VCPU, in seconds.\
+                Vcpu's delay metric. Time the vcpu thread was enqueued by the host \
+                scheduler, but was waiting in the queue instead of running. Exposed to \
+                the VM as a steal time",
+                delay / 1000 / 1000 / 1000,
+                tags!(
+                    "domain" => &name,
+                    "vcpu" => &vcpu_num
+                ),
+            ),
+        ]);
+    }
+
+    // Report block device statistics
+    let blocks = stat.block_stats()?;
+    for block in &blocks {
+        let mut data_source = "";
+        // Ugly hack to avoid getting metrics from cdrom block device
+        // TODO: somehow check the disk 'device' field for 'cdrom' string
+        // if block.name == "hdc" || block.name == "hda" {
+        //     continue;
+        // }
+
+        let dev = devices
+            .disks
+            .iter()
+            .find(|dev| dev.target.dev == block.name)
+            .map(|d| d.clone())
+            .unwrap_or_default();
+
+        let data_source = if block.path != "" {
+            &block.path
+        } else {
+            &dev.source.name
+        };
+
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "libvirt_domain_block_meta",
+                "Block device metadata info. Device name, source file, serial.",
+                1,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &dev.target.dev,
+                    "source_file" => data_source,
+                    "serial" => &dev.serial,
+                    "bus" => &dev.target.bus,
+                    "disk_type" => &dev.disk_type,
+                    "driver_type" => &dev.driver.typ,
+                    "cache" => &dev.driver.cache,
+                    "discard" => &dev.driver.discard
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_read_bytes_total",
+                "Number of bytes read from a block device, in bytes.",
+                block.read_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_read_requests_total",
+                "Number of read requests from a block device",
+                block.read_requests,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_read_time_seconds_total",
+                "Total time spent on reads from a block device, in seconds",
+                block.read_time / 1000 / 1000 / 1000, // From ns to s
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_write_bytes_total",
+                "Number of bytes written to a block device, in bytes",
+                block.write_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_write_requests_total",
+                "Number of write requests to a block device",
+                block.write_requests,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_write_time_seconds_total",
+                "Total time spent on writes on a block device, in seconds",
+                block.write_time / 1000 / 1000 / 1000, // From ns to s
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_flush_requests_total",
+                "Total flush requests from a block device",
+                block.flush_requests,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_block_stats_flush_time_seconds_total",
+                "Total time in seconds spent on cache flushing to a block device",
+                block.flush_time / 1000 / 1000 / 1000, // From ns to s
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_domain_block_stats_allocation",
+                "Offset of the highest written sector on a block device",
+                block.allocation,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_domain_block_stats_capacity_bytes",
+                "Logical size in bytes of the block device backing image",
+                block.capacity,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_domain_block_stats_physical_bytes",
+                "Physical size in bytes of the container of the backing image",
+                block.physical,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &block.name,
+                ),
+            ),
+        ]);
+
+        match stat.get_block_io_tune(&block.name) {
+            Ok(params) => metrics.extend_from_slice(&[
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_total_bytes",
+                    "Total throughput limit in bytes per second",
+                    params.total_bytes_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_read_bytes",
+                    "Read throughput limit in bytes per second",
+                    params.read_bytes_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_write_bytes",
+                    "Write throughput limit in bytes per second",
+                    params.write_bytes_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_total_requests",
+                    "Total requests per second limit",
+                    params.total_iops_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_read_requests",
+                    "Read requests per second limit",
+                    params.read_iops_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_write_requests",
+                    "Write requests per second limit",
+                    params.write_iops_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_total_bytes",
+                    "Total throughput burst limit in bytes per second",
+                    params.total_bytes_sec_max,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_read_bytes",
+                    "Read throughput burst limit in bytes per second",
+                    params.read_bytes_sec_max,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_write_bytes",
+                    "Write throughput burst limit in bytes per second",
+                    params.write_bytes_sec_max,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_total_requests",
+                    "Total requests per second burst limit",
+                    params.total_iops_sec_max,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_total_bytes_length_seconds",
+                    "Total throughput burst time in seconds",
+                    params.total_bytes_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_read_bytes_length_seconds",
+                    "Read throughput burst time in seconds",
+                    params.read_bytes_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_write_bytes_length_seconds",
+                    "Write throughput burst time in seconds",
+                    params.write_bytes_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_length_total_requests_seconds",
+                    "Total requests per second burst time in seconds",
+                    params.total_iops_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_length_read_requests_seconds",
+                    "Read requests per second burst time in seconds",
+                    params.read_iops_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_limit_burst_length_write_requests_seconds",
+                    "Write requests per second burst time in seconds",
+                    params.write_bytes_sec_max_length,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+                Metric::gauge_with_tags(
+                    "libvirt_domain_block_stats_size_iops_bytes",
+                    "The size of IO operations per seconds permitted through a block device",
+                    params.size_iops_sec,
+                    tags!(
+                        "domain" => &name,
+                        "target_device" => &block.name,
+                    ),
+                ),
+            ]),
+            Err(err) => match err.code {
+                // See also: https://github.com/libvirt/libvirt/blob/56fbabf1a1e272c6cc50adcb603996cf8e94ad08/include/libvirt/virterror.h#L209
+                55 => {
+                    warn!(message = "Invalid operation get_block_io_tune", ?err);
+                }
+                84 => {
+                    warn!(message = "Unsupported operation get_block_io_tune", ?err);
+                }
+                _ => return Err(err),
+            },
+        }
+    }
+
+    // Report network interface statistics
+    for iface in stat.network_stats()? {
+        let mut source_bridge = "";
+        let mut virtual_interface = "";
+        for net in &devices.interfaces {
+            if net.target.dev == iface.name {
+                source_bridge = &net.source.bridge;
+                virtual_interface = &net.virtual_port.parameters.interface_id;
+            }
+        }
+
+        if source_bridge != "" || virtual_interface != "" {
+            metrics.push(Metric::gauge_with_tags(
+                "libvirt_domain_interface_meta",
+                "Interfaces metadata. Source bridge, target device, interface uuid",
+                1,
+                tags!(
+                    "domain" => &name,
+                    "source_bridge" => source_bridge,
+                    "target_device" => &iface.name,
+                    "virtual_interface" => virtual_interface,
+                ),
+            ));
+        }
+
+        metrics.extend_from_slice(&[
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_receive_bytes_total",
+                "Number of bytes received on a network interface, in bytes",
+                iface.rx_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_receive_packets_total",
+                "Number of packets received on a network interface",
+                iface.rx_packets,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_receive_errors_total",
+                "Number of packet receive errors on a network interface",
+                iface.rx_errors,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_receive_drop_total",
+                "Number of packets receive drops on a network interface",
+                iface.rx_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_transmit_bytes_total",
+                "Number of bytes transmitted on a network interface, in bytes",
+                iface.tx_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_transmit_packets_total",
+                "Number of packets transmitted on a network interface",
+                iface.tx_packets,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_transmit_errors_total",
+                "Number of packet transmit errors on a network interface",
+                iface.tx_errors,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+            Metric::sum_with_tags(
+                "libvirt_domain_interface_stats_transmit_drop_total",
+                "Number of packets transmit drops on a network interface",
+                iface.tx_bytes,
+                tags!(
+                    "domain" => &name,
+                    "target_device" => &iface.name,
+                ),
+            ),
+        ])
+    }
+
+    // Collect Memory Stats
+    let ms = dom.memory_stats(11, 0)?;
+    let stats: schema::MemoryStats = ms.into();
+    let used_percent = if stats.usable != 0 && stats.available != 0 {
+        ((stats.available - stats.usable) / stats.available / 100) as f64
+    } else {
+        0.0
+    };
+
+    metrics.extend_from_slice(&[
+        Metric::sum_with_tags(
+            "libvirt_domain_memory_stats_major_fault_total",
+            "Page faults occur when a process makes a valid access to virtual memory that is not available.\
+            When servicing the page fault, if disk IO is required, it is considered a major fault",
+            stats.major_fault,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::sum_with_tags(
+            "libvirt_domain_memory_stats_minor_fault_total",
+            "Page faults occur when a process makes a valid access to virtual memory that is not available.\
+             When servicing the page not fault, if disk IO is required, it is considered a minor fault.",
+            stats.minor_fault,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_unused_bytes",
+            "The amount of memory left completely unused by the system. Memory that is \
+            available but used for reclaimable cache should NOT be reported as free. This value \
+            is expressed in bytes",
+            stats.unused * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_available_bytes",
+            "The total amount of usable memory as seen by the domain. This value may be less \
+            than the amount of memory assigned to the domain if a balloon driver is in use or if \
+            the guest OS does not initialize all assigned pages. This value is expressed in bytes",
+            stats.available * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_actual_balloon_bytes",
+            "Current balloon value (in bytes)",
+            stats.actual_balloon * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_rss_bytes",
+            "Resident Set Size of the process running the domain. This value is in bytes",
+            stats.rss * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_usable_bytes",
+            "How much the balloon can be inflated without pushing the guest system to swap, \
+            corresponds to 'Available' in /proc/meminfo",
+            stats.usable * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_disk_cache_bytes",
+            "The amount of memory, that can be quickly reclaimed without additional I/O \
+            (in bytes). Typically these pages are used for caching files from disk",
+            stats.disk_caches * 1024,
+            tags!(
+                "domain" => &name,
+            ),
+        ),
+        Metric::gauge_with_tags(
+            "libvirt_domain_memory_stats_used_percent",
+            "The amount of memory in percent, that used by domain",
+            used_percent,
+            tags!(
+                "domain" => &name,
+            ),
+        )
+    ]);
 
     Ok(metrics)
 }
@@ -375,10 +995,11 @@ mod tests {
             )
             .unwrap();
 
-        for stat in stats {
-            // let domain = virt::domain::Domain::new(stat.ptr.dom);
-
-            domain_stat_to_metrics(stat).unwrap();
+        for stat in &stats {
+            let metrics = domain_stat_to_metrics(stat).unwrap();
+            for metric in metrics {
+                println!("{}", metric);
+            }
         }
     }
 }
