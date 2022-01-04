@@ -35,7 +35,8 @@ apt install --yes \
   libglib2.0-dev \
   libgnutls28-dev \
   libxml2-dev \
-  pip
+  pip \
+  libtirpc-dev
 
 # Install tools for building libvirt
 pip install meson ninja docutils
