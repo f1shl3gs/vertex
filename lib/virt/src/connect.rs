@@ -574,7 +574,6 @@ impl Connect {
 
 impl Drop for Connect {
     fn drop(&mut self) {
-        self.close()
-            .expect("connect should be closed when drop");
+        self.close().expect("connect should be closed when drop");
     }
 }
