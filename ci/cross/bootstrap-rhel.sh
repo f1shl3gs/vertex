@@ -7,6 +7,7 @@ yum makecache
 
 yum install -y centos-release-scl \
   llvm-toolset-7 \
-  perl-IPC-Cmd
+  perl-IPC-Cmd \
+  libvirt-devel
 
 yum clean all

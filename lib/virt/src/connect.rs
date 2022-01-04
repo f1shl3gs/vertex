@@ -104,6 +104,11 @@ extern "C" {
         ret: *mut *mut virDomainStatsRecordPtr,
         flags: libc::c_uint,
     ) -> libc::c_int;
+    fn virConnectSetKeepAlive(
+        ptr: sys::virConnectPtr,
+        interval: libc::c_int,
+        count: libc::c_uint,
+    ) -> libc::c_int;
 }
 
 extern "C" fn connectCallback(
@@ -549,5 +554,27 @@ impl Connect {
 
             return Ok(array);
         }
+    }
+
+    // See also. https://libvirt.org/html/libvirt-libvirt-host.html#virConnectSetKeepAlive
+    pub fn set_keep_alive(&self, interval: i32, count: u32) -> Result<i32, Error> {
+        unsafe {
+            let ret = virConnectSetKeepAlive(
+                self.as_ptr(),
+                interval as libc::c_int,
+                count as libc::c_uint,
+            );
+            if ret == -1 {
+                return Err(Error::new());
+            }
+            Ok(ret as i32)
+        }
+    }
+}
+
+impl Drop for Connect {
+    fn drop(&mut self) {
+        self.close()
+            .expect("connect should be closed when drop");
     }
 }

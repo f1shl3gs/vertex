@@ -125,7 +125,7 @@ impl SourceConfig for LibvirtSourceConfig {
                             .await;
                     }
                     Err(err) => {
-                        warn!(message = "Scrape libvirt metrics failed", ?err, uri = %uri);
+                        warn!(message = "Scrape libvirt metrics failed", ?err);
                     }
                 }
             }
