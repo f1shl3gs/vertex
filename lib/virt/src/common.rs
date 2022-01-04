@@ -1,35 +1,3 @@
-/*
-
-int	virTypedParamsGetBoolean	(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     int * value)
-int	virTypedParamsGetDouble		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     double * value)
-int	virTypedParamsGetInt		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     int * value)
-int	virTypedParamsGetLLong		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     long long * value)
-int	virTypedParamsGetString		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     const char ** value)
-int	virTypedParamsGetUInt		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     unsigned int * value)
-int	virTypedParamsGetULLong		(virTypedParameterPtr params,
-                     int nparams,
-                     const char * name,
-                     unsigned long long * value)
-*/
-
 use crate::error::Error;
 use crate::typedparam::sys::virTypedParameterPtr;
 

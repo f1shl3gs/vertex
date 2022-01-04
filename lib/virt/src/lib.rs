@@ -38,45 +38,6 @@
 //!   assert_eq!(Ok(0), conn.close());
 //! }
 //! ```
-//!
-//! Most of the structs are automatically release their references by
-//! implemementing `Drop` trait but for structs which are reference
-//! counted at C level, it is still possible to explicitly release the
-//! reference at Rust level. For instance if a Rust method returns a
-//! *Domain, it is possible to call `free` on it when no longer
-//! required.
-//!
-//! ```
-//! use virt::connect::Connect;
-//! use virt::domain::Domain;
-//!
-//! if let Ok(mut conn) = Connect::open("test://default") {
-//!   if let Ok(mut dom) = Domain::lookup_by_name(&conn, "myguest") {
-//!       assert_eq!(Ok(()), dom.free());   // Explicitly releases memory at Rust level.
-//!       assert_eq!(Ok(0), conn.close());
-//!   }
-//! }
-//! ```
-//!
-//! For each methods accepting or returning a virTypedParameter array
-//! a new Rust struct has been defined where each attribute is
-//! handling a type Option.
-//!
-//! ```
-//! use virt::connect::Connect;
-//! use virt::domain::Domain;
-//!
-//! if let Ok(mut conn) = Connect::open("test://default") {
-//!   if let Ok(dom) = Domain::lookup_by_name(&conn, "myguest") {
-//!     if let Ok(memp) = dom.get_memory_parameters(0) {
-//!       if memp.hard_limit.is_some() {
-//!         println!("hard limit: {}", memp.hard_limit.unwrap())
-//!       }
-//!     }
-//!   }
-//!   assert_eq!(Ok(0), conn.close());
-//! }
-//! ```
 
 // Some structs imported from libvirt are only pointer.
 #![allow(improper_ctypes)]
@@ -147,14 +108,6 @@ macro_rules! impl_from {
 pub mod common;
 pub mod connect;
 pub mod domain;
-pub mod domain_snapshot;
 pub mod error;
-pub mod interface;
-pub mod network;
-pub mod nodedev;
-pub mod nwfilter;
-pub mod secret;
 pub mod storage_pool;
-pub mod storage_vol;
-pub mod stream;
 pub mod typedparam;

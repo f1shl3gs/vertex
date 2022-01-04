@@ -1,21 +1,15 @@
-mod stats;
-mod virt_v2;
-
 use crate::config::{
-    default_std_interval, deserialize_std_duration, serialize_std_duration, ticker_from_duration,
+    default_std_interval, deserialize_std_duration, serialize_std_duration,
     ticker_from_std_duration, DataType, GenerateConfig, SourceConfig, SourceContext,
     SourceDescription,
 };
-use crate::sources::libvirt::schema::Disk;
 use crate::sources::Source;
 use bitflags::bitflags;
-use event::{tags, Metric};
+use event::{tags, Event, Metric};
 use futures_util::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use snafu::ResultExt;
-use std::time::Duration;
-use virt::common::{get_int, get_u32, get_u64};
-use virt::domain::{DomainStatsBalloonStats, DomainStatsRecord};
+use std::time::{Duration, Instant};
+use virt::domain::DomainStatsRecord;
 use virt::error::ErrorLevel;
 
 // See also https://libvirt.org/html/libvirt-libvirt-domain.html#virDomainStatsTypes
@@ -56,8 +50,13 @@ bitflags! {
     }
 }
 
+fn default_uri() -> String {
+    "qemu:///system".to_string()
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 struct LibvirtSourceConfig {
+    #[serde(default = "default_uri")]
     uri: String,
     #[serde(default = "default_std_interval")]
     #[serde(
@@ -86,12 +85,50 @@ inventory::submit! {
 impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let mut ticker = ticker_from_std_duration(self.interval).take_until(ctx.shutdown);
-        let output = ctx.out.sink_map_err(|err| {
-            warn!(message = "Error sending libvirt metrics", ?err,);
+        let uri = self.uri.clone();
+        let mut output = ctx.out.sink_map_err(|err| {
+            warn!(message = "Error sending libvirt metrics", ?err);
         });
 
         Ok(Box::pin(async move {
-            while let Some(_ts) = ticker.next().await {}
+            while let Some(_ts) = ticker.next().await {
+                let turi = uri.clone();
+                match tokio::task::spawn_blocking(move || {
+                    let start = Instant::now();
+                    let result = gather(&turi);
+                    let up = result.is_ok();
+
+                    let mut metrics = result.unwrap_or_default();
+                    metrics.extend_from_slice(&[
+                        Metric::gauge(
+                            "libvirt_up",
+                            "Whether scraping libvirt's metrics was successful",
+                            up,
+                        ),
+                        Metric::gauge(
+                            "libvirt_scrape_duration_seconds",
+                            "",
+                            start.elapsed().as_secs_f64(),
+                        ),
+                    ]);
+                    metrics
+                })
+                .await
+                {
+                    Ok(mut metrics) => {
+                        let timestamp = Some(chrono::Utc::now());
+                        metrics.iter_mut().for_each(|m| m.timestamp = timestamp);
+                        let _ = output
+                            .send_all(
+                                &mut futures::stream::iter(metrics).map(Event::Metric).map(Ok),
+                            )
+                            .await;
+                    }
+                    Err(err) => {
+                        warn!(message = "Scrape libvirt metrics failed", ?err, uri = %uri);
+                    }
+                }
+            }
             Ok(())
         }))
     }
@@ -116,7 +153,7 @@ fn version_num_to_string(version_num: u32) -> String {
 }
 
 fn gather(uri: &str) -> Result<Vec<Metric>, virt::error::Error> {
-    let conn = virt::connect::Connect::open(uri)?;
+    let conn = virt::connect::Connect::open_read_only(uri)?;
 
     // virConnectGetVersion, hypervisor running, e.g. QEMU
     let version = conn.get_hyp_version()?;
@@ -149,14 +186,52 @@ fn gather(uri: &str) -> Result<Vec<Metric>, virt::error::Error> {
             | DomainStatsTypes::VIR_DOMAIN_STATS_BALLOON
             | DomainStatsTypes::VIR_DOMAIN_STATS_BLOCK
             | DomainStatsTypes::VIR_DOMAIN_STATS_PERF
-            | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL)
+            | DomainStatsTypes::VIR_DOMAIN_STATS_VCPU)
             .bits(),
         (DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_RUNNING
             | DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_SHUTOFF)
             .bits(),
     )?;
 
-    for stat in &stats {}
+    for stat in &stats {
+        let partial = domain_stat_to_metrics(stat)?;
+        metrics.extend(partial);
+    }
+
+    // Collect pool info
+    let pools = conn.list_all_storage_pools(2)?; // 2 for "ACTIVE" pools
+    for pool in &pools {
+        pool.refresh(0)?;
+
+        let name = pool.get_name()?;
+        let info = pool.get_info()?;
+        metrics.extend_from_slice(&[
+            Metric::gauge_with_tags(
+                "libvirt_pool_info_capacity_bytes",
+                "Pool capacity, in bytes",
+                info.capacity,
+                tags!(
+                    "pool" => &name,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_pool_info_allocation_bytes",
+                "Pool allocation, in bytes",
+                info.allocation,
+                tags!(
+                    "pool" => &name,
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "libvirt_pool_info_available_bytes",
+                "Pool available, in bytes",
+                info.available,
+                tags!(
+                    "pool" => &name,
+                ),
+            ),
+        ]);
+    }
 
     Ok(metrics)
 }
@@ -331,8 +406,6 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
 
     // Decode XML description of domain to get block device names, etc
     let xml_desc = dom.get_xml_desc(0)?;
-    println!("{}:\n{}", name, xml_desc);
-
     let schema::Domain { devices, metadata } = serde_xml_rs::from_str::<schema::Domain>(&xml_desc)
         .map_err(|err| virt::error::Error {
             code: 0,
@@ -387,7 +460,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
         Metric::sum_with_tags(
             "libvirt_domain_info_cpu_time_seconds_total",
             "Amount of CPU time used by the domain, in seconds",
-            info.cpu_time / 1000 / 1000 / 1000, // From ns to s
+            info.cpu_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
             tags!(
                 "domain" => &name,
             ),
@@ -425,7 +498,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_vcpu_time_seconds_total",
                 "Amount of CPU time used by the domain's VCPU, in seconds",
-                vcpu.cpu_time / 1000 / 1000 / 1000, // From ns to s
+                vcpu.cpu_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                 tags!(
                     "domain" => &name,
                     "vcpu" => &vcpu_num
@@ -443,7 +516,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_vcpu_wait_seconds_total",
                 "Vcpu's wait_sum metrics. CONFIG_SCHEDSTATS has to be enabled",
-                wait / 1000 / 1000 / 1000,
+                wait as f64 / 1000.0 / 1000.0 / 1000.0,
                 tags!(
                     "domain" => &name,
                     "vcpu" => &vcpu_num,
@@ -455,7 +528,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
                 Vcpu's delay metric. Time the vcpu thread was enqueued by the host \
                 scheduler, but was waiting in the queue instead of running. Exposed to \
                 the VM as a steal time",
-                delay / 1000 / 1000 / 1000,
+                delay as f64 / 1000.0 / 1000.0 / 1000.0,
                 tags!(
                     "domain" => &name,
                     "vcpu" => &vcpu_num
@@ -467,12 +540,11 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
     // Report block device statistics
     let blocks = stat.block_stats()?;
     for block in &blocks {
-        let mut data_source = "";
         // Ugly hack to avoid getting metrics from cdrom block device
         // TODO: somehow check the disk 'device' field for 'cdrom' string
-        // if block.name == "hdc" || block.name == "hda" {
-        //     continue;
-        // }
+        if block.name == "hdc" || block.name == "hda" {
+            continue;
+        }
 
         let dev = devices
             .disks
@@ -481,7 +553,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             .map(|d| d.clone())
             .unwrap_or_default();
 
-        let data_source = if block.path != "" {
+        let disk_source = if block.path != "" {
             &block.path
         } else {
             &dev.source.name
@@ -495,7 +567,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
                 tags!(
                     "domain" => &name,
                     "target_device" => &dev.target.dev,
-                    "source_file" => data_source,
+                    "source_file" => disk_source,
                     "serial" => &dev.serial,
                     "bus" => &dev.target.bus,
                     "disk_type" => &dev.disk_type,
@@ -525,7 +597,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_block_stats_read_time_seconds_total",
                 "Total time spent on reads from a block device, in seconds",
-                block.read_time / 1000 / 1000 / 1000, // From ns to s
+                block.read_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                 tags!(
                     "domain" => &name,
                     "target_device" => &block.name,
@@ -552,7 +624,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_block_stats_write_time_seconds_total",
                 "Total time spent on writes on a block device, in seconds",
-                block.write_time / 1000 / 1000 / 1000, // From ns to s
+                block.write_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                 tags!(
                     "domain" => &name,
                     "target_device" => &block.name,
@@ -570,7 +642,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_block_stats_flush_time_seconds_total",
                 "Total time in seconds spent on cache flushing to a block device",
-                block.flush_time / 1000 / 1000 / 1000, // From ns to s
+                block.flush_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                 tags!(
                     "domain" => &name,
                     "target_device" => &block.name,
@@ -605,7 +677,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             ),
         ]);
 
-        match stat.get_block_io_tune(&block.name) {
+        match stat.block_io_tune(&block.name) {
             Ok(params) => metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "libvirt_domain_block_stats_limit_total_bytes",
@@ -821,7 +893,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_interface_stats_receive_errors_total",
                 "Number of packet receive errors on a network interface",
-                iface.rx_errors,
+                iface.rx_errs,
                 tags!(
                     "domain" => &name,
                     "target_device" => &iface.name,
@@ -857,7 +929,7 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
             Metric::sum_with_tags(
                 "libvirt_domain_interface_stats_transmit_errors_total",
                 "Number of packet transmit errors on a network interface",
-                iface.tx_errors,
+                iface.tx_errs,
                 tags!(
                     "domain" => &name,
                     "target_device" => &iface.name,
@@ -972,9 +1044,11 @@ fn domain_stat_to_metrics(stat: &DomainStatsRecord) -> Result<Vec<Metric>, virt:
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::print_stdout)] // tests
     use super::*;
 
     #[test]
+    #[ignore]
     fn get_all_domain_stats() {
         let uri = "qemu:///system";
         let conn = virt::connect::Connect::open(uri).unwrap();
@@ -987,7 +1061,7 @@ mod tests {
                     | DomainStatsTypes::VIR_DOMAIN_STATS_BALLOON
                     | DomainStatsTypes::VIR_DOMAIN_STATS_BLOCK
                     | DomainStatsTypes::VIR_DOMAIN_STATS_PERF
-                    | DomainStatsTypes::VIR_DOMAIN_STATS_CPU_TOTAL)
+                    | DomainStatsTypes::VIR_DOMAIN_STATS_VCPU)
                     .bits(),
                 (DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_RUNNING
                     | DomainStatsFlags::VIR_CONNECT_LIST_DOMAINS_SHUTOFF)

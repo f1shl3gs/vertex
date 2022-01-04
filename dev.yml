@@ -19,10 +19,8 @@ sources:
     type: selfstat
   internal_logs:
     type: internal_logs
-  consul:
-    type: consul
-    endpoints:
-      - http://127.0.0.1:8500
+  libvirt:
+    type: libvirt
 
 transforms:
   add_extra_tags:
@@ -39,5 +37,5 @@ sinks:
       - add_extra_tags
       - selfstat
       - internal_metrics
-      - consul
+      - libvirt
     listen: 127.0.0.1:9101
