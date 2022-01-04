@@ -10,10 +10,5 @@ wget https://gitlab.com/qemu-project/keycodemapdb/-/archive/27acf0ef828bf719b205
 tar -xf libvirt-master.tar.gz
 tar -zxf keycodemapdb.tgz && cp -r keycodemapdb-27acf0ef828bf719b2053ba398b195829413dbdd/* libvirt-master/src/keycodemapdb
 cd libvirt-master
-meson configure --prefix /usr/local/x86_64-linux-musl
-CC=/usr/local/bin/x86_64-linux-musl-gcc meson build -Ddocs=disabled -Ddriver_remote=disabled && CC=/usr/local/bin/x86_64-linux-musl-gcc ninja -C build install
-rm -rf libvirt* keycodemapdb*
-
-
-#  meson configure --prefix /usr/local/x86_64-linux-musl && \
-#  CC=/usr/local/bin/x86_64-linux-musl-gcc meson build
+meson build -Ddocs=disabled -Dtests=disabled --prefix /usr/local/x86_64-linux-musl --libdir lib --default-library static  && CC=/usr/local/bin/x86_64-linux-musl-gcc ninja -C build && ninja -C build install
+cd ../ && rm -rf libvirt* keycodemapdb*
