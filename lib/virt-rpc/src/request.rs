@@ -358,6 +358,7 @@ pub mod generated {
     #![allow(dead_code)]
     #![allow(non_snake_case)]
     #![allow(unused_assignments)]
+
     use super::{ErrorCode, ErrorDomain};
     use ::xdr_codec;
 
@@ -371,6 +372,19 @@ pub mod generated {
 
         pub fn domain(&self) -> ErrorDomain {
             ErrorDomain::from(self.domain)
+        }
+    }
+
+    impl Default for virNetMessageHeader {
+        fn default() -> Self {
+            virNetMessageHeader {
+                prog: 0x20008086,
+                vers: 1,
+                proc_: 0,
+                type_: virNetMessageType::VIR_NET_CALL,
+                serial: 0,
+                status: virNetMessageStatus::VIR_NET_OK,
+            }
         }
     }
 }
@@ -392,6 +406,34 @@ impl<P: xdr_codec::Pack<Out>, Out: xdr_codec::Write> xdr_codec::Pack<Out> for Li
         sz += self.payload.pack(out)?;
         Ok(sz)
     }
+}
+
+pub trait LibvirtRpc<R: ::std::io::Read> {
+    const PROCEDURE: remote_procedure;
+    type Response: Send + ::xdr_codec::Unpack<R>;
+}
+
+macro_rules! delegate_pack_impl {
+    ($t:ty) => {
+        impl<Out: xdr_codec::Write> xdr_codec::Pack<Out> for $t {
+            fn pack(&self, out: &mut Out) -> xdr_codec::Result<usize> {
+                self.0.pack(out)
+            }
+        }
+    };
+}
+
+macro_rules! delegate_unpack_impl {
+    ($t:ty) => {
+        impl<In: xdr_codec::Read> xdr_codec::Unpack<In> for $t {
+            fn unpack(input: &mut In) -> xdr_codec::Result<(Self, usize)> {
+                let (inner, len) = xdr_codec::Unpack::unpack(input)?;
+                let mut pkt: $t = unsafe { ::std::mem::zeroed() };
+                pkt.0 = inner;
+                Ok((pkt, len))
+            }
+        }
+    };
 }
 
 macro_rules! req {
@@ -520,10 +562,32 @@ macro_rules! resp {
 macro_rules! rpc {
     ($id:path, $req:ident => $resp:ident) => {
         impl<R: ::std::io::Read> LibvirtRpc<R> for $req {
-            const PROCEDURE: ::remote_procedure = $id;
+            const PROCEDURE: remote_procedure = $id;
             type Response = $resp;
         }
     };
+}
+
+/// VM instance
+#[derive(Debug, Clone)]
+pub struct Domain(generated::remote_nonnull_domain);
+
+impl Domain {
+    /// positive integer, unique amongst running guest domains on a single host. An inactive domain does not have an ID.
+    pub fn id(&self) -> i32 {
+        self.0.id
+    }
+
+    /// short string, unique amongst all guest domains on a single host, both running and inactive.
+    pub fn name(&self) -> String {
+        self.0.name.0.clone()
+    }
+
+    /// guaranteed to be unique amongst all guest domains on any host.
+    pub fn uuid(&self) -> ::uuid::Uuid {
+        let bytes = self.0.uuid.0;
+        uuid::Uuid::from_slice(&bytes).unwrap()
+    }
 }
 
 /// Version request
@@ -535,6 +599,80 @@ impl GetLibVersionResponse {
     pub fn version(&self) -> (u32, u32, u32) {
         let v = (self.0).lib_ver;
 
-        (v / 1000000 % 1000, v / 1000 % 1000, v % 1000)
+        (
+            (v / 1000 / 1000 % 1000) as u32,
+            (v / 1000 % 1000) as u32,
+            (v % 1000) as u32,
+        )
     }
+}
+
+/// Auth list request must be the first request
+req!(AuthListRequest);
+resp!(AuthListResponse: generated::remote_auth_list_ret);
+rpc!(remote_procedure::REMOTE_PROC_AUTH_LIST, AuthListRequest => AuthListResponse);
+
+/// Connect open request
+use generated::remote_connect_open_args;
+req!(ConnectOpenRequest: remote_connect_open_args {
+     name => Some(generated::remote_nonnull_string("qemu:///system".to_string())),
+     flags => 0
+});
+resp!(ConnectOpenResponse);
+rpc!(remote_procedure::REMOTE_PROC_CONNECT_OPEN, ConnectOpenRequest => ConnectOpenResponse);
+
+/// List all domains
+use bitflags::bitflags;
+bitflags! {
+    pub struct ListAllDomainsFlags: u32 {
+        const DOMAINS_ACTIVE	=	1;
+        const DOMAINS_INACTIVE	=	2;
+        const DOMAINS_PERSISTENT	=	4;
+        const DOMAINS_TRANSIENT	=	8;
+        const DOMAINS_RUNNING	=	16;
+        const DOMAINS_PAUSED	=	32;
+        const DOMAINS_SHUTOFF	=	64;
+        const DOMAINS_OTHER	=	128;
+        const DOMAINS_MANAGEDSAVE	=	256;
+        const DOMAINS_NO_MANAGEDSAVE	=	512;
+        const DOMAINS_AUTOSTART	=	1024;
+        const DOMAINS_NO_AUTOSTART	=	2048;
+        const DOMAINS_HAS_SNAPSHOT	=	4096;
+        const DOMAINS_NO_SNAPSHOT	=	8192;
+    }
+}
+
+#[derive(Debug)]
+pub struct ListAllDomainsRequest(generated::remote_connect_list_all_domains_args);
+
+impl ListAllDomainsRequest {
+    pub fn new(flags: ListAllDomainsFlags) -> Self {
+        let payload = generated::remote_connect_list_all_domains_args {
+            need_results: 1,
+            flags: flags.bits(),
+        };
+        ListAllDomainsRequest(payload)
+    }
+}
+
+delegate_pack_impl!(ListAllDomainsRequest);
+
+#[derive(Debug)]
+pub struct ListAllDomainsResponse(generated::remote_connect_list_all_domains_ret);
+
+impl ::std::convert::Into<Vec<Domain>> for ListAllDomainsResponse {
+    fn into(self) -> Vec<Domain> {
+        let mut domains = Vec::new();
+        for dom in &(self.0).domains {
+            domains.push(Domain(dom.clone()))
+        }
+        domains
+    }
+}
+
+delegate_unpack_impl!(ListAllDomainsResponse);
+
+impl<R: ::std::io::Read> LibvirtRpc<R> for ListAllDomainsRequest {
+    const PROCEDURE: remote_procedure = remote_procedure::REMOTE_PROC_CONNECT_LIST_ALL_DOMAINS;
+    type Response = ListAllDomainsResponse;
 }

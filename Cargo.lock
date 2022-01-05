@@ -4809,8 +4809,10 @@ dependencies = [
 name = "virt-rpc"
 version = "0.1.0"
 dependencies = [
+ "bitflags 1.3.2",
  "bytes",
  "tokio",
+ "uuid",
  "xdr-codec",
  "xdrgen",
 ]

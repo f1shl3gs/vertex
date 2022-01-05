@@ -22,3 +22,9 @@ impl From<xdr_codec::Error> for Error {
         Self::Xdr(err)
     }
 }
+
+impl From<virNetMessageError> for Error {
+    fn from(err: virNetMessageError) -> Self {
+        Self::Libvirt(err)
+    }
+}
