@@ -27,7 +27,7 @@ members = [
     "lib/tracing-limit",
     "lib/humanize",
     "lib/sysinfo",
-    "lib/virt"
+    "lib/virt",
 ]
 
 [features]
@@ -60,7 +60,8 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "vendor-all"
+    "vendor-all",
+    "sources-libvirt"
 ]
 
 # Integration tests
@@ -127,7 +128,6 @@ sources = [
     "sources-fluentd",
     "sources-syslog",
     "sources-tail",
-    "sources-libvirt",
     "sources-mysqld",
     "sources-nvidia_smi",
     "sources-mongodb",

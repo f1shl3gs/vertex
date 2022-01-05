@@ -29,17 +29,7 @@ apt install --yes \
   llvm \
   locales \
   pkg-config \
-  wget \
-  libxml2-utils \
-  xsltproc \
-  libglib2.0-dev \
-  libgnutls28-dev \
-  libxml2-dev \
-  pip \
-  libtirpc-dev
-
-# Install tools for building libvirt
-pip install meson ninja docutils
+  wget
 
 # Locales
 locale-gen en_US.UTF-8
@@ -47,4 +37,3 @@ dpkg-reconfigure locales
 
 # Cleanup temporary files
 apt clean
-rm -rf "$(pip cache dir)"
