@@ -28,6 +28,7 @@ members = [
     "lib/humanize",
     "lib/sysinfo",
     "lib/virt",
+    "lib/virt-rpc",
 ]
 
 [features]
@@ -40,7 +41,8 @@ default = [
     "sinks",
     # extensions
     "extensions-pprof",
-    # "extensions-jemalloc"
+    # "extensions-jemalloc",
+    "sources-libvirt"
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -268,6 +270,7 @@ tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 sysinfo = { path = "lib/sysinfo" }
 virt = { path = "lib/virt", optional = true }
+virt-rpc = { path = "lib/virt-rpc"}
 
 # Allocation
 mimalloc = { version = "0.1.27", default-features = false, optional = true }

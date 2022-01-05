@@ -1,0 +1,12 @@
+[package]
+name = "virt-rpc"
+version = "0.1.0"
+edition = "2021"
+
+[build-dependencies]
+xdrgen = { version = "0.4.4" }
+
+[dependencies]
+bytes = { version = "1.1.0"}
+tokio = { version = "1.15.0", features = ["net", "rt", "macros"] }
+xdr-codec = { version = "0.4.4" }
