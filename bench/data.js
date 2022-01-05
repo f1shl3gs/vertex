@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641379986139,
+  "lastUpdate": 1641381023163,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6570,6 +6570,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.83,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "abcde6fe57d8c53f0b16a8e9413b119cc30f6444",
+          "message": "Libvirt",
+          "timestamp": "2022-01-04T07:50:55Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/92/commits/abcde6fe57d8c53f0b16a8e9413b119cc30f6444"
+        },
+        "date": 1641381022218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 78045000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1242900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 27.139,
             "unit": "ns/op"
           }
         ]
