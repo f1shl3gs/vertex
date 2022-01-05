@@ -26,7 +26,6 @@ apt install --yes \
   libclang-dev \
   libsasl2-dev \
   libssl-dev \
-  libvirt-dev \
   llvm \
   locales \
   pkg-config \
