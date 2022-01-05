@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641379902149,
+  "lastUpdate": 1641379916731,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2556,6 +2556,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 65.513,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "abcde6fe57d8c53f0b16a8e9413b119cc30f6444",
+          "message": "Libvirt",
+          "timestamp": "2022-01-04T07:50:55Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/92/commits/abcde6fe57d8c53f0b16a8e9413b119cc30f6444"
+        },
+        "date": 1641379916029,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 43.726,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 77.817,
             "unit": "ns/op"
           }
         ]
