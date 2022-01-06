@@ -35,6 +35,5 @@ apt install --yes \
 locale-gen en_US.UTF-8
 dpkg-reconfigure locales
 
-
-# Cleanup temporay files
+# Cleanup temporary files
 apt clean

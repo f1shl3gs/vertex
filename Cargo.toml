@@ -26,7 +26,8 @@ members = [
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",
-    "lib/sysinfo"
+    "lib/sysinfo",
+    "lib/virt",
 ]
 
 [features]
@@ -39,7 +40,7 @@ default = [
     "sinks",
     # extensions
     "extensions-pprof",
-    # "extensions-jemalloc"
+    # "extensions-jemalloc",
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -59,7 +60,7 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "vendor-all"
+    "vendor-all",
 ]
 
 # Integration tests
@@ -115,6 +116,7 @@ sources = [
     "sources-journald",
     "sources-internal_metrics",
     "sources-internal_logs",
+    "sources-libvirt",
     "sources-redis",
     "sources-pulsar",
     "sources-prometheus_scrape",
@@ -126,7 +128,6 @@ sources = [
     "sources-fluentd",
     "sources-syslog",
     "sources-tail",
-    "sources-libvirt",
     "sources-mysqld",
     "sources-nvidia_smi",
     "sources-mongodb",
@@ -156,7 +157,7 @@ sources-memcached = []
 sources-fluentd = []
 sources-syslog = []
 sources-tail = []
-sources-libvirt = []
+sources-libvirt = ["virt", "bitflags"]
 sources-mysqld = ["sqlx"]
 sources-nvidia_smi = ["serde-xml-rs"]
 sources-mongodb = ["mongodb/tokio-runtime"]
@@ -266,6 +267,7 @@ log_schema = { path = "lib/log_schema" }
 tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 sysinfo = { path = "lib/sysinfo" }
+virt = { path = "lib/virt", optional = true }
 
 # Allocation
 mimalloc = { version = "0.1.27", default-features = false, optional = true }
@@ -339,6 +341,7 @@ pprof = { version = "0.6.2", default-features = false, optional = true, features
 # External libs
 argh = { version = "0.1.7" }
 chrono = { version = "0.4.19", features = ["serde"] }
+bitflags = { version = "1.3.2", default-features = false, optional = true }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
 lazy_static = { version = "1.4.0" }

@@ -17,6 +17,7 @@ apt upgrade --yes
 
 # Deps
 apt install --yes \
+    bc \
     build-essential \
     ca-certificates \
     cmake \
@@ -26,6 +27,7 @@ apt install --yes \
     libclang-dev \
     libsasl2-dev \
     libssl-dev \
+    libvirt-dev \
     llvm \
     locales \
     pkg-config \
@@ -35,8 +37,7 @@ apt install --yes \
     ruby-bundler \
     shellcheck \
     sudo \
-    wget \
-    bc
+    wget
 
 
 # Locales
