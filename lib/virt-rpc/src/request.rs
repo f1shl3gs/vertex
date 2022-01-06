@@ -362,8 +362,11 @@ pub mod generated {
     use super::{ErrorCode, ErrorDomain};
     use ::xdr_codec;
 
-    include!(concat!(env!("OUT_DIR"), "/virnetprotocol_xdr.rs"));
-    include!(concat!(env!("OUT_DIR"), "/remote_protocol_xdr.rs"));
+    // include!(concat!(env!("OUT_DIR"), "/virnetprotocol_xdr.rs"));
+    // include!(concat!(env!("OUT_DIR"), "/remote_protocol_xdr.rs"));
+
+    include!("generated/remote_protocol_xdr.rs");
+    include!("generated/virnetprotocol_xdr.rs");
 
     impl virNetMessageError {
         pub fn code(&self) -> ErrorCode {
@@ -384,6 +387,36 @@ pub mod generated {
                 type_: virNetMessageType::VIR_NET_CALL,
                 serial: 0,
                 status: virNetMessageStatus::VIR_NET_OK,
+            }
+        }
+    }
+
+    impl remote_typed_param {
+        pub fn as_i32(&self) -> i32 {
+            match self.value {
+                remote_typed_param_value::Const1(v) => v,
+                _ => panic!(),
+            }
+        }
+
+        pub fn as_u32(&self) -> u32 {
+            match self.value {
+                remote_typed_param_value::Const2(v) => v,
+                _ => panic!(),
+            }
+        }
+
+        pub fn as_u64(&self) -> u64 {
+            match self.value {
+                remote_typed_param_value::Const4(v) => v,
+                _ => panic!(),
+            }
+        }
+
+        pub fn as_string(&self) -> String {
+            match self.value {
+                remote_typed_param_value::Const7(ref s) => s.0.clone(),
+                _ => panic!(),
             }
         }
     }
@@ -428,7 +461,7 @@ macro_rules! delegate_unpack_impl {
         impl<In: xdr_codec::Read> xdr_codec::Unpack<In> for $t {
             fn unpack(input: &mut In) -> xdr_codec::Result<(Self, usize)> {
                 let (inner, len) = xdr_codec::Unpack::unpack(input)?;
-                let mut pkt: $t = unsafe { ::std::mem::zeroed() };
+                let mut pkt: $t = Default::default();
                 pkt.0 = inner;
                 Ok((pkt, len))
             }
@@ -541,7 +574,7 @@ macro_rules! req {
 
 macro_rules! resp {
     ($name: ident) => {
-        #[derive(Debug)]
+        #[derive(Debug, Default)]
         pub struct $name(());
         delegate_unpack_impl!($name);
 
@@ -553,7 +586,7 @@ macro_rules! resp {
     };
 
     ($name: ident : $inner: ty) => {
-        #[derive(Debug)]
+        #[derive(Debug, Default)]
         pub struct $name($inner);
         delegate_unpack_impl!($name);
     };
@@ -588,31 +621,51 @@ impl Domain {
         let bytes = self.0.uuid.0;
         uuid::Uuid::from_slice(&bytes).unwrap()
     }
+
+    pub fn underlying(&self) -> remote_nonnull_domain {
+        self.0.clone()
+    }
 }
 
-/// Version request
+// Hyper version request
+req!(GetVersionRequest);
+resp!(GetVersionResponse: generated::remote_connect_get_version_ret);
+rpc!(remote_procedure::REMOTE_PROC_CONNECT_GET_VERSION, GetVersionRequest => GetVersionResponse);
+
+impl GetVersionResponse {
+    pub fn version(&self) -> String {
+        version_num_to_string(self.0.hv_ver)
+    }
+}
+
+#[inline]
+fn version_num_to_string(v: u64) -> String {
+    format!(
+        "{}.{}.{}",
+        v / 1000 / 1000 % 1000,
+        v / 1000 % 1000,
+        v % 1000
+    )
+}
+
+// libvirt daemon running
 req!(GetLibVersionRequest);
 resp!(GetLibVersionResponse: generated::remote_connect_get_lib_version_ret);
 rpc!(remote_procedure::REMOTE_PROC_CONNECT_GET_LIB_VERSION, GetLibVersionRequest => GetLibVersionResponse);
 
 impl GetLibVersionResponse {
-    pub fn version(&self) -> (u32, u32, u32) {
+    pub fn version(&self) -> String {
         let v = (self.0).lib_ver;
-
-        (
-            (v / 1000 / 1000 % 1000) as u32,
-            (v / 1000 % 1000) as u32,
-            (v % 1000) as u32,
-        )
+        version_num_to_string(v)
     }
 }
 
-/// Auth list request must be the first request
+// Auth list request must be the first request
 req!(AuthListRequest);
 resp!(AuthListResponse: generated::remote_auth_list_ret);
 rpc!(remote_procedure::REMOTE_PROC_AUTH_LIST, AuthListRequest => AuthListResponse);
 
-/// Connect open request
+// Connect open request
 use generated::remote_connect_open_args;
 req!(ConnectOpenRequest: remote_connect_open_args {
      name => Some(generated::remote_nonnull_string("qemu:///system".to_string())),
@@ -621,7 +674,11 @@ req!(ConnectOpenRequest: remote_connect_open_args {
 resp!(ConnectOpenResponse);
 rpc!(remote_procedure::REMOTE_PROC_CONNECT_OPEN, ConnectOpenRequest => ConnectOpenResponse);
 
-/// List all domains
+// List all domains
+use crate::request::generated::{
+    remote_domain_stats_record, remote_nonnull_domain, remote_nonnull_storage_pool, remote_string,
+    remote_typed_param, remote_typed_param_value,
+};
 use bitflags::bitflags;
 bitflags! {
     pub struct ListAllDomainsFlags: u32 {
@@ -657,7 +714,7 @@ impl ListAllDomainsRequest {
 
 delegate_pack_impl!(ListAllDomainsRequest);
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct ListAllDomainsResponse(generated::remote_connect_list_all_domains_ret);
 
 impl ::std::convert::Into<Vec<Domain>> for ListAllDomainsResponse {
@@ -675,4 +732,560 @@ delegate_unpack_impl!(ListAllDomainsResponse);
 impl<R: ::std::io::Read> LibvirtRpc<R> for ListAllDomainsRequest {
     const PROCEDURE: remote_procedure = remote_procedure::REMOTE_PROC_CONNECT_LIST_ALL_DOMAINS;
     type Response = ListAllDomainsResponse;
+}
+
+pub struct GetAllDomainStatsRequest(generated::remote_connect_get_all_domain_stats_args);
+
+impl GetAllDomainStatsRequest {
+    pub fn new(stats: u32, flags: u32) -> Self {
+        Self(generated::remote_connect_get_all_domain_stats_args {
+            doms: vec![],
+            stats,
+            flags,
+        })
+    }
+}
+
+delegate_pack_impl!(GetAllDomainStatsRequest);
+
+#[derive(Default)]
+pub struct GetAllDomainStatsResponse(generated::remote_connect_get_all_domain_stats_ret);
+delegate_unpack_impl!(GetAllDomainStatsResponse);
+
+pub struct DomainStatsRecord(remote_domain_stats_record);
+
+pub type DomainState = i32;
+
+pub const VIR_DOMAIN_NOSTATE: DomainState = 0;
+pub const VIR_DOMAIN_RUNNING: DomainState = 1;
+pub const VIR_DOMAIN_BLOCKED: DomainState = 2;
+pub const VIR_DOMAIN_PAUSED: DomainState = 3;
+pub const VIR_DOMAIN_SHUTDOWN: DomainState = 4;
+pub const VIR_DOMAIN_SHUTOFF: DomainState = 5;
+pub const VIR_DOMAIN_CRASHED: DomainState = 6;
+pub const VIR_DOMAIN_PMSUSPENDED: DomainState = 7;
+
+pub struct DomainInfo {
+    /// The running state, one of virDomainState.
+    pub state: DomainState,
+    /// The maximum memory in KBytes allowed.
+    pub max_mem: u64,
+    /// The memory in KBytes used by the domain.
+    pub memory: u64,
+    /// The number of virtual CPUs for the domain.
+    pub nr_virt_cpu: u32,
+    /// The CPU time used in nanoseconds.
+    pub cpu_time: u64,
+}
+
+#[derive(Debug, Default)]
+pub struct VcpuInfo {
+    pub number: u32,
+    // virtual CPU number
+    pub state: i32,
+    // value from virVcpuState
+    pub cpu: i32,
+    // real CPU number, or one of the value
+    pub cpu_time: u64, // CPU time used, in nanoseco
+}
+
+#[derive(Clone, Debug)]
+pub struct InterfaceStats {
+    pub name: String,
+    pub rx_bytes: u64,
+    pub rx_packets: u64,
+    pub rx_errs: u64,
+    pub rx_drop: u64,
+    pub tx_bytes: u64,
+    pub tx_packets: u64,
+    pub tx_errs: u64,
+    pub tx_drop: u64,
+}
+
+#[derive(Clone, Debug)]
+pub struct BlockInfo {
+    pub name: String,
+    pub backing_index: u32,
+    pub path: String,
+    pub read_requests: u64,
+    pub read_bytes: u64,
+    pub read_time: u64,
+    pub write_requests: u64,
+    pub write_bytes: u64,
+    pub write_time: u64,
+    pub flush_requests: u64,
+    pub flush_time: u64,
+    pub errors: u64,
+
+    /// Logical size in bytes of the image (how much storage the guest
+    /// will see).
+    pub capacity: u64,
+    /// Host storage in bytes occupied by the image (such as highest
+    /// allocated extent if there are no holes, similar to 'du').
+    pub allocation: u64,
+    /// Host physical size in bytes of the image container (last
+    /// offset, similar to 'ls')
+    pub physical: u64,
+}
+
+impl DomainStatsRecord {
+    pub fn domain(&self) -> Domain {
+        Domain(self.0.dom.clone())
+    }
+
+    pub fn blocks(&self) -> Vec<BlockInfo> {
+        let n = self.get_u64("block.count").unwrap_or_default();
+        let mut infos = Vec::with_capacity(n as usize);
+        for i in 0..n {
+            infos.push(BlockInfo {
+                name: self
+                    .0
+                    .params
+                    .get_string(&format!("block.{}.name", i))
+                    .unwrap_or_default(),
+                backing_index: self
+                    .0
+                    .params
+                    .get_u32(&format!("block.{}.backingIndex", i))
+                    .unwrap_or_default(),
+                path: self
+                    .0
+                    .params
+                    .get_string(&format!("block.{}.path", i))
+                    .unwrap_or_default(),
+                read_requests: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.rd.reqs", i))
+                    .unwrap_or_default(),
+                read_bytes: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.rd.bytes", i))
+                    .unwrap_or_default(),
+                read_time: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.rd.times", i))
+                    .unwrap_or_default(),
+                write_requests: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.wr.reqs", i))
+                    .unwrap_or_default(),
+                write_bytes: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.wr.bytes", i))
+                    .unwrap_or_default(),
+                write_time: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.wr.times", i))
+                    .unwrap_or_default(),
+                flush_requests: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.fl.reqs", i))
+                    .unwrap_or_default(),
+                flush_time: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.fl.times", i))
+                    .unwrap_or_default(),
+                errors: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.errors", i))
+                    .unwrap_or_default(),
+                capacity: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.capacity", i))
+                    .unwrap_or_default(),
+                allocation: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.allocation", i))
+                    .unwrap_or_default(),
+                physical: self
+                    .0
+                    .params
+                    .get_u64(&format!("block.{}.physical", i))
+                    .unwrap_or_default(),
+            });
+        }
+
+        infos
+    }
+
+    pub fn networks(&self) -> Vec<InterfaceStats> {
+        let n = self.get_u64("net.count").unwrap_or_default();
+        let mut stats = Vec::with_capacity(n as usize);
+        for i in 0..n {
+            stats.push(InterfaceStats {
+                name: self
+                    .0
+                    .params
+                    .get_string(format!("net.{}.name", i).as_str())
+                    .unwrap_or_default(),
+                rx_bytes: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.rx.bytes", i).as_str())
+                    .unwrap_or_default(),
+                rx_packets: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.rx.pkts", i).as_str())
+                    .unwrap_or_default(),
+                rx_errs: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.rx.errs", i).as_str())
+                    .unwrap_or_default(),
+                rx_drop: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.rx.drop", i).as_str())
+                    .unwrap_or_default(),
+                tx_bytes: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.tx.bytes", i).as_str())
+                    .unwrap_or_default(),
+                tx_packets: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.tx.pkets", i).as_str())
+                    .unwrap_or_default(),
+                tx_errs: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.tx.errs", i).as_str())
+                    .unwrap_or_default(),
+                tx_drop: self
+                    .0
+                    .params
+                    .get_u64(format!("net.{}.tx.drop", i).as_str())
+                    .unwrap_or_default(),
+            });
+        }
+
+        stats
+    }
+
+    pub fn vcpu_delay_and_wait(&self, vcpu: u32) -> (u64, u64) {
+        let delay = self
+            .get_u64(format!("vcpu.{}.delay", vcpu).as_str())
+            .unwrap_or_default();
+        let wait = self
+            .get_u64(format!("vcpu.{}.wait", vcpu).as_str())
+            .unwrap_or_default();
+        (delay, wait)
+    }
+
+    fn get_i32(&self, key: &str) -> Option<i32> {
+        self.0
+            .params
+            .iter()
+            .find(|p| p.field.0 == key)
+            .map(|p| match p.value {
+                remote_typed_param_value::Const1(v) => v,
+                _ => unreachable!(),
+            })
+    }
+
+    fn get_u32(&self, key: &str) -> Option<u32> {
+        self.0
+            .params
+            .iter()
+            .find(|p| p.field.0 == key)
+            .map(|p| match p.value {
+                remote_typed_param_value::Const2(v) => v,
+                _ => unreachable!(),
+            })
+    }
+
+    fn get_u64(&self, key: &str) -> Option<u64> {
+        self.0
+            .params
+            .iter()
+            .find(|p| p.field.0 == key)
+            .map(|p| match p.value {
+                remote_typed_param_value::Const4(v) => v,
+                _ => unreachable!(),
+            })
+    }
+}
+
+impl GetAllDomainStatsResponse {
+    pub fn stats(&self) -> Vec<DomainStatsRecord> {
+        let mut array = Vec::with_capacity(self.0.retStats.len());
+        for s in &self.0.retStats {
+            array.push(DomainStatsRecord(s.clone()))
+        }
+
+        array
+    }
+}
+
+pub struct DomainGetInfoRequest(generated::remote_domain_get_info_args);
+delegate_pack_impl!(DomainGetInfoRequest);
+
+impl DomainGetInfoRequest {
+    pub fn new(dom: remote_nonnull_domain) -> Self {
+        DomainGetInfoRequest(generated::remote_domain_get_info_args { dom })
+    }
+}
+resp!(DomainGetInfoResponse: generated::remote_domain_get_info_ret);
+impl From<DomainGetInfoResponse> for DomainInfo {
+    fn from(resp: DomainGetInfoResponse) -> Self {
+        DomainInfo {
+            state: resp.0.state as DomainState,
+            max_mem: resp.0.maxMem,
+            memory: resp.0.memory,
+            nr_virt_cpu: resp.0.nrVirtCpu,
+            cpu_time: resp.0.cpuTime,
+        }
+    }
+}
+
+pub struct DomainGetBlockIoTuneRequest(generated::remote_domain_get_block_io_tune_args);
+delegate_pack_impl!(DomainGetBlockIoTuneRequest);
+
+impl DomainGetBlockIoTuneRequest {
+    pub fn new(dom: remote_nonnull_domain, disk: remote_string, nparams: i32) -> Self {
+        Self(generated::remote_domain_get_block_io_tune_args {
+            dom,
+            disk,
+            nparams,
+            flags: 0,
+        })
+    }
+}
+
+#[derive(Default)]
+pub struct DomainGetBlockIoTuneResponse(generated::remote_domain_get_block_io_tune_ret);
+delegate_unpack_impl!(DomainGetBlockIoTuneResponse);
+
+impl DomainGetBlockIoTuneResponse {
+    pub fn nparams(&self) -> i32 {
+        self.0.nparams
+    }
+}
+
+#[derive(Debug)]
+pub struct BlockIoTuneParameters {
+    pub total_bytes_sec: u64,
+    pub read_bytes_sec: u64,
+    pub write_bytes_sec: u64,
+    pub total_iops_sec: u64,
+    pub read_iops_sec: u64,
+    pub write_iops_sec: u64,
+    pub total_bytes_sec_max: u64,
+    pub read_bytes_sec_max: u64,
+    pub write_bytes_sec_max: u64,
+    pub total_iops_sec_max: u64,
+    pub read_iops_sec_max: u64,
+    pub write_iops_sec_max: u64,
+    pub total_bytes_sec_max_length: u64,
+    pub read_bytes_sec_max_length: u64,
+    pub write_bytes_sec_max_length: u64,
+    pub total_iops_sec_max_length: u64,
+    pub read_iops_sec_max_length: u64,
+    pub write_iops_sec_max_length: u64,
+    pub size_iops_sec: u64,
+}
+
+pub trait Params {
+    fn get_u32(&self, key: &str) -> Option<u32>;
+    fn get_u64(&self, key: &str) -> Option<u64>;
+    fn get_string(&self, key: &str) -> Option<String>;
+}
+
+impl Params for Vec<remote_typed_param> {
+    fn get_u32(&self, key: &str) -> Option<u32> {
+        self.iter().find(|p| p.field.0 == key).map(|p| p.as_u32())
+    }
+
+    fn get_u64(&self, key: &str) -> Option<u64> {
+        self.iter().find(|p| p.field.0 == key).map(|p| p.as_u64())
+    }
+
+    fn get_string(&self, key: &str) -> Option<String> {
+        self.iter()
+            .find(|p| p.field.0 == key)
+            .map(|p| p.as_string())
+    }
+}
+
+impl From<DomainGetBlockIoTuneResponse> for BlockIoTuneParameters {
+    fn from(resp: DomainGetBlockIoTuneResponse) -> Self {
+        let params = resp.0.params;
+
+        BlockIoTuneParameters {
+            total_bytes_sec: params.get_u64("total_bytes_sec").unwrap_or_default(),
+            read_bytes_sec: params.get_u64("read_bytes_sec").unwrap_or_default(),
+            write_bytes_sec: params.get_u64("write_bytes_sec").unwrap_or_default(),
+            total_iops_sec: params.get_u64("total_iops_sec").unwrap_or_default(),
+            read_iops_sec: params.get_u64("read_iops_sec").unwrap_or_default(),
+            write_iops_sec: params.get_u64("write_iops_sec").unwrap_or_default(),
+            total_bytes_sec_max: params.get_u64("total_bytes_sec_max").unwrap_or_default(),
+            read_bytes_sec_max: params.get_u64("read_bytes_sec_max").unwrap_or_default(),
+            write_bytes_sec_max: params.get_u64("write_bytes_sec_max").unwrap_or_default(),
+            total_iops_sec_max: params.get_u64("total_iops_sec_max").unwrap_or_default(),
+            read_iops_sec_max: params.get_u64("read_iops_sec_max").unwrap_or_default(),
+            write_iops_sec_max: params.get_u64("write_iops_sec_max").unwrap_or_default(),
+            total_bytes_sec_max_length: params
+                .get_u64("total_bytes_sec_max_length")
+                .unwrap_or_default(),
+            read_bytes_sec_max_length: params
+                .get_u64("read_bytes_sec_max_length")
+                .unwrap_or_default(),
+            write_bytes_sec_max_length: params
+                .get_u64("write_bytes_sec_max_length")
+                .unwrap_or_default(),
+            total_iops_sec_max_length: params
+                .get_u64("total_iops_sec_max_length")
+                .unwrap_or_default(),
+            read_iops_sec_max_length: params
+                .get_u64("read_iops_sec_max_length")
+                .unwrap_or_default(),
+            write_iops_sec_max_length: params
+                .get_u64("write_iops_sec_max_length")
+                .unwrap_or_default(),
+            size_iops_sec: params.get_u64("size_iops_sec").unwrap_or_default(),
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct DomainGetVcpusRequest(generated::remote_domain_get_vcpus_args);
+delegate_pack_impl!(DomainGetVcpusRequest);
+impl DomainGetVcpusRequest {
+    pub fn new(dom: remote_nonnull_domain, maxinfo: i32) -> Self {
+        Self(generated::remote_domain_get_vcpus_args {
+            dom,
+            maxinfo,
+            maplen: 0,
+        })
+    }
+}
+
+#[derive(Default)]
+pub struct DomainGetVcpusResponse(generated::remote_domain_get_vcpus_ret);
+delegate_unpack_impl!(DomainGetVcpusResponse);
+
+impl From<DomainGetVcpusResponse> for Vec<VcpuInfo> {
+    fn from(resp: DomainGetVcpusResponse) -> Self {
+        resp.0
+            .info
+            .iter()
+            .map(|info| VcpuInfo {
+                number: info.number,
+                state: info.state,
+                cpu: info.cpu,
+                cpu_time: info.cpu_time,
+            })
+            .collect()
+    }
+}
+
+// Memory Stats
+#[derive(Default)]
+pub struct DomainMemoryStatsRequest(generated::remote_domain_memory_stats_args);
+delegate_pack_impl!(DomainMemoryStatsRequest);
+
+impl DomainMemoryStatsRequest {
+    pub fn new(dom: remote_nonnull_domain, maxStats: u32, flags: u32) -> Self {
+        Self(generated::remote_domain_memory_stats_args {
+            dom,
+            maxStats,
+            flags,
+        })
+    }
+}
+
+#[derive(Default)]
+pub struct DomainMemoryStatsResponse(generated::remote_domain_memory_stats_ret);
+delegate_unpack_impl!(DomainMemoryStatsResponse);
+
+#[derive(Debug, Default)]
+pub struct MemoryStats {
+    pub major_fault: u64,
+    pub minor_fault: u64,
+    pub unused: u64,
+    pub available: u64,
+    pub actual_balloon: u64,
+    pub rss: u64,
+    pub usable: u64,
+    pub disk_caches: u64,
+}
+
+impl From<DomainMemoryStatsResponse> for MemoryStats {
+    fn from(resp: DomainMemoryStatsResponse) -> Self {
+        let mut stats = MemoryStats::default();
+
+        for s in resp.0.stats {
+            match s.tag {
+                2 => stats.major_fault = s.val,
+                3 => stats.minor_fault = s.val,
+                4 => stats.unused = s.val,
+                5 => stats.available = s.val,
+                6 => stats.actual_balloon = s.val,
+                7 => stats.rss = s.val,
+                8 => stats.usable = s.val,
+                10 => stats.disk_caches = s.val,
+                _ => { /* do nothing */ }
+            }
+        }
+
+        stats
+    }
+}
+
+// List all storage pools
+#[derive(Default)]
+pub struct ListAllStoragePoolsRequest(generated::remote_connect_list_all_storage_pools_args);
+delegate_pack_impl!(ListAllStoragePoolsRequest);
+
+impl ListAllStoragePoolsRequest {
+    pub fn new(flags: u32) -> Self {
+        Self(generated::remote_connect_list_all_storage_pools_args {
+            need_results: 1,
+            flags,
+        })
+    }
+}
+
+#[derive(Default)]
+pub struct ListAllStoragePoolsResponse(generated::remote_connect_list_all_storage_pools_ret);
+delegate_unpack_impl!(ListAllStoragePoolsResponse);
+
+impl ListAllStoragePoolsResponse {
+    pub fn pools(&self) -> Vec<generated::remote_nonnull_storage_pool> {
+        self.0.pools.clone()
+    }
+}
+
+// Storage pool get info
+#[derive(Default)]
+pub struct StoragePoolGetInfoRequest(generated::remote_storage_pool_get_info_args);
+delegate_pack_impl!(StoragePoolGetInfoRequest);
+
+impl StoragePoolGetInfoRequest {
+    pub fn new(pool: generated::remote_nonnull_storage_pool) -> Self {
+        Self(generated::remote_storage_pool_get_info_args { pool })
+    }
+}
+
+#[derive(Default)]
+pub struct StoragePoolGetInfoResponse(pub generated::remote_storage_pool_get_info_ret);
+delegate_unpack_impl!(StoragePoolGetInfoResponse);
+
+impl StoragePoolGetInfoResponse {
+    pub fn state(&self) -> u8 {
+        self.0.state
+    }
 }

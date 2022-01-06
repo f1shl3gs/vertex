@@ -111,3 +111,15 @@ pub mod domain;
 pub mod error;
 pub mod storage_pool;
 pub mod typedparam;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn domains() {
+        let conn = connect::Connect::open_read_only("qemu:///system").unwrap();
+        let dms = conn.get_all_domain_stats(11, 0).unwrap();
+        println!()
+    }
+}

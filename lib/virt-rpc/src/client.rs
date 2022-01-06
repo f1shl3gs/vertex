@@ -1,15 +1,28 @@
 use crate::request;
+use crate::request::generated::remote_string;
+use crate::request::remote_procedure::{
+    REMOTE_PROC_CONNECT_GET_ALL_DOMAIN_STATS, REMOTE_PROC_CONNECT_GET_VERSION,
+    REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS, REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
+    REMOTE_PROC_DOMAIN_GET_INFO, REMOTE_PROC_DOMAIN_GET_VCPUS, REMOTE_PROC_DOMAIN_MEMORY_STATS,
+    REMOTE_PROC_STORAGE_POOL_GET_INFO,
+};
 use crate::request::{
     remote_procedure::{
-        REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION, REMOTE_PROC_CONNECT_OPEN, REMOTE_PROC_CONNECT_LIST_DOMAINS
+        REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION,
+        REMOTE_PROC_CONNECT_LIST_DOMAINS, REMOTE_PROC_CONNECT_OPEN,
     },
     virNetMessageError, virNetMessageHeader, virNetMessageStatus, AuthListRequest,
-    AuthListResponse, ConnectOpenRequest, ConnectOpenResponse, GetLibVersionRequest,
-    GetLibVersionResponse, LibvirtMessage, ListAllDomainsFlags, ListAllDomainsRequest,
-    ListAllDomainsResponse,
+    AuthListResponse, BlockIoTuneParameters, ConnectOpenRequest, ConnectOpenResponse, Domain,
+    DomainGetBlockIoTuneRequest, DomainGetBlockIoTuneResponse, DomainGetInfoRequest,
+    DomainGetInfoResponse, DomainGetVcpusRequest, DomainGetVcpusResponse, DomainInfo,
+    DomainMemoryStatsRequest, DomainMemoryStatsResponse, DomainStatsRecord,
+    GetAllDomainStatsRequest, GetAllDomainStatsResponse, GetLibVersionRequest,
+    GetLibVersionResponse, GetVersionRequest, GetVersionResponse, LibvirtMessage,
+    ListAllDomainsFlags, ListAllDomainsRequest, ListAllDomainsResponse, ListAllStoragePoolsRequest,
+    ListAllStoragePoolsResponse, MemoryStats, StoragePoolGetInfoRequest,
+    StoragePoolGetInfoResponse, VcpuInfo,
 };
 use crate::Error;
-use bytes::{BufMut, BytesMut};
 use std::io;
 use std::io::Cursor;
 use std::path::Path;
@@ -18,9 +31,18 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::UnixStream;
 use xdr_codec::{Pack, Unpack};
 
-pub struct LibvirtRequest {
-    header: request::virNetMessageHeader,
-    payload: BytesMut,
+#[derive(Debug)]
+pub struct StoragePoolInfo {
+    pub name: String,
+
+    /// A `StoragePoolState` flags
+    pub state: u32,
+    /// Logical size bytes.
+    pub capacity: u64,
+    /// Current allocation bytes.
+    pub allocation: u64,
+    /// Remaining free space bytes.
+    pub available: u64,
 }
 
 pub struct Client {
@@ -35,7 +57,7 @@ impl Client {
         Ok(Self { serial, stream })
     }
 
-    pub async fn version(&mut self) -> Result<(u32, u32, u32), Error> {
+    pub async fn version(&mut self) -> Result<String, Error> {
         let req = self.make_request(
             REMOTE_PROC_CONNECT_GET_LIB_VERSION,
             GetLibVersionRequest::new(),
@@ -44,6 +66,14 @@ impl Client {
         let pkt: GetLibVersionResponse = self.do_request(req).await?;
 
         Ok(pkt.version())
+    }
+
+    pub async fn hyper_version(&mut self) -> Result<String, Error> {
+        let req = self.make_request(REMOTE_PROC_CONNECT_GET_VERSION, GetVersionRequest::new());
+
+        let resp: GetVersionResponse = self.do_request(req).await?;
+
+        Ok(resp.version())
     }
 
     pub async fn auth(&mut self) -> Result<AuthListResponse, Error> {
@@ -58,6 +88,7 @@ impl Client {
         self.do_request(req).await
     }
 
+    // NOTE: this func will hanging forever, and i can't figure out why
     pub async fn list_all_domains(
         &mut self,
         flags: ListAllDomainsFlags,
@@ -67,6 +98,187 @@ impl Client {
             ListAllDomainsRequest::new(flags),
         );
         self.do_request(req).await
+    }
+
+    // Example of params
+    //
+    // state.state
+    // state.reason
+    // cpu.time
+    // cpu.user
+    // cpu.system
+    // cpu.cache.monitor.count
+    // cpu.haltpoll.success.time
+    // cpu.haltpoll.fail.time
+    // balloon.current
+    // balloon.maximum
+    // balloon.last-update
+    // balloon.rss
+    // vcpu.current
+    // vcpu.maximum
+    // vcpu.0.state
+    // vcpu.0.time
+    // vcpu.0.wait
+    // vcpu.0.delay
+    // vcpu.1.state
+    // vcpu.1.time
+    // vcpu.1.wait
+    // vcpu.1.delay
+    // net.count
+    // net.0.name
+    // net.0.rx.bytes
+    // net.0.rx.pkts
+    // net.0.rx.errs
+    // net.0.rx.drop
+    // net.0.tx.bytes
+    // net.0.tx.pkts
+    // net.0.tx.errs
+    // net.0.tx.drop
+    // net.1.name
+    // net.1.rx.bytes
+    // net.1.rx.pkts
+    // net.1.rx.errs
+    // net.1.rx.drop
+    // net.1.tx.bytes
+    // net.1.tx.pkts
+    // net.1.tx.errs
+    // net.1.tx.drop
+    // block.count
+    // block.0.name
+    // block.0.path
+    // block.0.backingIndex
+    // block.0.rd.reqs
+    // block.0.rd.bytes
+    // block.0.rd.times
+    // block.0.wr.reqs
+    // block.0.wr.bytes
+    // block.0.wr.times
+    // block.0.fl.reqs
+    // block.0.fl.times
+    // block.0.allocation
+    // block.0.capacity
+    // block.0.physical
+    // block.1.name
+    // block.1.path
+    // block.1.backingIndex
+    // block.1.rd.reqs
+    // block.1.rd.bytes
+    // block.1.rd.times
+    // block.1.wr.reqs
+    // block.1.wr.bytes
+    // block.1.wr.times
+    // block.1.fl.reqs
+    // block.1.fl.times
+    // block.1.allocation
+    // block.1.capacity
+    // block.1.physical
+    pub async fn get_all_domain_stats(&mut self) -> Result<Vec<DomainStatsRecord>, Error> {
+        let req = self.make_request(
+            REMOTE_PROC_CONNECT_GET_ALL_DOMAIN_STATS,
+            GetAllDomainStatsRequest::new(127, 80),
+        );
+
+        let resp: GetAllDomainStatsResponse = self.do_request(req).await?;
+        Ok(resp.stats())
+    }
+
+    pub async fn get_domain_info(&mut self, dom: &Domain) -> Result<DomainInfo, Error> {
+        let req = self.make_request(
+            REMOTE_PROC_DOMAIN_GET_INFO,
+            DomainGetInfoRequest::new(dom.underlying()),
+        );
+
+        let resp: DomainGetInfoResponse = self.do_request(req).await?;
+        Ok(resp.into())
+    }
+
+    pub async fn get_domain_vcpus(
+        &mut self,
+        dom: &Domain,
+        maxinfo: i32,
+    ) -> Result<Vec<VcpuInfo>, Error> {
+        let req = self.make_request(
+            REMOTE_PROC_DOMAIN_GET_VCPUS,
+            DomainGetVcpusRequest::new(dom.underlying(), maxinfo),
+        );
+
+        let resp: DomainGetVcpusResponse = self.do_request(req).await?;
+        Ok(resp.into())
+    }
+
+    pub async fn domain_memory_stats(
+        &mut self,
+        dom: &Domain,
+        maxinfo: u32,
+        flags: u32,
+    ) -> Result<MemoryStats, Error> {
+        let req = self.make_request(
+            REMOTE_PROC_DOMAIN_MEMORY_STATS,
+            DomainMemoryStatsRequest::new(dom.underlying(), maxinfo, flags),
+        );
+
+        let resp: DomainMemoryStatsResponse = self.do_request(req).await?;
+        Ok(resp.into())
+    }
+
+    pub async fn block_io_tune(
+        &mut self,
+        dom: &Domain,
+        disk: &str,
+    ) -> Result<BlockIoTuneParameters, Error> {
+        // first call to get nparams
+        let req = self.make_request(
+            REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
+            DomainGetBlockIoTuneRequest::new(
+                dom.underlying(),
+                Some(request::generated::remote_nonnull_string(disk.to_string())),
+                0,
+            ),
+        );
+
+        let resp: DomainGetBlockIoTuneResponse = self.do_request(req).await?;
+        let nparams = resp.nparams();
+
+        // second call get all params kvs
+        let req = self.make_request(
+            REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
+            DomainGetBlockIoTuneRequest::new(
+                dom.underlying(),
+                Some(request::generated::remote_nonnull_string(disk.to_string())),
+                nparams,
+            ),
+        );
+
+        let resp: DomainGetBlockIoTuneResponse = self.do_request(req).await?;
+        Ok(resp.into())
+    }
+
+    pub async fn storage_pools(&mut self) -> Result<Vec<StoragePoolInfo>, Error> {
+        let req = self.make_request(
+            REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS,
+            ListAllStoragePoolsRequest::new(0),
+        );
+        let resp: ListAllStoragePoolsResponse = self.do_request(req).await?;
+        let pools = resp.pools();
+        let mut infos = Vec::with_capacity(pools.len());
+
+        for pool in pools {
+            let name = pool.name.0.clone();
+            let req = self.make_request(
+                REMOTE_PROC_STORAGE_POOL_GET_INFO,
+                StoragePoolGetInfoRequest::new(pool),
+            );
+            let resp: StoragePoolGetInfoResponse = self.do_request(req).await?;
+            infos.push(StoragePoolInfo {
+                name,
+                state: resp.0.state as u32,
+                capacity: resp.0.capacity,
+                allocation: resp.0.allocation,
+                available: resp.0.available,
+            })
+        }
+
+        Ok(infos)
     }
 
     fn serial(&self) -> u32 {
@@ -123,32 +335,11 @@ impl Client {
         let (err, _) = virNetMessageError::unpack(&mut cur)?;
         Err(Error::from(err))
     }
-
-    fn pack<P: Pack<bytes::buf::Writer<bytes::BytesMut>>>(
-        procedure: request::remote_procedure,
-        payload: P,
-    ) -> Result<LibvirtRequest, xdr_codec::Error> {
-        let payload = {
-            let buf = BytesMut::with_capacity(4 * 1024);
-            let mut writer = buf.writer();
-            payload.pack(&mut writer)?;
-            writer.into_inner()
-        };
-
-        Ok(LibvirtRequest {
-            header: request::virNetMessageHeader {
-                proc_: procedure as i32,
-                ..Default::default()
-            },
-            payload,
-        })
-    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tokio::net::UnixStream;
 
     #[tokio::test]
     async fn connect() {
@@ -157,16 +348,33 @@ mod tests {
         // let auth = cli.auth().await.unwrap();
         let resp = cli.open().await.unwrap();
         let (major, minor, micro) = cli.version().await.unwrap();
-        println!("{}.{}.{}", major, minor, micro);
-        let resp = cli
-            .list_all_domains(
-                ListAllDomainsFlags::DOMAINS_ACTIVE | ListAllDomainsFlags::DOMAINS_INACTIVE,
-            )
-            .await
-            .unwrap();
-        let domains: Vec<request::Domain> = resp.into();
-        for dom in domains {
-            println!("{:#?}", dom)
+        println!("libvirt: {}.{}.{}", major, minor, micro);
+        let (major, minor, micro) = cli.hyper_version().await.unwrap();
+        println!("hyper: {}.{}.{}", major, minor, micro);
+
+        let stats = cli.get_all_domain_stats().await.unwrap();
+        for s in stats {
+            let dom = s.domain();
+            let info = cli.get_domain_info(&dom).await.unwrap();
+            println!("dom: {}", dom.name());
+
+            // vcpu
+            let vcpus = cli
+                .get_domain_vcpus(&dom, info.nr_virt_cpu as i32)
+                .await
+                .unwrap();
+            for vcpu in vcpus {
+                println!("vcpu:{} -> {}", vcpu.number, vcpu.cpu);
+                let (delay, wait) = s.vcpu_delay_and_wait(vcpu.number);
+                println!("vcpu:{}  delay {} wait {}", vcpu.number, delay, wait);
+            }
+
+            let blocks = s.blocks();
+            for block in blocks {
+                println!("block: {}", block);
+                let params = cli.block_io_tune(&dom, &block).await.unwrap();
+                println!("{:#?}", params);
+            }
         }
     }
 }
