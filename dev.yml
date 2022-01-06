@@ -21,7 +21,7 @@ sources:
     type: internal_logs
   libvirt:
     type: libvirt
-    uri: /run/libvirt/libvirt-sock-ro
+    sock: /run/libvirt/libvirt-sock-ro
 
 transforms:
   add_extra_tags:

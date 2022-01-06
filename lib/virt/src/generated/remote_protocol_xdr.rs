@@ -1,6 +1,6 @@
 // GENERATED CODE
 //
-// Generated from /home/f1shl3gs/Workspaces/clion/vertex/target/debug/build/virt-rpc-84ca5d2b339de854/out/remote_protocol.x by xdrgen.
+// Generated from /home/f1shl3gs/Workspaces/clion/vertex/target/debug/build/virt-84ca5d2b339de854/out/remote_protocol.x by xdrgen.
 //
 // DO NOT EDIT
 
@@ -1651,13 +1651,13 @@ pub struct remote_domain_get_vcpus_ret {
     pub cpumaps: Vec<u8>,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct remote_domain_get_xml_desc_args {
     pub dom: remote_nonnull_domain,
     pub flags: u32,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct remote_domain_get_xml_desc_ret {
     pub xml: remote_nonnull_string,
 }
@@ -9912,7 +9912,8 @@ impl<In: xdr_codec::Read> xdr_codec::Unpack<In> for remote_connect_list_all_stor
                     v
                 },
                 ret: {
-                    let (v, fsz) = xdr_codec::Unpack::unpack(input)?;
+                    // Libvirt might not return this field
+                    let (v, fsz) = xdr_codec::Unpack::unpack(input).unwrap_or_default();
                     sz += fsz;
                     v
                 },

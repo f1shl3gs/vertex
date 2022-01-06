@@ -674,66 +674,12 @@ req!(ConnectOpenRequest: remote_connect_open_args {
 resp!(ConnectOpenResponse);
 rpc!(remote_procedure::REMOTE_PROC_CONNECT_OPEN, ConnectOpenRequest => ConnectOpenResponse);
 
-// List all domains
 use crate::request::generated::{
-    remote_domain_stats_record, remote_nonnull_domain, remote_nonnull_storage_pool, remote_string,
-    remote_typed_param, remote_typed_param_value,
+    remote_domain_stats_record, remote_nonnull_domain, remote_string, remote_typed_param,
+    remote_typed_param_value,
 };
-use bitflags::bitflags;
-bitflags! {
-    pub struct ListAllDomainsFlags: u32 {
-        const DOMAINS_ACTIVE	=	1;
-        const DOMAINS_INACTIVE	=	2;
-        const DOMAINS_PERSISTENT	=	4;
-        const DOMAINS_TRANSIENT	=	8;
-        const DOMAINS_RUNNING	=	16;
-        const DOMAINS_PAUSED	=	32;
-        const DOMAINS_SHUTOFF	=	64;
-        const DOMAINS_OTHER	=	128;
-        const DOMAINS_MANAGEDSAVE	=	256;
-        const DOMAINS_NO_MANAGEDSAVE	=	512;
-        const DOMAINS_AUTOSTART	=	1024;
-        const DOMAINS_NO_AUTOSTART	=	2048;
-        const DOMAINS_HAS_SNAPSHOT	=	4096;
-        const DOMAINS_NO_SNAPSHOT	=	8192;
-    }
-}
 
-#[derive(Debug)]
-pub struct ListAllDomainsRequest(generated::remote_connect_list_all_domains_args);
-
-impl ListAllDomainsRequest {
-    pub fn new(flags: ListAllDomainsFlags) -> Self {
-        let payload = generated::remote_connect_list_all_domains_args {
-            need_results: 1,
-            flags: flags.bits(),
-        };
-        ListAllDomainsRequest(payload)
-    }
-}
-
-delegate_pack_impl!(ListAllDomainsRequest);
-
-#[derive(Debug, Default)]
-pub struct ListAllDomainsResponse(generated::remote_connect_list_all_domains_ret);
-
-impl ::std::convert::Into<Vec<Domain>> for ListAllDomainsResponse {
-    fn into(self) -> Vec<Domain> {
-        let mut domains = Vec::new();
-        for dom in &(self.0).domains {
-            domains.push(Domain(dom.clone()))
-        }
-        domains
-    }
-}
-
-delegate_unpack_impl!(ListAllDomainsResponse);
-
-impl<R: ::std::io::Read> LibvirtRpc<R> for ListAllDomainsRequest {
-    const PROCEDURE: remote_procedure = remote_procedure::REMOTE_PROC_CONNECT_LIST_ALL_DOMAINS;
-    type Response = ListAllDomainsResponse;
-}
-
+// Get all domain stats
 pub struct GetAllDomainStatsRequest(generated::remote_connect_get_all_domain_stats_args);
 
 impl GetAllDomainStatsRequest {
@@ -755,15 +701,6 @@ delegate_unpack_impl!(GetAllDomainStatsResponse);
 pub struct DomainStatsRecord(remote_domain_stats_record);
 
 pub type DomainState = i32;
-
-pub const VIR_DOMAIN_NOSTATE: DomainState = 0;
-pub const VIR_DOMAIN_RUNNING: DomainState = 1;
-pub const VIR_DOMAIN_BLOCKED: DomainState = 2;
-pub const VIR_DOMAIN_PAUSED: DomainState = 3;
-pub const VIR_DOMAIN_SHUTDOWN: DomainState = 4;
-pub const VIR_DOMAIN_SHUTOFF: DomainState = 5;
-pub const VIR_DOMAIN_CRASHED: DomainState = 6;
-pub const VIR_DOMAIN_PMSUSPENDED: DomainState = 7;
 
 pub struct DomainInfo {
     /// The running state, one of virDomainState.
@@ -834,7 +771,7 @@ impl DomainStatsRecord {
     }
 
     pub fn blocks(&self) -> Vec<BlockInfo> {
-        let n = self.get_u64("block.count").unwrap_or_default();
+        let n = self.get_u32("block.count").unwrap_or_default();
         let mut infos = Vec::with_capacity(n as usize);
         for i in 0..n {
             infos.push(BlockInfo {
@@ -920,7 +857,7 @@ impl DomainStatsRecord {
     }
 
     pub fn networks(&self) -> Vec<InterfaceStats> {
-        let n = self.get_u64("net.count").unwrap_or_default();
+        let n = self.get_u32("net.count").unwrap_or_default();
         let mut stats = Vec::with_capacity(n as usize);
         for i in 0..n {
             stats.push(InterfaceStats {
@@ -983,17 +920,6 @@ impl DomainStatsRecord {
             .get_u64(format!("vcpu.{}.wait", vcpu).as_str())
             .unwrap_or_default();
         (delay, wait)
-    }
-
-    fn get_i32(&self, key: &str) -> Option<i32> {
-        self.0
-            .params
-            .iter()
-            .find(|p| p.field.0 == key)
-            .map(|p| match p.value {
-                remote_typed_param_value::Const1(v) => v,
-                _ => unreachable!(),
-            })
     }
 
     fn get_u32(&self, key: &str) -> Option<u32> {
@@ -1198,10 +1124,10 @@ pub struct DomainMemoryStatsRequest(generated::remote_domain_memory_stats_args);
 delegate_pack_impl!(DomainMemoryStatsRequest);
 
 impl DomainMemoryStatsRequest {
-    pub fn new(dom: remote_nonnull_domain, maxStats: u32, flags: u32) -> Self {
+    pub fn new(dom: remote_nonnull_domain, max_stats: u32, flags: u32) -> Self {
         Self(generated::remote_domain_memory_stats_args {
             dom,
-            maxStats,
+            maxStats: max_stats,
             flags,
         })
     }
@@ -1284,8 +1210,23 @@ impl StoragePoolGetInfoRequest {
 pub struct StoragePoolGetInfoResponse(pub generated::remote_storage_pool_get_info_ret);
 delegate_unpack_impl!(StoragePoolGetInfoResponse);
 
-impl StoragePoolGetInfoResponse {
-    pub fn state(&self) -> u8 {
-        self.0.state
+// Get Domain xml desc
+#[derive(Default)]
+pub struct DomainGetXmlDescRequest(generated::remote_domain_get_xml_desc_args);
+delegate_pack_impl!(DomainGetXmlDescRequest);
+
+impl DomainGetXmlDescRequest {
+    pub fn new(dom: remote_nonnull_domain) -> Self {
+        Self(generated::remote_domain_get_xml_desc_args { dom, flags: 0 })
+    }
+}
+
+#[derive(Default)]
+pub struct DomainGetXmlDescResponse(generated::remote_domain_get_xml_desc_ret);
+delegate_unpack_impl!(DomainGetXmlDescResponse);
+
+impl DomainGetXmlDescResponse {
+    pub fn xml(&self) -> String {
+        self.0.xml.0.clone()
     }
 }

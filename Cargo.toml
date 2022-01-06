@@ -28,7 +28,6 @@ members = [
     "lib/humanize",
     "lib/sysinfo",
     "lib/virt",
-    "lib/virt-rpc",
 ]
 
 [features]
@@ -42,7 +41,6 @@ default = [
     # extensions
     "extensions-pprof",
     # "extensions-jemalloc",
-    "sources-libvirt"
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -63,7 +61,6 @@ target-x86_64-unknown-linux-gnu = [
     "rdkafka-cmake",
     "unix",
     "vendor-all",
-    "sources-libvirt"
 ]
 
 # Integration tests
@@ -119,6 +116,7 @@ sources = [
     "sources-journald",
     "sources-internal_metrics",
     "sources-internal_logs",
+    "sources-libvirt",
     "sources-redis",
     "sources-pulsar",
     "sources-prometheus_scrape",
@@ -270,7 +268,6 @@ tracing-limit = { path = "lib/tracing-limit" }
 humanize = { path = "lib/humanize" }
 sysinfo = { path = "lib/sysinfo" }
 virt = { path = "lib/virt", optional = true }
-virt-rpc = { path = "lib/virt-rpc"}
 
 # Allocation
 mimalloc = { version = "0.1.27", default-features = false, optional = true }

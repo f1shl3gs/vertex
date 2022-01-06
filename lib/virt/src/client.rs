@@ -1,26 +1,23 @@
 use crate::request;
-use crate::request::generated::remote_string;
 use crate::request::remote_procedure::{
     REMOTE_PROC_CONNECT_GET_ALL_DOMAIN_STATS, REMOTE_PROC_CONNECT_GET_VERSION,
     REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS, REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
-    REMOTE_PROC_DOMAIN_GET_INFO, REMOTE_PROC_DOMAIN_GET_VCPUS, REMOTE_PROC_DOMAIN_MEMORY_STATS,
-    REMOTE_PROC_STORAGE_POOL_GET_INFO,
+    REMOTE_PROC_DOMAIN_GET_INFO, REMOTE_PROC_DOMAIN_GET_VCPUS, REMOTE_PROC_DOMAIN_GET_XML_DESC,
+    REMOTE_PROC_DOMAIN_MEMORY_STATS, REMOTE_PROC_STORAGE_POOL_GET_INFO,
 };
 use crate::request::{
     remote_procedure::{
-        REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION,
-        REMOTE_PROC_CONNECT_LIST_DOMAINS, REMOTE_PROC_CONNECT_OPEN,
+        REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION, REMOTE_PROC_CONNECT_OPEN,
     },
     virNetMessageError, virNetMessageHeader, virNetMessageStatus, AuthListRequest,
     AuthListResponse, BlockIoTuneParameters, ConnectOpenRequest, ConnectOpenResponse, Domain,
     DomainGetBlockIoTuneRequest, DomainGetBlockIoTuneResponse, DomainGetInfoRequest,
-    DomainGetInfoResponse, DomainGetVcpusRequest, DomainGetVcpusResponse, DomainInfo,
-    DomainMemoryStatsRequest, DomainMemoryStatsResponse, DomainStatsRecord,
-    GetAllDomainStatsRequest, GetAllDomainStatsResponse, GetLibVersionRequest,
+    DomainGetInfoResponse, DomainGetVcpusRequest, DomainGetVcpusResponse, DomainGetXmlDescRequest,
+    DomainGetXmlDescResponse, DomainInfo, DomainMemoryStatsRequest, DomainMemoryStatsResponse,
+    DomainStatsRecord, GetAllDomainStatsRequest, GetAllDomainStatsResponse, GetLibVersionRequest,
     GetLibVersionResponse, GetVersionRequest, GetVersionResponse, LibvirtMessage,
-    ListAllDomainsFlags, ListAllDomainsRequest, ListAllDomainsResponse, ListAllStoragePoolsRequest,
-    ListAllStoragePoolsResponse, MemoryStats, StoragePoolGetInfoRequest,
-    StoragePoolGetInfoResponse, VcpuInfo,
+    ListAllStoragePoolsRequest, ListAllStoragePoolsResponse, MemoryStats,
+    StoragePoolGetInfoRequest, StoragePoolGetInfoResponse, VcpuInfo,
 };
 use crate::Error;
 use std::io;
@@ -29,7 +26,7 @@ use std::path::Path;
 use std::sync::atomic::{AtomicU32, Ordering};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::UnixStream;
-use xdr_codec::{Pack, Unpack};
+use xdr_codec::Unpack;
 
 #[derive(Debug)]
 pub struct StoragePoolInfo {
@@ -88,16 +85,13 @@ impl Client {
         self.do_request(req).await
     }
 
-    // NOTE: this func will hanging forever, and i can't figure out why
-    pub async fn list_all_domains(
-        &mut self,
-        flags: ListAllDomainsFlags,
-    ) -> Result<ListAllDomainsResponse, Error> {
+    pub async fn domain_xml(&mut self, dom: &Domain) -> Result<String, Error> {
         let req = self.make_request(
-            REMOTE_PROC_CONNECT_LIST_DOMAINS,
-            ListAllDomainsRequest::new(flags),
+            REMOTE_PROC_DOMAIN_GET_XML_DESC,
+            DomainGetXmlDescRequest::new(dom.underlying()),
         );
-        self.do_request(req).await
+        let resp: DomainGetXmlDescResponse = self.do_request(req).await?;
+        Ok(resp.xml())
     }
 
     // Example of params
@@ -256,7 +250,7 @@ impl Client {
     pub async fn storage_pools(&mut self) -> Result<Vec<StoragePoolInfo>, Error> {
         let req = self.make_request(
             REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS,
-            ListAllStoragePoolsRequest::new(0),
+            ListAllStoragePoolsRequest::new(2), // 2 for active pools
         );
         let resp: ListAllStoragePoolsResponse = self.do_request(req).await?;
         let pools = resp.pools();
@@ -339,18 +333,21 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::print_stdout)] // tests
+
     use super::*;
 
     #[tokio::test]
+    #[ignore]
     async fn connect() {
         let path = "/run/libvirt/libvirt-sock-ro";
         let mut cli = Client::connect(path).await.unwrap();
         // let auth = cli.auth().await.unwrap();
         let resp = cli.open().await.unwrap();
-        let (major, minor, micro) = cli.version().await.unwrap();
-        println!("libvirt: {}.{}.{}", major, minor, micro);
-        let (major, minor, micro) = cli.hyper_version().await.unwrap();
-        println!("hyper: {}.{}.{}", major, minor, micro);
+        let version = cli.version().await.unwrap();
+        println!("libvirt: {}", version);
+        let version = cli.hyper_version().await.unwrap();
+        println!("hyper: {}", version);
 
         let stats = cli.get_all_domain_stats().await.unwrap();
         for s in stats {
@@ -371,10 +368,15 @@ mod tests {
 
             let blocks = s.blocks();
             for block in blocks {
-                println!("block: {}", block);
-                let params = cli.block_io_tune(&dom, &block).await.unwrap();
+                println!("block: {}", block.name);
+                let params = cli.block_io_tune(&dom, &block.name).await.unwrap();
                 println!("{:#?}", params);
             }
+        }
+
+        let pools = cli.storage_pools().await.unwrap();
+        for pool in pools {
+            println!("pool: {}", pool.name);
         }
     }
 }

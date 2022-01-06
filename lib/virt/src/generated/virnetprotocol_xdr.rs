@@ -1,6 +1,6 @@
 // GENERATED CODE
 //
-// Generated from /home/f1shl3gs/Workspaces/clion/vertex/target/debug/build/virt-rpc-84ca5d2b339de854/out/virnetprotocol.x by xdrgen.
+// Generated from /home/f1shl3gs/Workspaces/clion/vertex/target/debug/build/virt-84ca5d2b339de854/out/virnetprotocol.x by xdrgen.
 //
 // DO NOT EDIT
 
