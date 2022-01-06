@@ -2182,7 +2182,7 @@ dependencies = [
  "bytes",
  "futures",
  "log 0.4.14",
- "netlink-packet-core 0.2.4",
+ "netlink-packet-core",
  "netlink-sys",
  "tokio",
 ]
