@@ -2,7 +2,20 @@ name: Check
 
 on:
   workflow_dispatch: {}
-  pull_request: {}
+  pull_request:
+    paths:
+      - ".github/workflows/benches.yml"
+      - ".cargo/**"
+      - "benches/**"
+      - "ci/bench/**"
+      - "lib/**"
+      - "src/**"
+      - "tests/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain"
+      - "ci/**"
+      - "Makefile"
 
 env:
   CI: true
@@ -12,19 +25,21 @@ env:
   # RUSTFLAGS: "-D warnings"
 
 jobs:
-  check:
-    name: "Cargo Check"
+  cancel-previous:
     runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    if: github.ref != 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v2.4.0
-      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash ci/environment/prepare.sh
-      - run: cargo clean
-      - run: cargo check
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true # can cancel workflows scheduled later
 
   style:
     name: "Style Checks"
     runs-on: ubuntu-20.04
+    needs:
+      - cancel-previous
     steps:
       - uses: actions/checkout@v2.4.0
       - uses: actions/cache@v2.1.7
@@ -40,4 +55,4 @@ jobs:
       - name: Check shell
         run:  bash ci/check-scripts.sh
       - name: Check fmt
-        run:  make fmt
+        run:  cargo fmt -- --check
