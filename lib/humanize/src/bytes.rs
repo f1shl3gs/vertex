@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::num::ParseFloatError;
 
-use serde::{Deserializer, Serializer};
+use serde::{Deserialize, Deserializer, Serializer};
 use snafu::{ResultExt, Snafu};
 
 // ICE Sizes, kibis of bits
@@ -95,7 +95,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         _ => {
             return Err(ParseBytesError::UnknownUnit {
                 unit: extra.clone(),
-            })
+            });
         }
     };
 
@@ -129,6 +129,23 @@ pub fn deserialize_bytes<'de, D: Deserializer<'de>>(deserializer: D) -> Result<u
 pub fn serialize_bytes<S: Serializer>(u: &usize, s: S) -> Result<S::Ok, S::Error> {
     let b = bytes(*u);
     s.serialize_str(&b)
+}
+
+pub fn deserialize_bytes_option<'de, D: Deserializer<'de>>(
+    deserializer: D,
+) -> Result<Option<usize>, D::Error> {
+    let s: Option<String> = Option::deserialize(deserializer)?;
+    match s {
+        None => Ok(None),
+        Some(s) => parse_bytes(&s).map_err(serde::de::Error::custom),
+    }
+}
+
+pub fn serialize_bytes_option<S: Serializer>(u: &Option<usize>, s: S) -> Result<S::Ok, S::Error> {
+    match u {
+        Some(v) => s.serialize_str(bytes(*v).as_str()),
+        None => s.serialize_none(),
+    }
 }
 
 #[cfg(test)]
