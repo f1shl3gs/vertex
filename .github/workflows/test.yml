@@ -96,3 +96,26 @@ jobs:
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
       - run: cargo test --workspace --no-fail-fast
+
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-20.04
+    needs: changes
+    if: ${{ needs.changes.outputs.source == 'true' }}
+    steps:
+      - uses: actions/checkout@v2.4.0
+      - uses: actions/cache@v2.1.7
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - run: make integration-test-consul
+      - run: make integration-test-haproxy
+      - run: make integration-test-memcached
+      - run: make integration-test-mysql
+      - run: make integration-test-nginx_stub
+      - run: make integration-test-redis
+      - run: make integration-test-zookeeper
