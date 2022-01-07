@@ -3,7 +3,7 @@ use crate::shutdown::ShutdownSignal;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings};
 use bytes::Bytes;
-use event::{Event, BatchStatus, BatchNotifier};
+use event::{BatchNotifier, BatchStatus, Event};
 use futures::Sink;
 use futures_util::future::BoxFuture;
 use futures_util::{FutureExt, SinkExt, StreamExt};
@@ -210,12 +210,10 @@ where
                             tripwire,
                             peer_addr.ip(),
                             output,
-                            acknowledgements
+                            acknowledgements,
                         );
 
-                        tokio::spawn(
-                            fut
-                        );
+                        tokio::spawn(fut);
                     }
                 })
                 .map(Ok)
