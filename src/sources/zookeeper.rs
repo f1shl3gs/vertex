@@ -150,7 +150,7 @@ impl SourceConfig for ZookeeperConfig {
         let source = ZookeeperSource::from(self);
         Ok(Box::pin(source.run(
             self.interval.to_std().unwrap(),
-            ctx.out,
+            ctx.output,
             ctx.shutdown,
         )))
     }

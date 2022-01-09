@@ -48,7 +48,7 @@ impl GeneratorConfig {
 #[typetag::serde(name = "generator")]
 impl SourceConfig for GeneratorConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        Ok(Box::pin(self.inner(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(self.inner(ctx.shutdown, ctx.output)))
     }
 
     fn output_type(&self) -> DataType {

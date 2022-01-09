@@ -809,7 +809,7 @@ impl SourceConfig for NodeMetricsConfig {
             collectors: self.collectors.clone(),
         };
 
-        Ok(Box::pin(nm.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(nm.run(ctx.shutdown, ctx.output)))
     }
 
     fn output_type(&self) -> DataType {

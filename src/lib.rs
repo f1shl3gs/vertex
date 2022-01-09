@@ -3,6 +3,7 @@
 mod async_read;
 mod batch;
 mod buffers;
+mod codecs;
 mod common;
 pub mod config;
 mod extensions;
@@ -16,7 +17,7 @@ pub mod sinks;
 pub mod sources;
 mod stats;
 mod stream;
-mod tcp;
+pub mod tcp;
 pub mod template;
 mod timezone;
 mod tls;
@@ -24,6 +25,7 @@ pub mod topology;
 pub mod trace;
 pub mod transforms;
 mod trigger;
+pub mod udp;
 
 pub use signal::SignalHandler;
 

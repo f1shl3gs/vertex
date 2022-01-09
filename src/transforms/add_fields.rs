@@ -1,4 +1,4 @@
-use crate::config::default_true;
+use crate::config::{default_true, Output};
 use crate::config::{DataType, GlobalOptions, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
@@ -25,8 +25,8 @@ impl TransformConfig for AddFieldsConfig {
         DataType::Log
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn transform_type(&self) -> &'static str {

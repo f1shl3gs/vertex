@@ -46,7 +46,7 @@ impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let mut ticker = ticker_from_std_duration(self.interval).take_until(ctx.shutdown);
         let sock = self.sock.clone();
-        let mut output = ctx.out.sink_map_err(|err| {
+        let mut output = ctx.output.sink_map_err(|err| {
             warn!(message = "Error sending libvirt metrics", ?err);
         });
 

@@ -1,10 +1,8 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashSet};
 
-use crate::config::{
-    DataType, GenerateConfig, GlobalOptions, TransformConfig, TransformDescription,
-};
+use crate::config::{DataType, ExpandType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformDescription};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
 
@@ -86,8 +84,11 @@ impl TransformConfig for AddTagsConfig {
         DataType::Any
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Any
+    fn outputs(&self) -> Vec<Output> {
+        vec![
+            Output::default(DataType::Metric),
+            Output::default(DataType::Log)
+        ]
     }
 
     fn transform_type(&self) -> &'static str {

@@ -2,10 +2,12 @@ mod builder;
 mod fanout;
 mod task;
 
+// re-exprot
+pub use fanout::{ControlChannel, ControlMessage, Fanout};
+
 use crate::buffers::EventStream;
 use crate::config::{Config, ConfigDiff, HealthcheckOptions, Resource};
 use crate::shutdown::ShutdownCoordinator;
-use crate::topology::fanout::{ControlChannel, ControlMessage};
 use crate::topology::task::Task;
 use crate::trigger::DisabledTrigger;
 use crate::{buffers, topology::builder::Pieces};

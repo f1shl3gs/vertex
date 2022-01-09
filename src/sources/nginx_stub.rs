@@ -71,7 +71,7 @@ impl SourceConfig for NginxStubConfig {
             )?);
         }
 
-        let mut out = ctx.out.sink_map_err(|err| {
+        let mut out = ctx.output.sink_map_err(|err| {
             error!(
                 message = "Error sending nginx stub metrics",
                 %err

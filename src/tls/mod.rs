@@ -8,13 +8,12 @@ use std::{fmt::Debug, net::SocketAddr, path::PathBuf, time::Duration};
 use tokio::net::TcpStream;
 use tokio_openssl::SslStream;
 
-#[cfg(feature = "sources-utils-tls")]
 mod incoming;
 mod maybe_tls;
 mod outgoing;
 mod settings;
 
-#[cfg(all(feature = "sources-utils-tls", feature = "listenfd"))]
+#[cfg(feature = "listenfd")]
 pub(crate) use incoming::{MaybeTlsIncomingStream, MaybeTlsListener};
 pub(crate) use maybe_tls::MaybeTls;
 pub use settings::{MaybeTlsSettings, TlsConfig, TlsOptions, TlsSettings};

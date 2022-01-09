@@ -70,7 +70,7 @@ impl SourceConfig for NtpConfig {
             pick_state: 0,
         };
 
-        Ok(Box::pin(ntp.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(ntp.run(ctx.shutdown, ctx.output)))
     }
 
     fn output_type(&self) -> DataType {

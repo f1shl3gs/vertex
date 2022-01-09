@@ -37,7 +37,7 @@ inventory::submit! {
 impl SourceConfig for KmsgConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let mut shutdown = ctx.shutdown;
-        let mut output = ctx.out;
+        let mut output = ctx.output;
         let boot = boot_time("/proc/uptime")?;
 
         Ok(Box::pin(async move {

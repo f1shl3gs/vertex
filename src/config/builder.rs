@@ -299,7 +299,7 @@ fn expand_globs_inner(inputs: &mut Vec<String>, id: &str, candidates: &[String])
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::{DataType, HealthCheck, SinkContext, SourceContext};
+    use crate::config::{DataType, HealthCheck, Output, SinkContext, SourceContext};
     use crate::sinks::Sink;
     use crate::sources::Source;
     use crate::transforms::Transform;
@@ -342,8 +342,8 @@ mod tests {
             DataType::Any
         }
 
-        fn output_type(&self) -> DataType {
-            DataType::Any
+        fn outputs(&self) -> Vec<Output> {
+            vec![Output::default(DataType::Any)]
         }
 
         fn transform_type(&self) -> &'static str {

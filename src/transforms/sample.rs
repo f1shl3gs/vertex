@@ -2,9 +2,7 @@ use event::Event;
 use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 
-use crate::config::{
-    DataType, GenerateConfig, GlobalOptions, TransformConfig, TransformDescription,
-};
+use crate::config::{DataType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformDescription};
 use crate::transforms::{FunctionTransform, Transform};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -34,8 +32,8 @@ impl TransformConfig for SampleConfig {
         DataType::Log
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn transform_type(&self) -> &'static str {

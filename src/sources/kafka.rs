@@ -233,7 +233,7 @@ impl SourceConfig for KafkaSourceConfig {
             self.partition_key.clone(),
             self.offset_key.clone(),
             self.headers_key.clone(),
-            ctx.out,
+            ctx.output,
             ctx.shutdown,
         )))
     }

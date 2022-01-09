@@ -82,7 +82,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             self.honor_labels,
             self.interval,
             ctx.shutdown,
-            ctx.out,
+            ctx.output,
         ))
     }
 

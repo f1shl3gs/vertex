@@ -25,6 +25,7 @@ impl Display for Protocol {
 pub enum Resource {
     Port(SocketAddr, Protocol),
     UnixSocket(String),
+    SystemFd(usize),
 }
 
 impl Resource {
@@ -84,6 +85,7 @@ impl Display for Resource {
         match self {
             Resource::Port(addr, proto) => write!(f, "{} {}", proto, addr),
             Resource::UnixSocket(path) => write!(f, "{}", path),
+            Resource::SystemFd(index) => write!(f, "systemd {}th socket", index + 1),
         }
     }
 }

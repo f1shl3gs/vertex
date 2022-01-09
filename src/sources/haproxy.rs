@@ -92,7 +92,7 @@ impl SourceConfig for HaproxyConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-        let mut output = ctx.out.sink_map_err(|err| {
+        let mut output = ctx.output.sink_map_err(|err| {
             error!(
                 message = "Error sending haproxy metrics",
                 %err

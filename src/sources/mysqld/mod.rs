@@ -169,7 +169,7 @@ impl SourceConfig for MysqldConfig {
             .unwrap()
             .take_until(ctx.shutdown);
         let options = self.connect_options();
-        let mut output = ctx.out;
+        let mut output = ctx.output;
         let instance = format!("{}:{}", self.host, self.port);
 
         Ok(Box::pin(async move {

@@ -72,7 +72,7 @@ impl SourceConfig for ConsulSourceConfig {
             .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
-        let mut output = ctx.out.sink_map_err(|err| {
+        let mut output = ctx.output.sink_map_err(|err| {
             error!(
                 message = "Error sending consul metrics",
                 %err

@@ -20,8 +20,11 @@ mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;
 
-use event::Event;
+use crate::config::Output;
+use crate::topology::{Fanout, ControlChannel};
+use event::{ByteSizeOf, Event};
 use futures::Stream;
+use std::collections::HashMap;
 use std::pin::Pin;
 
 /// Transforms that are simple, and don't require attention to coordination.
@@ -43,8 +46,171 @@ dyn_clone::clone_trait_object!(FunctionTransform);
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
+        task: Pin<Box<dyn Stream<Item=Event> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item=Event> + Send>>;
+}
+
+/// Broader than the simple [`FunctionTransform`], this trait allows transforms
+/// to write to multiple outputs. Those outputs must be known in advanced and
+/// returned via `TransformConfig::outputs`. Attempting to send to any output
+/// not registered in advance is considered a bug and will cause a panic.
+pub trait SyncTransform: Send + dyn_clone::DynClone + Sync {
+    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf);
+}
+
+dyn_clone::clone_trait_object!(SyncTransform);
+
+impl<T> SyncTransform for T
+    where
+        T: FunctionTransform,
+{
+    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf) {
+        FunctionTransform::transform(
+            self,
+            output.primary_buffer.as_mut().expect("no default output"),
+            event,
+        );
+    }
+}
+
+pub struct TransformOutputs {
+    outputs_spec: Vec<Output>,
+    primary_output: Option<Fanout>,
+    named_outputs: HashMap<String, Fanout>,
+}
+
+impl TransformOutputs {
+    pub fn new(outputs: Vec<Output>) -> (Self, HashMap<Option<String>, ControlChannel>) {
+        let outputs_spec = outputs.clone();
+        let mut primary_output = None;
+        let mut named_outputs = HashMap::new();
+        let mut controls = HashMap::new();
+
+        for output in outputs {
+            let (fanout, control) = Fanout::new();
+            match output.port {
+                None => {
+                    primary_output = Some(fanout);
+                    controls.insert(None, control);
+                }
+                Some(name) => {
+                    named_outputs.insert(name.clone(), fanout);
+                    controls.insert(Some(name.clone()), control);
+                }
+            }
+        }
+
+        (
+            Self {
+                outputs_spec,
+                primary_output,
+                named_outputs,
+            },
+            controls,
+        )
+    }
+
+    pub fn new_buf_with_capacity(&self, capacity: usize) -> TransformOutputsBuf {}
+}
+
+pub struct TransformOutputsBuf {
+    primary_buffer: Option<Vec<Event>>,
+    named_buffers: HashMap<String, Vec<Event>>,
+}
+
+impl TransformOutputsBuf {
+    pub fn new_with_capacity(outpus: Vec<Output>, capacity: usize) -> Self {
+        let mut primary_buffer = None;
+        let mut named_buffers = HashMap::new();
+
+        for output in outpus {
+            match output.port {
+                Some(name) => {
+                    named_buffers.insert(name.clone(), vec![]);
+                }
+                None => {
+                    primary_buffer = Some(Vec::with_capacity(capacity));
+                }
+            }
+        }
+
+        Self {
+            primary_buffer,
+            named_buffers,
+        }
+    }
+
+    pub fn push(&mut self, event: Event) {
+        self.primary_buffer
+            .as_mut()
+            .expect("no default output")
+            .push(event);
+    }
+
+    pub fn push_named(&mut self, name: &str, event: Event) {
+        self.named_buffers
+            .get_mut(name)
+            .expect("unknown output")
+            .push(event);
+    }
+
+    pub fn append(&mut self, slice: &mut Vec<Event>) {
+        self.primary_buffer
+            .as_mut()
+            .expect("no default output")
+            .append(slice);
+    }
+
+    pub fn append_named(&mut self, name: &str, slice: &mut Vec<Event>) {
+        self.named_buffers
+            .get_mut(name)
+            .expect("unknown output")
+            .append(slice);
+    }
+
+    pub fn drain(&mut self) -> impl Iterator<Item=Event> + '_ {
+        self.primary_buffer
+            .as_mut()
+            .expect("no default output")
+            .drain(..)
+    }
+
+    pub fn drain_named(&mut self, name: &str) -> impl Iterator<Item=Event> + '_ {
+        self.named_buffers
+            .get_mut(name)
+            .expect("unknown output")
+            .drain(..)
+    }
+
+    pub fn take_primary(&mut self) -> Vec<Event> {
+        std::mem::take(self.primary_buffer.as_mut().expect("no default output"))
+    }
+
+    pub fn take_all_nmaed(&mut self) -> HashMap<String, Vec<Event>> {
+        std::mem::take(&mut self.named_buffers)
+    }
+
+    pub fn len(&self) -> usize {
+        self.primary_buffer.as_ref().map_or(0, Vec::len) +
+            self.named_buffers
+                .iter()
+                .map(|(_, buf)| buf.len())
+                .sum::<usize>()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.len() == 0
+    }
+}
+
+impl ByteSizeOf for TransformOutputsBuf {
+    fn allocated_bytes(&self) -> usize {
+        self.primary_buffer.size_of() +
+            self.named_buffers
+                .iter()
+                .map(|(_, buf)| buf.size_of())
+                .sum::<usize>()
+    }
 }
 
 /// Transforms come in two variants. Functions or tasks.
@@ -52,6 +218,7 @@ pub trait TaskTransform: Send {
 /// task transforms act as a coordination or barrier point.
 pub enum Transform {
     Function(Box<dyn FunctionTransform>),
+    Synchronous(Box<dyn SyncTransform>),
     Task(Box<dyn TaskTransform>),
 }
 

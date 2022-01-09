@@ -1,4 +1,4 @@
-use crate::config::{DataType, GlobalOptions, TransformConfig};
+use crate::config::{DataType, GlobalOptions, Output, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
@@ -39,8 +39,8 @@ impl TransformConfig for CardinalityConfig {
         DataType::Metric
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn transform_type(&self) -> &'static str {

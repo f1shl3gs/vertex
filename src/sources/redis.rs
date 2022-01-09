@@ -270,7 +270,7 @@ impl SourceConfig for RedisSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let src = RedisSource::from(self);
 
-        Ok(Box::pin(src.run(ctx.out, ctx.shutdown)))
+        Ok(Box::pin(src.run(ctx.output, ctx.shutdown)))
     }
 
     fn output_type(&self) -> DataType {

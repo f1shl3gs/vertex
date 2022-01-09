@@ -11,6 +11,7 @@ mod resource;
 mod uri;
 mod validation;
 
+use std::collections::{HashMap, HashSet};
 // re-export
 #[cfg(test)]
 pub use component::test_generate_config;
@@ -85,6 +86,32 @@ pub enum DataType {
     Trace,
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct Output {
+    pub port: Option<String>,
+    pub typ: DataType,
+}
+
+impl Output {
+    /// Create a default `Output` of the given data type
+    ///
+    /// A default output is one without a port identifier (i.e. not a named output)
+    /// and the default output consumers will receive if they declare the component
+    /// itself as an input
+    pub fn default(typ: DataType) -> Self {
+        Self { port: None, typ }
+    }
+}
+
+impl<T: Into<String>> From<(T, DataType)> for Output {
+    fn from((name, typ): (T, DataType)) -> Self {
+        Self {
+            port: Some(name.into()),
+            typ,
+        }
+    }
+}
+
 #[derive(Deserialize, Serialize, Debug)]
 pub enum ExpandType {
     Parallel,
@@ -126,14 +153,50 @@ impl SourceOuter {
     pub fn resources(&self) -> Vec<Resource> {
         self.inner.resources()
     }
+
+    pub fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(self.inner.output_type())]
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct TransformOuter {
-    pub inputs: Vec<String>,
+pub struct TransformOuter<T> {
+    pub inputs: Vec<T>,
 
     #[serde(flatten)]
     pub inner: Box<dyn TransformConfig>,
+}
+
+impl<T> TransformOuter<T> {
+    fn map_inputs<U>(self, f: impl Fn(&T) -> U) -> TransformOuter<U> {
+        let inputs = self.inputs.iter().map(f).collect();
+        self.with_inputs(inputs)
+    }
+
+    fn with_inputs<U>(self, inputs: Vec<U>) -> TransformOuter<U> {
+        TransformOuter {
+            inputs,
+            inner: self.inner,
+        }
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct TransformContext {
+    // This is optional because currently there are a lot of places we use `TransformContext`
+    // that may not have the relevant data available (e.g. tests). In the furture it'd be
+    // nice to make it required somehow.
+    pub key: Option<String>,
+    pub globals: GlobalOptions,
+}
+
+impl TransformContext {
+    pub fn new_with_globals(globals: GlobalOptions) -> Self {
+        Self {
+            globals,
+            ..Default::default()
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -198,13 +261,13 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
 pub struct Config {
     pub global: GlobalOptions,
 
-    pub sources: IndexMap<String, SourceOuter>,
+    pub sources: HashMap<String, SourceOuter>,
 
-    pub transforms: IndexMap<String, TransformOuter>,
+    pub transforms: HashMap<String, TransformOuter>,
 
-    pub sinks: IndexMap<String, SinkOuter>,
+    pub sinks: HashMap<String, SinkOuter>,
 
-    pub extensions: IndexMap<String, Box<dyn ExtensionConfig>>,
+    pub extensions: HashMap<String, Box<dyn ExtensionConfig>>,
 
     #[serde(rename = "health_checks")]
     pub health_checks: HealthcheckOptions,
@@ -215,7 +278,7 @@ pub struct Config {
 
 pub struct SourceContext {
     pub name: String,
-    pub out: Pipeline,
+    pub output: Pipeline,
     pub shutdown: ShutdownSignal,
     pub global: GlobalOptions,
     pub proxy: ProxyConfig,
@@ -226,7 +289,7 @@ impl SourceContext {
     pub fn new_test(output: Pipeline) -> Self {
         Self {
             name: "default".to_string(),
-            out: output,
+            output,
             shutdown: ShutdownSignal::noop(),
             global: Default::default(),
             proxy: Default::default(),
@@ -252,13 +315,25 @@ pub trait SourceConfig: core::fmt::Debug + Send + Sync {
 #[async_trait]
 #[typetag::serde(tag = "type")]
 pub trait TransformConfig: core::fmt::Debug + Send + Sync + dyn_clone::DynClone {
-    async fn build(&self, globals: &GlobalOptions) -> crate::Result<transforms::Transform>;
+    async fn build(&self, ctx: &TransformContext) -> crate::Result<transforms::Transform>;
 
     fn input_type(&self) -> DataType;
 
-    fn output_type(&self) -> DataType;
+    fn outputs(&self) -> Vec<Output>;
 
     fn transform_type(&self) -> &'static str;
+
+    /// Returns true if the transform is able to be run across multiple tasks simultaneously
+    /// with no concerns around statfulness, ordering, etc
+    fn enable_concurrency(&self) -> bool {
+        false
+    }
+
+    /// Allows to detect if a transform can be embedded in another transform.
+    /// It's used by the pipelines transform for now
+    fn nestable(&self, _parents: &HashSet<&'static str>) -> bool {
+        true
+    }
 
     /// Allows a transform configuration to expand itself into multiple "child"
     /// transformations to replace it. this allows a transform to act as a
@@ -269,6 +344,8 @@ pub trait TransformConfig: core::fmt::Debug + Send + Sync + dyn_clone::DynClone 
         Ok(None)
     }
 }
+
+dyn_clone::clone_trait_object!(TransformConfig);
 
 #[derive(Debug, Clone)]
 pub struct SinkContext {

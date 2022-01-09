@@ -1,6 +1,7 @@
 mod acker;
 mod disk;
 mod usage;
+mod topology;
 
 // re-export
 pub use acker::{Ackable, Acker};

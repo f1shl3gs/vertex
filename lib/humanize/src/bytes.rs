@@ -137,7 +137,10 @@ pub fn deserialize_bytes_option<'de, D: Deserializer<'de>>(
     let s: Option<String> = Option::deserialize(deserializer)?;
     match s {
         None => Ok(None),
-        Some(s) => parse_bytes(&s).map_err(serde::de::Error::custom),
+        Some(s) => {
+            let size = parse_bytes(&s).map_err(serde::de::Error::custom)?;
+            Ok(Some(size))
+        }
     }
 }
 

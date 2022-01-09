@@ -51,7 +51,7 @@ impl SourceConfig for MemcachedConfig {
             .unwrap()
             .take_until(ctx.shutdown);
 
-        let mut output = ctx.out.sink_map_err(|err| {
+        let mut output = ctx.output.sink_map_err(|err| {
             error!(
                 message = "Error sending memcached metrics",
                 %err

@@ -350,6 +350,10 @@ impl Metric {
         }
     }
 
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        &mut self.metadata
+    }
+
     #[inline]
     pub fn name(&self) -> &str {
         &self.name

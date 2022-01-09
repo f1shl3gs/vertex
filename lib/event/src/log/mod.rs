@@ -176,6 +176,10 @@ impl LogRecord {
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
     }
+
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        &mut self.metadata
+    }
 }
 
 #[cfg(test)]

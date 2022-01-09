@@ -11,7 +11,9 @@ mod value;
 
 // re-export
 pub use buffer::{DecodeBytes, EncodeBytes};
-pub use finalization::*;
+pub use finalization::{
+    BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
+};
 pub use log::LogRecord;
 pub use metric::*;
 pub use value::Value;
@@ -19,7 +21,7 @@ pub use value::Value;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use crate::finalization::{BatchNotifier, EventFinalizer};
+use crate::metadata::EventMetadata;
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
 
@@ -157,6 +159,13 @@ impl Event {
         match self {
             Event::Log(l) => l,
             _ => panic!("Failed type coercion, {:?} is not a log", self),
+        }
+    }
+
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        match self {
+            Self::Metric(metric) => metric.metadata_mut(),
+            Self::Log(log) => log.metadata_mut(),
         }
     }
 

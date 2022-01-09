@@ -49,7 +49,7 @@ impl SourceConfig for InternalMetricsConfig {
             recorder,
             self.interval.to_std().unwrap(),
             ctx.shutdown,
-            ctx.out,
+            ctx.output,
         )))
     }
 

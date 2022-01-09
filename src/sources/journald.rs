@@ -91,7 +91,7 @@ impl SourceConfig for JournaldConfig {
             includes,
             excludes,
             batch_size: self.batch_size.unwrap_or(DEFAULT_BATCH_SIZE),
-            output: ctx.out,
+            output: ctx.output,
         };
 
         let start: StartJournalctlFn = Box::new(move |cursor| {

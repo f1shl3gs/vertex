@@ -15,14 +15,16 @@ use crate::{
 };
 
 use super::BuiltBuffer;
-use crate::config::{ExtensionContext, ProxyConfig};
+use crate::config::{ExtensionContext, Output, ProxyConfig, SourceOuter, TransformContext};
+use crate::topology::fanout;
 use crate::topology::fanout::ControlChannel;
+use crate::transforms::{SyncTransform, TransformOutputs};
 use event::Event;
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use internal::{EventsReceived, EventsSent};
 use stream_cancel::{Trigger, Tripwire};
 
-const DEFAULT_CHANNEL_BUFFER_SIZE: usize = 1024;
+const DEFAULT_BUFFER_SIZE: usize = 1024;
 
 pub struct Pieces {
     pub inputs: HashMap<String, (buffers::BufferInputCloner<Event>, Vec<String>)>,
@@ -32,6 +34,44 @@ pub struct Pieces {
     pub health_checks: HashMap<String, Task>,
     pub shutdown_coordinator: ShutdownCoordinator,
     pub detach_triggers: HashMap<String, Trigger>,
+}
+
+#[derive(Debug, Eq, Hash, PartialEq)]
+struct OutputId {
+    component: String,
+    port: Option<String>,
+}
+
+#[derive(Clone, Debug)]
+struct TransformNode {
+    key: String,
+    typetag: &'static str,
+    inputs: Vec<OutputId>,
+    input_type: DataType,
+    outputs: Vec<Output>,
+    concurrency: bool,
+}
+
+fn build_transform(
+    transform: Transform,
+    node: TransformNode,
+    input_rx: BufferReceiver<Event>,
+) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
+    match transform {
+        Transform::Function(f) => build_sync_transform(Box::new(t), node, input_rx),
+        Transform::Synchronous(s) => build_sync_transform(s, node, input_rx),
+        Transform::Task(t) => {
+            build_task_transform(t, input_rx, node.input_type, node.typetag, &node.key)
+        }
+    }
+}
+
+fn build_sync_transform(
+    t: Box<dyn SyncTransform>,
+    node: TransformNode,
+    input_rx: BufferReceiver<Event>,
+) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
+    let (outputs, controls) = TransformOutputs::new(node.outputs);
 }
 
 /// Builds only the new pieces, and doesn't check their topology.
@@ -93,29 +133,62 @@ pub async fn build_pieces(
         .iter()
         .filter(|(name, _)| diff.sources.contains_new(name))
     {
-        let (tx, rx) = futures::channel::mpsc::channel::<Event>(DEFAULT_CHANNEL_BUFFER_SIZE);
-        let pipeline = Pipeline::from_sender(tx, vec![]);
         let typetag = source.inner.source_type();
+        let mut builder = Pipeline::builder().with_buffer(DEFAULT_BUFFER_SIZE);
+        let mut pumps = Vec::new();
+        let mut controls = HashMap::new();
+        for output in source.outputs() {
+            let mut rx = builder.add_output(output.clone());
+            let (mut fanout, control) = Fanout::new();
+            let pump = async move {
+                while let Some(event) = rx.next().await {
+                    fanout.feed(event).await?
+                }
+
+                fanout.flush().await?;
+                Ok(TaskOutput::Source)
+            };
+
+            pumps.push(pump);
+            controls.insert(
+                OutputId {
+                    component: name.clone(),
+                    port: output.port,
+                },
+                control,
+            );
+        }
+
+        let pump = async move {
+            let mut handles = Vec::new();
+            for pump in pumps {
+                handles.push(tokio::spawn(pump));
+            }
+
+            for handle in handles {
+                handle.await.expect("join error")?;
+            }
+
+            Ok(TaskOutput::Source)
+        };
+        let pump = Task::new(name.clone(), typetag, pump);
+        let pipeline = builder.build();
+
         let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_source(name);
         let ctx = SourceContext {
             name: name.clone(),
-            out: pipeline,
+            output: pipeline,
             shutdown: shutdown_signal,
             global: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, &source.proxy),
         };
-
-        let src = match source.inner.build(ctx).await {
-            Ok(s) => s,
+        let server = match source.inner.build(ctx).await {
+            Ok(server) => server,
             Err(err) => {
-                errors.push(format!("Source {}: {}", name, err));
+                errors.push(format!("Source \"{}\": {}", name, err));
                 continue;
             }
         };
-
-        let (output, control) = Fanout::new();
-        let pump = rx.map(Ok).forward(output).map_ok(|_| TaskOutput::Source);
-        let pump = Task::new(name, typetag, pump);
 
         // The force_shutdown_tripwire is a Future that when it resolves means
         // that this source has failed to shut down gracefully within its
@@ -124,19 +197,29 @@ pub async fn build_pieces(
         // force_shutdown_tripwire. That means that if the force_shutdown_tripwire
         // resolves while the server Task is still running the Task will simply
         // be dropped on the floor.
-        let task = async {
-            match futures::future::try_select(src, force_shutdown_tripwire.unit_error().boxed())
-                .await
-            {
-                Ok(_) => Ok(TaskOutput::Source),
-                Err(_) => Err(()),
+        let server = async {
+            let result = tokio::select! {
+                biased;
+
+                _ = force_shutdown_tripwire => {
+                    Ok(())
+                },
+                result = server => result
+            };
+
+            match result {
+                Ok(()) => {
+                    debug!(message = "Finished");
+                    Ok(TaskOutput::Source)
+                }
+                Err(err) => Err(()),
             }
         };
-        let task = Task::new(name, typetag, task);
 
-        outputs.insert(name.clone(), control);
+        let server = Task::new(name.clone(), typetag, server);
+        outputs.extend(controls);
         tasks.insert(name.clone(), pump);
-        source_tasks.insert(name.clone(), task);
+        source_tasks.insert(name.clone(), server);
     }
 
     // Build transforms
@@ -145,6 +228,13 @@ pub async fn build_pieces(
         .iter()
         .filter(|(name, _)| diff.transforms.contains_new(name))
     {
+        let ctx = TransformContext {
+            key: Some(name.clone()),
+            globals: config.global.clone(),
+        };
+
+        let node = TransformNode {};
+
         let trans_inputs = &transform.inputs;
         let typetag = transform.inner.transform_type();
         let input_type = transform.inner.input_type();

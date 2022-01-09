@@ -39,7 +39,7 @@ impl SourceConfig for SelfStatConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let ss = SelfStat::from(self);
 
-        Ok(Box::pin(ss.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(ss.run(ctx.shutdown, ctx.output)))
     }
 
     fn output_type(&self) -> DataType {

@@ -35,7 +35,7 @@ impl SourceConfig for InternalLogsConfig {
             .to_owned();
         let pid_key = self.pid_key.as_deref().unwrap_or("pid").to_owned();
 
-        Ok(Box::pin(run(host_key, pid_key, ctx.out, ctx.shutdown)))
+        Ok(Box::pin(run(host_key, pid_key, ctx.output, ctx.shutdown)))
     }
 
     fn output_type(&self) -> DataType {
