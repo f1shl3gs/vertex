@@ -13,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::io::AsyncReadExt;
 
+use crate::config::Output;
 use crate::{
     config::{DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription},
     sources::Source,
@@ -92,8 +93,8 @@ impl SourceConfig for KmsgConfig {
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {

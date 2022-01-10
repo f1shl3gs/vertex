@@ -21,9 +21,20 @@ mod util;
 
 use async_trait::async_trait;
 use event::Event;
+use futures::future::BoxFuture;
 use futures::stream::BoxStream;
 use futures::{Stream, StreamExt};
+use snafu::Snafu;
 use std::fmt::{Debug, Formatter};
+
+pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
+
+/// Common healthcheck errors
+#[derive(Debug, Snafu)]
+pub enum HealthcheckError {
+    #[snafu(display("Unexpected status: {}", status))]
+    UnexpectedStatus { status: ::http::StatusCode },
+}
 
 #[async_trait]
 pub trait StreamSink {

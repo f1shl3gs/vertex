@@ -24,7 +24,7 @@ use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
 use tokio_util::codec::{Decoder, FramedRead};
 
-use crate::config::{DataType, SourceConfig, SourceContext};
+use crate::config::{DataType, Output, SourceConfig, SourceContext};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
@@ -63,7 +63,7 @@ pub struct JournaldConfig {
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.global.make_subdir(&ctx.name).map_err(|err| {
+        let data_dir = ctx.globals.make_subdir(&ctx.key.id()).map_err(|err| {
             warn!("create sub dir failed {:?}", err);
             err
         })?;
@@ -112,8 +112,8 @@ impl SourceConfig for JournaldConfig {
         )))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {

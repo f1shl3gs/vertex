@@ -2,7 +2,10 @@ use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashSet};
 
-use crate::config::{DataType, ExpandType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformDescription};
+use crate::config::{
+    DataType, ExpandType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformContext,
+    TransformDescription,
+};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
 
@@ -73,7 +76,7 @@ fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>
 #[async_trait]
 #[typetag::serde(name = "add_tags")]
 impl TransformConfig for AddTagsConfig {
-    async fn build(&self, _: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(AddTags::new(
             self.tags.clone(),
             self.overwrite,
@@ -87,7 +90,7 @@ impl TransformConfig for AddTagsConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![
             Output::default(DataType::Metric),
-            Output::default(DataType::Log)
+            Output::default(DataType::Log),
         ]
     }
 

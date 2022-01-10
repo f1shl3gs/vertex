@@ -14,6 +14,7 @@ mod grok_parser;
 mod jsmn_parser;
 mod json_parser;
 mod logfmt_parser;
+pub mod noop;
 mod rename_fields;
 mod rename_tags;
 mod route;
@@ -21,9 +22,11 @@ mod route;
 mod sample;
 
 use crate::config::Output;
-use crate::topology::{Fanout, ControlChannel};
-use event::{ByteSizeOf, Event};
+use crate::topology::{ControlChannel, Fanout};
+use event::Event;
 use futures::Stream;
+use futures_util::SinkExt;
+use shared::ByteSizeOf;
 use std::collections::HashMap;
 use std::pin::Pin;
 
@@ -46,8 +49,8 @@ dyn_clone::clone_trait_object!(FunctionTransform);
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item=Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item=Event> + Send>>;
+        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
 }
 
 /// Broader than the simple [`FunctionTransform`], this trait allows transforms
@@ -61,12 +64,23 @@ pub trait SyncTransform: Send + dyn_clone::DynClone + Sync {
 dyn_clone::clone_trait_object!(SyncTransform);
 
 impl<T> SyncTransform for T
-    where
-        T: FunctionTransform,
+where
+    T: FunctionTransform,
 {
     fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf) {
         FunctionTransform::transform(
             self,
+            output.primary_buffer.as_mut().expect("no default output"),
+            event,
+        );
+    }
+}
+
+// TODO: this is a bit ugly when we already have the above impl
+impl SyncTransform for Box<dyn FunctionTransform> {
+    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf) {
+        FunctionTransform::transform(
+            self.as_mut(),
             output.primary_buffer.as_mut().expect("no default output"),
             event,
         );
@@ -110,7 +124,33 @@ impl TransformOutputs {
         )
     }
 
-    pub fn new_buf_with_capacity(&self, capacity: usize) -> TransformOutputsBuf {}
+    pub fn new_buf_with_capacity(&self, capacity: usize) -> TransformOutputsBuf {
+        TransformOutputsBuf::new_with_capacity(self.outputs_spec.clone(), capacity)
+    }
+
+    pub async fn send(&mut self, buf: &mut TransformOutputsBuf) {
+        if let Some(primary) = self.primary_output.as_mut() {
+            send_inner(
+                buf.primary_buffer.as_mut().expect("mismatched outputs"),
+                primary,
+            )
+            .await;
+        }
+
+        for (key, buf) in &mut buf.named_buffers {
+            send_inner(
+                buf,
+                self.named_outputs.get_mut(key).expect("unknown output"),
+            )
+            .await;
+        }
+    }
+}
+
+async fn send_inner(buf: &mut Vec<Event>, output: &mut Fanout) {
+    for event in buf.drain(..) {
+        output.feed(event).await.expect("unit error")
+    }
 }
 
 pub struct TransformOutputsBuf {
@@ -168,14 +208,14 @@ impl TransformOutputsBuf {
             .append(slice);
     }
 
-    pub fn drain(&mut self) -> impl Iterator<Item=Event> + '_ {
+    pub fn drain(&mut self) -> impl Iterator<Item = Event> + '_ {
         self.primary_buffer
             .as_mut()
             .expect("no default output")
             .drain(..)
     }
 
-    pub fn drain_named(&mut self, name: &str) -> impl Iterator<Item=Event> + '_ {
+    pub fn drain_named(&mut self, name: &str) -> impl Iterator<Item = Event> + '_ {
         self.named_buffers
             .get_mut(name)
             .expect("unknown output")
@@ -191,8 +231,9 @@ impl TransformOutputsBuf {
     }
 
     pub fn len(&self) -> usize {
-        self.primary_buffer.as_ref().map_or(0, Vec::len) +
-            self.named_buffers
+        self.primary_buffer.as_ref().map_or(0, Vec::len)
+            + self
+                .named_buffers
                 .iter()
                 .map(|(_, buf)| buf.len())
                 .sum::<usize>()
@@ -205,8 +246,9 @@ impl TransformOutputsBuf {
 
 impl ByteSizeOf for TransformOutputsBuf {
     fn allocated_bytes(&self) -> usize {
-        self.primary_buffer.size_of() +
-            self.named_buffers
+        self.primary_buffer.size_of()
+            + self
+                .named_buffers
                 .iter()
                 .map(|(_, buf)| buf.size_of())
                 .sum::<usize>()

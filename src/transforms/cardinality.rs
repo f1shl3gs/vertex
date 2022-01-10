@@ -1,4 +1,4 @@
-use crate::config::{DataType, GlobalOptions, Output, TransformConfig};
+use crate::config::{DataType, GlobalOptions, Output, TransformConfig, TransformContext};
 use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
@@ -31,7 +31,7 @@ struct CardinalityConfig {
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for CardinalityConfig {
-    async fn build(&self, _globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Cardinality::new(self.limit)))
     }
 

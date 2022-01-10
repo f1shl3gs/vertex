@@ -1,3 +1,5 @@
-mod builder;
-mod test_utils;
-mod channel;
+pub mod builder;
+pub mod channel;
+
+#[cfg(test)]
+pub mod test_util;

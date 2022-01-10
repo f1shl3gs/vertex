@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
 use std::ops::Sub;
+use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
@@ -19,7 +20,7 @@ use snafu::{ResultExt, Snafu};
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::{Auth, HttpClient};
@@ -34,7 +35,7 @@ struct NginxStubConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
     tls: Option<TlsConfig>,
     auth: Option<Auth>,
 }
@@ -71,14 +72,8 @@ impl SourceConfig for NginxStubConfig {
             )?);
         }
 
-        let mut out = ctx.output.sink_map_err(|err| {
-            error!(
-                message = "Error sending nginx stub metrics",
-                %err
-            );
-        });
-
-        let interval = tokio::time::interval(self.interval.to_std().unwrap());
+        let mut output = ctx.output;
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
 
         Ok(Box::pin(async move {
@@ -88,18 +83,24 @@ impl SourceConfig for NginxStubConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                out.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending nginx stub metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

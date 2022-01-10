@@ -230,7 +230,8 @@ impl OctetCountingDecoder {
         if let Some(&first_byte) = src.get(0) {
             if (49..=57).contains(&first_byte) {
                 // First character is non zero number so we can assume that
-                // octet count framing is used
+                // octet count framing is used.
+                trace!(message = "Octet counting encoded event detected");
                 self.octet_decoding = Some(State::NotDiscarding);
             }
         }

@@ -2,7 +2,6 @@
 
 mod async_read;
 mod batch;
-mod buffers;
 mod codecs;
 mod common;
 pub mod config;
@@ -26,6 +25,7 @@ pub mod trace;
 pub mod transforms;
 mod trigger;
 pub mod udp;
+pub mod utilization;
 
 pub use signal::SignalHandler;
 

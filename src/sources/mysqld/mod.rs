@@ -15,10 +15,12 @@ use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySqlPool};
+use std::time::Duration;
 
 use crate::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use crate::sources::Source;
 use crate::tls::TlsConfig;
@@ -92,7 +94,7 @@ struct MysqldConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 fn default_host() -> String {
@@ -308,24 +310,29 @@ impl SourceConfig for MysqldConfig {
                 };
 
                 let now = Utc::now();
-                let mut stream = futures::stream::iter(metrics)
-                    .map(|mut m| {
-                        m.timestamp = Some(now);
-                        m.tags.insert("instance".to_string(), instance.to_string());
+                let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                    m.timestamp = Some(now);
+                    m.tags.insert("instance".to_string(), instance.to_string());
 
-                        Event::Metric(m)
-                    })
-                    .map(Ok);
+                    Event::Metric(m)
+                });
 
-                output.send_all(&mut stream).await;
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending mysqld metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

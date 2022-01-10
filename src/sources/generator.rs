@@ -1,9 +1,11 @@
 use async_trait::async_trait;
 use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 use crate::config::{
-    deserialize_duration, serialize_duration, DataType, SourceConfig, SourceContext,
+    default_interval, deserialize_duration, serialize_duration, DataType, Output, SourceConfig,
+    SourceContext,
 };
 use crate::sources::Source;
 
@@ -19,16 +21,12 @@ pub struct GeneratorConfig {
         serialize_with = "serialize_duration"
     )]
     #[serde(default = "default_interval")]
-    pub interval: chrono::Duration,
-}
-
-fn default_interval() -> chrono::Duration {
-    chrono::Duration::seconds(15)
+    pub interval: Duration,
 }
 
 impl GeneratorConfig {
     async fn inner(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
-        let interval = tokio::time::interval(self.interval.to_std().unwrap());
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while let Some(_) = ticker.next().await {
@@ -51,8 +49,8 @@ impl SourceConfig for GeneratorConfig {
         Ok(Box::pin(self.inner(ctx.shutdown, ctx.output)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -73,6 +71,6 @@ mod tests {
         )
         .unwrap();
 
-        assert_eq!(cf.interval, chrono::Duration::seconds(14))
+        assert_eq!(cf.interval, Duration::from_secs(14))
     }
 }

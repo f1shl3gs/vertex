@@ -373,14 +373,14 @@ impl Ledger {
     pub fn track_write(&self, record_size: u64) {
         self.increment_total_buffer_size(record_size);
         self.usage_handle
-            .increment_received_event_count_and_byte_size(1, record_size);
+            .increment_received_event_count_and_byte_size(1, record_size as usize);
     }
 
     /// Tracks the statistics of multiple successful reads.
     pub fn track_reads(&self, record_len: u64, total_record_size: u64) {
         self.decrement_total_buffer_size(total_record_size);
         self.usage_handle
-            .increment_sent_event_count_and_byte_size(record_len, total_record_size);
+            .increment_sent_event_count_and_byte_size(record_len, total_record_size as usize);
     }
 
     /// Marks the writer as finished.
@@ -506,7 +506,7 @@ impl Ledger {
         self.usage_handle
             .increment_received_event_count_and_byte_size(
                 initial_buffer_events,
-                initial_buffer_size,
+                initial_buffer_size as usize,
             );
     }
 

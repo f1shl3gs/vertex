@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
 use futures::{SinkExt, StreamExt};
@@ -11,7 +11,7 @@ use tokio::net::TcpStream;
 
 use crate::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::sources::Source;
 
@@ -26,7 +26,7 @@ struct MemcachedConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 impl GenerateConfig for MemcachedConfig {
@@ -50,13 +50,7 @@ impl SourceConfig for MemcachedConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-
-        let mut output = ctx.output.sink_map_err(|err| {
-            error!(
-                message = "Error sending memcached metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         let endpoints = self.endpoints.clone();
         Ok(Box::pin(async move {
@@ -67,18 +61,24 @@ impl SourceConfig for MemcachedConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending memcached metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

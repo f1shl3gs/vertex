@@ -9,7 +9,7 @@ use std::time::Duration;
 use serde::{Deserialize, Serialize};
 
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
-use crate::config::{deserialize_std_duration_option, serialize_std_duration_option};
+use crate::config::{deserialize_duration_option, serialize_duration_option};
 
 pub const CONCURRENCY_DEFAULT: Concurrency = Concurrency::None;
 pub const RATE_LIMIT_DURATION_DEFAULT: Duration = Duration::from_secs(1);
@@ -26,25 +26,25 @@ pub struct RequestConfig {
     #[serde(skip_serializing_if = "concurrency_is_none")]
     pub concurrency: Concurrency,
     #[serde(
-        deserialize_with = "deserialize_std_duration_option",
-        serialize_with = "serialize_std_duration_option"
+        deserialize_with = "deserialize_duration_option",
+        serialize_with = "serialize_duration_option"
     )]
     pub timeout: Option<Duration>,
     #[serde(
-        deserialize_with = "deserialize_std_duration_option",
-        serialize_with = "serialize_std_duration_option"
+        deserialize_with = "deserialize_duration_option",
+        serialize_with = "serialize_duration_option"
     )]
     pub rate_limit_duration: Option<Duration>,
     pub rate_limit_num: Option<u64>,
     pub retry_attempts: Option<usize>,
     #[serde(
-        deserialize_with = "deserialize_std_duration_option",
-        serialize_with = "serialize_std_duration_option"
+        deserialize_with = "deserialize_duration_option",
+        serialize_with = "serialize_duration_option"
     )]
     pub retry_max_duration: Option<Duration>,
     #[serde(
-        deserialize_with = "deserialize_std_duration_option",
-        serialize_with = "serialize_std_duration_option"
+        deserialize_with = "deserialize_duration_option",
+        serialize_with = "serialize_duration_option"
     )]
     pub retry_initial_backoff: Option<Duration>,
     #[serde(default)]

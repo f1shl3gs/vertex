@@ -26,6 +26,7 @@ pub enum Resource {
     Port(SocketAddr, Protocol),
     UnixSocket(String),
     SystemFd(usize),
+    DiskBuffer(String),
 }
 
 impl Resource {
@@ -86,6 +87,7 @@ impl Display for Resource {
             Resource::Port(addr, proto) => write!(f, "{} {}", proto, addr),
             Resource::UnixSocket(path) => write!(f, "{}", path),
             Resource::SystemFd(index) => write!(f, "systemd {}th socket", index + 1),
+            Resource::DiskBuffer(name) => write!(f, "disk buffer {:?}", name),
         }
     }
 }

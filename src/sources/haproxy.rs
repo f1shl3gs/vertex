@@ -1,4 +1,5 @@
 use std::io::BufRead;
+use std::time::Duration;
 
 use bytes::Buf;
 use event::{tags, Event, Metric};
@@ -10,7 +11,7 @@ use snafu::Snafu;
 
 use crate::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
@@ -45,7 +46,7 @@ struct HaproxyConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     endpoints: Vec<String>,
 
@@ -92,12 +93,7 @@ impl SourceConfig for HaproxyConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-        let mut output = ctx.output.sink_map_err(|err| {
-            error!(
-                message = "Error sending haproxy metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
@@ -109,18 +105,24 @@ impl SourceConfig for HaproxyConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending haproxy metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

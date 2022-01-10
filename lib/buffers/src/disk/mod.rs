@@ -1,4 +1,4 @@
-//! # Disk Buffer v2: Sequential File I/O Boogaloo.
+//! # Disk Buffer: Sequential File I/O Boogaloo.
 //!
 //! This disk buffer implementation is a replace from the LevelDB-based disk buffer implementation,
 //! referred internal to `disk` or `disk_v1`.  It focuses on avoiding external C/C++ dependencies,
@@ -104,7 +104,7 @@ mod writer;
 #[cfg(test)]
 mod tests;
 
-use self::{acknowledgements::create_disk_v2_acker, ledger::Ledger};
+use self::{acknowledgements::create_disk_acker, ledger::Ledger};
 pub use self::{
     common::{DiskBufferConfig, DiskBufferConfigBuilder},
     ledger::LedgerLoadCreateError,
@@ -165,7 +165,7 @@ where
 
         ledger.synchronize_buffer_usage();
 
-        let acker = create_disk_v2_acker(Arc::clone(&ledger));
+        let acker = create_disk_acker(Arc::clone(&ledger));
 
         Ok((writer, reader, acker, ledger))
     }

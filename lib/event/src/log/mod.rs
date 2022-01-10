@@ -11,12 +11,13 @@ use std::fmt::Debug;
 use bytes::Bytes;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 use tracing::field::Field;
 
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{EventFinalizer, EventFinalizers, Finalizable, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {

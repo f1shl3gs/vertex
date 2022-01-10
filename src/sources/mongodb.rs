@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
 use crate::sources::Source;
@@ -15,7 +16,7 @@ struct MongodbConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 inventory::submit! {
@@ -39,8 +40,8 @@ impl SourceConfig for MongodbConfig {
         todo!()
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

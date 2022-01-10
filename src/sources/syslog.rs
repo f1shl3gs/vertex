@@ -2,8 +2,8 @@ use crate::codecs;
 use crate::codecs::framing::bytes::BytesDecoder;
 use crate::codecs::framing::octet_counting::OctetCountingDecoder;
 use crate::codecs::{Decoder, SyslogDeserializer};
-use crate::config::SourceDescription;
 use crate::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
+use crate::config::{Output, SourceDescription};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::utils::{build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource};
@@ -158,8 +158,8 @@ impl SourceConfig for SyslogConfig {
         }
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -284,23 +284,37 @@ fn handle_events(
     // TODO: handle the byte_size
 
     for event in events {
-        let log = event.as_mut_log();
-
-        log.insert_field(log_schema().source_type_key(), Bytes::from("syslog"));
-
-        if let Some(default_host) = &default_host {
-            log.insert_field("source_ip", default_host.clone());
-        }
-
-        let parsed_hostname = log.get_field("hostname").map(|h| h.as_bytes());
-        if let Some(parsed_host) = parsed_hostname.or(default_host) {
-            log.insert_field(host_key, parsed_host);
-        }
-
-        let timestamp = log
-            .get_field("timestamp")
-            .and_then(|ts| ts.as_timestamp().cloned())
-            .unwrap_or_else(Utc::now);
-        log.insert_field(log_schema().timestamp_key(), timestamp);
+        enrich_syslog_event(event, host_key, default_host.clone());
     }
+}
+
+
+fn enrich_syslog_event(
+    event: &mut Event,
+    host_key: &str,
+    default_host: Option<Bytes>,
+) {
+    let log = event.as_mut_log();
+
+    log.insert_field(log_schema().source_type_key(), "syslog");
+
+    if let Some(default_host) = &default_host {
+        log.insert_field("source_ip", default_host.clone());
+    }
+
+    let parsed_hostname = log.get_field("hostname").map(|hostname| hostname.as_bytes());
+    if let Some(parsed_host) = parsed_hostname.or(default_host) {
+        log.insert_field(host_key, parsed_host);
+    }
+
+    let timestamp = log
+        .get_field("timestamp")
+        .and_then(|timestamp| timestamp.as_timestamp().cloned())
+        .unwrap_or_else(Utc::now);
+    log.insert_field(log_schema().timestamp_key(), timestamp);
+
+    trace!(
+        message = "Processing one event.",
+        event = ?event
+    );
 }

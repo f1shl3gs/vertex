@@ -1,13 +1,16 @@
-use std::fmt::{Display, Formatter};
+// Port from Go's std time package
 
-const NANOSECOND: i64 = 1;
-const MICROSECOND: i64 = 1000 * NANOSECOND;
-const MILLISECOND: i64 = 1000 * MICROSECOND;
-const SECOND: i64 = 1000 * MILLISECOND;
-const MINUTE: i64 = 60 * SECOND;
-const HOUR: i64 = 60 * MINUTE;
-const DAY: i64 = 24 * HOUR;
-const WEEK: i64 = 7 * DAY;
+use std::fmt::{Display, Formatter};
+use std::time::Duration;
+
+const NANOSECOND: u64 = 1;
+const MICROSECOND: u64 = 1000 * NANOSECOND;
+const MILLISECOND: u64 = 1000 * MICROSECOND;
+const SECOND: u64 = 1000 * MILLISECOND;
+const MINUTE: u64 = 60 * SECOND;
+const HOUR: u64 = 60 * MINUTE;
+const DAY: u64 = 24 * HOUR;
+const WEEK: u64 = 7 * DAY;
 
 #[derive(Eq, PartialEq, Debug, Copy, Clone)]
 pub enum ParseDurationError {
@@ -24,18 +27,18 @@ impl Display for ParseDurationError {
 }
 
 /// leading_int consumes the leading [0-9]* from s
-fn leading_int(s: &[u8]) -> Result<(i64, &[u8]), ParseDurationError> {
+fn leading_int(s: &[u8]) -> Result<(u64, &[u8]), ParseDurationError> {
     let mut consumed = 0;
     let o = s
         .iter()
         .take_while(|c| **c >= b'0' && **c <= b'9')
-        .try_fold(0i64, |x, &c| {
+        .try_fold(0u64, |x, &c| {
             consumed += 1;
 
-            if x > i64::MAX / 10 {
+            if x > u64::MAX / 10 {
                 None
             } else {
-                Some(10 * x + c as i64 - b'0' as i64)
+                Some(10 * x + c as u64 - b'0' as u64)
             }
         });
 
@@ -86,8 +89,9 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
 /// A duration string is a possibly signed sequence of decimal numbers,
 /// each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m".
 /// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
-pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError> {
-    let mut d = 0;
+pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
+    // [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
+    let mut d = 0u64;
     let mut neg = false;
     let mut s = text.as_bytes();
 
@@ -100,9 +104,13 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         }
     }
 
+    if neg {
+        return Err(ParseDurationError::InvalidDuration);
+    }
+
     // Special case: if all that is left is "0", this is zero
     if s.len() == 1 && s[0] == b'0' {
-        return Ok(chrono::Duration::seconds(0));
+        return Ok(Duration::from_secs(0));
     }
 
     if s.is_empty() {
@@ -177,7 +185,7 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
             return Err(ParseDurationError::UnknownUnit);
         }
 
-        if v > i64::MAX / unit {
+        if v > u64::MAX / unit {
             return Err(ParseDurationError::InvalidDuration);
         }
 
@@ -185,40 +193,28 @@ pub fn parse_duration(text: &str) -> Result<chrono::Duration, ParseDurationError
         if f > 0 {
             // float64 is needed to be nanosecond accurate for fractions of hours.
             // v >= 0 && (f * unit / scale) <= 3.6e+12 (ns/h, h is the largest unit)
-            v += (f as f64 * (unit as f64 / scale)) as i64;
-            if v < 0 {
-                return Err(ParseDurationError::InvalidDuration);
-            }
+            v = v
+                .checked_add((f as f64 * (unit as f64 / scale)) as u64)
+                .ok_or(ParseDurationError::InvalidDuration)?;
         }
 
         d += v;
-        if d < 0 {
-            return Err(ParseDurationError::InvalidDuration);
-        }
     }
 
-    if neg {
-        d = -d
-    }
-
-    Ok(chrono::Duration::nanoseconds(d))
+    Ok(Duration::from_nanos(d))
 }
 
 /// to_string returns a string representing the duration in the form "72h3m0.5s".
 /// Leading zero units are omitted. As a special case, durations less than one
 /// second format use a smaller unit (milli-, micro-, or nanoseconds) to ensure
 /// that the leading digit is non-zero. The zero duration formats as 0s
-pub fn duration_to_string(d: &chrono::Duration) -> String {
+pub fn duration_to_string(d: &Duration) -> String {
     // Largest time is 2540400h10m10.000000000s
     let mut w = 32;
     let mut buf = [0u8; 32];
 
-    let d = d.num_nanoseconds().unwrap();
+    let d = d.as_nanos() as u64;
     let mut u = d as u64;
-    let neg = d < 0;
-    /*    if neg {
-        u = -u;
-    }*/
 
     if u < SECOND as u64 {
         // Special case: if duration is smaller thant a second,
@@ -282,11 +278,6 @@ pub fn duration_to_string(d: &chrono::Duration) -> String {
         }
     }
 
-    if neg {
-        w -= 1;
-        buf[w] = b'-';
-    }
-
     return String::from_utf8_lossy(&buf[w..]).to_string();
 }
 
@@ -338,7 +329,14 @@ fn fmt_int(buf: &mut [u8], mut v: u64) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::Duration;
+    use std::time::Duration;
+
+    #[test]
+    fn test_leading_int() {
+        let (x, remain) = leading_int("12h".as_bytes()).unwrap();
+        assert_eq!(x, 12u64);
+        assert_eq!(String::from_utf8_lossy(remain), "h".to_string());
+    }
 
     #[test]
     fn test_leading_int_overflow() {
@@ -348,7 +346,7 @@ mod tests {
 
     struct ParseDurationTest {
         input: &'static str,
-        want: i64,
+        want: u64,
     }
 
     #[test]
@@ -372,18 +370,12 @@ mod tests {
                 want: 1478 * SECOND,
             },
             // sign
-            ParseDurationTest {
-                input: "-5s",
-                want: -5 * SECOND,
-            },
+            // ParseDurationTest { input: "-5s", want: -5 * SECOND },
             ParseDurationTest {
                 input: "+5s",
                 want: 5 * SECOND,
             },
-            ParseDurationTest {
-                input: "-0",
-                want: 0,
-            },
+            // ParseDurationTest { input: "-0", want: 0 },
             ParseDurationTest {
                 input: "+0",
                 want: 0,
@@ -475,10 +467,7 @@ mod tests {
                 input: "10.5s4m",
                 want: 4 * MINUTE + 10 * SECOND + 500 * MILLISECOND,
             },
-            ParseDurationTest {
-                input: "-2m3.4s",
-                want: -(2 * MINUTE + 3 * SECOND + 400 * MILLISECOND),
-            },
+            // ParseDurationTest { input: "-2m3.4s", want: -(2 * MINUTE + 3 * SECOND + 400 * MILLISECOND) },
             ParseDurationTest {
                 input: "1h2m3s4ms5us6ns",
                 want: 1 * HOUR
@@ -527,24 +516,24 @@ mod tests {
 
         for test in tests {
             let d = parse_duration(&test.input).unwrap();
-            assert_eq!(d, Duration::nanoseconds(test.want), "input: {}", test.input);
+            assert_eq!(d, Duration::from_nanos(test.want), "input: {}", test.input);
         }
     }
 
     #[test]
     fn parse_us() {
         let input = "12µs"; // U+00B5
-        let d = parse_duration(input).unwrap();
+        let _d = parse_duration(input).unwrap();
 
         let input = "12μs"; // U+03BC
-        let d = parse_duration(input).unwrap();
+        let _d = parse_duration(input).unwrap();
     }
 
     #[test]
     fn test_leading_fraction() {
         let (f, scale, r) = leading_fraction("6s".as_bytes());
         assert_eq!(6, f);
-        assert_eq!(10.0 as f64, scale);
+        assert_eq!(10.0, scale);
         assert_eq!(r, "s".as_bytes());
     }
 
@@ -561,12 +550,12 @@ mod tests {
             ("4m5.001s", 4 * MINUTE + 5001 * MILLISECOND),
             ("5h6m7.001s", 5 * HOUR + 6 * MINUTE + 7001 * MILLISECOND),
             ("8m0.000000001s", 8 * MINUTE + 1 * NANOSECOND),
-            ("2562047h47m16.854775807s", i64::MAX),
-            ("-2562047h47m16.854775808s", i64::MIN),
+            // ("2562047h47m16.854775807s", u64::MAX),
+            // ("-2562047h47m16.854775808s", u64::MIN),
         ];
 
         for (want, input) in tests {
-            let duration = chrono::Duration::nanoseconds(input);
+            let duration = Duration::from_nanos(input);
             assert_eq!(duration_to_string(&duration), want)
         }
     }

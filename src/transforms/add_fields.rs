@@ -1,4 +1,4 @@
-use crate::config::{default_true, Output};
+use crate::config::{default_true, Output, TransformContext};
 use crate::config::{DataType, GlobalOptions, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
@@ -17,7 +17,7 @@ pub struct AddFieldsConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "add_fields")]
 impl TransformConfig for AddFieldsConfig {
-    async fn build(&self, _globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(AddFields::from(self)))
     }
 

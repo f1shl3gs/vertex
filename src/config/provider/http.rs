@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use std::time::Duration;
 
 use async_stream::stream;
 use bytes::Buf;
@@ -34,7 +35,7 @@ pub struct HttpConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
     tls: Option<TlsOptions>,
     proxy: ProxyConfig,
     #[serde(default)]
@@ -46,7 +47,7 @@ impl Default for HttpConfig {
         Self {
             url: None,
             request: RequestConfig::default(),
-            interval: chrono::Duration::seconds(30),
+            interval: Duration::from_secs(30),
             tls: None,
             proxy: Default::default(),
             persist: None,
@@ -64,7 +65,7 @@ impl ProviderConfig for HttpConfig {
             .ok_or_else(|| vec!["URL is required for http provider".to_owned()])?;
 
         let tls_options = self.tls.take();
-        let poll_interval = self.interval.to_std().unwrap();
+        let poll_interval = self.interval;
         let request = self.request.clone();
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
         let attrs = build_attributes();

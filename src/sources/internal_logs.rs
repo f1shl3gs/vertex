@@ -1,11 +1,14 @@
+use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
 use futures::{SinkExt, StreamExt};
+use futures_util::stream;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tokio::sync::broadcast::error::RecvError;
+use tokio_stream::wrappers::errors::BroadcastStreamRecvError;
 
-use crate::config::{DataType, SourceConfig, SourceContext, SourceDescription};
+use crate::config::{DataType, Output, SourceConfig, SourceContext, SourceDescription};
 use crate::impl_generate_config_from_default;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
@@ -38,8 +41,8 @@ impl SourceConfig for InternalLogsConfig {
         Ok(Box::pin(run(host_key, pid_key, ctx.output, ctx.shutdown)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -50,49 +53,45 @@ impl SourceConfig for InternalLogsConfig {
 async fn run(
     host_key: String,
     pid_key: String,
-    output: Pipeline,
+    mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let mut output = output.sink_map_err(|err| {
-        error!(
-            message = "Error sending logs",
-            %err
-        )
-    });
     let subscription = crate::trace::subscribe();
-    let mut rx = subscription.receiver;
-
     let hostname = crate::hostname();
     let pid = std::process::id();
 
-    output
-        .send_all(
-            &mut futures::stream::iter(subscription.buffer).map(|mut log| {
+    // chain the logs emitted before the source started first
+    let mut rx = stream::iter(subscription.buffer)
+        .map(Ok)
+        .chain(tokio_stream::wrappers::BroadcastStream::new(
+            subscription.receiver,
+        ))
+        .take_until(shutdown);
+
+    // Note: This loop, or anything called within it, MUST NOT generate any
+    // logs that don't break the loop, as that could cause an infinite loop
+    // since it receives all such logs
+    while let Some(res) = rx.next().await {
+        match res {
+            Ok(mut log) => {
                 if let Ok(hostname) = &hostname {
                     log.insert_field(host_key.clone(), hostname.to_owned());
                 }
 
                 log.insert_field(pid_key.clone(), pid);
-                log.try_insert_field(log_schema().source_type_key(), "internal_logs");
-                log.try_insert_field(log_schema().timestamp_key(), Utc::now());
+                log.insert_field(log_schema().source_type_key(), "internal_log");
+                log.insert_field(log_schema().timestamp_key(), Utc::now());
+                if let Err(err) = output.send(Event::from(log)).await {
+                    error!(
+                        message = "Error sending log",
+                        %err
+                    );
 
-                Ok(log.into())
-            }),
-        )
-        .await?;
-
-    // Note: This loop, or anything called within it, MUST NOT generate any logs that don't
-    // break the loop, as that could cause an infinite loop since it receives all such logs.
-    loop {
-        tokio::select! {
-            receive = rx.recv() => {
-                match receive {
-                    Ok(event) => output.send(Event::from(event)).await?,
-                    Err(RecvError::Lagged(_)) => (),
-                    Err(RecvError::Closed) => break
+                    return Err(());
                 }
             }
-            _ = &mut shutdown => break
+
+            Err(BroadcastStreamRecvError::Lagged(_)) => (),
         }
     }
 
@@ -102,6 +101,7 @@ async fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::pipeline::ReceiverStream;
     use event::Value;
     use futures::channel::mpsc;
     use std::time::Duration;
@@ -157,7 +157,7 @@ mod tests {
         }
     }
 
-    async fn start_source() -> mpsc::Receiver<Event> {
+    async fn start_source() -> ReceiverStream<Event> {
         let (tx, rx) = Pipeline::new_test();
         let source = InternalLogsConfig::default()
             .build(SourceContext::new_test(tx))

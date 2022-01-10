@@ -1,7 +1,6 @@
 use crate::config::{
-    default_std_interval, deserialize_std_duration, serialize_std_duration,
-    ticker_from_std_duration, DataType, GenerateConfig, SourceConfig, SourceContext,
-    SourceDescription,
+    default_std_interval, deserialize_duration, serialize_duration, ticker_from_std_duration,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::sources::Source;
 use event::{tags, Event, Metric};
@@ -20,8 +19,8 @@ struct LibvirtSourceConfig {
     sock: String,
     #[serde(default = "default_std_interval")]
     #[serde(
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     interval: Duration,
 }
@@ -46,9 +45,7 @@ impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let mut ticker = ticker_from_std_duration(self.interval).take_until(ctx.shutdown);
         let sock = self.sock.clone();
-        let mut output = ctx.output.sink_map_err(|err| {
-            warn!(message = "Error sending libvirt metrics", ?err);
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while let Some(_ts) = ticker.next().await {
@@ -72,16 +69,24 @@ impl SourceConfig for LibvirtSourceConfig {
 
                 let timestamp = Some(chrono::Utc::now());
                 metrics.iter_mut().for_each(|m| m.timestamp = timestamp);
-                let _ = output
-                    .send_all(&mut futures::stream::iter(metrics).map(Event::Metric).map(Ok))
-                    .await;
+                if let Err(err) = output
+                    .send_all(&mut futures::stream::iter(metrics).map(Event::Metric))
+                    .await
+                {
+                    error!(
+                        message = "Error sending libvirt metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

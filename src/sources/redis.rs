@@ -1,4 +1,5 @@
 use std::collections::{BTreeMap, BTreeSet};
+use std::time::Duration;
 
 use event::{tags, Metric};
 use futures::{SinkExt, StreamExt};
@@ -8,7 +9,7 @@ use snafu::Snafu;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
 use crate::pipeline::Pipeline;
@@ -231,7 +232,7 @@ pub struct RedisSourceConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
@@ -273,8 +274,8 @@ impl SourceConfig for RedisSourceConfig {
         Ok(Box::pin(src.run(ctx.output, ctx.shutdown)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -300,7 +301,7 @@ impl RedisSource {
             password: None,
             url: conf.url.clone(),
             namespace: conf.namespace.clone(),
-            interval: conf.interval.to_std().unwrap(),
+            interval: conf.interval,
             client_name: None,
         }
     }
@@ -342,9 +343,17 @@ impl RedisSource {
                     m.name = format!("{}_{}", namespace, m.name)
                 }
 
-                Ok(m.into())
+                m.into()
             });
-            output.send_all(&mut stream).await;
+
+            if let Err(err) = output.send_all(&mut stream).await {
+                error!(
+                    message = "Error sending redis metrics",
+                    %err,
+                );
+
+                return Err(());
+            }
         }
 
         Ok(())

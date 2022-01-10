@@ -6,7 +6,8 @@ use std::{
     sync::Arc,
 };
 
-use core_common::internal_event::emit;
+use crate::encoding::DecodeBytes;
+use crate::Bufferable;
 use crc32fast::Hasher;
 use rkyv::{archived_root, AlignedVec};
 use snafu::{ResultExt, Snafu};
@@ -20,7 +21,6 @@ use super::{
     ledger::Ledger,
     record::{try_as_record_archive, Record, RecordStatus},
 };
-use crate::{encoding::DecodeBytes, internal_events::EventsCorrupted, Bufferable};
 
 #[derive(Debug)]
 struct DeletionMarker {
@@ -561,9 +561,8 @@ where
                 "detected {} missing records ({} -> {}), adjusting...",
                 corrupted_records, previous_id, record_id
             );
-            emit(&EventsCorrupted {
-                count: corrupted_records,
-            });
+
+            counter!("buffer_corrupted_events_total", corrupted_records);
 
             // We call this here, instead of incrementing `pending_acks` in the ledger
             // directly, or waiting for the next call to `next`, for two reasons:

@@ -83,7 +83,7 @@ pub fn build_unix_stream_source(
                             debug!(
                                 message = "Unix socket error",
                                 %err,
-                                path = &path
+                                path = ?path
                             );
 
                             if !err.can_continue() {
@@ -97,14 +97,14 @@ pub fn build_unix_stream_source(
 
                 info!("Finished sending");
 
-                let socket: &mut UnixStream = stream.get_mut();
+                let socket: &mut UnixStream = stream.get_mut().get_mut();
                 if let Err(err) = socket.shutdown().await {
                     error!(
                         message = "Failed shutting down socket",
                         %err
                     );
                 }
-            })
+            });
         }
 
         // Cleanup
@@ -117,7 +117,7 @@ pub fn build_unix_stream_source(
         if let Err(err) = remove_file(&path) {
             warn!(
                 message = "Failed to deleting unix socket file",
-                path = &path,
+                path = ?path,
                 %err
             );
         }

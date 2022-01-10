@@ -28,12 +28,12 @@ use super::{
     common::{create_crc32c_hasher, DiskBufferConfig},
     record::try_as_record_archive,
 };
+use crate::encoding::EncodeBytes;
 use crate::{
-    disk_v2::{
+    disk::{
         ledger::Ledger,
         record::{Record, RecordStatus},
     },
-    encoding::EncodeBytes,
     Bufferable,
 };
 

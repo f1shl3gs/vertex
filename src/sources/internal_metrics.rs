@@ -1,11 +1,13 @@
 use event::Event;
 use futures::{SinkExt, StreamExt};
+use futures_util::stream;
 use internal::metric::{get_global, init_global, InternalRecorder};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
+use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
-use crate::config::{default_interval, GenerateConfig, SourceDescription};
+use crate::config::{default_interval, GenerateConfig, Output, SourceDescription};
 
 use crate::{
     config::{deserialize_duration, serialize_duration, DataType, SourceConfig, SourceContext},
@@ -22,7 +24,7 @@ struct InternalMetricsConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 impl GenerateConfig for InternalMetricsConfig {
@@ -47,14 +49,14 @@ impl SourceConfig for InternalMetricsConfig {
 
         Ok(Box::pin(run(
             recorder,
-            self.interval.to_std().unwrap(),
+            self.interval,
             ctx.shutdown,
             ctx.output,
         )))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -74,14 +76,19 @@ async fn run(
     while let Some(_) = ticker.next().await {
         let timestamp = Some(chrono::Utc::now());
         let metrics = recorder.capture_metrics();
+        let events = metrics.map(|mut m| {
+            m.timestamp = timestamp;
+            Event::from(m)
+        });
 
-        let mut stream = futures::stream::iter(metrics)
-            .map(|mut m| {
-                m.timestamp = timestamp;
-                Event::Metric(m)
-            })
-            .map(Ok);
-        output.send_all(&mut stream).await;
+        if let Err(err) = output.send_all(&mut stream::iter(events)).await {
+            error!(
+                message = "Error sending internal metrics",
+                %err
+            );
+
+            return Err(());
+        }
     }
 
     Ok(())

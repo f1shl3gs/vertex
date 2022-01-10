@@ -1,17 +1,16 @@
 use std::{future::Future, io, path::Path, str::FromStr, sync::Arc};
 
+use crate::encoding::{DecodeBytes, EncodeBytes};
 use bytes::{Buf, BufMut};
-use core_common::byte_size_of::ByteSizeOf;
 use once_cell::sync::Lazy;
-use temp_dir::TempDir;
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
 use tracing_subscriber::{filter::LevelFilter, layer::SubscriberExt, Layer, Registry};
 
 use super::Ledger;
+use crate::ByteSizeOf;
 use crate::{
     buffer_usage_data::BufferUsageHandle,
-    disk_v2::{Buffer, DiskBufferConfig, Reader, Writer},
-    encoding::{DecodeBytes, EncodeBytes},
+    disk::{Buffer, DiskBufferConfig, Reader, Writer},
     Acker, Bufferable,
 };
 
@@ -289,7 +288,7 @@ where
     F: FnOnce(&Path) -> Fut,
     Fut: Future<Output = V>,
 {
-    let buf_dir = TempDir::new().expect("creating temp dir should never fail");
+    let buf_dir = tempdir::TempDir::new("disk_tests").expect("creating temp dir should never fail");
     f(buf_dir.path()).await
 }
 

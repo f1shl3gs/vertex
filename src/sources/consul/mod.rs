@@ -8,8 +8,8 @@ use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_std_interval, default_true, deserialize_std_duration, serialize_std_duration, DataType,
-    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    default_std_interval, default_true, deserialize_duration, serialize_duration, DataType,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::HttpClient;
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
@@ -26,8 +26,8 @@ struct ConsulSourceConfig {
 
     #[serde(
         default = "default_std_interval",
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     interval: std::time::Duration,
 
@@ -72,12 +72,7 @@ impl SourceConfig for ConsulSourceConfig {
             .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
-        let mut output = ctx.output.sink_map_err(|err| {
-            error!(
-                message = "Error sending consul metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
@@ -89,18 +84,24 @@ impl SourceConfig for ConsulSourceConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending consul metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -408,13 +409,13 @@ mod integration_tests {
         pub name: String,
         pub tcp: String,
         #[serde(
-            deserialize_with = "deserialize_std_duration",
-            serialize_with = "serialize_std_duration"
+            deserialize_with = "deserialize_duration",
+            serialize_with = "serialize_duration"
         )]
         pub timeout: std::time::Duration,
         #[serde(
-            deserialize_with = "deserialize_std_duration",
-            serialize_with = "serialize_std_duration"
+            deserialize_with = "deserialize_duration",
+            serialize_with = "serialize_duration"
         )]
         pub interval: std::time::Duration,
     }

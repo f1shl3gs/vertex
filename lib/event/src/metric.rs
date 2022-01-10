@@ -3,9 +3,10 @@ use std::fmt::{Display, Formatter, Write};
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 
 use crate::metadata::EventMetadata;
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable};
+use crate::{EventFinalizer, EventFinalizers, Finalizable};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {

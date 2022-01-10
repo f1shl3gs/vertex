@@ -1,5 +1,6 @@
 use crate::codecs::{ReadyFrames, StreamDecodingError};
 use crate::config::{Resource, SourceContext};
+use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings};
@@ -162,9 +163,6 @@ where
         max_connections: Option<u32>,
     ) -> crate::Result<crate::sources::Source> {
         let listenfd = ListenFd::from_env();
-        let output = ctx
-            .output
-            .sink_map_err(|err| error!(message = "Error sending event", %err));
 
         Ok(Box::pin(async move {
             let listener = match make_listener(addr, listenfd, &tls).await {
@@ -193,7 +191,7 @@ where
                     let shutdown_signal = ctx.shutdown.clone();
                     let tripwire = tripwire.clone();
                     let source = self.clone();
-                    let output = output.clone();
+                    let output = ctx.output.clone();
 
                     async move {
                         let socket = match conn {
@@ -252,7 +250,7 @@ async fn handle_stream<T>(
     source: T,
     mut tripwire: BoxFuture<'static, ()>,
     peer: IpAddr,
-    mut output: impl Sink<Event> + Send + 'static + Unpin,
+    mut output: Pipeline,
     acknowledgements: bool,
 ) where
     <<T as TcpSource>::Decoder as tokio_util::codec::Decoder>::Item: std::marker::Send,
@@ -322,7 +320,7 @@ async fn handle_stream<T>(
                             }
                         }
                         source.handle_events(&mut events, host.clone(), byte_size);
-                        match output.send_all(&mut stream::iter(events).map(Ok)).await {
+                        match output.send_all(&mut stream::iter(events)).await {
                             Ok(_) => {
                                 let ack = match receiver {
                                     None => TcpSourceAck::Ack,

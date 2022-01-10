@@ -3,7 +3,9 @@ mod component;
 mod diff;
 mod format;
 mod global;
+mod graph;
 mod helper;
+mod id;
 mod loading;
 mod provider;
 mod proxy;
@@ -11,7 +13,6 @@ mod resource;
 mod uri;
 mod validation;
 
-use std::collections::{HashMap, HashSet};
 // re-export
 #[cfg(test)]
 pub use component::test_generate_config;
@@ -19,12 +20,14 @@ pub use component::{ComponentDescription, ExampleError, GenerateConfig};
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use helper::*;
+pub use id::{ComponentKey, OutputId};
 pub use loading::load;
 pub use provider::ProviderDescription;
 pub use proxy::ProxyConfig;
 pub use uri::*;
 
 use async_trait::async_trait;
+use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
 use ::serde::{Deserialize, Serialize};
@@ -39,7 +42,8 @@ pub use builder::Builder;
 
 pub use crate::config::global::GlobalOptions;
 use crate::extensions::Extension;
-use buffers::Acker;
+use crate::transforms::noop::Noop;
+use buffers::{Acker, BufferType};
 use futures::future::BoxFuture;
 pub use helper::{
     deserialize_duration, deserialize_regex, serialize_duration, serialize_regex,
@@ -114,8 +118,16 @@ impl<T: Into<String>> From<(T, DataType)> for Output {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub enum ExpandType {
-    Parallel,
-    Serial,
+    /// Chain components together one after another. Components will be named according
+    /// to this order (e.g. component_name.0 and so on). If alias is set to true,
+    /// then a Noop transform will be added as the last component and given the raw
+    /// component_name identifier so that it can be used as an input for other components.
+    Parallel { aggregates: bool },
+    /// This ways of expanding will take all the components and chain then in order.
+    /// The first node will be renamed `component_name.0` and so on.
+    /// If `alias` is set to `true, then a `Noop` transform will be added as the
+    /// last component and named `component_name` so that it can be used as an input.
+    Serial { alias: bool },
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -139,7 +151,7 @@ pub struct SourceOuter {
     pub proxy: ProxyConfig,
 
     #[serde(flatten)]
-    pub inner: Box<dyn SourceConfig>,
+    pub(super) inner: Box<dyn SourceConfig>,
 }
 
 impl SourceOuter {
@@ -152,10 +164,6 @@ impl SourceOuter {
 
     pub fn resources(&self) -> Vec<Resource> {
         self.inner.resources()
-    }
-
-    pub fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(self.inner.output_type())]
     }
 }
 
@@ -181,12 +189,84 @@ impl<T> TransformOuter<T> {
     }
 }
 
+impl TransformOuter<String> {
+    pub(crate) fn expand(
+        mut self,
+        key: ComponentKey,
+        parent_types: &HashSet<&'static str>,
+        transforms: &mut IndexMap<ComponentKey, TransformOuter<String>>,
+        expansions: &mut IndexMap<ComponentKey, Vec<ComponentKey>>,
+    ) -> Result<(), String> {
+        if !self.inner.nestable(parent_types) {
+            return Err(format!(
+                "the component {} cannot be nested in {:?}",
+                self.inner.transform_type(),
+                parent_types
+            ));
+        }
+
+        let expansion = self
+            .inner
+            .expand()
+            .map_err(|err| format!("failed to expand transform '{}': {}", key, err))?;
+
+        let mut ptypes = parent_types.clone();
+        ptypes.insert(self.inner.transform_type());
+
+        if let Some((expanded, expand_type)) = expansion {
+            let mut children = Vec::new();
+            let mut inputs = self.inputs.clone();
+
+            for (name, content) in expanded {
+                let full_name = key.join(name);
+
+                let child = TransformOuter {
+                    inputs,
+                    inner: content,
+                };
+                child.expand(full_name.clone(), &ptypes, transforms, expansions)?;
+                children.push(full_name.clone());
+
+                inputs = match expand_type {
+                    ExpandType::Parallel { .. } => self.inputs.clone(),
+                    ExpandType::Serial { .. } => vec![full_name.to_string()],
+                }
+            }
+
+            if matches!(expand_type, ExpandType::Parallel { aggregates: true }) {
+                transforms.insert(
+                    key.clone(),
+                    TransformOuter {
+                        inputs: children.iter().map(ToString::to_string).collect(),
+                        inner: Box::new(Noop),
+                    },
+                );
+                children.push(key.clone());
+            } else if matches!(expand_type, ExpandType::Serial { alias: true }) {
+                transforms.insert(
+                    key.clone(),
+                    TransformOuter {
+                        inputs,
+                        inner: Box::new(Noop),
+                    },
+                );
+                children.push(key.clone());
+            }
+
+            expansions.insert(key.clone(), children);
+        } else {
+            transforms.insert(key, self);
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct TransformContext {
     // This is optional because currently there are a lot of places we use `TransformContext`
     // that may not have the relevant data available (e.g. tests). In the furture it'd be
     // nice to make it required somehow.
-    pub key: Option<String>,
+    pub key: Option<ComponentKey>,
     pub globals: GlobalOptions,
 }
 
@@ -200,14 +280,14 @@ impl TransformContext {
 }
 
 #[derive(Debug, Deserialize, Serialize)]
-pub struct SinkOuter {
-    pub inputs: Vec<String>,
+pub struct SinkOuter<T> {
+    pub inputs: Vec<T>,
 
     #[serde(flatten)]
     pub inner: Box<dyn SinkConfig>,
 
     #[serde(default)]
-    pub buffer: crate::buffers::BufferConfig,
+    pub buffer: buffers::BufferConfig,
 
     #[serde(default = "default_true")]
     pub health_check: bool,
@@ -217,8 +297,8 @@ pub struct SinkOuter {
     proxy: ProxyConfig,
 }
 
-impl SinkOuter {
-    pub fn new(inputs: Vec<String>, inner: Box<dyn SinkConfig>) -> Self {
+impl<T> SinkOuter<T> {
+    pub fn new(inputs: Vec<T>, inner: Box<dyn SinkConfig>) -> Self {
         Self {
             inner,
             inputs,
@@ -228,8 +308,17 @@ impl SinkOuter {
         }
     }
 
-    pub fn resources(&self, _id: &str) -> Vec<Resource> {
-        self.inner.resources()
+    pub fn resources(&self, id: &ComponentKey) -> Vec<Resource> {
+        let mut resources = self.inner.resources();
+
+        for stage in self.buffer.stages() {
+            match stage {
+                BufferType::Memory { .. } => {}
+                BufferType::Disk { .. } => resources.push(Resource::DiskBuffer(id.to_string())),
+            }
+        }
+
+        resources
     }
 
     pub fn health_check(&self) -> bool {
@@ -238,6 +327,21 @@ impl SinkOuter {
 
     pub const fn proxy(&self) -> &ProxyConfig {
         &self.proxy
+    }
+
+    fn map_inputs<U>(self, f: impl Fn(&T) -> U) -> SinkOuter<U> {
+        let inputs = self.inputs.iter().map(f).collect();
+        self.with_inputs(inputs)
+    }
+
+    fn with_inputs<U>(self, inputs: Vec<U>) -> SinkOuter<U> {
+        SinkOuter {
+            inputs,
+            inner: self.inner,
+            buffer: self.buffer,
+            health_check: self.health_check,
+            proxy: self.proxy,
+        }
     }
 }
 
@@ -261,26 +365,39 @@ impl<'a> From<&'a ConfigPath> for &'a PathBuf {
 pub struct Config {
     pub global: GlobalOptions,
 
-    pub sources: HashMap<String, SourceOuter>,
+    pub sources: IndexMap<ComponentKey, SourceOuter>,
 
-    pub transforms: HashMap<String, TransformOuter>,
+    pub transforms: IndexMap<ComponentKey, TransformOuter<OutputId>>,
 
-    pub sinks: HashMap<String, SinkOuter>,
+    pub sinks: IndexMap<ComponentKey, SinkOuter<OutputId>>,
 
-    pub extensions: HashMap<String, Box<dyn ExtensionConfig>>,
+    pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
     #[serde(rename = "health_checks")]
     pub health_checks: HealthcheckOptions,
 
     #[serde(skip_serializing, skip_deserializing)]
-    expansions: IndexMap<String, Vec<String>>,
+    expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,
+}
+
+impl Config {
+    pub fn builder() -> builder::Builder {
+        Default::default()
+    }
+
+    pub fn get_inputs(&self, id: &ComponentKey) -> Vec<ComponentKey> {
+        self.expansions
+            .get(id)
+            .cloned()
+            .unwrap_or_else(|| vec![id.clone()])
+    }
 }
 
 pub struct SourceContext {
-    pub name: String,
+    pub key: ComponentKey,
     pub output: Pipeline,
     pub shutdown: ShutdownSignal,
-    pub global: GlobalOptions,
+    pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
 }
 
@@ -288,12 +405,31 @@ impl SourceContext {
     #[cfg(test)]
     pub fn new_test(output: Pipeline) -> Self {
         Self {
-            name: "default".to_string(),
+            key: "default".into(),
             output,
             shutdown: ShutdownSignal::noop(),
-            global: Default::default(),
+            globals: Default::default(),
             proxy: Default::default(),
         }
+    }
+
+    pub fn new_shutdown(
+        key: &ComponentKey,
+        output: Pipeline,
+    ) -> (Self, crate::shutdown::ShutdownCoordinator) {
+        let mut shutdown = crate::shutdown::ShutdownCoordinator::default();
+        let (shutdown_signal, _) = shutdown.register_source(key);
+
+        (
+            Self {
+                key: key.clone(),
+                globals: GlobalOptions::default(),
+                shutdown: shutdown_signal,
+                output,
+                proxy: Default::default(),
+            },
+            shutdown,
+        )
     }
 }
 
@@ -302,7 +438,7 @@ impl SourceContext {
 pub trait SourceConfig: core::fmt::Debug + Send + Sync {
     async fn build(&self, ctx: SourceContext) -> crate::Result<sources::Source>;
 
-    fn output_type(&self) -> DataType;
+    fn outputs(&self) -> Vec<Output>;
 
     fn source_type(&self) -> &'static str;
 
@@ -368,7 +504,7 @@ impl SinkContext {
     pub fn new_test() -> Self {
         Self {
             globals: Default::default(),
-            acker: Acker::Null,
+            acker: Acker::passthrough(),
             proxy: Default::default(),
             health_check: true,
         }
@@ -423,6 +559,7 @@ inventory::collect!(ExtensionDescription);
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Duration;
 
     #[test]
     fn deserialize_config() {
@@ -509,12 +646,12 @@ sinks:
     struct WithDuration {
         #[serde(serialize_with = "serialize_duration")]
         #[serde(deserialize_with = "deserialize_duration")]
-        pub d: chrono::Duration,
+        pub d: Duration,
     }
 
     #[test]
     fn test_deserialize_duration() {
         let d: WithDuration = serde_yaml::from_str("d: 5m3s").unwrap();
-        assert_eq!(d.d, chrono::Duration::seconds(5 * 60 + 3));
+        assert_eq!(d.d, Duration::from_secs(5 * 60 + 3));
     }
 }

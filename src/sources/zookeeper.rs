@@ -1,6 +1,7 @@
 // mntr
 
 use std::collections::BTreeMap;
+use std::time::Duration;
 
 use event::{tags, Metric};
 use futures::{SinkExt, StreamExt};
@@ -11,7 +12,7 @@ use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
 use crate::pipeline::Pipeline;
@@ -29,7 +30,7 @@ struct ZookeeperConfig {
         serialize_with = "serialize_duration"
     )]
     #[serde(default = "default_interval")]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 impl GenerateConfig for ZookeeperConfig {
@@ -68,7 +69,7 @@ impl ZookeeperSource {
 
         let endpoint = self.endpoint.as_str();
         while let Some(_) = ticker.next().await {
-            match fetch_stats(endpoint).await {
+            let mut metrics = match fetch_stats(endpoint).await {
                 Ok((version, state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
                     metrics.extend_from_slice(&[
@@ -114,28 +115,38 @@ impl ZookeeperSource {
                         );
                     }
 
-                    let now = chrono::Utc::now();
-                    let mut stream = futures::stream::iter(metrics).map(|mut m| {
-                        m.timestamp = Some(now);
-                        Ok(m.into())
-                    });
-                    output.send_all(&mut stream).await;
+                    metrics
                 }
                 Err(err) => {
-                    output
-                        .send(
-                            Metric::gauge_with_tags(
-                                "zk_up",
-                                "",
-                                0,
-                                tags!(
-                                    "instance" => endpoint
-                                ),
-                            )
-                            .into(),
-                        )
-                        .await;
+                    warn!(
+                        message = "Fetch zookeeper stats failed",
+                        %err
+                    );
+
+                    vec![Metric::gauge_with_tags(
+                        "zk_up",
+                        "",
+                        0,
+                        tags!(
+                            "instance" => endpoint
+                        ),
+                    )]
                 }
+            };
+
+            let now = chrono::Utc::now();
+            let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                m.timestamp = Some(now);
+                m.into()
+            });
+
+            if let Err(err) = output.send_all(&mut stream).await {
+                error!(
+                    message = "Error sending zookeeper metrics",
+                    %err
+                );
+
+                return Err(());
             }
         }
 
@@ -149,14 +160,14 @@ impl SourceConfig for ZookeeperConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let source = ZookeeperSource::from(self);
         Ok(Box::pin(source.run(
-            self.interval.to_std().unwrap(),
+            self.interval,
             ctx.output,
             ctx.shutdown,
         )))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

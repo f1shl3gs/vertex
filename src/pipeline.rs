@@ -1,8 +1,9 @@
-use event::{Event, EventStatus};
+use event::{Event, EventStatus, Metric};
 use futures::channel::mpsc;
 use futures::Stream;
 use futures_util::{SinkExt, StreamExt};
 use pin_project::pin_project;
+use smallvec::IntoIter;
 use std::collections::HashMap;
 use std::fmt;
 use std::pin::Pin;
@@ -77,9 +78,10 @@ impl Builder {
             None => {
                 self.inner = Some(inner);
             }
-            Some(name) => self.named_inners.insert(name, inner),
+            Some(name) => {
+                self.named_inners.insert(name, inner);
+            }
         }
-
         rx
     }
 
