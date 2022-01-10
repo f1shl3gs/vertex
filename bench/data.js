@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641789425142,
+  "lastUpdate": 1641790319339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6835,6 +6835,41 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 27.139,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "c8d514801e81f6ceff3f2d25c3caadaf287990a7",
+          "message": "chore(deps): bump indexmap from 1.7.0 to 1.8.0",
+          "timestamp": "2022-01-07T05:53:53Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/103/commits/c8d514801e81f6ceff3f2d25c3caadaf287990a7"
+        },
+        "date": 1641790318369,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 71980000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1095900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.611,
             "unit": "ns/op"
           }
         ]
