@@ -188,7 +188,7 @@ async fn gather(
             );
 
             vec![]
-        },
+        }
     };
     let elapsed = start.elapsed().as_secs_f64();
     let up = if metrics.len() != 0 { 1 } else { 0 };

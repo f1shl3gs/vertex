@@ -51,4 +51,3 @@ fn to_string(cs: [libc::c_char; 65]) -> String {
 
     s
 }
-
