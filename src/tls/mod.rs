@@ -133,8 +133,8 @@ impl MaybeTlsStream<TcpStream> {
             Self::Tls(tls) => tls.get_ref(),
         };
 
-        if let Some(time_secs) = keepalive.time_secs {
-            let config = socket2::TcpKeepalive::new().with_time(Duration::from_secs(time_secs));
+        if let Some(timeout) = keepalive.timeout {
+            let config = socket2::TcpKeepalive::new().with_time(timeout);
 
             tcp::set_keepalive(stream, &config)?;
         }

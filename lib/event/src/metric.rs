@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
 use crate::metadata::EventMetadata;
-use crate::{EventFinalizer, EventFinalizers, Finalizable};
+use crate::{EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -156,6 +156,16 @@ impl Display for Metric {
             }
             _ => Ok(()),
         }
+    }
+}
+
+impl EventDataEq for Metric {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.value == other.value
+            && self.timestamp == other.timestamp
+            && self.tags == other.tags
+            && self.name == other.name
+            && self.description == other.description
     }
 }
 

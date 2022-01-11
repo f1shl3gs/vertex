@@ -217,8 +217,6 @@ where
         max_events: usize,
         when_full: WhenFull,
     ) -> (BufferSender<T>, BufferReceiver<T>) {
-        use crate::variant::MemoryBuffer;
-
         let noop_usage_handle = BufferUsageHandle::noop();
 
         let memory_buffer = Box::new(MemoryBuffer::new(max_events));

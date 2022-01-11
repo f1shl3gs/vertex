@@ -32,7 +32,7 @@ impl FramingConfig for OctetCountingDecoderConfig {
     }
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum State {
     NotDiscarding,
     Discarding(usize),
@@ -64,6 +64,7 @@ impl OctetCountingDecoder {
         }
     }
 
+    /// Decode a frame.
     fn octet_decode(
         &mut self,
         state: State,
@@ -72,19 +73,19 @@ impl OctetCountingDecoder {
         // Encoding scheme:
         //
         // len ' ' data
-        // |    |   | len number of bytes that contain syslog message
+        // |    |  | len number of bytes that contain syslog message
         // |    |
         // |    | Separating whitespace
         // |
         // | ASCII decimal number of unknown length
         let space_pos = src.iter().position(|&b| b == b' ');
 
-        // If we are discarding, descard to the next newline
+        // If we are discarding, discard to the next newline.
         let newline_pos = src.iter().position(|&b| b == b'\n');
 
         match (state, newline_pos, space_pos) {
             (State::Discarding(chars), _, _) if src.len() >= chars => {
-                // We have a certain number of chars to discard
+                // We have a certain number of chars to discard.
                 //
                 // There are enough chars in this frame to discard
                 src.advance(chars);
@@ -96,17 +97,17 @@ impl OctetCountingDecoder {
             }
 
             (State::Discarding(chars), _, _) => {
-                // We have a certain number of chars to discard
+                // We have a certain number of chars to discard.
                 //
-                // There aren't enough in this frame so we need to discard
-                // the entire frame and adjust the amount to discard accordingly
+                // There aren't enough in this frame so we need to discard the
+                // entire frame and adjust the amount to discard accordingly.
                 self.octet_decoding = Some(State::Discarding(src.len() - chars));
                 src.advance(src.len());
                 Ok(None)
             }
 
             (State::DiscardingToEol, Some(offset), _) => {
-                // When discarding we keep discarding to the next newline
+                // When discarding we keep discarding to the next newline.
                 src.advance(offset + 1);
                 self.octet_decoding = None;
                 Err(LinesCodecError::Io(io::Error::new(
@@ -116,7 +117,7 @@ impl OctetCountingDecoder {
             }
 
             (State::DiscardingToEol, None, _) => {
-                // There is no newline in this frame
+                // There is no newline in this frame.
                 //
                 // Since we don't have a set number of chars we want to discard,
                 // we need to discard to the next newline. Advance as far as we
@@ -126,11 +127,11 @@ impl OctetCountingDecoder {
             }
 
             (State::NotDiscarding, _, Some(space_pos)) if space_pos < self.other.max_length() => {
-                // Everything looks good
+                // Everything looks good.
                 //
                 // We aren't discarding, we have a space that is not beyond our
                 // maximum length. Attempt to parse the bytes as a number which
-                // will hopefully give us a sensible length for our message
+                // will hopefully give us a sensible length for our message.
                 let len: usize = match std::str::from_utf8(&src[..space_pos])
                     .map_err(|_| ())
                     .and_then(|num| num.parse().map_err(|_| ()))
@@ -145,7 +146,7 @@ impl OctetCountingDecoder {
                         self.octet_decoding = None;
                         return Err(LinesCodecError::Io(io::Error::new(
                             io::ErrorKind::InvalidData,
-                            "unable to decode message len as number",
+                            "Unable to decode message len as number",
                         )));
                     }
                 };
@@ -178,7 +179,7 @@ impl OctetCountingDecoder {
                         }
                     };
 
-                    // We have managed to read the entire message as valid UTF8
+                    // We have managed to read the entire message as valid UTF8!
                     src.advance(to);
                     self.octet_decoding = None;
                     Ok(Some(bytes))

@@ -172,7 +172,7 @@ transforms = [
 ]
 transforms-add_tags = []
 transforms-add_fields = []
-transforms-cardinality = []
+transforms-cardinality = ["bloom"]
 transforms-sample = ["seahash"]
 
 # sinks
@@ -288,7 +288,7 @@ jemalloc-ctl = { version = "0.3.3", optional = true }
 tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
-bytes = { version = "1.1.0", features = ["serde"] }
+bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.19" }
 futures-util = { version = "0.3.18" }
 async-trait = { version = "0.1.52" }
@@ -349,37 +349,37 @@ pprof = { version = "0.6.2", default-features = false, optional = true, features
 
 # External libs
 argh = { version = "0.1.7" }
+bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
-lazy_static = { version = "1.4.0" }
-memchr = { version = "2.4.1", optional = true, default-features = false}
-typetag = { version = "0.1.8" }
-indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
-regex = { version = "1.5.4" }
-hostname = { version = "0.3.1" }
-bloom = { version = "0.3.2" }
 exitcode = { version = "1.1.2" }
-url = { version = "2.2.2", features = ["serde"] }
-glob = { version = "0.3.0" }
-rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
-rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
-libc = { version = "0.2.112", optional = true }
-nom = { version = "7.1.0", default-features = false }
-snafu = { version = "0.6.10" }
-redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
-pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
-seahash = { version = "4.1.0", default-features = false, optional = true }
-inventory = { version = "0.1.11" }
-num_cpus = { version = "1.13.1" }
-once_cell = { version = "1.9", default-features = false }
-sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-uuid = { version = "0.8", default-features = false, features = ["v4"] }
-md5 = { version = "0.7" }
-mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
-rand_distr = { version = "0.4.2", default-features = false }
-smallvec = { version = "1.7.0", optional = true, features = ["union"] }
-syslog_loose = { version = "0.16.0", optional = true, default-features = false }
-twox-hash = { version = "1.6.2", default-features = false }
 flate2 = { version = "1.0.21" }
+glob = { version = "0.3.0" }
+hostname = { version = "0.3.1" }
+indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
+inventory = { version = "0.1.11" }
+lazy_static = { version = "1.4.0" }
+libc = { version = "0.2.112", optional = true }
+md5 = { version = "0.7" }
+memchr = { version = "2.4.1", optional = true, default-features = false}
+mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
+num_cpus = { version = "1.13.1" }
+nom = { version = "7.1.0", default-features = false }
+once_cell = { version = "1.9", default-features = false }
+pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 percent-encoding = { version = "2.1.0", default-features = false }
+rand_distr = { version = "0.4.2", default-features = false }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
+redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
+regex = { version = "1.5.4" }
+rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
+seahash = { version = "4.1.0", default-features = false, optional = true }
+smallvec = { version = "1.7.0", optional = true, features = ["union"] }
+snafu = { version = "0.6.10" }
+syslog_loose = { version = "0.16.0", optional = true, default-features = false }
+sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+twox-hash = { version = "1.6.2", default-features = false }
+typetag = { version = "0.1.8" }
+url = { version = "2.2.2", features = ["serde"] }
+uuid = { version = "0.8", default-features = false, features = ["v4"] }

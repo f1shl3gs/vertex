@@ -1,4 +1,3 @@
-use futures::task::AtomicWaker;
 use std::fmt::Formatter;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;

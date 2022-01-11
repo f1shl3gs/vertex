@@ -14,6 +14,7 @@ pub use finalization::{
     BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
 };
 pub use log::LogRecord;
+pub use macros::EventDataEq;
 pub use metric::*;
 pub use value::Value;
 
@@ -46,6 +47,16 @@ impl Finalizable for Event {
         match self {
             Event::Log(log) => log.take_finalizers(),
             Event::Metric(metric) => metric.take_finalizers(),
+        }
+    }
+}
+
+impl EventDataEq for Event {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        match (self, other) {
+            (Self::Log(a), Self::Log(b)) => a.event_data_eq(b),
+            (Self::Metric(a), Self::Metric(b)) => a.event_data_eq(b),
+            _ => false,
         }
     }
 }

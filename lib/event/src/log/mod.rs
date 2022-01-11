@@ -17,7 +17,7 @@ use tracing::field::Field;
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
-use crate::{EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -60,6 +60,12 @@ impl From<Bytes> for LogRecord {
         log.insert_field("timestamp", Utc::now());
 
         log
+    }
+}
+
+impl EventDataEq for LogRecord {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.fields == other.fields
     }
 }
 

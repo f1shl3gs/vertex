@@ -25,6 +25,7 @@ use tokio::time::sleep;
 use tokio_util::codec::{Decoder, FramedRead};
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[serde(untagged)]
 pub enum SocketListenAddr {
     SocketAddr(SocketAddr),
     #[serde(deserialize_with = "parse_systemd_fd")]
@@ -37,6 +38,12 @@ impl std::fmt::Display for SocketListenAddr {
             Self::SocketAddr(ref addr) => addr.fmt(f),
             Self::SystemFd(index) => write!(f, "system socket ${}", index),
         }
+    }
+}
+
+impl From<SocketAddr> for SocketListenAddr {
+    fn from(addr: SocketAddr) -> Self {
+        Self::SocketAddr(addr)
     }
 }
 
