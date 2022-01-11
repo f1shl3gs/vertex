@@ -28,6 +28,7 @@ members = [
     "lib/humanize",
     "lib/sysinfo",
     "lib/virt",
+    "lib/jsmn"
 ]
 
 [features]
@@ -236,6 +237,11 @@ name = "haproxy"
 harness = false
 path = "benches/haproxy.rs"
 
+[[bench]]
+name = "deserialize"
+harness = false
+path = "benches/deserialize.rs"
+
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
 nix = ">=0.22.2"
@@ -262,6 +268,7 @@ tower-test = { version = "0.4.0" }
 buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
 internal = { path = "lib/internal" }
+jsmn = { path = "lib/jsmn" }
 prometheus = { path = "lib/prometheus" }
 log_schema = { path = "lib/log_schema" }
 tracing-limit = { path = "lib/tracing-limit" }

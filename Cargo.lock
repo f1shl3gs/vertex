@@ -1678,6 +1678,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "jsmn"
+version = "0.1.0"
+
+[[package]]
 name = "krb5-src"
 version = "0.3.0+1.19.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4716,6 +4720,7 @@ dependencies = [
  "jemalloc-ctl",
  "jemalloc-sys",
  "jemallocator",
+ "jsmn",
  "lazy_static 1.4.0",
  "libc",
  "listenfd",
