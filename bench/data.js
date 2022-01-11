@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641875671646,
+  "lastUpdate": 1641875705999,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2721,6 +2721,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 75.236,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "b1914d8b878f0573b9a88e0f58c2d72b387096d2",
+          "message": "chore(deps): bump redis from 0.21.4 to 0.21.5",
+          "timestamp": "2022-01-10T14:58:12Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/104/commits/b1914d8b878f0573b9a88e0f58c2d72b387096d2"
+        },
+        "date": 1641875705104,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 44.621,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 75.625,
             "unit": "ns/op"
           }
         ]
