@@ -30,9 +30,7 @@ use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
 
-const DEFAULT_BUFFER_SIZE: usize = 1024;
-
-pub const SOURCE_SENDER_BUFFER_SIZE: usize = 1024;
+pub const DEFAULT_BUFFER_SIZE: usize = 1024;
 
 // TODO: this should be configured by user
 static TRANSFORM_CONCURRENCY_LIMIT: usize = 8;
@@ -319,7 +317,6 @@ pub async fn build_pieces(
     let mut source_tasks = HashMap::new();
     let mut shutdown_coordinator = ShutdownCoordinator::default();
     let mut health_checks = HashMap::new();
-    let health_checks_enabled = config.health_checks.enabled;
     let mut errors = vec![];
 
     // Build extensions
@@ -445,7 +442,7 @@ pub async fn build_pieces(
                     debug!(message = "Finished");
                     Ok(TaskOutput::Source)
                 }
-                Err(err) => Err(()),
+                Err(_err) => Err(()),
             }
         };
 

@@ -123,7 +123,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
 
         // The next character must be [0-9.]
         let c = s[0];
-        if !(c == b'.' || b'0' <= c && c <= b'9') {
+        if !(c == b'.' || c.is_ascii_digit()) {
             return Err(ParseDurationError::InvalidDuration);
         }
 
@@ -515,7 +515,7 @@ mod tests {
         ];
 
         for test in tests {
-            let d = parse_duration(&test.input).unwrap();
+            let d = parse_duration(test.input).unwrap();
             assert_eq!(d, Duration::from_nanos(test.want), "input: {}", test.input);
         }
     }

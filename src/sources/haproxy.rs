@@ -136,7 +136,7 @@ async fn scrap(
     auth: Option<Auth>,
     proxy: &ProxyConfig,
 ) -> Result<Vec<Metric>, Error> {
-    let client = HttpClient::new(tls, &proxy)?;
+    let client = HttpClient::new(tls, proxy)?;
 
     let mut req = http::Request::get(uri).body(hyper::Body::empty())?;
 
@@ -181,7 +181,14 @@ async fn gather(
     let start = std::time::Instant::now();
     let mut metrics = match scrap(uri, tls.clone(), auth.clone(), proxy).await {
         Ok(ms) => ms,
-        Err(err) => vec![],
+        Err(err) => {
+            warn!(
+                message = "Scraping metrics failed",
+                %err
+            );
+
+            vec![]
+        },
     };
     let elapsed = start.elapsed().as_secs_f64();
     let up = if metrics.len() != 0 { 1 } else { 0 };
@@ -213,15 +220,15 @@ pub enum ParseError {
 
 pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
-    let mut lines = reader.lines();
+    let lines = reader.lines();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = match line {
             Ok(line) => line,
             _ => continue,
         };
 
-        let parts = line.split(",").collect::<Vec<_>>();
+        let parts = line.split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
         }
@@ -253,11 +260,11 @@ pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
 }
 
 fn parse_info(reader: impl std::io::BufRead) -> Result<(String, String), Error> {
-    let mut lines = reader.lines();
+    let lines = reader.lines();
     let mut release_date = String::new();
     let mut version = String::new();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = match line {
             Ok(line) => line,
             Err(_) => continue,
@@ -324,6 +331,7 @@ macro_rules! try_push_metric {
 }
 
 fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(32);
 
     try_push_metric!(
@@ -591,6 +599,7 @@ fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
 }
 
 fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(23);
 
     try_push_metric!(
@@ -792,6 +801,7 @@ fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
 }
 
 fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(34);
 
     try_push_metric!(

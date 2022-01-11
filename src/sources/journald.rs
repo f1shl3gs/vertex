@@ -836,7 +836,7 @@ MESSAGE=audit log
         let v = log.fields.get("message").unwrap();
         match v {
             Value::Bytes(_) => v.clone(),
-            _ => panic!("invalid event")
+            _ => panic!("invalid event"),
         }
     }
 
@@ -862,10 +862,8 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("PRIORITY").unwrap();
         match v {
-            Value::Bytes(_) => {
-                v.clone()
-            }
-            _ => panic!("invalid event")
+            Value::Bytes(_) => v.clone(),
+            _ => panic!("invalid event"),
         }
     }
 }

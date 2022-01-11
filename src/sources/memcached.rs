@@ -137,7 +137,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                 ),
             )]);
 
-            for op in vec!["get", "delete", "inc", "decr", "cas", "touch"] {
+            for op in ["get", "delete", "inc", "decr", "cas", "touch"] {
                 let hits = get_value!(stats, (op.to_owned() + "_hits").as_str());
                 let misses = get_value!(stats, (op.to_owned() + "_misses").as_str());
 
@@ -324,7 +324,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
 
             for (slab, stats) in slabs {
                 let slab = slab.as_str();
-                for op in vec!["get", "delete", "incr", "decr", "cas", "touch"] {
+                for op in ["get", "delete", "incr", "decr", "cas", "touch"] {
                     metrics.push(Metric::sum_with_tags(
                         "memcached_slab_commands_total",
                         "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
@@ -833,7 +833,7 @@ enum ParseError {
 
 async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     let mut stats = Stats::default();
-    for cmd in vec!["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
+    for cmd in ["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
         let resp = query(addr, cmd).await.with_context(|| CommandExecFailed {
             cmd: cmd.to_string(),
         })?;

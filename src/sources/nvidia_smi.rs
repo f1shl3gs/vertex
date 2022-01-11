@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{Duration, Instant};
 
@@ -96,7 +96,7 @@ impl SourceConfig for NvidiaSmiConfig {
     }
 }
 
-async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
+async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
     let start = Instant::now();
     let output = Command::new(path).args(["-q", "-x"]).output()?;
     let reader = std::io::Cursor::new(output.stdout);

@@ -7,7 +7,7 @@ use crate::config::SinkOuter;
 
 use super::utils::start_topology;
 use crate::config::Config;
-use crate::topology::builder::SOURCE_SENDER_BUFFER_SIZE;
+use crate::topology::builder::DEFAULT_BUFFER_SIZE;
 
 use buffers::{BufferConfig, BufferType, WhenFull};
 const MEMORY_BUFFER_DEFAULT_MAX_EVENTS: usize = buffers::memory_buffer_default_max_events();
@@ -26,7 +26,7 @@ async fn serial_backpressure() {
 
     let expected_sourced_events = events_to_sink
         + MEMORY_BUFFER_DEFAULT_MAX_EVENTS
-        + SOURCE_SENDER_BUFFER_SIZE
+        + DEFAULT_BUFFER_SIZE
         + EXTRA_SENDER_EVENTS;
 
     let source_counter = Arc::new(AtomicUsize::new(0));
@@ -64,7 +64,7 @@ async fn default_fan_out() {
 
     let expected_sourced_events = events_to_sink
         + MEMORY_BUFFER_DEFAULT_MAX_EVENTS
-        + SOURCE_SENDER_BUFFER_SIZE
+        + DEFAULT_BUFFER_SIZE
         + EXTRA_SENDER_EVENTS;
 
     let source_counter = Arc::new(AtomicUsize::new(0));
@@ -111,7 +111,7 @@ async fn buffer_drop_fan_out() {
 
     let expected_sourced_events = events_to_sink
         + MEMORY_BUFFER_DEFAULT_MAX_EVENTS
-        + SOURCE_SENDER_BUFFER_SIZE
+        + DEFAULT_BUFFER_SIZE
         + EXTRA_SENDER_EVENTS;
 
     let source_counter = Arc::new(AtomicUsize::new(0));
@@ -163,7 +163,7 @@ async fn multiple_inputs_backpressure() {
 
     let expected_sourced_events = events_to_sink
         + MEMORY_BUFFER_DEFAULT_MAX_EVENTS
-        + SOURCE_SENDER_BUFFER_SIZE * 2
+        + DEFAULT_BUFFER_SIZE * 2
         + EXTRA_SENDER_EVENTS * 2;
 
     let source_counter_1 = Arc::new(AtomicUsize::new(0));

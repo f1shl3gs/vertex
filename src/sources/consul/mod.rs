@@ -61,7 +61,7 @@ impl SourceConfig for ConsulSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let proxy = ctx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let interval = tokio::time::interval(self.interval.into());
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;

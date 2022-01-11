@@ -135,7 +135,7 @@ impl Display for Metric {
 
         write!(fmt, "{}", self.name)?;
 
-        if self.tags.len() != 0 {
+        if !self.tags.is_empty() {
             write!(fmt, "{{")?;
 
             let mut n = 0;

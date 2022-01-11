@@ -64,7 +64,7 @@ register_source_config!("ntp", NtpConfig);
 #[typetag::serde(name = "ntp")]
 impl SourceConfig for NtpConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let ntp = NTP {
+        let ntp = Ntp {
             interval: self.interval,
             timeout: self.timeout,
             pools: self.pools.clone(),
@@ -83,7 +83,7 @@ impl SourceConfig for NtpConfig {
     }
 }
 
-struct NTP {
+struct Ntp {
     interval: std::time::Duration,
     timeout: std::time::Duration,
     pools: Vec<String>,
@@ -91,7 +91,7 @@ struct NTP {
     pick_state: usize,
 }
 
-impl NTP {
+impl Ntp {
     fn pick_one(&mut self) -> String {
         self.pick_state += 1;
 
@@ -107,7 +107,7 @@ impl NTP {
         let mut client = rsntp::AsyncSntpClient::new();
         client.set_timeout(self.timeout);
 
-        while let Some(now) = ticker.next().await {
+        while let Some(_ts) = ticker.next().await {
             let addr = self.pick_one();
 
             match client.synchronize(addr).await {

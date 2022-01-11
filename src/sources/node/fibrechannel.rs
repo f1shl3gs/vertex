@@ -107,7 +107,7 @@ async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Err
     let mut host = FibreChannelHost::default();
     host.name = root.file_name().unwrap().to_str().unwrap().to_string();
 
-    for sub in vec![
+    for sub in [
         "speed",
         "port_state",
         "port_type",

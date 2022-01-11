@@ -89,6 +89,18 @@ pub struct Timer {
     ewma: stats::Ewma,
 }
 
+impl Default for Timer {
+    fn default() -> Self {
+        Self {
+            overall_start: Instant::now(),
+            span_start: Instant::now(),
+            waiting: false,
+            total_wait: Duration::new(0, 0),
+            ewma: stats::Ewma::new(0.9),
+        }
+    }
+}
+
 /// A simple, specialized timer for tracking spans of waiting vs not-waiting
 /// time and reporting a smoothed estimate of utilization.
 ///
@@ -99,13 +111,7 @@ pub struct Timer {
 /// averages.
 impl Timer {
     pub fn new() -> Self {
-        Self {
-            overall_start: Instant::now(),
-            span_start: Instant::now(),
-            waiting: false,
-            total_wait: Duration::new(0, 0),
-            ewma: stats::Ewma::new(0.9),
-        }
+        Self::default()
     }
 
     /// Begin a new span representing time spent waiting

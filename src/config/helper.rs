@@ -81,7 +81,7 @@ pub fn ticker_from_duration(duration: std::time::Duration) -> Result<IntervalStr
 }
 
 pub fn ticker_from_std_duration(duration: std::time::Duration) -> IntervalStream {
-    let interval = tokio::time::interval(duration.into());
+    let interval = tokio::time::interval(duration);
     IntervalStream::new(interval)
 }
 

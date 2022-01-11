@@ -49,11 +49,7 @@ pub fn build_unix_stream_source(
 
             let path = path.clone();
             let np = if let Ok(addr) = socket.peer_addr() {
-                if let Some(p) = addr.as_pathname().map(|err| err.to_owned()) {
-                    Some(p)
-                } else {
-                    None
-                }
+                addr.as_pathname().map(|err| err.to_owned())
             } else {
                 None
             };

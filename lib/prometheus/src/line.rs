@@ -513,7 +513,7 @@ mod tests {
         fn wrap(s: &str) -> String {
             format!("  \t {}  .", s)
         }
-        let tail = "  .".to_string();
+        let tail = "  .";
 
         for case in vec![
             Case {

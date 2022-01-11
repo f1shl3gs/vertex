@@ -66,7 +66,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             let dataset = fields[2];
 
             metrics.push(Metric::gauge_with_tags(
-                "node_zfs_zpool_dataset_".to_owned() + &k,
+                format!("node_zfs_zpool_dataset_{}", k),
                 k,
                 v as f64,
                 tags!(

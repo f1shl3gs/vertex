@@ -12,9 +12,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
             Metric::gauge("node_load15", "15m load average", loads[2]),
         ]),
 
-        Err(err) => {
-            Err(Error::from(err))
-        }
+        Err(err) => Err(Error::from(err)),
     }
 }
 

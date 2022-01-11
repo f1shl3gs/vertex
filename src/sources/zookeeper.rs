@@ -68,7 +68,7 @@ impl ZookeeperSource {
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         let endpoint = self.endpoint.as_str();
-        while let Some(_) = ticker.next().await {
+        while let Some(_ts) = ticker.next().await {
             let metrics = match fetch_stats(endpoint).await {
                 Ok((version, state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
@@ -102,17 +102,14 @@ impl ZookeeperSource {
                     ]);
 
                     for (key, value) in stats {
-                        metrics.push(
-                            Metric::gauge_with_tags(
-                                key.as_str(),
-                                format!("{} value of mntr", key),
-                                value,
-                                tags!(
-                                    "instance" => endpoint
-                                ),
-                            )
-                            .into(),
-                        );
+                        metrics.push(Metric::gauge_with_tags(
+                            key.as_str(),
+                            format!("{} value of mntr", key),
+                            value,
+                            tags!(
+                                "instance" => endpoint
+                            ),
+                        ));
                     }
 
                     metrics

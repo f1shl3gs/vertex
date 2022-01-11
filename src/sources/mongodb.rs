@@ -36,7 +36,7 @@ impl GenerateConfig for MongodbConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "mongodb")]
 impl SourceConfig for MongodbConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, _ctx: SourceContext) -> crate::Result<Source> {
         todo!()
     }
 

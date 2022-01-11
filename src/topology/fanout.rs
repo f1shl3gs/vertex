@@ -55,7 +55,7 @@ impl Fanout {
             "Duplicate output id in fanout"
         );
 
-        self.sinks.push((id, Some(sink.into())));
+        self.sinks.push((id, Some(sink)));
     }
 
     fn remove(&mut self, id: &ComponentKey) {
