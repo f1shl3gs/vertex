@@ -321,6 +321,7 @@ mod tests {
     use crate::config::test_generate_config;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
+    use testify::next_addr;
 
     #[test]
     fn generate_config() {
@@ -626,5 +627,32 @@ mod tests {
         )).into();
 
         assert_event_data_eq!(event, want);
+    }
+
+    #[tokio::test]
+    async fn tcp_syslog() {
+        let num = 10000usize;
+
+        let in_addr = next_addr();
+        let out_addr = next_addr();
+
+        let mut config = crate::config::Config::builder();
+        config.add_source(
+            "in",
+            SyslogConfig{
+                mode: Mode::Tcp {
+                    address: in_addr.into(),
+                    keepalive: None,
+                    tls: None,
+                    receive_buffer_bytes: None,
+                    connection_limit: None
+                },
+                max_length: default_max_length(),
+                host_key: None
+            }
+        );
+        config.add_sink("out", &["in"], crate::sinks::blackhole::BlackholeConfig::default());
+
+        let output_lines = CounterReciver::receive_lines(out_addr);
     }
 }

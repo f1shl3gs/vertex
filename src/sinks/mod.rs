@@ -1,5 +1,5 @@
 #[cfg(feature = "sinks-blackhole")]
-mod blackhole;
+pub mod blackhole;
 #[cfg(feature = "sinks-clickhouse")]
 mod clickhouse;
 #[cfg(feature = "sinks-elasticsearch")]

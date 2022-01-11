@@ -4,6 +4,7 @@ mod socket;
 pub mod stats;
 mod stream;
 pub mod temp;
+mod counter;
 
 // re-export
 pub use portpicker::{pick_unused_local_port, pick_unused_port};
