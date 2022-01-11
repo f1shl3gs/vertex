@@ -7,7 +7,7 @@ use crate::sources::Source;
 use bytes::Bytes;
 use event::Event;
 use futures::stream;
-use futures_util::{FutureExt, SinkExt, StreamExt};
+use futures_util::{FutureExt, StreamExt};
 use std::fs::remove_file;
 use std::path::PathBuf;
 use tokio::io::AsyncWriteExt;

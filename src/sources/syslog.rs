@@ -14,7 +14,7 @@ use crate::udp;
 use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
-use futures_util::{FutureExt, SinkExt, StreamExt};
+use futures_util::StreamExt;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
@@ -195,7 +195,7 @@ impl TcpSource for SyslogTcpSource {
         )
     }
 
-    fn build_acker(&self, item: &[Self::Item]) -> Self::Acker {
+    fn build_acker(&self, _item: &[Self::Item]) -> Self::Acker {
         TcpNullAcker
     }
 }
@@ -256,8 +256,6 @@ pub fn udp(
         })
         .boxed();
 
-        Ok(())
-        /*
         match output.send_all(&mut stream).await {
             Ok(()) => {
                 info!(message = "Finished sending");
@@ -271,7 +269,7 @@ pub fn udp(
 
                 Err(())
             }
-        }*/
+        }
     })
 }
 

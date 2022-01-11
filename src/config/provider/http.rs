@@ -6,7 +6,6 @@ use bytes::Buf;
 use futures::Stream;
 use hyper::Body;
 use indexmap::IndexMap;
-use md5::Digest;
 use serde::{Deserialize, Serialize};
 use sysinfo::unix::{kernel_version, machine_id, os_version};
 use url::Url;
@@ -108,17 +107,6 @@ impl GenerateConfig for HttpConfig {
         })
         .unwrap()
     }
-}
-
-struct Watcher {
-    digest: Digest,
-}
-
-impl Watcher {
-    // Polls the HTTP endpoint after/every `interval`, returning a stream of `ConfigBuilder`.
-    // fn poll_http(&self) -> impl Stream<Item=crate::signal::SignalTo> {
-    //     todo!()
-    // }
 }
 
 /// Calls `http_request`, serializing the result to a `ConfigBuilder`.

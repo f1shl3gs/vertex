@@ -1,10 +1,9 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
-use std::collections::{BTreeMap, HashSet};
+use std::collections::BTreeMap;
 
 use crate::config::{
-    DataType, ExpandType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformContext,
-    TransformDescription,
+    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;

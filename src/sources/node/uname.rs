@@ -56,7 +56,6 @@ fn to_string(cs: [libc::c_char; 65]) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use libc::c_char;
 
     #[test]

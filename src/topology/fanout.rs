@@ -1,12 +1,11 @@
 use std::{fmt, pin::Pin};
 
-use futures::{channel::mpsc, future, stream, stream::Fuse, Sink, Stream, StreamExt};
+use futures::{channel::mpsc, stream::Fuse, Sink, Stream, StreamExt};
 
 use crate::config::ComponentKey;
 use event::Event;
 use futures_util::SinkExt;
 use std::task::{Context, Poll};
-use tokio::io::AsyncWrite;
 
 type GenericEventSink = Pin<Box<dyn Sink<Event, Error = ()> + Send>>;
 

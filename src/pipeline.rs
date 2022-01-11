@@ -1,9 +1,8 @@
-use event::{Event, EventStatus, Metric};
+use event::{Event, EventStatus};
 use futures::channel::mpsc;
 use futures::Stream;
 use futures_util::{SinkExt, StreamExt};
 use pin_project::pin_project;
-use smallvec::IntoIter;
 use std::collections::HashMap;
 use std::fmt;
 use std::pin::Pin;
@@ -199,7 +198,8 @@ impl Inner {
     }
 
     async fn send(&mut self, event: Event) -> Result<(), ClosedError> {
-        let byte_size = event.size_of();
+        // TODO: add metric
+        // let byte_size = event.size_of();
         self.inner.send(event).await?;
         Ok(())
     }

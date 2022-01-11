@@ -1,5 +1,5 @@
 use event::{Event, Metric};
-use futures::{stream, SinkExt, StreamExt};
+use futures::{stream, StreamExt};
 use rsntp;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;

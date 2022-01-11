@@ -4,7 +4,7 @@ use openssl::{
     ssl::{ConnectConfiguration, SslConnector, SslConnectorBuilder, SslMethod},
 };
 use snafu::{ResultExt, Snafu};
-use std::{fmt::Debug, net::SocketAddr, path::PathBuf, time::Duration};
+use std::{fmt::Debug, net::SocketAddr, path::PathBuf};
 use tokio::net::TcpStream;
 use tokio_openssl::SslStream;
 

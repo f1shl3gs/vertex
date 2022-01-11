@@ -1,11 +1,9 @@
-use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use tokio::sync::broadcast::error::RecvError;
 use tokio_stream::wrappers::errors::BroadcastStreamRecvError;
 
 use crate::config::{DataType, Output, SourceConfig, SourceContext, SourceDescription};
@@ -54,7 +52,7 @@ async fn run(
     host_key: String,
     pid_key: String,
     mut output: Pipeline,
-    mut shutdown: ShutdownSignal,
+    shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let subscription = crate::trace::subscribe();
     let hostname = crate::hostname();
@@ -103,7 +101,6 @@ mod tests {
     use super::*;
     use crate::pipeline::ReceiverStream;
     use event::Value;
-    use futures::channel::mpsc;
     use std::time::Duration;
     use testify::collect_ready;
     use tokio::time::sleep;
@@ -132,7 +129,7 @@ mod tests {
 
         sleep(Duration::from_millis(10)).await;
         let mut events = collect_ready(rx).await;
-        let mut test_id = Value::from(test_id.to_string());
+        let test_id = Value::from(test_id.to_string());
         events.retain(|event| event.as_log().get_field("test_id") == Some(&test_id));
 
         let end = chrono::Utc::now();

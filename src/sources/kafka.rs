@@ -5,7 +5,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
 use event::{LogRecord, Value};
-use futures::{FutureExt, SinkExt, StreamExt};
+use futures::{FutureExt, StreamExt};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
 use rdkafka::{ClientConfig, Message, TopicPartitionList};

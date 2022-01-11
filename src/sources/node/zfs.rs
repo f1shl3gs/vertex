@@ -255,7 +255,7 @@ fn parse_pool_name(path: &str) -> Result<String, Error> {
     }
 
     let name = elements[length - 2];
-    return Ok(name.to_string());
+    Ok(name.to_string())
 }
 
 #[cfg(test)]

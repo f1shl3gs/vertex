@@ -13,7 +13,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         ]),
 
         Err(err) => {
-            return Err(Error::from(err));
+            Err(Error::from(err))
         }
     }
 }

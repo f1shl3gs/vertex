@@ -1,6 +1,6 @@
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Event, Metric, Quantile};
-use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use futures::{FutureExt, StreamExt, TryFutureExt};
 use prometheus::{GroupKind, MetricGroup};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
@@ -8,9 +8,8 @@ use snafu::ResultExt;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_false, default_interval, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig,
-    SourceContext, SourceDescription,
+    default_false, default_interval, deserialize_duration, serialize_duration, DataType,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::{Auth, HttpClient};
 use crate::pipeline::Pipeline;

@@ -3,8 +3,7 @@ use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 
 use crate::config::{
-    DataType, GenerateConfig, GlobalOptions, Output, TransformConfig, TransformContext,
-    TransformDescription,
+    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use crate::transforms::{FunctionTransform, Transform};
 

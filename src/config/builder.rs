@@ -2,8 +2,8 @@ use super::validation;
 use crate::config::global::default_data_dir;
 use crate::config::provider::ProviderConfig;
 use crate::config::{
-    ComponentKey, Config, ExpandType, ExtensionConfig, GlobalOptions, HealthcheckOptions, OutputId,
-    SinkOuter, SourceOuter, TransformOuter,
+    ComponentKey, Config, ExtensionConfig, GlobalOptions, HealthcheckOptions, OutputId, SinkOuter,
+    SourceOuter, TransformOuter,
 };
 use glob;
 use indexmap::{IndexMap, IndexSet};

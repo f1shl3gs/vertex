@@ -1,5 +1,5 @@
 use event::Event;
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use futures_util::stream;
 use internal::metric::{get_global, init_global, InternalRecorder};
 use serde::{Deserialize, Serialize};

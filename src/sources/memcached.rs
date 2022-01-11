@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
@@ -902,11 +902,11 @@ mod tests {
     async fn test_parse_stats() {
         let mut stats = Stats::default();
         let data = std::fs::read_to_string("tests/fixtures/memcached/stats.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
         let data = std::fs::read_to_string("tests/fixtures/memcached/slabs.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
         let data = std::fs::read_to_string("tests/fixtures/memcached/items.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
 
         assert_eq!(stats.version, "1.6.12");
         assert_eq!(stats.libevent, "2.1.12-stable");

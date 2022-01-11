@@ -2,7 +2,7 @@ use std::time::Duration;
 use std::{fmt::Debug, io::Read};
 
 use event::{Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::sync::RwLock;

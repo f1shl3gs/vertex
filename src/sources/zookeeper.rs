@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use std::time::Duration;
 
 use event::{tags, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
@@ -69,7 +69,7 @@ impl ZookeeperSource {
 
         let endpoint = self.endpoint.as_str();
         while let Some(_) = ticker.next().await {
-            let mut metrics = match fetch_stats(endpoint).await {
+            let metrics = match fetch_stats(endpoint).await {
                 Ok((version, state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
                     metrics.extend_from_slice(&[

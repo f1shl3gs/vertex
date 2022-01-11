@@ -9,25 +9,20 @@ mod test;
 // re-exprot
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 
-use crate::config::{ComponentKey, Config, ConfigDiff, HealthcheckOptions, OutputId, Resource};
-use crate::shutdown::ShutdownCoordinator;
+use crate::config::{ComponentKey, Config, ConfigDiff, OutputId};
 use crate::topology::builder::Pieces;
 use crate::topology::running::RunningTopology;
 use crate::topology::task::Task;
-use crate::trigger::DisabledTrigger;
 use buffers::channel::{BufferReceiver, BufferSender};
 use event::Event;
-use futures::{future, Future, FutureExt, SinkExt};
+use futures::{Future, FutureExt};
 use std::panic::AssertUnwindSafe;
 use std::{
-    collections::{HashMap, HashSet},
-    pin::Pin,
+    collections::HashMap,
     sync::{Arc, Mutex},
-    time::Duration,
 };
 use task::TaskOutput;
 use tokio::sync::mpsc;
-use tokio::time::{sleep_until, Instant};
 
 type BuiltBuffer = (
     BufferSender<Event>,

@@ -1,5 +1,5 @@
 use crate::config::{default_true, Output, TransformContext};
-use crate::config::{DataType, GlobalOptions, TransformConfig};
+use crate::config::{DataType, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
 use indexmap::IndexMap;

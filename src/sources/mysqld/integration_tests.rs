@@ -62,7 +62,7 @@ async fn gather() {
     ] {
         sqlx::query(q).execute(&pool).await.unwrap();
     }
-    info_schema_query_response_time::gather(&pool)
+    let n = info_schema_query_response_time::gather(&pool)
         .await
         .unwrap();
 }

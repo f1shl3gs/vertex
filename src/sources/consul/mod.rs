@@ -1,7 +1,7 @@
 mod client;
 
 use event::{tags, Event, Metric};
-use futures_util::{SinkExt, StreamExt};
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Instant;

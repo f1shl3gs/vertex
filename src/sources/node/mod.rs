@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 mod arp;
 mod bcache;
 mod bonding;
@@ -55,7 +56,7 @@ use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use typetag;

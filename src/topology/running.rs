@@ -1,7 +1,6 @@
 use std::collections::{HashMap, HashSet};
 use std::sync::{Arc, Mutex};
 
-use buffers::builder;
 use buffers::channel::BufferSender;
 use event::Event;
 use futures::{future, Future, FutureExt, SinkExt};

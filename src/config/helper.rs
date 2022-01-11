@@ -1,4 +1,3 @@
-use humanize::{duration_to_string, parse_duration};
 use serde::{Deserialize, Deserializer, Serializer};
 use std::borrow::Cow;
 use std::time::Duration;

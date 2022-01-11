@@ -6,15 +6,15 @@ use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings};
 use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, Event};
+use futures::stream;
 use futures::StreamExt;
-use futures::{stream, Sink};
 use futures_util::future::BoxFuture;
-use futures_util::{FutureExt, SinkExt};
+use futures_util::FutureExt;
 use listenfd::ListenFd;
 use serde::{de, Deserialize, Deserializer, Serialize};
 use smallvec::SmallVec;
 use socket2::SockRef;
-use std::fmt::{Formatter, Pointer};
+use std::fmt::Formatter;
 use std::io;
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
@@ -154,7 +154,7 @@ where
 
     fn decoder(&self) -> Self::Decoder;
 
-    fn handle_events(&self, events: &mut [Event], host: Bytes, size: usize) {}
+    fn handle_events(&self, _events: &mut [Event], _host: Bytes, _size: usize) {}
 
     fn build_acker(&self, item: &[Self::Item]) -> Self::Acker;
 

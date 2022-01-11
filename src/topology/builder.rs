@@ -16,10 +16,9 @@ use crate::{
 
 use super::BuiltBuffer;
 use crate::config::{
-    ComponentKey, ExtensionContext, Output, OutputId, ProxyConfig, SourceOuter, TransformContext,
+    ComponentKey, ExtensionContext, Output, OutputId, ProxyConfig, TransformContext,
 };
 use crate::topology::fanout;
-use crate::topology::fanout::ControlChannel;
 use crate::transforms::{SyncTransform, TaskTransform, TransformOutputs, TransformOutputsBuf};
 use buffers::builder::TopologyBuilder;
 use buffers::channel::{BufferReceiver, BufferSender};
@@ -27,8 +26,6 @@ use buffers::{BufferType, WhenFull};
 use event::Event;
 use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
 use futures_util::stream::FuturesOrdered;
-use internal::{EventsReceived, EventsSent};
-use once_cell::sync::Lazy;
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
@@ -598,7 +595,7 @@ pub async fn build_pieces(
                 let duration = Duration::from_secs(10);
                 timeout(duration, healthcheck)
                     .map(|result| match result {
-                        Ok((Ok(_))) => {
+                        Ok(Ok(_)) => {
                             info!("Healthcheck: Passed");
                             Ok(TaskOutput::HealthCheck)
                         }

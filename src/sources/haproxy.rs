@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use bytes::Buf;
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;

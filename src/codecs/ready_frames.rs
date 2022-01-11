@@ -155,7 +155,7 @@ mod tests {
             Poll::Ready(Some(Ok((vec!["foo", "bar"], 9)))),
             poll!(rf.next())
         );
-        assert_eq!(Poll::Ready(Some(Ok(((vec!["baz"], 6))))), poll!(rf.next()));
+        assert_eq!(Poll::Ready(Some(Ok((vec!["baz"], 6)))), poll!(rf.next()));
         assert_eq!(Poll::Pending, poll!(rf.next()));
     }
 

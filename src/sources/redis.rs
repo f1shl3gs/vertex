@@ -2,7 +2,7 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::time::Duration;
 
 use event::{tags, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::Snafu;
@@ -904,7 +904,7 @@ fn validate_slave_line(line: &str) -> bool {
     }
 
     let c = line.as_bytes()[5];
-    return c >= b'0' && c <= b'9';
+    c >= b'0' && c <= b'9'
 }
 
 fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {

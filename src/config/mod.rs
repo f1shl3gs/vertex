@@ -27,7 +27,7 @@ pub use proxy::ProxyConfig;
 pub use uri::*;
 
 use async_trait::async_trait;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::path::PathBuf;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
 use ::serde::{Deserialize, Serialize};

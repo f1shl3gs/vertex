@@ -1,4 +1,4 @@
-use crate::config::{DataType, GlobalOptions, Output, TransformConfig, TransformContext};
+use crate::config::{DataType, Output, TransformConfig, TransformContext};
 use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
@@ -196,14 +196,14 @@ mod tests {
         let mut set = TagValueSet::new(total);
         for i in 0..total {
             let val = format!("{}", i);
-            assert_eq!(set.insert(&val), true);
+            assert!(set.insert(&val));
         }
 
         assert_eq!(set.len(), total);
 
         for i in 0..total {
             let val = format!("{}", i);
-            assert_eq!(set.insert(&val), false)
+            assert!(!set.insert(&val))
         }
     }
 

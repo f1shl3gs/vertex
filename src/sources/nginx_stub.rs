@@ -6,7 +6,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use event::{Event, Metric};
-use futures::{SinkExt, StreamExt, TryFutureExt};
+use futures::{StreamExt, TryFutureExt};
 use hyper::{StatusCode, Uri};
 use nom::{
     bytes::complete::{tag, take_while_m_n},

@@ -399,23 +399,23 @@ mod tests {
             },
             ParseDurationTest {
                 input: "1.0s",
-                want: 1 * SECOND,
+                want: SECOND,
             },
             ParseDurationTest {
                 input: "1.00s",
-                want: 1 * SECOND,
+                want: SECOND,
             },
             ParseDurationTest {
                 input: "1.004s",
-                want: 1 * SECOND + 4 * MILLISECOND,
+                want: SECOND + 4 * MILLISECOND,
             },
             ParseDurationTest {
                 input: "1.0040s",
-                want: 1 * SECOND + 4 * MILLISECOND,
+                want: SECOND + 4 * MILLISECOND,
             },
             ParseDurationTest {
                 input: "100.00100s",
-                want: 100 * SECOND + 1 * MILLISECOND,
+                want: 100 * SECOND + MILLISECOND,
             },
             // different units
             ParseDurationTest {
@@ -470,7 +470,7 @@ mod tests {
             // ParseDurationTest { input: "-2m3.4s", want: -(2 * MINUTE + 3 * SECOND + 400 * MILLISECOND) },
             ParseDurationTest {
                 input: "1h2m3s4ms5us6ns",
-                want: 1 * HOUR
+                want: HOUR
                     + 2 * MINUTE
                     + 3 * SECOND
                     + 4 * MILLISECOND
@@ -501,7 +501,7 @@ mod tests {
             // ParseDurationTest { input: "9223372036854775.807us", want: i64::MAX * NANOSECOND },
             // ParseDurationTest { input: "9223372036s854ms775us807ns", want: i64::MAX * NANOSECOND },
             // large negative value
-            // todo: ParseDurationTest { input: "-9223372036854775807ns", want: -1 << 63 + 1 * NANOSECOND },
+            // todo: ParseDurationTest { input: "-9223372036854775807ns", want: -1 << 63 + NANOSECOND },
             // huge string; issue 15011.
             ParseDurationTest {
                 input: "0.100000000000000000000h",
@@ -541,7 +541,7 @@ mod tests {
     fn test_duration_to_string() {
         let tests = vec![
             ("0s", 0),
-            ("1ns", 1 * NANOSECOND),
+            ("1ns", NANOSECOND),
             // ("1.1µs", 1100 * NANOSECOND),
             ("1.1us", 1100 * NANOSECOND),
             ("2.2ms", 2200 * MICROSECOND),
@@ -549,7 +549,7 @@ mod tests {
             ("4m5s", 4 * MINUTE + 5 * SECOND),
             ("4m5.001s", 4 * MINUTE + 5001 * MILLISECOND),
             ("5h6m7.001s", 5 * HOUR + 6 * MINUTE + 7001 * MILLISECOND),
-            ("8m0.000000001s", 8 * MINUTE + 1 * NANOSECOND),
+            ("8m0.000000001s", 8 * MINUTE + NANOSECOND),
             // ("2562047h47m16.854775807s", u64::MAX),
             // ("-2562047h47m16.854775808s", u64::MIN),
         ];

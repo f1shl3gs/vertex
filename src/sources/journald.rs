@@ -12,7 +12,7 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
 use event::{Event, Value};
-use futures::{stream::BoxStream, SinkExt, StreamExt};
+use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
 use nix::{
     sys::signal::{kill, Signal},
@@ -651,12 +651,12 @@ mod tests {
 
     impl TestJournal {
         fn new(
-            checkpoint: &Option<String>,
+            _checkpoint: &Option<String>,
         ) -> (
             BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
             StopJournalctlFn,
         ) {
-            let mut journal = TestJournal {};
+            let journal = TestJournal {};
             (journal_stream(), Box::new(|| ()))
         }
     }
@@ -835,12 +835,8 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("message").unwrap();
         match v {
-            Value::Bytes(_) => {
-                return v.clone();
-            }
-            _ => {
-                panic!("invalid event")
-            }
+            Value::Bytes(_) => v.clone(),
+            _ => panic!("invalid event")
         }
     }
 
@@ -867,11 +863,9 @@ MESSAGE=audit log
         let v = log.fields.get("PRIORITY").unwrap();
         match v {
             Value::Bytes(_) => {
-                return v.clone();
+                v.clone()
             }
-            _ => {
-                panic!("invalid event")
-            }
+            _ => panic!("invalid event")
         }
     }
 }
