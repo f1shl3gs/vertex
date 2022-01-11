@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641913501400,
+  "lastUpdate": 1641914550077,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7170,6 +7170,56 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.645,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "7e3e13b147e28fb9fa282cc389351f6aa7f99e1f",
+          "message": "add jsmn",
+          "timestamp": "2022-01-10T14:58:12Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/105/commits/7e3e13b147e28fb9fa282cc389351f6aa7f99e1f"
+        },
+        "date": 1641914548830,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "deserialize/jsmn",
+            "value": 436.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 437.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "deserialize/serde",
+            "value": 511.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 71197000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1154400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.629,
             "unit": "ns/op"
           }
         ]
