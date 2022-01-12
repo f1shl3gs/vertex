@@ -1,3 +1,5 @@
+pub mod util;
+
 #[cfg(feature = "sinks-blackhole")]
 pub mod blackhole;
 #[cfg(feature = "sinks-clickhouse")]
@@ -12,12 +14,12 @@ pub mod loki;
 mod prometheus_exporter;
 #[cfg(feature = "sinks-pulsar")]
 mod pulsar;
+#[cfg(feature = "sinks-socket")]
+pub mod socket;
 #[cfg(feature = "sinks-stdout")]
 mod stdout;
 #[cfg(feature = "sinks-vertex")]
 mod vertex;
-
-mod util;
 
 use async_trait::async_trait;
 use event::Event;

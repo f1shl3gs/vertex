@@ -316,7 +316,8 @@ pub fn install_tracing_helpers() -> AssertionRegistry {
             .with_filter(fmt_filter);
 
         let base_subscriber = Registry::default();
-        let subscriber = base_subscriber.with(assertions_layer).with(fmt_layer);
+        let subscriber = base_subscriber.with(assertions_layer);
+        let subscriber = subscriber.with(fmt_layer);
 
         tracing::subscriber::set_global_default(subscriber).unwrap();
         assertion_registry

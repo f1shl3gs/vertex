@@ -177,15 +177,16 @@ transforms-sample = ["seahash"]
 
 # sinks
 sinks = [
-    "sinks-prometheus_exporter",
-    "sinks-stdout",
     "sinks-blackhole",
-    "sinks-kafka",
-    "sinks-pulsar",
+    "sinks-clickhouse",
     "sinks-elasticsearch",
     "sinks-loki",
+    "sinks-kafka",
+    "sinks-prometheus_exporter",
+    "sinks-pulsar",
+    "sinks-stdout",
+    "sinks-socket",
     "sinks-vertex",
-    "sinks-clickhouse",
 ]
 
 sinks-prometheus_exporter = []
@@ -197,6 +198,7 @@ sinks-elasticsearch = []
 sinks-loki = []
 sinks-vertex = []
 sinks-clickhouse = []
+sinks-socket = []
 
 # extensions
 extensions-pprof = ["pprof/flamegraph"]
@@ -284,7 +286,7 @@ jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
 
-# futrures & tokio
+# Futrures & Tokio
 tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }

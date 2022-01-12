@@ -113,6 +113,9 @@ fn main() {
     ).replace(
         r#"[ u8 ; 16i64 as usize ] = unsafe { :: std :: mem :: uninitialized ( ) }"#,
         r#"[ u8 ; 16i64 as usize ] = [0u8; 16]"#,
+    ).replace(
+        r#"REMOTE_STORAGE_POOL_LIST_MAX as usize ) ) ? ; sz += fsz ; v } , ret : { let ( v , fsz ) = xdr_codec :: Unpack :: unpack ( input ) ?"#,
+        r#"REMOTE_STORAGE_POOL_LIST_MAX as usize ) ) ? ; sz += fsz ; v } , ret : { let ( v , fsz ) = xdr_codec :: Unpack :: unpack ( input ).unwrap_or_default()"#,
     );
 
     std::fs::write(&path, content).unwrap();

@@ -732,6 +732,8 @@ MESSAGE=audit log
             result.unwrap();
             count += 1;
         }
+
+        assert_eq!(count, 8)
     }
 
     fn create_unit_matches<S: Into<String>>(units: Vec<S>) -> HashSet<String> {

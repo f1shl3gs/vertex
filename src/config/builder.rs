@@ -1,10 +1,11 @@
+use super::global::default_data_dir;
+use super::provider::ProviderConfig;
 use super::validation;
-use crate::config::global::default_data_dir;
-use crate::config::provider::ProviderConfig;
-use crate::config::{
+use super::{
     ComponentKey, Config, ExtensionConfig, GlobalOptions, HealthcheckOptions, OutputId, SinkOuter,
     SourceOuter, TransformOuter,
 };
+use super::{SinkConfig, SourceConfig};
 use glob;
 use indexmap::{IndexMap, IndexSet};
 use serde::{Deserialize, Serialize};
@@ -110,13 +111,11 @@ impl Builder {
         Ok(())
     }
 
-    #[cfg(test)]
     pub fn add_source<S: SourceConfig + 'static, T: Into<String>>(&mut self, id: T, source: S) {
         self.sources
             .insert(ComponentKey::from(id.into()), SourceOuter::new(source));
     }
 
-    #[cfg(test)]
     pub fn add_sink<S: SinkConfig + 'static, T: Into<String>>(
         &mut self,
         id: T,
@@ -131,7 +130,6 @@ impl Builder {
         self.add_sink_outer(id, sink);
     }
 
-    #[cfg(test)]
     pub fn add_sink_outer(&mut self, id: impl Into<String>, sink: SinkOuter<String>) {
         self.sinks.insert(ComponentKey::from(id.into()), sink);
     }
@@ -269,13 +267,13 @@ pub fn expand_macros(
     let parent_types = HashSet::new();
 
     while let Some((key, transform)) = builder.transforms.pop() {
-        if let Err(error) = transform.expand(
+        if let Err(err) = transform.expand(
             key,
             &parent_types,
             &mut expanded_transforms,
             &mut expansions,
         ) {
-            errors.push(error);
+            errors.push(err);
         }
     }
     builder.transforms = expanded_transforms;

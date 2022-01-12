@@ -368,12 +368,15 @@ dependencies = [
  "bytecheck",
  "bytes",
  "crc32fast",
+ "criterion",
  "crossbeam-utils",
  "dyn-clone",
  "fslock",
  "futures",
  "memmap2",
  "metrics",
+ "metrics-tracing-context",
+ "metrics-util",
  "once_cell",
  "pin-project",
  "rkyv",
@@ -4600,13 +4603,12 @@ dependencies = [
 
 [[package]]
 name = "tracing-fluent-assertions"
-version = "0.1.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86c549d116f461c60789ab23dd1b7d27317e18b36619ef58c5bd9e4b507da31c"
+version = "0.2.0"
+source = "git+https://github.com/vectordotdev/tracing-fluent-assertions?branch=bump-tracing-subscriber#0b32307299b832bfbcaf6026e2f53436b8b9abee"
 dependencies = [
  "tracing",
  "tracing-core",
- "tracing-subscriber 0.2.25",
+ "tracing-subscriber 0.3.5",
 ]
 
 [[package]]

@@ -112,7 +112,7 @@ fn scrape(
             .map(move |_| futures::stream::iter(urls.clone()))
             .flatten()
             .map(move |url| {
-                let instance = instance_tag.as_ref().map(|tag| {
+                let instance = instance_tag.as_ref().map(|_tag| {
                     let instance = format!(
                         "{}:{}",
                         url.host().unwrap_or_default(),
@@ -184,7 +184,7 @@ fn scrape(
                                             event
                                         }))
                                     }
-                                    Err(err) => {
+                                    Err(_err) => {
                                         // TODO: handle it
                                         None
                                     }

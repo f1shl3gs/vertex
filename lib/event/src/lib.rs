@@ -6,7 +6,6 @@ mod macros;
 mod metadata;
 mod metric;
 mod trace;
-mod value;
 
 // re-export
 pub use buffers::{DecodeBytes, EncodeBytes};
@@ -14,9 +13,9 @@ pub use finalization::{
     BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
 };
 pub use log::LogRecord;
+pub use log::value::Value;
 pub use macros::EventDataEq;
 pub use metric::*;
-pub use value::Value;
 
 use std::collections::BTreeMap;
 use std::sync::Arc;

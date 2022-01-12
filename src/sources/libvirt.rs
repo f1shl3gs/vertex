@@ -1,13 +1,14 @@
-use crate::config::{
-    default_std_interval, deserialize_duration, serialize_duration, ticker_from_std_duration,
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
-use crate::sources::Source;
 use event::{tags, Event, Metric};
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
 use virt::{Client, Error};
+
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, ticker_from_std_duration, DataType,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+};
+use crate::sources::Source;
 
 fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
@@ -17,7 +18,7 @@ fn default_sock() -> String {
 struct LibvirtSourceConfig {
     #[serde(default = "default_sock")]
     sock: String,
-    #[serde(default = "default_std_interval")]
+    #[serde(default = "default_interval")]
     #[serde(
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
@@ -29,7 +30,7 @@ impl GenerateConfig for LibvirtSourceConfig {
     fn generate_config() -> serde_yaml::Value {
         serde_yaml::to_value(LibvirtSourceConfig {
             sock: default_sock(),
-            interval: default_std_interval(),
+            interval: default_interval(),
         })
         .unwrap()
     }

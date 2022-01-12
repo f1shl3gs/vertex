@@ -8,7 +8,7 @@ use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_std_interval, default_true, deserialize_duration, serialize_duration, DataType,
+    default_interval, default_true, deserialize_duration, serialize_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::HttpClient;
@@ -25,7 +25,7 @@ struct ConsulSourceConfig {
     endpoints: Vec<String>,
 
     #[serde(
-        default = "default_std_interval",
+        default = "default_interval",
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
@@ -43,7 +43,7 @@ impl GenerateConfig for ConsulSourceConfig {
         serde_yaml::to_value(Self {
             tls: None,
             endpoints: vec!["http://127.0.0.1:8500".to_string()],
-            interval: default_std_interval(),
+            interval: default_interval(),
             health_summary: default_true(),
             query_options: None,
         })

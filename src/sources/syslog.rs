@@ -26,7 +26,7 @@ use tokio::net::UdpSocket;
 use tokio_util::udp::UdpFramed;
 
 // The default max length of the input buffer
-const fn default_max_length() -> usize {
+pub const fn default_max_length() -> usize {
     128 * 1024
 }
 
@@ -62,11 +62,11 @@ pub enum Mode {
 // #[serde(deny_unknown_fields)]
 pub struct SyslogConfig {
     #[serde(flatten)]
-    mode: Mode,
+    pub mode: Mode,
     #[serde(default = "default_max_length")]
-    max_length: usize,
+    pub max_length: usize,
     // The host key of the log. This differs from `hostname`
-    host_key: Option<String>,
+    pub host_key: Option<String>,
 }
 
 impl GenerateConfig for SyslogConfig {
@@ -171,7 +171,7 @@ impl SourceConfig for SyslogConfig {
             Mode::Tcp { address, .. } => vec![address.into()],
             Mode::Udp { address, .. } => vec![Resource::udp(address)],
             #[cfg(unix)]
-            Mode::Unix { path, .. } => vec![],
+            Mode::Unix { .. } => vec![],
         }
     }
 }
@@ -193,6 +193,10 @@ impl TcpSource for SyslogTcpSource {
             Box::new(OctetCountingDecoder::new_with_max_length(self.max_length)),
             Box::new(SyslogDeserializer),
         )
+    }
+
+    fn handle_events(&self, events: &mut [Event], host: Bytes, size: usize) {
+        handle_events(events, &self.host_key, Some(host), size)
     }
 
     fn build_acker(&self, _item: &[Self::Item]) -> Self::Acker {
@@ -321,6 +325,7 @@ mod tests {
     use crate::config::test_generate_config;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
+    use std::collections::HashMap;
     use testify::next_addr;
 
     #[test]
@@ -627,32 +632,5 @@ mod tests {
         )).into();
 
         assert_event_data_eq!(event, want);
-    }
-
-    #[tokio::test]
-    async fn tcp_syslog() {
-        let num = 10000usize;
-
-        let in_addr = next_addr();
-        let out_addr = next_addr();
-
-        let mut config = crate::config::Config::builder();
-        config.add_source(
-            "in",
-            SyslogConfig{
-                mode: Mode::Tcp {
-                    address: in_addr.into(),
-                    keepalive: None,
-                    tls: None,
-                    receive_buffer_bytes: None,
-                    connection_limit: None
-                },
-                max_length: default_max_length(),
-                host_key: None
-            }
-        );
-        config.add_sink("out", &["in"], crate::sinks::blackhole::BlackholeConfig::default());
-
-        let output_lines = CounterReciver::receive_lines(out_addr);
     }
 }

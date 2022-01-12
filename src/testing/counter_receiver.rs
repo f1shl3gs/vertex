@@ -1,7 +1,20 @@
-use std::cmp::Ordering;
-use std::sync::Arc;
+use event::Event;
+use futures::FutureExt;
+use futures::{ready, Stream, StreamExt, TryStreamExt};
+use std::future::Future;
+use std::net::SocketAddr;
+use std::path::Path;
+use std::pin::Pin;
 use std::sync::atomic::AtomicUsize;
-use futures::{Stream, StreamExt};
+use std::sync::atomic::Ordering;
+use std::sync::Arc;
+use std::task::{Context, Poll};
+use tokio::io::{AsyncRead, AsyncWrite};
+use tokio::net::TcpListener;
+use tokio::sync::oneshot;
+use tokio::task::JoinHandle;
+use tokio_stream::wrappers::{TcpListenerStream, UnixListenerStream};
+use tokio_util::codec::{FramedRead, LinesCodec};
 
 pub struct CountReceiver<T> {
     count: Arc<AtomicUsize>,
@@ -23,9 +36,9 @@ impl<T: Send + 'static> CountReceiver<T> {
     }
 
     fn new<F, Fut>(make_fut: F) -> CountReceiver<T>
-        where
-            F: FnOnce(Arc<AtomicUsize>, oneshot::Receiver<()>, oneshot::Sender<()>) -> Fut,
-            Fut: Future<Output = Vec<T>> + Send + 'static,
+    where
+        F: FnOnce(Arc<AtomicUsize>, oneshot::Receiver<()>, oneshot::Sender<()>) -> Fut,
+        Fut: Future<Output = Vec<T>> + Send + 'static,
     {
         let count = Arc::new(AtomicUsize::new(0));
         let (trigger, tripwire) = oneshot::channel();
@@ -64,14 +77,14 @@ impl CountReceiver<String> {
                 tripwire,
                 Some(connected),
             )
-                .await
+            .await
         })
     }
 
     #[cfg(unix)]
     pub fn receive_lines_unix<P>(path: P) -> CountReceiver<String>
-        where
-            P: AsRef<Path> + Send + 'static,
+    where
+        P: AsRef<Path> + Send + 'static,
     {
         CountReceiver::new(|count, tripwire, connected| async move {
             let listener = tokio::net::UnixListener::bind(path).unwrap();
@@ -81,7 +94,7 @@ impl CountReceiver<String> {
                 tripwire,
                 Some(connected),
             )
-                .await
+            .await
         })
     }
 
@@ -91,9 +104,9 @@ impl CountReceiver<String> {
         tripwire: oneshot::Receiver<()>,
         mut connected: Option<oneshot::Sender<()>>,
     ) -> Vec<String>
-        where
-            S: Stream<Item = IoResult<T>>,
-            T: AsyncWrite + AsyncRead,
+    where
+        S: Stream<Item = tokio::io::Result<T>>,
+        T: AsyncWrite + AsyncRead,
     {
         stream
             .take_until(tripwire)
@@ -114,8 +127,8 @@ impl CountReceiver<String> {
 
 impl CountReceiver<Event> {
     pub fn receive_events<S>(stream: S) -> CountReceiver<Event>
-        where
-            S: Stream<Item = Event> + Send + 'static,
+    where
+        S: Stream<Item = Event> + Send + 'static,
     {
         CountReceiver::new(|count, tripwire, connected| async move {
             connected.send(()).unwrap();

@@ -1,9 +1,11 @@
+#![deny(clippy::all)]
+
 mod acker;
 mod buffer_usage_data;
 mod config;
 mod disk;
-mod encoding;
-mod topology;
+pub mod encoding;
+pub mod topology;
 mod variant;
 
 // re-export

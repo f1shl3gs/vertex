@@ -56,12 +56,8 @@ pub const fn default_false() -> bool {
     false
 }
 
-pub fn default_interval() -> std::time::Duration {
+pub const fn default_interval() -> std::time::Duration {
     Duration::from_secs(15)
-}
-
-pub fn default_std_interval() -> std::time::Duration {
-    std::time::Duration::from_secs(15)
 }
 
 /// Answers "Is it possible to skip serializing this value, because it's the

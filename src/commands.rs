@@ -130,7 +130,7 @@ pub struct Providers {
 impl Providers {
     pub fn run(&self) {
         match &self.name {
-            Some(name) => match ProviderDescription::example(&name) {
+            Some(name) => match ProviderDescription::example(name) {
                 Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
                 Err(err) => {
                     println!("Generate example failed: {:?}", err);

@@ -4,9 +4,10 @@ mod insert;
 mod keys;
 pub mod path_iter;
 mod remove;
+pub mod value;
 
 use std::collections::BTreeMap;
-use std::fmt::Debug;
+use std::fmt::{Debug, Display};
 
 use bytes::Bytes;
 use chrono::Utc;
@@ -154,6 +155,17 @@ impl LogRecord {
         if !self.contains(key) {
             self.insert_field(key, value);
         }
+    }
+
+    /// This function will insert a key in place without reference to any pathing
+    /// information in the key. It will insert over the top of any value that
+    /// exists in the map already.
+    pub fn insert_flat_field<K, V>(&mut self, key: K, value: V) -> Option<Value>
+    where
+        K: Into<String> + Display,
+        V: Into<Value> + Debug,
+    {
+        self.fields.insert(key.into(), value.into())
     }
 
     pub fn contains(&self, key: impl AsRef<str>) -> bool {
