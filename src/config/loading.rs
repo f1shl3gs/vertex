@@ -1,10 +1,11 @@
 use regex::{Captures, Regex};
 use std::collections::HashMap;
 use std::fs::File;
+use std::path::Path;
 
+use super::validation;
 use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
-use std::path::Path;
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider
@@ -14,10 +15,17 @@ pub async fn load_from_paths_with_provider(
     signal_handler: &mut signal::SignalHandler,
 ) -> Result<Config, Vec<String>> {
     let (mut builder, load_warnings) = load_builder_from_paths(paths)?;
+    validation::check_provider(&builder)?;
     signal_handler.clear();
 
+    // If there's a provider, overwrite the existing config builder with
+    // the remote variant
     if let Some(mut provider) = builder.provider {
-        builder = provider.build(signal_handler).await?
+        builder = provider.build(signal_handler).await?;
+        info!(
+            message = "Provider configured",
+            provider = ?provider.provider_type()
+        );
     }
 
     let (config, build_warnings) = builder.build_with_warnings()?;
@@ -143,17 +151,19 @@ pub fn load(
     format::deserialize(&with_vars, format).map(|builder| (builder, warnings))
 }
 
-fn load_from_str(content: String) -> Result<(Config, Vec<String>), Vec<String>> {
-    let mut vars = std::env::vars().collect::<HashMap<_, _>>();
-    if !vars.contains_key("HOSTNAME") {
-        if let Ok(hostname) = get_hostname() {
-            vars.insert("HOSTNAME".into(), hostname);
-        }
-    }
+fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String>> {
+    let (builder, load_warnings) =
+        load_from_inputs(std::iter::once((content.as_bytes(), Some(format))))?;
+    let (config, build_warnings) = builder.build_with_warnings()?;
 
-    let (with_vars, warnings) = interpolate(&content, &vars);
+    load_warnings
+        .into_iter()
+        .chain(build_warnings)
+        .for_each(|warning| {
+            warn!("{}", warning);
+        });
 
-    format::deserialize(&with_vars, Some(Format::YAML)).map(|config| (config, warnings))
+    Ok(config)
 }
 
 pub fn get_hostname() -> std::io::Result<String> {
@@ -211,18 +221,6 @@ sources:
     type: selfstat
   generator:
     type: generator
-#  ntp:
-#    type: ntp
-#    interval: 15s
-#    timeout: 10s
-#    pools:
-#      - time1.aliyun.com
-#      - time2.aliyun.com
-#      - time3.aliyun.com
-#      - time4.aliyun.com
-#      - time5.aliyun.com
-#      - time6.aliyun.com
-#      - time7.aliyun.com
   journald:
     type: journald
     units: []
@@ -258,8 +256,7 @@ sinks:
 
     #[test]
     fn test_load_from_str() {
-        let (config, warnings) = load_from_str(INPUT.to_string()).unwrap();
-        assert_eq!(warnings.len(), 0);
+        let config = load_from_str(INPUT, Format::YAML).unwrap();
         assert_eq!(config.sources.len(), 5);
     }
 

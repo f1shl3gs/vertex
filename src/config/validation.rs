@@ -165,6 +165,21 @@ pub fn check_resources(builder: &Builder) -> Result<(), Vec<String>> {
     }
 }
 
+/// Check that provide + topology config aren't present in the same builder, which is an error
+pub fn check_provider(builder: &Builder) -> Result<(), Vec<String>> {
+    if builder.provider.is_some()
+        && (!builder.sources.is_empty()
+            || !builder.transforms.is_empty()
+            || !builder.sinks.is_empty())
+    {
+        Err(vec![
+            "No sources/transforms/sinks are allowed if provider config is present".to_string(),
+        ])
+    } else {
+        Ok(())
+    }
+}
+
 #[derive(Debug, Clone)]
 enum Node {
     Source {

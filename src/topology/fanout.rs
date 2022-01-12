@@ -244,7 +244,7 @@ mod tests {
     #[tokio::test]
     async fn fanout_notready() {
         let (tx_a, rx_a) = TopologyBuilder::memory(1, WhenFull::Block).await;
-        let (tx_b, rx_b) = TopologyBuilder::memory(0, WhenFull::Block).await;
+        let (tx_b, rx_b) = TopologyBuilder::memory(1, WhenFull::Block).await;
         let (tx_c, rx_c) = TopologyBuilder::memory(1, WhenFull::Block).await;
 
         let (mut fanout, _fanout_control) = Fanout::new();
@@ -324,7 +324,7 @@ mod tests {
     #[tokio::test]
     async fn fanout_shrink_after_notready() {
         let (tx_a, rx_a) = TopologyBuilder::memory(1, WhenFull::Block).await;
-        let (tx_b, rx_b) = TopologyBuilder::memory(0, WhenFull::Block).await;
+        let (tx_b, rx_b) = TopologyBuilder::memory(1, WhenFull::Block).await;
         let (tx_c, rx_c) = TopologyBuilder::memory(1, WhenFull::Block).await;
 
         let (mut fanout, mut fanout_control) = Fanout::new();
@@ -356,7 +356,7 @@ mod tests {
     #[tokio::test]
     async fn fanout_shrink_at_notready() {
         let (tx_a, rx_a) = TopologyBuilder::memory(1, WhenFull::Block).await;
-        let (tx_b, rx_b) = TopologyBuilder::memory(0, WhenFull::Block).await;
+        let (tx_b, rx_b) = TopologyBuilder::memory(1, WhenFull::Block).await;
         let (tx_c, rx_c) = TopologyBuilder::memory(1, WhenFull::Block).await;
 
         let (mut fanout, mut fanout_control) = Fanout::new();
@@ -388,7 +388,7 @@ mod tests {
     #[tokio::test]
     async fn fanout_shrink_before_notready() {
         let (tx_a, rx_a) = TopologyBuilder::memory(1, WhenFull::Block).await;
-        let (tx_b, rx_b) = TopologyBuilder::memory(0, WhenFull::Block).await;
+        let (tx_b, rx_b) = TopologyBuilder::memory(1, WhenFull::Block).await;
         let (tx_c, rx_c) = TopologyBuilder::memory(1, WhenFull::Block).await;
 
         let (mut fanout, mut fanout_control) = Fanout::new();

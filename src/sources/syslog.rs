@@ -588,7 +588,7 @@ mod tests {
             log_schema().timestamp_key() => date,
             log_schema().message_key() => msg,
             log_schema().source_type_key() => "syslog",
-            "host" => "host",
+            "host" => "74794bfb6795",
             "hostname" => "74794bfb6795",
             "severity" => "info",
             "facility" => "local7",

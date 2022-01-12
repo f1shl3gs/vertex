@@ -4944,6 +4944,7 @@ dependencies = [
  "hyper-openssl",
  "hyper-proxy",
  "indexmap",
+ "indoc",
  "internal",
  "inventory 0.1.11",
  "jemalloc-ctl",

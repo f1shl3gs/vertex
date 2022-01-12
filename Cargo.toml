@@ -366,6 +366,7 @@ flate2 = { version = "1.0.21" }
 glob = { version = "0.3.0" }
 hostname = { version = "0.3.1" }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
+indoc = { version = "1.0.3", default-features = false }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
 libc = { version = "0.2.112", optional = true }

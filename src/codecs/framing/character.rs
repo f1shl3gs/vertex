@@ -97,7 +97,7 @@ impl Decoder for CharacterDelimitedDecoder {
                             max_length = self.max_length,
                             internal_log_rate_secs = 10
                         );
-                        buf.advance(next_delimiter_index);
+                        buf.advance(next_delimiter_index + 1);
                     } else {
                         let frame = buf.split_to(next_delimiter_index).freeze();
                         buf.advance(1); // scoot past the delimiter
@@ -149,6 +149,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+    use indoc::indoc;
     use std::collections::HashMap;
 
     #[test]
@@ -226,7 +227,7 @@ mod tests {
 
     #[test]
     fn decode_json_multiline() {
-        let events = r#"
+        let events = indoc! {r#"
             {"log":"\u0009at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)\n","stream":"stdout","time":"2019-01-18T07:49:27.374616758Z"}
             {"log":"\u0009at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\n","stream":"stdout","time":"2019-01-18T07:49:27.374640288Z"}
             {"log":"\u0009at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)\n","stream":"stdout","time":"2019-01-18T07:49:27.374655505Z"}
@@ -278,7 +279,7 @@ mod tests {
             {"log":"\n","stream":"stdout","time":"2019-01-18T07:49:27.375391335Z"}
             {"log":"\n","stream":"stdout","time":"2019-01-18T07:49:27.375416915Z"}
             {"log":"2019-01-18 07:53:06.419 [               ]  INFO 1 --- [vent-bus.prod-1] c.t.listener.CommonListener              : warehousing Dailywarehousing.daily\n","stream":"stdout","time":"2019-01-18T07:53:06.420527437Z"}
-        "#;
+        "#};
 
         let mut codec = CharacterDelimitedDecoder::new(b'\n');
         let buf = &mut BytesMut::new();
