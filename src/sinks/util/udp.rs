@@ -120,8 +120,8 @@ impl UdpConnector {
         let socket = UdpSocket::bind(bind_address).await.context(BindError)?;
 
         if let Some(send_buffer_bytes) = self.send_buffer_bytes {
-            if let Err(error) = udp::set_send_buffer_size(&socket, send_buffer_bytes) {
-                warn!(message = "Failed configuring send buffer size on UDP socket.", %error);
+            if let Err(err) = udp::set_send_buffer_size(&socket, send_buffer_bytes) {
+                warn!(message = "Failed configuring send buffer size on UDP socket.", %err);
             }
         }
 
@@ -199,7 +199,7 @@ impl tower::Service<Bytes> for UdpService {
                 UdpServiceState::Sending(fut) => {
                     let socket = match ready!(fut.poll_unpin(cx)).context(ServiceChannelRecvError) {
                         Ok(socket) => socket,
-                        Err(error) => return Poll::Ready(Err(error)),
+                        Err(err) => return Poll::Ready(Err(err)),
                     };
                     UdpServiceState::Connected(socket)
                 }

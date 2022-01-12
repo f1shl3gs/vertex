@@ -156,14 +156,14 @@ impl TcpConnector {
             .context(ConnectError)
             .map(|mut maybe_tls| {
                 if let Some(keepalive) = self.keepalive {
-                    if let Err(error) = maybe_tls.set_keepalive(keepalive) {
-                        warn!(message = "Failed configuring TCP keepalive.", %error);
+                    if let Err(err) = maybe_tls.set_keepalive(keepalive) {
+                        warn!(message = "Failed configuring TCP keepalive.", %err);
                     }
                 }
 
                 if let Some(send_buffer_bytes) = self.send_buffer_bytes {
-                    if let Err(error) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
-                        warn!(message = "Failed configuring send buffer size on TCP socket.", %error);
+                    if let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
+                        warn!(message = "Failed configuring send buffer size on TCP socket.", %err);
                     }
                 }
 
@@ -239,7 +239,7 @@ impl TcpSink {
         let mut buf = [0u8; 1];
         let mut buf = ReadBuf::new(&mut buf);
         match Pin::new(stream).poll_read(&mut cx, &mut buf) {
-            Poll::Ready(Err(error)) => ShutdownCheck::Error(error),
+            Poll::Ready(Err(err)) => ShutdownCheck::Error(err),
             Poll::Ready(Ok(())) if buf.filled().is_empty() => {
                 // Maybe this is only a sign to close the channel,
                 // in which case we should try to flush our buffers

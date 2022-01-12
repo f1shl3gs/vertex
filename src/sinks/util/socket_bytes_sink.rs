@@ -93,8 +93,8 @@ where
 
     fn poll_ready(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         if *self.as_mut().project().events_total >= MAX_PENDING_ITEMS {
-            if let Err(error) = ready!(self.as_mut().poll_flush(cx)) {
-                return Poll::Ready(Err(error));
+            if let Err(err) = ready!(self.as_mut().poll_flush(cx)) {
+                return Poll::Ready(Err(err));
             }
         }
 
@@ -111,10 +111,10 @@ where
     fn poll_flush(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         let pinned = self.as_mut().project();
         match (pinned.shutdown_check)(pinned.inner.get_mut().get_mut()) {
-            ShutdownCheck::Error(error) => return Poll::Ready(Err(error)),
+            ShutdownCheck::Error(err) => return Poll::Ready(Err(err)),
             ShutdownCheck::Close(reason) => {
-                if let Err(error) = ready!(self.as_mut().poll_close(cx)) {
-                    return Poll::Ready(Err(error));
+                if let Err(err) = ready!(self.as_mut().poll_close(cx)) {
+                    return Poll::Ready(Err(err));
                 }
 
                 return Poll::Ready(Err(IoError::new(ErrorKind::Other, reason)));
