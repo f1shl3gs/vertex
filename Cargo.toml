@@ -31,6 +31,12 @@ members = [
 ]
 
 [features]
+
+benches = [
+    "sources-syslog",
+    "sinks-loki"
+]
+
 default = [
     # common
     "disk-buffer",

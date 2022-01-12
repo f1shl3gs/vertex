@@ -89,7 +89,7 @@ check: check_shell check_clippy check_fmt
 
 .PHONY: bench-vertex
 bench-vertex:
-	cargo bench --features bench --no-default-features
+	cargo bench --features bench --no-default-features --features benches
 
 .PHONY: bench-prometheus
 bench-prometheus:

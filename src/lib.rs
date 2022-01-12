@@ -34,8 +34,6 @@ pub mod testing;
 
 pub use signal::SignalHandler;
 
-extern crate bloom;
-
 #[macro_use]
 extern crate metrics;
 
