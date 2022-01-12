@@ -10,7 +10,7 @@ serde_yaml = { version = "0.8.23" }
 [dependencies]
 atomig = { version = "0.3.3", features = ["derive", "serde"] }
 buffers = { path = "../buffers" }
-bytes = { version = "1.0.1", default-features = false, features = ["serde"] }
+bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 futures = { version = "0.3.19", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }

@@ -17,7 +17,7 @@ where
     T: Ackable,
 {
     fn ack_size(&self) -> usize {
-        self.iter().map(|x| x.ack_size()).sum()
+        self.iter().map(Ackable::ack_size).sum()
     }
 }
 

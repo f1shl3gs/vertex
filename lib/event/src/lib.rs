@@ -12,8 +12,8 @@ pub use buffers::{DecodeBytes, EncodeBytes};
 pub use finalization::{
     BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
 };
-pub use log::LogRecord;
 pub use log::value::Value;
+pub use log::LogRecord;
 pub use macros::EventDataEq;
 pub use metric::*;
 
@@ -109,6 +109,13 @@ impl Event {
         }
     }
 
+    pub fn metadata(&self) -> &EventMetadata {
+        match self {
+            Self::Log(log) => log.metadata(),
+            Self::Metric(metric) => metric.metadata(),
+        }
+    }
+
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
         match self {
             Self::Metric(metric) => metric.metadata_mut(),
@@ -126,6 +133,15 @@ impl Event {
         match self {
             Self::Log(log) => log.add_finalizer(finalizer),
             Self::Metric(metric) => metric.add_finalizer(finalizer),
+        }
+    }
+
+    /// Replace the finalizer with a new one created from the given optional
+    /// batch notifier
+    pub fn with_batch_notifier_option(self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+        match self {
+            Self::Log(log) => log.with_batch_notifier_option(batch).into(),
+            Self::Metric(metric) => metric.with_batch_notifier_option(batch).into(),
         }
     }
 }

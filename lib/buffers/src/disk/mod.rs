@@ -101,8 +101,8 @@ mod record;
 mod ser;
 mod writer;
 
-#[cfg(test)]
-mod tests;
+// #[cfg(test)]
+// mod tests;
 
 use self::{acknowledgements::create_disk_acker, ledger::Ledger};
 pub use self::{

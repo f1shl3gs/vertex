@@ -183,10 +183,12 @@ impl StreamSink for UnixSink {
 
 #[cfg(test)]
 mod tests {
+    use testify::random::random_lines_with_stream;
     use tokio::net::UnixListener;
 
     use super::*;
     use crate::sinks::util::{encode_log, Encoding};
+    use crate::testing::CountReceiver;
 
     fn temp_uds_path(name: &str) -> PathBuf {
         tempfile::tempdir().unwrap().into_path().join(name)

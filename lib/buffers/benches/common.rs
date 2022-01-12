@@ -9,10 +9,10 @@ use buffers::{
     BufferType,
 };
 use bytes::{Buf, BufMut};
-use shared::ByteSizeOf;
 use futures::{Sink, SinkExt, Stream, StreamExt};
 use metrics_tracing_context::{MetricsLayer, TracingContextLayer};
 use metrics_util::{layers::Layer, DebuggingRecorder};
+use shared::ByteSizeOf;
 use tracing::Span;
 use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 

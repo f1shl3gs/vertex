@@ -1,12 +1,13 @@
 use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter, Write};
+use std::sync::Arc;
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
 use crate::metadata::EventMetadata;
-use crate::{EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -361,6 +362,10 @@ impl Metric {
         }
     }
 
+    pub fn metadata(&self) -> &EventMetadata {
+        &self.metadata
+    }
+
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
         &mut self.metadata
     }
@@ -405,6 +410,11 @@ impl Metric {
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
+    }
+
+    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier_option(batch);
+        self
     }
 }
 

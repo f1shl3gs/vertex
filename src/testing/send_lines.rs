@@ -1,5 +1,5 @@
 use futures::StreamExt;
-use futures_util::{ SinkExt};
+use futures_util::SinkExt;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 use tokio::io::AsyncWriteExt;

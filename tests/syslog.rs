@@ -1,8 +1,6 @@
 use event::encoding::EncodingConfig;
-use event::LogRecord;
 use rand::{thread_rng, Rng};
 use serde::Deserialize;
-use serde_json::Value;
 use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
@@ -209,14 +207,13 @@ async fn tcp_syslog() {
     let output_messages: Vec<SyslogMessageRfc5424> = output_lines
         .iter()
         .map(|s| {
-            println!("{}", s);
+            let mut value = serde_json::Value::from_str(s).unwrap();
+            let v = value.as_object_mut().unwrap().get("fields").unwrap();
+            let mut v = v.clone();
+            v.as_object_mut().unwrap().remove("hostname");
+            v.as_object_mut().unwrap().remove("source_ip");
 
-            let mut log: LogRecord = serde_json::from_str(s).unwrap();
-            log.remove_field("hostname");
-            log.remove_field("source_ip");
-            let value = serde_json::to_value(log.fields).unwrap();
-
-            serde_json::from_value(value).unwrap()
+            serde_json::from_value(v).unwrap()
         })
         .collect();
 

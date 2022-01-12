@@ -1,5 +1,4 @@
-#![deny(clippy::all)]
-
+#[deny(clippy::cast_precision_loss)]
 mod acker;
 mod buffer_usage_data;
 mod config;

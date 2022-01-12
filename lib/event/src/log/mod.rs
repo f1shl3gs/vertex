@@ -8,9 +8,11 @@ pub mod value;
 
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Display};
+use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
+use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 use tracing::field::Field;
@@ -18,7 +20,7 @@ use tracing::field::Field;
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
-use crate::{EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -56,9 +58,8 @@ impl From<Bytes> for LogRecord {
     fn from(bs: Bytes) -> Self {
         let mut log = LogRecord::default();
 
-        // TODO: log schema should be used here
-        log.insert_field("message", bs);
-        log.insert_field("timestamp", Utc::now());
+        log.insert_field(log_schema().message_key(), bs);
+        log.insert_field(log_schema().timestamp_key(), Utc::now());
 
         log
     }
@@ -172,6 +173,10 @@ impl LogRecord {
         contains::contains(&self.fields, key.as_ref())
     }
 
+    pub fn get_flat_field(&self, key: impl AsRef<str>) -> Option<&Value> {
+        self.fields.get(key.as_ref())
+    }
+
     pub fn get_field(&self, key: impl AsRef<str>) -> Option<&Value> {
         get::get(&self.fields, key.as_ref())
     }
@@ -196,8 +201,17 @@ impl LogRecord {
         self.metadata.add_finalizer(finalizer);
     }
 
+    pub fn metadata(&self) -> &EventMetadata {
+        &self.metadata
+    }
+
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
         &mut self.metadata
+    }
+
+    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier_option(batch);
+        self
     }
 }
 

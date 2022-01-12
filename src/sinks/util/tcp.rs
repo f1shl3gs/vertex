@@ -306,11 +306,12 @@ impl StreamSink for TcpSink {
 #[cfg(test)]
 mod test {
     use super::*;
+    use testify::next_addr;
     use tokio::net::TcpListener;
 
     #[tokio::test]
     async fn healthcheck() {
-        trace_init();
+        crate::trace::test_init();
 
         let addr = next_addr();
         let _listener = TcpListener::bind(&addr).await.unwrap();

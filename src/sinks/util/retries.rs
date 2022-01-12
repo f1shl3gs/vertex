@@ -270,7 +270,7 @@ mod tests {
 
     #[tokio::test]
     async fn service_error_retry() {
-        trace_init();
+        crate::trace::test_init();
 
         time::pause();
 
@@ -301,7 +301,7 @@ mod tests {
 
     #[tokio::test]
     async fn service_error_no_retry() {
-        trace_init();
+        crate::trace::test_init();
 
         let policy = FixedRetryPolicy::new(
             5,
@@ -321,7 +321,7 @@ mod tests {
 
     #[tokio::test]
     async fn timeout_error() {
-        trace_init();
+        crate::trace::test_init();
 
         time::pause();
 

@@ -12,8 +12,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 
 use crate::config::graph::Graph;
-#[cfg(test)]
-use crate::config::{SinkConfig, SourceConfig, TransformConfig};
+use crate::config::TransformConfig;
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -134,7 +133,6 @@ impl Builder {
         self.sinks.insert(ComponentKey::from(id.into()), sink);
     }
 
-    #[cfg(test)]
     pub fn add_transform<T: TransformConfig + 'static, S: Into<String>>(
         &mut self,
         id: S,
