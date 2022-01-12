@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641962220038,
+  "lastUpdate": 1641962240516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1274,6 +1274,31 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1112400,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "bd8b1a26f9d9d730b1a8ceeee1eaba75506b3e35",
+          "message": "chore(deps): bump assert_cmd from 2.0.2 to 2.0.3",
+          "timestamp": "2022-01-10T14:58:12Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/106/commits/bd8b1a26f9d9d730b1a8ceeee1eaba75506b3e35"
+        },
+        "date": 1641962239393,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1225100,
             "unit": "ns/op"
           }
         ]
