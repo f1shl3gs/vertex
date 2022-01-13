@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1641994479131,
+  "lastUpdate": 1642048083527,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2971,6 +2971,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 74.263,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "b5c6b74230005893a98365f95d742cd1f5de84ca",
+          "message": "chore(deps): bump openssl-probe from 0.1.4 to 0.1.5",
+          "timestamp": "2022-01-10T14:58:12Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/108/commits/b5c6b74230005893a98365f95d742cd1f5de84ca"
+        },
+        "date": 1642048082822,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 38.465,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 104.02,
             "unit": "ns/op"
           }
         ]
