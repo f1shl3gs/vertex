@@ -343,7 +343,7 @@ async fn collect_health_state_metric(
     Ok(metrics)
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
     use super::*;
     use crate::config::ProxyConfig;

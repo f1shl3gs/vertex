@@ -1,19 +1,22 @@
-use crate::tcp::{self, TcpKeepaliveConfig};
+use std::{fmt::Debug, net::SocketAddr, path::PathBuf, time::Duration};
+
 use openssl::{
     error::ErrorStack,
     ssl::{ConnectConfiguration, SslConnector, SslConnectorBuilder, SslMethod},
 };
 use snafu::{ResultExt, Snafu};
-use std::{fmt::Debug, net::SocketAddr, path::PathBuf};
 use tokio::net::TcpStream;
 use tokio_openssl::SslStream;
 
+use crate::tcp::{self, TcpKeepaliveConfig};
+
+#[cfg(feature = "tls-utils")]
 mod incoming;
 mod maybe_tls;
 mod outgoing;
 mod settings;
 
-#[cfg(feature = "listenfd")]
+#[cfg(all(feature = "tls-utils", feature = "listenfd"))]
 pub(crate) use incoming::{MaybeTlsIncomingStream, MaybeTlsListener};
 pub(crate) use maybe_tls::MaybeTls;
 pub use settings::{MaybeTlsSettings, TlsConfig, TlsOptions, TlsSettings};

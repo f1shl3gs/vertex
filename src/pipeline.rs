@@ -10,7 +10,7 @@ use std::task::{Context, Poll};
 
 use crate::config::Output;
 
-const CHUNK_SIZE: usize = 1024;
+const CHUNK_SIZE: usize = 1000;
 
 #[derive(Debug)]
 pub struct ClosedError;
@@ -124,6 +124,7 @@ impl Pipeline {
         Self::new_with_buffer(100)
     }
 
+    #[cfg(test)]
     pub fn new_test_finalize(status: EventStatus) -> (Self, impl Stream<Item = Event> + Unpin) {
         let (pipe, recv) = Self::new_with_buffer(100);
 
@@ -137,6 +138,23 @@ impl Pipeline {
         });
 
         (pipe, recv)
+    }
+
+    #[cfg(test)]
+    pub fn add_outputs(
+        &mut self,
+        status: EventStatus,
+        name: String,
+    ) -> impl Stream<Item = Event> + Unpin {
+        let (inner, recv) = Inner::new_with_buffer(100);
+        let recv = recv.map(move |mut event| {
+            let metadata = event.metadata_mut();
+            metadata.update_status(status);
+            metadata.update_sources();
+            event
+        });
+        self.named_inners.insert(name, inner);
+        recv
     }
 
     pub async fn send(&mut self, event: Event) -> Result<(), ClosedError> {
@@ -239,7 +257,7 @@ impl Inner {
             }
         }
 
-        //
+        // TODO: add metrics for event sends
 
         Ok(())
     }

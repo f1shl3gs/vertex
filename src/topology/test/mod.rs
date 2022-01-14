@@ -24,6 +24,7 @@ mod reload;
 #[cfg(all(test, feature = "sinks-console", feature = "sources-socket"))]
 mod doesnt_reload;
 
-#[cfg(test)]
-mod backpressure;
+// TODO: enable this in the future
+// #[cfg(test)]
+// mod backpressure;
 mod utils;
