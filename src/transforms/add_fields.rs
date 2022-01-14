@@ -1,5 +1,5 @@
-use crate::config::default_true;
-use crate::config::{DataType, GlobalOptions, TransformConfig};
+use crate::config::{default_true, Output, TransformContext};
+use crate::config::{DataType, TransformConfig};
 use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
 use indexmap::IndexMap;
@@ -17,7 +17,7 @@ pub struct AddFieldsConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "add_fields")]
 impl TransformConfig for AddFieldsConfig {
-    async fn build(&self, _globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(AddFields::from(self)))
     }
 
@@ -25,8 +25,8 @@ impl TransformConfig for AddFieldsConfig {
         DataType::Log
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn transform_type(&self) -> &'static str {

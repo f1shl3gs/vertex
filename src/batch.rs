@@ -181,7 +181,7 @@ pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
         deserialize_with = "deserialize_duration_option",
         serialize_with = "serialize_duration_option"
     )]
-    pub timeout: Option<chrono::Duration>,
+    pub timeout: Option<Duration>,
 
     #[serde(skip)]
     _d: PhantomData<D>,
@@ -191,8 +191,7 @@ pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
 
 impl<D: SinkBatchSettings> BatchConfig<D, Unmerged> {
     pub fn validate(self) -> Result<BatchConfig<D, Merged>, BatchError> {
-        let timeout =
-            chrono::Duration::from_std(D::TIMEOUT).expect("Timeout should be set already");
+        let timeout = D::TIMEOUT;
         let config = BatchConfig {
             max_bytes: self.max_bytes.or(D::MAX_BYTES),
             max_events: self.max_events.or(D::MAX_EVENTS),
@@ -266,7 +265,7 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
                 events: adjusted.max_events.unwrap_or(usize::MAX),
                 _b: PhantomData,
             },
-            timeout: timeout.to_std().unwrap(),
+            timeout,
         })
     }
 
@@ -290,11 +289,7 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
 
         // This is unfortunate since we technically have already made sure
         // that isn't possible in `validate`, but alas.
-        let timeout = self
-            .timeout
-            .ok_or(BatchError::InvalidTimeout)?
-            .to_std()
-            .unwrap();
+        let timeout = self.timeout.ok_or(BatchError::InvalidTimeout)?;
 
         Ok(BatcherSettings::new(timeout, max_bytes, max_events))
     }

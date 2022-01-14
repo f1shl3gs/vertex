@@ -1,11 +1,13 @@
 use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter, Write};
+use std::sync::Arc;
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 
 use crate::metadata::EventMetadata;
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable};
+use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -60,18 +62,8 @@ impl MetricValue {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
-pub struct DataPoint {
-    pub tags: BTreeMap<String, String>,
-    pub timestamp: u64,
-    pub value: MetricValue,
-}
-
-impl DataPoint {
-    pub fn insert(&mut self, k: String, v: String) {
-        self.tags.insert(k, v);
-    }
-}
+/// The type alias for an array of `Metric` elements
+pub type Metrics = Vec<Metric>;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
@@ -134,7 +126,7 @@ impl Display for Metric {
 
         write!(fmt, "{}", self.name)?;
 
-        if self.tags.len() != 0 {
+        if !self.tags.is_empty() {
             write!(fmt, "{{")?;
 
             let mut n = 0;
@@ -155,6 +147,16 @@ impl Display for Metric {
             }
             _ => Ok(()),
         }
+    }
+}
+
+impl EventDataEq for Metric {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.value == other.value
+            && self.timestamp == other.timestamp
+            && self.tags == other.tags
+            && self.name == other.name
+            && self.description == other.description
     }
 }
 
@@ -350,6 +352,14 @@ impl Metric {
         }
     }
 
+    pub fn metadata(&self) -> &EventMetadata {
+        &self.metadata
+    }
+
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        &mut self.metadata
+    }
+
     #[inline]
     pub fn name(&self) -> &str {
         &self.name
@@ -390,6 +400,11 @@ impl Metric {
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
+    }
+
+    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier_option(batch);
+        self
     }
 }
 

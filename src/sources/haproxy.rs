@@ -1,8 +1,9 @@
 use std::io::BufRead;
+use std::time::Duration;
 
 use bytes::Buf;
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
@@ -10,7 +11,7 @@ use snafu::Snafu;
 
 use crate::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::{Auth, HttpClient};
 use crate::sources::Source;
@@ -45,7 +46,7 @@ struct HaproxyConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     endpoints: Vec<String>,
 
@@ -92,12 +93,7 @@ impl SourceConfig for HaproxyConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-        let mut output = ctx.out.sink_map_err(|err| {
-            error!(
-                message = "Error sending haproxy metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
@@ -109,18 +105,24 @@ impl SourceConfig for HaproxyConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending haproxy metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -134,7 +136,7 @@ async fn scrap(
     auth: Option<Auth>,
     proxy: &ProxyConfig,
 ) -> Result<Vec<Metric>, Error> {
-    let client = HttpClient::new(tls, &proxy)?;
+    let client = HttpClient::new(tls, proxy)?;
 
     let mut req = http::Request::get(uri).body(hyper::Body::empty())?;
 
@@ -179,7 +181,14 @@ async fn gather(
     let start = std::time::Instant::now();
     let mut metrics = match scrap(uri, tls.clone(), auth.clone(), proxy).await {
         Ok(ms) => ms,
-        Err(err) => vec![],
+        Err(err) => {
+            warn!(
+                message = "Scraping metrics failed",
+                %err
+            );
+
+            vec![]
+        }
     };
     let elapsed = start.elapsed().as_secs_f64();
     let up = if metrics.len() != 0 { 1 } else { 0 };
@@ -211,15 +220,15 @@ pub enum ParseError {
 
 pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
     let mut metrics = vec![];
-    let mut lines = reader.lines();
+    let lines = reader.lines();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = match line {
             Ok(line) => line,
             _ => continue,
         };
 
-        let parts = line.split(",").collect::<Vec<_>>();
+        let parts = line.split(',').collect::<Vec<_>>();
         if parts.len() < MINIMUM_CSV_FIELD_COUNT {
             return Err(ParseError::RowTooShort);
         }
@@ -251,11 +260,11 @@ pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
 }
 
 fn parse_info(reader: impl std::io::BufRead) -> Result<(String, String), Error> {
-    let mut lines = reader.lines();
+    let lines = reader.lines();
     let mut release_date = String::new();
     let mut version = String::new();
 
-    while let Some(line) = lines.next() {
+    for line in lines {
         let line = match line {
             Ok(line) => line,
             Err(_) => continue,
@@ -322,6 +331,7 @@ macro_rules! try_push_metric {
 }
 
 fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(32);
 
     try_push_metric!(
@@ -589,6 +599,7 @@ fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
 }
 
 fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(23);
 
     try_push_metric!(
@@ -790,6 +801,7 @@ fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
 }
 
 fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
+    #![allow(clippy::int_plus_one)]
     let mut metrics = Vec::with_capacity(34);
 
     try_push_metric!(

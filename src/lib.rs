@@ -1,10 +1,12 @@
 #![allow(clippy::float_cmp)]
+#![allow(clippy::too_many_arguments)]
 
 mod async_read;
 mod batch;
-mod buffers;
+mod codecs;
 mod common;
 pub mod config;
+mod dns;
 mod extensions;
 mod http;
 mod multiline;
@@ -12,11 +14,12 @@ mod partition;
 mod pipeline;
 mod shutdown;
 pub mod signal;
+mod sink;
 pub mod sinks;
 pub mod sources;
 mod stats;
 mod stream;
-mod tcp;
+pub mod tcp;
 pub mod template;
 mod timezone;
 mod tls;
@@ -24,10 +27,12 @@ pub mod topology;
 pub mod trace;
 pub mod transforms;
 mod trigger;
+pub mod udp;
+pub mod utilization;
+
+pub mod testing;
 
 pub use signal::SignalHandler;
-
-extern crate bloom;
 
 #[macro_use]
 extern crate metrics;

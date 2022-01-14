@@ -3,7 +3,7 @@ use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 
 use crate::config::{
-    DataType, GenerateConfig, GlobalOptions, TransformConfig, TransformDescription,
+    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use crate::transforms::{FunctionTransform, Transform};
 
@@ -26,7 +26,7 @@ impl GenerateConfig for SampleConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "sample")]
 impl TransformConfig for SampleConfig {
-    async fn build(&self, _global: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         todo!()
     }
 
@@ -34,8 +34,8 @@ impl TransformConfig for SampleConfig {
         DataType::Log
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn transform_type(&self) -> &'static str {

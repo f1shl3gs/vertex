@@ -1,4 +1,4 @@
-use event::ByteSizeOf;
+use shared::ByteSizeOf;
 
 use super::data::BatchData;
 

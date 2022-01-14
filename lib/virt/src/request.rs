@@ -356,17 +356,18 @@ pub mod generated {
     //! It follows original naming convention
     #![allow(non_camel_case_types)]
     #![allow(dead_code)]
-    #![allow(non_snake_case)]
     #![allow(unused_assignments)]
+    #![allow(non_snake_case)]
+    #![allow(clippy::all)]
 
     use super::{ErrorCode, ErrorDomain};
     use ::xdr_codec;
 
-    // include!(concat!(env!("OUT_DIR"), "/virnetprotocol_xdr.rs"));
-    // include!(concat!(env!("OUT_DIR"), "/remote_protocol_xdr.rs"));
+    include!(concat!(env!("OUT_DIR"), "/virnetprotocol_xdr.rs"));
+    include!(concat!(env!("OUT_DIR"), "/remote_protocol_xdr.rs"));
 
-    include!("generated/remote_protocol_xdr.rs");
-    include!("generated/virnetprotocol_xdr.rs");
+    // include!("generated/remote_protocol_xdr.rs");
+    // include!("generated/virnetprotocol_xdr.rs");
 
     impl virNetMessageError {
         pub fn code(&self) -> ErrorCode {
@@ -577,12 +578,6 @@ macro_rules! resp {
         #[derive(Debug, Default)]
         pub struct $name(());
         delegate_unpack_impl!($name);
-
-        impl Into<()> for $name {
-            fn into(self) -> () {
-                ()
-            }
-        }
     };
 
     ($name: ident : $inner: ty) => {

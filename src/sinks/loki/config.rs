@@ -29,7 +29,7 @@ pub enum Encoding {
 pub struct LokiDefaultBatchSettings;
 
 impl SinkBatchSettings for LokiDefaultBatchSettings {
-    const MAX_EVENTS: Option<usize> = Some(100_00);
+    const MAX_EVENTS: Option<usize> = Some(10_000);
     const MAX_BYTES: Option<usize> = Some(1_000_000);
     const TIMEOUT: Duration = Duration::from_secs(1);
 }

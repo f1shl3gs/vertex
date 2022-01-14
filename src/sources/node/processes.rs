@@ -73,7 +73,7 @@ impl Stats {
     }
 
     fn total(&self) -> usize {
-        self.0.iter().fold(0usize, |mut acc, (_, v)| acc + *v)
+        self.0.iter().fold(0usize, |acc, (_, v)| acc + *v)
     }
 
     fn append(&mut self, s: &str) {

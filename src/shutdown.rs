@@ -5,6 +5,7 @@ use std::{
     task::{Context, Poll},
 };
 
+use crate::config::ComponentKey;
 use futures::{future, ready, Future, FutureExt};
 use stream_cancel::{Trigger, Tripwire};
 use tokio::time::{timeout_at, Instant};
@@ -13,9 +14,9 @@ use crate::stream::tripwire_handler;
 
 #[derive(Debug, Default)]
 pub struct ShutdownCoordinator {
-    begun_triggers: HashMap<String, Trigger>,
-    force_triggers: HashMap<String, Trigger>,
-    complete_tripwires: HashMap<String, Tripwire>,
+    begun_triggers: HashMap<ComponentKey, Trigger>,
+    force_triggers: HashMap<ComponentKey, Trigger>,
+    complete_tripwires: HashMap<ComponentKey, Tripwire>,
 }
 
 impl ShutdownCoordinator {
@@ -23,15 +24,18 @@ impl ShutdownCoordinator {
     /// of this Source and stores them as needed. Return the ShutdownSignal for
     /// this Source as well as a Tripwire that will be notified if the Source
     /// should be forcibly shutdown
-    pub fn register_source(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output = ()>) {
+    pub fn register_source(
+        &mut self,
+        name: &ComponentKey,
+    ) -> (ShutdownSignal, impl Future<Output = ()>) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
 
-        self.begun_triggers.insert(name.to_string(), begun_trigger);
-        self.force_triggers.insert(name.to_string(), force_trigger);
+        self.begun_triggers.insert(name.clone(), begun_trigger);
+        self.force_triggers.insert(name.clone(), force_trigger);
         self.complete_tripwires
-            .insert(name.to_string(), complete_tripwire);
+            .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
 
@@ -43,15 +47,18 @@ impl ShutdownCoordinator {
     }
 
     // TODO: implement it
-    pub fn register_extension(&mut self, name: &str) -> (ShutdownSignal, impl Future<Output = ()>) {
+    pub fn register_extension(
+        &mut self,
+        name: &ComponentKey,
+    ) -> (ShutdownSignal, impl Future<Output = ()>) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
 
-        self.begun_triggers.insert(name.to_string(), begun_trigger);
-        self.force_triggers.insert(name.to_string(), force_trigger);
+        self.begun_triggers.insert(name.clone(), begun_trigger);
+        self.force_triggers.insert(name.clone(), force_trigger);
         self.complete_tripwires
-            .insert(name.to_string(), complete_tripwire);
+            .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
 
@@ -63,9 +70,9 @@ impl ShutdownCoordinator {
     }
 
     /// Takes ownership of all internal state for the given source from another ShutdownCoordinator.
-    pub fn takeover_source(&mut self, name: &str, other: &mut Self) {
+    pub fn takeover_source(&mut self, name: &ComponentKey, other: &mut Self) {
         let existing = self.begun_triggers.insert(
-            name.to_string(),
+            name.clone(),
             other.begun_triggers.remove(name).unwrap_or_else(|| {
                 panic!(
                     "other ShutdownCoordinator didn't have a begun trigger for {}",
@@ -82,7 +89,7 @@ impl ShutdownCoordinator {
         }
 
         let existing = self.force_triggers.insert(
-            name.to_string(),
+            name.clone(),
             other.force_triggers.remove(name).unwrap_or_else(|| {
                 panic!(
                     "other ShutdownCoordinator didn't have a force trigger for {}",
@@ -98,7 +105,7 @@ impl ShutdownCoordinator {
         }
 
         let existing = self.complete_tripwires.insert(
-            name.to_string(),
+            name.clone(),
             other.complete_tripwires.remove(name).unwrap_or_else(|| {
                 panic!(
                     "Other ShutdownCoordinator didn't have a complete tripwire for {}",
@@ -158,7 +165,11 @@ impl ShutdownCoordinator {
     /// resolves to a bool that indicates if the source shut down cleanly
     /// before the given `deadline`. If the result is false then that means
     /// the source failed to shut down before `deadline` and had to be force-shutdown.
-    pub fn shutdown_source(&mut self, name: &str, deadline: Instant) -> impl Future<Output = bool> {
+    pub fn shutdown_source(
+        &mut self,
+        name: &ComponentKey,
+        deadline: Instant,
+    ) -> impl Future<Output = bool> {
         let begin_trigger = self.begun_triggers.remove(name).unwrap_or_else(|| {
             panic!(
                 "begun_trigger for source '{}' not found in the ShutdownCoordinator",
@@ -207,7 +218,7 @@ impl ShutdownCoordinator {
     fn shutdown_source_complete(
         complete_tripwire: Tripwire,
         force_trigger: Trigger,
-        name: String,
+        name: ComponentKey,
         deadline: Instant,
     ) -> impl Future<Output = bool> {
         async move {
@@ -351,12 +362,12 @@ mod tests {
     #[tokio::test]
     async fn shutdown_coordinator_shutdown_source_clean() {
         let mut shutdown = ShutdownCoordinator::default();
-        let name = "test";
+        let key = ComponentKey::from("test");
 
-        let (shutdown_signal, _) = shutdown.register_source(name);
+        let (shutdown_signal, _) = shutdown.register_source(&key);
 
         let deadline = Instant::now() + Duration::from_secs(1);
-        let shutdown_complete = shutdown.shutdown_source(name, deadline);
+        let shutdown_complete = shutdown.shutdown_source(&key, deadline);
 
         drop(shutdown_signal);
 
@@ -367,12 +378,12 @@ mod tests {
     #[tokio::test]
     async fn shutdown_coordinator_shutdown_source_force() {
         let mut shutdown = ShutdownCoordinator::default();
-        let name = "test";
+        let key = ComponentKey::from("test");
 
-        let (_shutdown_signal, force_shutdown_tripwire) = shutdown.register_source(name);
+        let (_shutdown_signal, force_shutdown_tripwire) = shutdown.register_source(&key);
 
         let deadline = Instant::now() + Duration::from_secs(1);
-        let shutdown_complete = shutdown.shutdown_source(name, deadline);
+        let shutdown_complete = shutdown.shutdown_source(&key, deadline);
 
         // Since we never drop the ShutdownSignal the ShutdownCoordinator assumes the Source is
         // still running and must force shutdown.

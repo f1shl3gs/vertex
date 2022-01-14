@@ -1,15 +1,15 @@
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Event, Metric, Quantile};
-use futures::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use futures::{FutureExt, StreamExt, TryFutureExt};
 use prometheus::{GroupKind, MetricGroup};
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::ResultExt;
+use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_false, default_interval, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, ProxyConfig, SourceConfig, SourceContext,
-    SourceDescription,
+    default_false, default_interval, deserialize_duration, serialize_duration, DataType,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::{Auth, HttpClient};
 use crate::pipeline::Pipeline;
@@ -33,7 +33,7 @@ struct PrometheusScrapeConfig {
         serialize_with = "serialize_duration",
         deserialize_with = "deserialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: std::time::Duration,
     #[serde(default = "default_false")]
     honor_labels: bool,
     tls: Option<TlsOptions>,
@@ -82,12 +82,12 @@ impl SourceConfig for PrometheusScrapeConfig {
             self.honor_labels,
             self.interval,
             ctx.shutdown,
-            ctx.out,
+            ctx.output,
         ))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -102,26 +102,17 @@ fn scrape(
     proxy: ProxyConfig,
     instance_tag: Option<String>,
     honor_labels: bool,
-    interval: chrono::Duration,
+    interval: std::time::Duration,
     shutdown: ShutdownSignal,
-    output: Pipeline,
+    mut output: Pipeline,
 ) -> Source {
-    let output = output.sink_map_err(|err| {
-        error!(
-            message = "Error sending metric",
-            %err
-        );
-    });
-
-    let ticker = ticker_from_duration(interval).unwrap();
-
-    Box::pin(
-        ticker
+    Box::pin(async move {
+        let mut stream = IntervalStream::new(tokio::time::interval(interval))
             .take_until(shutdown)
             .map(move |_| futures::stream::iter(urls.clone()))
             .flatten()
             .map(move |url| {
-                let instance = instance_tag.as_ref().map(|tag| {
+                let instance = instance_tag.as_ref().map(|_tag| {
                     let instance = format!(
                         "{}:{}",
                         url.host().unwrap_or_default(),
@@ -190,10 +181,10 @@ fn scrape(
                                                 }
                                             }
 
-                                            Ok(event)
+                                            event
                                         }))
                                     }
-                                    Err(err) => {
+                                    Err(_err) => {
                                         // TODO: handle it
                                         None
                                     }
@@ -227,9 +218,23 @@ fn scrape(
                     .flatten()
             })
             .flatten()
-            .forward(output)
-            .inspect(|_| info!("Finished sending")),
-    )
+            .boxed();
+
+        match output.send_all(&mut stream).await {
+            Ok(()) => {
+                info!(message = "Finished sending");
+                Ok(())
+            }
+            Err(err) => {
+                error!(
+                    message = "Error sending scraped metrics",
+                    %err
+                );
+
+                Err(())
+            }
+        }
+    })
 }
 
 fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {

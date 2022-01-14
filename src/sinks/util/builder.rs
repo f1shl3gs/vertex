@@ -6,9 +6,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use buffers::{Ackable, Acker};
-use event::{ByteSizeOf, Finalizable};
+use event::Finalizable;
 use futures::Stream;
 use futures_util::{stream::Map, StreamExt};
+use shared::ByteSizeOf;
 use tower::Service;
 
 use super::request_builder::RequestBuilder;

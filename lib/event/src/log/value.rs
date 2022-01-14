@@ -4,8 +4,7 @@ use std::convert::TryInto;
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde::{Deserialize, Serialize, Serializer};
-
-use crate::ByteSizeOf;
+use shared::ByteSizeOf;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
 pub enum Value {

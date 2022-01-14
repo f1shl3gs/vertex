@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use std::io::Write;
 
 use async_trait::async_trait;
+use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
 use futures::{stream::BoxStream, FutureExt};
@@ -9,7 +10,6 @@ use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
 
 use crate::{
-    buffers::Acker,
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
     impl_generate_config_from_default,
     sinks::{Sink, StreamSink},
@@ -97,7 +97,7 @@ impl StreamSink for StdoutSink {
         let mut stdout = std::io::stdout();
         let encoding = EncodingConfig::from(Encoding::Json);
 
-        while let Some(mut event) = input.next().await {
+        while let Some(event) = input.next().await {
             self.acker.ack(1);
 
             if let Some(text) = encode_event(event, &encoding) {

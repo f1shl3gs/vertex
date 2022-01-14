@@ -2,9 +2,9 @@
 name = "testify"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [dependencies]
+event = { path = "../event" }
 rand = "0.8.4"
-
-# futures
 futures = { version = "0.3.19" }

@@ -1,11 +1,11 @@
 use std::path::PathBuf;
+use std::time::Duration;
 
-use chrono::Duration;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 
 use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
     SourceContext, SourceDescription,
 };
 use crate::sources::Source;
@@ -33,11 +33,12 @@ struct TailConfig {
 }
 
 fn default_ignore_older_than() -> Duration {
-    Duration::hours(12)
+    // 12 hours
+    Duration::from_secs(12 * 60 * 60)
 }
 
 fn default_glob_interval() -> Duration {
-    Duration::seconds(3)
+    Duration::from_secs(3)
 }
 
 impl GenerateConfig for TailConfig {
@@ -64,13 +65,13 @@ impl SourceConfig for TailConfig {
         // add the source name as a subdir, so that multiple sources can operate
         // within the same given data_dir(e.g. the global one) without the file
         // servers' checkpointers interfering with each other
-        let data_dir = ctx.global.make_subdir(&ctx.name)?;
+        let data_dir = ctx.globals.make_subdir(&ctx.key.id())?;
 
         todo!()
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {

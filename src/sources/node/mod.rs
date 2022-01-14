@@ -1,3 +1,4 @@
+#[allow(dead_code)]
 mod arp;
 mod bcache;
 mod bonding;
@@ -51,10 +52,11 @@ mod zfs;
 
 use std::io::Read;
 use std::str::FromStr;
+use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use typetag;
@@ -68,8 +70,8 @@ use self::netdev::NetdevConfig;
 use self::netstat::NetstatConfig;
 use self::vmstat::VMStatConfig;
 use crate::config::{
-    default_false, default_true, deserialize_duration, serialize_duration, DataType, SourceConfig,
-    SourceContext,
+    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
+    DataType, Output, SourceConfig, SourceContext,
 };
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
@@ -302,7 +304,7 @@ pub struct NodeMetricsConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     #[serde(default = "default_proc_path")]
     proc_path: String,
@@ -312,10 +314,6 @@ pub struct NodeMetricsConfig {
 
     #[serde(default = "default_collectors")]
     collectors: Collectors,
-}
-
-fn default_interval() -> chrono::Duration {
-    chrono::Duration::seconds(15)
 }
 
 fn default_proc_path() -> String {
@@ -785,13 +783,16 @@ impl NodeMetrics {
 
             let now = chrono::Utc::now();
 
-            let mut stream = futures::stream::iter(metrics)
-                .map(|mut m| {
-                    m.timestamp = Some(now);
-                    Event::Metric(m)
-                })
-                .map(Ok);
-            out.send_all(&mut stream).await;
+            let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                m.timestamp = Some(now);
+                Event::Metric(m)
+            });
+
+            if let Err(err) = out.send_all(&mut stream).await {
+                error!(message = "Error sending node metrics", ?err);
+
+                return Err(());
+            }
         }
 
         Ok(())
@@ -803,17 +804,17 @@ impl NodeMetrics {
 impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
-            interval: self.interval.to_std().unwrap(),
+            interval: self.interval,
             proc_path: default_proc_path().into(),
             sys_path: default_sys_path().into(),
             collectors: self.collectors.clone(),
         };
 
-        Ok(Box::pin(nm.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(nm.run(ctx.shutdown, ctx.output)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {

@@ -4,19 +4,26 @@ mod insert;
 mod keys;
 pub mod path_iter;
 mod remove;
+pub mod value;
 
 use std::collections::BTreeMap;
-use std::fmt::Debug;
+use std::fmt::{Debug, Display};
+use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
+use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 use tracing::field::Field;
 
 use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
-use crate::{ByteSizeOf, EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
+
+/// The type alias for an array of `LogRecord` elements
+pub type Logs = Vec<LogRecord>;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
@@ -54,11 +61,16 @@ impl From<Bytes> for LogRecord {
     fn from(bs: Bytes) -> Self {
         let mut log = LogRecord::default();
 
-        // TODO: log schema should be used here
-        log.insert_field("message", bs);
-        log.insert_field("timestamp", Utc::now());
+        log.insert_field(log_schema().message_key(), bs);
+        log.insert_field(log_schema().timestamp_key(), Utc::now());
 
         log
+    }
+}
+
+impl EventDataEq for LogRecord {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.fields == other.fields
     }
 }
 
@@ -149,8 +161,23 @@ impl LogRecord {
         }
     }
 
+    /// This function will insert a key in place without reference to any pathing
+    /// information in the key. It will insert over the top of any value that
+    /// exists in the map already.
+    pub fn insert_flat_field<K, V>(&mut self, key: K, value: V) -> Option<Value>
+    where
+        K: Into<String> + Display,
+        V: Into<Value> + Debug,
+    {
+        self.fields.insert(key.into(), value.into())
+    }
+
     pub fn contains(&self, key: impl AsRef<str>) -> bool {
         contains::contains(&self.fields, key.as_ref())
+    }
+
+    pub fn get_flat_field(&self, key: impl AsRef<str>) -> Option<&Value> {
+        self.fields.get(key.as_ref())
     }
 
     pub fn get_field(&self, key: impl AsRef<str>) -> Option<&Value> {
@@ -175,6 +202,19 @@ impl LogRecord {
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
+    }
+
+    pub fn metadata(&self) -> &EventMetadata {
+        &self.metadata
+    }
+
+    pub fn metadata_mut(&mut self) -> &mut EventMetadata {
+        &mut self.metadata
+    }
+
+    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier_option(batch);
+        self
     }
 }
 

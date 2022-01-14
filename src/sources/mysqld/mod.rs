@@ -3,22 +3,24 @@ mod global_variables;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
-#[cfg(all(test, feature = "integration-tests-mysql"))]
-mod integration_tests;
 mod slave_status;
 
-use chrono::Utc;
-use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+#[cfg(all(test, feature = "integration-tests-mysql"))]
+mod integration_tests;
+
+use event::{Event, Metric};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-use sqlx::{ConnectOptions, MySqlPool};
+use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
+use std::time::{Duration, Instant};
 
 use crate::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use crate::sources::Source;
 use crate::tls::TlsConfig;
@@ -38,6 +40,8 @@ pub enum Error {
     ParseMysqlVersionFailed { version: String },
     #[snafu(display("query slave status failed"))]
     QuerySlaveStatusFailed,
+    #[snafu(display("task join failed, err: {}", source))]
+    TaskJoinError { source: tokio::task::JoinError },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -92,7 +96,7 @@ struct MysqldConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 fn default_host() -> String {
@@ -169,7 +173,7 @@ impl SourceConfig for MysqldConfig {
             .unwrap()
             .take_until(ctx.shutdown);
         let options = self.connect_options();
-        let mut output = ctx.out;
+        let mut output = ctx.output;
         let instance = format!("{}:{}", self.host, self.port);
 
         Ok(Box::pin(async move {
@@ -177,160 +181,120 @@ impl SourceConfig for MysqldConfig {
             let instance = instance.as_str();
 
             while ticker.next().await.is_some() {
-                let version = match get_mysql_version(&pool).await {
-                    Ok(v) => v,
-                    Err(err) => {
-                        warn!(
-                            message = "get mysql version failed",
-                            instance,
-                            %err
-                        );
+                let start = Instant::now();
+                let result = gather(instance, pool.clone()).await;
+                let elapsed = start.elapsed().as_secs_f64();
+                let up = result.is_ok();
 
-                        output
-                            .send(
-                                Metric::gauge_with_tags(
-                                    "mysql_up",
-                                    "Whether the MySQL server is up.",
-                                    0,
-                                    tags!(
-                                        "instance" => instance
-                                    ),
-                                )
-                                .into(),
-                            )
-                            .await;
+                let mut metrics = result.unwrap_or_default();
+                metrics.extend_from_slice(&[
+                    Metric::gauge("mysql_up", "Whether the MySQL server is up.", up),
+                    Metric::gauge("mysql_scrape_duration_seconds", "", elapsed),
+                ]);
 
-                        continue;
-                    }
-                };
+                let now = chrono::Utc::now();
+                let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                    m.timestamp = Some(now);
+                    m.insert_tag("instance", instance);
+                    Event::Metric(m)
+                });
 
-                let mut tasks = vec![];
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending mysqld metrics",
+                        %err
+                    );
 
-                if version >= 5.1 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(async move { global_status::gather(&p).await }));
+                    return Err(());
                 }
-
-                if version >= 5.1 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(
-                        async move { global_variables::gather(&p).await },
-                    ));
-                }
-
-                if version >= 5.5 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        info_schema_innodb_cmp::gather(&p).await
-                    }));
-                }
-
-                if version >= 5.5 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        info_schema_innodb_cmpmem::gather(&p).await
-                    }));
-                }
-
-                if version >= 5.5 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(async move {
-                        info_schema_query_response_time::gather(&p).await
-                    }));
-                }
-
-                if version >= 5.1 {
-                    let p = pool.clone();
-                    tasks.push(tokio::spawn(async move { slave_status::gather(&p).await }));
-                }
-
-                // When `try_join_all` works with `JoinHandle`, the behavior does not match
-                // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
-                let metrics = match futures::future::try_join_all(tasks).await {
-                    Err(err) => {
-                        warn!(
-                            message = "Staring scrape tasks failed",
-                            %err
-                        );
-
-                        vec![Metric::gauge_with_tags(
-                            "mysql_up",
-                            "Whether the MySQL server is up.",
-                            0,
-                            tags!(
-                                "instance" => instance
-                            ),
-                        )]
-                    }
-                    Ok(results) => {
-                        let merged =
-                            results
-                                .iter()
-                                .fold(Ok(vec![]), |acc, part| match (acc, part) {
-                                    (Ok(mut acc), Ok(part)) => {
-                                        acc.extend_from_slice(part);
-                                        Ok(acc)
-                                    }
-                                    (Ok(_), Err(err)) => Err(err),
-                                    (Err(err), _) => Err(err),
-                                });
-
-                        match merged {
-                            Ok(mut metrics) => {
-                                metrics.push(Metric::gauge_with_tags(
-                                    "mysql_up",
-                                    "Whether the MySQL server is up.",
-                                    1,
-                                    tags!(
-                                        "instance" => instance
-                                    ),
-                                ));
-
-                                metrics
-                            }
-                            Err(err) => {
-                                warn!(
-                                    message = "Scrape metrics failed",
-                                    %err
-                                );
-
-                                vec![Metric::gauge_with_tags(
-                                    "mysql_up",
-                                    "Whether the MySQL server is up.",
-                                    0,
-                                    tags!(
-                                        "instance" => instance
-                                    ),
-                                )]
-                            }
-                        }
-                    }
-                };
-
-                let now = Utc::now();
-                let mut stream = futures::stream::iter(metrics)
-                    .map(|mut m| {
-                        m.timestamp = Some(now);
-                        m.tags.insert("instance".to_string(), instance.to_string());
-
-                        Event::Metric(m)
-                    })
-                    .map(Ok);
-
-                output.send_all(&mut stream).await;
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
         "mysqld"
     }
+}
+
+pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Error> {
+    let version = match get_mysql_version(&pool).await {
+        Ok(v) => v,
+        Err(err) => {
+            warn!(
+                message = "Get mysql version failed",
+                instance,
+                %err
+            );
+
+            return Err(err);
+        }
+    };
+
+    let mut tasks = vec![];
+
+    if version >= 5.1 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move { global_status::gather(&p).await }));
+    }
+
+    if version >= 5.1 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(
+            async move { global_variables::gather(&p).await },
+        ));
+    }
+
+    if version >= 5.5 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move {
+            info_schema_innodb_cmp::gather(&p).await
+        }));
+    }
+
+    if version >= 5.5 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move {
+            info_schema_innodb_cmpmem::gather(&p).await
+        }));
+    }
+
+    if version >= 5.5 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move {
+            info_schema_query_response_time::gather(&p).await
+        }));
+    }
+
+    if version >= 5.1 {
+        let p = pool.clone();
+        tasks.push(tokio::spawn(async move { slave_status::gather(&p).await }));
+    }
+
+    // When `try_join_all` works with `JoinHandle`, the behavior does not match
+    // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
+    let results = futures::future::try_join_all(tasks)
+        .await
+        .context(TaskJoinError)?;
+
+    // NOTE:
+    // `results.into_iter().collect()` would be awesome, BUT
+    // the trait `FromIterator<Vec<event::Metric>>` is not implemented for `Vec<event::Metric>`
+
+    let mut metrics = vec![];
+    for partial in results {
+        match partial {
+            Ok(partial) => metrics.extend(partial),
+            Err(err) => return Err(err),
+        }
+    }
+
+    Ok(metrics)
 }
 
 pub fn valid_name(s: &str) -> String {

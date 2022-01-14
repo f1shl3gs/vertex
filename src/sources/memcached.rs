@@ -1,8 +1,8 @@
 use std::collections::HashMap;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
@@ -11,7 +11,7 @@ use tokio::net::TcpStream;
 
 use crate::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::sources::Source;
 
@@ -26,7 +26,7 @@ struct MemcachedConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 }
 
 impl GenerateConfig for MemcachedConfig {
@@ -50,13 +50,7 @@ impl SourceConfig for MemcachedConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-
-        let mut output = ctx.out.sink_map_err(|err| {
-            error!(
-                message = "Error sending memcached metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         let endpoints = self.endpoints.clone();
         Ok(Box::pin(async move {
@@ -67,18 +61,24 @@ impl SourceConfig for MemcachedConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending memcached metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -137,7 +137,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                 ),
             )]);
 
-            for op in vec!["get", "delete", "inc", "decr", "cas", "touch"] {
+            for op in ["get", "delete", "inc", "decr", "cas", "touch"] {
                 let hits = get_value!(stats, (op.to_owned() + "_hits").as_str());
                 let misses = get_value!(stats, (op.to_owned() + "_misses").as_str());
 
@@ -324,7 +324,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
 
             for (slab, stats) in slabs {
                 let slab = slab.as_str();
-                for op in vec!["get", "delete", "incr", "decr", "cas", "touch"] {
+                for op in ["get", "delete", "incr", "decr", "cas", "touch"] {
                     metrics.push(Metric::sum_with_tags(
                         "memcached_slab_commands_total",
                         "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
@@ -833,7 +833,7 @@ enum ParseError {
 
 async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     let mut stats = Stats::default();
-    for cmd in vec!["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
+    for cmd in ["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
         let resp = query(addr, cmd).await.with_context(|| CommandExecFailed {
             cmd: cmd.to_string(),
         })?;
@@ -902,11 +902,11 @@ mod tests {
     async fn test_parse_stats() {
         let mut stats = Stats::default();
         let data = std::fs::read_to_string("tests/fixtures/memcached/stats.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
         let data = std::fs::read_to_string("tests/fixtures/memcached/slabs.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
         let data = std::fs::read_to_string("tests/fixtures/memcached/items.txt").unwrap();
-        stats.append(&data);
+        stats.append(&data).unwrap();
 
         assert_eq!(stats.version, "1.6.12");
         assert_eq!(stats.libevent, "2.1.12-stable");

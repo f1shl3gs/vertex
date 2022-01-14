@@ -7,9 +7,17 @@ pub use error::Error;
 
 #[cfg(test)]
 mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+    use crate::Client;
+
+    #[tokio::test]
+    #[ignore]
+    #[allow(clippy::print_stdout)]
+    async fn get_version() {
+        let mut cli = Client::connect("/run/libvirt/libvirt-sock-ro")
+            .await
+            .unwrap();
+        cli.open().await.unwrap();
+        let ver = cli.version().await.unwrap();
+        println!("version: {}", ver);
     }
 }

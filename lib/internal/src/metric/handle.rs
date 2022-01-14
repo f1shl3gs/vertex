@@ -98,7 +98,8 @@ impl Gauge {
         // and transmute back and forth to an f64 here. They have the
         // same size so this operation is safe, just don't read the
         // AtomicU64 directly
-        self.inner
+        let _ = self
+            .inner
             .fetch_update(Ordering::AcqRel, Ordering::Relaxed, |c| {
                 let v = value.update_value(c);
                 Some(v)
@@ -170,7 +171,8 @@ impl Histogram {
         }
 
         self.count.fetch_add(1, Ordering::Relaxed);
-        self.sum
+        let _ = self
+            .sum
             .fetch_update(Ordering::AcqRel, Ordering::Relaxed, |c| Some(c + value));
     }
 
@@ -212,12 +214,6 @@ impl Counter {
     pub fn new() -> Self {
         Self {
             inner: AtomicU64::new(0),
-        }
-    }
-
-    pub fn with_count(count: u64) -> Self {
-        Self {
-            inner: AtomicU64::new(count),
         }
     }
 

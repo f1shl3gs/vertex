@@ -1,16 +1,18 @@
+use std::time::Duration;
 use std::{fmt::Debug, io::Read};
 
 use event::{Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
 
+use crate::config::Output;
 use crate::{
     config::{
-        deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
-        SourceContext, SourceDescription,
+        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+        SourceConfig, SourceContext, SourceDescription,
     },
     pipeline::Pipeline,
     shutdown::ShutdownSignal,
@@ -26,11 +28,7 @@ struct SelfStatConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
-}
-
-fn default_interval() -> chrono::Duration {
-    chrono::Duration::seconds(15)
+    interval: Duration,
 }
 
 #[async_trait::async_trait]
@@ -39,11 +37,11 @@ impl SourceConfig for SelfStatConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let ss = SelfStat::from(self);
 
-        Ok(Box::pin(ss.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(ss.run(ctx.shutdown, ctx.output)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -72,7 +70,7 @@ struct SelfStat {
 impl From<&SelfStatConfig> for SelfStat {
     fn from(conf: &SelfStatConfig) -> Self {
         Self {
-            interval: conf.interval.to_std().unwrap(),
+            interval: conf.interval,
             cpu_total: RwLock::new(0.0),
         }
     }
@@ -88,14 +86,19 @@ impl SelfStat {
                 Ok(metrics) => {
                     let now = Some(chrono::Utc::now());
 
-                    let mut stream = futures::stream::iter(metrics)
-                        .map(|mut m| {
-                            m.timestamp = now;
-                            Event::Metric(m)
-                        })
-                        .map(Ok);
+                    let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                        m.timestamp = now;
+                        Event::Metric(m)
+                    });
 
-                    out.send_all(&mut stream).await;
+                    if let Err(err) = out.send_all(&mut stream).await {
+                        error!(
+                            message = "Error sending selfstat metrics",
+                            %err
+                        );
+
+                        return Err(());
+                    }
                 }
                 Err(err) => {
                     warn!(

@@ -1,11 +1,12 @@
-use chrono::Duration;
 use event::{Event, Metric};
-use futures::{stream, SinkExt, StreamExt};
+use futures::{stream, StreamExt};
 use rsntp;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
+use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
+use crate::config::Output;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
@@ -38,7 +39,7 @@ pub struct NtpConfig {
 }
 
 fn default_timeout() -> Duration {
-    Duration::seconds(10)
+    Duration::from_secs(10)
 }
 
 impl GenerateConfig for NtpConfig {
@@ -63,18 +64,18 @@ register_source_config!("ntp", NtpConfig);
 #[typetag::serde(name = "ntp")]
 impl SourceConfig for NtpConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let ntp = NTP {
-            interval: self.interval.to_std()?,
-            timeout: self.timeout.to_std()?,
+        let ntp = Ntp {
+            interval: self.interval,
+            timeout: self.timeout,
             pools: self.pools.clone(),
             pick_state: 0,
         };
 
-        Ok(Box::pin(ntp.run(ctx.shutdown, ctx.out)))
+        Ok(Box::pin(ntp.run(ctx.shutdown, ctx.output)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -82,7 +83,7 @@ impl SourceConfig for NtpConfig {
     }
 }
 
-struct NTP {
+struct Ntp {
     interval: std::time::Duration,
     timeout: std::time::Duration,
     pools: Vec<String>,
@@ -90,7 +91,7 @@ struct NTP {
     pick_state: usize,
 }
 
-impl NTP {
+impl Ntp {
     fn pick_one(&mut self) -> String {
         self.pick_state += 1;
 
@@ -106,7 +107,7 @@ impl NTP {
         let mut client = rsntp::AsyncSntpClient::new();
         client.set_timeout(self.timeout);
 
-        while let Some(now) = ticker.next().await {
+        while let Some(_ts) = ticker.next().await {
             let addr = self.pick_one();
 
             match client.synchronize(addr).await {
@@ -131,9 +132,19 @@ impl NTP {
                         // TODO: sanity
                     ];
 
-                    let mut stream = stream::iter(metrics).map(Event::Metric).map(Ok);
+                    let mut stream = stream::iter(metrics).map(|mut m| {
+                        m.timestamp = timestamp;
+                        Event::Metric(m)
+                    });
 
-                    out.send_all(&mut stream).await;
+                    if let Err(err) = out.send_all(&mut stream).await {
+                        error!(
+                            message = "Error sending ntp metrics",
+                            %err
+                        );
+
+                        return Err(());
+                    }
                 }
 
                 Err(err) => {

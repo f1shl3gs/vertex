@@ -10,7 +10,7 @@ use crate::request::{
         REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION, REMOTE_PROC_CONNECT_OPEN,
     },
     virNetMessageError, virNetMessageHeader, virNetMessageStatus, AuthListRequest,
-    AuthListResponse, BlockIoTuneParameters, ConnectOpenRequest, ConnectOpenResponse, Domain,
+    AuthListResponse, BlockIoTuneParameters, ConnectOpenRequest, Domain,
     DomainGetBlockIoTuneRequest, DomainGetBlockIoTuneResponse, DomainGetInfoRequest,
     DomainGetInfoResponse, DomainGetVcpusRequest, DomainGetVcpusResponse, DomainGetXmlDescRequest,
     DomainGetXmlDescResponse, DomainInfo, DomainMemoryStatsRequest, DomainMemoryStatsResponse,
@@ -80,9 +80,10 @@ impl Client {
         Ok(pkt)
     }
 
-    pub async fn open(&mut self) -> Result<ConnectOpenResponse, Error> {
+    pub async fn open(&mut self) -> Result<(), Error> {
         let req = self.make_request(REMOTE_PROC_CONNECT_OPEN, ConnectOpenRequest::new());
-        self.do_request(req).await
+        self.do_request(req).await?;
+        Ok(())
     }
 
     pub async fn domain_xml(&mut self, dom: &Domain) -> Result<String, Error> {
@@ -343,7 +344,7 @@ mod tests {
         let path = "/run/libvirt/libvirt-sock-ro";
         let mut cli = Client::connect(path).await.unwrap();
         // let auth = cli.auth().await.unwrap();
-        let resp = cli.open().await.unwrap();
+        cli.open().await.unwrap();
         let version = cli.version().await.unwrap();
         println!("libvirt: {}", version);
         let version = cli.hyper_version().await.unwrap();

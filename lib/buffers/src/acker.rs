@@ -1,4 +1,4 @@
-use futures::task::AtomicWaker;
+use std::fmt::Formatter;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
@@ -17,43 +17,104 @@ where
     T: Ackable,
 {
     fn ack_size(&self) -> usize {
-        self.iter().map(|x| x.ack_size()).sum()
+        self.iter().map(Ackable::ack_size).sum()
     }
 }
 
-#[derive(Clone, Debug)]
-pub enum Acker {
-    Disk(Arc<AtomicUsize>, Arc<AtomicWaker>),
-    Null,
+/// A handle for acknowledging reads from a buffer
+///
+/// In many cases, acknowledgements (sometimes referred to as "end-to-end acknowledgements")
+/// flow with an event from the moment it is processed by a source, all the way until it is
+/// processed by a sink. This occurs with in-memory buffers, which are the default, as the
+/// `Event` object itself which carries the acknowledgement state is never serialized or
+/// deserialized.
+///
+/// In other cases, such as disk buffers, the act of serializing the event to disk inherently
+/// strips the acknowledgement data from the event that gets deserialized on the other side.
+/// When an event is written to a disk buffer, we acknowledge it after it has been written,
+/// which is where we know that the event has been durably stored to disk and the source can
+/// propagate that acknowledgement information as needed.
+///
+/// The other side of the equation is when we read events back out of the disk buffer and process
+/// them in a sink. Similar to if there was no disk buffer, we want the "source" -- which is the
+/// disk buffer itself -- to know when it can remove the event from disk after it has been
+/// durably processed by the downstream sink, and this is where `Acker` comes into play.
+///
+/// Any sink using a buffer is given an `Acker` that they use to update the acknowledgement
+/// state as they process events. Even when an in-memory buffer is used, `Acker` is still
+/// called, even though it is a no-op. In this sense, the `passthrough` variant represents
+/// buffers that do not otherwise break the finalization logic when the event crosses into
+/// the buffer.
+///
+/// Conversely, `segmented` represents buffers where the acknowledgement logic is segmented
+/// into multiple parts: the acknowledgement when being written to the buffer, and the
+/// secondary acknowledgement when being processed by the sink after reading out of the buffer.
+#[derive(Clone)]
+pub struct Acker {
+    inner: Option<Arc<dyn Fn(usize) + Send + Sync>>,
+}
+
+impl std::fmt::Debug for Acker {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("Acker")
+            .field(
+                "inner",
+                if self.inner.is_some() {
+                    &"segmented"
+                } else {
+                    &"passthrough"
+                },
+            )
+            .finish()
+    }
 }
 
 impl Acker {
-    // This method should be called by a sink to indicate that it has
-    // successfully flushed the next `num` events from its input stream.
-    // If there are events that have flushed, but events that came before
-    // them in the stream have not been flushed, the later events must
-    // _not_ be acked until all preceding elements are also acked. This
-    // is primary used by the on-disk buffer to known which events are okay
-    // to delete from disk.
-    pub fn ack(&self, num: usize) {
-        // Only ack items if the amount to ack is larger than zero.
-        if num > 0 {
-            match self {
-                Acker::Null => {}
-                Acker::Disk(counter, notifier) => {
-                    counter.fetch_add(num, Ordering::Relaxed);
-                    notifier.wake();
-                }
-            }
+    /// Creates a passthrough [`Acker`]
+    ///
+    /// All calls to [`ack`] are a no-op
+    pub fn passthrough() -> Self {
+        Self { inner: None }
+    }
+
+    /// Creates a segmented [`Acker`]
+    ///
+    /// All calls to [`ack`] will call the given function `f`
+    pub fn segmented<F>(f: F) -> Self
+    where
+        F: Fn(usize) + Send + Sync + 'static,
+    {
+        Self {
+            inner: Some(Arc::new(f)),
         }
     }
 
-    #[must_use]
-    pub fn new_for_testing() -> (Self, Arc<AtomicUsize>) {
-        let ack_counter = Arc::new(AtomicUsize::new(0));
-        let notifier = Arc::new(AtomicWaker::new());
-        let acker = Acker::Disk(Arc::clone(&ack_counter), Arc::clone(&notifier));
+    /// Creates a basic [`Acker`] that simply tracks the total acknowledgement count
+    ///
+    /// A handle to the underlying [`AtomicUsize`] is passed back alongside the `Acker`
+    /// itself
+    pub fn basic() -> (Self, Arc<AtomicUsize>) {
+        let counter = Arc::new(AtomicUsize::new(0));
+        let counter2 = Arc::clone(&counter);
+        let inner = move |n: usize| {
+            counter2.fetch_add(n, Ordering::Relaxed);
+        };
+        let acker = Acker::segmented(inner);
 
-        (acker, ack_counter)
+        (acker, counter)
+    }
+
+    /// Acknowledgement a certain amount of records
+    ///
+    /// Callers are responsible for ensuring that acknowledgements are in order.
+    /// That is to say, if multiple records are read from the buffer, and all
+    /// messages except one are durably processed, only the count of the messages
+    /// processed up until that message can be acknowledged.
+    pub fn ack(&self, n: usize) {
+        if n > 0 {
+            if let Some(inner) = self.inner.as_ref() {
+                (&*inner)(n);
+            }
+        }
     }
 }

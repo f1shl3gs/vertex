@@ -8,6 +8,7 @@ pub type SignalRx = mpsc::Receiver<SignalTo>;
 
 /// Control messages used by Vertex to drive topology and shutdown events.
 #[derive(Debug)]
+#[allow(clippy::large_enum_variant)]
 pub enum SignalTo {
     /// Signal to reload config from a string.
     ReloadFromConfigBuilder(Builder),

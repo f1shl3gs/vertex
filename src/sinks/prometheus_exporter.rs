@@ -8,6 +8,7 @@ use std::{
 };
 
 use async_trait::async_trait;
+use buffers::Acker;
 use chrono::Utc;
 use event::MetricValue;
 use event::{Event, Metric};
@@ -22,7 +23,6 @@ use stream_cancel::{Trigger, Tripwire};
 
 use crate::stream::tripwire_handler;
 use crate::{
-    buffers::Acker,
     config::{
         default_false, DataType, HealthCheck, Resource, SinkConfig, SinkContext, SinkDescription,
     },

@@ -12,7 +12,7 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
 use event::{Event, Value};
-use futures::{stream::BoxStream, SinkExt, StreamExt};
+use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
 use nix::{
     sys::signal::{kill, Signal},
@@ -24,7 +24,7 @@ use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
 use tokio_util::codec::{Decoder, FramedRead};
 
-use crate::config::{DataType, SourceConfig, SourceContext};
+use crate::config::{DataType, Output, SourceConfig, SourceContext};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
@@ -63,7 +63,7 @@ pub struct JournaldConfig {
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.global.make_subdir(&ctx.name).map_err(|err| {
+        let data_dir = ctx.globals.make_subdir(&ctx.key.id()).map_err(|err| {
             warn!("create sub dir failed {:?}", err);
             err
         })?;
@@ -91,7 +91,7 @@ impl SourceConfig for JournaldConfig {
             includes,
             excludes,
             batch_size: self.batch_size.unwrap_or(DEFAULT_BATCH_SIZE),
-            output: ctx.out,
+            output: ctx.output,
         };
 
         let start: StartJournalctlFn = Box::new(move |cursor| {
@@ -112,8 +112,8 @@ impl SourceConfig for JournaldConfig {
         )))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -651,12 +651,12 @@ mod tests {
 
     impl TestJournal {
         fn new(
-            checkpoint: &Option<String>,
+            _checkpoint: &Option<String>,
         ) -> (
             BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
             StopJournalctlFn,
         ) {
-            let mut journal = TestJournal {};
+            let journal = TestJournal {};
             (journal_stream(), Box::new(|| ()))
         }
     }
@@ -732,6 +732,8 @@ MESSAGE=audit log
             result.unwrap();
             count += 1;
         }
+
+        assert_eq!(count, 8)
     }
 
     fn create_unit_matches<S: Into<String>>(units: Vec<S>) -> HashSet<String> {
@@ -835,12 +837,8 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("message").unwrap();
         match v {
-            Value::Bytes(_) => {
-                return v.clone();
-            }
-            _ => {
-                panic!("invalid event")
-            }
+            Value::Bytes(_) => v.clone(),
+            _ => panic!("invalid event"),
         }
     }
 
@@ -866,12 +864,8 @@ MESSAGE=audit log
         let log = event.as_log();
         let v = log.fields.get("PRIORITY").unwrap();
         match v {
-            Value::Bytes(_) => {
-                return v.clone();
-            }
-            _ => {
-                panic!("invalid event")
-            }
+            Value::Bytes(_) => v.clone(),
+            _ => panic!("invalid event"),
         }
     }
 }
