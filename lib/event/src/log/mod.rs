@@ -22,6 +22,9 @@ use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
 
+/// The type alias for an array of `LogRecord` elements
+pub type Logs = Vec<LogRecord>;
+
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
     pub tags: BTreeMap<String, String>,

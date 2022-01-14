@@ -22,7 +22,7 @@ mod stdout;
 mod vertex;
 
 use async_trait::async_trait;
-use event::Event;
+use event::{Event, Events};
 use futures::future::BoxFuture;
 use futures::stream::BoxStream;
 use futures::{Stream, StreamExt};
@@ -39,13 +39,13 @@ pub enum HealthcheckError {
 }
 
 #[async_trait]
-pub trait StreamSink {
-    async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()>;
+pub trait StreamSink<T> {
+    async fn run(self: Box<Self>, input: BoxStream<'_, T>) -> Result<(), ()>;
 }
 
 pub enum Sink {
-    Sink(Box<dyn futures::Sink<Event, Error = ()> + Send + Unpin>),
-    Stream(Box<dyn StreamSink + Send>),
+    Sink(Box<dyn futures::Sink<Events, Error = ()> + Send + Unpin>),
+    Stream(Box<dyn StreamSink<Events> + Send>),
 }
 
 impl Debug for Sink {
@@ -87,7 +87,7 @@ impl Sink {
     /// # Panics
     ///
     /// This function will panic if the self instance is not `Sink`.
-    pub fn into_stream(self) -> Box<dyn StreamSink + Send> {
+    pub fn into_stream(self) -> Box<dyn StreamSink<Events> + Send> {
         match self {
             Self::Stream(stream) => stream,
             _ => panic!("Failed type coercion, {:?} is not a Stream", self),

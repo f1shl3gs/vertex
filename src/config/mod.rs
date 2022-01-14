@@ -607,10 +607,6 @@ sources:
       - time5.aliyun.com
       - time6.aliyun.com
       - time7.aliyun.com
-#  journald:
-#    type: journald
-#    units: []
-#    excludes: []
 
 transforms:
   add_extra_tags:
@@ -639,18 +635,18 @@ sinks:
 
         ";
 
-        let _cb: Config = format::deserialize(text, Some(format::Format::YAML)).unwrap();
-    }
-
-    #[derive(Serialize, Deserialize)]
-    struct WithDuration {
-        #[serde(serialize_with = "serialize_duration")]
-        #[serde(deserialize_with = "deserialize_duration")]
-        pub d: Duration,
+        let _b: Builder = format::deserialize(text, Some(format::Format::YAML)).unwrap();
     }
 
     #[test]
-    fn test_deserialize_duration() {
+    fn deserialize_with_duration() {
+        #[derive(Serialize, Deserialize)]
+        struct WithDuration {
+            #[serde(serialize_with = "serialize_duration")]
+            #[serde(deserialize_with = "deserialize_duration")]
+            pub d: Duration,
+        }
+
         let d: WithDuration = serde_yaml::from_str("d: 5m3s").unwrap();
         assert_eq!(d.d, Duration::from_secs(5 * 60 + 3));
     }

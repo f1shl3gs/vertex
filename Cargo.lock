@@ -379,6 +379,7 @@ dependencies = [
  "metrics-util",
  "once_cell",
  "pin-project",
+ "quickcheck",
  "rkyv",
  "serde",
  "shared",
@@ -994,6 +995,16 @@ checksum = "3ddf21e73e016298f5cb37d6ef8e8da8e39f91f9ec8b0df44b7deb16a9f8cd5b"
 dependencies = [
  "log 0.3.9",
  "regex 0.2.11",
+]
+
+[[package]]
+name = "env_logger"
+version = "0.8.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
+dependencies = [
+ "log 0.4.14",
+ "regex 1.5.4",
 ]
 
 [[package]]
@@ -3179,6 +3190,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "quickcheck"
+version = "1.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "588f6378e4dd99458b60ec275b4477add41ce4fa9f64dcba6f15adccb19b50d6"
+dependencies = [
+ "env_logger 0.8.4",
+ "log 0.4.14",
+ "rand 0.8.4",
+]
+
+[[package]]
 name = "quote"
 version = "0.3.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5232,7 +5254,7 @@ checksum = "ef5855c0e686b4ef5fd0b96920d8e1f6317215798bcbde1ffec477a90d891ed2"
 dependencies = [
  "bitflags 0.9.1",
  "clap",
- "env_logger",
+ "env_logger 0.4.3",
  "lazy_static 0.2.11",
  "log 0.3.9",
  "nom 3.2.1",

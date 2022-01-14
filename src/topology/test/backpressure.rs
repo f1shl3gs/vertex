@@ -216,7 +216,7 @@ mod test_sink {
     }
 
     #[async_trait]
-    impl StreamSink for TestBackpressureSink {
+    impl StreamSink<Event> for TestBackpressureSink {
         async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
             let _num_taken = input.take(self.num_to_consume).count().await;
             futures::future::pending::<()>().await;

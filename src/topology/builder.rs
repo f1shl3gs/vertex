@@ -30,7 +30,7 @@ use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
 
-pub const DEFAULT_BUFFER_SIZE: usize = 1024;
+pub const DEFAULT_BUFFER_SIZE: usize = 1000;
 
 // TODO: this should be configured by user
 static TRANSFORM_CONCURRENCY_LIMIT: usize = 8;

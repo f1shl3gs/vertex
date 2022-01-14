@@ -7,6 +7,9 @@ pub mod encoding;
 pub mod topology;
 mod variant;
 
+#[cfg(test)]
+mod test;
+
 // re-export
 pub use acker::{Ackable, Acker};
 pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
@@ -16,6 +19,9 @@ pub use topology::{builder, channel};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 use std::fmt::Debug;
+
+#[cfg(test)]
+use quickcheck::{Arbitrary, Gen};
 
 #[macro_use]
 extern crate tracing;
@@ -28,6 +34,20 @@ pub enum WhenFull {
     Block,
     DropNewest,
     Overflow,
+}
+
+#[cfg(test)]
+impl Arbitrary for WhenFull {
+    fn arbitrary(g: &mut Gen) -> Self {
+        // TODO: We explictly avoid generating "overflow" as a possible value because
+        // nothing yet supports handling it, and will be defaulted to using "block"
+        // if they encounter "overflow". Thus, there's no reason to emit it here... yet
+        if bool::arbitrary(g) {
+            WhenFull::Block
+        } else {
+            WhenFull::DropNewest
+        }
+    }
 }
 
 impl Default for WhenFull {

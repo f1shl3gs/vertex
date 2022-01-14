@@ -217,12 +217,6 @@ impl Counter {
         }
     }
 
-    pub fn with_count(count: u64) -> Self {
-        Self {
-            inner: AtomicU64::new(count),
-        }
-    }
-
     pub fn record(&self, value: u64) {
         self.inner.fetch_add(value, Ordering::Relaxed);
     }

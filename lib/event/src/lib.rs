@@ -20,6 +20,7 @@ pub use metric::*;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+use crate::log::Logs;
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
@@ -30,6 +31,32 @@ use crate::metadata::EventMetadata;
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),
+}
+
+/// An array of one of the `Event` variants exclusively
+pub enum Events {
+    /// An array of type `LogRecord`
+    Logs(Logs),
+    /// An array of type `Metric`
+    Metrics(Metrics),
+}
+
+impl From<Event> for Events {
+    fn from(event: Event) -> Self {
+        match event {
+            Event::Log(log) => Self::Logs(vec![log]),
+            Event::Metric(metric) => Self::Metrics(vec![metric]),
+        }
+    }
+}
+
+impl ByteSizeOf for Events {
+    fn allocated_bytes(&self) -> usize {
+        match self {
+            Self::Logs(logs) => logs.allocated_bytes(),
+            Self::Metrics(metrics) => metrics.allocated_bytes(),
+        }
+    }
 }
 
 impl ByteSizeOf for Event {

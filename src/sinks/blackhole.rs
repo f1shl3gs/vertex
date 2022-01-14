@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use buffers::Acker;
-use event::Event;
+use event::{Event, Events};
 use futures::prelude::stream::BoxStream;
 use futures::FutureExt;
 use futures_util::StreamExt;
@@ -54,7 +54,7 @@ impl BlackholeSink {
 }
 
 #[async_trait]
-impl StreamSink for BlackholeSink {
+impl StreamSink<Events> for BlackholeSink {
     async fn run(self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
         while let Some(_) = input.next().await {
             self.acker.ack(1);

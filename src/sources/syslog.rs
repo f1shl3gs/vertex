@@ -325,8 +325,6 @@ mod tests {
     use crate::config::test_generate_config;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
-    use std::collections::HashMap;
-    use testify::next_addr;
 
     #[test]
     fn generate_config() {

@@ -62,18 +62,8 @@ impl MetricValue {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd, PartialEq)]
-pub struct DataPoint {
-    pub tags: BTreeMap<String, String>,
-    pub timestamp: u64,
-    pub value: MetricValue,
-}
-
-impl DataPoint {
-    pub fn insert(&mut self, k: String, v: String) {
-        self.tags.insert(k, v);
-    }
-}
+/// The type alias for an array of `Metric` elements
+pub type Metrics = Vec<Metric>;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
