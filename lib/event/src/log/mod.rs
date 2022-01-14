@@ -146,6 +146,19 @@ impl Finalizable for LogRecord {
 }
 
 impl LogRecord {
+    pub fn new(tags: BTreeMap<String, String>, fields: BTreeMap<String, Value>) -> Self {
+        Self {
+            tags,
+            fields,
+            metadata: Default::default(),
+        }
+    }
+
+    pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier(batch);
+        self
+    }
+
     pub fn insert_field(
         &mut self,
         key: impl AsRef<str>,

@@ -1,11 +1,6 @@
-use std::path::PathBuf;
-
+use crate::provider::Provider;
 use glob::Pattern;
-
-/// Represents the ability to enumerate paths
-pub trait Provider {
-    fn scan(&self) -> Vec<PathBuf>;
-}
+use std::path::PathBuf;
 
 /// A glob-based path provider
 ///

@@ -22,7 +22,7 @@ members = [
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
-    # "lib/tail",
+    "lib/tail",
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/humanize",
@@ -284,6 +284,7 @@ log_schema = { path = "lib/log_schema" }
 prometheus = { path = "lib/prometheus" }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
+tail = { path = "lib/tail" }
 tracing-limit = { path = "lib/tracing-limit" }
 virt = { path = "lib/virt", optional = true }
 
@@ -362,6 +363,7 @@ bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 dyn-clone = { version = "1.0.4" }
+encoding_rs = { version = "0.8.30", features = ["serde"]}
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.21" }
 glob = { version = "0.3.0" }

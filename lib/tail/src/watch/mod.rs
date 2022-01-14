@@ -1,13 +1,11 @@
-mod inotify;
-mod stat;
 #[cfg(test)]
 mod tests;
 
 use std::fs;
+use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek};
 use std::os::unix::fs::MetadataExt;
 use std::path::PathBuf;
-use std::time::Instant;
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
@@ -24,7 +22,7 @@ use crate::{Position, ReadFrom};
 /// The `Watcher` is expected to live for the lifetime of the file path. `Server` is
 /// responsible for clearing away `Watchers` which no longer exist
 pub struct Watcher {
-    path: PathBuf,
+    pub(crate) path: PathBuf,
 
     findable: bool,
     reader: Box<dyn BufRead>,
@@ -32,8 +30,6 @@ pub struct Watcher {
     devno: u64,
     inode: u64,
     dead: bool,
-    last_read_attempt: Instant,
-    last_read_success: Instant,
     max_line_bytes: usize,
     line_delimiter: Bytes,
     buf: BytesMut,
@@ -71,9 +67,11 @@ impl Watcher {
 
         // Determine the actual position at which we should start reading
         let (reader, position): (Box<dyn BufRead>, Position) = match (gzipped, too_old, read_from) {
-            (true, true, _) => debug!(
-                message = "Not reading gzipped file older than `ignore_older`"
-            )(Box::new(null_reader()), 0),
+            (true, true, _) => {
+                debug!(message = "Not reading gzipped file older than `ignore_older`");
+
+                (Box::new(null_reader()), 0)
+            }
             (true, _, ReadFrom::Checkpoint(position)) => {
                 debug!(
                     message = "Not re-reading gzipped frile with existing stored offset",
@@ -115,13 +113,6 @@ impl Watcher {
             }
         };
 
-        let ts = metadata
-            .modified()
-            .ok()
-            .and_then(|mtime| mtime.elapsed().ok())
-            .and_then(|diff| Instant::now().checked_sub(diff))
-            .unwrap_or_else(Instant::now);
-
         Ok(Self {
             path,
             findable: false,
@@ -130,22 +121,10 @@ impl Watcher {
             devno,
             inode,
             dead: false,
-            last_read_attempt: ts,
-            last_read_success: ts,
             max_line_bytes,
             line_delimiter,
             buf: BytesMut::new(),
         })
-    }
-
-    pub fn update_path(&mut self, path: PathBuf) -> io::Result<()> {
-        todo!()
-    }
-
-    #[inline]
-    pub fn should_read(&self) -> bool {
-        // TODO: implement this
-        true
     }
 
     /// Read a single line from the underlying file
@@ -167,7 +146,7 @@ impl Watcher {
             Ok(Some(_)) => Ok(Some(self.buf.split().freeze())),
             Ok(None) => {
                 if !self.findable {
-                    self.dead = true;
+                    self.set_dead();
                     // File has been deleted, so return what we have in the buffer, even though it
                     // didn't end with a newline. This is not a perfect signal for when we should
                     // give up waiting for a newline, but it's decent.
@@ -184,12 +163,41 @@ impl Watcher {
             }
             Err(err) => {
                 if let io::ErrorKind::NotFound = err.kind() {
-                    self.dead = true;
+                    self.set_dead();
                 }
 
                 Err(err)
             }
         }
+    }
+
+    pub fn update_path(&mut self, path: PathBuf) -> io::Result<()> {
+        let f = File::open(&path)?;
+        let meta = f.metadata()?;
+        let devno = meta.dev();
+        let inode = meta.ino();
+
+        if (devno, inode) != (self.devno, self.inode) {
+            let mut reader = io::BufReader::new(fs::File::open(&path)?);
+            let gzipped = is_gzipped(&mut reader)?;
+            let new_reader: Box<dyn BufRead> = if gzipped {
+                if self.position != 0 {
+                    Box::new(null_reader())
+                } else {
+                    Box::new(io::BufReader::new(MultiGzDecoder::new(reader)))
+                }
+            } else {
+                reader.seek(io::SeekFrom::Start(self.position))?;
+                Box::new(reader)
+            };
+
+            self.reader = new_reader;
+            self.devno = devno;
+            self.inode = inode;
+        }
+
+        self.path = path;
+        Ok(())
     }
 
     #[inline]
@@ -201,20 +209,16 @@ impl Watcher {
         self.findable
     }
 
-    fn track_read_attempt(&mut self) {
-        self.last_read_attempt = Instant::now();
-    }
-
-    fn track_read_success(&mut self) {
-        self.last_read_success = Instant::now();
-    }
-
     pub fn set_findable(&mut self, b: bool) {
         self.findable = b;
     }
 
     pub fn dead(&self) -> bool {
         self.dead
+    }
+
+    pub fn set_dead(&mut self) {
+        self.dead = true
     }
 }
 

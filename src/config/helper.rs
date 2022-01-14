@@ -1,3 +1,8 @@
+mod charset;
+mod regex;
+
+pub use self::regex::*;
+
 use serde::{Deserialize, Deserializer, Serializer};
 use std::borrow::Cow;
 use std::time::Duration;

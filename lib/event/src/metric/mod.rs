@@ -402,6 +402,11 @@ impl Metric {
         self.metadata.add_finalizer(finalizer);
     }
 
+    pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
+        self.metadata = self.metadata.with_batch_notifier(batch);
+        self
+    }
+
     pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self

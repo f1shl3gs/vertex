@@ -964,6 +964,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
+name = "encoding_rs"
+version = "0.8.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7896dc8abb250ffdda33912550faa54c88ec8b998dec0b2c55ab224921ce11df"
+dependencies = [
+ "cfg-if",
+ "serde",
+]
+
+[[package]]
 name = "endian-type"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4231,6 +4241,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "tail"
+version = "0.1.0"
+dependencies = [
+ "bstr",
+ "bytes",
+ "chrono",
+ "criterion",
+ "dashmap 4.0.2",
+ "flate2",
+ "futures",
+ "glob",
+ "quickcheck",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "tracing-test",
+]
+
+[[package]]
 name = "take_mut"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4713,6 +4745,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "tracing-test"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3eb7bda2e93bbc9c5b247034acc6a4b3d04f033a3d4b8fc1cb87d4d1c7c7ebd7"
+dependencies = [
+ "lazy_static 1.4.0",
+ "tracing-core",
+ "tracing-subscriber 0.3.5",
+ "tracing-test-macro",
+]
+
+[[package]]
+name = "tracing-test-macro"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4801dca35e4e2cee957c469bd4a1c370fadb7894c0d50721a40eba3523e6e91c"
+dependencies = [
+ "lazy_static 1.4.0",
+ "quote 1.0.14",
+ "syn 1.0.84",
+]
+
+[[package]]
 name = "trust-dns-proto"
 version = "0.20.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4951,6 +5006,7 @@ dependencies = [
  "console-subscriber",
  "criterion",
  "dyn-clone",
+ "encoding_rs",
  "env-test-util",
  "event",
  "exitcode",
@@ -5021,6 +5077,7 @@ dependencies = [
  "stream-cancel",
  "sysinfo",
  "syslog_loose",
+ "tail",
  "tempfile",
  "testcontainers",
  "testify",

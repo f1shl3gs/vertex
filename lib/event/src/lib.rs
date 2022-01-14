@@ -10,7 +10,8 @@ mod trace;
 // re-export
 pub use buffers::{DecodeBytes, EncodeBytes};
 pub use finalization::{
-    BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers, EventStatus, Finalizable,
+    BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,
+    Finalizable,
 };
 pub use log::value::Value;
 pub use log::LogRecord;
@@ -160,6 +161,13 @@ impl Event {
         match self {
             Self::Log(log) => log.add_finalizer(finalizer),
             Self::Metric(metric) => metric.add_finalizer(finalizer),
+        }
+    }
+
+    pub fn with_batch_notifier(self, batch: &Arc<BatchNotifier>) -> Self {
+        match self {
+            Self::Log(log) => log.with_batch_notifier(batch).into(),
+            Self::Metric(metric) => metric.with_batch_notifier(batch).into(),
         }
     }
 
