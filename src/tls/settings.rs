@@ -398,6 +398,10 @@ impl MaybeTlsSettings {
             MaybeTls::Tls(_) => "https",
         }
     }
+
+    pub fn client_config(config: &Option<TlsConfig>) -> Result<Self> {
+        Self::from_config(config, false)
+    }
 }
 
 impl From<TlsSettings> for MaybeTlsSettings {

@@ -291,10 +291,10 @@ impl MaybeTlsIncomingStream<TcpStream> {
                         this.state = StreamState::Accepted(MaybeTlsStream::Tls(stream));
                         continue;
                     }
-                    Err(error) => {
-                        let error = io::Error::new(io::ErrorKind::Other, error);
-                        this.state = StreamState::AcceptError(error.to_string());
-                        Poll::Ready(Err(error))
+                    Err(err) => {
+                        let ioErr = io::Error::new(io::ErrorKind::Other, err);
+                        this.state = StreamState::AcceptError(ioErr.to_string());
+                        Poll::Ready(Err(ioErr))
                     }
                 },
                 StreamState::AcceptError(error) => {
@@ -340,10 +340,10 @@ impl AsyncWrite for MaybeTlsIncomingStream<TcpStream> {
                     this.state = StreamState::Accepted(MaybeTlsStream::Tls(stream));
                     Poll::Pending
                 }
-                Err(error) => {
-                    let error = io::Error::new(io::ErrorKind::Other, error);
-                    this.state = StreamState::AcceptError(error.to_string());
-                    Poll::Ready(Err(error))
+                Err(err) => {
+                    let ioErr = io::Error::new(io::ErrorKind::Other, err);
+                    this.state = StreamState::AcceptError(ioErr.to_string());
+                    Poll::Ready(Err(ioErr))
                 }
             },
             StreamState::AcceptError(error) => {
