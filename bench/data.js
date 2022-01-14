@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642049279238,
+  "lastUpdate": 1642134965522,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3026,6 +3026,36 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 104.02,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "id": "38948a31ffb887a335c32b001f541b6efabd72a2",
+          "message": "chore(deps): bump assert_cmd from 2.0.3 to 2.0.4",
+          "timestamp": "2022-01-10T14:58:12Z",
+          "url": "https://github.com/f1shl3gs/vertex/pull/109/commits/38948a31ffb887a335c32b001f541b6efabd72a2"
+        },
+        "date": 1642134964644,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 42.439,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 73.338,
             "unit": "ns/op"
           }
         ]
