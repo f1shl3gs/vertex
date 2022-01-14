@@ -348,7 +348,7 @@ prost-types = { version = "0.9.0", default-features = false }
 tokio-openssl = { version = "0.6.3", default-features = false }
 openssl = { version = "0.10.36", default-features = false }
 hyper-openssl = { version = "0.9.1", default-features = false }
-openssl-probe = { version = "0.1.4", default-features = false }
+openssl-probe = { version = "0.1.5", default-features = false }
 
 # Networking
 socket2 = { version = "0.4.2", default-features = false }
