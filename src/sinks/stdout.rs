@@ -2,12 +2,12 @@ use std::fmt::Debug;
 use std::io::Write;
 
 use async_trait::async_trait;
-use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
+use buffers::Acker;
 
 use crate::{
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
@@ -97,10 +97,13 @@ impl StreamSink for StdoutSink {
         let mut stdout = std::io::stdout();
         let encoding = EncodingConfig::from(Encoding::Json);
 
-        while let Some(event) = input.next().await {
+        while let Some(mut event) = input.next().await {
             self.acker.ack(1);
 
-            if let Some(text) = encode_event(event, &encoding) {
+            if let Some(mut text) = encode_event(event, &encoding) {
+                // Without the new line char, the latest line will be buffered
+                // rather than flush to terminal immediately.
+                text.push('\n');
                 stdout.write_all(text.as_bytes()).map_err(|err| {
                     error!(
                         message = "Write event to stdout failed",
