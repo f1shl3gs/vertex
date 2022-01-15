@@ -7,7 +7,7 @@ build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
 bloat:
-	cargo bloat --release --crates
+	cargo bloat --release --crates -n 50
 
 lines:
 	@./scripts/lines.sh
