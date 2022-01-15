@@ -19,9 +19,10 @@ sources:
     type: selfstat
   internal_logs:
     type: internal_logs
-  libvirt:
-    type: libvirt
-    sock: /run/libvirt/libvirt-sock-ro
+  tail:
+    type: tail
+    include:
+      - "/home/f1shl3gs/Workspaces/clion/vertex/tmp.txt"
 
 transforms:
   add_extra_tags:
@@ -38,5 +39,8 @@ sinks:
       - add_extra_tags
       - selfstat
       - internal_metrics
-      - libvirt
     listen: 127.0.0.1:9101
+  stdout:
+    type: stdout
+    inputs:
+      - tail

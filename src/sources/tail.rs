@@ -64,6 +64,7 @@ struct TailConfig {
         serialize_with = "serialize_bytes"
     )]
     max_read_bytes: usize,
+    #[serde(default = "default_line_delimiter")]
     line_delimiter: String,
 
     #[serde(default = "default_glob_interval")]
@@ -92,6 +93,10 @@ fn default_max_read_bytes() -> usize {
 
 fn default_max_line_bytes() -> usize {
     100 * 1024 // 100kb
+}
+
+fn default_line_delimiter() -> String {
+    "\n".into()
 }
 
 impl GenerateConfig for TailConfig {
