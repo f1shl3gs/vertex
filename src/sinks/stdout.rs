@@ -2,12 +2,12 @@ use std::fmt::Debug;
 use std::io::Write;
 
 use async_trait::async_trait;
+use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
-use buffers::Acker;
 
 use crate::{
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
