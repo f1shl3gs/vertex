@@ -2967,7 +2967,9 @@ dependencies = [
 name = "procfs"
 version = "0.1.0"
 dependencies = [
+ "futures",
  "glob",
+ "libc",
  "tokio",
 ]
 

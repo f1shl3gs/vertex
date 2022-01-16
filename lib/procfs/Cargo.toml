@@ -9,5 +9,7 @@ exclude = ["fixtures"]
 tokio = { version = "1.15.0", features = ["fs", "io-util", "test-util", "macros"] }
 
 [dependencies]
-glob = "0.3.0"
+futures = { version = "0.3.19" }
+glob = { version = "0.3.0" }
+libc = { version = "0.2.112" }
 tokio = { version = "1.15.0", features = ["fs", "io-util"] }

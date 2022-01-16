@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 mod arp;
+mod bcache;
 mod bonding;
 mod btrfs;
 mod conntrack;
@@ -11,6 +12,8 @@ mod drm;
 mod edac;
 mod entropy;
 mod fibrechannel;
+mod filefd;
+mod filesystem;
 mod nfs;
 
 use glob::{GlobError, PatternError};
