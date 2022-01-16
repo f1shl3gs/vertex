@@ -2,11 +2,12 @@
 name = "procfs"
 version = "0.1.0"
 edition = "2021"
+publish = false
+exclude = ["fixtures"]
 
 [dev-dependencies]
 tokio = { version = "1.15.0", features = ["fs", "io-util", "test-util", "macros"] }
 
 [dependencies]
 glob = "0.3.0"
-snafu = { version = "0.6.10" }
 tokio = { version = "1.15.0", features = ["fs", "io-util"] }
