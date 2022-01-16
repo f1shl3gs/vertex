@@ -1,8 +1,10 @@
 use std::path::PathBuf;
+
 use crate::btrfs::Stats;
-use crate::{Error, read_into, SysFS};
+use crate::{read_into, Error, SysFS};
 
 /// InternalStats contains internal bcache statistics
+#[derive(Default)]
 pub struct InternalStats {
     active_journal_entries: u64,
     btree_nodes: u64,
@@ -11,6 +13,7 @@ pub struct InternalStats {
 }
 
 /// PeriodStats contains statistics for a time period (5 min or total)
+#[derive(Default)]
 pub struct PeriodStats {
     bypassed: u64,
     cache_bypass_hits: u64,
@@ -18,7 +21,7 @@ pub struct PeriodStats {
     cache_hits: u64,
     cache_miss_collisions: u64,
     cache_misses: u64,
-    cache_readaheads: u64
+    cache_readaheads: u64,
 }
 
 /// BcacheStats contains bcache runtime statistics, parsed from /sys/fs/bcache/.
@@ -47,16 +50,15 @@ impl SysFS {
         let path = self.root.join("fs/bcache");
         let mut dirs = tokio::fs::read_dir(path).await?;
         while let Some(entry) = dirs.next_entry().await? {
-            let name = entry.file_name();
-            if !name.contains_byte(b'-') {
+            let name = entry.file_name()
+                .to_string_lossy()
+                .to_string();
+
+            if !name.contains('-') {
                 continue;
             }
 
-            let name = name.to_string_lossy().to_string();
-
             // stats
-
-
         }
 
         Ok(vec![])
@@ -75,26 +77,33 @@ async fn read_stats(root: PathBuf) -> Result<BcacheStats, Error> {
     bs.tree_depth = read_into(root.join("tree_depth")).await?;
 
     // dir internal
-    bs.internal.active_journal_entries = read_into(root.join("internal/active_journal_entries")).await?;
+    bs.internal.active_journal_entries =
+        read_into(root.join("internal/active_journal_entries")).await?;
     bs.internal.btree_nodes = read_into(root.join("internal/btree_nodes")).await?;
-    bs.internal.btree_read_average_duration_nano_seconds = read_into(root.join("internal/btree_read_average_duration_us")).await?;
+    bs.internal.btree_read_average_duration_nano_seconds =
+        read_into(root.join("internal/btree_read_average_duration_us")).await?;
     bs.internal.cache_read_races = read_into(root.join("internal/cache_read_races")).await?;
 
     // dir stats_five_minute
     bs.five_min.bypassed = read_into(root.join("stats_five_minute/bypassed")).await?;
     bs.five_min.cache_hits = read_into(root.join("stats_five_minute/cache_hits")).await?;
-    bs.five_min.cache_bypass_misses = read_into(root.join("stats_five_minute/cache_bypass_hits")).await?;
-    bs.five_min.cache_bypass_hits = read_into(root.join("stats_five_minute/cache_bypass_hits")).await?;
-    bs.five_min.cache_miss_collisions = read_into(root.join("stats_five_minute/cache_miss_collisions")).await?;
+    bs.five_min.cache_bypass_misses =
+        read_into(root.join("stats_five_minute/cache_bypass_hits")).await?;
+    bs.five_min.cache_bypass_hits =
+        read_into(root.join("stats_five_minute/cache_bypass_hits")).await?;
+    bs.five_min.cache_miss_collisions =
+        read_into(root.join("stats_five_minute/cache_miss_collisions")).await?;
     bs.five_min.cache_misses = read_into(root.join("stats_five_minute/cache_misses")).await?;
-    bs.five_min.cache_readaheads = read_into(root.join("stats_five_minute/cache_readaheads")).await?;
+    bs.five_min.cache_readaheads =
+        read_into(root.join("stats_five_minute/cache_readaheads")).await?;
 
     // dir stats_total
     bs.total.bypassed = read_into(root.join("stats_total/bypassed")).await?;
     bs.total.cache_hits = read_into(root.join("stats_total/cache_hits")).await?;
     bs.total.cache_bypass_misses = read_into(root.join("stats_total/cache_bypass_hits")).await?;
     bs.total.cache_bypass_hits = read_into(root.join("stats_total/cache_bypass_hits")).await?;
-    bs.total.cache_miss_collisions = read_into(root.join("stats_total/cache_miss_collisions")).await?;
+    bs.total.cache_miss_collisions =
+        read_into(root.join("stats_total/cache_miss_collisions")).await?;
     bs.total.cache_misses = read_into(root.join("stats_total/cache_misses")).await?;
     bs.total.cache_readaheads = read_into(root.join("stats_total/cache_readaheads")).await?;
 

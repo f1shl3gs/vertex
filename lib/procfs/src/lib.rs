@@ -8,6 +8,7 @@ mod conntrack;
 mod cpu;
 mod cpufreq;
 mod diskstats;
+mod dmi;
 mod drm;
 mod edac;
 mod entropy;
