@@ -15,25 +15,36 @@ mod entropy;
 mod fibrechannel;
 mod filefd;
 mod filesystem;
+mod infiniband;
+mod loadavg;
+mod mdadm;
+mod meminfo;
+mod netclass;
+mod netdev;
+mod netstat;
 mod nfs;
 
 use glob::{GlobError, PatternError};
 use std::io::Read;
-use std::num::ParseIntError;
+use std::num::{ParseFloatError, ParseIntError};
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 #[derive(Debug)]
 pub enum Error {
-    Io { err: std::io::Error },
+    Io { path: PathBuf, err: std::io::Error },
     InvalidData { err: std::io::Error },
     ParseInteger { err: ParseIntError },
+    ParseFloat { err: ParseFloatError },
     Glob { err: PatternError },
 }
 
 impl From<std::io::Error> for Error {
     fn from(err: std::io::Error) -> Self {
-        Self::Io { err }
+        Self::Io {
+            err,
+            path: "".into(),
+        }
     }
 }
 
@@ -55,6 +66,12 @@ impl From<ParseIntError> for Error {
     }
 }
 
+impl From<ParseFloatError> for Error {
+    fn from(err: ParseFloatError) -> Self {
+        Self::ParseFloat { err }
+    }
+}
+
 impl Error {
     pub fn invalid_data<E>(err: E) -> Self
     where
@@ -69,15 +86,11 @@ pub struct ProcFS {
     root: PathBuf,
 }
 
-impl Default for ProcFS {
-    fn default() -> Self {
-        Self {
-            root: "/proc".into(),
-        }
-    }
-}
-
 impl ProcFS {
+    pub fn new(root: impl Into<PathBuf>) -> Self {
+        Self { root: root.into() }
+    }
+
     #[cfg(test)]
     pub fn test_procfs() -> Self {
         Self {
@@ -117,10 +130,13 @@ pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::
 
 pub async fn read_into<P, T, E>(path: P) -> Result<T, Error>
 where
-    P: AsRef<Path>,
+    P: AsRef<Path> + Clone,
     T: FromStr<Err = E>,
     Error: From<E>,
 {
-    let content = read_to_string(path).await?;
+    let content = read_to_string(&path).await.map_err(|err| Error::Io {
+        path: path.as_ref().into(),
+        err,
+    })?;
     Ok(<T as FromStr>::from_str(content.as_str())?)
 }

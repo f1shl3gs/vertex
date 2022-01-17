@@ -32,7 +32,10 @@ impl Default for FileSystemConfig {
 }
 
 fn default_mount_points_exclude() -> regex::Regex {
-    regex::Regex::new("^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+|var/lib/containers/storage/.+)($|/)").unwrap()
+    regex::Regex::new(
+        "^/(dev|proc|run/credentials/.+|sys|var/lib/docker/.+|var/lib/containers/storage/.+)($|/)",
+    )
+    .unwrap()
 }
 
 fn default_fs_type_exclude() -> regex::Regex {

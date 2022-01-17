@@ -4,8 +4,10 @@ use tokio::io::AsyncBufReadExt;
 
 impl ProcFS {
     pub async fn arp_entries(&self) -> Result<BTreeMap<String, u64>, Error> {
-        let path = &self.root.join("net/arp");
-        let f = tokio::fs::File::open(path).await?;
+        let path = self.root.join("net/arp");
+        let f = tokio::fs::File::open(&path)
+            .await
+            .map_err(|err| Error::Io { path, err })?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
         let mut devices = BTreeMap::new();

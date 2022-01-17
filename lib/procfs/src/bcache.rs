@@ -50,9 +50,7 @@ impl SysFS {
         let path = self.root.join("fs/bcache");
         let mut dirs = tokio::fs::read_dir(path).await?;
         while let Some(entry) = dirs.next_entry().await? {
-            let name = entry.file_name()
-                .to_string_lossy()
-                .to_string();
+            let name = entry.file_name().to_string_lossy().to_string();
 
             if !name.contains('-') {
                 continue;

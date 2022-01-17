@@ -2969,7 +2969,11 @@ version = "0.1.0"
 dependencies = [
  "futures",
  "glob",
+ "lazy_static 1.4.0",
  "libc",
+ "nom 7.1.0",
+ "regex 1.5.4",
+ "tempfile",
  "tokio",
 ]
 

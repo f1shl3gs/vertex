@@ -72,7 +72,7 @@ impl SysFS {
                 "product_uuid" => d.product_uuid = value,
                 "product_version" => d.product_version = value,
                 "sys_vendor" => d.sys_vendor = value,
-                _ => continue
+                _ => continue,
             }
         }
 
@@ -106,8 +106,14 @@ mod tests {
         assert_eq!(d.product_family, "PowerEdge".to_string());
         assert_eq!(d.product_name, "PowerEdge R6515".to_string());
         assert_eq!(d.product_serial, "7N62AI2".to_string());
-        assert_eq!(d.product_sku, "SKU=NotProvided;ModelName=PowerEdge R6515".to_string());
-        assert_eq!(d.product_uuid, "83340ca8-cb49-4474-8c29-d2088ca84dd9".to_string());
+        assert_eq!(
+            d.product_sku,
+            "SKU=NotProvided;ModelName=PowerEdge R6515".to_string()
+        );
+        assert_eq!(
+            d.product_uuid,
+            "83340ca8-cb49-4474-8c29-d2088ca84dd9".to_string()
+        );
         assert_eq!(d.product_version, "System Version".to_string());
         assert_eq!(d.sys_vendor, "Dell Inc.".to_string());
     }
