@@ -151,14 +151,3 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
 
     stats
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_fetch_tcpstats() {
-        let stats = fetch_tcp_stats(netlink_packet_sock_diag::constants::AF_INET).await;
-        assert!(stats.established > 0);
-    }
-}
