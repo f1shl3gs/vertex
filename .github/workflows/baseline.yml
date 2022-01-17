@@ -29,9 +29,9 @@ jobs:
     needs:
       - cancel-previous
     steps:
+      - uses: actions/checkout@v2.4.0
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
-      - uses: actions/checkout@v2.4.0
       - run: cargo build --release | tee build.txt
       - run: bash ./ci/extract_build_time.sh > build.json
       - name: Store bench results
