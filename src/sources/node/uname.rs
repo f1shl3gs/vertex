@@ -1,16 +1,14 @@
 use super::Error;
 use event::{tags, Metric};
-/// Exposes system information as provided by the uname systemc call
-use libc::c_char;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {
-        sysname: [0 as c_char; 65],
-        nodename: [0 as c_char; 65],
-        release: [0 as c_char; 65],
-        version: [0 as c_char; 65],
-        machine: [0 as c_char; 65],
-        domainname: [0 as c_char; 65],
+        sysname: [0; 65],
+        nodename: [0; 65],
+        release: [0; 65],
+        version: [0; 65],
+        machine: [0; 65],
+        domainname: [0; 65],
     };
 
     let v = unsafe { libc::uname(&mut u) };
@@ -52,25 +50,4 @@ fn to_string(cs: [libc::c_char; 65]) -> String {
     }
 
     s
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use libc::c_char;
-
-    #[test]
-    fn test_uname() {
-        let mut u = libc::utsname {
-            sysname: [0 as c_char; 65],
-            nodename: [0 as c_char; 65],
-            release: [0 as c_char; 65],
-            version: [0 as c_char; 65],
-            machine: [0 as c_char; 65],
-            domainname: [0 as c_char; 65],
-        };
-
-        let v = unsafe { libc::uname(&mut u) };
-        assert_eq!(v, 0);
-    }
 }

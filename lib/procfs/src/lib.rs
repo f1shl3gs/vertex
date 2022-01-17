@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 mod arp;
 mod btrfs;
 mod fibre_channel;

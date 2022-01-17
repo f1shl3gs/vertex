@@ -7,7 +7,7 @@ build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
 bloat:
-	cargo bloat --release --crates
+	cargo bloat --release --crates -n 50
 
 lines:
 	@./scripts/lines.sh
@@ -89,7 +89,7 @@ check: check_shell check_clippy check_fmt
 
 .PHONY: bench-vertex
 bench-vertex:
-	cargo bench --features bench --no-default-features
+	cargo bench --features bench --no-default-features --features benches
 
 .PHONY: bench-prometheus
 bench-prometheus:

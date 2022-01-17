@@ -4,9 +4,10 @@ use std::num::NonZeroUsize;
 
 use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
-use event::{ByteSizeOf, Event, EventFinalizers, Finalizable, Value};
+use event::{Event, EventFinalizers, Finalizable, Value};
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
+use shared::ByteSizeOf;
 use snafu::Snafu;
 
 use crate::common::events::TemplateRenderingFailed;

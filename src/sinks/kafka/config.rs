@@ -1,5 +1,6 @@
 use futures_util::FutureExt;
 use std::collections::HashMap;
+use std::time::Duration;
 
 use event::encoding::{EncodingConfig, StandardEncodings};
 use rdkafka::ClientConfig;
@@ -35,26 +36,26 @@ pub struct KafkaSinkConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    pub socket_timeout: chrono::Duration,
+    pub socket_timeout: Duration,
     #[serde(default = "default_message_timeout")]
     #[serde(
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    pub message_timeout: chrono::Duration,
+    pub message_timeout: Duration,
     #[serde(default)]
     pub librdkafka_options: HashMap<String, String>,
     pub headers_field: Option<String>,
 }
 
-fn default_socket_timeout() -> chrono::Duration {
+fn default_socket_timeout() -> Duration {
     // default in librdkafka
-    chrono::Duration::milliseconds(60000)
+    Duration::from_millis(60000)
 }
 
-fn default_message_timeout() -> chrono::Duration {
+fn default_message_timeout() -> Duration {
     // default in libkafka
-    chrono::Duration::milliseconds(300000)
+    Duration::from_millis(300000)
 }
 
 /// Used to determine the options to set in configs, since both kafka consumers and providers have
@@ -73,11 +74,11 @@ impl KafkaSinkConfig {
             .set("compression.codec", &to_string(self.compression))
             .set(
                 "socket.timeout.ms",
-                &self.socket_timeout.num_milliseconds().to_string(),
+                &self.socket_timeout.as_millis().to_string(),
             )
             .set(
                 "message.timeout.ms",
-                &self.message_timeout.num_milliseconds().to_string(),
+                &self.message_timeout.as_millis().to_string(),
             )
             .set("statistics.inerval.ms", "1000")
             .set("queue.min.messages", QUEUE_MIN_MESSAGES.to_string());
@@ -97,7 +98,7 @@ impl KafkaSinkConfig {
                     return Err(format!(
                         "Batching setting `batch.timeout` sets `librdkafka_options.{}={}`.\
                         The config already sets this as `librdkafka_options.queue.buffering.max.ms={}`.\
-                        Please delete one", key, timeout.num_milliseconds(), val
+                        Please delete one", key, timeout.as_millis(), val
                     ).into());
                 }
 
@@ -105,10 +106,10 @@ impl KafkaSinkConfig {
                     message = "Applying batch option as librdkafka option",
                     librdkafka_option = key,
                     batch_option = "timeout",
-                    value = timeout.num_milliseconds()
+                    value = timeout.as_millis() as u64
                 );
 
-                config.set(key, &(timeout.num_milliseconds()).to_string());
+                config.set(key, &(timeout.as_millis()).to_string());
             }
 
             if let Some(value) = self.batch.max_events {

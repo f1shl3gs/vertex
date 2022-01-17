@@ -1,10 +1,11 @@
 use std::collections::{BTreeMap, HashMap};
 use std::sync::Arc;
+use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
 use event::{LogRecord, Value};
-use futures::{FutureExt, SinkExt, StreamExt};
+use futures::{FutureExt, StreamExt};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
 use rdkafka::{ClientConfig, Message, TopicPartitionList};
@@ -13,7 +14,7 @@ use snafu::{ResultExt, Snafu};
 
 use crate::common::kafka::{KafkaAuthConfig, KafkaEventReceived, KafkaStatisticsContext};
 use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, SourceConfig,
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
     SourceContext, SourceDescription,
 };
 use crate::pipeline::Pipeline;
@@ -25,20 +26,20 @@ fn default_auto_offset_reset() -> String {
     "largest".to_string()
 }
 
-fn default_session_timeout() -> chrono::Duration {
-    chrono::Duration::seconds(10)
+fn default_session_timeout() -> Duration {
+    Duration::from_secs(10)
 }
 
-fn default_socket_timeout() -> chrono::Duration {
-    chrono::Duration::seconds(60)
+fn default_socket_timeout() -> Duration {
+    Duration::from_secs(60)
 }
 
-fn default_fetch_wait_max() -> chrono::Duration {
-    chrono::Duration::milliseconds(100)
+fn default_fetch_wait_max() -> Duration {
+    Duration::from_millis(100)
 }
 
-fn default_commit_interval() -> chrono::Duration {
-    chrono::Duration::seconds(5)
+fn default_commit_interval() -> Duration {
+    Duration::from_secs(5)
 }
 
 fn default_key_field() -> String {
@@ -73,25 +74,25 @@ struct KafkaSourceConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    session_timeout: chrono::Duration,
+    session_timeout: Duration,
     #[serde(default = "default_socket_timeout")]
     #[serde(
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    socket_timeout: chrono::Duration,
+    socket_timeout: Duration,
     #[serde(default = "default_fetch_wait_max")]
     #[serde(
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    fetch_wait_max: chrono::Duration,
+    fetch_wait_max: Duration,
     #[serde(default = "default_commit_interval")]
     #[serde(
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    commit_interval: chrono::Duration,
+    commit_interval: Duration,
     #[serde(default = "default_key_field")]
     key_field: String,
     #[serde(default = "default_topic_key")]
@@ -151,21 +152,21 @@ impl KafkaSourceConfig {
             .set("auto.offset.reset", self.auto_offset_reset.to_string())
             .set(
                 "session.timeout.ms",
-                self.session_timeout.num_milliseconds().to_string(),
+                self.session_timeout.as_millis().to_string(),
             )
             .set(
                 "socket.timeout.ms",
-                self.socket_timeout.num_milliseconds().to_string(),
+                self.socket_timeout.as_millis().to_string(),
             )
             .set(
                 "fetch.wait.max.ms",
-                self.fetch_wait_max.num_milliseconds().to_string(),
+                self.fetch_wait_max.as_millis().to_string(),
             )
             .set("enable.partition.eof", "false")
             .set("enable.auto.commit", "true")
             .set(
                 "auto.commit.interval.ms",
-                self.commit_interval.num_milliseconds().to_string(),
+                self.commit_interval.as_millis().to_string(),
             )
             .set("enable.auto.offset.store", "false")
             .set("statistics.interval.ms", "1000")
@@ -233,13 +234,13 @@ impl SourceConfig for KafkaSourceConfig {
             self.partition_key.clone(),
             self.offset_key.clone(),
             self.headers_key.clone(),
-            ctx.out,
+            ctx.output,
             ctx.shutdown,
         )))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -346,10 +347,10 @@ mod tests {
             topics: vec![topic.into()],
             group: group.into(),
             auto_offset_reset: "beginning".to_string(),
-            session_timeout: chrono::Duration::seconds(6),
-            socket_timeout: chrono::Duration::seconds(60),
-            fetch_wait_max: chrono::Duration::milliseconds(100),
-            commit_interval: chrono::Duration::seconds(5),
+            session_timeout: Duration::from_secs(6),
+            socket_timeout: Duration::from_secs(60),
+            fetch_wait_max: Duration::from_millis(100),
+            commit_interval: Duration::from_secs(5),
             key_field: "message_key".to_string(),
             topic_key: "topic".to_string(),
             partition_key: "partition".to_string(),

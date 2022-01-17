@@ -1,7 +1,9 @@
 name: Benchmark
 
 on:
-  pull_request:
+  push:
+    branches:
+      - master
     paths:
       - ".github/workflows/benches.yml"
       - ".cargo/**"

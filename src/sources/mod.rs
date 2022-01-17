@@ -54,9 +54,10 @@ mod redis;
 #[cfg(feature = "sources-selfstat")]
 mod selfstat;
 #[cfg(feature = "sources-syslog")]
-mod syslog;
+pub mod syslog;
 #[cfg(feature = "sources-tail")]
 mod tail;
+mod utils;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 

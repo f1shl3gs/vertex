@@ -86,8 +86,77 @@ impl FileWatcherFile {
         self.contents.truncate(0);
     }
 
+    pub fn write_line(&mut self, input: &str) {
+        self.contents.extend_from_slice(input.as_bytes());
+        self.contents.push(b'\n');
+        self.reads_available += 1;
+    }
+
     pub fn read_line(&mut self) -> Option<String> {
-        todo!()
+        // FWFile mimics a unix file being read in a buffered fashion,
+        // driven by file_watcher. We _have_ to keep on top of where the
+        // reader's read index -- called read_idx -- is between reads and
+        // the size of the file -- called previous_read_size -- in the event
+        // of truncation.
+        //
+        // If we detect in file_watcher that a truncation has happened then
+        // the buffered reader is seeked back to 0. This is performed in
+        // like kind when we reset read_idx to 0, as in the following case
+        // where there are no reads available.
+        if self.contents.is_empty() && self.reads_available == 0 {
+            self.read_index = 0;
+            self.previous_read_size = 0;
+            return None;
+        }
+        // Now, the above is done only when nothing has been written to the
+        // FWFile or the contents have been totally removed. The trickier
+        // case is where there are maybe _some_ things to be read but the
+        // read_idx might be mis-set owing to truncations.
+        //
+        // `read_line` is performed in a line-wise fashion. start_idx
+        // and end_idx are pulled apart from one another to find the
+        // start and end of the line, if there's a line to be found.
+        let mut end_idx;
+        let start_idx;
+        // Here's where we do truncation detection. When our file has
+        // shrunk, restart the search at zero index. If the file is the
+        // same size -- implying that it's either not changed or was
+        // truncated and then filled back in before a read could occur
+        // -- we return None. Else, start searching at the present
+        // read_idx.
+        let max = self.contents.len();
+        if self.previous_read_size > max {
+            self.read_index = 0;
+            start_idx = 0;
+            end_idx = 0;
+        } else if self.read_index == max {
+            return None;
+        } else {
+            start_idx = self.read_index;
+            end_idx = self.read_index;
+        }
+        // Seek end_idx forward until we hit the newline character.
+        while self.contents[end_idx] != b'\n' {
+            end_idx += 1;
+            if end_idx == max {
+                return None;
+            }
+        }
+        // Produce the read string -- minus its newline character -- and
+        // set the control variables appropriately.
+        let ret = std::str::from_utf8(&self.contents[start_idx..end_idx]).unwrap();
+        self.read_index = end_idx + 1;
+        self.reads_available -= 1;
+        self.previous_read_size = max;
+        // There's a trick here. What happens if we _only_ read a
+        // newline character. Well, that'll happen when truncations
+        // cause trimmed reads and the only remaining character in the
+        // line is the newline. Womp womp
+        if !ret.is_empty() {
+            Some(ret.to_string())
+        } else {
+            None
+        }
     }
 }
 

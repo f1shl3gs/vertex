@@ -179,7 +179,7 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
             }
         }
 
-        return None;
+        None
     }
 
     fields
@@ -253,10 +253,10 @@ fn recovery_line(input: &str) -> IResult<&str, (f64, i64, f64, f64)> {
 
 fn state_metric_value(key: &str, state: &str) -> f64 {
     if key == state {
-        return 1.0;
+        1.0
+    } else {
+        0.0
     }
-
-    return 0.0;
 }
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {

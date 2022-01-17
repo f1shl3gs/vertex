@@ -2,6 +2,7 @@ use std::fmt::Debug;
 use std::io::Write;
 
 use async_trait::async_trait;
+use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
 use futures::{stream::BoxStream, FutureExt};
@@ -9,7 +10,6 @@ use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
 
 use crate::{
-    buffers::Acker,
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
     impl_generate_config_from_default,
     sinks::{Sink, StreamSink},
@@ -100,7 +100,10 @@ impl StreamSink for StdoutSink {
         while let Some(mut event) = input.next().await {
             self.acker.ack(1);
 
-            if let Some(text) = encode_event(event, &encoding) {
+            if let Some(mut text) = encode_event(event, &encoding) {
+                // Without the new line char, the latest line will be buffered
+                // rather than flush to terminal immediately.
+                text.push('\n');
                 stdout.write_all(text.as_bytes()).map_err(|err| {
                     error!(
                         message = "Write event to stdout failed",

@@ -38,7 +38,7 @@ fn main() {
         return;
     }
 
-    let threads = opts.threads.unwrap_or_else(|| num_cpus::get());
+    let threads = opts.threads.unwrap_or(num_cpus::get());
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(threads)

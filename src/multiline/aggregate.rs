@@ -4,11 +4,12 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
+use crate::config::{deserialize_bytes_regex, serialize_bytes_regex};
 use bytes::{Bytes, BytesMut};
 use futures::Stream;
 use futures::StreamExt;
 use pin_project::pin_project;
-use regex::bytes::Regex;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
@@ -61,13 +62,13 @@ pub struct Config {
 /// Provides a `Stream` implementation that reads lines from the `inner` stream
 /// and yields aggregated lines.
 #[pin_project(project = LineAggProj)]
-pub struct LineAgg<T, K, C> {
+pub struct LineAgg<T, R, K, C> {
     /// The stream from which we read the lines.
     #[pin]
     inner: T,
 
     /// The core line aggregation logic.
-    logic: Logic<K, C>,
+    logic: Logic<R, K, C>,
 
     /// Stashed lines. When line aggregation results in more than one line being emitted,
     /// we have to stash lines and return them into the stream after that before doing any
@@ -79,12 +80,24 @@ pub struct LineAgg<T, K, C> {
     draining: Option<Vec<(K, Bytes, C)>>,
 }
 
+/// Rule is extract from core logic, so we can implement preset easily and, implement it
+/// as we wish, the performance of regex is not good, so we can implement by something like
+/// `contains`, it should be blazing fast.
+pub trait Rule {
+    fn is_start(&self, line: &Bytes) -> bool;
+    fn is_condition(&self, line: &Bytes) -> bool;
+    fn mode(&self) -> Mode;
+}
+
 /// Core line aggregation logic
 ///
 /// Encapsulates the essential state and the core logic for the line aggregation algorithm
-pub struct Logic<K, C> {
+pub struct Logic<R, K, C> {
     /// Configuration parameters to use.
-    config: Config,
+    rule: R,
+
+    /// Timeout for multiline aggregate
+    timeout: std::time::Duration,
 
     /// Line per key
     /// Key is usually a filename or other line source identifier.
@@ -94,24 +107,26 @@ pub struct Logic<K, C> {
     timeouts: DelayQueue<K>,
 }
 
-impl<K, C> Logic<K, C> {
+impl<R, K, C> Logic<R, K, C> {
     /// Create a new `Logic` using the specified `Config`
-    pub fn new(config: Config) -> Self {
+    pub fn new(rule: R, timeout: std::time::Duration) -> Self {
         Self {
-            config,
+            rule,
+            timeout,
             buffers: HashMap::new(),
             timeouts: DelayQueue::new(),
         }
     }
 }
 
-impl<T, K, C> LineAgg<T, K, C>
+impl<T, R, K, C> LineAgg<T, R, K, C>
 where
     T: Stream<Item = (K, Bytes, C)> + Unpin,
     K: Hash + Eq + Clone,
+    R: Rule,
 {
     /// Create a new `LineAgg` using the specified `inner` stream and preconfigured `logic`
-    pub fn new(inner: T, logic: Logic<K, C>) -> Self {
+    pub fn new(inner: T, logic: Logic<R, K, C>) -> Self {
         Self {
             inner,
             logic,
@@ -121,10 +136,11 @@ where
     }
 }
 
-impl<T, K, C> Stream for LineAgg<T, K, C>
+impl<T, R, K, C> Stream for LineAgg<T, R, K, C>
 where
     T: Stream<Item = (K, Bytes, C)> + Unpin,
     K: Hash + Eq + Clone,
+    R: Rule,
 {
     /// `K` - file name, or other line source,
     /// `Bytes` - the line data,
@@ -200,16 +216,17 @@ where
     }
 }
 
-impl<T, K, C> LineAgg<T, K, C>
+impl<T, R, K, C> LineAgg<T, R, K, C>
 where
     T: Stream<Item = (K, Bytes, C)> + Unpin,
     K: Hash + Eq + Clone,
+    R: Rule,
 {
     /// Handle line and do stashing of extra emitted lines.
     /// Requires that the `stashed` item is empty(i.e. entry is vacant). This invariant has
     /// to be taken care of by the caller.
     fn handle_line_and_stashing(
-        this: &mut LineAggProj<'_, T, K, C>,
+        this: &mut LineAggProj<'_, T, R, K, C>,
         src: K,
         line: Bytes,
         context: C,
@@ -250,9 +267,10 @@ enum Decision {
     EndExclude,
 }
 
-impl<K, C> Logic<K, C>
+impl<R, K, C> Logic<R, K, C>
 where
     K: Hash + Eq + Clone,
+    R: Rule,
 {
     /// Handle line, if we have something to output - return it.
     pub fn handle_line(
@@ -264,8 +282,8 @@ where
         // Check if we already have the buffered data for the source
         match self.buffers.entry(src) {
             Entry::Occupied(mut entry) => {
-                let condition_matched = self.config.condition_pattern.is_match(line.as_ref());
-                let decision = match (self.config.mode, condition_matched) {
+                let condition_matched = self.rule.is_condition(&line);
+                let decision = match (self.rule.mode(), condition_matched) {
                     // All consecutive lines matching this pattern are included in the group
                     (Mode::ContinueThrough, true) => Decision::Continue,
                     (Mode::ContinueThrough, false) => Decision::EndExclude,
@@ -285,7 +303,7 @@ where
                 match decision {
                     Decision::Continue => {
                         let buffered = entry.get_mut();
-                        self.timeouts.reset(&buffered.0, self.config.timeout);
+                        self.timeouts.reset(&buffered.0, self.timeout);
                         buffered.1.add_next_line(line);
                         None
                     }
@@ -304,12 +322,10 @@ where
             }
             Entry::Vacant(entry) => {
                 // This line is a candidate for buffering, or passing through
-                if self.config.start_pattern.is_match(line.as_ref()) {
+                if self.rule.is_start(&line) {
                     // It was indeed a new line we need to filter. Set the timeout
                     // buffer this line.
-                    let key = self
-                        .timeouts
-                        .insert(entry.key().clone(), self.config.timeout);
+                    let key = self.timeouts.insert(entry.key().clone(), self.timeout);
                     entry.insert((key, Aggregate::new(line, context)));
                     None
                 } else {
@@ -356,6 +372,37 @@ impl<C> Aggregate<C> {
     }
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct RegexRule {
+    #[serde(
+        deserialize_with = "deserialize_bytes_regex",
+        serialize_with = "serialize_bytes_regex"
+    )]
+    start_pattern: regex::bytes::Regex,
+    #[serde(
+        deserialize_with = "deserialize_bytes_regex",
+        serialize_with = "serialize_bytes_regex"
+    )]
+    condition_pattern: regex::bytes::Regex,
+
+    mode: Mode,
+}
+
+impl Rule for RegexRule {
+    fn is_start(&self, line: &Bytes) -> bool {
+        self.start_pattern.is_match(line.as_ref())
+    }
+
+    fn is_condition(&self, line: &Bytes) -> bool {
+        self.condition_pattern.is_match(line.as_ref())
+    }
+
+    fn mode(&self) -> Mode {
+        self.mode
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -393,9 +440,9 @@ mod tests {
         )
     }
 
-    async fn run_and_assert(lines: &[&'static str], config: Config, expected: &[&'static str]) {
+    async fn run_and_assert(lines: &[&'static str], rule: impl Rule, expected: &[&'static str]) {
         let stream = stream_from_lines(lines);
-        let logic = Logic::new(config);
+        let logic = Logic::new(rule, std::time::Duration::from_secs(5));
         let aggr = LineAgg::new(stream, logic);
         let results = aggr.collect().await;
         assert_results(results, expected)
@@ -414,11 +461,10 @@ mod tests {
             " last part of the incomplete finishing message",
         ];
 
-        let config = Config {
-            start_pattern: Regex::new("^[^\\s]").unwrap(),
-            condition_pattern: Regex::new("^[\\s]+").unwrap(),
+        let rule = RegexRule {
+            start_pattern: regex::bytes::Regex::new("^[^\\s]").unwrap(),
+            condition_pattern: regex::bytes::Regex::new("^[\\s]+").unwrap(),
             mode: Mode::ContinueThrough,
-            timeout: std::time::Duration::from_millis(10),
         };
 
         let expected = vec![
@@ -431,5 +477,7 @@ mod tests {
                 " last part of the incomplete finishing message"
             ),
         ];
+
+        run_and_assert(&lines, rule, &expected).await;
     }
 }

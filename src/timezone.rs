@@ -1,13 +1,16 @@
 use chrono::{DateTime, Local, ParseError, TimeZone as _, Utc};
 use chrono_tz::Tz;
-use derivative::Derivative;
 
-#[derive(Clone, Copy, Debug, Derivative, Eq, PartialEq)]
-#[derivative(Default)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum TimeZone {
-    #[derivative(Default)]
     Local,
     Named(Tz),
+}
+
+impl Default for TimeZone {
+    fn default() -> Self {
+        Self::Local
+    }
 }
 
 /// This is a wrapper trait to allow `TimeZone` types to be passed generically

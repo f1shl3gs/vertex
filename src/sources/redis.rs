@@ -1,14 +1,15 @@
 use std::collections::{BTreeMap, BTreeSet};
+use std::time::Duration;
 
 use event::{tags, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use snafu::Snafu;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
 use crate::pipeline::Pipeline;
@@ -231,7 +232,7 @@ pub struct RedisSourceConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
@@ -270,11 +271,11 @@ impl SourceConfig for RedisSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let src = RedisSource::from(self);
 
-        Ok(Box::pin(src.run(ctx.out, ctx.shutdown)))
+        Ok(Box::pin(src.run(ctx.output, ctx.shutdown)))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -300,7 +301,7 @@ impl RedisSource {
             password: None,
             url: conf.url.clone(),
             namespace: conf.namespace.clone(),
-            interval: conf.interval.to_std().unwrap(),
+            interval: conf.interval,
             client_name: None,
         }
     }
@@ -342,9 +343,17 @@ impl RedisSource {
                     m.name = format!("{}_{}", namespace, m.name)
                 }
 
-                Ok(m.into())
+                m.into()
             });
-            output.send_all(&mut stream).await;
+
+            if let Err(err) = output.send_all(&mut stream).await {
+                error!(
+                    message = "Error sending redis metrics",
+                    %err,
+                );
+
+                return Err(());
+            }
         }
 
         Ok(())
@@ -418,24 +427,6 @@ impl RedisSource {
     }
 }
 
-async fn extract_key_group_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
-    todo!()
-}
-
-async fn extract_count_keys_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
-    todo!()
-}
-
-async fn extract_stream_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
-    todo!()
-}
-
 async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
     conn: &mut C,
 ) -> Result<Vec<Metric>, Error> {
@@ -494,7 +485,6 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
         let event = parts[0].as_str();
         let spike_last = parts[1].parse::<f64>()?;
         let spike_duration = parts[2].parse::<f64>()?;
-        let max = parts[3].parse::<f64>()?;
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
@@ -618,8 +608,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                             tags!(
                                 "db" => key
                             ),
-                        )
-                        .into(),
+                        ),
                         Metric::gauge_with_tags(
                             "db_keys_expiring",
                             "Total number of expiring keys by DB",
@@ -627,22 +616,18 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                             tags!(
                                 "db" => key
                             ),
-                        )
-                        .into(),
+                        ),
                     ]);
 
                     if avg_ttl > -1.0 {
-                        metrics.push(
-                            Metric::gauge_with_tags(
-                                "db_avg_ttl_seconds",
-                                "Avg TTL in seconds",
-                                avg_ttl,
-                                tags!(
-                                    "db" => key
-                                ),
-                            )
-                            .into(),
-                        );
+                        metrics.push(Metric::gauge_with_tags(
+                            "db_avg_ttl_seconds",
+                            "Avg TTL in seconds",
+                            avg_ttl,
+                            tags!(
+                                "db" => key
+                            ),
+                        ));
                     }
 
                     handled_dbs.insert(dbname.clone());
@@ -673,8 +658,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                     tags!(
                         "db" => name.as_str()
                     ),
-                )
-                .into(),
+                ),
                 Metric::gauge_with_tags(
                     "db_keys_expiring",
                     "Total number of expiring keys by DB",
@@ -682,39 +666,32 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                     tags!(
                         "db" => name.as_str()
                     ),
-                )
-                .into(),
+                ),
             ])
         }
     }
 
     let role = instance_infos.get("slave_info").map_or("", |v| *v);
 
-    metrics.push(
-        Metric::gauge_with_tags(
-            "instance_info",
-            "Information about the Redis instance",
-            1,
-            tags!(
-                "role" => instance_infos.get("role").map_or("", |v| v),
-                "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
-                "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
-                "os" => instance_infos.get("os").map_or("", |v| *v)
-            ),
-        )
-        .into(),
-    );
+    metrics.push(Metric::gauge_with_tags(
+        "instance_info",
+        "Information about the Redis instance",
+        1,
+        tags!(
+            "role" => instance_infos.get("role").map_or("", |v| v),
+            "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
+            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
+            "os" => instance_infos.get("os").map_or("", |v| *v)
+        ),
+    ));
 
     if role == "slave" {
-        metrics.push(
-            Metric::gauge_with_tags(
-                "slave_info",
-                "Information about the Redis slave",
-                1,
-                slave_infos,
-            )
-            .into(),
-        )
+        metrics.push(Metric::gauge_with_tags(
+            "slave_info",
+            "Information about the Redis slave",
+            1,
+            slave_infos,
+        ))
     }
 
     Ok(metrics)
@@ -895,7 +872,7 @@ fn validate_slave_line(line: &str) -> bool {
     }
 
     let c = line.as_bytes()[5];
-    return c >= b'0' && c <= b'9';
+    c >= b'0' && c <= b'9'
 }
 
 fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
@@ -1039,7 +1016,7 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         let value = resp[2 * pos + 1].as_str();
 
         if key == "databases" {
-            return value.parse().map_err(|err| Error::InvalidData {
+            return value.parse().map_err(|_err| Error::InvalidData {
                 desc: value.to_string(),
             });
         }

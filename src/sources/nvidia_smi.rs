@@ -1,12 +1,13 @@
 use std::borrow::Cow;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
-use futures::{SinkExt, StreamExt};
+use futures::StreamExt;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+use crate::config::Output;
 use crate::{
     config::{
         default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
@@ -24,7 +25,7 @@ struct NvidiaSmiConfig {
         deserialize_with = "deserialize_duration",
         serialize_with = "serialize_duration"
     )]
-    interval: chrono::Duration,
+    interval: Duration,
 
     #[serde(default = "default_smi_path")]
     path: PathBuf,
@@ -56,20 +57,22 @@ impl SourceConfig for NvidiaSmiConfig {
         let mut ticker = ticker_from_duration(self.interval)
             .unwrap()
             .take_until(ctx.shutdown);
-        let mut output = ctx.out.sink_map_err(|err| {
-            error!(
-                message = "Error sending nvidia smi metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
                 match gather(&path).await {
                     Ok(metrics) => {
-                        let mut stream = futures::stream::iter(metrics).map(Event::Metric).map(Ok);
+                        let mut stream = futures::stream::iter(metrics).map(Event::Metric);
 
-                        output.send_all(&mut stream).await?;
+                        if let Err(err) = output.send_all(&mut stream).await {
+                            error!(
+                                message = "Error sending nvidia smi metrics",
+                                %err
+                            );
+
+                            return Err(());
+                        }
                     }
                     Err(err) => {
                         warn!(
@@ -84,8 +87,8 @@ impl SourceConfig for NvidiaSmiConfig {
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -93,7 +96,7 @@ impl SourceConfig for NvidiaSmiConfig {
     }
 }
 
-async fn gather(path: &PathBuf) -> Result<Vec<Metric>, Error> {
+async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
     let start = Instant::now();
     let output = Command::new(path).args(["-q", "-x"]).output()?;
     let reader = std::io::Cursor::new(output.stdout);

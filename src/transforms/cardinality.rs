@@ -1,4 +1,4 @@
-use crate::config::{DataType, GlobalOptions, TransformConfig};
+use crate::config::{DataType, Output, TransformConfig, TransformContext};
 use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
@@ -31,7 +31,7 @@ struct CardinalityConfig {
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for CardinalityConfig {
-    async fn build(&self, _globals: &GlobalOptions) -> crate::Result<Transform> {
+    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Cardinality::new(self.limit)))
     }
 
@@ -39,8 +39,8 @@ impl TransformConfig for CardinalityConfig {
         DataType::Metric
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn transform_type(&self) -> &'static str {
@@ -196,14 +196,14 @@ mod tests {
         let mut set = TagValueSet::new(total);
         for i in 0..total {
             let val = format!("{}", i);
-            assert_eq!(set.insert(&val), true);
+            assert!(set.insert(&val));
         }
 
         assert_eq!(set.len(), total);
 
         for i in 0..total {
             let val = format!("{}", i);
-            assert_eq!(set.insert(&val), false)
+            assert!(!set.insert(&val))
         }
     }
 

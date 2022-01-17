@@ -35,7 +35,7 @@ pub enum DataDirError {
 #[serde(default, deny_unknown_fields)]
 pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]
-    pub data_dir: PathBuf,
+    pub data_dir: Option<PathBuf>,
     #[serde(default = "default_timezone")]
     pub timezone: timezone::TimeZone,
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
@@ -44,8 +44,8 @@ pub struct GlobalOptions {
     pub log_schema: LogSchema,
 }
 
-pub fn default_data_dir() -> PathBuf {
-    PathBuf::from("/var/lib/vertex")
+pub fn default_data_dir() -> Option<PathBuf> {
+    Some(PathBuf::from("/var/lib/vertex"))
 }
 
 fn default_timezone() -> timezone::TimeZone {
@@ -60,7 +60,8 @@ impl GlobalOptions {
     ///
     /// Function will error if it is unable to make data directory
     pub fn validate_data_dir(&self) -> Result<PathBuf, DataDirError> {
-        let dir = self.data_dir.clone();
+        let data_dir = self.data_dir.clone();
+        let dir = data_dir.ok_or(DataDirError::MissingDataDir)?;
 
         if !dir.exists() {
             return Err(DataDirError::NotExist { path: dir });
@@ -108,7 +109,7 @@ mod tests {
 data_dir: foo
 "#;
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
-        assert_eq!(global.data_dir, PathBuf::from("foo"));
+        assert_eq!(global.data_dir.unwrap(), PathBuf::from("foo"));
 
         let input = "
 timezone: CET

@@ -8,10 +8,9 @@ use std::task::Poll;
 use atomig::{Atom, Atomic, Ordering};
 use futures::future::FutureExt;
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 use tokio::sync::oneshot;
 use tracing::error;
-
-use crate::ByteSizeOf;
 
 type ImmutVec<T> = Box<[T]>;
 

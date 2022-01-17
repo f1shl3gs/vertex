@@ -1,15 +1,15 @@
 mod client;
 
 use event::{tags, Event, Metric};
-use futures_util::{SinkExt, StreamExt};
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Instant;
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::config::{
-    default_std_interval, default_true, deserialize_std_duration, serialize_std_duration, DataType,
-    GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+    default_interval, default_true, deserialize_duration, serialize_duration, DataType,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::http::HttpClient;
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
@@ -25,9 +25,9 @@ struct ConsulSourceConfig {
     endpoints: Vec<String>,
 
     #[serde(
-        default = "default_std_interval",
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        default = "default_interval",
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     interval: std::time::Duration,
 
@@ -43,7 +43,7 @@ impl GenerateConfig for ConsulSourceConfig {
         serde_yaml::to_value(Self {
             tls: None,
             endpoints: vec!["http://127.0.0.1:8500".to_string()],
-            interval: default_std_interval(),
+            interval: default_interval(),
             health_summary: default_true(),
             query_options: None,
         })
@@ -61,7 +61,7 @@ impl SourceConfig for ConsulSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let proxy = ctx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let interval = tokio::time::interval(self.interval.into());
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;
@@ -72,12 +72,7 @@ impl SourceConfig for ConsulSourceConfig {
             .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
-        let mut output = ctx.out.sink_map_err(|err| {
-            error!(
-                message = "Error sending consul metrics",
-                %err
-            )
-        });
+        let mut output = ctx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
@@ -89,18 +84,24 @@ impl SourceConfig for ConsulSourceConfig {
                 let mut stream = futures::stream::iter(metrics)
                     .map(futures::stream::iter)
                     .flatten()
-                    .map(Event::Metric)
-                    .map(Ok);
+                    .map(Event::Metric);
 
-                output.send_all(&mut stream).await?
+                if let Err(err) = output.send_all(&mut stream).await {
+                    error!(
+                        message = "Error sending consul metrics",
+                        %err
+                    );
+
+                    return Err(());
+                }
             }
 
             Ok(())
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Metric
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Metric)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -342,7 +343,7 @@ async fn collect_health_state_metric(
     Ok(metrics)
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
     use super::*;
     use crate::config::ProxyConfig;
@@ -408,13 +409,13 @@ mod integration_tests {
         pub name: String,
         pub tcp: String,
         #[serde(
-            deserialize_with = "deserialize_std_duration",
-            serialize_with = "serialize_std_duration"
+            deserialize_with = "deserialize_duration",
+            serialize_with = "serialize_duration"
         )]
         pub timeout: std::time::Duration,
         #[serde(
-            deserialize_with = "deserialize_std_duration",
-            serialize_with = "serialize_std_duration"
+            deserialize_with = "deserialize_duration",
+            serialize_with = "serialize_duration"
         )]
         pub interval: std::time::Duration,
     }

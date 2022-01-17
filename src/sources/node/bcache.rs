@@ -7,7 +7,7 @@ pub struct BCacheConfig {
     priority_stats: bool,
 }
 
-pub async fn gather(sys_path: &str, conf: &BCacheConfig) -> Result<Vec<Metric>, Error> {
+pub async fn gather(_sys_path: &str, _conf: &BCacheConfig) -> Result<Vec<Metric>, Error> {
     todo!()
 }
 

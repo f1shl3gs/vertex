@@ -8,11 +8,11 @@ use std::{
 
 use chrono::{TimeZone, Utc};
 use event::{fields, LogRecord};
-use futures::SinkExt;
 use serde::{Deserialize, Serialize};
 use serde_yaml::Value;
 use tokio::io::AsyncReadExt;
 
+use crate::config::Output;
 use crate::{
     config::{DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription},
     sources::Source,
@@ -37,7 +37,7 @@ inventory::submit! {
 impl SourceConfig for KmsgConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let mut shutdown = ctx.shutdown;
-        let mut output = ctx.out;
+        let mut output = ctx.output;
         let boot = boot_time("/proc/uptime")?;
 
         Ok(Box::pin(async move {
@@ -92,8 +92,8 @@ impl SourceConfig for KmsgConfig {
         }))
     }
 
-    fn output_type(&self) -> DataType {
-        DataType::Log
+    fn outputs(&self) -> Vec<Output> {
+        vec![Output::default(DataType::Log)]
     }
 
     fn source_type(&self) -> &'static str {
@@ -207,33 +207,11 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tokio::io::AsyncReadExt;
 
     #[test]
     fn test_boot_time() {
         // NOTE: the value returned is not constant, so assert_eq! will not help
         boot_time("tests/fixtures/proc/uptime").unwrap();
-    }
-
-    // TODO: The runner `sudo -E` is a proper way to run this, may we should
-    //   move this test to `integration_tests`
-    #[tokio::test]
-    #[ignore]
-    async fn test_read() {
-        let f = tokio::fs::File::open("/dev/kmsg").await.unwrap();
-        let mut reader = tokio::io::BufReader::new(f);
-
-        let mut buf = [0; 256];
-        let n = reader.read(&mut buf[..]).await.unwrap();
-        let v = buf[..n].to_vec();
-
-        let mut buf = [0; 256];
-        let n = reader.read(&mut buf[..]).await.unwrap();
-        let v = buf[..n].to_vec();
-
-        let mut buf = [0; 256];
-        let n = reader.read(&mut buf[..]).await.unwrap();
-        let v = buf[..n].to_vec();
     }
 
     #[test]

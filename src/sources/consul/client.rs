@@ -7,7 +7,7 @@ use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
-use crate::config::{deserialize_std_duration, serialize_std_duration};
+use crate::config::{deserialize_duration, serialize_duration};
 use crate::http::HttpClient;
 
 #[derive(Debug, Snafu)]
@@ -113,8 +113,8 @@ pub struct QueryOptions {
     // if the endpoint supports background refresh caching. See
     // https://www.consul.io/api/features/caching.html for more details.
     #[serde(
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     pub max_age: std::time::Duration,
 
@@ -124,8 +124,8 @@ pub struct QueryOptions {
     // ignored if the endpoint supports background refresh caching. See
     // https://www.consul.io/api/features/caching.html for more details.
     #[serde(
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     pub stale_if_error: std::time::Duration,
 
@@ -142,8 +142,8 @@ pub struct QueryOptions {
     // WaitTime is used to bound the duration of a wait.
     // Defaults to that of the Config, but can be overridden.
     #[serde(
-        deserialize_with = "deserialize_std_duration",
-        serialize_with = "serialize_std_duration"
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
     )]
     pub wait_time: std::time::Duration,
 

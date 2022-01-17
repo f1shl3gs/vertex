@@ -1,16 +1,17 @@
+use crate::config::ComponentKey;
 use indexmap::map::IndexMap;
 use std::collections::HashSet;
 
 use super::Config;
 
 pub struct Difference {
-    pub to_remove: HashSet<String>,
-    pub to_change: HashSet<String>,
-    pub to_add: HashSet<String>,
+    pub to_remove: HashSet<ComponentKey>,
+    pub to_change: HashSet<ComponentKey>,
+    pub to_add: HashSet<ComponentKey>,
 }
 
 impl Difference {
-    fn new<C>(old: &IndexMap<String, C>, new: &IndexMap<String, C>) -> Self
+    fn new<C>(old: &IndexMap<ComponentKey, C>, new: &IndexMap<ComponentKey, C>) -> Self
     where
         C: serde::Serialize + serde::Deserialize<'static>,
     {
@@ -42,15 +43,15 @@ impl Difference {
 
     /// True if name is present in new config and either not in the old
     /// one or is different.
-    pub fn contains_new(&self, name: &str) -> bool {
-        self.to_add.contains(name) || self.to_change.contains(name)
+    pub fn contains_new(&self, id: &ComponentKey) -> bool {
+        self.to_add.contains(id) || self.to_change.contains(id)
     }
 
-    pub fn changed_and_added(&self) -> impl Iterator<Item = &String> {
+    pub fn changed_and_added(&self) -> impl Iterator<Item = &ComponentKey> {
         self.to_change.iter().chain(self.to_add.iter())
     }
 
-    pub fn remove_and_changed(&self) -> impl Iterator<Item = &String> {
+    pub fn removed_and_changed(&self) -> impl Iterator<Item = &ComponentKey> {
         self.to_change.iter().chain(self.to_remove.iter())
     }
 
