@@ -37,7 +37,7 @@ jobs:
       - name: Store bench results
         uses: benchmark-action/github-action-benchmark@v1
         with:
-          name: ${{ matrix.target }}
+          name: Build
           tool: customSmallerIsBetter
           output-file-path: build.json
           github-token: ${{ secrets.GITHUB_TOKEN }}
