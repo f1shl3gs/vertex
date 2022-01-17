@@ -1,0 +1,47 @@
+name: Baseline
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch: {}
+
+permissions:
+  deployments: write
+  contents: write
+
+env:
+  CI: true
+
+jobs:
+  cancel-previous:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 3
+    if: github.ref != 'refs/heads/master'
+    steps:
+      - uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          all_but_latest: true # can cancel workflows scheduled later
+
+  baseline:
+    name: Baseline
+    runs-on: ubuntu-20.04
+    needs:
+      - cancel-previous
+    steps:
+      - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/environment/prepare.sh
+      - uses: actions/checkout@v2.4.0
+      - run: cargo build --release | tee build.txt
+      - run: bash ./ci/extract_build_time.sh > build.json
+      - name: Store bench results
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: ${{ matrix.target }}
+          tool: customSmallerIsBetter
+          output-file-path: build.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          comment-on-alert: true
+          benchmark-data-dir-path: bench
