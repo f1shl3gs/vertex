@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642474383845,
+  "lastUpdate": 1642494617577,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3301,6 +3301,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 57.302,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "22dba336137ce0fb17dca770e107dee913e03543",
+          "message": "Merge pull request #128 from f1shl3gs/reenable_bench_workflow\n\nre-enable benches",
+          "timestamp": "2022-01-18T16:23:43+08:00",
+          "tree_id": "a80756f00b945fdf83fc6caf6eb4cc48a714190c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/22dba336137ce0fb17dca770e107dee913e03543"
+        },
+        "date": 1642494616498,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.641,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 62.24,
             "unit": "ns/op"
           }
         ]
