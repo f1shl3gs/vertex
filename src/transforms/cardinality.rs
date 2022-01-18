@@ -206,7 +206,4 @@ mod tests {
             assert!(!set.insert(&val))
         }
     }
-
-    #[test]
-    fn test_tag_key_limit() {}
 }
