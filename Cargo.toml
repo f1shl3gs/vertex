@@ -378,7 +378,7 @@ nom = { version = "7.1.0", default-features = false }
 once_cell = { version = "1.9", default-features = false }
 pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 percent-encoding = { version = "2.1.0", default-features = false }
-rand_distr = { version = "0.4.2", default-features = false }
+rand_distr = { version = "0.4.3", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 regex = { version = "1.5.4" }
