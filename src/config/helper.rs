@@ -76,12 +76,7 @@ pub const fn default_acknowledgements() -> bool {
     false
 }
 
-pub fn ticker_from_duration(duration: std::time::Duration) -> Result<IntervalStream, ()> {
-    let interval = tokio::time::interval(duration);
-    Ok(IntervalStream::new(interval))
-}
-
-pub fn ticker_from_std_duration(duration: std::time::Duration) -> IntervalStream {
+pub fn ticker_from_duration(duration: std::time::Duration) -> IntervalStream {
     let interval = tokio::time::interval(duration);
     IntervalStream::new(interval)
 }

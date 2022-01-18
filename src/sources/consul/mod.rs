@@ -169,12 +169,12 @@ async fn collect_peers_metric(client: &Client) -> Result<Vec<Metric>, ConsulErro
 }
 
 async fn collect_leader_metric(client: &Client) -> Result<Vec<Metric>, ConsulError> {
-    let leader = client.leader().await? != "";
+    let leader = client.leader().await?;
 
     Ok(vec![Metric::gauge(
         "consul_raft_leader",
         "Does Raft cluster have a leader (according to this node)",
-        leader,
+        !leader.is_empty(),
     )])
 }
 
@@ -296,7 +296,7 @@ async fn collect_health_state_metric(
     let status_list = ["passing", "warning", "critical", "maintenance"];
 
     for hc in &health_state {
-        if hc.service_id == "" {
+        if hc.service_id.is_empty() {
             for status in status_list {
                 metrics.push(Metric::gauge_with_tags(
                     "consul_health_node_status",

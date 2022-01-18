@@ -63,7 +63,7 @@ pub struct JournaldConfig {
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.globals.make_subdir(&ctx.key.id()).map_err(|err| {
+        let data_dir = ctx.globals.make_subdir(ctx.key.id()).map_err(|err| {
             warn!("create sub dir failed {:?}", err);
             err
         })?;
@@ -236,22 +236,16 @@ impl JournaldSource {
                 };
 
                 if let Some(tmp) = entry.remove(&*CURSOR) {
-                    match tmp {
-                        Value::Bytes(_) => *cursor = Some(tmp.to_string_lossy()),
-                        _ => {}
+                    if let Value::Bytes(_) = tmp {
+                        *cursor = Some(tmp.to_string_lossy());
                     }
                 }
 
                 saw_record = true;
-                if let Some(tmp) = entry.get(SYSTEMD_UNIT) {
-                    match tmp {
-                        Value::Bytes(value) => {
-                            let s = String::from_utf8_lossy(value);
-                            if self.filter(&s) {
-                                continue;
-                            }
-                        }
-                        _ => {}
+                if let Some(Value::Bytes(value)) = entry.get(SYSTEMD_UNIT) {
+                    let s = String::from_utf8_lossy(value);
+                    if self.filter(&s) {
+                        continue;
                     }
                 }
 
@@ -280,7 +274,7 @@ impl JournaldSource {
             return true;
         }
 
-        if self.includes.len() == 0 {
+        if self.includes.is_empty() {
             return false;
         }
 
@@ -592,7 +586,7 @@ mod checkpoints_tests {
         let mut checkpointer = Checkpointer::new(filename).await.unwrap();
 
         // read nothing
-        assert_eq!(checkpointer.get().await.unwrap().is_none(), true);
+        assert!(checkpointer.get().await.unwrap().is_none());
 
         // read first write
         checkpointer.set("foo").await.unwrap();
@@ -656,7 +650,6 @@ mod tests {
             BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
             StopJournalctlFn,
         ) {
-            let journal = TestJournal {};
             (journal_stream(), Box::new(|| ()))
         }
     }
@@ -794,27 +787,25 @@ MESSAGE=audit log
 
     fn test_journal(includes: &[&str], excludes: &[&str]) -> JournaldSource {
         let (tx, _) = Pipeline::new_test();
-        let journal = JournaldSource {
+        JournaldSource {
             includes: create_unit_matches(includes.to_vec()),
             excludes: create_unit_matches(excludes.to_vec()),
             batch_size: DEFAULT_BATCH_SIZE,
             output: tx,
-        };
-
-        journal
+        }
     }
 
     #[test]
     fn unit_filter() {
         // if nothing configured, allow all
         let journal = test_journal(&[], &[]);
-        assert_eq!(journal.filter("foo"), false);
-        assert_eq!(journal.filter("bar"), false);
+        assert!(!journal.filter("foo"));
+        assert!(!journal.filter("bar"));
 
         // filter one
         let journal = test_journal(&[], &["foo"]);
-        assert_eq!(journal.filter("foo"), true);
-        assert_eq!(journal.filter("bar"), false);
+        assert!(journal.filter("foo"));
+        assert!(!journal.filter("bar"));
     }
 
     #[tokio::test]

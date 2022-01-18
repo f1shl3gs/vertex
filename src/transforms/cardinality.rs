@@ -76,7 +76,7 @@ impl TagValueSet {
     }
 
     #[inline]
-    fn len(&self) -> usize {
+    const fn len(&self) -> usize {
         self.elements
     }
 
@@ -179,14 +179,14 @@ mod tests {
     fn test_tag_value_set() {
         let mut set = TagValueSet::new(10);
         assert_eq!(set.len(), 0);
-        assert_eq!(set.contains("foo"), false);
+        assert!(!set.contains("foo"));
 
-        assert_eq!(set.insert("foo"), true);
-        assert_eq!(set.contains("foo"), true);
+        assert!(set.insert("foo"));
+        assert!(set.contains("foo"));
         assert_eq!(set.len(), 1);
 
-        assert_eq!(set.insert("bar"), true);
-        assert_eq!(set.contains("bar"), true);
+        assert!(set.insert("bar"));
+        assert!(set.contains("bar"));
         assert_eq!(set.len(), 2);
     }
 
@@ -206,7 +206,4 @@ mod tests {
             assert!(!set.insert(&val))
         }
     }
-
-    #[test]
-    fn test_tag_key_limit() {}
 }

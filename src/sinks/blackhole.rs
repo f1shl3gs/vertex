@@ -48,7 +48,7 @@ struct BlackholeSink {
 }
 
 impl BlackholeSink {
-    pub fn new(acker: Acker) -> Self {
+    pub const fn new(acker: Acker) -> Self {
         Self { acker }
     }
 }

@@ -97,7 +97,7 @@ impl StreamSink for StdoutSink {
         let mut stdout = std::io::stdout();
         let encoding = EncodingConfig::from(Encoding::Json);
 
-        while let Some(mut event) = input.next().await {
+        while let Some(event) = input.next().await {
             self.acker.ack(1);
 
             if let Some(mut text) = encode_event(event, &encoding) {

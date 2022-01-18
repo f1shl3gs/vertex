@@ -250,7 +250,6 @@ impl Checkpointer {
                 info!(message = "Loaded checkpoint data",);
 
                 self.checkpoints.set_state(state, ignore_before);
-                return;
             }
             Err(err) if err.kind() == io::ErrorKind::NotFound => {
                 // This is expected, so no warning needed
@@ -260,8 +259,6 @@ impl Checkpointer {
                     message = "Unable to load checkpoint data",
                     %err
                 );
-
-                return;
             }
         }
     }
@@ -283,7 +280,7 @@ mod tests {
         let fp = Fingerprint { dev: 1, inode: 2 };
 
         let dir = tempdir().unwrap();
-        let mut checkpointer = Checkpointer::new(dir.path());
+        let checkpointer = Checkpointer::new(dir.path());
         let checkpoints = checkpointer.checkpoints;
 
         checkpoints.update(fp, 3);
@@ -300,7 +297,7 @@ mod tests {
 
         {
             // checkpointer will be dropped once this block is done.
-            let mut checkpointer = Checkpointer::new(dir.path());
+            let checkpointer = Checkpointer::new(dir.path());
             checkpointer.checkpoints.update(fp, position);
             checkpointer.write_checkpoints().unwrap();
         }

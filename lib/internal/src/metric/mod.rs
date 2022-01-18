@@ -37,5 +37,5 @@ pub fn init_global() -> Result<(), Error> {
 pub fn get_global() -> Result<&'static InternalRecorder, Error> {
     GLOBAL_RECORDER
         .get()
-        .ok_or(Error::from(ErrorKind::NotFound))
+        .ok_or_else(|| Error::from(ErrorKind::NotFound))
 }

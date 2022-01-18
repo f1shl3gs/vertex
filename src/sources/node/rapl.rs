@@ -81,7 +81,7 @@ async fn get_rapl_zones(sys_path: &str) -> Result<Vec<RaplZone>, Error> {
 //
 // the name looks like: "package-10"
 fn get_name_and_index(s: &str) -> Option<(&str, i32)> {
-    let p = s.find("-")?;
+    let p = s.find('-')?;
     let name = &s[..p];
     let next = &s[p + 1..s.len()];
     let index = next.parse().ok()?;

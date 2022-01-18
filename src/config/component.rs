@@ -71,7 +71,7 @@ where
             .ok_or_else(|| ExampleError::DoesNotExist {
                 type_str: type_str.to_string(),
             })
-            .and_then(|t| Ok(t.example.clone()))
+            .map(|t| t.example.clone())
     }
 
     /// Returns a sorted Vec of all plugins registered of a type

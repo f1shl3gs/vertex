@@ -203,15 +203,9 @@ async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
     let paths = glob::glob(&pattern).context("find btrfs blocks failed")?;
 
     let mut stats = vec![];
-    for entry in paths {
-        match entry {
-            Ok(path) => {
-                let s = get_stats(path).await.context("get btrfs stats failed")?;
-
-                stats.push(s);
-            }
-            _ => {}
-        }
+    for path in paths.flatten() {
+        let s = get_stats(path).await.context("get btrfs stats failed")?;
+        stats.push(s);
     }
 
     Ok(stats)
@@ -289,7 +283,7 @@ async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
     Ok(files)
 }
 
-async fn read_device_info(path: &PathBuf) -> Result<BTreeMap<String, Device>, Error> {
+async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
     let path = path.join("devices");
     let mut dirs = tokio::fs::read_dir(path)
         .await
@@ -386,8 +380,7 @@ async fn read_layouts(
 }
 
 // read_layout reads the Btrfs layout statistics for an allocation layout.
-async fn read_layout(root: &PathBuf, devices: usize) -> Result<LayoutUsage, Error> {
-    let root = root.clone();
+async fn read_layout(root: &Path, devices: usize) -> Result<LayoutUsage, Error> {
     let path = root.join("total_bytes");
     let total_bytes = read_into(path).await?;
 

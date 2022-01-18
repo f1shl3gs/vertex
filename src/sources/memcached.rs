@@ -47,9 +47,7 @@ inventory::submit! {
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let mut output = ctx.output;
 
         let endpoints = self.endpoints.clone();
@@ -708,8 +706,8 @@ async fn gather(addr: &str) -> Vec<Metric> {
         futures::future::join(fetch_stats_metrics(addr), fetch_settings_metric(addr)).await;
 
     let up = stats.is_ok() && settings.is_ok();
-    let mut metrics = stats.unwrap_or(vec![]);
-    metrics.extend(settings.unwrap_or(vec![]));
+    let mut metrics = stats.unwrap_or_default();
+    metrics.extend(settings.unwrap_or_default());
 
     metrics.extend_from_slice(&[
         Metric::gauge(

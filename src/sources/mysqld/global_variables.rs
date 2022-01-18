@@ -159,7 +159,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
     // mysql_galera_variables_info metric
     match text_items.get("wsrep_cluster_name") {
-        Some(value) if value != "" => metrics.push(Metric::gauge_with_tags(
+        Some(value) if !value.is_empty() => metrics.push(Metric::gauge_with_tags(
             "mysql_galera_variables_info",
             "PXC/Galera variables information",
             1,
@@ -172,7 +172,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
 
     // mysql_galera_gcache_size_bytes metric
     match text_items.get("wsrep_provider_options") {
-        Some(value) if value != "" => {
+        Some(value) if !value.is_empty() => {
             metrics.push(Metric::gauge(
                 "mysql_galera_gcache_size_bytes",
                 "PXC/Galera gcache size",

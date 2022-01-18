@@ -1,4 +1,4 @@
-use event::{Event, EventStatus};
+use event::Event;
 use futures::channel::mpsc;
 use futures::Stream;
 use futures_util::{SinkExt, StreamExt};
@@ -7,6 +7,9 @@ use std::collections::HashMap;
 use std::fmt;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+#[cfg(test)]
+use event::EventStatus;
 
 use crate::config::Output;
 
@@ -63,6 +66,8 @@ pub struct Builder {
 }
 
 impl Builder {
+    // https://github.com/rust-lang/rust/issues/73255
+    #[allow(clippy::missing_const_for_fn)]
     pub fn with_buffer(self, buf_size: usize) -> Self {
         Self {
             buf_size,
@@ -84,6 +89,8 @@ impl Builder {
         rx
     }
 
+    // https://github.com/rust-lang/rust/issues/73255
+    #[allow(clippy::missing_const_for_fn)]
     pub fn build(self) -> Pipeline {
         Pipeline {
             inner: self.inner,

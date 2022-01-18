@@ -71,7 +71,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
     let mut label_values = BTreeMap::new();
     for backend in &backends {
         let mut local_address = "";
-        if backend.local_address != "" {
+        if !backend.local_address.is_empty() {
             local_address = &backend.local_address;
         }
 
@@ -93,7 +93,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
         let key = kv.join("-");
         let mut status = sums
             .entry(key.clone())
-            .or_insert(IPVSBackendStatus::default());
+            .or_insert_with(IPVSBackendStatus::default);
 
         status.active_conn += backend.active_conn;
         status.inact_conn += backend.inact_conn;
@@ -230,7 +230,7 @@ async fn parse_ipvs_backend_status(root: &str) -> Result<Vec<IPVSBackendStatus>,
 
     while let Some(line) = lines.next_line().await? {
         let fields = line.split_ascii_whitespace().collect::<Vec<_>>();
-        if fields.len() == 0 {
+        if fields.is_empty() {
             continue;
         }
 

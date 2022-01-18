@@ -524,7 +524,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
 
         // Extended precision counters are uint64 values
         if label == "xpc" {
-            let us = parse_u64s(&parts[1..]).map_err(|err| Error::from(err))?;
+            let us = parse_u64s(&parts[1..]).map_err(Error::from)?;
 
             if us.len() != 3 {
                 return Err(Error::new_invalid(
@@ -540,7 +540,7 @@ async fn parse_stat(path: PathBuf) -> Result<Stats, Error> {
         }
 
         // all other counters are u32 values
-        let us = parse_u32s(&parts[1..]).map_err(|err| Error::from(err))?;
+        let us = parse_u32s(&parts[1..]).map_err(Error::from)?;
 
         match label {
             "extent_alloc" => {

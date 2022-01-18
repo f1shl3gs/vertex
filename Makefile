@@ -39,23 +39,23 @@ build_x86_64-unknown-linux-gnu: artifacts-dir
 # Integration tests
 .PHONY: integration-test-nginx_stub
 integration-test-nginx_stub:
-	cargo test -p vertex --lib sources::nginx_stub::integration_tests:: --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::nginx_stub::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-redis
 integration-test-redis:
-	cargo test -p vertex --lib sources::redis::integration_tests:: --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::redis::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-zookeeper
 integration-test-zookeeper:
-	cargo test -p vertex --lib sources::zookeeper::integration_tests:: --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-memcached
 integration-test-memcached:
-	cargo test -p vertex --lib sources::memcached::integration_tests:: --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::memcached::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-haproxy
 integration-test-haproxy:
-	cargo test -p vertex --lib sources::haproxy::integration_tests:: --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::haproxy::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-mysql
 integration-test-mysql:

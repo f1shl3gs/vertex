@@ -97,7 +97,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
         match props.get("label") {
             Some(v) => {
-                if v != "" {
+                if !v.is_empty() {
                     metrics.push(Metric::gauge_with_tags(
                         "node_hwmon_sensor_label",
                         "Label for given chip and sensor",
@@ -115,13 +115,10 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
         if sensor_type == "beep_enable" {
             let mut v = 0f64;
-            match props.get("") {
-                Some(value) => {
-                    if value == "1" {
-                        v = 1.0;
-                    }
+            if let Some(value) = props.get("") {
+                if value == "1" {
+                    v = 1.0;
                 }
-                None => {}
             }
 
             metrics.push(Metric::gauge_with_tags(
@@ -196,9 +193,9 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if element == "input" {
                 // input is actually the value
                 if let Some(_v) = props.get("") {
-                    name = name + "_input";
+                    name += "_input";
                 }
-            } else if element != "" {
+            } else if !element.is_empty() {
                 name = format!("{}_{}", name, sanitized(element));
             }
 
@@ -257,7 +254,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
             if sensor_type == "temp" && element != "type" {
                 let mut element = element.as_str();
-                if element == "" {
+                if element.is_empty() {
                     element = "input";
                 }
 
@@ -414,10 +411,10 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 async fn collect_sensor_data<P: AsRef<Path>>(
     dir: P,
 ) -> Result<BTreeMap<String, BTreeMap<String, String>>, Error> {
-    let mut dirs = std::fs::read_dir(dir)?;
+    let dirs = std::fs::read_dir(dir)?;
     let mut stats = BTreeMap::<String, BTreeMap<String, String>>::new();
 
-    while let Some(result) = dirs.next() {
+    for result in dirs {
         match result {
             Ok(entry) => {
                 let filename = entry.file_name();
@@ -465,7 +462,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
     // consume type
     for i in 0..s.len() {
         let c = s[i];
-        if c >= b'0' && c <= b'9' {
+        if c.is_ascii_digit() {
             typ_end = i;
             break;
         }
@@ -537,11 +534,11 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
             let clean_dev_name = sanitized(dev_name);
             let clean_dev_typ = sanitized(dev_type);
 
-            if clean_dev_typ != "" && clean_dev_name != "" {
+            if !clean_dev_typ.is_empty() && !clean_dev_name.is_empty() {
                 return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name));
             }
 
-            if clean_dev_name != "" {
+            if !clean_dev_name.is_empty() {
                 return Ok(clean_dev_name);
             }
         }
@@ -628,7 +625,7 @@ mod tests {
     #[test]
     fn test_is_hwmon_sensor() {
         assert!(is_hwmon_sensor("fan"));
-        assert_eq!(is_hwmon_sensor("foo"), false);
+        assert!(!is_hwmon_sensor("foo"));
     }
 
     #[tokio::test]

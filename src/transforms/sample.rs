@@ -55,7 +55,7 @@ struct Sample {
 }
 
 impl Sample {
-    pub fn new(rate: u64) -> Self {
+    pub const fn new(rate: u64) -> Self {
         Self {
             rate,
             count: 0,

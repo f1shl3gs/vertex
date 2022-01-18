@@ -2,6 +2,13 @@
 name = "shared"
 version = "0.1.0"
 edition = "2021"
+publish = false
+
+[dev-dependencies]
+serde_yaml = { version = "0.8.23" }
 
 [dependencies]
 bytes = { version = "1.0.1", default-features = false, features = ["serde"] }
+chrono = { version = "0.4.19", features = ["serde"] }
+chrono-tz = { version = "0.6.1", features = ["serde"] }
+serde = { version = "1.0.133", features = ["derive"] }

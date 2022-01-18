@@ -73,7 +73,7 @@ async fn read_bonding_stats(sys_path: PathBuf) -> Result<HashMap<String, Vec<f64
                 if let Ok(state) = read_to_string(path).await {
                     sstat[0] += 1f64;
                     if state.trim() == "up" {
-                        sstat[1] = sstat[1] + 1f64;
+                        sstat[1] += 1f64;
                     }
                 }
             }

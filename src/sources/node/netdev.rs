@@ -255,7 +255,7 @@ impl DeviceStatus {
         let transmit_compressed = parts[16].parse()?;
 
         Ok(Self {
-            name: name.to_string(),
+            name,
             recv_bytes,
             recv_packets,
             recv_errs,

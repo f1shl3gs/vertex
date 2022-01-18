@@ -60,7 +60,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = path.to_str().unwrap();
         let kvs = parse_pool_objset_file(path).await?;
         for (k, v) in kvs {
-            let fields = k.split(".").collect::<Vec<_>>();
+            let fields = k.split('.').collect::<Vec<_>>();
             let k = fields[0];
             let pool_name = fields[1];
             let dataset = fields[2];
@@ -144,7 +144,7 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
 
-    let zps = path.split("/").collect::<Vec<_>>();
+    let zps = path.split('/').collect::<Vec<_>>();
     let length = zps.len();
     if length < 2 {
         return Err(Error::new_invalid(
@@ -209,7 +209,7 @@ async fn parse_pool_objset_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         }
 
         if parts[0] == "dataset_name" {
-            let elmts = path.split("/").collect::<Vec<_>>();
+            let elmts = path.split('/').collect::<Vec<_>>();
             let length = elmts.len();
             pool_name = elmts[length - 2].to_string();
             dataset_name = parts[2].to_string();
@@ -246,7 +246,7 @@ async fn parse_pool_state_file(path: &str) -> Result<BTreeMap<String, bool>, Err
 }
 
 fn parse_pool_name(path: &str) -> Result<String, Error> {
-    let elements = path.split("/").collect::<Vec<_>>();
+    let elements = path.split('/').collect::<Vec<_>>();
     let length = elements.len();
     if length < 2 {
         return Err(Error::new_invalid(
@@ -267,21 +267,19 @@ mod tests {
     async fn test_parse_pool_procfs_file() {
         let paths = glob("tests/fixtures/proc/spl/kstat/zfs/*/io").unwrap();
         let mut parsed = 0;
-        for path in paths {
-            if let Ok(path) = path {
-                let path = path.to_str().unwrap();
-                parsed += 1;
-                let kvs = parse_pool_procfs_file(path).await.unwrap();
-                assert_ne!(kvs.len(), 0);
+        for path in paths.flatten() {
+            let path = path.to_str().unwrap();
+            parsed += 1;
+            let kvs = parse_pool_procfs_file(path).await.unwrap();
+            assert_ne!(kvs.len(), 0);
 
-                for (k, v) in kvs {
-                    if k != "kstat.zfs.misc.io.nread" {
-                        continue;
-                    }
+            for (k, v) in kvs {
+                if k != "kstat.zfs.misc.io.nread" {
+                    continue;
+                }
 
-                    if v != 1884160 && v != 2826240 {
-                        panic!("incorrect value parsed from procfs data")
-                    }
+                if v != 1884160 && v != 2826240 {
+                    panic!("incorrect value parsed from procfs data")
                 }
             }
         }

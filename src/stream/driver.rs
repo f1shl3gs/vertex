@@ -24,7 +24,7 @@ impl SequenceNumber {
     ///
     /// This can be used trivially for correlating a given `SequenceNumber`
     /// in logs/metrics/tracings
-    fn id(&self) -> u64 {
+    const fn id(&self) -> u64 {
         self.0
     }
 }
@@ -158,6 +158,7 @@ pub struct Driver<I, S> {
 }
 
 impl<I, S> Driver<I, S> {
+    #[allow(clippy::missing_const_for_fn)]
     pub fn new(input: I, service: S, acker: Acker) -> Self {
         Self {
             input,

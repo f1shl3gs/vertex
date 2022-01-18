@@ -56,7 +56,7 @@ struct MDStat {
 
 async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
     let content = read_to_string(path).await?;
-    let lines = content.split("\n").collect::<Vec<_>>();
+    let lines = content.split('\n').collect::<Vec<_>>();
 
     let mut stats = vec![];
     let line_count = lines.len();
@@ -64,7 +64,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
         if line.is_empty()
             || line.starts_with("Personalities")
             || line.starts_with("unused")
-            || line.starts_with(" ")
+            || line.starts_with(' ')
         {
             continue;
         }
@@ -202,7 +202,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {
         // In the device deviceLine, only disks have a number associated with them in []
-        let total = dev_line.matches("[").count() as i64;
+        let total = dev_line.matches('[').count() as i64;
         return Ok((total, total, 0, size));
     }
 
@@ -225,7 +225,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 
     let total = caps[2].parse()?;
     let active = caps[3].parse()?;
-    let down = caps[4].matches("_").count() as i64;
+    let down = caps[4].matches('_').count() as i64;
 
     Ok((active, total, down, size))
 }
