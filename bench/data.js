@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642494730968,
+  "lastUpdate": 1642494752481,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6824,6 +6824,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 309910,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "543d8ffa49586dc4834aa6fe57f22c8b4efe87d6",
+          "message": "Merge pull request #129 from f1shl3gs/dependabot/cargo/dashmap-5.0.0\n\nchore(deps): bump dashmap from 4.0.2 to 5.0.0",
+          "timestamp": "2022-01-18T16:24:21+08:00",
+          "tree_id": "b744b7b1f88665f78aeddca78cea8254f05689d1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/543d8ffa49586dc4834aa6fe57f22c8b4efe87d6"
+        },
+        "date": 1642494751706,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 730.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 71170,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 368520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 759190,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 278.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 27478,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 152520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 302940,
             "unit": "ns/op"
           }
         ]
