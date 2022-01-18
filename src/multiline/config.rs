@@ -303,7 +303,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                 let timeout = timeout.unwrap_or(DEFAULT_TIMEOUT);
 
                 match parser {
-                    None => return Err(de::Error::missing_field("parser")),
+                    None => Err(de::Error::missing_field("parser")),
 
                     Some(CUSTOM_PARSER) => {
                         if condition_pattern.is_none() {
@@ -318,53 +318,43 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                             return Err(de::Error::missing_field("mode"));
                         }
 
-                        return Ok(MultilineConfig {
+                        Ok(MultilineConfig {
                             timeout,
                             parser: Parser::Custom {
                                 condition_pattern: condition_pattern.unwrap(),
                                 start_pattern: start_pattern.unwrap(),
                                 mode: mode.unwrap(),
                             },
-                        });
-                    }
-
-                    Some(CRI_PARSER) => {
-                        return Ok(MultilineConfig {
-                            timeout,
-                            parser: Parser::Cri,
-                        });
-                    }
-
-                    Some(DOCKER_PARSER) => {
-                        return Ok(MultilineConfig {
-                            timeout,
-                            parser: Parser::Docker,
-                        });
-                    }
-
-                    Some(GO_PARSER) => {
-                        return Ok(MultilineConfig {
-                            timeout,
-                            parser: Parser::Go,
-                        });
-                    }
-
-                    Some(JAVA_PARSER) => {
-                        return Ok(MultilineConfig {
-                            timeout,
-                            parser: Parser::Java,
-                        });
-                    }
-
-                    Some(NOINDENT) => {
-                        return Ok(MultilineConfig {
-                            timeout,
-                            parser: Parser::NoIndent,
                         })
                     }
 
+                    Some(CRI_PARSER) => Ok(MultilineConfig {
+                        timeout,
+                        parser: Parser::Cri,
+                    }),
+
+                    Some(DOCKER_PARSER) => Ok(MultilineConfig {
+                        timeout,
+                        parser: Parser::Docker,
+                    }),
+
+                    Some(GO_PARSER) => Ok(MultilineConfig {
+                        timeout,
+                        parser: Parser::Go,
+                    }),
+
+                    Some(JAVA_PARSER) => Ok(MultilineConfig {
+                        timeout,
+                        parser: Parser::Java,
+                    }),
+
+                    Some(NOINDENT) => Ok(MultilineConfig {
+                        timeout,
+                        parser: Parser::NoIndent,
+                    }),
+
                     _ => unreachable!(),
-                };
+                }
             }
         }
 

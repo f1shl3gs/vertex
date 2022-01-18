@@ -30,7 +30,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         RESPONSE_TIME_READ_QUERY,
         RESPONSE_TIME_WRITE_QUERY,
     ] {
-        metrics.push(query_response_time(&pool, query).await?);
+        metrics.push(query_response_time(pool, query).await?);
     }
 
     Ok(metrics)

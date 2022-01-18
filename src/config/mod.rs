@@ -102,7 +102,7 @@ impl Output {
     /// A default output is one without a port identifier (i.e. not a named output)
     /// and the default output consumers will receive if they declare the component
     /// itself as an input
-    pub fn default(typ: DataType) -> Self {
+    pub const fn default(typ: DataType) -> Self {
         Self { port: None, typ }
     }
 }
@@ -321,7 +321,8 @@ impl<T> SinkOuter<T> {
         resources
     }
 
-    pub fn health_check(&self) -> bool {
+    #[inline]
+    pub const fn health_check(&self) -> bool {
         self.health_check
     }
 

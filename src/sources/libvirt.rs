@@ -5,7 +5,7 @@ use std::time::{Duration, Instant};
 use virt::{Client, Error};
 
 use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_std_duration, DataType,
+    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use crate::sources::Source;
@@ -44,7 +44,7 @@ inventory::submit! {
 #[typetag::serde(name = "libvirt")]
 impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_std_duration(self.interval).take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let sock = self.sock.clone();
         let mut output = ctx.output;
 
@@ -274,7 +274,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 .map(|d| d.clone())
                 .unwrap_or_default();
 
-            let disk_source = if block.path != "" {
+            let disk_source = if !block.path.is_empty() {
                 &block.path
             } else {
                 &dev.source.name
@@ -583,7 +583,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 }
             }
 
-            if source_bridge != "" || virtual_interface != "" {
+            if !source_bridge.is_empty() || !virtual_interface.is_empty() {
                 metrics.push(Metric::gauge_with_tags(
                     "libvirt_domain_interface_meta",
                     "Interfaces metadata. Source bridge, target device, interface uuid",

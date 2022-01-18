@@ -131,14 +131,7 @@ impl<S: Subscriber + 'static> Subscriber for BroadcastSubscriber<S> {
 }
 
 pub fn init(color: bool, json: bool, levels: &str) {
-    // Note: when test init might be called multiple times,
-    // it is not allowed when vertex running
-    #[cfg(not(test))]
-    BUFFER
-        .set(Mutex::new(Some(vec![])))
-        .expect("Log record buffer init failed");
-    #[cfg(test)]
-    BUFFER.set(Mutex::new(Some(vec![])));
+    let _ = BUFFER.set(Mutex::new(Some(vec![])));
 
     // An escape hatch to disable injecting a metrics layer into tracing.
     // May be used for performance reasons. This is a hidden and undocumented functionality.

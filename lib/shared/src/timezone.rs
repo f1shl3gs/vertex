@@ -93,8 +93,6 @@ tz: CET
         "#;
 
         let w: TzWrapper = serde_yaml::from_str(input).unwrap();
-
-        let tz = w.tz;
         assert_eq!(w.tz.name(), "CET");
     }
 }

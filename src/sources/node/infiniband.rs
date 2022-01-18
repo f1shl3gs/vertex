@@ -571,9 +571,11 @@ async fn infiniband_class<P: AsRef<Path>>(root: P) -> Result<Vec<InfiniBandDevic
 }
 
 async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Error> {
-    let name = path.file_name().unwrap().to_str().unwrap().to_string();
-    let mut device = InfiniBandDevice::default();
-    device.name = name.clone();
+    let name = path.file_name().unwrap().to_str().unwrap();
+    let mut device = InfiniBandDevice {
+        name: name.to_string(),
+        ..Default::default()
+    };
 
     for sub in ["board_id", "fw_ver", "hca_type"] {
         let sp = path.clone().join(sub);
@@ -601,7 +603,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
         .await
         .context("failed to list InfiniBand ports")?;
     while let Some(entry) = dirs.next_entry().await? {
-        let port = parse_infiniband_port(&name, entry.path()).await?;
+        let port = parse_infiniband_port(name, entry.path()).await?;
         device.ports.push(port);
     }
 
@@ -618,9 +620,12 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
         .unwrap()
         .parse::<u32>()
         .context("failed to convert port to u32")?;
-    let mut ibp = InfiniBandPort::default();
-    ibp.name = name.to_string();
-    ibp.port = port_num;
+
+    let mut ibp = InfiniBandPort {
+        name: name.to_string(),
+        port: port_num,
+        ..Default::default()
+    };
 
     let sp = root.clone().join("state");
     let content = read_to_string(sp).await?;
@@ -647,7 +652,7 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 
 // Parse InfiniBand state. Expected format: "<id>: <string-representation>"
 fn parse_state(s: &str) -> Result<(u32, String), Error> {
-    let parts = s.split(":").map(|p| p.trim()).collect::<Vec<_>>();
+    let parts = s.split(':').map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
         return invalid_error!("failed to split {} into 'ID: Name'", s);
     }
@@ -660,7 +665,7 @@ fn parse_state(s: &str) -> Result<(u32, String), Error> {
 
 // Parse rate (example: "100 Gb/sec (4X EDR)") and return it as bytes/second
 fn parse_rate(s: &str) -> Result<u64, Error> {
-    let parts = s.splitn(2, " ").collect::<Vec<_>>();
+    let parts = s.splitn(2, ' ').collect::<Vec<_>>();
     if parts.len() != 2 {
         return invalid_error!("failed to split {}", s);
     }

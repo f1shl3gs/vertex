@@ -243,6 +243,7 @@ struct Stat {
 
 struct Usage(libc::statvfs);
 
+#[allow(clippy::missing_const_for_fn)]
 impl Usage {
     #[inline]
     pub fn size(&self) -> u64 {

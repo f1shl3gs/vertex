@@ -68,7 +68,7 @@ impl ProviderConfig for HttpConfig {
         let request = self.request.clone();
         let proxy = ProxyConfig::from_env().merge(&self.proxy);
         let attrs = build_attributes();
-        let (builder, _) =
+        let builder =
             http_request_to_config_builder(&url, &tls_options, &request.headers, &proxy, attrs)
                 .await?;
 
@@ -116,19 +116,17 @@ async fn http_request_to_config_builder(
     headers: &IndexMap<String, String>,
     proxy: &ProxyConfig,
     attrs: IndexMap<String, String>,
-) -> Result<(crate::config::Builder, String), Vec<String>> {
+) -> Result<crate::config::Builder, Vec<String>> {
     let config_str = http_request(url, tls_options, headers, proxy, attrs)
         .await
         .map_err(|err| vec![err.to_owned()])?;
-
-    let digest = md5::compute(&config_str);
 
     let (builder, warnings) = crate::config::load(config_str.chunk(), None)?;
     for warning in warnings.into_iter() {
         warn!("{}", warning);
     }
 
-    Ok((builder, format!("{:?}", digest)))
+    Ok(builder)
 }
 
 /// Makes an HTTP request to the provided endpoint, returning the String body.
@@ -237,14 +235,11 @@ fn poll_http(
     let mut interval = tokio::time::interval_at(tokio::time::Instant::now() + interval, interval);
 
     stream! {
-        let mut digest = String::new();
-
         loop {
             interval.tick().await;
             let attrs = build_attributes();
             match http_request_to_config_builder(&url, &tls_options, &headers, &proxy, attrs).await {
-                Ok((builder, _digest)) => {
-                    digest = _digest;
+                Ok(builder) => {
                     yield signal::SignalTo::ReloadFromConfigBuilder(builder)
                 },
                 Err(_) => return,

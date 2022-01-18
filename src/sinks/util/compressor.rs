@@ -43,7 +43,7 @@ impl Write for Writer {
 
     fn flush(&mut self) -> std::io::Result<()> {
         match self {
-            Writer::Plain(inner) => Ok(()),
+            Writer::Plain(_inner) => Ok(()),
             Writer::Gzip(writer) => writer.flush(),
             Writer::Zlib(writer) => writer.flush(),
         }

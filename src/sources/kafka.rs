@@ -26,19 +26,19 @@ fn default_auto_offset_reset() -> String {
     "largest".to_string()
 }
 
-fn default_session_timeout() -> Duration {
+const fn default_session_timeout() -> Duration {
     Duration::from_secs(10)
 }
 
-fn default_socket_timeout() -> Duration {
+const fn default_socket_timeout() -> Duration {
     Duration::from_secs(60)
 }
 
-fn default_fetch_wait_max() -> Duration {
+const fn default_fetch_wait_max() -> Duration {
     Duration::from_millis(100)
 }
 
-fn default_commit_interval() -> Duration {
+const fn default_commit_interval() -> Duration {
     Duration::from_secs(5)
 }
 

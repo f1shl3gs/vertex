@@ -3,7 +3,7 @@ use bytes::Bytes;
 use chrono::Utc;
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
 use futures::Stream;
-use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
+use futures_util::{FutureExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
@@ -79,19 +79,19 @@ struct TailConfig {
     multiline: Option<MultilineConfig>,
 }
 
-fn default_ignore_older_than() -> Duration {
+const fn default_ignore_older_than() -> Duration {
     Duration::from_secs(12 * 60 * 60)
 }
 
-fn default_glob_interval() -> Duration {
+const fn default_glob_interval() -> Duration {
     Duration::from_secs(3)
 }
 
-fn default_max_read_bytes() -> usize {
+const fn default_max_read_bytes() -> usize {
     2 * 1024
 }
 
-fn default_max_line_bytes() -> usize {
+const fn default_max_line_bytes() -> usize {
     100 * 1024 // 100kb
 }
 
@@ -158,7 +158,7 @@ impl SourceConfig for TailConfig {
         let host_key = self
             .host_key
             .clone()
-            .unwrap_or(log_schema().host_key().to_string());
+            .unwrap_or_else(|| log_schema().host_key().to_string());
         let hostname = hostname().unwrap();
         let timestamp_key = log_schema().timestamp_key();
         let source_type_key = log_schema().source_type_key();
@@ -169,9 +169,9 @@ impl SourceConfig for TailConfig {
             })
         });
 
-        let charset = self.charset.clone();
+        let charset = self.charset;
         let line_delimiter = match charset {
-            Some(e) => Encoder::new(&e).encode_from_utf8(&self.line_delimiter),
+            Some(e) => Encoder::new(e).encode_from_utf8(&self.line_delimiter),
             None => Bytes::from(self.line_delimiter.clone()),
         };
 

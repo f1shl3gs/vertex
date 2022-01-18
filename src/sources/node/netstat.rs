@@ -91,7 +91,7 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
         let values = line.split_ascii_whitespace().collect::<Vec<_>>();
 
         // remove trailing :
-        let protocol = names[0].strip_suffix(":").unwrap();
+        let protocol = names[0].strip_suffix(':').unwrap();
         stats.insert(protocol.to_string(), BTreeMap::new());
         if names.len() != values.len() {
             return Err(Error::new_invalid("mismatch field count"));

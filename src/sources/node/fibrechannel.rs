@@ -93,11 +93,9 @@ pub struct FibreChannelHost {
 pub async fn fibre_channel_class(sys_path: &str) -> Result<Vec<FibreChannelHost>, Error> {
     let mut fcc = Vec::new();
     let path = format!("{}/class/fc_host", sys_path);
-    for dir in std::fs::read_dir(path)? {
-        if let Ok(entry) = dir {
-            let host = parse_fibre_channel_host(entry.path()).await?;
-            fcc.push(host);
-        }
+    for entry in std::fs::read_dir(path)?.flatten() {
+        let host = parse_fibre_channel_host(entry.path()).await?;
+        fcc.push(host);
     }
 
     Ok(fcc)

@@ -191,7 +191,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
         let values = text_items
             .get("wsrep_evs_repl_latency")
             .unwrap()
-            .split("/")
+            .split('/')
             .collect::<Vec<_>>();
 
         if evs.len() == values.len() {

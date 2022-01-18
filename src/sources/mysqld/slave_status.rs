@@ -81,7 +81,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     'outer: for query in ["SHOW ALL SLAVES STATUS", "SHOW SLAVE STATUS"] {
         match sqlx::query_as::<_, Record>(query).fetch_one(pool).await {
             // MySQL/Percona
-            Err(err) => {
+            Err(_err) => {
                 // Leverage lock-free SHOW SLAVE STATUS by guessing the right suffix
                 for suffix in [" NONBLOCKING", " NOLOCK", ""] {
                     let query = format!("{}{}", query, suffix);

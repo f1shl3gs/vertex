@@ -3,11 +3,9 @@ use super::{read_to_string, Error, ErrorContext};
 use event::Metric;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(&proc_path)
-        .await
-        .context("read sockstat failed")?;
+    let stat4 = sockstat4(proc_path).await.context("read sockstat failed")?;
 
-    let stat6 = sockstat6(&proc_path)
+    let stat6 = sockstat6(proc_path)
         .await
         .context("read sockstat6 failed")?;
 
@@ -132,10 +130,12 @@ fn parse_sockstat(content: &str) -> Result<NetSockstat, Error> {
         }
 
         // Parse all other lines as individual protocols
-        let mut i = 1;
-        let mut nsp = NetSockstatProtocol::default();
-        nsp.protocol = proto.to_string();
+        let mut nsp = NetSockstatProtocol {
+            protocol: proto.to_string(),
+            ..Default::default()
+        };
 
+        let mut i = 1;
         loop {
             if i == size {
                 break;

@@ -41,7 +41,7 @@ pub enum Error {
     #[snafu(display("query slave status failed"))]
     QuerySlaveStatusFailed,
     #[snafu(display("task join failed, err: {}", source))]
-    TaskJoinError { source: tokio::task::JoinError },
+    TaskJoinFailed { source: tokio::task::JoinError },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -103,11 +103,11 @@ fn default_host() -> String {
     "localhost".to_string()
 }
 
-fn default_port() -> u16 {
+const fn default_port() -> u16 {
     3306
 }
 
-fn default_info_schema() -> InfoSchemaConfig {
+const fn default_info_schema() -> InfoSchemaConfig {
     InfoSchemaConfig {
         innodb_cmp: true,
         innodb_cmpmem: true,
@@ -169,9 +169,7 @@ inventory::submit! {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let options = self.connect_options();
         let mut output = ctx.output;
         let instance = format!("{}:{}", self.host, self.port);
@@ -280,7 +278,7 @@ pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Er
     // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
     let results = futures::future::try_join_all(tasks)
         .await
-        .context(TaskJoinError)?;
+        .context(TaskJoinFailed)?;
 
     // NOTE:
     // `results.into_iter().collect()` would be awesome, BUT

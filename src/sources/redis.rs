@@ -452,7 +452,7 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
 
     let mut last_id: i64 = 0;
     let mut last_slow_execution_second: f64 = 0.0;
-    if values.len() > 0 {
+    if !values.is_empty() {
         last_id = values[0];
         if values.len() > 2 {
             last_slow_execution_second = values[2] as f64 / 1e6
@@ -538,12 +538,12 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
 
     for line in infos.lines() {
         let line = line.trim();
-        if line.len() == 0 {
+        if line.is_empty() {
             continue;
         }
 
-        if line.starts_with("# ") {
-            field_class = line[2..].to_string();
+        if let Some(stripped) = line.strip_prefix("# ") {
+            field_class = stripped.to_string();
             continue;
         }
 
@@ -716,7 +716,7 @@ fn parse_and_generate(key: &str, value: &str) -> Result<Metric, Error> {
 
     if name == "latest_fork_usec" {
         name = "latest_fork_seconds".to_string();
-        val = val / 1e6;
+        val /= 1e6;
     }
 
     let metric = if let Some(name) = GAUGE_METRICS.get(name.as_str()) {
@@ -872,7 +872,7 @@ fn validate_slave_line(line: &str) -> bool {
     }
 
     let c = line.as_bytes()[5];
-    c >= b'0' && c <= b'9'
+    c.is_ascii_digit()
 }
 
 fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {

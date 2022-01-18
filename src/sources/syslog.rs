@@ -353,7 +353,7 @@ mod tests {
             _ => unreachable!(),
         };
 
-        assert_eq!(receive_buffer_bytes, Some(1024 as usize));
+        assert_eq!(receive_buffer_bytes, Some(1024usize));
     }
 
     #[test]

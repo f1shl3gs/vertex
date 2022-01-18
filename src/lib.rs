@@ -1,5 +1,10 @@
+#![allow(clippy::new_without_default)]
 #![allow(clippy::float_cmp)]
 #![allow(clippy::too_many_arguments)]
+#![deny(clippy::clone_on_ref_ptr)]
+#![deny(clippy::trivially_copy_pass_by_ref)]
+#![deny(clippy::disallowed_method)] // [nursery] mark some functions as verboten
+#![deny(clippy::missing_const_for_fn)] // [nursery] valuable to the optimizer, but may produce false positives
 
 mod async_read;
 mod batch;
@@ -22,7 +27,6 @@ mod stats;
 mod stream;
 pub mod tcp;
 pub mod template;
-mod timezone;
 mod tls;
 pub mod topology;
 pub mod trace;

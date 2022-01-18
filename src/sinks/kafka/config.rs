@@ -48,12 +48,12 @@ pub struct KafkaSinkConfig {
     pub headers_field: Option<String>,
 }
 
-fn default_socket_timeout() -> Duration {
+const fn default_socket_timeout() -> Duration {
     // default in librdkafka
     Duration::from_millis(60000)
 }
 
-fn default_message_timeout() -> Duration {
+const fn default_message_timeout() -> Duration {
     // default in libkafka
     Duration::from_millis(300000)
 }

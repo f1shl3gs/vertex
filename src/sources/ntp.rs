@@ -38,7 +38,7 @@ pub struct NtpConfig {
     pub pools: Vec<String>,
 }
 
-fn default_timeout() -> Duration {
+const fn default_timeout() -> Duration {
     Duration::from_secs(10)
 }
 

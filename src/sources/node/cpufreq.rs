@@ -97,25 +97,19 @@ async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
 
     let mut stats = Vec::new();
 
-    for entry in cpus {
-        match entry {
-            Ok(path) => {
-                let cp = path.to_str().unwrap();
-                let mut stat = parse_cpu_freq_cpu_info(cp).await?;
+    for path in cpus.flatten() {
+        let cp = path.to_str().unwrap();
+        let mut stat = parse_cpu_freq_cpu_info(cp).await?;
 
-                // this looks terrible
-                stat.name = path
-                    .file_name()
-                    .unwrap()
-                    .to_str()
-                    .unwrap()
-                    .replace("cpu", "");
+        // this looks terrible
+        stat.name = path
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .replace("cpu", "");
 
-                stats.push(stat)
-            }
-
-            Err(err) => {}
-        }
+        stats.push(stat)
     }
 
     Ok(stats)

@@ -90,9 +90,7 @@ impl SourceConfig for HaproxyConfig {
         let auth = self.auth.clone();
         let proxy = ctx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let mut output = ctx.output;
 
         Ok(Box::pin(async move {
@@ -191,7 +189,7 @@ async fn gather(
         }
     };
     let elapsed = start.elapsed().as_secs_f64();
-    let up = if metrics.len() != 0 { 1 } else { 0 };
+    let up = if !metrics.is_empty() { 1 } else { 0 };
     let instance = format!("{}:{}", uri.host().unwrap(), uri.port_u16().unwrap());
     metrics.extend_from_slice(&[
         Metric::gauge(
@@ -1121,7 +1119,7 @@ mod tests {
         let reader = BufReader::new(io::Cursor::new(content));
         let metrics = parse_csv(reader).unwrap();
 
-        assert!(metrics.len() > 0);
+        assert!(!metrics.is_empty());
     }
 
     #[test]

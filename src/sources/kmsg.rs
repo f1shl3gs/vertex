@@ -68,12 +68,10 @@ impl SourceConfig for KmsgConfig {
                             }
                         };
 
-                        match parse_line(&buf, n) {
-                            Ok((priority, seq, ts, msg)) => {
-                                let nano_seconds = boot + ts * 1000;
+                        if let Ok((priority, seq, ts, msg)) = parse_line(&buf, n) {
+                            let nano_seconds = boot + ts * 1000;
                                 let timestamp = Utc.timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32);
                                 let timestamp_key = log_schema::log_schema().timestamp_key();
-
                                 let record = LogRecord::from(fields!(
                                         "priority" => priority,
                                         "sequence" => seq,
@@ -82,9 +80,6 @@ impl SourceConfig for KmsgConfig {
                                     ));
 
                                 output.send(record.into()).await.unwrap();
-                            }
-
-                            _ => {}
                         }
                     }
                 }
@@ -112,7 +107,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     for i in consumed..size {
         consumed += 1;
         let c = buf[i];
-        if c < b'0' || c > b'9' {
+        if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
             }
@@ -127,7 +122,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     for i in consumed..size {
         consumed += 1;
         let c = buf[i];
-        if c < b'0' || c > b'9' {
+        if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
             }

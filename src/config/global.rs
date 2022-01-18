@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
 use crate::config::{skip_serializing_if_default, ProxyConfig};
-use crate::timezone;
+use shared::timezone;
 
 #[derive(Debug, Snafu)]
 pub enum DataDirError {

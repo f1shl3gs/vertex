@@ -1,9 +1,9 @@
-use crate::codecs::{ReadyFrames, StreamDecodingError};
-use crate::config::{Resource, SourceContext};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::tcp::TcpKeepaliveConfig;
-use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings};
+use std::fmt::Formatter;
+use std::io;
+use std::net::{IpAddr, SocketAddr};
+use std::sync::Arc;
+use std::time::Duration;
+
 use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, Event};
 use futures::stream;
@@ -14,15 +14,17 @@ use listenfd::ListenFd;
 use serde::{de, Deserialize, Deserializer, Serialize};
 use smallvec::SmallVec;
 use socket2::SockRef;
-use std::fmt::Formatter;
-use std::io;
-use std::net::{IpAddr, SocketAddr};
-use std::sync::Arc;
-use std::time::Duration;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{TcpListener, TcpStream};
 use tokio::time::sleep;
 use tokio_util::codec::{Decoder, FramedRead};
+
+use crate::codecs::{ReadyFrames, StreamDecodingError};
+use crate::config::{Resource, SourceContext};
+use crate::pipeline::Pipeline;
+use crate::shutdown::ShutdownSignal;
+use crate::tcp::TcpKeepaliveConfig;
+use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings, TlsError};
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
@@ -266,6 +268,30 @@ async fn handle_stream<T>(
     tokio::select! {
         result = socket.handshake() => {
             if let Err(err) = result {
+                counter!("connection_errors_total", 1, "mode" => "tcp");
+
+                match err {
+                    // Specific error that occurs when the other side is only doing
+                    // SYN/SYN-ACK connections for healthcheck.
+                    // https://github.com/timberio/vector/issues/7318
+                    TlsError::Handshake{ ref source }
+                        if source.code() == openssl::ssl::ErrorCode::SYSCALL
+                            && source.io_error().is_none() =>
+                    {
+                        debug!(
+                            message = "Connection error, probably a healthcheck",
+                            %err,
+                            internal_log_rate_secs = 10
+                        );
+                    },
+                    _ => {
+                        warn!(
+                            message = "Connection error",
+                            %err,
+                            internal_log_rate_secs = 10
+                        );
+                    }
+                }
                 return;
             }
         },

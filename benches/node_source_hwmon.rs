@@ -1,5 +1,4 @@
 use criterion::{criterion_group, criterion_main, measurement::WallTime, Criterion};
-use pprof::criterion::{Output, PProfProfiler};
 use vertex::sources::node::hwmon::gather;
 
 pub fn hwmon_gather(c: &mut Criterion) -> &mut Criterion<WallTime> {
@@ -13,7 +12,7 @@ pub fn hwmon_gather(c: &mut Criterion) -> &mut Criterion<WallTime> {
 
 criterion_group!(
     name = benches;
-    config = Criterion::default().with_profiler(PProfProfiler::new(100, Output::Flamegraph(None)));
+    config = Criterion::default();
     targets = hwmon_gather
 );
 criterion_main!(benches);

@@ -359,7 +359,7 @@ mod tests {
 
         assert_eq!(set.len(), 1);
         assert_eq!(
-            set.iter().enumerate().nth(0).unwrap().1.expired_at,
+            set.iter().enumerate().next().unwrap().1.expired_at,
             now + 60
         );
     }

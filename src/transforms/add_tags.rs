@@ -17,7 +17,7 @@ pub struct AddTagsConfig {
     pub overwrite: bool,
 }
 
-pub fn default_overwrite() -> bool {
+const fn default_overwrite() -> bool {
     true
 }
 

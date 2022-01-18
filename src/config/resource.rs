@@ -30,11 +30,11 @@ pub enum Resource {
 }
 
 impl Resource {
-    pub fn tcp(addr: SocketAddr) -> Self {
+    pub const fn tcp(addr: SocketAddr) -> Self {
         Self::Port(addr, Protocol::Tcp)
     }
 
-    pub fn udp(addr: SocketAddr) -> Self {
+    pub const fn udp(addr: SocketAddr) -> Self {
         Self::Port(addr, Protocol::Udp)
     }
 

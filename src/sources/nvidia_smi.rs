@@ -54,9 +54,7 @@ inventory::submit! {
 impl SourceConfig for NvidiaSmiConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let mut output = ctx.output;
 
         Ok(Box::pin(async move {
@@ -100,7 +98,7 @@ async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
     let start = Instant::now();
     let output = Command::new(path).args(["-q", "-x"]).output()?;
     let reader = std::io::Cursor::new(output.stdout);
-    let smi: SMI = serde_xml_rs::from_reader(reader)?;
+    let smi: Smi = serde_xml_rs::from_reader(reader)?;
     let elapsed = start.elapsed();
 
     let mut metrics = Vec::with_capacity(smi.gpus.len() * 24 + 1);
@@ -377,7 +375,7 @@ struct LinkWidth {
 
 impl LinkWidth {
     fn get_link_width(&self) -> i32 {
-        let link_width = self.current_link_width.strip_suffix("x").unwrap_or("0");
+        let link_width = self.current_link_width.strip_suffix('x').unwrap_or("0");
 
         link_width.parse().unwrap_or(0)
     }
@@ -390,7 +388,7 @@ struct LinkInfo {
 }
 
 #[derive(Deserialize, Serialize)]
-struct PCI {
+struct Pci {
     pci_gpu_link_info: LinkInfo,
 }
 
@@ -419,9 +417,9 @@ struct ClockStats {
     video_clock: Value,
 }
 
-// GPU defines the structure of the GPU portion of the smi output.
+// Gpu defines the structure of the GPU portion of the smi output.
 #[derive(Deserialize, Serialize)]
-struct GPU {
+struct Gpu {
     fan_speed: Value,
     fb_memory_usage: MemoryStats,
     performance_state: String,
@@ -431,28 +429,28 @@ struct GPU {
     compute_mode: String,
     utilization: UtilizationStats,
     power_readings: PowerReadings,
-    pci: PCI,
+    pci: Pci,
     encoder_stats: EncoderStats,
     fbc_stats: FBCStats,
     clocks: ClockStats,
 }
 
-impl GPU {
+impl Gpu {
     fn pstat(&self) -> Result<i32, Error> {
         let s = self
             .performance_state
-            .strip_prefix("P")
+            .strip_prefix('P')
             .ok_or("Invalid performance state")?;
 
         Ok(s.parse()?)
     }
 }
 
-// SMI defines the structure for the output of "nvidia-smi -q -x".
+// Smi defines the structure for the output of "nvidia-smi -q -x".
 #[derive(Deserialize, Serialize)]
-struct SMI {
+struct Smi {
     #[serde(rename = "gpu")]
-    gpus: Vec<GPU>,
+    gpus: Vec<Gpu>,
     driver_version: String,
     cuda_version: String,
 }
@@ -465,7 +463,7 @@ mod tests {
     #[test]
     fn test_deserialize_output() {
         let text = read_to_string("tests/fixtures/nvidia-smi.xml").unwrap();
-        let smi: SMI = serde_xml_rs::from_str(&text).unwrap();
+        let smi: Smi = serde_xml_rs::from_str(&text).unwrap();
         assert_eq!(smi.driver_version, "470.82.00");
         assert_eq!(smi.gpus.len(), 1);
         assert_eq!(smi.gpus[0].compute_mode, "Default");

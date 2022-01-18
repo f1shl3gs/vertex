@@ -2869,7 +2869,6 @@ checksum = "55f35f865aa964be21fcde114cbd1cfbd9bf8a471460ed965b0f84f96c711401"
 dependencies = [
  "backtrace",
  "cfg-if",
- "criterion",
  "findshlibs",
  "inferno",
  "lazy_static 1.4.0",
@@ -3897,6 +3896,10 @@ name = "shared"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "chrono",
+ "chrono-tz",
+ "serde",
+ "serde_yaml",
 ]
 
 [[package]]

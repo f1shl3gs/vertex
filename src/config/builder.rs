@@ -392,7 +392,7 @@ mod tests {
     #[async_trait]
     #[typetag::serde(name = "mock")]
     impl TransformConfig for MockTransformConfig {
-        async fn build(&self, ctx: &TransformContext) -> crate::Result<Transform> {
+        async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
             todo!()
         }
 
