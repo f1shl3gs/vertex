@@ -1648,6 +1648,7 @@ dependencies = [
  "metrics",
  "metrics-util",
  "once_cell",
+ "parking_lot",
  "quanta",
  "tracing",
 ]
@@ -2033,9 +2034,9 @@ dependencies = [
 
 [[package]]
 name = "metrics"
-version = "0.17.1"
+version = "0.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "55586aa936c35f34ba8aa5d97356d554311206e1ce1f9e68fe7b07288e5ad827"
+checksum = "8f601807a248964869e222d209fd5f8e5bcc5542e4c9b1ef21bcee4424868ce5"
 dependencies = [
  "ahash 0.7.6",
  "metrics-macros",
@@ -2043,25 +2044,22 @@ dependencies = [
 
 [[package]]
 name = "metrics-macros"
-version = "0.4.0"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caa72e4a3d157986dd2565c82ecbddcc23941513669a3766b938f6b72eb87f3f"
+checksum = "44128401debcab0d777da11d005419b4d6ad6da8cb5eea64487c34ee0a311cf5"
 dependencies = [
- "lazy_static 1.4.0",
- "proc-macro-hack",
  "proc-macro2 1.0.36",
  "quote 1.0.14",
- "regex 1.5.4",
  "syn 1.0.84",
 ]
 
 [[package]]
 name = "metrics-tracing-context"
-version = "0.9.0"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7927d28bccc322a3f48fc445bffe7cb491ab8a43ea28f7c5f75bc16fc4e5d6bd"
+checksum = "487300885ada4d795d6517eaa13fbf15422241bd78ecb6a38760138b639941c1"
 dependencies = [
- "itoa 0.4.8",
+ "itoa 1.0.1",
  "lockfree-object-pool",
  "metrics",
  "metrics-util",
@@ -2073,16 +2071,14 @@ dependencies = [
 
 [[package]]
 name = "metrics-util"
-version = "0.10.2"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1174223789e331d9d47a4a953dac36e397db60fa8d2a111ac505388c6c7fe32e"
+checksum = "eb8e50225c0fa6146fe721a6fa9c556acdfa2910f2120caff5b25b03362c7033"
 dependencies = [
- "ahash 0.7.6",
  "aho-corasick 0.7.18",
  "atomic-shim",
  "crossbeam-epoch",
  "crossbeam-utils",
- "dashmap 4.0.2",
  "hashbrown",
  "indexmap",
  "metrics",

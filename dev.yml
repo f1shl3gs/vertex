@@ -19,6 +19,10 @@ sources:
     type: selfstat
   internal_logs:
     type: internal_logs
+  dummy:
+    type: prometheus_scrape
+    endpoints:
+      - http://127.0.0.1:9100/metrics
   tail:
     type: tail
     include:

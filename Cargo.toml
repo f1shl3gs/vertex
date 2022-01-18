@@ -305,10 +305,9 @@ async-trait = { version = "0.1.52" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
 
-
 # Metrics
-metrics = { version = "0.17.1", default-features = false, features = ["std"] }
-metrics-tracing-context = { version = "0.9.0", default-features = false }
+metrics = { version = "0.18.0", default-features = false }
+metrics-tracing-context = { version = "0.10.0", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.28", default-features = false }

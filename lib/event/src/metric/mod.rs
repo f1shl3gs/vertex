@@ -20,7 +20,7 @@ pub enum Kind {
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
-    pub count: u32,
+    pub count: u64,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
@@ -312,6 +312,36 @@ impl Metric {
             name: name.into(),
             description: Some(desc.into()),
             tags: Default::default(),
+            unit: None,
+            timestamp: None,
+            metadata: Default::default(),
+            value: MetricValue::Histogram {
+                count: count.into(),
+                sum: sum.into_f64(),
+                buckets,
+            },
+        }
+    }
+
+    #[inline]
+    pub fn histogram_with_tags<N, D, C, S>(
+        name: N,
+        desc: D,
+        tags: BTreeMap<String, String>,
+        count: C,
+        sum: S,
+        buckets: Vec<Bucket>,
+    ) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        C: Into<u64>,
+        S: IntoF64,
+    {
+        Self {
+            name: name.into(),
+            description: Some(desc.into()),
+            tags,
             unit: None,
             timestamp: None,
             metadata: Default::default(),
