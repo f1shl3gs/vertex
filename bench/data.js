@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642495823491,
+  "lastUpdate": 1642496105295,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8793,6 +8793,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.717,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "22dba336137ce0fb17dca770e107dee913e03543",
+          "message": "Merge pull request #128 from f1shl3gs/reenable_bench_workflow\n\nre-enable benches",
+          "timestamp": "2022-01-18T16:23:43+08:00",
+          "tree_id": "a80756f00b945fdf83fc6caf6eb4cc48a714190c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/22dba336137ce0fb17dca770e107dee913e03543"
+        },
+        "date": 1642496102584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 71560000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1331800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 30.544,
             "unit": "ns/op"
           }
         ]
