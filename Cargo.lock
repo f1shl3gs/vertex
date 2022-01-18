@@ -4250,7 +4250,7 @@ dependencies = [
  "bytes",
  "chrono",
  "criterion",
- "dashmap 4.0.2",
+ "dashmap 5.0.0",
  "flate2",
  "futures",
  "glob",
