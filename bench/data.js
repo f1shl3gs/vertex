@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642594285651,
+  "lastUpdate": 1642594821832,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9467,6 +9467,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 873,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "770b27969c2fdbb93d56ef6adc4befbc7a32f077",
+          "message": "Merge pull request #134 from f1shl3gs/validate_config\n\nadd validate command",
+          "timestamp": "2022-01-19T20:02:35+08:00",
+          "tree_id": "d4f5dd64feac8cac8f76e6f19d96a1442ad87635",
+          "url": "https://github.com/f1shl3gs/vertex/commit/770b27969c2fdbb93d56ef6adc4befbc7a32f077"
+        },
+        "date": 1642594820885,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 876,
             "unit": "s"
           }
         ]
