@@ -21,7 +21,7 @@ pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use helper::*;
 pub use id::{ComponentKey, OutputId};
-pub use loading::load;
+pub use loading::{load, load_builder_from_paths, merge_path_lists, process_paths};
 pub use provider::ProviderDescription;
 pub use proxy::ProxyConfig;
 pub use uri::*;

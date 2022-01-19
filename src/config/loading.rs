@@ -1,11 +1,16 @@
 use regex::{Captures, Regex};
 use std::collections::HashMap;
 use std::fs::File;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+use std::sync::Mutex;
 
 use super::validation;
 use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
+
+lazy_static! {
+    pub static ref CONFIG_PATHS: Mutex<Vec<ConfigPath>> = Mutex::default();
+}
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider
@@ -193,6 +198,88 @@ fn interpolate(input: &str, vars: &HashMap<String, String>) -> (String, Vec<Stri
         .into_owned();
 
     (interpolated, warnings)
+}
+
+/// Merge the paths coming from different cli flags with different formats
+/// into a unified list of paths with formats
+pub fn merge_path_lists(
+    list: Vec<(&[PathBuf], FormatHint)>,
+) -> impl Iterator<Item = (PathBuf, FormatHint)> + '_ {
+    list.into_iter()
+        .flat_map(|(paths, format)| paths.iter().cloned().map(move |path| (path, format)))
+}
+
+#[cfg(unix)]
+fn default_config_paths() -> Vec<ConfigPath> {
+    vec![ConfigPath::File(
+        "/etc/vertex/vertex.yml".into(),
+        Some(Format::YAML),
+    )]
+}
+
+#[cfg(not(unix))]
+fn default_config_paths() -> Vec<ConfigPath> {
+    vec![]
+}
+
+pub fn process_paths(paths: &[ConfigPath]) -> Option<Vec<ConfigPath>> {
+    let default_paths = default_config_paths();
+    let starting_paths = if !paths.is_empty() {
+        paths
+    } else {
+        &default_paths
+    };
+
+    let mut paths = Vec::new();
+    for path in starting_paths {
+        let pattern: &PathBuf = path.into();
+
+        let matches: Vec<PathBuf> = match glob::glob(pattern.to_str().expect("No ability to glob"))
+        {
+            Ok(gp) => gp.flat_map(Result::ok).collect(),
+            Err(err) => {
+                error!(
+                    message = "Failed to read glob pattern",
+                    path = ?pattern,
+                    ?err
+                );
+
+                return None;
+            }
+        };
+
+        if matches.is_empty() {
+            error!(
+                message = "Config file not found in path",
+                path = ?pattern
+            );
+
+            std::process::exit(exitcode::CONFIG);
+        }
+
+        match path {
+            ConfigPath::File(_, format) => {
+                for path in matches {
+                    paths.push(ConfigPath::File(path, *format));
+                }
+            }
+
+            ConfigPath::Dir(_) => {
+                for path in matches {
+                    paths.push(ConfigPath::Dir(path));
+                }
+            }
+        }
+    }
+
+    paths.sort();
+    paths.dedup();
+
+    // Ignore poison error and let the current main thread continue
+    // running to do the cleanup
+    std::mem::drop(CONFIG_PATHS.lock().map(|mut guard| *guard = paths.clone()));
+
+    Some(paths)
 }
 
 #[cfg(test)]

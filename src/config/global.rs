@@ -31,7 +31,7 @@ pub enum DataDirError {
     },
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(default, deny_unknown_fields)]
 pub struct GlobalOptions {
     #[serde(default = "default_data_dir")]
@@ -42,6 +42,17 @@ pub struct GlobalOptions {
     pub proxy: ProxyConfig,
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub log_schema: LogSchema,
+}
+
+impl Default for GlobalOptions {
+    fn default() -> Self {
+        Self {
+            data_dir: default_data_dir(),
+            timezone: default_timezone(),
+            proxy: Default::default(),
+            log_schema: Default::default(),
+        }
+    }
 }
 
 pub fn default_data_dir() -> Option<PathBuf> {

@@ -38,8 +38,8 @@ fn main() {
         return;
     }
 
+    let mut config_paths = opts.config_paths_with_formats();
     let threads = opts.threads.unwrap_or_else(num_cpus::get);
-
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(threads)
         .thread_name("vertex-worker")
@@ -57,7 +57,7 @@ fn main() {
         info!(
             message = "start vertex",
             threads = threads,
-            config = ?opts.config
+            configs = ?opts.configs
         );
 
         openssl_probe::init_ssl_cert_env_vars();
@@ -65,7 +65,7 @@ fn main() {
         let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
         signal_handler.forever(signal::os_signals());
 
-        let config = config::load_from_paths_with_provider(&config_paths_with_formats(&opts.config), &mut signal_handler)
+        let config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler)
             .await
             .map_err(handle_config_errors)
             .unwrap();
@@ -123,7 +123,7 @@ fn main() {
 
                             SignalTo::ReloadFromDisk => {
                                 // Reload paths
-                                let config_paths = config_paths_with_formats(&opts.config);
+                                config_paths = config::process_paths(&config_paths).unwrap_or(config_paths);
                                 let new_config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler).await
                                     .map_err(handle_config_errors)
                                     .ok();
