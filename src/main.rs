@@ -20,7 +20,7 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 use vertex::{
-    config::{self, ConfigPath, FormatHint},
+    config,
     signal::{self, SignalTo},
     topology,
 };
@@ -194,12 +194,4 @@ pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
     }
 
     exitcode::CONFIG
-}
-
-// TODO: implement it
-fn config_paths_with_formats(path: &str) -> Vec<config::ConfigPath> {
-    vec![ConfigPath::File(
-        path.into(),
-        FormatHint::from(config::Format::YAML),
-    )]
 }

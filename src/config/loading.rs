@@ -156,7 +156,7 @@ pub fn load(
     format::deserialize(&with_vars, format).map(|builder| (builder, warnings))
 }
 
-fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String>> {
+pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String>> {
     let (builder, load_warnings) =
         load_from_inputs(std::iter::once((content.as_bytes(), Some(format))))?;
     let (config, build_warnings) = builder.build_with_warnings()?;
