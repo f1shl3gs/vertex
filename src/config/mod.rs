@@ -21,10 +21,11 @@ pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use helper::*;
 pub use id::{ComponentKey, OutputId};
-pub use loading::load;
+pub use loading::{load, load_builder_from_paths, load_from_str, merge_path_lists, process_paths};
 pub use provider::ProviderDescription;
 pub use proxy::ProxyConfig;
 pub use uri::*;
+pub use validation::warnings;
 
 use async_trait::async_trait;
 use std::collections::HashSet;

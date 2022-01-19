@@ -7,11 +7,11 @@ mod task;
 mod test;
 
 // re-exprot
+pub use builder::{build_pieces, Pieces};
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
 
 use buffers::channel::{BufferReceiver, BufferSender};
-use builder::Pieces;
 use event::Event;
 use futures::{Future, FutureExt};
 use std::panic::AssertUnwindSafe;
