@@ -347,7 +347,7 @@ pub async fn build_pieces(
             match futures::future::try_select(ext, force_shutdown_tripwire.unit_error().boxed())
                 .await
             {
-                Ok(_) => Ok(TaskOutput::Source),
+                Ok(_) => Ok(TaskOutput::Extension),
                 Err(_) => Err(()),
             }
         });

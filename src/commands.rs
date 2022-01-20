@@ -18,6 +18,14 @@ pub struct RootCommand {
 
     #[argh(
         option,
+        short = 'l',
+        default = "\"info\".to_string()",
+        description = "log level"
+    )]
+    pub log_level: String,
+
+    #[argh(
+        option,
         short = 'c',
         long = "config",
         description = "read configuration from one or more files, wildcard paths are supported"

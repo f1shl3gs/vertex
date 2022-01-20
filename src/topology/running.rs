@@ -508,6 +508,17 @@ impl RunningTopology {
             info!(message = "Starting sink.", key = %key);
             self.spawn_sink(key, &mut new_pieces);
         }
+
+        // Extensions
+        for key in &diff.extensions.to_change {
+            info!(message = "Rebuilding extension", key = %key);
+            self.spawn_extension(key, &mut new_pieces);
+        }
+
+        for key in &diff.extensions.to_add {
+            info!(message = "Starting extension", key = %key);
+            self.spawn_extension(key, &mut new_pieces);
+        }
     }
 
     fn spawn_sink(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {
@@ -522,6 +533,28 @@ impl RunningTopology {
         let spawned = tokio::spawn(task);
         if let Some(previous) = self.tasks.insert(key.clone(), spawned) {
             drop(previous); // detach and forget
+        }
+    }
+
+    fn spawn_extension(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {
+        let task = new_pieces.tasks.remove(key).unwrap();
+        let dkey = task.key().to_string();
+        let span = error_span!(
+            "extension",
+            component_kind = "extension",
+            component_key = %task.key(),
+            component_type = %task.typetag(),
+        );
+
+        let task = handle_errors(task, self.abort_tx.clone()).instrument(span);
+        let spawned = tokio::spawn(task);
+        if let Some(previous) = self.tasks.insert(key.clone(), spawned) {
+            info!(
+                message = "Drop previous component",
+                key = %dkey
+            );
+
+            drop(previous) // detach and forget
         }
     }
 

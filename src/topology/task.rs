@@ -17,6 +17,7 @@ pub enum TaskOutput {
     /// Buffer of sink
     Sink(Utilization<BufferReceiver<Event>>, Acker),
     HealthCheck,
+    Extension,
 }
 
 /// High level topology task

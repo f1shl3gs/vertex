@@ -38,6 +38,7 @@ benches = [
 ]
 
 default = [
+    # "tokio-console",
     # common
     "disk-buffer",
     "listenfd",
@@ -46,11 +47,13 @@ default = [
     "sinks",
     # extensions
     "extensions-pprof",
+    "extensions-healthcheck"
     # "extensions-jemalloc",
 ]
 
 target-x86_64-unknown-linux-musl = [
     "disk-buffer",
+    "extensions",
     "sinks",
     "sources",
     "transforms",
@@ -61,6 +64,7 @@ target-x86_64-unknown-linux-musl = [
 
 target-x86_64-unknown-linux-gnu = [
     "disk-buffer",
+    "extensions",
     "sinks",
     "sources",
     "transforms",
@@ -100,7 +104,7 @@ integration-tests-prometheus_exporter = []
 
 # Common
 disk-buffer = []
-tokio-console = ["console-subscriber"]
+tokio-console = ["console-subscriber", "tokio/tracing"]
 
 # Allocator
 allocator-mimalloc = ["mimalloc"]
@@ -205,8 +209,13 @@ sinks-clickhouse = []
 sinks-socket = []
 
 # extensions
+extensions = [
+    "extensions-healthcheck"
+]
+
 extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+extensions-healthcheck = []
 
 # Codecs
 codecs = ["smallvec", "memchr"]

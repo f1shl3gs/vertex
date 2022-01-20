@@ -48,11 +48,35 @@ fn main() {
         .build()
         .unwrap();
 
+    let levels = std::env::var("VERTEX_LOG").unwrap_or_else(|_| match opts.log_level.as_str() {
+        "off" => "off".to_owned(),
+        #[cfg(feature = "tokio-console")]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("tail={}", level),
+            "tower_limit=trace".to_owned(),
+            "runtime=trace".to_owned(),
+            "tokio=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+        #[cfg(not(feature = "tokio-console"))]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("vrl={}", level),
+            format!("file_source={}", level),
+            "tower_limit=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+    });
+
     runtime.block_on(async move {
-        #[cfg(test)]
-            vertex::trace::init(true, false, "debug");
-        #[cfg(not(test))]
-            vertex::trace::init(true, false, "info");
+        vertex::trace::init(true, false, &levels);
 
         info!(
             message = "start vertex",

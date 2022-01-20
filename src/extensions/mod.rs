@@ -1,4 +1,6 @@
 mod exec;
+#[cfg(feature = "extensions-healthcheck")]
+mod healthcheck;
 #[cfg(feature = "extensions-jemalloc")]
 mod jemalloc;
 #[cfg(feature = "extensions-pprof")]

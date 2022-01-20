@@ -4,10 +4,12 @@ global:
 health_checks:
   enabled: false
 
-extensions: {}
-  # pprof:
-  #   type: pprof
-  #   listen: 127.0.0.1:9000
+extensions:
+  healthcheck:
+    type: healthcheck
+  pprof:
+    type: pprof
+    listen: 127.0.0.1:9000
   # jemalloc:
   #   type: jemalloc
 
