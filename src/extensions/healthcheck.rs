@@ -1,20 +1,20 @@
-use futures_util::FutureExt;
 use std::convert::Infallible;
 use std::net::SocketAddr;
+use std::sync::atomic::{AtomicBool, Ordering};
 
+use futures_util::FutureExt;
 use http::{Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
-use once_cell::sync::OnceCell;
 use serde::{Deserialize, Serialize};
 
 use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use crate::extensions::Extension;
 
-static READINESS: OnceCell<bool> = OnceCell::new();
+static READINESS: AtomicBool = AtomicBool::new(false);
 
 pub fn set_readiness(ready: bool) {
-    READINESS.set(ready).expect("Set READINESS success");
+    READINESS.store(ready, Ordering::Relaxed)
 }
 
 fn default_endpoint() -> SocketAddr {
@@ -79,26 +79,23 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
             .unwrap());
     }
 
-    Ok(match req.uri().path() {
-        "/-/healthy" => Response::new(Body::from("Vertex is Healthy.\n")),
+    let (status, body) = match req.uri().path() {
+        "/-/healthy" => (StatusCode::OK, "Vertex is Healthy.\n"),
         "/-/ready" => {
-            let readiness = READINESS.get_or_init(|| false);
-
-            if *readiness {
-                Response::builder()
-                    .status(StatusCode::OK)
-                    .body(Body::from("Vertex is Ready.\n"))
-                    .unwrap()
+            if READINESS.load(Ordering::Relaxed) {
+                (StatusCode::OK, "Vertex is Ready.\n")
             } else {
-                Response::builder()
-                    .status(StatusCode::SERVICE_UNAVAILABLE)
-                    .body(Body::from("Vertex is not ready.\n"))
-                    .unwrap()
+                (StatusCode::SERVICE_UNAVAILABLE, "Vertex is not ready.\n")
             }
         }
-        _ => Response::builder()
-            .status(StatusCode::NOT_FOUND)
-            .body(Body::empty())
-            .unwrap(),
-    })
+        _ => (
+            StatusCode::NOT_FOUND,
+            "Only \"/-/healthy\" and \"/-/ready\" allowed",
+        ),
+    };
+
+    Ok(Response::builder()
+        .status(status)
+        .body(Body::from(body))
+        .unwrap())
 }
