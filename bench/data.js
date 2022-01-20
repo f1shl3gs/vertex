@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642673256814,
+  "lastUpdate": 1642673489756,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9886,6 +9886,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 902,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "181e6ea7694e8f8a5643445989cedb36ac9296f1",
+          "message": "Merge pull request #136 from f1shl3gs/add_healthcheck_extension\n\nAdd healthcheck extension",
+          "timestamp": "2022-01-20T17:48:25+08:00",
+          "tree_id": "b3a5c5b5fd92fe8b843a2101a3a3a2cd15c8f802",
+          "url": "https://github.com/f1shl3gs/vertex/commit/181e6ea7694e8f8a5643445989cedb36ac9296f1"
+        },
+        "date": 1642673488656,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1099,
             "unit": "s"
           }
         ]
