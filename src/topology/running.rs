@@ -538,7 +538,6 @@ impl RunningTopology {
 
     fn spawn_extension(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {
         let task = new_pieces.tasks.remove(key).unwrap();
-        let dkey = task.key().to_string();
         let span = error_span!(
             "extension",
             component_kind = "extension",
@@ -549,13 +548,11 @@ impl RunningTopology {
         let task = handle_errors(task, self.abort_tx.clone()).instrument(span);
         let spawned = tokio::spawn(task);
         if let Some(previous) = self.tasks.insert(key.clone(), spawned) {
-            info!(
-                message = "Drop previous component",
-                key = %dkey
-            );
-
-            drop(previous) // detach and forget
+            drop(previous); // detach and forget
         }
+
+        self.shutdown_coordinator
+            .takeover_source(key, &mut new_pieces.shutdown_coordinator);
     }
 
     fn spawn_transform(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {

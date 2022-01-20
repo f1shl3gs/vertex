@@ -13,14 +13,16 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
-use crate::commands::RootCommand;
 use std::collections::HashMap;
+
+use crate::commands::RootCommand;
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 use vertex::{
     config,
+    extensions::healthcheck,
     signal::{self, SignalTo},
     topology,
 };
@@ -105,6 +107,10 @@ fn main() {
             .ok_or(exitcode::CONFIG)
             .unwrap();
         let result = topology::start_validate(config, diff, pieces).await;
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(true);
+
         let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
         // run
@@ -182,6 +188,9 @@ fn main() {
                     else => unreachable!("Signal streams never end"),
                 }
         };
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(false);
 
         match signal {
             SignalTo::Shutdown => {

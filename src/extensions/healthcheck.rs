@@ -1,3 +1,4 @@
+use futures_util::FutureExt;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
@@ -13,7 +14,7 @@ use crate::extensions::Extension;
 static READINESS: OnceCell<bool> = OnceCell::new();
 
 pub fn set_readiness(ready: bool) {
-    READINESS.set(ready);
+    READINESS.set(ready).expect("Set READINESS success");
 }
 
 fn default_endpoint() -> SocketAddr {
@@ -50,37 +51,16 @@ impl ExtensionConfig for HealthcheckConfig {
         );
 
         let shutdown = ctx.shutdown;
-        let addr = self.endpoint.clone();
+        let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+        let server = Server::bind(&self.endpoint)
+            .serve(service)
+            .with_graceful_shutdown(shutdown.map(|_| ()));
 
         Ok(Box::pin(async move {
-            let service =
-                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
-
-            info!("start serving......");
-            if let Err(err) = Server::bind(&addr).serve(service).await {
+            if let Err(err) = server.await {
                 error!(message = "Error serving", ?err);
-
                 return Err(());
             }
-
-            /*info!("starting");
-                        Server::bind(&addr)
-                            .serve(service)
-                            .await;
-
-                        /*info!("start await");
-                        match server.await {
-                            Ok(_) => {}
-                            Err(err) => {
-                                info!("err done");
-                                warn!(message = "healthcheck serve failed", ?err);
-                                return Err(());
-                            }
-                        }
-            */
-                        info!("ok done");*/
-
-            info!("ok done");
 
             Ok(())
         }))
@@ -100,7 +80,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 
     Ok(match req.uri().path() {
-        "/-/healthy" => Response::new(Body::from("Vertex is Healthy.=n")),
+        "/-/healthy" => Response::new(Body::from("Vertex is Healthy.\n")),
         "/-/ready" => {
             let readiness = READINESS.get_or_init(|| false);
 

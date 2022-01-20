@@ -13,7 +13,7 @@ mod common;
 pub mod config;
 mod dns;
 mod encoding_transcode;
-mod extensions;
+pub mod extensions;
 mod http;
 mod multiline;
 mod partition;
