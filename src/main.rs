@@ -13,14 +13,16 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
-use crate::commands::RootCommand;
 use std::collections::HashMap;
+
+use crate::commands::RootCommand;
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 use vertex::{
     config,
+    extensions::healthcheck,
     signal::{self, SignalTo},
     topology,
 };
@@ -48,11 +50,35 @@ fn main() {
         .build()
         .unwrap();
 
+    let levels = std::env::var("VERTEX_LOG").unwrap_or_else(|_| match opts.log_level.as_str() {
+        "off" => "off".to_owned(),
+        #[cfg(feature = "tokio-console")]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("tail={}", level),
+            "tower_limit=trace".to_owned(),
+            "runtime=trace".to_owned(),
+            "tokio=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+        #[cfg(not(feature = "tokio-console"))]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("vrl={}", level),
+            format!("file_source={}", level),
+            "tower_limit=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+    });
+
     runtime.block_on(async move {
-        #[cfg(test)]
-            vertex::trace::init(true, false, "debug");
-        #[cfg(not(test))]
-            vertex::trace::init(true, false, "info");
+        vertex::trace::init(true, false, &levels);
 
         info!(
             message = "start vertex",
@@ -81,6 +107,10 @@ fn main() {
             .ok_or(exitcode::CONFIG)
             .unwrap();
         let result = topology::start_validate(config, diff, pieces).await;
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(true);
+
         let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
         // run
@@ -158,6 +188,9 @@ fn main() {
                     else => unreachable!("Signal streams never end"),
                 }
         };
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(false);
 
         match signal {
             SignalTo::Shutdown => {

@@ -1,5 +1,6 @@
-use dashmap::DashMap;
 use std::fmt;
+
+use dashmap::DashMap;
 use tracing_core::{
     callsite::Identifier,
     field::{display, Field, Value, Visit},
@@ -13,11 +14,11 @@ use tracing_subscriber::layer::{Context, Layer};
 #[macro_use]
 extern crate tracing;
 
-#[cfg(test)]
-use mock_instant::Instant;
-
 #[cfg(not(test))]
 use std::time::Instant;
+
+#[cfg(test)]
+use mock_instant::Instant;
 
 const RATE_LIMIT_SECS_FIELD: &str = "internal_log_rate_secs";
 const MESSAGE_FIELD: &str = "message";
@@ -366,15 +367,15 @@ struct LimitVisitor {
 }
 
 impl Visit for LimitVisitor {
-    fn record_i64(&mut self, field: &Field, value: i64) {
-        if field.name() == RATE_LIMIT_SECS_FIELD {
-            self.limit = Some(u64::try_from(value).unwrap_or_default());
-        }
-    }
-
     fn record_u64(&mut self, field: &Field, value: u64) {
         if field.name() == RATE_LIMIT_SECS_FIELD {
             self.limit = Some(value);
+        }
+    }
+
+    fn record_i64(&mut self, field: &Field, value: i64) {
+        if field.name() == RATE_LIMIT_SECS_FIELD {
+            self.limit = Some(u64::try_from(value).unwrap_or_default());
         }
     }
 
@@ -393,13 +394,15 @@ impl Visit for LimitVisitor {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use mock_instant::MockClock;
     use std::{
         sync::{Arc, Mutex},
         time::Duration,
     };
+
+    use mock_instant::MockClock;
     use tracing_subscriber::layer::SubscriberExt;
+
+    use super::*;
 
     #[derive(Default)]
     struct RecordingLayer<S> {
@@ -444,7 +447,8 @@ mod test {
         let events: Arc<Mutex<Vec<String>>> = Default::default();
 
         let recorder = RecordingLayer::new(Arc::clone(&events));
-        let sub = tracing_subscriber::Registry::default().with(RateLimitedLayer::new(recorder));
+        let sub =
+            tracing_subscriber::registry::Registry::default().with(RateLimitedLayer::new(recorder));
         tracing::subscriber::with_default(sub, || {
             for _ in 0..21 {
                 info!(message = "Hello world!", internal_log_rate_secs = 1);

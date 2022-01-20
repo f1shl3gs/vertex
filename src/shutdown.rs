@@ -46,7 +46,6 @@ impl ShutdownCoordinator {
         (shutdown_signal, force_tripwire)
     }
 
-    // TODO: implement it
     pub fn register_extension(
         &mut self,
         name: &ComponentKey,

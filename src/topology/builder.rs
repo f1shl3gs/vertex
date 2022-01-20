@@ -5,21 +5,6 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-use crate::{
-    config::{Config, ConfigDiff, DataType, SinkContext, SourceContext},
-    pipeline::Pipeline,
-    shutdown::ShutdownCoordinator,
-    topology::fanout::Fanout,
-    topology::task::{Task, TaskOutput},
-    transforms::Transform,
-};
-
-use super::BuiltBuffer;
-use crate::config::{
-    ComponentKey, ExtensionContext, Output, OutputId, ProxyConfig, TransformContext,
-};
-use crate::topology::fanout;
-use crate::transforms::{SyncTransform, TaskTransform, TransformOutputs, TransformOutputsBuf};
 use buffers::builder::TopologyBuilder;
 use buffers::channel::{BufferReceiver, BufferSender};
 use buffers::{BufferType, WhenFull};
@@ -29,6 +14,19 @@ use futures_util::stream::FuturesOrdered;
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
+
+use super::BuiltBuffer;
+use crate::config::{
+    ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
+    SinkContext, SourceContext, TransformContext,
+};
+use crate::pipeline::Pipeline;
+use crate::shutdown::ShutdownCoordinator;
+use crate::topology::fanout;
+use crate::topology::fanout::Fanout;
+use crate::topology::task::{Task, TaskOutput};
+use crate::transforms::Transform;
+use crate::transforms::{SyncTransform, TaskTransform, TransformOutputs, TransformOutputsBuf};
 
 pub const DEFAULT_BUFFER_SIZE: usize = 1000;
 
@@ -343,16 +341,32 @@ pub async fn build_pieces(
             }
         };
 
-        let task = Task::new(key.clone(), typetag, async {
-            match futures::future::try_select(ext, force_shutdown_tripwire.unit_error().boxed())
-                .await
-            {
-                Ok(_) => Ok(TaskOutput::Source),
-                Err(_) => Err(()),
-            }
-        });
+        // The force_shutdown_tripwire is a Future that when it resolves means that
+        // this source has failed to shut down gracefully within its allotted time
+        // window and instead should be forcibly shut down. We accomplish this
+        // by select()-ing on the server Task with the force_shutdown_tripwire.
+        // That means that if the force_shutdown_tripwire resolves while the
+        // server Task is still running the Task will simply be dropped on the floor.
+        let server = async {
+            let result = tokio::select! {
+                biased;
 
-        let task = Task::new(key.clone(), typetag, task);
+                _ = force_shutdown_tripwire => {
+                    Ok(())
+                },
+                result = ext => result,
+            };
+
+            match result {
+                Ok(()) => {
+                    debug!(message = "Finished.");
+                    Ok(TaskOutput::Source)
+                }
+                Err(()) => Err(()),
+            }
+        };
+
+        let task = Task::new(key.clone(), typetag, server);
         tasks.insert(key.clone(), task);
     }
 
