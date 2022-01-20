@@ -1,5 +1,3 @@
-#![allow(clippy::print_stdout)] // tests
-
 mod validate;
 
 use argh::FromArgs;
@@ -36,8 +34,9 @@ pub struct RootCommand {
 }
 
 impl RootCommand {
+    #![allow(clippy::print_stdout)]
     pub fn show_version(&self) {
-        println!("{}", get_version());
+        println!("vertex {}", get_version());
     }
 
     pub fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {
@@ -76,6 +75,7 @@ impl Commands {
 macro_rules! impl_list_and_example {
     ($typ:ident, $desc:ident) => {
         impl $typ {
+            #![allow(clippy::print_stdout)]
             pub fn run(&self) {
                 match &self.name {
                     Some(name) => match $desc::example(&name) {
@@ -141,6 +141,7 @@ pub struct Providers {
 }
 
 impl Providers {
+    #![allow(clippy::print_stdout)]
     pub fn run(&self) {
         match &self.name {
             Some(name) => match ProviderDescription::example(name) {
