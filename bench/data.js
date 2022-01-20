@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642672554334,
+  "lastUpdate": 1642673256814,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9857,6 +9857,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1107,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8c66977984c58a7476a870ebe66a5cd44ad4dff8",
+          "message": "Merge pull request #139 from f1shl3gs/add_extension_label\n\nAdd extension label",
+          "timestamp": "2022-01-20T17:48:45+08:00",
+          "tree_id": "30bfa48133d5c7ee9d66d5291351792211353aba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8c66977984c58a7476a870ebe66a5cd44ad4dff8"
+        },
+        "date": 1642673255871,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 902,
             "unit": "s"
           }
         ]
