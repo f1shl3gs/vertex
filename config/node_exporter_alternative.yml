@@ -1,0 +1,12 @@
+sources:
+  selfstat:
+    type: selfstat
+  node:
+    type: node_metrics
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - node
+      - selfstat
