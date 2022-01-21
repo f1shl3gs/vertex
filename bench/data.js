@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1642772456825,
+  "lastUpdate": 1642772596221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10100,6 +10100,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 847,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23f9e854c274c5a74cbcb9e0429c25317f7b126b",
+          "message": "Merge pull request #141 from f1shl3gs/add_service_unit\n\nadd systemd service file",
+          "timestamp": "2022-01-21T21:22:57+08:00",
+          "tree_id": "08088f2b552c9be54deea8e0f82c59420246eb0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/23f9e854c274c5a74cbcb9e0429c25317f7b126b"
+        },
+        "date": 1642772594703,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1020,
             "unit": "s"
           }
         ]
