@@ -5,13 +5,13 @@ use crate::sources::Source;
 use crate::tls::{MaybeTlsSettings, TlsConfig};
 use bytes::Bytes;
 use event::Event;
+use futures_util::TryFutureExt;
 use http::{HeaderMap, Request, Response, StatusCode, Uri};
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Server};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
-use futures_util::TryFutureExt;
-use hyper::{Body, Server};
-use hyper::service::{make_service_fn, service_fn};
 
 #[async_trait]
 pub trait HttpSource: Clone + Send + Sync + 'static {
@@ -40,8 +40,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         let acknowledgements = ctx.globals.acknowledgements;
 
         Ok(Box::pin(async move {
-            let listener = tls.bind(&address)
-                .await?;
+            let listener = tls.bind(&address).await?;
 
             let service = make_service_fn(move |_conn| {
                 counter!("http_source_request_total", 1);
@@ -63,10 +62,8 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                             match headers.get("authorization") {
                                 Some(value) => {
                                     let s = value.to_str().unwrap();
-                                    if s != auth.password {
-
-                                    }
-                                },
+                                    if s != auth.password {}
+                                }
                                 None => {
                                     let resp = Response::builder()
                                         .status(StatusCode::UNAUTHORIZED)
@@ -81,18 +78,14 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                         let body = hyper::body::to_bytes(req.body()).await?;
                         let uri = req.uri();
 
-                        let events = self.build_events(body, header)
-                            .unwrap();
+                        let events = self.build_events(body, header).unwrap();
 
                         let mut stream = futures::stream(events.iter());
 
                         match output.send_all(&mut stream).await {
-                            Ok(_) => {},
+                            Ok(_) => {}
                             Err(err) => {
-                                warn!(
-                                    message = "Error sending metrics",
-                                    ?err
-                                );
+                                warn!(message = "Error sending metrics", ?err);
                             }
                         }
 
@@ -110,10 +103,7 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
                 .with_graceful_shutdown(shutdown.map_err(|_| ()))
                 .await
             {
-                error!(
-                    message = "Http source server start failed",
-                    ?err
-                );
+                error!(message = "Http source server start failed", ?err);
 
                 return Err(());
             }

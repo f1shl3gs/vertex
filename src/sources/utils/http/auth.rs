@@ -6,6 +6,4 @@ pub struct HttpSourceAuthConfig {
     pub password: String,
 }
 
-impl HttpSourceAuthConfig {
-
-}
+impl HttpSourceAuthConfig {}
