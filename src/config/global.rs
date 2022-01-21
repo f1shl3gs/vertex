@@ -42,6 +42,11 @@ pub struct GlobalOptions {
     pub proxy: ProxyConfig,
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub log_schema: LogSchema,
+    #[serde(
+        default,
+        skip_serializing_if = "crate::config::skip_serializing_if_default"
+    )]
+    pub acknowledgements: bool,
 }
 
 impl Default for GlobalOptions {
@@ -51,6 +56,7 @@ impl Default for GlobalOptions {
             timezone: default_timezone(),
             proxy: Default::default(),
             log_schema: Default::default(),
+            acknowledgements: false,
         }
     }
 }
