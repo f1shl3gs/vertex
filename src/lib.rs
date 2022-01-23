@@ -48,6 +48,7 @@ extern crate lazy_static;
 extern crate tracing;
 #[macro_use]
 extern crate internal;
+extern crate core;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;

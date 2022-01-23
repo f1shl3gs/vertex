@@ -1,15 +1,26 @@
+use std::net::SocketAddr;
+
+use bytes::Bytes;
+use event::Event;
+use http::{HeaderMap, Method, StatusCode, Uri};
+use prometheus::proto;
+use prost::Message;
+use serde::{Deserialize, Serialize};
+use serde_yaml::Value;
+
 use crate::config::{
     DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::sources::Source;
+use crate::sources::utils::http::{decode, ErrorMessage};
+use crate::sources::{
+    utils::http::{HttpSource, HttpSourceAuthConfig},
+    Source,
+};
 use crate::tls::TlsConfig;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use std::net::SocketAddr;
 
 const SOURCE_NAME: &str = "prometheus_remote_write";
 
-const fn default_address() -> SocketAddr {
+fn default_address() -> SocketAddr {
     "0.0.0.0:9090".parse().unwrap()
 }
 
@@ -43,7 +54,21 @@ inventory::submit! {
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SourceConfig for PrometheusRemoteWriteConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        todo!()
+        let source = RemoteWriteSource;
+        let acknowledgements = self.acknowledgements.clone();
+
+        source
+            .run(
+                self.address,
+                Method::POST,
+                "/write",
+                true,
+                &self.tls,
+                &self.auth,
+                ctx,
+                acknowledgements,
+            )
+            .await
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -56,5 +81,40 @@ impl SourceConfig for PrometheusRemoteWriteConfig {
 
     fn resources(&self) -> Vec<Resource> {
         vec![Resource::tcp(self.address)]
+    }
+}
+
+#[derive(Clone)]
+struct RemoteWriteSource;
+
+impl RemoteWriteSource {
+    fn decode_body(&self, body: Bytes) -> Result<Vec<Event>, ErrorMessage> {
+        let request = proto::WriteRequest::decode(body).map_err(|err| {
+            ErrorMessage::new(
+                StatusCode::BAD_REQUEST,
+                format!("Could not decode write request: {}", err),
+            )
+        })?;
+
+        Ok(vec![])
+    }
+}
+
+impl HttpSource for RemoteWriteSource {
+    fn build_events(
+        &self,
+        uri: &Uri,
+        headers: &HeaderMap,
+        mut body: Bytes,
+    ) -> Result<Vec<Event>, ErrorMessage> {
+        if headers
+            .get("Content-Encoding")
+            .map(|header| header.as_ref())
+            != Some(&b"snappy"[..])
+        {
+            body = decode(&Some("snappy".to_string()), body)?;
+        }
+
+        self.decode_body(body)
     }
 }
