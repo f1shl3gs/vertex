@@ -43,7 +43,7 @@ pub struct HttpSourceAuth {
 }
 
 impl HttpSourceAuth {
-    pub fn validate(&self, header: &Option<&HeaderValue>) -> bool {
+    pub fn validate(&self, header: Option<&HeaderValue>) -> bool {
         match (&self.token, header) {
             (Some(t1), Some(t2)) => match t2.to_str() {
                 Ok(t2) => t1 == t2,

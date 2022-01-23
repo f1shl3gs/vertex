@@ -1,15 +1,19 @@
 use std::collections::HashMap;
 use std::convert::Infallible;
+use std::future::Future;
 use std::net::SocketAddr;
+use std::pin::Pin;
 use std::sync::Arc;
+use std::task::{Context, Poll};
 
 use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, BatchStatusReceiver, Event};
 use futures::TryFutureExt;
 use futures_util::FutureExt;
 use http::{HeaderMap, Request, Response, StatusCode, Uri};
-use hyper::service::{make_service_fn, service_fn};
+use hyper::service::{make_service_fn, Service, service_fn};
 use hyper::{Body, Server};
+use tower::ServiceBuilder;
 
 use super::error::ErrorMessage;
 use crate::config::SourceContext;
@@ -52,43 +56,49 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
             output
         });
 
+        // TODO: nested closure is pretty tricky, re-work is needed
         let service = make_service_fn(move |_conn| {
             counter!("http_source_connection_total", 1);
             let inner = Arc::clone(&inner);
+            let builder = self.clone();
+            let mut output = inner.output.clone();
 
             async move {
-                Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| async move {
+                Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| {
                     counter!("http_source_request_total", 1);
                     let inner = Arc::clone(&inner);
+                    let mut output = inner.output.clone();
+                    let builder = builder.clone();
 
-                    if req.uri().path() != inner.path {
-                        let resp = Response::builder()
-                            .status(StatusCode::NOT_FOUND)
-                            .body(Body::empty())
-                            .unwrap();
+                    async move {
+                        if req.uri().path() != inner.path {
+                            let resp = Response::builder()
+                                .status(StatusCode::NOT_FOUND)
+                                .body(Body::empty())
+                                .unwrap();
+
+                            return Ok::<_, crate::Error>(resp);
+                        }
+
+                        // authorization
+                        let (parts, body) = req.into_parts();
+                        let uri = &parts.uri;
+                        let headers = &parts.headers;
+                        if !inner.auth.validate(headers.get("authorization")) {
+                            let resp = Response::builder()
+                                .status(StatusCode::UNAUTHORIZED)
+                                .body(Body::empty())
+                                .unwrap();
+                            return Ok::<_, crate::Error>(resp);
+                        }
+
+                        let body = hyper::body::to_bytes(body).await?;
+                        let events = builder.build_events(uri, headers, body);
+                        let ack = acknowledgements;
+                        let resp = handle_request(events, acknowledgements, &mut output).await;
 
                         return Ok::<_, crate::Error>(resp);
                     }
-
-                    // authorization
-                    let (parts, body) = req.into_parts();
-                    let uri = &parts.uri;
-                    let headers = &parts.headers;
-                    if !inner.auth.validate(&headers.get("authorization")) {
-                        let resp = Response::builder()
-                            .status(StatusCode::UNAUTHORIZED)
-                            .body(Body::empty())
-                            .unwrap();
-                        return Ok::<_, crate::Error>(resp);
-                    }
-
-                    let body = hyper::body::to_bytes(body).await?;
-                    let events = self.build_events(uri, headers, body);
-                    let ack = acknowledgements;
-                    // let resp = handle_request(events, acknowledgements, &mut inner.output).await;
-                    let resp = ok_resp(None);
-
-                    return Ok::<_, crate::Error>(resp);
                 }))
             }
         });
@@ -97,10 +107,10 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
             let path = path.as_str();
 
             if let Err(err) =
-                Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-                    .serve(service)
-                    .with_graceful_shutdown(shutdown.map(|_| ()))
-                    .await
+            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
+                .serve(service)
+                .with_graceful_shutdown(shutdown.map(|_| ()))
+                .await
             {
                 error!(message = "Http source server start failed", ?err);
 
@@ -116,14 +126,52 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
     }
 }
 
+struct MakeSvc {
+    acknowledgement: bool,
+    auth: HttpSourceAuth,
+    path: String,
+    output: Pipeline
+}
+
+impl<T> Service<T> for MakeSvc {
+    type Response = Inner;
+    type Error = hyper::Error;
+    type Future = Pin<Box<dyn Future<Output=Result<Self::Response, Self::Error>> + Send>>;
+
+    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, _req: T) -> Self::Future {
+        let inner = Inner {
+            path: self.path.clone(),
+            auth: self.auth.clone(),
+            output: self.output.clone()
+        };
+
+        Box::pin(async move {
+            Ok(inner)
+        })
+    }
+}
+
 struct Inner {
     path: String,
     auth: HttpSourceAuth,
     output: Pipeline
 }
 
-impl Inner {
-    async fn serve(&mut self, req: Request<Body>) -> Result<Response<Body>, crate::Error> {
+impl Service<Request<Body>> for Inner {
+    type Response = Response<Body>;
+    type Error = hyper::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
+
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, req: Request<Body>) -> Self::Future {
+
         todo!()
     }
 }
