@@ -25,7 +25,7 @@ pub struct Bucket {
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Quantile {
-    pub upper: f64,
+    pub quantile: f64,
     pub value: f64,
 }
 
@@ -206,13 +206,19 @@ impl IntoF64 for std::time::Duration {
 
 impl Metric {
     #[inline]
-    pub fn new(name: impl ToString, tags: BTreeMap<String, String>, value: MetricValue) -> Self {
+    pub fn new(
+        name: impl ToString,
+        description: Option<String>,
+        tags: BTreeMap<String, String>,
+        ts: DateTime<Utc>,
+        value: MetricValue,
+    ) -> Self {
         Self {
             name: name.to_string(),
-            description: None,
+            description,
             tags,
             unit: None,
-            timestamp: None,
+            timestamp: Some(ts),
             value,
             metadata: Default::default(),
         }

@@ -29,6 +29,24 @@ macro_rules! fields {
     );
 }
 
+#[macro_export]
+macro_rules! buckets {
+    ( $( $limit:expr => $count:expr),* ) => {
+        vec![
+            $( event::Bucket { upper: $limit, count: $count}, )*
+        ]
+    };
+}
+
+#[macro_export]
+macro_rules! quantiles {
+    ( $( $q:expr => $value:expr),* ) => {
+        vec![
+            $( event::Quantile { quantile: $q, value: $value }, )*
+        ]
+    };
+}
+
 /// A related trait to `PartialEq`, `EventDataEq` tests if two events
 /// contain the same data, exclusive of the metadata. This is used to
 /// test for events having the same values but potentially different
@@ -36,6 +54,22 @@ macro_rules! fields {
 /// the ability to compare them for exact equality.
 pub trait EventDataEq<Rhs: ?Sized = Self> {
     fn event_data_eq(&self, other: &Rhs) -> bool;
+}
+
+impl<T: EventDataEq> EventDataEq for &[T] {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.len() == other.len()
+            && self
+                .iter()
+                .zip(other.iter())
+                .all(|(a, b)| a.event_data_eq(b))
+    }
+}
+
+impl<T: EventDataEq> EventDataEq for Vec<T> {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.as_slice().event_data_eq(&other.as_slice())
+    }
 }
 
 #[macro_export]

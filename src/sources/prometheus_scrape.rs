@@ -273,7 +273,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                             .quantiles
                             .iter()
                             .map(|q| Quantile {
-                                upper: q.quantile,
+                                quantile: q.quantile,
                                 value: q.value,
                             })
                             .collect::<Vec<_>>(),

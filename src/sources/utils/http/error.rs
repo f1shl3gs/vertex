@@ -15,8 +15,9 @@ impl Serialize for ErrorMessage {
         S: Serializer,
     {
         let mut em = serializer.serialize_struct("error_message", 2).unwrap();
-        em.serialize_field("code", &self.code.as_u16());
-        em.serialize_field("message", self.message.as_str());
+        em.serialize_field("code", &self.code.as_u16()).unwrap();
+        em.serialize_field("message", self.message.as_str())
+            .unwrap();
         em.end()
     }
 }

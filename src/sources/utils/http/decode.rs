@@ -7,8 +7,8 @@ use snap::raw::Decoder as SnappyDecoder;
 
 use super::ErrorMessage;
 
-pub fn decode(header: &Option<String>, mut body: Bytes) -> Result<Bytes, ErrorMessage> {
-    if let Some(encodings) = header {
+pub fn decode(encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMessage> {
+    if let Some(encodings) = encodings {
         for encoding in encodings.rsplit(',').map(str::trim) {
             body = match encoding {
                 "identity" => body,
@@ -44,11 +44,14 @@ pub fn decode(header: &Option<String>, mut body: Bytes) -> Result<Bytes, ErrorMe
 }
 
 #[inline]
-fn handle_decode_error(encoding: &str, error: impl std::error::Error) -> ErrorMessage {
+fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMessage {
     counter!("http_decompress_error_total", 1, "encoding" => encoding.to_string());
 
     ErrorMessage::new(
         StatusCode::UNPROCESSABLE_ENTITY,
-        format!("Failed decompressing payload with {} decoder.", encoding),
+        format!(
+            "Failed decompressing payload with {} decoder, err: {}.",
+            encoding, err
+        ),
     )
 }

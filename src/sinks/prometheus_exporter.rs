@@ -181,7 +181,7 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                         } => {
                             for q in quantiles {
                                 let mut tags = ent.tags.clone();
-                                tags.insert("quantile".to_string(), q.upper.to_string());
+                                tags.insert("quantile".to_string(), q.quantile.to_string());
                                 write_metric!(result, ent.name, tags, q.value)
                             }
 

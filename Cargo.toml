@@ -87,6 +87,7 @@ all-integration-tests = [
     "integration-tests-ntp",
     "integration-tests-prometheus_scrape",
     "integration-tests-prometheus_exporter",
+    "integration-tests-prometheus_remote_write"
 ]
 
 integration-tests-consul = []
@@ -101,6 +102,7 @@ integration-tests-memcached = []
 integration-tests-ntp = []
 integration-tests-prometheus_scrape = []
 integration-tests-prometheus_exporter = []
+integration-tests-prometheus_remote_write = []
 
 # Common
 disk-buffer = []

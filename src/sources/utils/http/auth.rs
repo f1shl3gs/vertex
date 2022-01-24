@@ -1,5 +1,4 @@
-use crate::sources::utils::http::error::ErrorMessage;
-use headers::{Authorization, Header, HeaderMapExt};
+use headers::{Authorization, HeaderMapExt};
 use http::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
 

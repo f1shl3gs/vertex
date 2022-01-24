@@ -2976,7 +2976,6 @@ name = "prometheus"
 version = "0.1.0"
 dependencies = [
  "criterion",
- "event",
  "indexmap",
  "nom 7.1.0",
  "num_enum",
