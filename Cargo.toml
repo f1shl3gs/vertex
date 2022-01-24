@@ -329,7 +329,7 @@ tracing-subscriber = { version = "0.3.6", default-features = false, features = [
 # HTTP
 hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
-listenfd = { version = "0.4.0", default-features = false, optional = true }
+listenfd = { version = "0.5.0", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
 http = { version = "0.2.6", default-features = false }
@@ -339,7 +339,7 @@ headers = { version = "0.3.5" }
 tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
-serde = { version = "1.0.133", features = ["derive", "std", "rc"] }
+serde = { version = "1.0.135", features = ["derive", "std", "rc"] }
 serde_yaml = { version = "0.8.23" }
 serde_json = { version = "1.0.75", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
@@ -360,7 +360,7 @@ hyper-openssl = { version = "0.9.1", default-features = false }
 openssl-probe = { version = "0.1.5", default-features = false }
 
 # Networking
-socket2 = { version = "0.4.2", default-features = false }
+socket2 = { version = "0.4.3", default-features = false }
 
 # Profile
 pprof = { version = "0.6.2", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
@@ -381,7 +381,7 @@ indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 indoc = { version = "1.0.3", default-features = false }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.112", optional = true }
+libc = { version = "0.2.113", optional = true }
 md5 = { version = "0.7" }
 memchr = { version = "2.4.1", optional = true, default-features = false}
 mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
