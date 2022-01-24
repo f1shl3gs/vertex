@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 nom = { version = "7.1.0" }
-snafu = { version = "0.6.10" }
+snafu = { version = "0.7.0" }
 event = { path = "../event" }
 prost = { version = "0.9" }
 num_enum = { version = "0.5.6" }

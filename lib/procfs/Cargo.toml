@@ -8,5 +8,5 @@ tokio = { version = "1.15.0", features = ["fs", "io-util", "test-util", "macros"
 
 [dependencies]
 glob = "0.3.0"
-snafu = { version = "0.6.10" }
+snafu = { version = "0.7.0" }
 tokio = { version = "1.15.0", features = ["fs", "io-util"] }

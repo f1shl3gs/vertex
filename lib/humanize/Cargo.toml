@@ -12,6 +12,6 @@ path = "benches/duration.rs"
 criterion = { version = "0.3.5" }
 
 [dependencies]
-snafu = { version = "0.6.10" }
+snafu = { version = "0.7.0" }
 chrono = { version = "0.4.19", features = ["serde"] }
 serde = { version = "1.0.135", default-features = false, features = ["std"] }
