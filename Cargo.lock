@@ -1524,7 +1524,7 @@ dependencies = [
  "httpdate",
  "itoa 0.4.8",
  "pin-project-lite",
- "socket2 0.4.2",
+ "socket2 0.4.3",
  "tokio",
  "tower-service",
  "tracing",
@@ -2182,7 +2182,7 @@ dependencies = [
  "serde_with",
  "sha-1",
  "sha2",
- "socket2 0.4.2",
+ "socket2 0.4.3",
  "stringprep",
  "strsim 0.10.0",
  "take_mut",
@@ -3983,9 +3983,9 @@ dependencies = [
 
 [[package]]
 name = "socket2"
-version = "0.4.2"
+version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5dc90fe6c7be1a323296982db1836d1ea9e47b6839496dde9a541bc496df3516"
+checksum = "0f82496b90c36d70af5fcd482edaa2e0bd16fade569de1330405fecbbdac736b"
 dependencies = [
  "libc",
  "winapi",
@@ -5081,7 +5081,7 @@ dependencies = [
  "shared",
  "smallvec",
  "snafu",
- "socket2 0.4.2",
+ "socket2 0.4.3",
  "sqlx",
  "stream-cancel",
  "strip-ansi-escapes",
