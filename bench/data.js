@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643028261761,
+  "lastUpdate": 1643028274361,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3965,6 +3965,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 65.874,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca91c85af6d8e7d681ebec9678c061043b870329",
+          "message": "Merge pull request #147 from f1shl3gs/dependabot/cargo/crc32fast-1.3.1\n\nchore(deps): bump crc32fast from 1.3.0 to 1.3.1",
+          "timestamp": "2022-01-24T20:38:20+08:00",
+          "tree_id": "2bda899a3f0938531e5260c047b13b38f491242a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca91c85af6d8e7d681ebec9678c061043b870329"
+        },
+        "date": 1643028273659,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 28.511,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 73.29,
             "unit": "ns/op"
           }
         ]
