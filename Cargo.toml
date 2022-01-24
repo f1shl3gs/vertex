@@ -87,6 +87,7 @@ all-integration-tests = [
     "integration-tests-ntp",
     "integration-tests-prometheus_scrape",
     "integration-tests-prometheus_exporter",
+    "integration-tests-prometheus_remote_write"
 ]
 
 integration-tests-consul = []
@@ -101,6 +102,7 @@ integration-tests-memcached = []
 integration-tests-ntp = []
 integration-tests-prometheus_scrape = []
 integration-tests-prometheus_exporter = []
+integration-tests-prometheus_remote_write = []
 
 # Common
 disk-buffer = []
@@ -157,7 +159,7 @@ sources-internal_logs = []
 sources-redis = ["redis"]
 sources-pulsar = ["pulsar"]
 sources-prometheus_scrape = []
-sources-prometheus_remote_write = []
+sources-prometheus_remote_write = ["snap"]
 sources-nginx_stub = []
 sources-zookeeper = []
 sources-haproxy = []
@@ -396,6 +398,7 @@ rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], opt
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.8.0", optional = true, features = ["union"] }
 snafu = { version = "0.6.10", default-features = false }
+snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
 syslog_loose = { version = "0.16.0", optional = true, default-features = false }
 sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }

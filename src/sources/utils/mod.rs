@@ -1,4 +1,5 @@
 mod finalizer;
+pub mod http;
 mod tcp;
 mod unix_stream;
 mod wrappers;

@@ -1,0 +1,11 @@
+sources:
+  prw:
+    type: prometheus_remote_write
+    address: 0.0.0.0:20012
+    acknowledgements: false
+
+sinks:
+  stdout:
+    type: stdout
+    inputs:
+      - prw
