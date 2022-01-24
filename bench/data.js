@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643028981993,
+  "lastUpdate": 1643029460137,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10880,6 +10880,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 911,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e4c3bef40ff3a6a9c593eab589be2041cd953af",
+          "message": "Merge pull request #145 from f1shl3gs/bump_toolchain\n\nbump to 1.58.1",
+          "timestamp": "2022-01-24T20:44:39+08:00",
+          "tree_id": "9987a4dc600a3ffc2e987fadc4d1ef0f80521784",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e4c3bef40ff3a6a9c593eab589be2041cd953af"
+        },
+        "date": 1643029459259,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 996,
             "unit": "s"
           }
         ]
