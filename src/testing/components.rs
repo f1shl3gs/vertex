@@ -5,5 +5,5 @@ pub fn init_test() {
     testify::event::clear_recorded_events();
 
     // Handle multiple initialization
-    internal::metric::init_global().expect("Failed to initialize metrics recorder")
+    internal::metric::init_global();
 }

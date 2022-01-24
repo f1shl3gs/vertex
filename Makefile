@@ -65,8 +65,12 @@ integration-test-mysql:
 integration-test-consul:
 	cargo test -p vertex --lib sources::consul::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: integration-tests-prometheus_remote_write
+integration-test-prometheus_remote_write:
+	cargo test -p vertex --lib sources::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper
+integration-tests: integration-test-*
 
 .PHONY: test
 test:
