@@ -47,7 +47,7 @@ jobs:
               - "Cargo.toml"
               - "Cargo.lock"
               - "Makefile"
-              - "rust-toolchain"
+              - "rust-toolchain.toml"
               - ".cargo/**"
               - "scripts/**"
               - "ci/**"
