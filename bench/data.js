@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643029560364,
+  "lastUpdate": 1643033306858,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4120,6 +4120,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 66.39,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2e88e3f9653f23786bae680701278863a95e5f47",
+          "message": "Merge pull request #146 from f1shl3gs/prometheus_remote_write_source\n\nAdd prometheus remote write source",
+          "timestamp": "2022-01-24T22:02:51+08:00",
+          "tree_id": "690b3d1d00deca1458c74016eb4b1d020249a681",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2e88e3f9653f23786bae680701278863a95e5f47"
+        },
+        "date": 1643033306148,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.785,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 51.07,
             "unit": "ns/op"
           }
         ]
