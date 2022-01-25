@@ -7,9 +7,4 @@ rule_files: []
 remote_write:
   - url: http://host.docker.internal:20012/write
 
-scrape_configs:
-  - job_name: 'prometheus'
-    static_configs:
-      - targets:
-          - 'localhost:9090'
-
+scrape_configs: []
