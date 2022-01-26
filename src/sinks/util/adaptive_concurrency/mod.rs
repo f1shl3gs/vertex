@@ -3,9 +3,13 @@ mod events;
 mod future;
 mod layer;
 mod semaphore;
-mod service;
+pub mod service;
+
 #[cfg(test)]
 mod tests;
+
+// Re-export
+pub use layer::AdaptiveConcurrencyLimitLayer;
 
 use serde::{Deserialize, Serialize};
 

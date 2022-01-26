@@ -193,6 +193,7 @@ sinks = [
     "sinks-loki",
     "sinks-kafka",
     "sinks-prometheus_exporter",
+    "sinks-prometheus_remote_write",
     "sinks-pulsar",
     "sinks-stdout",
     "sinks-socket",
@@ -200,6 +201,7 @@ sinks = [
 ]
 
 sinks-prometheus_exporter = []
+sinks-prometheus_remote_write = ["snap"]
 sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka"]
@@ -336,7 +338,7 @@ http = { version = "0.2.6", default-features = false }
 headers = { version = "0.3.5" }
 
 # Tower
-tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
 serde = { version = "1.0.135", features = ["derive", "std", "rc"] }

@@ -16,6 +16,7 @@ pub use finalization::{
 pub use log::value::Value;
 pub use log::LogRecord;
 pub use macros::EventDataEq;
+pub use metadata::EventMetadata;
 pub use metric::*;
 
 use std::collections::BTreeMap;
@@ -25,8 +26,6 @@ use crate::log::Logs;
 use bytes::{Buf, BufMut};
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
-
-use crate::metadata::EventMetadata;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {

@@ -12,6 +12,8 @@ mod kafka;
 pub mod loki;
 #[cfg(feature = "sinks-prometheus_exporter")]
 mod prometheus_exporter;
+#[cfg(feature = "sinks-prometheus_remote_write")]
+mod prometheus_remote_write;
 #[cfg(feature = "sinks-pulsar")]
 mod pulsar;
 #[cfg(feature = "sinks-socket")]
@@ -30,6 +32,13 @@ use snafu::Snafu;
 use std::fmt::{Debug, Formatter};
 
 pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
+
+/// Common build errors
+#[derive(Debug, Snafu)]
+pub enum BuildError {
+    #[snafu(display("URI parse error: {}", source))]
+    UriParse { source: http::uri::InvalidUri },
+}
 
 /// Common healthcheck errors
 #[derive(Debug, Snafu)]
@@ -68,6 +77,16 @@ impl Sink {
             Self::Sink(sink) => input.map(Ok).forward(sink).await,
             Self::Stream(s) => s.run(Box::pin(input)).await,
         }
+    }
+
+    /// Run the `Sink` with a one-time `Vec` of `Event`, for use in tests
+    #[cfg(test)]
+    pub async fn run_events<I>(self, input: I) -> Result<(), ()>
+    where
+        I: IntoIterator<Item = Event> + Send,
+        I::IntoIter: Send,
+    {
+        self.run(futures::stream::iter(input).map(Into::into)).await
     }
 
     /// Converts `Sink` into a `futures::Sink`

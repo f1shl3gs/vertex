@@ -112,10 +112,4 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
-      - run: make integration-test-consul
-      - run: make integration-test-haproxy
-      - run: make integration-test-memcached
-      - run: make integration-test-mysql
-      - run: make integration-test-nginx_stub
-      - run: make integration-test-redis
-      - run: make integration-test-zookeeper
+      - run: make integration-tests

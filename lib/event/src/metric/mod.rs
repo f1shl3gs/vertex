@@ -224,6 +224,24 @@ impl Metric {
         }
     }
 
+    pub fn new_with_metadata(
+        name: String,
+        tags: BTreeMap<String, String>,
+        value: MetricValue,
+        timestamp: Option<DateTime<Utc>>,
+        metadata: EventMetadata,
+    ) -> Self {
+        Self {
+            name,
+            description: None,
+            tags,
+            unit: None,
+            timestamp,
+            value,
+            metadata,
+        }
+    }
+
     #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
     where
@@ -390,6 +408,12 @@ impl Metric {
 
     pub fn metadata(&self) -> &EventMetadata {
         &self.metadata
+    }
+
+    // TODO: add more information
+    #[inline]
+    pub fn into_parts(self) -> (MetricValue, Option<DateTime<Utc>>, EventMetadata) {
+        (self.value, self.timestamp, self.metadata)
     }
 
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
