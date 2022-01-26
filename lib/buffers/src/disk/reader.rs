@@ -89,9 +89,7 @@ where
     /// At this stage, the record can be assumed to have been written correctly, and read correctly
     /// from disk, as the checksum was also validated.
     #[snafu(display("failed to decoded record: {:?}", source))]
-    FailedToDecode {
-        source: <T as DecodeBytes<T>>::Error,
-    },
+    FailedToDecode { source: <T as DecodeBytes>::Error },
 }
 
 impl<T> ReaderError<T>

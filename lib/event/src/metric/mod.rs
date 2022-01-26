@@ -412,8 +412,22 @@ impl Metric {
 
     // TODO: add more information
     #[inline]
-    pub fn into_parts(self) -> (MetricValue, Option<DateTime<Utc>>, EventMetadata) {
-        (self.value, self.timestamp, self.metadata)
+    pub fn into_parts(
+        self,
+    ) -> (
+        String,
+        BTreeMap<String, String>,
+        MetricValue,
+        Option<DateTime<Utc>>,
+        EventMetadata,
+    ) {
+        (
+            self.name,
+            self.tags,
+            self.value,
+            self.timestamp,
+            self.metadata,
+        )
     }
 
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {

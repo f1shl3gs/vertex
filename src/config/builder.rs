@@ -10,6 +10,7 @@ use glob;
 use indexmap::{IndexMap, IndexSet};
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
+use std::path::Path;
 
 use crate::config::graph::Graph;
 use crate::config::TransformConfig;
@@ -51,6 +52,10 @@ impl Builder {
 
     pub fn build_with_warnings(self) -> Result<(Config, Vec<String>), Vec<String>> {
         compile(self)
+    }
+
+    pub fn set_data_dir(&mut self, path: &Path) {
+        self.global.data_dir = Some(path.to_owned())
     }
 
     pub fn append(&mut self, with: Self) -> Result<(), Vec<String>> {

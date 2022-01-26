@@ -17,7 +17,7 @@ pub mod extensions;
 mod http;
 mod multiline;
 mod partition;
-mod pipeline;
+pub mod pipeline;
 mod shutdown;
 pub mod signal;
 mod sink;
