@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643173780572,
+  "lastUpdate": 1643173818150,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1905,6 +1905,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1316400,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f01b4e9720a3a82931b7c6a7057fa5e23beda68",
+          "message": "Merge pull request #149 from f1shl3gs/prometheus_remote_write_sink\n\nadd prometheus remote write sink",
+          "timestamp": "2022-01-26T13:04:50+08:00",
+          "tree_id": "2695f018f51ebeefff5d3abbd307b10b64b59584",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f01b4e9720a3a82931b7c6a7057fa5e23beda68"
+        },
+        "date": 1643173817092,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1079100,
             "unit": "ns/op"
           }
         ]
