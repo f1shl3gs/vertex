@@ -10,7 +10,7 @@ impl Rule for NoIndent {
         }
 
         let b = line.as_ref();
-        return b[0] != b' ' && b[0] != b'\t';
+        b[0] != b' ' && b[0] != b'\t'
     }
 
     fn is_condition(&self, line: &Bytes) -> bool {
@@ -19,7 +19,7 @@ impl Rule for NoIndent {
         }
 
         let b = line.as_ref();
-        return b[0] == b' ' || b[0] == b'\t';
+        b[0] == b' ' || b[0] == b'\t'
     }
 
     fn mode(&self) -> Mode {

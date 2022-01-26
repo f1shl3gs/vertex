@@ -159,7 +159,7 @@ fn key_to_parts(key: &Key) -> (String, BTreeMap<String, String>) {
         .map(|label| (String::from(label.key()), String::from(label.value())))
         .collect::<BTreeMap<String, String>>();
 
-    return (name.to_string(), tags);
+    (name.to_string(), tags)
 }
 
 #[inline]
