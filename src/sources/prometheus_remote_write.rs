@@ -311,6 +311,7 @@ mod tests {
         let req = http::Request::post(&url).body(Body::from(body)).unwrap();
 
         let resp = client.send(req).await.unwrap();
+        assert!(resp.status().is_success());
 
         let output = collect_ready(rx).await;
 
