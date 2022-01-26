@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643190337562,
+  "lastUpdate": 1643191195489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11873,6 +11873,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 904,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0c92b4b77908163d59355974092615480ef7f70e",
+          "message": "Merge pull request #154 from f1shl3gs/ensure_fanout_flushed_on_idle\n\nensure fanout is flushed on idle",
+          "timestamp": "2022-01-26T17:37:22+08:00",
+          "tree_id": "b51c97806df426e61cd04bfe47f731cbcc7e6d32",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0c92b4b77908163d59355974092615480ef7f70e"
+        },
+        "date": 1643191193779,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1110,
             "unit": "s"
           }
         ]
