@@ -151,6 +151,8 @@ async fn send_inner(buf: &mut Vec<Event>, output: &mut Fanout) {
     for event in buf.drain(..) {
         output.feed(event).await.expect("unit error")
     }
+
+    output.flush().await.expect("unit error")
 }
 
 pub struct TransformOutputsBuf {

@@ -154,6 +154,17 @@ impl LogRecord {
         }
     }
 
+    #[inline]
+    pub fn into_parts(
+        self,
+    ) -> (
+        BTreeMap<String, String>,
+        BTreeMap<String, Value>,
+        EventMetadata,
+    ) {
+        (self.tags, self.fields, self.metadata)
+    }
+
     pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
