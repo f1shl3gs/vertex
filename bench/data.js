@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643309906617,
+  "lastUpdate": 1643310587911,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12121,6 +12121,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 939,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e3e53858bf9299cca0695fea982b75a2b66ccab8",
+          "message": "Merge pull request #156 from f1shl3gs/switch_futures_channel_to_tokio_in_fanout\n\nswitch to tokio's channel",
+          "timestamp": "2022-01-28T02:50:21+08:00",
+          "tree_id": "ab9e356872c6b7092a2af952d9958c096ee2c0f5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e3e53858bf9299cca0695fea982b75a2b66ccab8"
+        },
+        "date": 1643310586888,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 974,
             "unit": "s"
           }
         ]
