@@ -3,7 +3,7 @@ use std::sync::{Arc, Mutex};
 
 use buffers::channel::BufferSender;
 use event::Event;
-use futures::{future, Future, FutureExt, SinkExt};
+use futures::{future, Future, FutureExt};
 use tokio::sync::{mpsc, watch};
 use tokio::time::{interval, sleep_until};
 use tokio::time::{Duration, Instant};
@@ -610,7 +610,7 @@ impl RunningTopology {
             for input in inputs {
                 if let Some(output) = self.outputs.get_mut(input) {
                     // This can only fail if we are disconnected, which is a valid situation.
-                    let _ = output.send(ControlMessage::Remove(key.clone())).await;
+                    let _ = output.send(ControlMessage::Remove(key.clone()));
                 }
             }
         }
@@ -618,7 +618,7 @@ impl RunningTopology {
 
     async fn setup_outputs(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {
         let outputs = new_pieces.outputs.remove(key).unwrap();
-        for (port, mut output) in outputs {
+        for (port, output) in outputs {
             let id = OutputId {
                 component: key.clone(),
                 port,
@@ -628,12 +628,10 @@ impl RunningTopology {
                     // Sink may have been removed with the new config so it may not
                     // be present.
                     if let Some(input) = self.inputs.get(sink_key) {
-                        let _ = output
-                            .send(ControlMessage::Add(
-                                sink_key.clone(),
-                                Box::pin(input.clone()),
-                            ))
-                            .await;
+                        let _ = output.send(ControlMessage::Add(
+                            sink_key.clone(),
+                            Box::pin(input.clone()),
+                        ));
                     }
                 }
             }
@@ -642,12 +640,10 @@ impl RunningTopology {
                     // Transform may have been removed with the new config so it may
                     // not be present.
                     if let Some(input) = self.inputs.get(transform_key) {
-                        let _ = output
-                            .send(ControlMessage::Add(
-                                transform_key.clone(),
-                                Box::pin(input.clone()),
-                            ))
-                            .await;
+                        let _ = output.send(ControlMessage::Add(
+                            transform_key.clone(),
+                            Box::pin(input.clone()),
+                        ));
                     }
                 }
             }
@@ -665,8 +661,7 @@ impl RunningTopology {
                 .outputs
                 .get_mut(&input)
                 .expect("unknown output")
-                .send(ControlMessage::Add(key.clone(), Box::pin(tx.clone())))
-                .await;
+                .send(ControlMessage::Add(key.clone(), Box::pin(tx.clone())));
         }
 
         self.inputs.insert(key.clone(), tx);
@@ -717,7 +712,7 @@ impl RunningTopology {
         for input in inputs_to_remove {
             if let Some(output) = self.outputs.get_mut(input) {
                 // This can only fail if we are disconnected, which is a valid situation.
-                let _ = output.send(ControlMessage::Remove(key.clone())).await;
+                let _ = output.send(ControlMessage::Remove(key.clone()));
             }
         }
 
@@ -727,8 +722,7 @@ impl RunningTopology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Add(key.clone(), Box::pin(tx.clone())))
-                .await;
+                .send(ControlMessage::Add(key.clone(), Box::pin(tx.clone())));
         }
 
         for &input in inputs_to_replace {
@@ -740,8 +734,7 @@ impl RunningTopology {
                 .send(ControlMessage::Replace(
                     key.clone(),
                     Some(Box::pin(tx.clone())),
-                ))
-                .await;
+                ));
         }
 
         self.inputs.insert(key.clone(), tx);
@@ -766,8 +759,7 @@ impl RunningTopology {
                 .outputs
                 .get_mut(input)
                 .unwrap()
-                .send(ControlMessage::Replace(key.clone(), None))
-                .await;
+                .send(ControlMessage::Replace(key.clone(), None));
         }
     }
 
