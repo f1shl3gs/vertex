@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643312401005,
+  "lastUpdate": 1643312422867,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2137,6 +2137,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1489200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15bb40b9434ad8a75bd554cb7cbd9be4681a5ef0",
+          "message": "Merge pull request #157 from f1shl3gs/switch_to_tokio_channel_for_pipeline\n\nSwitch to tokio channel for pipeline",
+          "timestamp": "2022-01-28T03:34:43+08:00",
+          "tree_id": "eb7bd1cbaaa3c0da7d35d4cdb3877783146440b0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15bb40b9434ad8a75bd554cb7cbd9be4681a5ef0"
+        },
+        "date": 1643312421698,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 997810,
             "unit": "ns/op"
           }
         ]
