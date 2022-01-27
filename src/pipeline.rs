@@ -1,5 +1,4 @@
 use event::Event;
-use futures::channel::mpsc;
 use futures::Stream;
 use futures_util::{SinkExt, StreamExt};
 use pin_project::pin_project;
@@ -7,6 +6,7 @@ use std::collections::HashMap;
 use std::fmt;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+use tokio::sync::mpsc;
 
 #[cfg(test)]
 use event::EventStatus;
@@ -26,8 +26,8 @@ impl fmt::Display for ClosedError {
 
 impl std::error::Error for ClosedError {}
 
-impl From<mpsc::SendError> for ClosedError {
-    fn from(_: mpsc::SendError) -> Self {
+impl From<mpsc::error::SendError<Event>> for ClosedError {
+    fn from(_: mpsc::error::SendError<Event>) -> Self {
         Self
     }
 }
@@ -219,6 +219,7 @@ struct Inner {
 impl Inner {
     fn new_with_buffer(n: usize) -> (Self, ReceiverStream<Event>) {
         let (tx, rx) = mpsc::channel(n);
+        let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
         (Self { inner: tx }, ReceiverStream::new(rx))
     }
 
@@ -316,11 +317,11 @@ impl Inner {
 #[derive(Debug)]
 pub struct ReceiverStream<T> {
     #[pin]
-    inner: mpsc::Receiver<T>,
+    inner: tokio_stream::wrappers::ReceiverStream<T>,
 }
 
 impl<T> ReceiverStream<T> {
-    fn new(inner: mpsc::Receiver<T>) -> Self {
+    const fn new(inner: tokio_stream::wrappers::ReceiverStream<T>) -> Self {
         Self { inner }
     }
 
