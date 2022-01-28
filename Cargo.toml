@@ -280,7 +280,7 @@ rand = { version = "0.8.4" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.15.0", features = ["test-util"] }
+tokio = { version = "1.16.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -307,7 +307,7 @@ jemalloc-ctl = { version = "0.3.3", optional = true }
 # Futrures & Tokio
 async-stream = { version = "0.3.2" }
 console-subscriber = { version = "0.1.1", optional = true }
-tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.16.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
