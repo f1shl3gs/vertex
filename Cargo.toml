@@ -335,7 +335,7 @@ listenfd = { version = "0.5.0", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
 http = { version = "0.2.6", default-features = false }
-headers = { version = "0.3.5" }
+headers = { version = "0.3.6" }
 
 # Tower
 tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
