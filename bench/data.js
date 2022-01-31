@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643655840233,
+  "lastUpdate": 1643655844669,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10089,6 +10089,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 312550,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bc57d40b4cbb5dc478198fb3b88fc2cd9be60449",
+          "message": "Merge pull request #163 from f1shl3gs/dependabot/cargo/parking_lot-0.12.0\n\nchore(deps): bump parking_lot from 0.11.2 to 0.12.0",
+          "timestamp": "2022-02-01T02:56:09+08:00",
+          "tree_id": "d0b582101ddfe0e1064a6d5bce812d29d5004d72",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bc57d40b4cbb5dc478198fb3b88fc2cd9be60449"
+        },
+        "date": 1643655843729,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 862.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 86347,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 432620,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 838430,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 316.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 31605,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 158060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 315320,
             "unit": "ns/op"
           }
         ]
