@@ -4,7 +4,6 @@ use std::{fmt::Debug, io::Read};
 use event::{Event, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -50,11 +49,13 @@ impl SourceConfig for SelfStatConfig {
 }
 
 impl GenerateConfig for SelfStatConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 
@@ -215,6 +216,11 @@ async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64)
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<SelfStatConfig>()
+    }
 
     #[tokio::test]
     async fn test_proc_stat() {

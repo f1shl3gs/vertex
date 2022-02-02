@@ -15,7 +15,6 @@ use nom::{
     sequence::{preceded, terminated, tuple},
 };
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use tokio_stream::wrappers::IntervalStream;
 
@@ -41,14 +40,28 @@ struct NginxStubConfig {
 }
 
 impl GenerateConfig for NginxStubConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec!["http://127.0.0.1:1111".to_string()],
-            interval: default_interval(),
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+# Configures the authentication strategy.
+# auth:
+{}
+"#,
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2),
+        )
     }
 }
 
@@ -312,6 +325,11 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<NginxStubConfig>()
+    }
 
     #[test]
     fn nginx_stub_status_try_from() {

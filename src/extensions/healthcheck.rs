@@ -29,11 +29,8 @@ pub struct HealthcheckConfig {
 }
 
 impl GenerateConfig for HealthcheckConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            endpoint: default_endpoint(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        "endpoint: 0.0.0.0:13133".into()
     }
 }
 

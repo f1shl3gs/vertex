@@ -103,16 +103,20 @@ inventory::submit! {
 }
 
 impl GenerateConfig for AddTagsConfig {
-    fn generate_config() -> serde_yaml::Value {
-        let mut tags = BTreeMap::new();
-        tags.insert("key1".to_string(), "value1".to_string());
-        tags.insert("key2".to_string(), "value2".to_string());
+    fn generate_config() -> String {
+        r#"
+# Tags add to the event
+tags:
+  foo: bar
+  host: ${HOSTNAME}
 
-        serde_yaml::to_value(Self {
-            tags,
-            overwrite: default_overwrite(),
-        })
-        .unwrap()
+# Controls how tag conflicts are handled if the event has tags that
+# Vertex would add.
+#
+# overwrite: false
+
+"#
+        .into()
     }
 }
 

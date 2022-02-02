@@ -27,12 +27,17 @@ struct LibvirtSourceConfig {
 }
 
 impl GenerateConfig for LibvirtSourceConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(LibvirtSourceConfig {
-            sock: default_sock(),
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The interval between scrapes.
+#
+# interval: 15s
+
+# The socket path of libvirtd, read permission is required
+#
+# sock: /run/libvirt/libvirt-sock-ro
+"#
+        .into()
     }
 }
 
@@ -925,5 +930,15 @@ mod schema {
         pub devices: Devices,
         #[serde(default)]
         pub metadata: Metadata,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<LibvirtSourceConfig>()
     }
 }

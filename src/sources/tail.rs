@@ -100,22 +100,80 @@ fn default_line_delimiter() -> String {
 }
 
 impl GenerateConfig for TailConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            ignore_older_than: default_ignore_older_than(),
-            host_key: None,
-            include: vec!["/path/to/include/*.log".into()],
-            exclude: vec!["/path/to/exclude/noop.log".into()],
-            read_from: Some(ReadFromConfig::End),
-            max_line_bytes: default_max_line_bytes(),
-            max_read_bytes: default_max_read_bytes(),
-            line_delimiter: "\n".to_string(),
-            glob_interval: default_glob_interval(),
-            acknowledgement: Default::default(),
-            charset: None,
-            multiline: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# Array of file patterns to include. Globbing is support.
+#
+include:
+- /path/to/some-*.log
+
+# Array of file patterns to exclude. Globbing is supported.
+# Takes precedence over the "include" option
+#
+# exlucde:
+# - /path/to/some-exclude.log
+
+# In the absence of a checkpoint, this setting tells Vertex where to
+# start reading files that are present at startup.
+#
+# Availabel options:
+# - beginning:  Read from the beginning of the file.
+# - end:        Start reading from the current end of the file.
+#
+# read_from: beginning
+
+# Ignore files with a data modification date older than the specified
+# duration.
+#
+# ignore_older: 1h
+
+# The maximum number of a bytes a line can contain before being discarded.
+# This protects against malformed lines or tailing incorrect files.
+#
+# max_line_bytes: {}
+
+# An approximate limit on the amount of data read from a single file at
+# a given time.
+#
+# max_read_bytes: {}
+
+# Delay between file discovery calls. This controls the interval at which
+# Vertex searches for files. Higher value result in greater chances of some
+# short living files being missed between searches, but lower value increases
+# performance impact of file discovery.
+#
+# glob_interval: {}
+
+# The key name added to each event representing the current host. This can
+# be globally set via the global "host_key" option.
+#
+# host_key: host
+
+# Encoding of the source messages. Takes one of the encoding "label strings"
+# defined as part of the "Encoding Standard"
+# https://encoding.spec.whatwg.org/#concept-encoding-get
+#
+# When set, the messages are transcoded from the specified encoding to UTF-8,
+# which is the encoding vertex assumes internally for string-like data.
+# Enable this transcoding operation if you need your data to be in UTF-8 for
+# further processing. At the time of transcoding, any malformed sequences(that's
+# can't be mapped to UTF-8) will be replaced with "replacement character (see:
+# https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character)
+# and warnings will be logged.
+#
+# charset: utf-16be
+
+# Controls how acknowledgements are handled by this source
+#
+# acknowledgements: false
+
+#
+            "#,
+            humanize::bytes(default_max_line_bytes()),
+            humanize::bytes(default_max_read_bytes()),
+            humanize::duration_to_string(&default_glob_interval()),
+        )
     }
 }
 
@@ -318,5 +376,15 @@ impl SourceConfig for TailConfig {
 
     fn source_type(&self) -> &'static str {
         "tail"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<TailConfig>()
     }
 }

@@ -23,6 +23,7 @@ use snafu::{ResultExt, Snafu};
 use tower::Service;
 use tracing_futures::Instrument;
 
+use crate::config::GenerateConfig;
 use crate::{
     config::ProxyConfig,
     tls::{tls_connector_builder, MaybeTlsSettings, TlsError},
@@ -205,6 +206,28 @@ impl<B> fmt::Debug for HttpClient<B> {
 pub enum Auth {
     Basic { user: String, password: String },
     Bearer { token: String },
+}
+
+impl GenerateConfig for Auth {
+    fn generate_config() -> String {
+        r#"
+# The authentication strategy to use, the available value
+# is "basic" or "bearer". If strategy is set to "bearer",
+# "user" and "password" is ignored, and "token" must be
+# configured.
+strategy: basic
+
+# The basic authentication user name.
+user: username
+
+# The basic authentication password.
+password: password
+
+# The token to use for bearer authentication.
+# token: abcdefg
+"#
+        .into()
+    }
 }
 
 pub trait MaybeAuth: Sized {

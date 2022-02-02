@@ -25,7 +25,7 @@ dyn_clone::clone_trait_object!(ProviderConfig);
 /// Describes a provider plugin storing its type name and an optional example config
 pub struct ProviderDescription {
     pub type_str: &'static str,
-    example: serde_yaml::Value,
+    example: String,
 }
 
 impl ProviderDescription
@@ -43,7 +43,7 @@ where
     }
 
     /// Returns an example config for a plugin identified by its type
-    pub fn example(type_str: &str) -> Result<serde_yaml::Value, ExampleError> {
+    pub fn example(type_str: &str) -> Result<String, ExampleError> {
         inventory::iter::<ProviderDescription>
             .into_iter()
             .find(|t| t.type_str == type_str)

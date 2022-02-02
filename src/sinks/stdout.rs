@@ -9,9 +9,9 @@ use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
 
+use crate::config::GenerateConfig;
 use crate::{
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
-    impl_generate_config_from_default,
     sinks::{Sink, StreamSink},
 };
 
@@ -19,11 +19,15 @@ use crate::{
 #[serde(deny_unknown_fields)]
 pub struct StdoutConfig {}
 
+impl GenerateConfig for StdoutConfig {
+    fn generate_config() -> String {
+        r#"# Nothing need to be config"#.into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<StdoutConfig>("stdout")
 }
-
-impl_generate_config_from_default!(StdoutConfig);
 
 #[async_trait]
 #[typetag::serde(name = "stdout")]
@@ -114,5 +118,16 @@ impl StreamSink for StdoutSink {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::config::test_generate_config;
+
+    #[test]
+    fn generate_config() {
+        test_generate_config::<StdoutConfig>();
     }
 }

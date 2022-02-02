@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use socket2::SockRef;
 use tokio::net::TcpStream;
 
-use crate::config::{deserialize_duration_option, serialize_duration_option};
+use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
 
 /// Configuration for keepalive probes in a TCP Stream
 ///
@@ -16,6 +16,12 @@ pub struct TcpKeepaliveConfig {
         serialize_with = "serialize_duration_option"
     )]
     pub timeout: Option<std::time::Duration>,
+}
+
+impl GenerateConfig for TcpKeepaliveConfig {
+    fn generate_config() -> String {
+        todo!()
+    }
 }
 
 // This function will be obsolete after tokio/mio internally use `socket2` and expose the

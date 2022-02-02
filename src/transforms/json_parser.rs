@@ -39,8 +39,8 @@ inventory::submit! {
 }
 
 impl GenerateConfig for JsonParserConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(JsonParserConfig::default()).unwrap()
+    fn generate_config() -> String {
+        "# TODO".into()
     }
 }
 

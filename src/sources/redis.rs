@@ -4,7 +4,6 @@ use std::time::Duration;
 use event::{tags, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::Snafu;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -245,15 +244,19 @@ pub struct RedisSourceConfig {
 }
 
 impl GenerateConfig for RedisSourceConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            url: "127.0.0.1:1111".to_string(),
-            interval: default_interval(),
-            namespace: None,
-            user: None,
-            password: Some("some_password".to_string()),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoints to connect to redis
+#
+endpoint: redis://localhost:6379
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# TODO: example for configuring "user" and password
+"#
+            .into()
     }
 }
 

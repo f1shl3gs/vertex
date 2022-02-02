@@ -19,9 +19,6 @@ use crate::tls::{MaybeTlsSettings, TlsConfig};
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
-    #[serde(default)]
-    tls: Option<TlsConfig>,
-
     endpoints: Vec<String>,
 
     #[serde(
@@ -31,6 +28,9 @@ struct ConsulSourceConfig {
     )]
     interval: std::time::Duration,
 
+    #[serde(default)]
+    tls: Option<TlsConfig>,
+
     #[serde(default = "default_true")]
     health_summary: bool,
 
@@ -39,15 +39,26 @@ struct ConsulSourceConfig {
 }
 
 impl GenerateConfig for ConsulSourceConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            tls: None,
-            endpoints: vec!["http://127.0.0.1:8500".to_string()],
-            interval: default_interval(),
-            health_summary: default_true(),
-            query_options: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+
+
+"#,
+            TlsConfig::generate_commented_with_indent(2)
+        )
     }
 }
 

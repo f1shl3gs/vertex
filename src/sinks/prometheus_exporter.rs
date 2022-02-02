@@ -21,12 +21,13 @@ use indexmap::set::IndexSet;
 use serde::{Deserialize, Serialize};
 use stream_cancel::{Trigger, Tripwire};
 
+use crate::config::GenerateConfig;
 use crate::stream::tripwire_handler;
+use crate::tls::MaybeTlsSettings;
 use crate::{
     config::{
         default_false, DataType, HealthCheck, Resource, SinkConfig, SinkContext, SinkDescription,
     },
-    impl_generate_config_from_default,
     sinks::{Sink, StreamSink},
     tls::TlsConfig,
 };
@@ -34,8 +35,6 @@ use crate::{
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct PrometheusExporterConfig {
-    pub namespace: Option<String>,
-
     pub tls: Option<TlsConfig>,
 
     #[serde(default = "default_listen_address")]
@@ -51,7 +50,6 @@ pub struct PrometheusExporterConfig {
 impl Default for PrometheusExporterConfig {
     fn default() -> Self {
         Self {
-            namespace: None,
             tls: None,
             listen: default_listen_address(),
             telemetry_path: default_telemetry_path(),
@@ -68,11 +66,26 @@ fn default_telemetry_path() -> String {
     "/metrics".into()
 }
 
+impl GenerateConfig for PrometheusExporterConfig {
+    fn generate_config() -> String {
+        r#"
+# Which address the prometheus server will listen at
+# lisent: 0.0.0.0:9100
+
+# Telemetry path for this HTTP server
+# telemetry_path: /metric
+
+# Compress response
+# compression: false
+
+"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<PrometheusExporterConfig>("prometheus_exporter")
 }
-
-impl_generate_config_from_default!(PrometheusExporterConfig);
 
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
@@ -259,22 +272,16 @@ impl PrometheusExporter {
 
         let (trigger, tripwire) = Tripwire::new();
         let address = self.config.listen;
+        let tls = self.config.tls.clone();
         tokio::spawn(async move {
-            /*
-                        let tls = MaybeTLSSettings::from_config(&self.config.tls)
-                            .map_err(|err| warn!(message = "Server TLS error: {}", err))?;
+            let tls = MaybeTlsSettings::from_config(&tls, true).map_err(|err| {
+                error!(message = "Server TLS error", ?err);
+            })?;
+            let listener = tls.bind(&address).await.map_err(|err| {
+                error!(message = "Server TLS error", ?err);
+            })?;
 
-                        let listener = tls.bind(&address)
-                            .await
-                            .map_err(|err| warn!(message = "Server bind error: {}", err))?;
-            */
-            /*Server::builder()
-                            .serve(new_service)
-                            .with_graceful_shutdown(tripwire.then(tripwire_handler))
-                            .await
-                            .map_err(|err| warn!(message = "Server error", ?err))?;
-            */
-            Server::bind(&address)
+            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
                 .await

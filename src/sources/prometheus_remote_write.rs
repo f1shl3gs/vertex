@@ -36,14 +36,30 @@ struct PrometheusRemoteWriteConfig {
 }
 
 impl GenerateConfig for PrometheusRemoteWriteConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            address: default_address(),
-            tls: None,
-            auth: None,
-            acknowledgements: false,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            "\
+# The address to accept connections on. The address must include a port
+#
+address: 0.0.0.0:9090
+
+# Configures the TLS options for incoming connections.
+# tls:
+{}
+
+# Options for HTTP Basic Authentication
+#
+# auth:
+{}
+
+# Controls how acknowledgements are handled by this source
+#
+# acknowledgements: false
+
+",
+            TlsConfig::generate_commented_with_indent(2),
+            HttpSourceAuthConfig::generate_commented_with_indent(2)
+        )
     }
 }
 

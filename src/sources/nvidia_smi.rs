@@ -36,12 +36,20 @@ fn default_smi_path() -> PathBuf {
 }
 
 impl GenerateConfig for NvidiaSmiConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-            path: default_smi_path(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The interval between scrapes.
+#
+# interval: 15s
+
+# The nvidia_smi's absolutely path
+#
+# path: {:?}
+
+"#,
+            default_smi_path()
+        )
     }
 }
 
@@ -459,6 +467,11 @@ struct Smi {
 mod tests {
     use super::*;
     use std::fs::read_to_string;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<NvidiaSmiConfig>()
+    }
 
     #[test]
     fn test_deserialize_output() {

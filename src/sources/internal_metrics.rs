@@ -3,7 +3,6 @@ use futures::StreamExt;
 use futures_util::stream;
 use internal::metric::{get_global, init_global, InternalRecorder};
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -28,11 +27,14 @@ struct InternalMetricsConfig {
 }
 
 impl GenerateConfig for InternalMetricsConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The interval between scrapes.
+#
+# Default: 15s
+# interval: 15s
+"#
+        .into()
     }
 }
 

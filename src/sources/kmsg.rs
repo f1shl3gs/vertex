@@ -9,7 +9,6 @@ use std::{
 use chrono::{TimeZone, Utc};
 use event::{fields, LogRecord};
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use tokio::io::AsyncReadExt;
 
 use crate::config::Output;
@@ -23,8 +22,8 @@ use crate::{
 struct KmsgConfig {}
 
 impl GenerateConfig for KmsgConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {}).unwrap()
+    fn generate_config() -> String {
+        r#"# No more config option is needed"#.into()
     }
 }
 
@@ -202,6 +201,11 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<KmsgConfig>()
+    }
 
     #[test]
     fn test_boot_time() {

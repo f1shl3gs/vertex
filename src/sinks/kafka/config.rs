@@ -182,8 +182,63 @@ fn to_string(value: impl serde::Serialize) -> String {
 }
 
 impl GenerateConfig for KafkaSinkConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
+    fn generate_config() -> String {
+        format!(r#"
+# A comma-separated list of host and port pairs that are the addresses of
+# the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
+# connects to initially ot bootstrap itself.
+#
+bootstrap_servers: 127.0.0.1:9092,127.0.0.2:9092
+
+# The Kafka topic name to write events to
+#
+topic: some-topic
+
+# The log field name or tags key to use for the topic key. If the field
+# does not exist in the log or in tags, a blank value will be used. If
+# unspecified, the key is not sent. Kafka uses a hash of the key to choose
+# the partition or uses round-robin if the record has no key.
+#
+# key_field: user_id
+
+# Configures the encoding specific sink behavior.
+#
+# encoding: TODO
+
+# Configures the sink batching behavior
+#
+# batch:
+{}
+
+# Configures the sink specific buffer behavior.
+#
+# buffer:
+#  # The buffer's type and storage mechanism.
+#  #
+#  # Availabels:
+#  # disk:     Stores the sink's buffer on disk. This is less performant,
+#  #           but durable. Data will not be lost between restarts. Will
+#  #           also hold data in memory to enhance performance.
+#  #           WARNING: This may stall the sink if disk performance isn't on
+#  #           par with the throughput.
+#  # memory:   Stores the sinks buffer in memory. this is more performant, but
+#  #           less durable. Data will be lost if Vertex restarted forcefully.
+#  type: memory
+#
+#  # The maximum number of events allowed in the buffer.
+#  #
+#  # max_events: 512
+#
+#  # The maximum size of the buffer on the disk.
+#  #
+#  # Used only when buffer type is disk
+#  # max_size:  128M
+
+#
+
+"#, BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2))
+
+        /*serde_yaml::to_value(Self {
             bootstrap_servers: "10.14.22.123.9092,10.14.22.123.9092".to_string(),
             topic: "some-topic".to_string(),
             key_field: Some("uid".to_string()),
@@ -196,7 +251,7 @@ impl GenerateConfig for KafkaSinkConfig {
             librdkafka_options: Default::default(),
             headers_field: None,
         })
-        .unwrap()
+        .unwrap()*/
     }
 }
 

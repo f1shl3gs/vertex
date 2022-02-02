@@ -70,19 +70,60 @@ pub struct SyslogConfig {
 }
 
 impl GenerateConfig for SyslogConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            mode: Mode::Tcp {
-                address: SocketListenAddr::SocketAddr("0.0.0.0:514".parse().unwrap()),
-                keepalive: None,
-                tls: None,
-                receive_buffer_bytes: None,
-                connection_limit: None,
-            },
-            max_length: default_max_length(),
-            host_key: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The type of socket to use
+#
+# Available values:
+# tcp:      TCP socket
+# udp:      UDP socket
+# unix:     Unix domain stream socket (*nix only)
+mode: tcp
+
+# The address to listen for connections on, or systemd#N to use the Nth
+# socket passed by systemd socket activation. If an address is used it
+# must inlucde a port
+#
+address: 0.0.0.0:514
+
+# The max number of TCP connections that will be processed
+#
+# Availabel only when mode is "tcp"
+# connection_limit: 1024
+
+# Configures the TCP keepalive behavior for the connection to the source.
+#
+# Availabel only when mode is "tcp"
+# keepalive:
+{}
+
+# Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
+#
+# Availabel only when mode is "tcp"
+# receive_buffer_bytes: 64ki
+
+# Configures the TLS options for incoming connections
+#
+# Availabel only when mode is "tcp"
+# tls:
+{}
+
+# The maximum buffer size of incoming messages. Messages larger than
+# this are truncated.
+#
+# max_length: {}
+
+# The key name added to each event representing the current host. This can
+# be globally set via the global "host_key" option.
+#
+# host_key: host
+
+        "#,
+            TcpKeepaliveConfig::generate_commented_with_indent(2),
+            TlsConfig::generate_commented_with_indent(2),
+            humanize::bytes(default_max_length()),
+        )
     }
 }
 

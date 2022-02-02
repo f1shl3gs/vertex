@@ -5,6 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use crate::config::GenerateConfig;
 use openssl::{
     pkcs12::{ParsedPkcs12, Pkcs12},
     pkey::{PKey, Private},
@@ -35,6 +36,37 @@ pub struct TlsConfig {
     pub enabled: Option<bool>,
     #[serde(flatten)]
     pub options: TlsOptions,
+}
+
+impl GenerateConfig for TlsConfig {
+    fn generate_config() -> String {
+        r#"
+# Absolute path to an additional CA certificate file, in DER or PEM
+# format(X.509), or an inline CA certificate in PEM format
+ca_file: /path/to/certificate_authority.crt
+
+# Absolute path to a certificate file used to identify this connection,
+# in DER or PEM format (X.509) or PKCS#12, or an inline certificate in
+# PEM format. If this is set and is not a PKCS#12 archive, "key_file"
+# must also be set.
+crt_file: /path/to/host_certificate.crt
+
+# Absolute path to a private key file used to identify this connection,
+# in DER or PEM format (PKCS#8), or an inline private key in PEM format.
+# If this is set, "crt_file" must also be set.
+key_file: /path/to/host_certificate.key
+
+# Pass phrase used to unlock the encrypted key file. This has no effect
+# unless "key_file" is set.
+key_pass: some_password
+
+# If "true", Vertex will validate the configured remote host name against
+# the remote host's TLS certificate. Do NOT set this to false unless you
+# understand the risks of not verifying the remote hostname.
+verify_hostname: true
+"#
+        .into()
+    }
 }
 
 impl TlsConfig {

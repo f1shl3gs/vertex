@@ -84,8 +84,10 @@ impl LokiConfig {
 }
 
 impl GenerateConfig for LokiConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
+    fn generate_config() -> String {
+        format!(r#""#)
+
+        /*serde_yaml::to_value(Self {
             endpoint: "http://localhost:3100".parse().unwrap(),
             encoding: EncodingConfig::from(Encoding::Json),
             tenant: None,
@@ -99,7 +101,7 @@ impl GenerateConfig for LokiConfig {
             tls: None,
             compression: Compression::default(),
         })
-        .unwrap()
+        .unwrap()*/
     }
 }
 
