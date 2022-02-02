@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643787645387,
+  "lastUpdate": 1643788279813,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13397,6 +13397,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1134,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f9fa62ec3347b010a1c78dccb5a4e55eea5e6f95",
+          "message": "Merge pull request #165 from f1shl3gs/dependabot/cargo/pretty_assertions-1.1.0\n\nchore(deps): bump pretty_assertions from 1.0.0 to 1.1.0",
+          "timestamp": "2022-02-02T15:31:14+08:00",
+          "tree_id": "16e75f84dc3afc9b2be85da9b56c755f1b9db31c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f9fa62ec3347b010a1c78dccb5a4e55eea5e6f95"
+        },
+        "date": 1643788278052,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 995,
             "unit": "s"
           }
         ]
