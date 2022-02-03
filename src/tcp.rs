@@ -20,7 +20,13 @@ pub struct TcpKeepaliveConfig {
 
 impl GenerateConfig for TcpKeepaliveConfig {
     fn generate_config() -> String {
-        todo!()
+        r#"
+# The time a connection needs to be idle before sending TCP
+# keepalive probes.
+#
+# timeout: 120s
+"#
+        .into()
     }
 }
 

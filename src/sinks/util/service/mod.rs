@@ -67,31 +67,38 @@ impl GenerateConfig for RequestConfig {
 # The maximum number of in-flight requests allowed at any given time,
 # or “adaptive” to allow Vertex to automatically set the limit based
 # on current network and service conditions.
+#
 concurrency: 128
 
 # The maximum time a request can take before being aborted. It is highly
 # recommended that you do not lower this value below the service’s internal
 # timeout, as this could create orphaned requests, pile on retries, and
 # result in duplicate data downstream.
+#
 timeout: 30s
 
 # The time window, used for the rate_limit_num option.
+#
 # rate_limit_duration: 1s
 
 # The maximum number of requests allowed within the "rate_limit_duration",
 # time window.
+#
 # rate_limit_num: 512
 
 # The maximum number of retries to make for failed requests. The default,
 # for all intents and purposes, represents an infinite number of retries
+#
 retry_attempts: 3
 
 # The maximum amount of time to wait between retries.
+#
 retry_max_duration: 30s
 
 # The amount of time to wait before attempting the first retry for a
 # failed request. Once, the first retry has failed the fibonacci sequence
 # will be used to select future backoffs.
+#
 retry_initial_backoff: 1s
 "#
         .into()

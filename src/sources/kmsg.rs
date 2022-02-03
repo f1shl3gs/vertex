@@ -23,7 +23,9 @@ struct KmsgConfig {}
 
 impl GenerateConfig for KmsgConfig {
     fn generate_config() -> String {
-        r#"# No more config option is needed"#.into()
+        r#"# No more config option is needed
+{}"#
+        .into()
     }
 }
 

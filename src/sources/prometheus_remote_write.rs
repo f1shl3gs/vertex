@@ -10,7 +10,8 @@ use prost::Message;
 use serde::{Deserialize, Serialize};
 
 use crate::config::{
-    DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext, SourceDescription,
+    default_false, DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use crate::sources::utils::http::{decode, ErrorMessage};
 use crate::sources::{
@@ -32,6 +33,7 @@ struct PrometheusRemoteWriteConfig {
     tls: Option<TlsConfig>,
     auth: Option<HttpSourceAuthConfig>,
 
+    #[serde(default = "default_false")]
     acknowledgements: bool,
 }
 

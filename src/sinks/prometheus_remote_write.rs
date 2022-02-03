@@ -63,27 +63,32 @@ endpoint: http://prom.example.com/write
 # Config batch behavior
 batch:
   # The maximum size of a batch, before it is flushed
+  #
   max_bytes: 128 Ki
+
   # The maximum events of a batch, before it is flushed
+  #
   max_events: 4096
+
   # The maximum age of a batch before it is flushed
+  #
   timeout: 5s
 
 # Configures the sink request behavior
 #
-request:
+# request:
 {}
 
 # Configures the TLS options for outgoing connections
-tls:
+# tls:
 {}
 
 # Configures the authentication strategy
-auth:
+# auth:
 {}
 
 "#,
-            RequestConfig::generate_config_with_indent(2),
+            RequestConfig::generate_commented_with_indent(2),
             TlsConfig::generate_commented_with_indent(2),
             Auth::generate_commented_with_indent(2)
         )

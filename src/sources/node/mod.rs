@@ -349,6 +349,14 @@ impl GenerateConfig for NodeMetricsConfig {
 # The interval between scrapes.
 #
 # interval: 15s
+
+# Proc path
+#
+proc_path: /proc
+
+# Sys path
+#
+sys_path: /sys
 "#
         .into()
     }

@@ -87,7 +87,7 @@ macro_rules! impl_list_and_example {
             pub fn run(&self) {
                 match &self.name {
                     Some(name) => match $desc::example(&name) {
-                        Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                        Ok(example) => println!("{}", example.trim()),
                         Err(err) => {
                             println!("Generate example failed: {}", err);
                             std::process::exit(exitcode::UNAVAILABLE);

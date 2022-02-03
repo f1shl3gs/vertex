@@ -22,7 +22,9 @@ pub struct InternalLogsConfig {
 
 impl GenerateConfig for InternalLogsConfig {
     fn generate_config() -> String {
-        r#"# No need to config anything"#.into()
+        r#"# No need to config anything
+{}"#
+        .into()
     }
 }
 

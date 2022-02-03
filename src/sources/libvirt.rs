@@ -35,7 +35,7 @@ impl GenerateConfig for LibvirtSourceConfig {
 
 # The socket path of libvirtd, read permission is required
 #
-# sock: /run/libvirt/libvirt-sock-ro
+sock: /run/libvirt/libvirt-sock-ro
 "#
         .into()
     }

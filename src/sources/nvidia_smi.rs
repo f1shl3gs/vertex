@@ -45,7 +45,7 @@ impl GenerateConfig for NvidiaSmiConfig {
 
 # The nvidia_smi's absolutely path
 #
-# path: {:?}
+path: {:?}
 
 "#,
             default_smi_path()

@@ -50,12 +50,14 @@ impl SourceConfig for SelfStatConfig {
 
 impl GenerateConfig for SelfStatConfig {
     fn generate_config() -> String {
-        r#"
+        format!(
+            r#"
 # The interval between scrapes.
 #
-# interval: 15s
-"#
-        .into()
+interval: {}
+"#,
+            humanize::duration_to_string(&default_interval())
+        )
     }
 }
 

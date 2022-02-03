@@ -21,7 +21,9 @@ pub struct StdoutConfig {}
 
 impl GenerateConfig for StdoutConfig {
     fn generate_config() -> String {
-        r#"# Nothing need to be config"#.into()
+        r#"# Nothing need to be config
+{}"#
+        .into()
     }
 }
 

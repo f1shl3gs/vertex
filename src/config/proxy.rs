@@ -1,10 +1,10 @@
 use super::{default_true, skip_serializing_if_default};
+use crate::config::GenerateConfig;
 use hyper::http::uri::InvalidUri;
 use hyper_proxy::Custom;
 use hyper_proxy::{Intercept, Proxy, ProxyConnector};
 use no_proxy::NoProxy;
 use serde::{Deserialize, Serialize};
-use crate::config::GenerateConfig;
 
 fn from_env(key: &str) -> Option<String> {
     // use lowercase first and the upercase
@@ -93,7 +93,8 @@ impl GenerateConfig for ProxyConfig {
 # no_proxy:
 # - .example.com
 # - 127.0.0.1
-"#.into()
+"#
+        .into()
     }
 }
 

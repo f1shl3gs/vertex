@@ -256,7 +256,7 @@ endpoint: redis://localhost:6379
 
 # TODO: example for configuring "user" and password
 "#
-            .into()
+        .into()
     }
 }
 

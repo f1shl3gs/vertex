@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use crate::config::GenerateConfig;
 use internal::{update_counter, InternalEvent};
 use metrics::{counter, gauge};
 use rdkafka::consumer::ConsumerContext;
@@ -41,11 +42,35 @@ impl Default for KafkaCompression {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-struct KafkaSaslConfig {
+pub struct KafkaSaslConfig {
     enabled: Option<bool>,
     username: Option<String>,
     password: Option<String>,
     mechanism: Option<String>,
+}
+
+impl GenerateConfig for KafkaSaslConfig {
+    fn generate_config() -> String {
+        r#"
+# Enable SASL/SCRAM authentication to the remote. (Not
+# supported on Windows at this time)
+#
+# enabled: false
+
+# The kafka SASL/SCRAM mechanisms
+#
+# mechanism: SCRAM-SHA-512
+
+# The Kafka SASL/SCRAM authentication password.
+#
+# password: password
+
+# The Kafka SASL/SCRAM authentication username.
+#
+# username: username
+"#
+        .into()
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -56,8 +81,8 @@ pub struct KafkaTLSConfig {
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct KafkaAuthConfig {
-    sasl: Option<KafkaSaslConfig>,
-    tls: Option<KafkaTLSConfig>,
+    pub sasl: Option<KafkaSaslConfig>,
+    pub tls: Option<KafkaTLSConfig>,
 }
 
 impl KafkaAuthConfig {

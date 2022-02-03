@@ -40,7 +40,25 @@ inventory::submit! {
 
 impl GenerateConfig for JsonParserConfig {
     fn generate_config() -> String {
-        "# TODO".into()
+        r#"
+# Which field to parse, by default log_schema's message key is used.
+#
+# field: message
+
+# Should Vertex drop the invalid event
+#
+drop_invalid: true
+
+# Which field to store the parsed result. If this is not set, the resultd
+# will set as log's fields, which means other filed will dropped.
+#
+# target_field: null
+
+# Overwrite the target field.
+#
+# overwrite_target: false
+"#
+        .into()
     }
 }
 

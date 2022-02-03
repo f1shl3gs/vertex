@@ -95,7 +95,8 @@ inventory::submit! {
 
 impl GenerateConfig for HttpConfig {
     fn generate_config() -> String {
-        format!(r#"
+        format!(
+            r#"
 # The URL to download config
 #
 url: http://config.example.com/config
@@ -117,9 +118,11 @@ url: http://config.example.com/config
 
 #
 
-        "#, humanize::duration_to_string(&default_interval()),
-        TlsConfig::generate_commented_with_indent(2),
-        ProxyConfig::generate_commented_with_indent(2))
+        "#,
+            humanize::duration_to_string(&default_interval()),
+            TlsConfig::generate_commented_with_indent(2),
+            ProxyConfig::generate_commented_with_indent(2)
+        )
     }
 }
 
