@@ -275,13 +275,13 @@ assert_cmd = { version = "2.0.2" }
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 indoc = { version = "1.0.3", default-features = false }
-pretty_assertions = { version = "1.0.0" }
+pretty_assertions = { version = "1.1.0" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.4" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.15.0", features = ["test-util"] }
+tokio = { version = "1.16.1", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -308,7 +308,7 @@ jemalloc-ctl = { version = "0.3.3", optional = true }
 # Futrures & Tokio
 async-stream = { version = "0.3.2" }
 console-subscriber = { version = "0.1.1", optional = true }
-tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.16.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
@@ -336,7 +336,7 @@ listenfd = { version = "0.5.0", default-features = false, optional = true }
 cidr = { version = "0.2.1" }
 no-proxy = { version = "0.3.1" }
 http = { version = "0.2.6", default-features = false }
-headers = { version = "0.3.5" }
+headers = { version = "0.3.6" }
 
 # Tower
 tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
@@ -363,7 +363,7 @@ hyper-openssl = { version = "0.9.1", default-features = false }
 openssl-probe = { version = "0.1.5", default-features = false }
 
 # Networking
-socket2 = { version = "0.4.3", default-features = false }
+socket2 = { version = "0.4.4", default-features = false }
 
 # Profile
 pprof = { version = "0.6.2", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
@@ -383,7 +383,7 @@ hostname = { version = "0.3.1" }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.114", optional = true }
+libc = { version = "0.2.117", optional = true }
 md5 = { version = "0.7" }
 memchr = { version = "2.4.1", optional = true, default-features = false}
 mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
