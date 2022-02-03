@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643876584702,
+  "lastUpdate": 1643877346589,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5317,6 +5317,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 60.959,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e7dbe71831e92161711d66425335b2a94c81492b",
+          "message": "Merge pull request #167 from f1shl3gs/text_example_config\n\nText example config",
+          "timestamp": "2022-02-03T16:30:27+08:00",
+          "tree_id": "57f2c81528e232cec6d637c45e5acab3cd633c28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e7dbe71831e92161711d66425335b2a94c81492b"
+        },
+        "date": 1643877345916,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.035,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 53.794,
             "unit": "ns/op"
           }
         ]
