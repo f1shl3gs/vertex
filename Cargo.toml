@@ -383,7 +383,7 @@ indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 indoc = { version = "1.0.3", default-features = false }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.116", optional = true }
+libc = { version = "0.2.117", optional = true }
 md5 = { version = "0.7" }
 memchr = { version = "2.4.1", optional = true, default-features = false}
 mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
