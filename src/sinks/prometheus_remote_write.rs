@@ -54,16 +54,44 @@ pub struct RemoteWriteConfig {
 }
 
 impl GenerateConfig for RemoteWriteConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            endpoint: "http://prom.example.com/write".to_string(),
-            batch: Default::default(),
-            request: Default::default(),
-            tenant_id: None,
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# Endpoint of Prometheus's remote write API
+endpoint: http://prom.example.com/write
+
+# Config batch behavior
+batch:
+  # The maximum size of a batch, before it is flushed
+  #
+  max_bytes: 128 Ki
+
+  # The maximum events of a batch, before it is flushed
+  #
+  max_events: 4096
+
+  # The maximum age of a batch before it is flushed
+  #
+  timeout: 5s
+
+# Configures the sink request behavior
+#
+# request:
+{}
+
+# Configures the TLS options for outgoing connections
+# tls:
+{}
+
+# Configures the authentication strategy
+# auth:
+{}
+
+"#,
+            RequestConfig::generate_commented_with_indent(2),
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2)
+        )
     }
 }
 

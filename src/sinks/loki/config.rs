@@ -4,18 +4,17 @@ use std::time::Duration;
 use event::encoding::EncodingConfig;
 use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 
 use crate::batch::{BatchConfig, SinkBatchSettings};
 use crate::config::{DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, UriSerde};
 use crate::http::{Auth, HttpClient, MaybeAuth};
 use crate::sinks::loki::healthcheck::health_check;
 use crate::sinks::loki::sink::LokiSink;
-use crate::sinks::util::service::{Concurrency, RequestConfig};
+use crate::sinks::util::service::RequestConfig;
 use crate::sinks::util::Compression;
 use crate::sinks::Sink;
 use crate::template::Template;
-use crate::tls::{TlsOptions, TlsSettings};
+use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -55,6 +54,7 @@ pub struct LokiConfig {
     pub compression: Compression,
 
     pub tenant: Option<Template>,
+    #[serde(default)]
     pub labels: HashMap<Template, Template>,
 
     #[serde(default = "crate::config::default_false")]
@@ -84,22 +84,112 @@ impl LokiConfig {
 }
 
 impl GenerateConfig for LokiConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoint: "http://localhost:3100".parse().unwrap(),
-            encoding: EncodingConfig::from(Encoding::Json),
-            tenant: None,
-            labels: Default::default(),
-            remove_label_fields: false,
-            remove_timestamp: false,
-            out_of_order_action: Default::default(),
-            auth: None,
-            request: RequestConfig::new(Concurrency::None),
-            batch: Default::default(),
-            tls: None,
-            compression: Compression::default(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The base URL of the Loki instance
+#
+endpoint: http://loki.example.com:3100
+
+# Configures the encoding specific sink behavior.
+#
+encoding:
+  # The encoding codec used to serialize the events before outputting.
+  #
+  codec: json
+
+  # Prevent the sink from encoding the specified fields.
+  #
+  # except_fields:
+  # - foo
+  # - bar.key
+
+  # Makes the sink encode only the specified fields.
+  #
+  # only_fields:
+  # - k01
+  # - k02.k03
+
+  # How to format event timestamps
+  #
+  # Availabel values:
+  # rfc3339     Formats as a RFC3339 string
+  # unix        Formats as a unix timestamp
+  #
+  # timestamp_format: rfc3339
+
+# The tenant id that's sent with every request, by default
+# this is not required since a proxy should set this header.
+# When running Loki locally a tenant id is not required either.
+# Your can read more abount tenant id's at
+# https://github.com/grafana/loki/blob/master/docs/operations/multi-tenancy.md
+#
+# Note: This parameter supports Vertex's template syntax, which
+# enables you to use dynamic per-event value.
+#
+# tenant_id: some_tenant_id
+
+# A set of labels that are attached to each batch of events.
+# Both keys and values are templatable, which enables you to
+# attach dynamic labels to events. Note: If the set of labels
+# has high cardinality, this can cause drastic performance
+# issues with Loki. To prevent this from happening, reduce
+# the number of unique label keys and values.
+#
+# labels:
+#   foo: bar
+#   another_foo: {{ .field.key }}
+
+# If this is set to "true" then when labels are collected from
+# events those fields will also get removed from the event.
+#
+# remote_label_fields: false
+
+# If this is set to "true" then the timestamp will be removed
+# from the evnt payload. Note the event timestamp will still be
+# sent as metadata to Loki for indexing.
+#
+# remove_timestamp: true
+
+# Some sources may generate events with timestamps that aren't
+# in strictly chronological order. The Loki service can't
+# accept a stream of such events. Vertex sorts events before
+# sending them to Loki, however some late events might
+# arrive after a batch has been sent. This option specifies
+# what Vertex should do with those events.
+#
+# Availabel values:
+# drop                  Drop the event, with a warning
+# rewrite_timestamp     Rewrite timestamp of the event to the
+#         latest timestamp that was pushed.
+#
+# out_of_order_action: drop
+
+# Configures the authentication strategy
+#
+# auth:
+{}
+
+# Configures the sink request behavior.
+#
+# request:
+{}
+
+# Configures the sink batching behavior.
+#
+# TODO
+
+# Configures the TLS options for outgoing connections.
+#
+# tls:
+{}
+
+# TODO: compression
+        "#,
+            Auth::generate_commented_with_indent(2),
+            RequestConfig::generate_commented_with_indent(2),
+            TlsConfig::generate_commented_with_indent(2),
+        )
     }
 }
 

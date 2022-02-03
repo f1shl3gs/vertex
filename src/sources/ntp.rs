@@ -2,7 +2,6 @@ use event::{Event, Metric};
 use futures::{stream, StreamExt};
 use rsntp;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -43,18 +42,26 @@ const fn default_timeout() -> Duration {
 }
 
 impl GenerateConfig for NtpConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            timeout: default_timeout(),
-            interval: default_interval(),
-            pools: vec![
-                "0.pool.ntp.org".to_string(),
-                "1.pool.ntp.org".to_string(),
-                "2.pool.ntp.org".to_string(),
-                "3.pool.ntp.org".to_string(),
-            ],
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# NTP servers to use.
+pools:
+- 0.pool.ntp.org
+- 1.pool.ntp.org
+- 2.pool.ntp.org
+- 3.pool.ntp.org
+
+# The query timeout
+# timeout: {}s
+
+# The interval between scrapes.
+#
+# interval: {}s
+"#,
+            default_timeout().as_secs(),
+            default_interval().as_secs()
+        )
     }
 }
 
@@ -154,5 +161,15 @@ impl Ntp {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<NtpConfig>()
     }
 }

@@ -6,7 +6,6 @@ use event::{tags, Event, Metric};
 use futures::StreamExt;
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::Snafu;
 
 use crate::config::{
@@ -58,17 +57,28 @@ struct HaproxyConfig {
 }
 
 impl GenerateConfig for HaproxyConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-            endpoints: vec![
-                "http://127.0.0.1:1111/metrics".to_string(),
-                "http://127.0.0.1:2222/metrics".to_string(),
-            ],
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+# Configures the authentication strategy.
+# auth:
+{}
+"#,
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2),
+        )
     }
 }
 
@@ -1102,6 +1112,11 @@ mod tests {
     use super::*;
     use std::io;
     use std::io::BufReader;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<HaproxyConfig>()
+    }
 
     #[test]
     fn test_parse_info() {

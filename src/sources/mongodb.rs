@@ -24,12 +24,17 @@ inventory::submit! {
 }
 
 impl GenerateConfig for MongodbConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec!["1.1.1.1:1234".into(), "2.2.2.2:1234".into()],
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoint to MongoDB server.
+endpoints:
+- localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 

@@ -6,9 +6,9 @@ use futures::FutureExt;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 
+use crate::config::GenerateConfig;
 use crate::{
     config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
-    impl_generate_config_from_default,
     sinks::{Sink, StreamSink},
 };
 
@@ -18,11 +18,19 @@ pub struct BlackholeConfig {
     pub rate: Option<usize>,
 }
 
+impl GenerateConfig for BlackholeConfig {
+    fn generate_config() -> String {
+        r#"
+# Receive 10 event every second
+rate: 10
+"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<BlackholeConfig>("blackhole")
 }
-
-impl_generate_config_from_default!(BlackholeConfig);
 
 #[async_trait]
 #[typetag::serde(name = "blackhole")]

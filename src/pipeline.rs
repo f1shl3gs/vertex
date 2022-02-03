@@ -1,6 +1,6 @@
 use event::Event;
 use futures::Stream;
-use futures_util::{SinkExt, StreamExt};
+use futures_util::StreamExt;
 use pin_project::pin_project;
 use std::collections::HashMap;
 use std::fmt;

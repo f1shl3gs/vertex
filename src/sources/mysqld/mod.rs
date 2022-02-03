@@ -11,7 +11,6 @@ mod integration_tests;
 use event::{Event, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
@@ -58,14 +57,26 @@ struct InfoSchemaConfig {
     query_response_time: bool,
 }
 
+const fn default_global_status() -> bool {
+    true
+}
+
+const fn default_global_variables() -> bool {
+    true
+}
+
+const fn default_slave_status() -> bool {
+    true
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct MysqldConfig {
     // Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
-    #[serde(default = "default_true")]
+    #[serde(default = "default_global_status")]
     global_status: bool,
     // Since 5.1, Collect from SHOW GLOBAL VARIABLES (Enabled by default)
-    #[serde(default = "default_true")]
+    #[serde(default = "default_global_variables")]
     global_variables: bool,
     // Since 5.1, Collect from SHOW SLAVE STATUS (Enabled by default)
     #[serde(default = "default_true")]
@@ -138,26 +149,43 @@ impl MysqldConfig {
 }
 
 impl GenerateConfig for MysqldConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            global_status: default_true(),
-            global_variables: default_true(),
-            slave_status: default_true(),
-            auto_increment_columns: default_false(),
-            binlog_size: default_false(),
-            info_schema: InfoSchemaConfig {
-                innodb_cmp: default_true(),
-                innodb_cmpmem: default_true(),
-                query_response_time: default_true(),
-            },
-            host: default_host(),
-            port: default_port(),
-            username: Some("foo".to_string()),
-            password: Some("some_password".to_string()),
-            ssl: None,
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# IP address to Mysql server.
+host: {}
+
+#
+port: {}
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Username used to connect to MySQL instance
+# username: user
+
+# Password used to connect to MySQL instance
+# password: some_password
+
+# TLS options to connect to MySQL server.
+# tls:
+{}
+
+##### Scrape Configuration #####
+
+# Since 5.1, Collect from "SHOW GLOBAL STATUS"
+global_status: {}
+
+# Since 5.1, Collect from "SHOW GLOBAL VARIABLES"
+global_variables: {}
+"#,
+            default_host(),
+            default_port(),
+            TlsConfig::generate_commented_with_indent(2),
+            default_global_status(),
+            default_global_variables(),
+        )
     }
 }
 
@@ -335,4 +363,14 @@ pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     };
 
     Ok(version)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<MysqldConfig>()
+    }
 }

@@ -110,25 +110,76 @@ struct KafkaSourceConfig {
 }
 
 impl GenerateConfig for KafkaSourceConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            bootstrap_servers: "".to_string(),
-            topics: vec!["topic_1".to_string()],
-            group: "foo".to_string(),
-            auto_offset_reset: "".to_string(),
-            session_timeout: default_session_timeout(),
-            socket_timeout: default_socket_timeout(),
-            fetch_wait_max: default_fetch_wait_max(),
-            commit_interval: default_commit_interval(),
-            key_field: default_key_field(),
-            topic_key: default_topic_key(),
-            partition_key: default_partition_key(),
-            offset_key: default_offset_key(),
-            headers_key: default_headers_key(),
-            auth: Default::default(),
-            librdkafka_options: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# A comma-separated list of host and port pairs that are the address
+# of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
+# client connects to initially to bootstrap itself.
+bootstrap_servers: 10.14.22.123:9092,10.14.23.332:9092
+
+# The Kafka topics names to read eevnts from. Regex is supported if
+# the topic begins with `^`.
+topics:
+- ^(prefix1|prefix2)-.*
+- topic1
+- topic2
+
+# The consumer group name to be used to consume events from Kafka.
+group: foo
+
+# If offsets for consumer group do not exist, set them using this
+# strategy. See the librdkafka documentation for the
+# "auto.offset.reset" option for further clarification.
+#
+# auto_offset_reset: "largest"
+
+# The Kafka session timeout.
+# session_timeout: {}s
+
+# Default timeout for network requests.
+socket_timeout: {}s
+
+# Maximum time the broker may wait to fill the response.
+fetch_wait_max: {}s
+
+# The frequency that the consumer offsets are committed(written) to
+# offset storage.
+# commit_interval: {}s
+
+# The log field name to use for the Kafka message key.
+# key_field: {}
+
+# The log field name to use for the Kafka topic.
+# topic_key: {}
+
+# The log field name to use for the Kafka partition name.
+# partition_key: {}
+
+# The log field name to use for the Kafka offset
+# offset_key: {}
+
+# The log field name to use for the Kafka headers.
+# headers_key: {}
+
+# auth:
+
+# Advanced options. See librdkafka documentation for more details.
+# https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+# librdkafka_options:
+#   foo: bar
+
+"#,
+            default_session_timeout().as_secs(),
+            default_socket_timeout().as_secs(),
+            default_fetch_wait_max().as_secs(),
+            default_commit_interval().as_secs(),
+            default_key_field(),
+            default_topic_key(),
+            default_partition_key(),
+            default_offset_key(),
+            default_headers_key(),
+        )
     }
 }
 

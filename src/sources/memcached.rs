@@ -4,7 +4,6 @@ use std::time::{Duration, Instant};
 use event::{tags, Event, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
@@ -30,12 +29,18 @@ struct MemcachedConfig {
 }
 
 impl GenerateConfig for MemcachedConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec!["127.0.0.1:1111".to_string(), "127.0.0.1:2222".to_string()],
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoint to Consul server.
+endpoints:
+- 127.0.0.1:1111
+- 127.0.0.1:2222
+
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 
@@ -895,6 +900,11 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<MemcachedConfig>()
+    }
 
     #[tokio::test]
     async fn test_parse_stats() {

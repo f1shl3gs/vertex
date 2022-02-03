@@ -1,4 +1,5 @@
 use super::{default_true, skip_serializing_if_default};
+use crate::config::GenerateConfig;
 use hyper::http::uri::InvalidUri;
 use hyper_proxy::Custom;
 use hyper_proxy::{Intercept, Proxy, ProxyConnector};
@@ -62,6 +63,38 @@ impl Default for ProxyConfig {
             https: None,
             no_proxy: NoProxy::default(),
         }
+    }
+}
+
+impl GenerateConfig for ProxyConfig {
+    fn generate_config() -> String {
+        r#"
+# If false the proxy will be disabled
+#
+# enabled: true
+
+# The URL to proxy HTTP requests through.
+#
+# http: http://proxy.example.com
+
+# The URL to proxy HTTPS requests through
+#
+# https: https://proxy.example.com
+
+# A list of hosts to avoid proxying. Allowed patterns here include:
+#
+# Domain names:     "example.com" matches requests to example.com
+# Wildcard domains: ".example.com" matches requests to example.com and its
+#                    subdomains
+# IP address:        "127.0.0.1" matches requests to 127.0.0.1
+# CIDR blocks:       "192.168.0.0./16" matches requests to any IP addressess in this range.
+# Splat:             "*" matches all hosts
+#
+# no_proxy:
+# - .example.com
+# - 127.0.0.1
+"#
+        .into()
     }
 }
 

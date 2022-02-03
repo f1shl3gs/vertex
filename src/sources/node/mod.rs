@@ -71,11 +71,11 @@ use self::netstat::NetstatConfig;
 use self::vmstat::VMStatConfig;
 use crate::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    DataType, Output, SourceConfig, SourceContext,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext,
 };
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
-use crate::{config::SourceDescription, impl_generate_config_from_default, sources::Source};
+use crate::{config::SourceDescription, sources::Source};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -343,7 +343,24 @@ inventory::submit! {
     SourceDescription::new::<NodeMetricsConfig>("node")
 }
 
-impl_generate_config_from_default!(NodeMetricsConfig);
+impl GenerateConfig for NodeMetricsConfig {
+    fn generate_config() -> String {
+        r#"
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Proc path
+#
+proc_path: /proc
+
+# Sys path
+#
+sys_path: /sys
+"#
+        .into()
+    }
+}
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct NodeMetrics {
@@ -826,7 +843,10 @@ impl SourceConfig for NodeMetricsConfig {
 mod tests {
     use super::*;
 
-    // TODO: add more test for default values
+    #[test]
+    fn generate_config() {
+        crate::config::test_generate_config::<NodeMetricsConfig>()
+    }
 
     #[test]
     fn test_deserialize() {

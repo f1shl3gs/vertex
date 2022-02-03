@@ -6,7 +6,6 @@ use std::time::Duration;
 use event::{tags, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
@@ -34,12 +33,17 @@ struct ZookeeperConfig {
 }
 
 impl GenerateConfig for ZookeeperConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoint: "127.0.0.1:9092".to_string(),
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoints to connect to.
+#
+endpoint: 127.0.0.1:2181
+
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 

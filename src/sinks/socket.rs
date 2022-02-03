@@ -31,17 +31,48 @@ inventory::submit! {
 }
 
 impl GenerateConfig for SocketSinkConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            mode: Mode::Tcp(TcpSinkConfig::new(
-                "127.0.0.1:1000".to_string(),
-                None,
-                None,
-                None,
-            )),
-            encoding: EncodingConfig::from(Encoding::Json),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The type of socket to use.
+#
+# Avaiable values:
+#   tcp: TCP socket
+#   udp: UDP socket
+#   unix: Unix domain socket (Linux only)
+mode: tcp
+
+# The unix socket path. This should be the absolute path.
+# path: /path/to/socket
+
+# The address to connect to. The address must include a port.
+address: 127.0.0.1:5000
+
+# Configures the encoding specific sink behavior
+encoding:
+  # The encoding codec used to serialize the events before
+  # outputting.
+  #
+  # Avaiable values:
+  #   json: JSON encoded event
+  #   text: The message field from the event.
+  codec: json
+
+  # Prevent the sink from encoding the specified fields
+  # except_fields:
+  # - foo
+  # - foo.bar
+
+  # Makes the sink encode only the specified fields
+  # only_fields: foo
+
+  # How to format event timestamps
+  #
+  # Avaiable values:
+  #   rfc3339: Formats as a RFC3339 string -- default
+  #   unix:    Formats as a unix timestamp
+
+"#
+        .into()
     }
 }
 

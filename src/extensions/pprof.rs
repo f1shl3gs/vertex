@@ -9,9 +9,8 @@ use hyper::{
 };
 use serde::{Deserialize, Serialize};
 
-use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
+use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use crate::extensions::Extension;
-use crate::impl_generate_config_from_default;
 use crate::shutdown::ShutdownSignal;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -85,8 +84,16 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::new(Body::from(vec![])))
 }
 
+impl GenerateConfig for PProfConfig {
+    fn generate_config() -> String {
+        r#"
+# Which address the pprof server will listen
+listen: 0.0.0.0:10910
+"#
+        .into()
+    }
+}
+
 inventory::submit! {
     ExtensionDescription::new::<PProfConfig>("pprof")
 }
-
-impl_generate_config_from_default!(PProfConfig);

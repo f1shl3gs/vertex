@@ -16,7 +16,7 @@ use crate::config::{
 };
 use crate::http::HttpClient;
 use crate::signal;
-use crate::tls::{TlsOptions, TlsSettings};
+use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
 use crate::SignalHandler;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -94,18 +94,35 @@ inventory::submit! {
 }
 
 impl GenerateConfig for HttpConfig {
-    fn generate_config() -> serde_yaml::Value {
-        let url = "https://example.config.com/config".parse().unwrap();
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The URL to download config
+#
+url: http://config.example.com/config
 
-        serde_yaml::to_value(Self {
-            url: Some(url),
-            request: Default::default(),
-            interval: default_interval(),
-            tls: None,
-            proxy: Default::default(),
-            persist: None,
-        })
-        .unwrap()
+# The interval between fetch config.
+#
+# interval: {}
+
+# Configures the TLS options for outgoing connections.
+#
+# tls:
+{}
+
+# Configures an HTTP/HTTPS proxy for Vertex to use. By default, the globally
+# configured proxy is used.
+#
+# proxy:
+{}
+
+#
+
+        "#,
+            humanize::duration_to_string(&default_interval()),
+            TlsConfig::generate_commented_with_indent(2),
+            ProxyConfig::generate_commented_with_indent(2)
+        )
     }
 }
 

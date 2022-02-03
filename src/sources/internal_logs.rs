@@ -6,8 +6,9 @@ use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::errors::BroadcastStreamRecvError;
 
-use crate::config::{DataType, Output, SourceConfig, SourceContext, SourceDescription};
-use crate::impl_generate_config_from_default;
+use crate::config::{
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::sources::Source;
@@ -19,11 +20,17 @@ pub struct InternalLogsConfig {
     pid_key: Option<String>,
 }
 
+impl GenerateConfig for InternalLogsConfig {
+    fn generate_config() -> String {
+        r#"# No need to config anything
+{}"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SourceDescription::new::<InternalLogsConfig>("internal_logs")
 }
-
-impl_generate_config_from_default!(InternalLogsConfig);
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_logs")]
