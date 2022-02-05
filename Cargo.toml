@@ -314,7 +314,7 @@ stream-cancel = { version = "0.8.1" }
 metrics = { version = "0.18.0", default-features = false }
 
 # Tracing
-tracing = { version = "0.1.28", default-features = false }
+tracing = { version = "0.1.30", default-features = false }
 
 # HTTP
 hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
