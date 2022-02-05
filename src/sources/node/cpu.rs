@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
-use crate::config::{default_false, default_true, deserialize_regex, serialize_regex};
+use framework::config::{default_false, default_true, deserialize_regex, serialize_regex};
 
 const USER_HZ: f64 = 100.0;
 

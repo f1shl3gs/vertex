@@ -1,20 +1,19 @@
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Event, Metric, Quantile};
+use framework::config::{
+    default_false, default_interval, deserialize_duration, serialize_duration, DataType,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+};
+use framework::http::{Auth, HttpClient};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
 use futures::{FutureExt, StreamExt, TryFutureExt};
 use prometheus::{GroupKind, MetricGroup};
 use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
-    default_false, default_interval, deserialize_duration, serialize_duration, DataType,
-    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
-};
-use crate::http::{Auth, HttpClient};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 // pulled up, and split over multiple lines, because the long lines trip up rustfmt such that it
 // gave up trying to format, but reported no error
@@ -342,12 +341,11 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use crate::config::test_generate_config;
     use crate::sources::prometheus_scrape::PrometheusScrapeConfig;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<PrometheusScrapeConfig>();
+        crate::testing::test_generate_config::<PrometheusScrapeConfig>();
     }
 
     #[tokio::test]

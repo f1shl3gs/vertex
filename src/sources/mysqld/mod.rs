@@ -8,21 +8,20 @@ mod slave_status;
 #[cfg(all(test, feature = "integration-tests-mysql"))]
 mod integration_tests;
 
+use std::time::{Duration, Instant};
+
 use event::{Event, Metric};
+use framework::config::{
+    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
+};
+use framework::{tls::TlsConfig, Source};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
-use std::time::{Duration, Instant};
-
-use crate::config::{
-    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
-};
-use crate::sources::Source;
-use crate::tls::TlsConfig;
 
 const VERSION_QUERY: &str = "SELECT @@version";
 
@@ -371,6 +370,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<MysqldConfig>()
+        crate::testing::test_generate_config::<MysqldConfig>()
     }
 }

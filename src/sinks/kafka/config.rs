@@ -1,19 +1,18 @@
-use futures_util::FutureExt;
 use std::collections::HashMap;
 use std::time::Duration;
 
 use event::encoding::{EncodingConfig, StandardEncodings};
+use framework::batch::{BatchConfig, NoDefaultBatchSettings};
+use framework::config::{
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
+};
+use framework::{Healthcheck, Sink};
+use futures_util::FutureExt;
 use rdkafka::ClientConfig;
 use serde::{Deserialize, Serialize};
 
-use crate::batch::{BatchConfig, NoDefaultBatchSettings};
+use super::sink::health_check;
 use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaSaslConfig};
-use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, HealthCheck, SinkConfig,
-    SinkContext,
-};
-use crate::sinks::kafka::sink::health_check;
-use crate::sinks::Sink;
 
 pub const QUEUE_MIN_MESSAGES: u64 = 100000;
 
@@ -293,7 +292,7 @@ encoding:
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = super::sink::KafkaSink::new(self.clone(), ctx.acker())?;
         let hc = health_check(self.clone()).boxed();
         Ok((Sink::Stream(Box::new(sink)), hc))
@@ -311,10 +310,9 @@ impl SinkConfig for KafkaSinkConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<KafkaSinkConfig>();
+        crate::testing::test_generate_config::<KafkaSinkConfig>();
     }
 }

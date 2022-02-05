@@ -1,11 +1,11 @@
-use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
-use crate::config::{
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
-use crate::sources::Source;
+use framework::Source;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

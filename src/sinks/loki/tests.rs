@@ -1,13 +1,13 @@
 use event::Event;
+use framework::config::ProxyConfig;
+use framework::http::HttpClient;
+use framework::sink::util::testing::{build_test_server, load_sink};
+use framework::tls::TlsSettings;
 use futures_util::StreamExt;
 
-use crate::config::ProxyConfig;
-use crate::http::HttpClient;
 use crate::sinks::loki::config::LokiConfig;
 use crate::sinks::loki::healthcheck::health_check;
 use crate::sinks::loki::sink::LokiSink;
-use crate::sinks::util::testing::{build_test_server, load_sink};
-use crate::tls::TlsSettings;
 
 #[test]
 fn interpolate_labels() {

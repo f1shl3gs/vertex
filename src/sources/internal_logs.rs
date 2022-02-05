@@ -1,17 +1,16 @@
 use chrono::Utc;
 use event::Event;
+use framework::config::{
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::errors::BroadcastStreamRecvError;
-
-use crate::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -61,7 +60,7 @@ async fn run(
     mut output: Pipeline,
     shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let subscription = crate::trace::subscribe();
+    let subscription = framework::trace::subscribe();
     let hostname = crate::hostname();
     let pid = std::process::id();
 
@@ -106,23 +105,23 @@ async fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::pipeline::ReceiverStream;
     use event::Value;
+    use framework::pipeline::ReceiverStream;
     use std::time::Duration;
     use testify::collect_ready;
     use tokio::time::sleep;
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<InternalLogsConfig>();
+        crate::testing::test_generate_config::<InternalLogsConfig>();
     }
 
     #[tokio::test]
     async fn receive_logs() {
         let test_id: u8 = rand::random();
         let start = chrono::Utc::now();
-        crate::trace::init(false, false, "debug");
-        crate::trace::reset_early_buffer();
+        framework::trace::init(false, false, "debug");
+        framework::trace::reset_early_buffer();
         error!(
             message = "Before source started",
             %test_id
@@ -170,7 +169,7 @@ mod tests {
 
         tokio::spawn(source);
         sleep(Duration::from_millis(10)).await;
-        crate::trace::stop_buffering();
+        framework::trace::stop_buffering();
         rx
     }
 }

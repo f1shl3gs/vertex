@@ -56,6 +56,13 @@ use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use event::{tags, Event, Metric};
+use framework::config::{
+    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{config::SourceDescription, Source};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
@@ -69,13 +76,6 @@ use self::netclass::NetClassConfig;
 use self::netdev::NetdevConfig;
 use self::netstat::NetstatConfig;
 use self::vmstat::VMStatConfig;
-use crate::config::{
-    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::{config::SourceDescription, sources::Source};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -845,7 +845,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<NodeMetricsConfig>()
+        crate::testing::test_generate_config::<NodeMetricsConfig>()
     }
 
     #[test]

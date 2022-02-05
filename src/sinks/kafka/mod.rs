@@ -6,8 +6,8 @@ mod sink;
 #[cfg(test)]
 mod tests;
 
-use crate::config::SinkDescription;
 use config::KafkaSinkConfig;
+use framework::config::SinkDescription;
 
 inventory::submit! {
     SinkDescription::new::<KafkaSinkConfig>("kafka")

@@ -1,20 +1,21 @@
 mod client;
 
-use event::{tags, Event, Metric};
-use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Instant;
-use tokio_stream::wrappers::IntervalStream;
 
-use crate::config::{
+use event::{tags, Event, Metric};
+use framework::config::{
     default_interval, default_true, deserialize_duration, serialize_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::http::HttpClient;
+use framework::http::HttpClient;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
+use futures_util::StreamExt;
+use serde::{Deserialize, Serialize};
+use tokio_stream::wrappers::IntervalStream;
+
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -357,10 +358,10 @@ async fn collect_health_state_metric(
 #[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
     use super::*;
-    use crate::config::ProxyConfig;
-    use crate::http::HttpClient;
-    use crate::tls::MaybeTlsSettings;
     use event::MetricValue;
+    use framework::config::ProxyConfig;
+    use framework::http::HttpClient;
+    use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
     use hyper::Body;
     use testcontainers::images::generic::{GenericImage, WaitFor};

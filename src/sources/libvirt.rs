@@ -1,14 +1,14 @@
-use event::{tags, Event, Metric};
-use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
-use virt::{Client, Error};
 
-use crate::config::{
+use event::{tags, Event, Metric};
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::sources::Source;
+use framework::Source;
+use futures_util::StreamExt;
+use serde::{Deserialize, Serialize};
+use virt::{Client, Error};
 
 fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
@@ -939,6 +939,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<LibvirtSourceConfig>()
+        crate::testing::test_generate_config::<LibvirtSourceConfig>()
     }
 }

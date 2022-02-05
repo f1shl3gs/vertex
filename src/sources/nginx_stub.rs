@@ -6,6 +6,13 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use event::{Event, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
+    SourceConfig, SourceContext, SourceDescription,
+};
+use framework::http::{Auth, HttpClient};
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
 use futures::{StreamExt, TryFutureExt};
 use hyper::{StatusCode, Uri};
 use nom::{
@@ -17,14 +24,6 @@ use nom::{
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
-};
-use crate::http::{Auth, HttpClient};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct NginxStubConfig {
@@ -328,7 +327,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<NginxStubConfig>()
+        crate::testing::test_generate_config::<NginxStubConfig>()
     }
 
     #[test]
@@ -430,8 +429,8 @@ mod integration_tests {
     }
 
     use super::NginxStubStatus;
-    use crate::config::ProxyConfig;
-    use crate::http::{Auth, HttpClient};
+    use framework::config::ProxyConfig;
+    use framework::http::{Auth, HttpClient};
     use hyper::{Body, StatusCode, Uri};
     use nginx::Nginx;
     use std::convert::TryInto;

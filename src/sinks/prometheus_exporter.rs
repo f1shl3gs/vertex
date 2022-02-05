@@ -1,17 +1,21 @@
-use std::{
-    convert::Infallible,
-    fmt::Write,
-    hash::Hasher,
-    net::{IpAddr, Ipv4Addr, SocketAddr},
-    ops::{Deref, DerefMut},
-    sync::{Arc, RwLock},
-};
+use std::convert::Infallible;
+use std::fmt::Write;
+use std::hash::Hasher;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::ops::{Deref, DerefMut};
+use std::sync::{Arc, RwLock};
 
 use async_trait::async_trait;
 use buffers::Acker;
 use chrono::Utc;
 use event::MetricValue;
 use event::{Event, Metric};
+use framework::config::{
+    default_false, DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
+};
+use framework::stream::tripwire_handler;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::{Healthcheck, Sink, StreamSink};
 use futures::prelude::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
 use hyper::http::HeaderValue;
@@ -20,17 +24,6 @@ use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use indexmap::set::IndexSet;
 use serde::{Deserialize, Serialize};
 use stream_cancel::{Trigger, Tripwire};
-
-use crate::config::GenerateConfig;
-use crate::stream::tripwire_handler;
-use crate::tls::MaybeTlsSettings;
-use crate::{
-    config::{
-        default_false, DataType, HealthCheck, Resource, SinkConfig, SinkContext, SinkDescription,
-    },
-    sinks::{Sink, StreamSink},
-    tls::TlsConfig,
-};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -90,7 +83,7 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for PrometheusExporterConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = PrometheusExporter::new(self.clone(), ctx.acker);
         let health_check = futures::future::ok(()).boxed();
 

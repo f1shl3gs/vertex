@@ -4,14 +4,14 @@ use event::{
     encoding::{EncodingConfig, StandardEncodings},
     Event, Finalizable, Value,
 };
+use framework::template::Template;
 use internal::emit;
 use log_schema::LogSchema;
 use rdkafka::message::OwnedHeaders;
 
 use super::service::KafkaRequest;
+use super::service::KafkaRequestMetadata;
 use crate::common::kafka::KafkaHeaderExtractionFailed;
-use crate::sinks::kafka::service::KafkaRequestMetadata;
-use crate::template::Template;
 
 pub struct KafkaRequestBuilder {
     pub key_field: Option<String>,

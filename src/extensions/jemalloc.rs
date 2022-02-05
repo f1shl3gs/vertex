@@ -9,11 +9,11 @@ use hyper::{Body, Method, Response, Server, StatusCode};
 use jemalloc_ctl::{stats, Access, AsName};
 use serde::{Deserialize, Serialize};
 
-use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
 use crate::duration::{duration_to_string, parse_duration};
-use crate::extensions::Extension;
 use crate::impl_generate_config_from_default;
-use crate::shutdown::ShutdownSignal;
+use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
+use framework::shutdown::ShutdownSignal;
+use framework::Extension;
 
 const OUTPUT: &str = "profile.out";
 const PROF_ACTIVE: &'static [u8] = b"prof.active\0";

@@ -6,38 +6,17 @@
 #![deny(clippy::disallowed_method)] // [nursery] mark some functions as verboten
 #![deny(clippy::missing_const_for_fn)] // [nursery] valuable to the optimizer, but may produce false positives
 
-mod async_read;
-mod batch;
-mod codecs;
 mod common;
-pub mod config;
-mod dns;
 mod encoding_transcode;
 pub mod extensions;
-mod http;
 mod multiline;
-mod partition;
-pub mod pipeline;
-mod shutdown;
-pub mod signal;
 mod sink;
 pub mod sinks;
 pub mod sources;
-mod stats;
-mod stream;
-pub mod tcp;
-pub mod template;
-mod tls;
-pub mod topology;
-pub mod trace;
-pub mod transforms;
-mod trigger;
-pub mod udp;
-pub mod utilization;
-
 pub mod testing;
+pub mod transforms;
 
-pub use signal::SignalHandler;
+pub use framework::hostname;
 
 #[macro_use]
 extern crate metrics;
@@ -79,8 +58,4 @@ pub fn get_version() -> String {
     };
 
     format!("{} ({})", pkg_version, build_string)
-}
-
-pub fn hostname() -> std::io::Result<String> {
-    Ok(::hostname::get()?.to_string_lossy().into())
 }

@@ -1,8 +1,11 @@
 use std::task::{Context, Poll};
 
-use crate::config::UriSerde;
 use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
+use framework::config::UriSerde;
+use framework::http::{Auth, HttpClient};
+use framework::sink::util::Compression;
+use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
 use internal::EventsSent;
@@ -10,16 +13,12 @@ use snafu::Snafu;
 use tower::Service;
 use tracing::Instrument;
 
-use crate::http::{Auth, HttpClient};
-use crate::sinks::util::Compression;
-use crate::stream::DriverResponse;
-
 #[derive(Debug, Snafu)]
 pub enum LokiError {
     #[snafu(display("Server responded with an error: {}", code))]
     ServerError { code: StatusCode },
     #[snafu(display("Failed to make HTTP(S) request: {}", source))]
-    HttpError { source: crate::http::HttpError },
+    HttpError { source: framework::http::HttpError },
 }
 
 pub struct LokiRequest {

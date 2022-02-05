@@ -5,15 +5,13 @@ use async_trait::async_trait;
 use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
+use framework::{
+    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
+    Healthcheck, Sink, StreamSink,
+};
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
-
-use crate::config::GenerateConfig;
-use crate::{
-    config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
-    sinks::{Sink, StreamSink},
-};
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -34,7 +32,7 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "stdout")]
 impl SinkConfig for StdoutConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         Ok((
             Sink::Stream(Box::new(StdoutSink { acker: ctx.acker })),
             futures::future::ok(()).boxed(),
@@ -126,10 +124,9 @@ impl StreamSink for StdoutSink {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<StdoutConfig>();
+        crate::testing::test_generate_config::<StdoutConfig>();
     }
 }

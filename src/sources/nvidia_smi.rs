@@ -7,14 +7,13 @@ use event::{tags, Event, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::config::Output;
-use crate::{
+use framework::config::Output;
+use framework::{
     config::{
         default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
         GenerateConfig, SourceConfig, SourceContext, SourceDescription,
     },
-    sources::Source,
-    Error,
+    Error, Source,
 };
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -470,7 +469,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<NvidiaSmiConfig>()
+        crate::testing::test_generate_config::<NvidiaSmiConfig>()
     }
 
     #[test]

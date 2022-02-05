@@ -2,11 +2,11 @@ use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
-use crate::config::{
+use event::Event;
+use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use crate::transforms::{FunctionTransform, Transform};
-use event::Event;
+use framework::{FunctionTransform, Transform};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

@@ -4,21 +4,17 @@ use std::net::SocketAddr;
 use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Event, Metric, Quantile};
+use framework::config::{
+    default_false, DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext,
+    SourceDescription,
+};
+use framework::source::util::http::{decode, ErrorMessage};
+use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
+use framework::{tls::TlsConfig, Source};
 use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
 use serde::{Deserialize, Serialize};
-
-use crate::config::{
-    default_false, DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext,
-    SourceDescription,
-};
-use crate::sources::utils::http::{decode, ErrorMessage};
-use crate::sources::{
-    utils::http::{HttpSource, HttpSourceAuthConfig},
-    Source,
-};
-use crate::tls::TlsConfig;
 
 const SOURCE_NAME: &str = "prometheus_remote_write";
 
@@ -234,20 +230,20 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
 mod tests {
     use super::*;
     use crate::common::prometheus::TimeSeries;
-    use crate::config::ProxyConfig;
-    use crate::http::HttpClient;
-    use crate::pipeline::Pipeline;
     use crate::testing::components;
-    use crate::tls::MaybeTlsSettings;
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
     use event::{assert_event_data_eq, buckets, quantiles, tags, EventStatus, Metric};
+    use framework::config::ProxyConfig;
+    use framework::http::HttpClient;
+    use framework::pipeline::Pipeline;
+    use framework::tls::{MaybeTlsSettings, TlsOptions};
     use hyper::Body;
     use testify::collect_ready;
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<PrometheusRemoteWriteConfig>();
+        crate::testing::test_generate_config::<PrometheusRemoteWriteConfig>();
     }
 
     fn make_events() -> Vec<Event> {
@@ -343,7 +339,17 @@ mod tests {
 
     #[tokio::test]
     async fn receives_metrics_over_https() {
-        receives_metrics(Some(TlsConfig::test_config())).await;
+        let tls_config = TlsConfig {
+            enabled: Some(true),
+            options: TlsOptions {
+                ca_file: Some("lib/framework/tests/fixtures/tls/Vertex_CA.crt".into()),
+                crt_file: Some("lib/framework/tests/fixtures/tls/localhost.crt".into()),
+                key_file: Some("lib/framework/tests/fixtures/tls/localhost.key".into()),
+                ..TlsOptions::default()
+            },
+        };
+
+        receives_metrics(Some(tls_config)).await;
     }
 }
 

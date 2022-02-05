@@ -1,17 +1,16 @@
-use async_trait::async_trait;
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
-use crate::config::{
+use async_trait::async_trait;
+use event::{Event, Metric};
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, Output, SourceConfig,
     SourceContext,
 };
-use crate::sources::Source;
-
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use event::{Event, Metric};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::Source;
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
@@ -58,7 +57,7 @@ impl SourceConfig for GeneratorConfig {
     }
 }
 
-#[cfg(all(test, feature = "sources-generator"))]
+#[cfg(test)]
 mod tests {
     use super::*;
 

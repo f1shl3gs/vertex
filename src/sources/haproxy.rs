@@ -3,19 +3,17 @@ use std::time::Duration;
 
 use bytes::Buf;
 use event::{tags, Event, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
+    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+};
+use framework::http::{Auth, HttpClient};
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::{Error, Source};
 use futures::StreamExt;
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
-
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
-};
-use crate::http::{Auth, HttpClient};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
-use crate::Error;
 
 // HAProxy 1.4
 // # pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,
@@ -1115,7 +1113,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<HaproxyConfig>()
+        crate::testing::test_generate_config::<HaproxyConfig>()
     }
 
     #[test]

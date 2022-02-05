@@ -2,19 +2,19 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use event::encoding::EncodingConfig;
+use framework::batch::{BatchConfig, SinkBatchSettings};
+use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSerde};
+use framework::http::{Auth, HttpClient, MaybeAuth};
+use framework::sink::util::service::RequestConfig;
+use framework::sink::util::Compression;
+use framework::tls::{TlsConfig, TlsOptions, TlsSettings};
+use framework::Sink;
+use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
 
-use crate::batch::{BatchConfig, SinkBatchSettings};
-use crate::config::{DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, UriSerde};
-use crate::http::{Auth, HttpClient, MaybeAuth};
-use crate::sinks::loki::healthcheck::health_check;
-use crate::sinks::loki::sink::LokiSink;
-use crate::sinks::util::service::RequestConfig;
-use crate::sinks::util::Compression;
-use crate::sinks::Sink;
-use crate::template::Template;
-use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
+use super::healthcheck::health_check;
+use super::sink::LokiSink;
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -57,9 +57,9 @@ pub struct LokiConfig {
     #[serde(default)]
     pub labels: HashMap<Template, Template>,
 
-    #[serde(default = "crate::config::default_false")]
+    #[serde(default = "framework::config::default_false")]
     pub remove_label_fields: bool,
-    #[serde(default = "crate::config::default_true")]
+    #[serde(default = "framework::config::default_true")]
     pub remove_timestamp: bool,
     #[serde(default)]
     pub out_of_order_action: OutOfOrderAction,
@@ -196,7 +196,7 @@ encoding:
 #[async_trait::async_trait]
 #[typetag::serde(name = "loki")]
 impl SinkConfig for LokiConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         if self.labels.is_empty() {
             return Err("`labels` must include at least one label".into());
         }
@@ -251,11 +251,10 @@ pub fn valid_label_name(label: &Template) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<LokiConfig>();
+        crate::testing::test_generate_config::<LokiConfig>();
     }
 
     #[test]
