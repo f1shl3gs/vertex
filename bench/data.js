@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644082142007,
+  "lastUpdate": 1644082146652,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2456,6 +2456,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1393500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bd0b717c88445dee97e8e9b585f305054ea5cc85",
+          "message": "Merge pull request #170 from f1shl3gs/framework\n\nmove common mods to framework",
+          "timestamp": "2022-02-06T01:23:16+08:00",
+          "tree_id": "6ef7b87dfde59186c5c3e017393e34cdf94c47e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bd0b717c88445dee97e8e9b585f305054ea5cc85"
+        },
+        "date": 1644082145996,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1119800,
             "unit": "ns/op"
           }
         ]
