@@ -83,7 +83,7 @@ tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
 tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 tracing = { version = "0.1.28", default-features = false }
-tracing-core = { version = "0.1.21", default-features = false }
+tracing-core = { version = "0.1.22", default-features = false }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-limit = { path = "../tracing-limit" }
 tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
