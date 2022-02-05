@@ -59,4 +59,3 @@ pub fn get_version() -> String {
 
     format!("{} ({})", pkg_version, build_string)
 }
-
