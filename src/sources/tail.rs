@@ -1,24 +1,25 @@
-use crate::encoding_transcode::{Decoder, Encoder};
+use std::path::PathBuf;
+use std::time::Duration;
+
 use bytes::Bytes;
 use chrono::Utc;
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
+use framework::config::{
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
+    SourceContext, SourceDescription,
+};
+use framework::source::util::OrderedFinalizer;
+use framework::Source;
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
-use std::time::Duration;
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 
-use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
-    SourceContext, SourceDescription,
-};
+use crate::encoding_transcode::{Decoder, Encoder};
 use crate::hostname;
 use crate::multiline::{LineAgg, Logic, MultilineConfig, Parser};
-use crate::sources::utils::OrderedFinalizer;
-use crate::sources::Source;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -385,6 +386,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<TailConfig>()
+        crate::testing::test_generate_config::<TailConfig>()
     }
 }

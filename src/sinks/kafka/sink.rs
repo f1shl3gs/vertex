@@ -3,6 +3,9 @@ use std::time::Duration;
 use buffers::Acker;
 use event::encoding::{EncodingConfig, StandardEncodings};
 use event::Event;
+use framework::sink::util::builder::SinkBuilderExt;
+use framework::template::{Template, TemplateParseError};
+use framework::StreamSink;
 use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
 use rdkafka::consumer::{BaseConsumer, Consumer};
@@ -16,8 +19,6 @@ use super::config::{KafkaRole, KafkaSinkConfig, QUEUE_MIN_MESSAGES};
 use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
 use crate::common::kafka::KafkaStatisticsContext;
-use crate::sinks::{util::builder::SinkBuilderExt, StreamSink};
-use crate::template::{Template, TemplateParseError};
 
 #[derive(Debug, Snafu)]
 pub enum BuildError {

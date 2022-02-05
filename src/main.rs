@@ -15,17 +15,18 @@ extern crate chrono_tz;
 
 use std::collections::HashMap;
 
-use crate::commands::RootCommand;
+use framework::{
+    config,
+    signal::{self, SignalTo},
+    topology,
+};
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
-use vertex::{
-    config,
-    extensions::healthcheck,
-    signal::{self, SignalTo},
-    topology,
-};
+use vertex::extensions::healthcheck;
+
+use crate::commands::RootCommand;
 
 fn main() {
     let opts: RootCommand = argh::from_env();
@@ -78,7 +79,7 @@ fn main() {
     });
 
     runtime.block_on(async move {
-        vertex::trace::init(true, false, &levels);
+        framework::trace::init(true, false, &levels);
 
         info!(
             message = "start vertex",
@@ -119,7 +120,7 @@ fn main() {
 
         // Any internal_logs source will have grabbed a copy of the early buffer by this
         // point and set up a subscriber
-        vertex::trace::stop_buffering();
+        framework::trace::stop_buffering();
 
         let signal = loop {
             tokio::select! {

@@ -1,0 +1,285 @@
+use std::future::Future;
+use std::sync::{Arc, Mutex, MutexGuard};
+use std::time::{Duration, Instant};
+
+#[cfg(test)]
+use testify::stats::{TimeHistogram, TimeWeightedSum};
+use tokio::sync::OwnedSemaphorePermit;
+use tokio::time::error::Elapsed;
+
+use crate::http::HttpError;
+use crate::stats::{EwmaVar, Mean, MeanVariance};
+
+use super::events::{
+    AdaptiveConcurrencyAverageRtt, AdaptiveConcurrencyInflight, AdaptiveConcurrencyLimitChanged,
+    AdaptiveConcurrencyObservedRtt,
+};
+use super::semaphore::ShrinkableSemaphore;
+use super::AdaptiveConcurrencySettings;
+use super::MAX_CONCURRENCY;
+use crate::sink::util::retries::{RetryAction, RetryLogic};
+
+/// Shared class for `tokio::sync::Semaphore` that manages adjusting the
+/// semaphore size and other associated data.
+#[derive(Clone, Debug)]
+pub struct Controller<L> {
+    semaphore: Arc<ShrinkableSemaphore>,
+    concurrency: Option<usize>,
+    settings: AdaptiveConcurrencySettings,
+    logic: L,
+    pub inner: Arc<Mutex<Inner>>,
+
+    #[cfg(test)]
+    pub stats: Arc<Mutex<ControllerStatistics>>,
+}
+
+#[derive(Debug)]
+pub struct Inner {
+    pub(crate) current_limit: usize,
+    inflight: usize,
+    past_rtt: EwmaVar,
+    next_update: Instant,
+    current_rtt: Mean,
+    had_back_pressure: bool,
+    reached_limit: bool,
+}
+
+#[cfg(test)]
+#[derive(Debug, Default)]
+pub struct ControllerStatistics {
+    pub inflight: TimeHistogram,
+    pub concurrency_limit: TimeHistogram,
+    pub observed_rtt: TimeWeightedSum,
+    pub averaged_rtt: TimeWeightedSum,
+}
+
+impl<L> Controller<L> {
+    pub fn new(
+        concurrency: Option<usize>,
+        settings: AdaptiveConcurrencySettings,
+        logic: L,
+    ) -> Self {
+        // If a `concurrency` is specified, it becomes both the current limit and the maximum,
+        // effectively bypassing all the mechanisms. Otherwise, the current limit is set to 1
+        // and the maximum to MAX_CONCURRENCY.
+        let current_limit = concurrency.unwrap_or(1);
+
+        Self {
+            semaphore: Arc::new(ShrinkableSemaphore::new(current_limit)),
+            concurrency,
+            settings,
+            logic,
+            inner: Arc::new(Mutex::new(Inner {
+                current_limit,
+                inflight: 0,
+                past_rtt: EwmaVar::new(settings.ewma_alpha),
+                next_update: instant_now(),
+                current_rtt: Default::default(),
+                had_back_pressure: false,
+                reached_limit: false,
+            })),
+            #[cfg(test)]
+            stats: Arc::new(Mutex::new(Default::default())),
+        }
+    }
+
+    pub fn acquire(&self) -> impl Future<Output = OwnedSemaphorePermit> + Send + 'static {
+        Arc::clone(&self.semaphore).acquire()
+    }
+
+    pub fn start_request(&self) {
+        let mut inner = self.inner.lock().expect("Controller mutex is poisoned");
+
+        #[cfg(test)]
+        {
+            let mut stats = self.stats.lock().expect("Stats mutex is poisoned");
+            stats.inflight.add(inner.inflight, instant_now());
+        }
+
+        inner.inflight += 1;
+        if inner.inflight >= inner.current_limit {
+            inner.reached_limit = true;
+        }
+
+        emit!(&AdaptiveConcurrencyInflight {
+            inflight: inner.inflight as u64
+        });
+    }
+
+    /// Adjust the controller to a response, based on type of response given (backpresuree or not)
+    /// and if it should be used as a valid RTT measurement.
+    fn adjust_to_response_inner(&self, start: Instant, is_back_pressure: bool, use_rtt: bool) {
+        let now = instant_now();
+        let mut inner = self.inner.lock().expect("Controller mutex is poisoned");
+
+        let rtt = now.saturating_duration_since(start);
+        if use_rtt {
+            emit!(&AdaptiveConcurrencyObservedRtt { rtt });
+        }
+
+        let rtt = rtt.as_secs_f64();
+        if is_back_pressure {
+            inner.had_back_pressure = true;
+        }
+
+        #[cfg(test)]
+        let mut stats = self.stats.lock().expect("Stats mutex is poisoned");
+
+        #[cfg(test)]
+        {
+            if use_rtt {
+                stats.observed_rtt.add(rtt, now);
+            }
+
+            stats.inflight.add(inner.inflight, now);
+        }
+
+        inner.inflight -= 1;
+        emit!(&AdaptiveConcurrencyInflight {
+            inflight: inner.inflight as u64
+        });
+
+        if use_rtt {
+            inner.current_rtt.update(rtt);
+        }
+        let current_rtt = inner.current_rtt.average();
+
+        // When the RTT values are all exactly the same, as for the "constant link" test,
+        // the average calculation above produces results either the exact value or that value
+        // plus epsilon, depending on the number of samples. This ends up throttling aggressively
+        // due to the high side falling outside of the calculated deviance. Rounding these values
+        // forces the differences to zero.
+        #[cfg(test)]
+        let current_rtt = current_rtt.map(|c| (c * 1000000.0).round() / 1000000.0);
+
+        match inner.past_rtt.state() {
+            None => {
+                // No past measurements, set up initial values.
+                if let Some(current_rtt) = current_rtt {
+                    inner.past_rtt.update(current_rtt);
+                    inner.next_update = now + Duration::from_secs_f64(current_rtt);
+                }
+            }
+
+            Some(mut past_rtt) => {
+                if now < inner.next_update {
+                    return;
+                }
+
+                #[cfg(test)]
+                {
+                    if let Some(current_rtt) = current_rtt {
+                        stats.averaged_rtt.add(current_rtt, now);
+                    }
+
+                    stats.concurrency_limit.add(inner.current_limit, now);
+                    drop(stats); // Drop the stats lock a little earlier on this path
+                }
+
+                if let Some(current_rtt) = current_rtt {
+                    emit!(&AdaptiveConcurrencyAverageRtt {
+                        rtt: Duration::from_secs_f64(current_rtt)
+                    });
+                }
+
+                // Only manage the concurrency if `concurrency` was set to "adaptive"
+                if self.concurrency.is_none() {
+                    self.manage_limit(&mut inner, past_rtt, current_rtt);
+                }
+
+                // Reset values for next interval
+                if let Some(current_rtt) = current_rtt {
+                    past_rtt = inner.past_rtt.update(current_rtt);
+                }
+                inner.next_update = now + Duration::from_secs_f64(past_rtt.mean);
+                inner.current_rtt = Default::default();
+                inner.had_back_pressure = false;
+                inner.reached_limit = false;
+            }
+        }
+    }
+
+    fn manage_limit(
+        &self,
+        inner: &mut MutexGuard<Inner>,
+        past_rtt: MeanVariance,
+        current_rtt: Option<f64>,
+    ) {
+        let past_rtt_deviation = past_rtt.variance.sqrt();
+        let threshold = past_rtt_deviation * self.settings.rtt_deviation_scale;
+
+        // Normal quick responses trigger an increase in the concurrency limit. Note that we only
+        // check this if we had requests to go beyond the current limit ot prevent increasing the
+        // limit beyond what we have evidence for.
+        if inner.current_limit < MAX_CONCURRENCY
+            && inner.reached_limit
+            && !inner.had_back_pressure
+            && current_rtt.is_some()
+            && current_rtt.unwrap() <= past_rtt.mean
+        {
+            // Increase(additive) the current concurrency limit
+            self.semaphore.add_permits(1);
+            inner.current_limit += 1;
+        } else if inner.current_limit > 1
+            && (inner.had_back_pressure || current_rtt.unwrap_or(0.0) >= past_rtt.mean + threshold)
+        {
+            // Back pressure responses, either explicit or implicit due to increasing response times,
+            // trigger a decrease in the concurrency limit.
+
+            // Decrease(multiplicative) the current concurrency limit
+            let to_forget = inner.current_limit
+                - (inner.current_limit as f64 * self.settings.decrease_ratio) as usize;
+            self.semaphore.forget_permits(to_forget);
+            inner.current_limit -= to_forget;
+        }
+
+        emit!(&AdaptiveConcurrencyLimitChanged {
+            concurrency: inner.current_limit as u64,
+            reached_limit: inner.reached_limit,
+            had_back_pressure: inner.had_back_pressure,
+            current_rtt: current_rtt.map(Duration::from_secs_f64),
+            past_rtt: Duration::from_secs_f64(past_rtt.mean),
+            past_rtt_deviation: Duration::from_secs_f64(past_rtt_deviation),
+        });
+    }
+}
+
+impl<L> Controller<L>
+where
+    L: RetryLogic,
+{
+    pub fn adjust_to_response(&self, start: Instant, resp: &Result<L::Response, crate::Error>) {
+        // It would be better to avoid generating the string in Retry(_) just to throw it away
+        // here, but it's probably not worth the effort.
+        let response_action = resp.as_ref().map(|resp| self.logic.should_retry_resp(resp));
+        let is_back_pressure = match &response_action {
+            Ok(action) => matches!(action, RetryAction::Retry(_)),
+            Err(err) => {
+                if let Some(err) = err.downcast_ref::<L::Error>() {
+                    self.logic.is_retriable_error(err)
+                } else if err.downcast_ref::<Elapsed>().is_some() {
+                    true
+                } else if err.downcast_ref::<HttpError>().is_some() {
+                    // HTTP protocal-level errors are not backpressure
+                    false
+                } else {
+                    warn!(
+                        message = "Unhandled error response",
+                        %err,
+                        internal_log_rate_secs = 5
+                    );
+
+                    false
+                }
+            }
+        };
+
+        // Only adjust to the RTT when the request was successfully processed.
+        let use_rtt = matches!(response_action, Ok(RetryAction::Successful));
+        self.adjust_to_response_inner(start, is_back_pressure, use_rtt)
+    }
+}
+
+pub fn instant_now() -> std::time::Instant {
+    tokio::time::Instant::now().into()
+}

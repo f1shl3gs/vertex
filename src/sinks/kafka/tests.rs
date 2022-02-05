@@ -4,7 +4,7 @@ mod integration_tests {
 
     #[tokio::test]
     async fn healthcheck() {
-        crate::trace::test_init();
+        framework::trace::test_init();
         let topic = format!("test-{}", random_string(10));
     }
 }

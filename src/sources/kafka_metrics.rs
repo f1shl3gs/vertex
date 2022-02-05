@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::config::{GenerateConfig, SourceDescription};
+use framework::config::{GenerateConfig, SourceDescription};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct KafkaMetricsConfig {

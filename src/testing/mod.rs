@@ -1,10 +1,10 @@
 pub mod components;
-mod counter_receiver;
+mod config;
 mod send_lines;
 mod topology;
 mod wait;
 
-pub use counter_receiver::CountReceiver;
+pub use config::test_generate_config;
 pub use send_lines::{send_encodable, send_lines};
 pub use topology::start_topology;
 pub use wait::*;

@@ -1,4 +1,7 @@
 use event::encoding::EncodingConfig;
+use framework::sink::util::tcp::TcpSinkConfig;
+use framework::sink::util::Encoding;
+use framework::testing::CountReceiver;
 use rand::{thread_rng, Rng};
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -8,10 +11,8 @@ use testify::next_addr;
 use testify::random::{random_maps, random_string};
 use vertex::sinks::socket;
 use vertex::sinks::socket::SocketSinkConfig;
-use vertex::sinks::util::tcp::TcpSinkConfig;
-use vertex::sinks::util::Encoding;
 use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
-use vertex::testing::{send_lines, start_topology, wait_for_tcp, CountReceiver};
+use vertex::testing::{send_lines, start_topology, wait_for_tcp};
 
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Copy, Clone, Deserialize, PartialEq, Debug)]
@@ -167,7 +168,7 @@ async fn tcp_syslog() {
     let in_addr = next_addr();
     let out_addr = next_addr();
 
-    let mut config = vertex::config::Config::builder();
+    let mut config = framework::config::Config::builder();
     config.add_source(
         "in",
         SyslogConfig {

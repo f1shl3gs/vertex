@@ -1,8 +1,8 @@
-use crate::config::{DataType, Output, TransformConfig, TransformContext};
-use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
 use event::Event;
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::{FunctionTransform, Transform};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};

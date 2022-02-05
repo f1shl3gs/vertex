@@ -1,6 +1,6 @@
 use super::{Error, ErrorContext};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::Metric;
+use framework::config::{deserialize_regex, serialize_regex};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;

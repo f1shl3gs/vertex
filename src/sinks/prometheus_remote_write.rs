@@ -3,6 +3,17 @@ use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
 use event::{Event, Metric};
+use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
+use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
+use framework::http::{Auth, HttpClient};
+use framework::sink::util::http::HttpRetryLogic;
+use framework::sink::util::metrics::{MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer};
+use framework::sink::util::partition::{PartitionBuffer, PartitionInnerBuffer};
+use framework::sink::util::service::RequestConfig;
+use framework::sink::util::sink::PartitionBatchSink;
+use framework::template::Template;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
 use http::{StatusCode, Uri};
 use hyper::{body, Body};
@@ -11,21 +22,7 @@ use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use tower::{Service, ServiceBuilder};
 
-use crate::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
 use crate::common::events::TemplateRenderingFailed;
-use crate::config::{
-    DataType, GenerateConfig, HealthCheck, SinkConfig, SinkContext, SinkDescription,
-};
-use crate::http::{Auth, HttpClient};
-use crate::sinks;
-use crate::sinks::util::http::HttpRetryLogic;
-use crate::sinks::util::metrics::{MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer};
-use crate::sinks::util::partition::{PartitionBuffer, PartitionInnerBuffer};
-use crate::sinks::util::service::RequestConfig;
-use crate::sinks::util::sink::PartitionBatchSink;
-use crate::sinks::Sink;
-use crate::template::Template;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct PrometheusRemoteWriteDefaultBatchSettings;
@@ -102,8 +99,11 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SinkConfig for RemoteWriteConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        let endpoint = self.endpoint.parse::<Uri>().context(sinks::UriParse)?;
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let endpoint = self
+            .endpoint
+            .parse::<Uri>()
+            .context(crate::sinks::UriParse)?;
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
@@ -176,7 +176,7 @@ async fn healthcheck(endpoint: Uri, client: HttpClient) -> crate::Result<()> {
 
     match resp.status() {
         StatusCode::OK => Ok(()),
-        other => Err(sinks::HealthcheckError::UnexpectedStatus { status: other }.into()),
+        other => Err(HealthcheckError::UnexpectedStatus { status: other }.into()),
     }
 }
 
@@ -257,9 +257,9 @@ impl MetricNormalize for PrometheusMetricNormalize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::sinks::util::testing::build_test_server;
     use chrono::Utc;
     use event::{tags, Metric};
+    use framework::sink::util::testing::build_test_server;
     use futures_util::StreamExt;
     use http::HeaderMap;
     use prometheus::proto;
@@ -268,7 +268,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<RemoteWriteConfig>();
+        crate::testing::test_generate_config::<RemoteWriteConfig>();
     }
 
     macro_rules! labels {
@@ -413,10 +413,10 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-prometheus_remote_write"))]
 mod integration_tests {
-    use crate::config::{ProxyConfig, SinkConfig, SinkContext};
-    use crate::http::HttpClient;
     use crate::sinks::prometheus_remote_write::RemoteWriteConfig;
     use event::Metric;
+    use framework::config::{ProxyConfig, SinkConfig, SinkContext};
+    use framework::http::HttpClient;
     use hyper::Body;
     use serde::{Deserialize, Serialize};
     use std::time::Duration;

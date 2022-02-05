@@ -1,11 +1,10 @@
 use event::Event;
-use internal::InternalEvent;
-use serde::{Deserialize, Serialize};
-
-use crate::config::{
+use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use crate::transforms::{FunctionTransform, Transform};
+use framework::{FunctionTransform, Transform};
+use internal::InternalEvent;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct SampleConfig {
@@ -115,10 +114,9 @@ impl InternalEvent for SampleEventDiscarded {
 #[cfg(test)]
 mod tests {
     use super::SampleConfig;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<SampleConfig>()
+        crate::testing::test_generate_config::<SampleConfig>()
     }
 }

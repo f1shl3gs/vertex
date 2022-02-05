@@ -1,6 +1,7 @@
-use crate::config::{Config, ConfigDiff};
-use crate::topology;
 use std::collections::HashMap;
+
+use framework::config::{Config, ConfigDiff};
+use framework::topology;
 
 pub async fn start_topology(
     mut config: Config,

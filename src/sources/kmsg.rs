@@ -1,21 +1,17 @@
 /// Collect messages from /dev/kmsg
 ///
 /// https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
-use std::{
-    io::{self, Read},
-    time,
-};
+use std::io::{self, Read};
+use std::time;
 
 use chrono::{TimeZone, Utc};
 use event::{fields, LogRecord};
+use framework::{
+    config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription},
+    Source,
+};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncReadExt;
-
-use crate::config::Output;
-use crate::{
-    config::{DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription},
-    sources::Source,
-};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -206,7 +202,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<KmsgConfig>()
+        crate::testing::test_generate_config::<KmsgConfig>()
     }
 
     #[test]

@@ -5,24 +5,24 @@ use std::num::NonZeroUsize;
 use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::{Event, EventFinalizers, Finalizable, Value};
+use framework::config::SinkContext;
+use framework::http::HttpClient;
+use framework::partition::Partitioner;
+use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::util::{Compression, RequestBuilder};
+use framework::stream::BatcherSettings;
+use framework::template::Template;
+use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
 use shared::ByteSizeOf;
 use snafu::Snafu;
 
+use super::config::{Encoding, LokiConfig, OutOfOrderAction};
+use super::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfOrderEventRewrite};
+use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
+use super::service::{LokiRequest, LokiService};
 use crate::common::events::TemplateRenderingFailed;
-use crate::config::SinkContext;
-use crate::http::HttpClient;
-use crate::partition::Partitioner;
-use crate::sinks::loki::config::{Encoding, LokiConfig, OutOfOrderAction};
-use crate::sinks::loki::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfOrderEventRewrite};
-use crate::sinks::loki::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
-use crate::sinks::loki::service::{LokiRequest, LokiService};
-use crate::sinks::util::builder::SinkBuilderExt;
-use crate::sinks::util::{Compression, RequestBuilder};
-use crate::sinks::StreamSink;
-use crate::stream::BatcherSettings;
-use crate::template::Template;
 
 #[derive(Clone)]
 pub struct KeyPartitioner(Option<Template>);

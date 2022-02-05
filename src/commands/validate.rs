@@ -6,10 +6,10 @@ use std::path::PathBuf;
 use argh::FromArgs;
 use colored::*;
 use exitcode::ExitCode;
+use framework::config;
+use framework::config::{load_builder_from_paths, Config, ConfigDiff, ConfigPath};
+use framework::topology::{build_pieces, take_healthchecks, Pieces};
 use tracing::error;
-use vertex::config;
-use vertex::config::{load_builder_from_paths, Config, ConfigDiff, ConfigPath};
-use vertex::topology::{build_pieces, take_healthchecks, Pieces};
 
 #[derive(FromArgs, PartialEq, Debug)]
 #[argh(

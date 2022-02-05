@@ -1,7 +1,7 @@
-use crate::config::{default_true, Output, TransformContext};
-use crate::config::{DataType, TransformConfig};
-use crate::transforms::{FunctionTransform, Transform};
 use event::Event;
+use framework::config::{default_true, Output, TransformContext};
+use framework::config::{DataType, TransformConfig};
+use framework::{FunctionTransform, Transform};
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 

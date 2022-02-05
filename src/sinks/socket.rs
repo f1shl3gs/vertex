@@ -1,12 +1,11 @@
 use event::encoding::EncodingConfig;
+use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
+use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
 #[cfg(unix)]
-use crate::sinks::util::unix::UnixSinkConfig;
-use crate::{
-    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
-    sinks::util::{encode_log, tcp::TcpSinkConfig, udp::UdpSinkConfig, Encoding},
-};
+use framework::sink::util::unix::UnixSinkConfig;
+use framework::sink::util::{encode_log, tcp::TcpSinkConfig, udp::UdpSinkConfig, Encoding};
 
 #[derive(Deserialize, Serialize, Debug)]
 // TODO: add back when serde-rs/serde#1358 is addressed
@@ -92,7 +91,7 @@ impl SocketSinkConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "socket")]
 impl SinkConfig for SocketSinkConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(super::Sink, super::Healthcheck)> {
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let encoding = self.encoding.clone();
         let encode_event = move |event| encode_log(event, &encoding);
         match &self.mode {

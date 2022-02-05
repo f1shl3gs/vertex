@@ -2,12 +2,12 @@ mod util;
 
 use buffers::{BufferConfig, BufferType, WhenFull};
 use event::Event;
+use framework::config::{Config, SinkOuter};
 use futures_util::StreamExt;
 use log_schema::log_schema;
 use std::time::Duration;
 use tempfile::tempdir;
 use util::{sink, source, transform};
-use vertex::config::{Config, SinkOuter};
 use vertex::testing::start_topology;
 
 #[tokio::test]

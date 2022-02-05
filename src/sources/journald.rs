@@ -12,6 +12,10 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
 use event::{Event, Value};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::Source;
 use futures::{stream::BoxStream, StreamExt};
 use log_schema::log_schema;
 use nix::{
@@ -23,11 +27,6 @@ use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
 use tokio_util::codec::{Decoder, FramedRead};
-
-use crate::config::{DataType, Output, SourceConfig, SourceContext};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
 
 const DEFAULT_BATCH_SIZE: usize = 16;
 const CHECKPOINT_FILENAME: &str = "checkpoint.txt";

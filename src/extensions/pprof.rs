@@ -2,16 +2,15 @@ use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
+use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
+use framework::shutdown::ShutdownSignal;
+use framework::Extension;
 use futures::FutureExt;
 use hyper::{
     service::{make_service_fn, service_fn},
     Body, Request, Response, Server,
 };
 use serde::{Deserialize, Serialize};
-
-use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
-use crate::extensions::Extension;
-use crate::shutdown::ShutdownSignal;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

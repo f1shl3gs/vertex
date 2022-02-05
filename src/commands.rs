@@ -1,12 +1,13 @@
 mod validate;
 
-use argh::FromArgs;
 use std::path::PathBuf;
-use vertex::config::{
+
+use argh::FromArgs;
+use framework::config::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
     TransformDescription,
 };
-use vertex::{config, get_version};
+use framework::{config, get_version};
 
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]

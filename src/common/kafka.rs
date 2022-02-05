@@ -1,15 +1,14 @@
 use std::path::{Path, PathBuf};
 
-use crate::config::GenerateConfig;
+use framework::config::GenerateConfig;
+use framework::tls::TlsOptions;
+use framework::Error;
 use internal::{update_counter, InternalEvent};
 use metrics::{counter, gauge};
 use rdkafka::consumer::ConsumerContext;
 use rdkafka::{ClientConfig, ClientContext, Statistics};
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
-
-use crate::tls::TlsOptions;
-use crate::Error;
 
 #[derive(Debug, Snafu)]
 enum KafkaError {

@@ -1,4 +1,5 @@
-use crate::http::HttpClient;
+use framework::http::HttpClient;
+
 use crate::sinks::loki::config::LokiConfig;
 
 pub async fn health_check(config: LokiConfig, client: HttpClient) -> crate::Result<()> {

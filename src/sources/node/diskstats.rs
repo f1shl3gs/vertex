@@ -1,6 +1,6 @@
 use super::{Error, ErrorContext};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 /// Exposes disk I/O statistics
 ///
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
