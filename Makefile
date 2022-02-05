@@ -70,6 +70,10 @@ integration-test-prometheus_remote_write:
 	cargo test -p vertex --lib sinks::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
 	cargo test -p vertex --lib sources::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: integration-test-loki
+integration-test-loki:
+	cargo test -p vertex --lib sinks::loki::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: integration-tests
 integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-tests-prometheus_remote_write
 

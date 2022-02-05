@@ -1,8 +1,11 @@
+use bytes::BytesMut;
+use chrono::{Date, Utc};
 use std::collections::HashMap;
 use std::io::Write;
 
 use event::encoding::Encoder;
 use event::{EventFinalizers, Finalizable};
+use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
 use shared::ByteSizeOf;
 
@@ -117,9 +120,35 @@ pub struct LokiBatchEncoder;
 
 impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
     fn encode(&self, input: Vec<LokiRecord>, writer: &mut dyn Write) -> std::io::Result<usize> {
-        let batch = LokiBatch::from(input);
-        let body = serde_json::json!({ "stream": [batch] });
-        let body = serde_json::to_vec(&body)?;
-        writer.write(&body)
+        // See: https://github.com/grafana/loki/blob/f598484a947a1c57e3b7b5a90f17f36954150679/clients/pkg/promtail/client/batch.go#L61
+        let labels = format!(
+            "{{{}}}",
+            input[0]
+                .labels
+                .iter()
+                .map(|(k, v)| format!(r#"{}="{}""#, k, v))
+                .collect::<Vec<_>>()
+                .join(", ")
+        );
+
+        let entries = input
+            .iter()
+            .map(|record| {
+                let seconds = record.event.timestamp / 1_000_000_000;
+                let nanos = (record.event.timestamp % 1_000_000_000) as i32;
+
+                super::proto::EntryAdapter {
+                    timestamp: Some(prost_types::Timestamp { seconds, nanos }),
+                    line: record.event.event.clone(),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        let pr = super::proto::PushRequest {
+            streams: vec![super::proto::StreamAdapter { labels, entries }],
+        };
+
+        let buf = pr.encode_to_vec();
+        writer.write(&buf)
     }
 }
