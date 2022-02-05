@@ -1,27 +1,29 @@
-use crate::codecs;
-use crate::codecs::framing::bytes::BytesDecoder;
-use crate::codecs::framing::octet_counting::OctetCountingDecoder;
-use crate::codecs::{Decoder, SyslogDeserializer};
-use crate::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
-use crate::config::{Output, SourceDescription};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::utils::{build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource};
-use crate::sources::Source;
-use crate::tcp::TcpKeepaliveConfig;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
-use crate::udp;
+use std::net::SocketAddr;
+use std::path::PathBuf;
+use std::time::Duration;
+
 use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
+use framework::codecs::framing::bytes::BytesDecoder;
+use framework::codecs::framing::octet_counting::OctetCountingDecoder;
+use framework::codecs::{Decoder, SyslogDeserializer};
+use framework::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
+use framework::config::{Output, SourceDescription};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::source::util::{
+    build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource,
+};
+use framework::tcp::TcpKeepaliveConfig;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
+use framework::{codecs, udp};
 use futures_util::StreamExt;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
-use std::net::SocketAddr;
-use std::path::PathBuf;
-use std::time::Duration;
 use tokio::net::UdpSocket;
 use tokio_util::udp::UdpFramed;
 
@@ -252,7 +254,7 @@ pub fn udp(
     receive_buffer_bytes: Option<usize>,
     shutdown: ShutdownSignal,
     mut output: Pipeline,
-) -> super::Source {
+) -> framework::Source {
     Box::pin(async move {
         let socket = UdpSocket::bind(&addr)
             .await
@@ -362,14 +364,13 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::codecs::decoding::Deserializer;
-    use crate::config::test_generate_config;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
+    use framework::codecs::decoding::Deserializer;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<SyslogConfig>();
+        crate::testing::test_generate_config::<SyslogConfig>();
     }
 
     #[test]

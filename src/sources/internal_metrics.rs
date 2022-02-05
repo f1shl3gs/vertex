@@ -1,19 +1,17 @@
 use event::Event;
+use framework::config::{default_interval, GenerateConfig, Output, SourceDescription};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{
+    config::{deserialize_duration, serialize_duration, DataType, SourceConfig, SourceContext},
+    Source,
+};
 use futures::StreamExt;
 use futures_util::stream;
 use internal::metric::{get_global, init_global, InternalRecorder};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{default_interval, GenerateConfig, Output, SourceDescription};
-
-use crate::{
-    config::{deserialize_duration, serialize_duration, DataType, SourceConfig, SourceContext},
-    pipeline::Pipeline,
-    shutdown::ShutdownSignal,
-    sources::Source,
-};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

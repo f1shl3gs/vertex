@@ -1,15 +1,12 @@
 use event::Event;
+use framework::config::{
+    default_true, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
+    TransformDescription,
+};
+use framework::{FunctionTransform, Transform};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
-use crate::config::GenerateConfig;
-use crate::{
-    config::{
-        default_true, DataType, Output, TransformConfig, TransformContext, TransformDescription,
-    },
-    transforms::{FunctionTransform, Transform},
-};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields, default)]
@@ -199,7 +196,7 @@ mod test {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<JsonParserConfig>();
+        crate::testing::test_generate_config::<JsonParserConfig>();
     }
 
     #[test]

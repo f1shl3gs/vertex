@@ -2,21 +2,19 @@ use std::time::Duration;
 use std::{fmt::Debug, io::Read};
 
 use event::{Event, Metric};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{
+    config::{
+        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+        Output, SourceConfig, SourceContext, SourceDescription,
+    },
+    Source,
+};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::Output;
-use crate::{
-    config::{
-        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        SourceConfig, SourceContext, SourceDescription,
-    },
-    pipeline::Pipeline,
-    shutdown::ShutdownSignal,
-    sources::Source,
-};
 
 const USER_HZ: f64 = 100.0;
 
@@ -221,7 +219,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<SelfStatConfig>()
+        crate::testing::test_generate_config::<SelfStatConfig>()
     }
 
     #[tokio::test]

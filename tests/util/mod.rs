@@ -1,10 +1,7 @@
-mod mock;
-
-use crate::util::mock::MockSinkConfig;
 use event::Event;
+use framework::mock::{MockSinkConfig, MockSourceConfig, MockTransformConfig};
+use framework::pipeline::Pipeline;
 use futures::Stream;
-use mock::{MockSourceConfig, MockTransformConfig};
-use vertex::pipeline::Pipeline;
 
 pub fn source() -> (Pipeline, MockSourceConfig) {
     let (tx, rx) = Pipeline::new_with_buffer(1);

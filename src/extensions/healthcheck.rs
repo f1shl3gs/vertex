@@ -2,14 +2,13 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::sync::atomic::{AtomicBool, Ordering};
 
+use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
+use framework::Extension;
 use futures_util::FutureExt;
 use http::{Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
 use serde::{Deserialize, Serialize};
-
-use crate::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
-use crate::extensions::Extension;
 
 static READINESS: AtomicBool = AtomicBool::new(false);
 

@@ -4,8 +4,8 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use crate::config::{deserialize_bytes_regex, serialize_bytes_regex};
 use bytes::{Bytes, BytesMut};
+use framework::config::{deserialize_bytes_regex, serialize_bytes_regex};
 use futures::Stream;
 use futures::StreamExt;
 use pin_project::pin_project;

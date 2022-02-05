@@ -1,4 +1,4 @@
-use crate::template::TemplateRenderingError;
+use framework::template::TemplateRenderingError;
 use internal::InternalEvent;
 
 pub struct TemplateRenderingFailed<'a> {

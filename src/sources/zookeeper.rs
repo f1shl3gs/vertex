@@ -4,20 +4,18 @@ use std::collections::BTreeMap;
 use std::time::Duration;
 
 use event::{tags, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
+    SourceConfig, SourceContext, SourceDescription,
+};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{Error, Source};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
-};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

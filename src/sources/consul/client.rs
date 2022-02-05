@@ -7,8 +7,8 @@ use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
-use crate::config::{deserialize_duration, serialize_duration};
-use crate::http::HttpClient;
+use framework::config::{deserialize_duration, serialize_duration};
+use framework::http::HttpClient;
 
 #[derive(Debug, Snafu)]
 pub enum ConsulError {
@@ -19,7 +19,7 @@ pub enum ConsulError {
     #[snafu(display("Read response body failed, {}", source))]
     ReadBody { source: hyper::Error },
     #[snafu(display("Do http request failed, {}", source))]
-    HttpErr { source: crate::http::HttpError },
+    HttpErr { source: framework::http::HttpError },
     #[snafu(display("Decode response failed, {}", source))]
     DecodeError { source: serde_json::Error },
     #[snafu(display("Unexpected status {}", code))]

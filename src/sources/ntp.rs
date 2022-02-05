@@ -1,21 +1,18 @@
 use event::{Event, Metric};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{
+    config::{
+        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+        Output, SourceConfig, SourceContext,
+    },
+    register_source_config, Source,
+};
 use futures::{stream, StreamExt};
 use rsntp;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::Output;
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::{
-    config::{
-        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        SourceConfig, SourceContext,
-    },
-    register_source_config,
-};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -170,6 +167,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<NtpConfig>()
+        crate::testing::test_generate_config::<NtpConfig>()
     }
 }

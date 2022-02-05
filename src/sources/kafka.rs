@@ -5,6 +5,13 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
 use event::{LogRecord, Value};
+use framework::config::{
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
+    SourceContext, SourceDescription,
+};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{Error, Source};
 use futures::{FutureExt, StreamExt};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
@@ -13,14 +20,6 @@ use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
 use crate::common::kafka::{KafkaAuthConfig, KafkaEventReceived, KafkaStatisticsContext};
-use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
-    SourceContext, SourceDescription,
-};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::Error;
 
 fn default_auto_offset_reset() -> String {
     "largest".to_string()

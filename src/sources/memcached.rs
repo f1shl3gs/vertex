@@ -2,17 +2,16 @@ use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
+    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+};
+use framework::Source;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
-
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
-use crate::sources::Source;
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
@@ -903,7 +902,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<MemcachedConfig>()
+        crate::testing::test_generate_config::<MemcachedConfig>()
     }
 
     #[tokio::test]

@@ -7,7 +7,3 @@ pub mod healthcheck;
 mod jemalloc;
 #[cfg(feature = "extensions-pprof")]
 mod pprof;
-
-use futures::future::BoxFuture;
-
-pub type Extension = BoxFuture<'static, Result<(), ()>>;

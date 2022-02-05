@@ -17,5 +17,5 @@ pub(super) mod proto {
 use config::LokiConfig;
 
 inventory::submit! {
-    crate::config::SinkDescription::new::<LokiConfig>("loki")
+    framework::config::SinkDescription::new::<LokiConfig>("loki")
 }

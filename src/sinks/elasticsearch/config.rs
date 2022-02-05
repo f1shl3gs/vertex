@@ -1,4 +1,4 @@
-use crate::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
+use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]

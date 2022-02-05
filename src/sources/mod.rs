@@ -57,14 +57,10 @@ mod selfstat;
 pub mod syslog;
 #[cfg(feature = "sources-tail")]
 mod tail;
-mod utils;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 
-use futures::future::BoxFuture;
 use snafu::Snafu;
-
-pub type Source = BoxFuture<'static, Result<(), ()>>;
 
 #[derive(Debug, Snafu)]
 enum BuildError {

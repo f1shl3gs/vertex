@@ -73,6 +73,10 @@ integration-test-prometheus_remote_write:
 .PHONY: integration-tests
 integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-tests-prometheus_remote_write
 
+.PHONY: udeps
+udeps:
+	cargo +nightly udeps
+
 .PHONY: test
 test:
 	cargo test --workspace --no-fail-fast
