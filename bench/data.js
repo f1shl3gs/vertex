@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644095452631,
+  "lastUpdate": 1644095530778,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2572,6 +2572,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1253300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca0af3c9a3b8f6f84f366f735f395cd3b46f7802",
+          "message": "Merge pull request #168 from f1shl3gs/dependabot/cargo/tracing-0.1.30\n\nchore(deps): bump tracing from 0.1.29 to 0.1.30",
+          "timestamp": "2022-02-06T05:05:40+08:00",
+          "tree_id": "c9d66ae02f291658c09af5143feab6ed307a1ed5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca0af3c9a3b8f6f84f366f735f395cd3b46f7802"
+        },
+        "date": 1644095530048,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1372700,
             "unit": "ns/op"
           }
         ]
