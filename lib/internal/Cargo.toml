@@ -11,4 +11,4 @@ metrics-util = { version = "0.11.0", default-features = false, features = ["rece
 once_cell = { version = "1.9.0" }
 parking_lot = { version = "0.12.0" }
 quanta = { version = "0.9.3" }
-tracing = { version = "0.1.28", default-features = false }
+tracing = { version = "0.1.30", default-features = false }
