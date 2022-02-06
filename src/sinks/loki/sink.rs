@@ -66,14 +66,12 @@ impl Partitioner for RecordPartitionner {
 
 #[derive(Clone)]
 pub struct LokiRequestBuilder {
-    compression: Compression,
     encoder: LokiBatchEncoder,
 }
 
 impl LokiRequestBuilder {
-    fn new(compression: Compression) -> Self {
+    fn new() -> Self {
         Self {
-            compression,
             encoder: LokiBatchEncoder::default(),
         }
     }
@@ -102,7 +100,7 @@ impl RequestBuilder<(PartitionKey, Vec<LokiRecord>)> for LokiRequestBuilder {
     type Error = RequestBuildError;
 
     fn compression(&self) -> Compression {
-        self.compression
+        Compression::None
     }
 
     fn encoder(&self) -> &Self::Encoder {
@@ -294,7 +292,7 @@ impl LokiSink {
     pub fn new(config: LokiConfig, client: HttpClient, cx: SinkContext) -> crate::Result<Self> {
         Ok(Self {
             acker: cx.acker,
-            request_builder: LokiRequestBuilder::new(config.compression),
+            request_builder: LokiRequestBuilder::new(),
             encoder: EventEncoder {
                 key_partitioner: KeyPartitioner::new(config.tenant),
                 encoding: config.encoding,

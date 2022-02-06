@@ -50,8 +50,6 @@ impl Default for OutOfOrderAction {
 pub struct LokiConfig {
     pub endpoint: UriSerde,
     pub encoding: EncodingConfig<Encoding>,
-    #[serde(default)]
-    pub compression: Compression,
 
     pub tenant: Option<Template>,
     #[serde(default)]
