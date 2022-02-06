@@ -132,14 +132,14 @@ impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
         );
 
         let entries = input
-            .iter()
+            .into_iter()
             .map(|record| {
                 let seconds = record.event.timestamp / 1_000_000_000;
                 let nanos = (record.event.timestamp % 1_000_000_000) as i32;
 
                 super::proto::EntryAdapter {
                     timestamp: Some(prost_types::Timestamp { seconds, nanos }),
-                    line: record.event.event.clone(),
+                    line: record.event.event,
                 }
             })
             .collect::<Vec<_>>();
