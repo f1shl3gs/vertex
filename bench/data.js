@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644137733464,
+  "lastUpdate": 1644138482695,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14645,6 +14645,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 895,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e105497d10c0545b9ad985bbd3b789e0a198406a",
+          "message": "Merge pull request #173 from f1shl3gs/loki_sink_snappy_compression\n\nsink(Loki): encode with protobuf and compress with snappy",
+          "timestamp": "2022-02-06T16:48:19+08:00",
+          "tree_id": "6d6a385005ed3eb4f5f1f96bfe1fb780dea95851",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e105497d10c0545b9ad985bbd3b789e0a198406a"
+        },
+        "date": 1644138481380,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1010,
             "unit": "s"
           }
         ]
