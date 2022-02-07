@@ -111,6 +111,11 @@ mod tests {
     use event::{tags, Metric};
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<AddTagsConfig>();
+    }
+
+    #[test]
     fn add_tags_without_overwrite() {
         let metric = Metric::sum_with_tags(
             "foo",
