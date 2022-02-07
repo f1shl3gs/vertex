@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644215296962,
+  "lastUpdate": 1644229937191,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5884,6 +5884,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 63.15,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04bc9ca1578de6ae8dfa2b86c1da33b4a7f4797b",
+          "message": "Merge pull request #177 from f1shl3gs/metric_series\n\nMetric series",
+          "timestamp": "2022-02-07T18:27:43+08:00",
+          "tree_id": "d3eb9a5c4661d63be584b673d1a45e518b5b48d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/04bc9ca1578de6ae8dfa2b86c1da33b4a7f4797b"
+        },
+        "date": 1644229936442,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.647,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 55.465,
             "unit": "ns/op"
           }
         ]
