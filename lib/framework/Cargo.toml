@@ -41,7 +41,7 @@ event = { path = "../event" }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.21" }
 futures = { version = "0.3.19", default-features = false }
-futures-util = { version = "0.3.18", default-features = false }
+futures-util = { version = "0.3.21", default-features = false }
 glob = { version = "0.3.0" }
 headers = { version = "0.3.6" }
 humanize = { path = "../humanize" }
