@@ -686,12 +686,12 @@ mod integration_tests {
 
                 assert!(metrics
                     .iter()
-                    .any(|m| m.name == "consul_scrape_duration_seconds"));
+                    .any(|m| m.name() == "consul_scrape_duration_seconds"));
 
                 assert!(
                     metrics
                         .iter()
-                        .any(|m| m.name == name && m.tags == tags && m.value == value),
+                        .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
                     "Case \"{}\" want {} {:?} {:?}\n{:#?}",
                     test,
                     name,
