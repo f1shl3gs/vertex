@@ -79,7 +79,7 @@ impl TimeSeries {
     pub fn encode_metric(&mut self, metric: &Metric) {
         let name = metric.name();
         let timestamp = metric.timestamp().map(|ts| ts.timestamp_millis());
-        let tags = &metric.tags;
+        let tags = &metric.tags();
         self.emit_metadata(name, name, &metric.value);
 
         match &metric.value {

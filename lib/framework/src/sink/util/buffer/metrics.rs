@@ -1,7 +1,7 @@
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 
 use chrono::{DateTime, Utc};
-use event::{EventMetadata, Metric, MetricValue};
+use event::{EventMetadata, Metric, MetricSeries, MetricValue};
 
 use crate::batch::{
     Batch, BatchConfig, BatchError, BatchSize, Merged, PushResult, SinkBatchSettings,
@@ -163,12 +163,6 @@ impl<N> From<N> for MetricNormalizer<N> {
 
 type MetricEntry = (MetricValue, Option<DateTime<Utc>>, EventMetadata);
 
-#[derive(Clone, Debug, Eq, Hash, PartialEq, PartialOrd)]
-struct MetricSeries {
-    name: String,
-    tags: BTreeMap<String, String>,
-}
-
 /// This is a convenience wrapper for HashMap<MetricSeries, MetricEntry>
 /// that provides some extra functionality
 pub struct MetricSet(HashMap<MetricSeries, MetricEntry>);
@@ -181,11 +175,7 @@ impl MetricSet {
 
     fn insert(&mut self, metric: Metric) {
         let metadata = metric.metadata().clone();
-
-        let series = MetricSeries {
-            name: metric.name,
-            tags: metric.tags,
-        };
+        let series = metric.series;
 
         self.0
             .insert(series, (metric.value, metric.timestamp, metadata));

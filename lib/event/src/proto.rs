@@ -128,7 +128,7 @@ impl From<crate::Quantile> for Quantile {
 
 impl From<crate::Metric> for WithMetadata<Metric> {
     fn from(metric: crate::Metric) -> Self {
-        let (name, tags, value, timestamp, metadata) = metric.into_parts();
+        let (series, value, timestamp, metadata) = metric.into_parts();
         let timestamp = timestamp.map(|ts| prost_types::Timestamp {
             seconds: ts.timestamp(),
             nanos: ts.timestamp_subsec_nanos() as i32,
@@ -158,8 +158,8 @@ impl From<crate::Metric> for WithMetadata<Metric> {
         };
 
         let data = Metric {
-            name,
-            tags,
+            name: series.name,
+            tags: series.tags,
             description: "".to_string(),
             unit: "".to_string(),
             timestamp,

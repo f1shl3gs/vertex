@@ -180,7 +180,12 @@ fn scrape(
                                             let metric = event.as_mut_metric();
 
                                             if let Some(instance) = &instance {
-                                                match (honor_labels, metric.tag_value("instance")) {
+                                                match (
+                                                    honor_labels,
+                                                    metric
+                                                        .tag_value("instance")
+                                                        .map(|v| v.to_string()),
+                                                ) {
                                                     (false, Some(old_instance)) => {
                                                         metric.insert_tag(
                                                             "exported_instance",

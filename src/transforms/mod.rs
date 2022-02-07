@@ -20,8 +20,6 @@ mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;
 
-use event::Event;
-
 /// Transform a single `Event` through the `FunctionTransform`
 ///
 /// # Panics
@@ -31,8 +29,8 @@ use event::Event;
 #[cfg(test)]
 pub fn transform_one(
     ft: &mut dyn framework::FunctionTransform,
-    event: impl Into<Event>,
-) -> Option<Event> {
+    event: impl Into<event::Event>,
+) -> Option<event::Event> {
     let mut buf = Vec::with_capacity(1);
     ft.transform(&mut buf, event.into());
     assert!(buf.len() < 2);

@@ -340,9 +340,9 @@ impl RedisSource {
             let timestamp = chrono::Utc::now();
             let mut stream = futures::stream::iter(metrics).map(|mut m| {
                 m.timestamp = Some(timestamp);
-                m.tags.insert("instance".to_string(), self.url.to_owned());
+                m.insert_tag("instance", &self.url);
                 if let Some(ref namespace) = self.namespace {
-                    m.name = format!("{}_{}", namespace, m.name)
+                    m.set_name(format!("{}_{}", namespace, m.name()));
                 }
 
                 m.into()

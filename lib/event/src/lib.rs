@@ -20,6 +20,7 @@ pub use macros::EventDataEq;
 pub use metadata::EventMetadata;
 pub use metric::*;
 
+use std::collections::btree_map;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
@@ -136,6 +137,20 @@ impl Event {
         match self {
             Event::Log(l) => l,
             _ => panic!("Failed type coercion, {:?} is not a log", self),
+        }
+    }
+
+    pub fn tags(&self) -> &BTreeMap<String, String> {
+        match self {
+            Event::Log(log) => &log.tags,
+            Event::Metric(metric) => metric.tags(),
+        }
+    }
+
+    pub fn tag_entry(&mut self, key: impl Into<String>) -> btree_map::Entry<String, String> {
+        match self {
+            Self::Log(log) => log.tags.entry(key.into()),
+            Self::Metric(metric) => metric.series.tags.entry(key.into()),
         }
     }
 

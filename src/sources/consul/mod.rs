@@ -163,8 +163,7 @@ async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOption
     metrics.push(Metric::gauge("consul_scrape_duration_seconds", "", elapsed));
 
     metrics.iter_mut().for_each(|m| {
-        m.tags
-            .insert("instance".to_string(), client.endpoint.clone());
+        m.insert_tag("instance", &client.endpoint);
     });
 
     metrics
@@ -687,12 +686,12 @@ mod integration_tests {
 
                 assert!(metrics
                     .iter()
-                    .any(|m| m.name == "consul_scrape_duration_seconds"));
+                    .any(|m| m.name() == "consul_scrape_duration_seconds"));
 
                 assert!(
                     metrics
                         .iter()
-                        .any(|m| m.name == name && m.tags == tags && m.value == value),
+                        .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
                     "Case \"{}\" want {} {:?} {:?}\n{:#?}",
                     test,
                     name,
