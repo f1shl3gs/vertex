@@ -7,4 +7,4 @@ publish = false
 [dependencies]
 event = { path = "../event" }
 rand = "0.8.4"
-futures = { version = "0.3.19" }
+futures = { version = "0.3.21" }
