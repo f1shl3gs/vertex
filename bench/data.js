@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644214437585,
+  "lastUpdate": 1644214441100,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2659,6 +2659,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1160700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "19a332cfe30f17bdd0490587652c58e3d19967d2",
+          "message": "Merge pull request #174 from f1shl3gs/dependabot/cargo/futures-0.3.21\n\nchore(deps): bump futures from 0.3.19 to 0.3.21",
+          "timestamp": "2022-02-07T14:07:15+08:00",
+          "tree_id": "a8a76cc1a837da12a2fe091feaa170067d402a3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/19a332cfe30f17bdd0490587652c58e3d19967d2"
+        },
+        "date": 1644214440320,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1396900,
             "unit": "ns/op"
           }
         ]
