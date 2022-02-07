@@ -1,5 +1,5 @@
 mod contains;
-mod get;
+pub mod get;
 mod insert;
 mod keys;
 pub mod path_iter;

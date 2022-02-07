@@ -96,6 +96,17 @@ impl Transform {
     pub fn task(v: impl TaskTransform + 'static) -> Self {
         Transform::Task(Box::new(v))
     }
+
+    /// Create a new task transform over individual `Event`s.
+    ///
+    /// These tasks are coordinated, and map a stream of some `U` to
+    /// some other `T`.
+    ///
+    /// **Note:** You should prefer to implement `FunctionTransform`
+    /// over this where possible.
+    pub fn event_task(v: impl TaskTransform + 'static) -> Self {
+        Transform::Task(Box::new(v))
+    }
 }
 
 pub struct TransformOutputsBuf {

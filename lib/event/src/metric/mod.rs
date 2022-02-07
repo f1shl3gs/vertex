@@ -46,6 +46,23 @@ pub enum MetricValue {
     },
 }
 
+impl MetricValue {
+    pub fn add(&mut self, f: impl IntoF64) {
+        match self {
+            MetricValue::Sum(v) => *v += f.into_f64(),
+            _ => unreachable!(),
+        }
+    }
+
+    pub fn update(&mut self, f: impl IntoF64) {
+        match self {
+            MetricValue::Sum(v) => *v = f.into_f64(),
+            MetricValue::Gauge(v) => *v = f.into_f64(),
+            _ => unreachable!(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub struct MetricSeries {
     pub name: String,
