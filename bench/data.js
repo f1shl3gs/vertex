@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644229937191,
+  "lastUpdate": 1644230031515,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2688,6 +2688,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1396900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04bc9ca1578de6ae8dfa2b86c1da33b4a7f4797b",
+          "message": "Merge pull request #177 from f1shl3gs/metric_series\n\nMetric series",
+          "timestamp": "2022-02-07T18:27:43+08:00",
+          "tree_id": "d3eb9a5c4661d63be584b673d1a45e518b5b48d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/04bc9ca1578de6ae8dfa2b86c1da33b4a7f4797b"
+        },
+        "date": 1644230030759,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1167300,
             "unit": "ns/op"
           }
         ]
