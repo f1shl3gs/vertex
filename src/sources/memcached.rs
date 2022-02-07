@@ -727,7 +727,7 @@ async fn gather(addr: &str) -> Vec<Metric> {
     ]);
 
     for metric in metrics.iter_mut() {
-        metric.tags.insert("instance".to_string(), addr.to_string());
+        metric.insert_tag("instance", addr);
     }
 
     metrics

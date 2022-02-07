@@ -160,7 +160,7 @@ impl FunctionTransform for Cardinality {
     fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
         let metric = event.as_metric();
 
-        for (k, v) in &metric.tags {
+        for (k, v) in metric.tags() {
             if !self.try_accept_tag(k, v) {
                 // rejected
                 return;

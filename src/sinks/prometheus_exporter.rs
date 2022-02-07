@@ -124,17 +124,13 @@ impl DerefMut for ExpiringEntry {
 
 impl std::hash::Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        let metric = &self.metric;
-        metric.tags.hash(state);
-        metric.name.hash(state);
-
-        // TODO: maybe handle metric value too?
+        self.series.hash(state)
     }
 }
 
 impl PartialEq<Self> for ExpiringEntry {
     fn eq(&self, other: &Self) -> bool {
-        self.metric.tags == other.metric.tags && self.metric.name == other.metric.name
+        self.series.eq(&other.series)
     }
 }
 
@@ -178,7 +174,7 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                 |mut result, ent| {
                     match ent.metric.value {
                         MetricValue::Gauge(v) | MetricValue::Sum(v) => {
-                            write_metric!(result, ent.name, ent.tags, v);
+                            write_metric!(result, ent.name(), ent.tags(), v);
                         }
                         MetricValue::Summary {
                             ref quantiles,
@@ -186,13 +182,18 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                             count,
                         } => {
                             for q in quantiles {
-                                let mut tags = ent.tags.clone();
+                                let mut tags = ent.tags().clone();
                                 tags.insert("quantile".to_string(), q.quantile.to_string());
-                                write_metric!(result, ent.name, tags, q.value)
+                                write_metric!(result, ent.name(), tags, q.value)
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
+                            write_metric!(result, format!("{}_sum", ent.name()), ent.tags(), sum);
+                            write_metric!(
+                                result,
+                                format!("{}_count", ent.name()),
+                                ent.tags(),
+                                count
+                            );
                         }
                         MetricValue::Histogram {
                             ref buckets,
@@ -200,13 +201,18 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                             count,
                         } => {
                             for b in buckets {
-                                let mut tags = ent.tags.clone();
+                                let mut tags = ent.tags().clone();
                                 tags.insert("le".to_string(), b.upper.to_string());
-                                write_metric!(result, ent.name, tags, b.count);
+                                write_metric!(result, ent.name(), tags, b.count);
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
+                            write_metric!(result, format!("{}_sum", ent.name()), ent.tags(), sum);
+                            write_metric!(
+                                result,
+                                format!("{}_count", ent.name()),
+                                ent.tags(),
+                                count
+                            );
                         }
                     }
 

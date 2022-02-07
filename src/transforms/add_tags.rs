@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
+use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
 use event::Event;
@@ -35,40 +36,19 @@ impl AddTags {
 
 impl FunctionTransform for AddTags {
     fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        if self.tags.is_empty() {
-            return;
-        }
-
-        match event {
-            Event::Metric(ref mut metric) => {
-                merge_tags(&self.tags, &mut metric.tags, self.overwrite);
-
-                output.push(event);
-            }
-
-            Event::Log(ref mut log) => {
-                merge_tags(&self.tags, &mut log.tags, self.overwrite);
-                output.push(event);
+        for (key, value) in &self.tags {
+            match (event.tag_entry(key), self.overwrite) {
+                (Entry::Vacant(entry), _) => {
+                    entry.insert(value.clone());
+                }
+                (Entry::Occupied(mut entry), true) => {
+                    entry.insert(value.clone());
+                }
+                (Entry::Occupied(_entry), false) => {}
             }
         }
-    }
-}
 
-fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>, overwrite: bool) {
-    if overwrite {
-        for (k, v) in from {
-            to.insert(k.clone(), v.clone());
-        }
-
-        return;
-    }
-
-    for (k, v) in from {
-        if to.contains_key(k) {
-            continue;
-        }
-
-        to.insert(k.clone(), v.clone());
+        output.push(event)
     }
 }
 
@@ -76,6 +56,10 @@ fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>
 #[typetag::serde(name = "add_tags")]
 impl TransformConfig for AddTagsConfig {
     async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+        if self.tags.is_empty() {
+            return Err("At least one key/value pair required".into());
+        }
+
         Ok(Transform::function(AddTags::new(
             self.tags.clone(),
             self.overwrite,
@@ -127,7 +111,7 @@ mod tests {
     use event::{tags, Metric};
 
     #[test]
-    fn add_tags() {
+    fn add_tags_without_overwrite() {
         let metric = Metric::sum_with_tags(
             "foo",
             "",
