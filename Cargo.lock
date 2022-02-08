@@ -4398,6 +4398,7 @@ version = "0.1.0"
 dependencies = [
  "argh",
  "assert_cmd",
+ "async-stream",
  "async-trait",
  "atty",
  "bloom",

@@ -175,11 +175,13 @@ sources-elasticsearch = []
 transforms = [
     "transforms-add_tags",
     "transforms-add_fields",
+    "transforms-aggregate",
     "transforms-cardinality",
     "transforms-sample"
 ]
 transforms-add_tags = []
 transforms-add_fields = []
+transforms-aggregate = ["async-stream"]
 transforms-cardinality = ["bloom"]
 transforms-sample = ["seahash"]
 
@@ -346,6 +348,7 @@ pprof = { version = "0.6.2", default-features = false, optional = true, features
 
 # External libs
 argh = { version = "0.1.7" }
+async-stream = { version = "0.3.2", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
