@@ -6,6 +6,13 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use event::{Event, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
+    SourceConfig, SourceContext, SourceDescription,
+};
+use framework::http::{Auth, HttpClient};
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
 use futures::{StreamExt, TryFutureExt};
 use hyper::{StatusCode, Uri};
 use nom::{
@@ -15,17 +22,8 @@ use nom::{
     sequence::{preceded, terminated, tuple},
 };
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use snafu::{ResultExt, Snafu};
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
-};
-use crate::http::{Auth, HttpClient};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct NginxStubConfig {
@@ -41,14 +39,28 @@ struct NginxStubConfig {
 }
 
 impl GenerateConfig for NginxStubConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec!["http://127.0.0.1:1111".to_string()],
-            interval: default_interval(),
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+# Configures the authentication strategy.
+# auth:
+{}
+"#,
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2),
+        )
     }
 }
 
@@ -314,6 +326,11 @@ mod tests {
     use super::*;
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<NginxStubConfig>()
+    }
+
+    #[test]
     fn nginx_stub_status_try_from() {
         let input = "Active connections: 291 \n\
                     server accepts handled requests\n \
@@ -412,8 +429,8 @@ mod integration_tests {
     }
 
     use super::NginxStubStatus;
-    use crate::config::ProxyConfig;
-    use crate::http::{Auth, HttpClient};
+    use framework::config::ProxyConfig;
+    use framework::http::{Auth, HttpClient};
     use hyper::{Body, StatusCode, Uri};
     use nginx::Nginx;
     use std::convert::TryInto;

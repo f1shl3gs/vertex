@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.112" }
+libc = { version = "0.2.117" }
 
 [dependencies]

@@ -1,16 +1,14 @@
 use async_trait::async_trait;
 use buffers::Acker;
 use event::Event;
+use framework::{
+    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
+    Healthcheck, Sink, StreamSink,
+};
 use futures::prelude::stream::BoxStream;
 use futures::FutureExt;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
-
-use crate::{
-    config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
-    impl_generate_config_from_default,
-    sinks::{Sink, StreamSink},
-};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -18,17 +16,25 @@ pub struct BlackholeConfig {
     pub rate: Option<usize>,
 }
 
+impl GenerateConfig for BlackholeConfig {
+    fn generate_config() -> String {
+        r#"
+# Receive 10 event every second
+rate: 10
+"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<BlackholeConfig>("blackhole")
 }
 
-impl_generate_config_from_default!(BlackholeConfig);
-
 #[async_trait]
 #[typetag::serde(name = "blackhole")]
 impl SinkConfig for BlackholeConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
-        let sink = BlackholeSink::new(ctx.acker);
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = BlackholeSink::new(cx.acker);
         let health_check = futures::future::ok(()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), health_check))
@@ -48,7 +54,7 @@ struct BlackholeSink {
 }
 
 impl BlackholeSink {
-    pub fn new(acker: Acker) -> Self {
+    pub const fn new(acker: Acker) -> Self {
         Self { acker }
     }
 }

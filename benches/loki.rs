@@ -1,6 +1,6 @@
 use criterion::{criterion_group, criterion_main, BatchSize, Criterion, Throughput};
+use framework::template::Template;
 use vertex::sinks::loki::valid_label_name;
-use vertex::template::Template;
 
 const VALID: [&str; 4] = ["name", " name ", "bee_bop", "a09b"];
 const INVALID: [&str; 4] = ["0ab", "*", "", " "];

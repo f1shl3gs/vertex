@@ -18,6 +18,7 @@ debug = true
 members = [
     "lib/buffers",
     "lib/event",
+    "lib/framework",
     "lib/procfs",
     "lib/internal",
     "lib/prometheus",
@@ -38,35 +39,36 @@ benches = [
 ]
 
 default = [
+    # "tokio-console",
     # common
     "disk-buffer",
-    "listenfd",
     "sources",
     "transforms",
     "sinks",
     # extensions
     "extensions-pprof",
+    "extensions-healthcheck"
     # "extensions-jemalloc",
 ]
 
 target-x86_64-unknown-linux-musl = [
     "disk-buffer",
+    "extensions",
     "sinks",
     "sources",
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "vendor-all"
 ]
 
 target-x86_64-unknown-linux-gnu = [
     "disk-buffer",
+    "extensions",
     "sinks",
     "sources",
     "transforms",
     "rdkafka-cmake",
     "unix",
-    "vendor-all",
 ]
 
 # Integration tests
@@ -83,6 +85,7 @@ all-integration-tests = [
     "integration-tests-ntp",
     "integration-tests-prometheus_scrape",
     "integration-tests-prometheus_exporter",
+    "integration-tests-prometheus_remote_write"
 ]
 
 integration-tests-consul = []
@@ -97,12 +100,11 @@ integration-tests-memcached = []
 integration-tests-ntp = []
 integration-tests-prometheus_scrape = []
 integration-tests-prometheus_exporter = []
+integration-tests-prometheus_remote_write = []
 
 # Common
 disk-buffer = []
-tokio-console = [
-    "console-subscriber"
-]
+tokio-console = ["framework/tokio-console", "tokio/tracing"]
 
 # Allocator
 allocator-mimalloc = ["mimalloc"]
@@ -143,7 +145,7 @@ sources = [
 sources-bind = []
 sources-consul = []
 sources-generator = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "rtnetlink"]
+sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-kafka = ["rdkafka"]
 sources-kafka_metrics = ["rdkafka"]
@@ -153,20 +155,20 @@ sources-journald = []
 sources-internal_metrics = []
 sources-internal_logs = []
 sources-redis = ["redis"]
-sources-pulsar = ["pulsar"]
+sources-pulsar = []
 sources-prometheus_scrape = []
-sources-prometheus_remote_write = []
+sources-prometheus_remote_write = ["snap"]
 sources-nginx_stub = []
 sources-zookeeper = []
 sources-haproxy = []
 sources-memcached = []
 sources-fluentd = []
-sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "syslog_loose", "listenfd", "tls-utils"]
+sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
 sources-tail = []
 sources-libvirt = ["virt"]
 sources-mysqld = ["sqlx"]
 sources-nvidia_smi = ["serde-xml-rs"]
-sources-mongodb = ["mongodb/tokio-runtime"]
+sources-mongodb = []
 sources-elasticsearch = []
 
 # transforms
@@ -189,6 +191,7 @@ sinks = [
     "sinks-loki",
     "sinks-kafka",
     "sinks-prometheus_exporter",
+    "sinks-prometheus_remote_write",
     "sinks-pulsar",
     "sinks-stdout",
     "sinks-socket",
@@ -196,10 +199,11 @@ sinks = [
 ]
 
 sinks-prometheus_exporter = []
+sinks-prometheus_remote_write = ["snap"]
 sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka"]
-sinks-pulsar = ["pulsar"]
+sinks-pulsar = []
 sinks-elasticsearch = []
 sinks-loki = []
 sinks-vertex = []
@@ -207,8 +211,13 @@ sinks-clickhouse = []
 sinks-socket = []
 
 # extensions
+extensions = [
+    "extensions-healthcheck"
+]
+
 extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+extensions-healthcheck = []
 
 # Codecs
 codecs = ["smallvec", "memchr"]
@@ -231,11 +240,6 @@ rdkafka-cmake = ["rdkafka", "rdkafka/cmake_build"]
 
 # Enables features that work only on systems providing `cfg(unix)`
 unix = []
-
-# These are **very** useful on Cross compilations!
-vendor-all = ["vendor-openssl"]
-vendor-sasl = ["rdkafka/gssapi-vendored"]
-vendor-openssl = ["openssl/vendored"]
 
 [[bench]]
 name = "loki"
@@ -263,14 +267,15 @@ prost-build = { version = "0.9" }
 assert_cmd = { version = "2.0.2" }
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
-pprof = { version = "0.6.2", default-features = false, features = ["flamegraph", "criterion"] }
-pretty_assertions = { version = "1.0.0" }
+framework = { path = "lib/framework", features = ["test-util"]}
+indoc = { version = "1.0.3", default-features = false }
+pretty_assertions = { version = "1.1.0" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.4" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.15.0", features = ["test-util"] }
+tokio = { version = "1.16.1", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -278,6 +283,7 @@ tower-test = { version = "0.4.0" }
 # workspaces
 buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
+framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
 internal = { path = "lib/internal" }
 log_schema = { path = "lib/log_schema" }
@@ -285,7 +291,6 @@ prometheus = { path = "lib/prometheus" }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
 tail = { path = "lib/tail" }
-tracing-limit = { path = "lib/tracing-limit" }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
@@ -295,50 +300,38 @@ jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profi
 jemalloc-ctl = { version = "0.3.3", optional = true }
 
 # Futrures & Tokio
-tokio = { version = "1.15.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.16.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
-futures = { version = "0.3.19" }
-futures-util = { version = "0.3.18" }
+futures = { version = "0.3.21", default-features = false }
+futures-util = { version = "0.3.18", default-features = false }
 async-trait = { version = "0.1.52" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
-async-stream = { version = "0.3.2" }
-console-subscriber = { git = "https://github.com/tokio-rs/console", rev = "f2c30d52c9f22de69bac38009a9183135808806c", optional = true }
 
 # Metrics
-metrics = { version = "0.17.1", default-features = false, features = ["std"] }
-metrics-tracing-context = { version = "0.9.0", default-features = false }
+metrics = { version = "0.18.0", default-features = false }
 
 # Tracing
-tracing = { version = "0.1.28", default-features = false }
-tracing-core = { version = "0.1.21", default-features = false }
-tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
-tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
-tracing-subscriber = { version = "0.3.5", default-features = false, features = ["env-filter", "json", "ansi"] }
+tracing = { version = "0.1.30", default-features = false }
 
 # HTTP
 hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
-hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
-listenfd = { version = "0.3.5", default-features = false, optional = true }
-cidr = { version = "0.2.1" }
-no-proxy = { version = "0.3.1" }
-http = { version = "0.2.6" }
-headers = { version = "0.3.5" }
+http = { version = "0.2.6", default-features = false }
+headers = { version = "0.3.6" }
 
 # Tower
-tower = { version = "0.4.10", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
-serde = { version = "1.0.133", features = ["derive", "std", "rc"] }
+serde = { version = "1.0.136", features = ["derive", "std", "rc"] }
 serde_yaml = { version = "0.8.23" }
-serde_json = { version = "1.0.74", default-features = false }
+serde_json = { version = "1.0.78", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
 # Netlink
 netlink-sys = { version = "0.8.1", features = ["tokio_socket"], optional = true }
-rtnetlink = { version = "0.9.0", features = ["tokio_socket"], optional = true }
 netlink-packet-sock-diag = { version = "0.3.0", optional = true }
 
 # Protobuf
@@ -346,13 +339,7 @@ prost = { version = "0.9.0", default-features = false, features = ["std"] }
 prost-types = { version = "0.9.0", default-features = false }
 
 # TLS
-tokio-openssl = { version = "0.6.3", default-features = false }
-openssl = { version = "0.10.36", default-features = false }
-hyper-openssl = { version = "0.9.1", default-features = false }
 openssl-probe = { version = "0.1.5", default-features = false }
-
-# Networking
-socket2 = { version = "0.4.2", default-features = false }
 
 # Profile
 pprof = { version = "0.6.2", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
@@ -362,36 +349,30 @@ argh = { version = "0.1.7" }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
+colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.4" }
 encoding_rs = { version = "0.8.30", features = ["serde"]}
 exitcode = { version = "1.1.2" }
-flate2 = { version = "1.0.21" }
 glob = { version = "0.3.0" }
-hostname = { version = "0.3.1" }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
-indoc = { version = "1.0.3", default-features = false }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.112", optional = true }
-md5 = { version = "0.7" }
+libc = { version = "0.2.117", optional = true }
 memchr = { version = "2.4.1", optional = true, default-features = false}
-mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
+# mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
 nom = { version = "7.1.0", default-features = false }
-once_cell = { version = "1.9", default-features = false }
-pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
+# pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 percent-encoding = { version = "2.1.0", default-features = false }
-rand_distr = { version = "0.4.2", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 regex = { version = "1.5.4" }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
-smallvec = { version = "1.7.0", optional = true, features = ["union"] }
-snafu = { version = "0.6.10" }
-syslog_loose = { version = "0.16.0", optional = true, default-features = false }
+smallvec = { version = "1.8.0", optional = true, features = ["union"] }
+snafu = { version = "0.6.10", default-features = false }
+snap = { version = "1.0.5", default-features = false, optional = true }
+strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-twox-hash = { version = "1.6.2", default-features = false }
 typetag = { version = "0.1.8" }
 url = { version = "2.2.2", features = ["serde"] }
-uuid = { version = "0.8", default-features = false, features = ["v4"] }

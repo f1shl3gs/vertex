@@ -1,8 +1,11 @@
 use std::task::{Context, Poll};
 
-use crate::config::UriSerde;
 use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
+use framework::config::UriSerde;
+use framework::http::{Auth, HttpClient};
+use framework::sink::util::Compression;
+use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
 use internal::EventsSent;
@@ -10,16 +13,12 @@ use snafu::Snafu;
 use tower::Service;
 use tracing::Instrument;
 
-use crate::http::{Auth, HttpClient};
-use crate::sinks::util::Compression;
-use crate::stream::DriverResponse;
-
 #[derive(Debug, Snafu)]
 pub enum LokiError {
     #[snafu(display("Server responded with an error: {}", code))]
     ServerError { code: StatusCode },
     #[snafu(display("Failed to make HTTP(S) request: {}", source))]
-    HttpError { source: crate::http::HttpError },
+    HttpError { source: framework::http::HttpError },
 }
 
 pub struct LokiRequest {
@@ -90,18 +89,19 @@ impl Service<LokiRequest> for LokiService {
     }
 
     fn call(&mut self, request: LokiRequest) -> Self::Future {
-        let mut builder =
-            http::Request::post(&self.endpoint.uri).header("Content-Type", "application/json");
+        let payload = snap::raw::Encoder::new()
+            .compress_vec(&request.payload)
+            .expect("Out of memory");
 
-        if let Some(ce) = self.compression.content_encoding() {
-            builder = builder.header(http::header::CONTENT_ENCODING, ce);
-        }
+        let mut builder = http::Request::post(&self.endpoint.uri)
+            .header("Content-Type", "application/x-protobuf")
+            .header(http::header::CONTENT_ENCODING, "snappy");
 
         if let Some(tenant) = request.tenant {
             builder = builder.header("X-Scope-OrgID", tenant)
         }
 
-        let body = hyper::Body::from(request.payload);
+        let body = hyper::Body::from(payload);
         let mut req = builder.body(body).unwrap();
 
         if let Some(auth) = &self.endpoint.auth {

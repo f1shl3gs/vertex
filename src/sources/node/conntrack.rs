@@ -21,7 +21,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     path.push("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path).await?;
 
-    let stats = get_conntrack_statistics(&proc_path)
+    let stats = get_conntrack_statistics(proc_path)
         .await
         .context("get conntrack statistics failed")?;
 

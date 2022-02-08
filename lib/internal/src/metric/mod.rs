@@ -1,4 +1,3 @@
-mod handle;
 mod recorder;
 
 // re-export
@@ -29,16 +28,14 @@ pub fn init_global() -> Result<(), Error> {
     let recorder = InternalRecorder::new();
 
     GLOBAL_RECORDER
-        .set(recorder.clone())
+        .set(recorder)
         .map_err(|_| Error::from(ErrorKind::AlreadyExists))?;
 
-    // This where we combine metrics-rs and our registry. We box it to avoid
-    // having to fiddle with statistics ourselves
-    metrics::set_boxed_recorder(Box::new(recorder)).map_err(|_| Error::from(ErrorKind::NotFound))
+    metrics::set_recorder(get_global().unwrap()).map_err(|_| Error::from(ErrorKind::NotFound))
 }
 
 pub fn get_global() -> Result<&'static InternalRecorder, Error> {
     GLOBAL_RECORDER
         .get()
-        .ok_or(Error::from(ErrorKind::NotFound))
+        .ok_or_else(|| Error::from(ErrorKind::NotFound))
 }

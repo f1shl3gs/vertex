@@ -8,22 +8,20 @@ mod slave_status;
 #[cfg(all(test, feature = "integration-tests-mysql"))]
 mod integration_tests;
 
-use event::{Event, Metric};
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use snafu::{ResultExt, Snafu};
-use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
-use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
 use std::time::{Duration, Instant};
 
-use crate::config::{
+use event::{Event, Metric};
+use framework::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
     ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
     SourceDescription,
 };
-use crate::sources::Source;
-use crate::tls::TlsConfig;
+use framework::{tls::TlsConfig, Source};
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use snafu::{ResultExt, Snafu};
+use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
+use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
 
 const VERSION_QUERY: &str = "SELECT @@version";
 
@@ -41,7 +39,7 @@ pub enum Error {
     #[snafu(display("query slave status failed"))]
     QuerySlaveStatusFailed,
     #[snafu(display("task join failed, err: {}", source))]
-    TaskJoinError { source: tokio::task::JoinError },
+    TaskJoinFailed { source: tokio::task::JoinError },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -58,14 +56,26 @@ struct InfoSchemaConfig {
     query_response_time: bool,
 }
 
+const fn default_global_status() -> bool {
+    true
+}
+
+const fn default_global_variables() -> bool {
+    true
+}
+
+const fn default_slave_status() -> bool {
+    true
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct MysqldConfig {
     // Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
-    #[serde(default = "default_true")]
+    #[serde(default = "default_global_status")]
     global_status: bool,
     // Since 5.1, Collect from SHOW GLOBAL VARIABLES (Enabled by default)
-    #[serde(default = "default_true")]
+    #[serde(default = "default_global_variables")]
     global_variables: bool,
     // Since 5.1, Collect from SHOW SLAVE STATUS (Enabled by default)
     #[serde(default = "default_true")]
@@ -103,11 +113,11 @@ fn default_host() -> String {
     "localhost".to_string()
 }
 
-fn default_port() -> u16 {
+const fn default_port() -> u16 {
     3306
 }
 
-fn default_info_schema() -> InfoSchemaConfig {
+const fn default_info_schema() -> InfoSchemaConfig {
     InfoSchemaConfig {
         innodb_cmp: true,
         innodb_cmpmem: true,
@@ -138,26 +148,43 @@ impl MysqldConfig {
 }
 
 impl GenerateConfig for MysqldConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            global_status: default_true(),
-            global_variables: default_true(),
-            slave_status: default_true(),
-            auto_increment_columns: default_false(),
-            binlog_size: default_false(),
-            info_schema: InfoSchemaConfig {
-                innodb_cmp: default_true(),
-                innodb_cmpmem: default_true(),
-                query_response_time: default_true(),
-            },
-            host: default_host(),
-            port: default_port(),
-            username: Some("foo".to_string()),
-            password: Some("some_password".to_string()),
-            ssl: None,
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# IP address to Mysql server.
+host: {}
+
+#
+port: {}
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Username used to connect to MySQL instance
+# username: user
+
+# Password used to connect to MySQL instance
+# password: some_password
+
+# TLS options to connect to MySQL server.
+# tls:
+{}
+
+##### Scrape Configuration #####
+
+# Since 5.1, Collect from "SHOW GLOBAL STATUS"
+global_status: {}
+
+# Since 5.1, Collect from "SHOW GLOBAL VARIABLES"
+global_variables: {}
+"#,
+            default_host(),
+            default_port(),
+            TlsConfig::generate_commented_with_indent(2),
+            default_global_status(),
+            default_global_variables(),
+        )
     }
 }
 
@@ -169,9 +196,7 @@ inventory::submit! {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let options = self.connect_options();
         let mut output = ctx.output;
         let instance = format!("{}:{}", self.host, self.port);
@@ -280,7 +305,7 @@ pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Er
     // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
     let results = futures::future::try_join_all(tasks)
         .await
-        .context(TaskJoinError)?;
+        .context(TaskJoinFailed)?;
 
     // NOTE:
     // `results.into_iter().collect()` would be awesome, BUT
@@ -337,4 +362,14 @@ pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     };
 
     Ok(version)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<MysqldConfig>()
+    }
 }

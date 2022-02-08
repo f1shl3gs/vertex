@@ -1,6 +1,6 @@
 use super::{read_to_string, Error, ErrorContext};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use tokio::fs;
 

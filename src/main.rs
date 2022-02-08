@@ -13,17 +13,20 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
-use crate::commands::RootCommand;
 use std::collections::HashMap;
+
+use framework::{
+    config,
+    signal::{self, SignalTo},
+    topology,
+};
 use tokio::time::Duration;
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
-use vertex::{
-    config::{self, ConfigPath, FormatHint},
-    signal::{self, SignalTo},
-    topology,
-};
+use vertex::extensions::healthcheck;
+
+use crate::commands::RootCommand;
 
 fn main() {
     let opts: RootCommand = argh::from_env();
@@ -38,8 +41,8 @@ fn main() {
         return;
     }
 
-    let threads = opts.threads.unwrap_or(num_cpus::get());
-
+    let mut config_paths = opts.config_paths_with_formats();
+    let threads = opts.threads.unwrap_or_else(num_cpus::get);
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(threads)
         .thread_name("vertex-worker")
@@ -48,16 +51,40 @@ fn main() {
         .build()
         .unwrap();
 
+    let levels = std::env::var("VERTEX_LOG").unwrap_or_else(|_| match opts.log_level.as_str() {
+        "off" => "off".to_owned(),
+        #[cfg(feature = "tokio-console")]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("tail={}", level),
+            "tower_limit=trace".to_owned(),
+            "runtime=trace".to_owned(),
+            "tokio=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+        #[cfg(not(feature = "tokio-console"))]
+        level => [
+            format!("vertex={}", level),
+            format!("codec={}", level),
+            format!("vrl={}", level),
+            format!("file_source={}", level),
+            "tower_limit=trace".to_owned(),
+            format!("rdkafka={}", level),
+            format!("buffers={}", level),
+        ]
+        .join(","),
+    });
+
     runtime.block_on(async move {
-        #[cfg(test)]
-            vertex::trace::init(true, false, "debug");
-        #[cfg(not(test))]
-            vertex::trace::init(true, false, "info");
+        framework::trace::init(true, false, &levels);
 
         info!(
             message = "start vertex",
             threads = threads,
-            config = ?opts.config
+            configs = ?opts.configs
         );
 
         openssl_probe::init_ssl_cert_env_vars();
@@ -65,7 +92,7 @@ fn main() {
         let (mut signal_handler, mut signal_rx) = signal::SignalHandler::new();
         signal_handler.forever(signal::os_signals());
 
-        let config = config::load_from_paths_with_provider(&config_paths_with_formats(&opts.config), &mut signal_handler)
+        let config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler)
             .await
             .map_err(handle_config_errors)
             .unwrap();
@@ -81,6 +108,10 @@ fn main() {
             .ok_or(exitcode::CONFIG)
             .unwrap();
         let result = topology::start_validate(config, diff, pieces).await;
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(true);
+
         let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
         // run
@@ -89,7 +120,7 @@ fn main() {
 
         // Any internal_logs source will have grabbed a copy of the early buffer by this
         // point and set up a subscriber
-        vertex::trace::stop_buffering();
+        framework::trace::stop_buffering();
 
         let signal = loop {
             tokio::select! {
@@ -123,7 +154,7 @@ fn main() {
 
                             SignalTo::ReloadFromDisk => {
                                 // Reload paths
-                                let config_paths = config_paths_with_formats(&opts.config);
+                                config_paths = config::process_paths(&config_paths).unwrap_or(config_paths);
                                 let new_config = config::load_from_paths_with_provider(&config_paths, &mut signal_handler).await
                                     .map_err(handle_config_errors)
                                     .ok();
@@ -158,6 +189,9 @@ fn main() {
                     else => unreachable!("Signal streams never end"),
                 }
         };
+
+        #[cfg(feature = "extensions-healthcheck")]
+        healthcheck::set_readiness(false);
 
         match signal {
             SignalTo::Shutdown => {
@@ -194,12 +228,4 @@ pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
     }
 
     exitcode::CONFIG
-}
-
-// TODO: implement it
-fn config_paths_with_formats(path: &str) -> Vec<config::ConfigPath> {
-    vec![ConfigPath::File(
-        path.into(),
-        FormatHint::from(config::Format::YAML),
-    )]
 }

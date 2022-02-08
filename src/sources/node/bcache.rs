@@ -20,7 +20,7 @@ struct Stats {
     // The name of the bcache used to source these statistics
     name: String,
     bcache: BcacheStats,
-    bdevs: Vec<BDevStats>,
+    bdevs: Vec<BdevStats>,
     caches: Vec<CacheStats>,
 }
 
@@ -38,7 +38,7 @@ struct BcacheStats {
 }
 
 /// BDevStats contains statistics for one backing device
-struct BDevStats {
+struct BdevStats {
     name: String,
     dirty_data: u64,
     five_min: PeriodStats,

@@ -2,18 +2,16 @@ use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
 use event::{tags, Event, Metric};
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use snafu::{ResultExt, Snafu};
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use tokio::net::TcpStream;
-
-use crate::config::{
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::sources::Source;
+use framework::Source;
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use snafu::{ResultExt, Snafu};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
@@ -30,12 +28,18 @@ struct MemcachedConfig {
 }
 
 impl GenerateConfig for MemcachedConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec!["127.0.0.1:1111".to_string(), "127.0.0.1:2222".to_string()],
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoint to Consul server.
+endpoints:
+- 127.0.0.1:1111
+- 127.0.0.1:2222
+
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 
@@ -47,9 +51,7 @@ inventory::submit! {
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let mut output = ctx.output;
 
         let endpoints = self.endpoints.clone();
@@ -708,8 +710,8 @@ async fn gather(addr: &str) -> Vec<Metric> {
         futures::future::join(fetch_stats_metrics(addr), fetch_settings_metric(addr)).await;
 
     let up = stats.is_ok() && settings.is_ok();
-    let mut metrics = stats.unwrap_or(vec![]);
-    metrics.extend(settings.unwrap_or(vec![]));
+    let mut metrics = stats.unwrap_or_default();
+    metrics.extend(settings.unwrap_or_default());
 
     metrics.extend_from_slice(&[
         Metric::gauge(
@@ -725,7 +727,7 @@ async fn gather(addr: &str) -> Vec<Metric> {
     ]);
 
     for metric in metrics.iter_mut() {
-        metric.tags.insert("instance".to_string(), addr.to_string());
+        metric.insert_tag("instance", addr);
     }
 
     metrics
@@ -897,6 +899,11 @@ async fn query(addr: &str, cmd: &str) -> Result<String, std::io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<MemcachedConfig>()
+    }
 
     #[tokio::test]
     async fn test_parse_stats() {

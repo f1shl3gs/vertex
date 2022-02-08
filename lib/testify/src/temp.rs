@@ -5,3 +5,8 @@ pub fn temp_file() -> PathBuf {
     let file_name = super::random::random_string(16);
     path.join(file_name)
 }
+
+#[inline]
+pub fn temp_dir() -> PathBuf {
+    std::env::temp_dir()
+}

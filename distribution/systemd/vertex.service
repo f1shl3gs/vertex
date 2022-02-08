@@ -1,0 +1,21 @@
+[Unit]
+Description=Vertex daemon
+After=syslog.target network.target remote-fs.target nss-lookup.target
+
+[Service]
+# User and group
+User=vertex
+Group=vertex
+
+Type=simple
+EnvironmentFile=-/etc/default/vertex
+ExecStart=/usr/sbin/vertex
+Restart=on-failure
+
+# Resource limitation
+#
+# LimitNOFILE=4096
+# LimitNPROC=128
+
+[Install]
+WantedBy=multi-user.target

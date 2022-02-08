@@ -1,0 +1,97 @@
+[package]
+name = "framework"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+default = ["tls-utils", "listenfd", "sources-utils-tcp-keepalive", "openssl/vendored"]
+
+tls-utils = []
+sources-utils-tcp-socket = []
+sources-utils-tcp-keepalive = ["sources-utils-tcp-socket"]
+test-util = []
+tokio-console = ["console-subscriber", "tokio/tracing"]
+
+[dev-dependencies]
+env-test-util = { version = "1.0.1" }
+indoc = { version = "1.0.3", default-features = false }
+pretty_assertions = { version = "1.1.0" }
+proptest = { version = "1.0" }
+rand = { version = "0.8.4" }
+rand_distr = { version = "0.4.3", default-features = false }
+tempfile = { version = "3.2.0" }
+testify = { path = "../testify" }
+tokio = { version = "1.16.1", features = ["test-util"] }
+tokio-test = { version = "0.4.2" }
+tower-test = { version = "0.4.0" }
+
+[dependencies]
+async-stream = { version = "0.3.2" }
+async-trait = { version = "0.1.52" }
+buffers = { path = "../buffers" }
+bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
+chrono = { version = "0.4.19", features = ["serde"] }
+chrono-tz = { version = "0.6.1", features = ["serde"] }
+console-subscriber = { version = "0.1.2", optional = true }
+dyn-clone = { version = "1.0.4" }
+encoding_rs = { version = "0.8.30", features = ["serde"]}
+event = { path = "../event" }
+# TODO: framework should not exit if any error happened
+exitcode = { version = "1.1.2" }
+flate2 = { version = "1.0.21" }
+futures = { version = "0.3.21", default-features = false }
+futures-util = { version = "0.3.18", default-features = false }
+glob = { version = "0.3.0" }
+headers = { version = "0.3.6" }
+humanize = { path = "../humanize" }
+hostname = { version = "0.3.1" }
+http = { version = "0.2.6", default-features = false }
+hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper-openssl = { version = "0.9.1", default-features = false }
+hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
+indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
+internal = { path = "../internal" }
+inventory = { version = "0.1.11" }
+lazy_static = { version = "1.4.0" }
+listenfd = { version = "0.5.0", default-features = false, optional = true }
+log_schema = { path = "../log_schema" }
+memchr = { version = "2.4.1", default-features = false}
+metrics = { version = "0.18.0", default-features = false }
+metrics-tracing-context = { version = "0.10.0", default-features = false }
+no-proxy = { version = "0.3.1" }
+once_cell = { version = "1.9", default-features = false }
+openssl = { version = "0.10.36", default-features = false }
+percent-encoding = { version = "2.1.0", default-features = false }
+pin-project = { version = "1.0.10" }
+regex = { version = "1.5.4" }
+smallvec = { version = "1.8.0", features = ["union"] }
+serde = { version = "1.0.136", default-features = false, features = ["derive", "std"] }
+serde_yaml = { version = "0.8.23" }
+serde_json = { version = "1.0.78", default-features = false }
+# remove shared after "shared" merged into this crate
+shared = { path = "../shared" }
+snafu = { version = "0.6.10", default-features = false }
+snap = { version = "1.0.5", default-features = false }
+socket2 = { version = "0.4.4", default-features = false }
+stream-cancel = { version = "0.8.1" }
+sysinfo = { path = "../sysinfo" }
+syslog_loose = { version = "0.16.0", default-features = false }
+tokio = { version = "1.16.1", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
+tokio-openssl = { version = "0.6.3", default-features = false }
+tokio-stream = { version = "0.1.8", features = ["time", "net"] }
+tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
+tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tracing = { version = "0.1.30", default-features = false }
+tracing-core = { version = "0.1.22", default-features = false }
+tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
+tracing-limit = { path = "../tracing-limit" }
+tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
+tracing-subscriber = { version = "0.3.8", default-features = false, features = ["env-filter", "json", "ansi"] }
+twox-hash = { version = "1.6.2", default-features = false }
+typetag = { version = "0.1.8" }
+url = { version = "2.2.2", features = ["serde"] }
+uuid = { version = "0.8", default-features = false, features = ["v4"] }
+
+[target.'cfg(unix)'.dependencies]
+atty = "0.2.14"

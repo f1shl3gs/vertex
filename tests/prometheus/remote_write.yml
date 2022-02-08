@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 10s
+
+rule_files: []
+
+remote_write:
+  - url: http://host.docker.internal:20012/write
+
+scrape_configs: []

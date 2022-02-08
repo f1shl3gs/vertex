@@ -4,21 +4,18 @@ use std::collections::BTreeMap;
 use std::time::Duration;
 
 use event::{tags, Metric};
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
-use tokio::net::TcpStream;
-use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::Error;
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{Error, Source};
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
+use tokio::net::TcpStream;
+use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -34,12 +31,17 @@ struct ZookeeperConfig {
 }
 
 impl GenerateConfig for ZookeeperConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoint: "127.0.0.1:9092".to_string(),
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoints to connect to.
+#
+endpoint: 127.0.0.1:2181
+
+# The interval between scrapes.
+#
+# interval: 15s
+"#
+        .into()
     }
 }
 
@@ -70,7 +72,7 @@ impl ZookeeperSource {
         let endpoint = self.endpoint.as_str();
         while let Some(_ts) = ticker.next().await {
             let metrics = match fetch_stats(endpoint).await {
-                Ok((version, state, stats)) => {
+                Ok((version, state, peer_state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
                     metrics.extend_from_slice(&[
                         Metric::gauge_with_tags(
@@ -97,6 +99,15 @@ impl ZookeeperSource {
                             tags!(
                                 "state" => state,
                                 "instance" => endpoint
+                            ),
+                        ),
+                        Metric::gauge_with_tags(
+                            "zk_peer_state",
+                            "",
+                            1,
+                            tags!(
+                                "state" => peer_state,
+                                "instance" => endpoint,
                             ),
                         ),
                     ]);
@@ -174,20 +185,12 @@ impl SourceConfig for ZookeeperConfig {
 
 fn parse_version(input: &str) -> String {
     let input = input.strip_prefix("zk_version").unwrap();
-    let version = input.trim_start().split(',').nth(0).unwrap_or("");
+    let version = input.trim_start().split(',').next().unwrap_or("");
 
     version.to_string()
 }
 
-fn parse_server_state(line: &str) -> String {
-    todo!()
-}
-
-fn parse_peer_state(line: &str) -> String {
-    todo!()
-}
-
-async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64>), Error> {
+async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
     let socket = TcpStream::connect(addr).await?;
     let (reader, mut writer) = tokio::io::split(socket);
 
@@ -199,6 +202,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64
 
     let mut version = String::new();
     let mut server_state = String::new();
+    let mut peer_state = String::new();
     let mut stats = BTreeMap::new();
     while let Some(line) = lines.next_line().await? {
         let (key, value) = match line.split_once('\t') {
@@ -220,6 +224,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64
         }
 
         if key == "zk_peer_state" {
+            peer_state = value.to_string();
             continue;
         }
 
@@ -230,7 +235,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, BTreeMap<String, f64
         }
     }
 
-    Ok((version, server_state, stats))
+    Ok((version, server_state, peer_state, stats))
 }
 
 #[cfg(test)]
@@ -347,7 +352,7 @@ mod integration_tests {
         let host_port = service.get_host_port(2181).unwrap();
         let addr = format!("127.0.0.1:{}", host_port);
 
-        let (version, state, stats) = fetch_stats(addr.as_str()).await.unwrap();
+        let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
         assert_eq!(version, "3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b");
         assert_eq!(state, "standalone");
         assert_eq!(*stats.get("zk_uptime").unwrap() > 0.0, true);

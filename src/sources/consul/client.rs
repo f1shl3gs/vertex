@@ -7,8 +7,8 @@ use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
-use crate::config::{deserialize_duration, serialize_duration};
-use crate::http::HttpClient;
+use framework::config::{deserialize_duration, serialize_duration};
+use framework::http::HttpClient;
 
 #[derive(Debug, Snafu)]
 pub enum ConsulError {
@@ -19,7 +19,7 @@ pub enum ConsulError {
     #[snafu(display("Read response body failed, {}", source))]
     ReadBody { source: hyper::Error },
     #[snafu(display("Do http request failed, {}", source))]
-    HttpErr { source: crate::http::HttpError },
+    HttpErr { source: framework::http::HttpError },
     #[snafu(display("Decode response failed, {}", source))]
     DecodeError { source: serde_json::Error },
     #[snafu(display("Unexpected status {}", code))]
@@ -186,10 +186,10 @@ impl QueryOptions {
         let mut builder = http::request::Builder::new();
         let mut params = Vec::with_capacity(16);
 
-        if self.namespace != "" {
+        if !self.namespace.is_empty() {
             params.push(("ns", self.namespace.to_owned()));
         }
-        if self.datacenter != "" {
+        if !self.datacenter.is_empty() {
             params.push(("dc", self.datacenter.to_owned()));
         }
         if self.allow_stale {
@@ -206,13 +206,13 @@ impl QueryOptions {
             let ms = self.wait_time.as_millis().to_string() + "ms";
             params.push(("wait", ms));
         }
-        if self.token != "" {
+        if !self.token.is_empty() {
             builder = builder.header("X-Consul-Token", self.token.to_owned());
         }
-        if self.near != "" {
+        if !self.near.is_empty() {
             params.push(("near", self.near.to_owned()));
         }
-        if self.filter != "" {
+        if !self.filter.is_empty() {
             params.push(("filter", self.filter.to_owned()));
         }
         if !self.node_meta.is_empty() {
@@ -245,7 +245,7 @@ impl QueryOptions {
                 ))
             }
 
-            if cc.len() > 0 {
+            if !cc.is_empty() {
                 let value = cc.join(",");
                 builder = builder.header("Cache-Control", value);
             }
@@ -263,7 +263,7 @@ pub struct Client {
 }
 
 impl Client {
-    pub fn new(endpoint: String, client: HttpClient) -> Self {
+    pub const fn new(endpoint: String, client: HttpClient) -> Self {
         Self { endpoint, client }
     }
 

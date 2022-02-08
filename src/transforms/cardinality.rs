@@ -1,8 +1,8 @@
-use crate::config::{DataType, Output, TransformConfig, TransformContext};
-use crate::transforms::{FunctionTransform, Transform};
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
 use event::Event;
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
+use framework::{FunctionTransform, Transform};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};
@@ -76,7 +76,7 @@ impl TagValueSet {
     }
 
     #[inline]
-    fn len(&self) -> usize {
+    const fn len(&self) -> usize {
         self.elements
     }
 
@@ -160,7 +160,7 @@ impl FunctionTransform for Cardinality {
     fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
         let metric = event.as_metric();
 
-        for (k, v) in &metric.tags {
+        for (k, v) in metric.tags() {
             if !self.try_accept_tag(k, v) {
                 // rejected
                 return;
@@ -179,14 +179,14 @@ mod tests {
     fn test_tag_value_set() {
         let mut set = TagValueSet::new(10);
         assert_eq!(set.len(), 0);
-        assert_eq!(set.contains("foo"), false);
+        assert!(!set.contains("foo"));
 
-        assert_eq!(set.insert("foo"), true);
-        assert_eq!(set.contains("foo"), true);
+        assert!(set.insert("foo"));
+        assert!(set.contains("foo"));
         assert_eq!(set.len(), 1);
 
-        assert_eq!(set.insert("bar"), true);
-        assert_eq!(set.contains("bar"), true);
+        assert!(set.insert("bar"));
+        assert!(set.contains("bar"));
         assert_eq!(set.len(), 2);
     }
 
@@ -206,7 +206,4 @@ mod tests {
             assert!(!set.insert(&val))
         }
     }
-
-    #[test]
-    fn test_tag_key_limit() {}
 }

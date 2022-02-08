@@ -1,27 +1,25 @@
 mod client;
 
-use event::{tags, Event, Metric};
-use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 use std::time::Instant;
-use tokio_stream::wrappers::IntervalStream;
 
-use crate::config::{
+use event::{tags, Event, Metric};
+use framework::config::{
     default_interval, default_true, deserialize_duration, serialize_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::http::HttpClient;
+use framework::http::HttpClient;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
+use futures_util::StreamExt;
+use serde::{Deserialize, Serialize};
+use tokio_stream::wrappers::IntervalStream;
+
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
-    #[serde(default)]
-    tls: Option<TlsConfig>,
-
     endpoints: Vec<String>,
 
     #[serde(
@@ -31,6 +29,9 @@ struct ConsulSourceConfig {
     )]
     interval: std::time::Duration,
 
+    #[serde(default)]
+    tls: Option<TlsConfig>,
+
     #[serde(default = "default_true")]
     health_summary: bool,
 
@@ -39,15 +40,26 @@ struct ConsulSourceConfig {
 }
 
 impl GenerateConfig for ConsulSourceConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            tls: None,
-            endpoints: vec!["http://127.0.0.1:8500".to_string()],
-            interval: default_interval(),
-            health_summary: default_true(),
-            query_options: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+
+
+"#,
+            TlsConfig::generate_commented_with_indent(2)
+        )
     }
 }
 
@@ -151,8 +163,7 @@ async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOption
     metrics.push(Metric::gauge("consul_scrape_duration_seconds", "", elapsed));
 
     metrics.iter_mut().for_each(|m| {
-        m.tags
-            .insert("instance".to_string(), client.endpoint.clone());
+        m.insert_tag("instance", &client.endpoint);
     });
 
     metrics
@@ -169,12 +180,12 @@ async fn collect_peers_metric(client: &Client) -> Result<Vec<Metric>, ConsulErro
 }
 
 async fn collect_leader_metric(client: &Client) -> Result<Vec<Metric>, ConsulError> {
-    let leader = client.leader().await? != "";
+    let leader = client.leader().await?;
 
     Ok(vec![Metric::gauge(
         "consul_raft_leader",
         "Does Raft cluster have a leader (according to this node)",
-        leader,
+        !leader.is_empty(),
     )])
 }
 
@@ -296,7 +307,7 @@ async fn collect_health_state_metric(
     let status_list = ["passing", "warning", "critical", "maintenance"];
 
     for hc in &health_state {
-        if hc.service_id == "" {
+        if hc.service_id.is_empty() {
             for status in status_list {
                 metrics.push(Metric::gauge_with_tags(
                     "consul_health_node_status",
@@ -346,10 +357,10 @@ async fn collect_health_state_metric(
 #[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
     use super::*;
-    use crate::config::ProxyConfig;
-    use crate::http::HttpClient;
-    use crate::tls::MaybeTlsSettings;
     use event::MetricValue;
+    use framework::config::ProxyConfig;
+    use framework::http::HttpClient;
+    use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
     use hyper::Body;
     use testcontainers::images::generic::{GenericImage, WaitFor};
@@ -675,12 +686,12 @@ mod integration_tests {
 
                 assert!(metrics
                     .iter()
-                    .any(|m| m.name == "consul_scrape_duration_seconds"));
+                    .any(|m| m.name() == "consul_scrape_duration_seconds"));
 
                 assert!(
                     metrics
                         .iter()
-                        .any(|m| m.name == name && m.tags == tags && m.value == value),
+                        .any(|m| m.name() == name && m.tags() == &tags && m.value == value),
                     "Case \"{}\" want {} {:?} {:?}\n{:#?}",
                     test,
                     name,

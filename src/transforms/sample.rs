@@ -1,11 +1,10 @@
 use event::Event;
-use internal::InternalEvent;
-use serde::{Deserialize, Serialize};
-
-use crate::config::{
+use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use crate::transforms::{FunctionTransform, Transform};
+use framework::{FunctionTransform, Transform};
+use internal::InternalEvent;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct SampleConfig {
@@ -14,12 +13,25 @@ struct SampleConfig {
 }
 
 impl GenerateConfig for SampleConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            rate: 0,
-            key_field: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The rate at which events will be forwarded, expressed as 1/N. For
+# example, "10" means 1 out of every 10 events will be forwarded and
+# rest will be dropped
+#
+rate: 10
+
+# The name of the log field whose value will be hased to determine
+# if the event should be passed.
+#
+# Consistently samples the same events. Actual rate of sampling may
+# differ from the configured one if values in the field are not
+# uniformly distributed. If left unspecified, or if the event doesn't
+# have "key_field", events will be count rated.
+#
+# key_field: foo.bar
+        "#
+        .into()
     }
 }
 
@@ -55,7 +67,7 @@ struct Sample {
 }
 
 impl Sample {
-    pub fn new(rate: u64) -> Self {
+    pub const fn new(rate: u64) -> Self {
         Self {
             rate,
             count: 0,
@@ -102,10 +114,9 @@ impl InternalEvent for SampleEventDiscarded {
 #[cfg(test)]
 mod tests {
     use super::SampleConfig;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<SampleConfig>()
+        crate::testing::test_generate_config::<SampleConfig>()
     }
 }

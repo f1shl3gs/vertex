@@ -1,22 +1,18 @@
 use event::{Event, Metric};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{
+    config::{
+        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
+        Output, SourceConfig, SourceContext,
+    },
+    register_source_config, Source,
+};
 use futures::{stream, StreamExt};
 use rsntp;
 use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::Output;
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::{
-    config::{
-        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        SourceConfig, SourceContext,
-    },
-    register_source_config,
-};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -38,23 +34,31 @@ pub struct NtpConfig {
     pub pools: Vec<String>,
 }
 
-fn default_timeout() -> Duration {
+const fn default_timeout() -> Duration {
     Duration::from_secs(10)
 }
 
 impl GenerateConfig for NtpConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            timeout: default_timeout(),
-            interval: default_interval(),
-            pools: vec![
-                "0.pool.ntp.org".to_string(),
-                "1.pool.ntp.org".to_string(),
-                "2.pool.ntp.org".to_string(),
-                "3.pool.ntp.org".to_string(),
-            ],
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# NTP servers to use.
+pools:
+- 0.pool.ntp.org
+- 1.pool.ntp.org
+- 2.pool.ntp.org
+- 3.pool.ntp.org
+
+# The query timeout
+# timeout: {}s
+
+# The interval between scrapes.
+#
+# interval: {}s
+"#,
+            default_timeout().as_secs(),
+            default_interval().as_secs()
+        )
     }
 }
 
@@ -154,5 +158,15 @@ impl Ntp {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<NtpConfig>()
     }
 }

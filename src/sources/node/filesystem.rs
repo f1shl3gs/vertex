@@ -1,6 +1,6 @@
 use super::{Error, ErrorContext};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use std::{ffi::CString, path::Path};
 use tokio::io::AsyncBufReadExt;
@@ -246,6 +246,7 @@ struct Stat {
 
 struct Usage(libc::statvfs);
 
+#[allow(clippy::missing_const_for_fn)]
 impl Usage {
     #[inline]
     pub fn size(&self) -> u64 {

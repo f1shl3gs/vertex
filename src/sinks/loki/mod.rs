@@ -7,6 +7,8 @@ mod sink;
 
 pub use config::valid_label_name;
 
+#[cfg(all(test, feature = "integration-tests-loki"))]
+mod integration_tests;
 #[cfg(test)]
 mod tests;
 
@@ -17,5 +19,5 @@ pub(super) mod proto {
 use config::LokiConfig;
 
 inventory::submit! {
-    crate::config::SinkDescription::new::<LokiConfig>("loki")
+    framework::config::SinkDescription::new::<LokiConfig>("loki")
 }

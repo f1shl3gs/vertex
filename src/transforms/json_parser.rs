@@ -1,15 +1,12 @@
 use event::Event;
+use framework::config::{
+    default_true, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
+    TransformDescription,
+};
+use framework::{FunctionTransform, Transform};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-
-use crate::config::GenerateConfig;
-use crate::{
-    config::{
-        default_true, DataType, Output, TransformConfig, TransformContext, TransformDescription,
-    },
-    transforms::{FunctionTransform, Transform},
-};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields, default)]
@@ -39,8 +36,26 @@ inventory::submit! {
 }
 
 impl GenerateConfig for JsonParserConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(JsonParserConfig::default()).unwrap()
+    fn generate_config() -> String {
+        r#"
+# Which field to parse, by default log_schema's message key is used.
+#
+# field: message
+
+# Should Vertex drop the invalid event
+#
+drop_invalid: true
+
+# Which field to store the parsed result. If this is not set, the resultd
+# will set as log's fields, which means other filed will dropped.
+#
+# target_field: null
+
+# Overwrite the target field.
+#
+# overwrite_target: false
+"#
+        .into()
     }
 }
 
@@ -181,7 +196,7 @@ mod test {
 
     #[test]
     fn generate_config() {
-        crate::config::test_generate_config::<JsonParserConfig>();
+        crate::testing::test_generate_config::<JsonParserConfig>();
     }
 
     #[test]

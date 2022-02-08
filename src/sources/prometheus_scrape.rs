@@ -1,21 +1,19 @@
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Event, Metric, Quantile};
-use futures::{FutureExt, StreamExt, TryFutureExt};
-use prometheus::{GroupKind, MetricGroup};
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use snafu::ResultExt;
-use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
+use framework::config::{
     default_false, default_interval, deserialize_duration, serialize_duration, DataType,
     GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::http::{Auth, HttpClient};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
-use crate::tls::{TlsOptions, TlsSettings};
+use framework::http::{Auth, HttpClient};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
+use futures::{FutureExt, StreamExt, TryFutureExt};
+use prometheus::{GroupKind, MetricGroup};
+use serde::{Deserialize, Serialize};
+use snafu::ResultExt;
+use tokio_stream::wrappers::IntervalStream;
 
 // pulled up, and split over multiple lines, because the long lines trip up rustfmt such that it
 // gave up trying to format, but reported no error
@@ -36,23 +34,45 @@ struct PrometheusScrapeConfig {
     interval: std::time::Duration,
     #[serde(default = "default_false")]
     honor_labels: bool,
-    tls: Option<TlsOptions>,
+    tls: Option<TlsConfig>,
     auth: Option<Auth>,
 }
 
 impl GenerateConfig for PrometheusScrapeConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            endpoints: vec![
-                "http://127.0.0.1:1111/metrics".to_string(),
-                "http://127.0.0.1:2222/metrics".to_string(),
-            ],
-            interval: default_interval(),
-            honor_labels: false,
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# Endpoints to scrape metrics from.
+#
+endpoints:
+- http://localhost:9090/metrics
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Controls how tag conflicts are handled if the scraped source has tags
+# that Vertex would add. If true Vertex will not add the new tag if the
+# scraped metric has the tag already. If false, Vertex will rename the
+# conflicting tag by adding "exported_" to it. This matches Prometheus's
+# "honor_labels" configuration.
+#
+# honor_labels: false
+
+# Configures the TLS options for outgoing connections.
+#
+# tls:
+{}
+
+# Configures the authentication strategy.
+#
+# auth:
+{}
+
+"#,
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2)
+        )
     }
 }
 
@@ -72,7 +92,7 @@ impl SourceConfig for PrometheusScrapeConfig {
                     .context(crate::sources::UriParseError)
             })
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
-        let tls = TlsSettings::from_options(&self.tls)?;
+        let tls = MaybeTlsSettings::from_config(&self.tls, true)?;
         Ok(scrape(
             urls,
             tls,
@@ -97,7 +117,7 @@ impl SourceConfig for PrometheusScrapeConfig {
 
 fn scrape(
     urls: Vec<http::Uri>,
-    tls: TlsSettings,
+    tls: MaybeTlsSettings,
     auth: Option<Auth>,
     proxy: ProxyConfig,
     instance_tag: Option<String>,
@@ -160,7 +180,12 @@ fn scrape(
                                             let metric = event.as_mut_metric();
 
                                             if let Some(instance) = &instance {
-                                                match (honor_labels, metric.tag_value("instance")) {
+                                                match (
+                                                    honor_labels,
+                                                    metric
+                                                        .tag_value("instance")
+                                                        .map(|v| v.to_string()),
+                                                ) {
                                                     (false, Some(old_instance)) => {
                                                         metric.insert_tag(
                                                             "exported_instance",
@@ -273,7 +298,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                             .quantiles
                             .iter()
                             .map(|q| Quantile {
-                                upper: q.quantile,
+                                quantile: q.quantile,
                                 value: q.value,
                             })
                             .collect::<Vec<_>>(),
@@ -321,12 +346,11 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use crate::config::test_generate_config;
     use crate::sources::prometheus_scrape::PrometheusScrapeConfig;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<PrometheusScrapeConfig>();
+        crate::testing::test_generate_config::<PrometheusScrapeConfig>();
     }
 
     #[tokio::test]

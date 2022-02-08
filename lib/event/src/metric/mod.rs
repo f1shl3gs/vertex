@@ -20,12 +20,12 @@ pub enum Kind {
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub struct Bucket {
     pub upper: f64,
-    pub count: u32,
+    pub count: u64,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Quantile {
-    pub upper: f64,
+    pub quantile: f64,
     pub value: f64,
 }
 
@@ -44,6 +44,28 @@ pub enum MetricValue {
         sum: f64,
         quantiles: Vec<Quantile>,
     },
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
+pub struct MetricSeries {
+    pub name: String,
+    pub tags: BTreeMap<String, String>,
+}
+
+impl ByteSizeOf for MetricSeries {
+    fn allocated_bytes(&self) -> usize {
+        self.name.allocated_bytes() + self.tags.allocated_bytes()
+    }
+}
+
+impl MetricSeries {
+    pub fn insert_tag(
+        &mut self,
+        key: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Option<String> {
+        self.tags.insert(key.into(), value.into())
+    }
 }
 
 impl ByteSizeOf for MetricValue {
@@ -67,11 +89,10 @@ pub type Metrics = Vec<Metric>;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Metric {
-    pub name: String,
+    #[serde(flatten)]
+    pub series: MetricSeries,
 
     pub description: Option<String>,
-
-    pub tags: BTreeMap<String, String>,
 
     pub unit: Option<String>,
 
@@ -85,12 +106,10 @@ pub struct Metric {
 
 impl ByteSizeOf for Metric {
     fn allocated_bytes(&self) -> usize {
-        let s1 = self
-            .tags
-            .iter()
-            .fold(0, |acc, (k, v)| acc + k.len() + v.len());
-
-        s1
+        self.series.allocated_bytes()
+            + self.unit.allocated_bytes()
+            + self.description.allocated_bytes()
+            + self.value.allocated_bytes()
     }
 }
 
@@ -124,16 +143,16 @@ impl Display for Metric {
             write!(fmt, "{:?} ", timestamp)?;
         }
 
-        write!(fmt, "{}", self.name)?;
+        write!(fmt, "{}", self.name())?;
 
-        if !self.tags.is_empty() {
+        if !self.series.tags.is_empty() {
             write!(fmt, "{{")?;
 
             let mut n = 0;
-            for (k, v) in &self.tags {
+            for (k, v) in self.tags() {
                 n += 1;
                 write!(fmt, "{}=\"{}\"", k, v)?;
-                if n != self.tags.len() {
+                if n != self.series.tags.len() {
                     fmt.write_char(',')?;
                 }
             }
@@ -154,8 +173,8 @@ impl EventDataEq for Metric {
     fn event_data_eq(&self, other: &Self) -> bool {
         self.value == other.value
             && self.timestamp == other.timestamp
-            && self.tags == other.tags
-            && self.name == other.name
+            && self.tags() == other.tags()
+            && self.name() == other.name()
             && self.description == other.description
     }
 }
@@ -206,15 +225,40 @@ impl IntoF64 for std::time::Duration {
 
 impl Metric {
     #[inline]
-    pub fn new(name: impl ToString, tags: BTreeMap<String, String>, value: MetricValue) -> Self {
+    pub fn new(
+        name: impl ToString,
+        description: Option<String>,
+        tags: BTreeMap<String, String>,
+        ts: DateTime<Utc>,
+        value: MetricValue,
+    ) -> Self {
         Self {
-            name: name.to_string(),
-            description: None,
-            tags,
+            series: MetricSeries {
+                name: name.to_string(),
+                tags,
+            },
+            description,
             unit: None,
-            timestamp: None,
+            timestamp: Some(ts),
             value,
             metadata: Default::default(),
+        }
+    }
+
+    pub fn new_with_metadata(
+        name: String,
+        tags: BTreeMap<String, String>,
+        value: MetricValue,
+        timestamp: Option<DateTime<Utc>>,
+        metadata: EventMetadata,
+    ) -> Self {
+        Self {
+            series: MetricSeries { name, tags },
+            description: None,
+            unit: None,
+            timestamp,
+            value,
+            metadata,
         }
     }
 
@@ -226,9 +270,11 @@ impl Metric {
         V: IntoF64,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags: Default::default(),
+            },
             description: Some(desc.into()),
-            tags: Default::default(),
             unit: None,
             timestamp: None,
             value: MetricValue::Gauge(v.into_f64()),
@@ -249,9 +295,11 @@ impl Metric {
         V: IntoF64,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags,
+            },
             description: Some(desc.into()),
-            tags,
             unit: None,
             timestamp: None,
             value: MetricValue::Gauge(value.into_f64()),
@@ -267,9 +315,11 @@ impl Metric {
         V: Into<f64>,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags: Default::default(),
+            },
             description: Some(desc.into()),
-            tags: Default::default(),
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(v.into()),
@@ -290,9 +340,11 @@ impl Metric {
         V: IntoF64,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags,
+            },
             description: Some(desc.into()),
-            tags,
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(value.into_f64()),
@@ -309,9 +361,43 @@ impl Metric {
         S: IntoF64,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags: Default::default(),
+            },
             description: Some(desc.into()),
-            tags: Default::default(),
+            unit: None,
+            timestamp: None,
+            metadata: Default::default(),
+            value: MetricValue::Histogram {
+                count: count.into(),
+                sum: sum.into_f64(),
+                buckets,
+            },
+        }
+    }
+
+    #[inline]
+    pub fn histogram_with_tags<N, D, C, S>(
+        name: N,
+        desc: D,
+        tags: BTreeMap<String, String>,
+        count: C,
+        sum: S,
+        buckets: Vec<Bucket>,
+    ) -> Metric
+    where
+        N: Into<String>,
+        D: Into<String>,
+        C: Into<u64>,
+        S: IntoF64,
+    {
+        Self {
+            series: MetricSeries {
+                name: name.into(),
+                tags,
+            },
+            description: Some(desc.into()),
             unit: None,
             timestamp: None,
             metadata: Default::default(),
@@ -338,9 +424,11 @@ impl Metric {
         S: IntoF64,
     {
         Self {
-            name: name.into(),
+            series: MetricSeries {
+                name: name.into(),
+                tags: Default::default(),
+            },
             description: Some(desc.into()),
-            tags: Default::default(),
             unit: None,
             timestamp: None,
             metadata: Default::default(),
@@ -356,13 +444,31 @@ impl Metric {
         &self.metadata
     }
 
+    // TODO: add more information
+    #[inline]
+    pub fn into_parts(
+        self,
+    ) -> (
+        MetricSeries,
+        MetricValue,
+        Option<DateTime<Utc>>,
+        EventMetadata,
+    ) {
+        (self.series, self.value, self.timestamp, self.metadata)
+    }
+
     pub fn metadata_mut(&mut self) -> &mut EventMetadata {
         &mut self.metadata
     }
 
     #[inline]
     pub fn name(&self) -> &str {
-        &self.name
+        &self.series.name
+    }
+
+    #[inline]
+    pub fn set_name(&mut self, name: impl Into<String>) {
+        self.series.name = name.into();
     }
 
     #[inline]
@@ -377,25 +483,38 @@ impl Metric {
     }
 
     #[inline]
+    pub fn tags(&self) -> &BTreeMap<String, String> {
+        &self.series.tags
+    }
+
+    #[inline]
     pub fn with_tags(mut self, tags: BTreeMap<String, String>) -> Self {
-        self.tags = tags;
+        self.series.tags = tags;
         self
+    }
+
+    pub fn has_tag(&self, key: &str) -> bool {
+        self.series.tags.contains_key(key)
+    }
+
+    #[inline]
+    pub fn tag_value(&self, name: &str) -> Option<&str> {
+        self.series.tags.get(name).map(|k| k.as_str())
+    }
+
+    #[inline]
+    pub fn insert_tag(
+        &mut self,
+        name: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Option<String> {
+        self.series.insert_tag(name.into(), value.into())
     }
 
     #[inline]
     pub fn with_desc(mut self, desc: Option<String>) -> Self {
         self.description = desc;
         self
-    }
-
-    #[inline]
-    pub fn tag_value(&self, name: &str) -> Option<String> {
-        self.tags.get(name).map(|v| v.to_string())
-    }
-
-    #[inline]
-    pub fn insert_tag(&mut self, name: impl ToString, value: impl ToString) -> Option<String> {
-        self.tags.insert(name.to_string(), value.to_string())
     }
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
@@ -416,12 +535,26 @@ impl Metric {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tags;
 
     #[test]
     fn test_gauge() {
         let m = Metric::gauge("name", "desc", 1);
-        assert_eq!(m.name, "name");
+        assert_eq!(m.name(), "name");
         assert_eq!(m.description, Some("desc".to_string()));
         assert_eq!(m.value, MetricValue::Gauge(1.0));
+    }
+
+    #[test]
+    fn test_sum() {
+        let m = Metric::sum("name", "desc", 1);
+        assert_eq!(m.name(), "name");
+        assert_eq!(m.description, Some("desc".to_string()));
+        assert_eq!(m.value, MetricValue::Sum(1.0));
+
+        let m = Metric::sum_with_tags("name", "desc", 2, tags!("foo" => "bar"));
+        assert_eq!(m.name(), "name");
+        assert_eq!(m.description, Some("desc".to_string()));
+        assert_eq!(m.value, MetricValue::Sum(2.0));
     }
 }

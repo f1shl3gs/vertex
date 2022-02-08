@@ -1,14 +1,14 @@
-use event::{tags, Event, Metric};
-use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use std::time::{Duration, Instant};
-use virt::{Client, Error};
 
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_std_duration, DataType,
+use event::{tags, Event, Metric};
+use framework::config::{
+    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::sources::Source;
+use framework::Source;
+use futures_util::StreamExt;
+use serde::{Deserialize, Serialize};
+use virt::{Client, Error};
 
 fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
@@ -27,12 +27,17 @@ struct LibvirtSourceConfig {
 }
 
 impl GenerateConfig for LibvirtSourceConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(LibvirtSourceConfig {
-            sock: default_sock(),
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The interval between scrapes.
+#
+# interval: 15s
+
+# The socket path of libvirtd, read permission is required
+#
+sock: /run/libvirt/libvirt-sock-ro
+"#
+        .into()
     }
 }
 
@@ -44,7 +49,7 @@ inventory::submit! {
 #[typetag::serde(name = "libvirt")]
 impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_std_duration(self.interval).take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let sock = self.sock.clone();
         let mut output = ctx.output;
 
@@ -274,7 +279,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 .map(|d| d.clone())
                 .unwrap_or_default();
 
-            let disk_source = if block.path != "" {
+            let disk_source = if !block.path.is_empty() {
                 &block.path
             } else {
                 &dev.source.name
@@ -583,7 +588,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 }
             }
 
-            if source_bridge != "" || virtual_interface != "" {
+            if !source_bridge.is_empty() || !virtual_interface.is_empty() {
                 metrics.push(Metric::gauge_with_tags(
                     "libvirt_domain_interface_meta",
                     "Interfaces metadata. Source bridge, target device, interface uuid",
@@ -925,5 +930,15 @@ mod schema {
         pub devices: Devices,
         #[serde(default)]
         pub metadata: Metadata,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<LibvirtSourceConfig>()
     }
 }

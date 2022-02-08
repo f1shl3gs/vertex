@@ -3,6 +3,7 @@ use std::task::{Context, Poll};
 use buffers::Ackable;
 use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
+use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use internal::{BytesSent, EventsSent};
 use rdkafka::error::KafkaError;
@@ -12,7 +13,6 @@ use rdkafka::util::Timeout;
 use tower::Service;
 
 use crate::common::kafka::KafkaStatisticsContext;
-use crate::stream::DriverResponse;
 
 pub struct KafkaRequestMetadata {
     pub finalizers: EventFinalizers,

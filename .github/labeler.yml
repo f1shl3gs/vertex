@@ -13,6 +13,9 @@ transforms:
 sinks:
   - src/sinks/**/*
 
+extensions:
+  - src/extensions/**/*
+
 topology:
   - src/topology/**/*
 

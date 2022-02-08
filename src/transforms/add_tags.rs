@@ -1,12 +1,13 @@
 use async_trait::async_trait;
 use serde::{Deserialize, Serialize};
+use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
-use crate::config::{
+use event::Event;
+use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use crate::transforms::{FunctionTransform, Transform};
-use event::Event;
+use framework::{FunctionTransform, Transform};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -17,7 +18,7 @@ pub struct AddTagsConfig {
     pub overwrite: bool,
 }
 
-pub fn default_overwrite() -> bool {
+const fn default_overwrite() -> bool {
     true
 }
 
@@ -35,40 +36,19 @@ impl AddTags {
 
 impl FunctionTransform for AddTags {
     fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        if self.tags.is_empty() {
-            return;
-        }
-
-        match event {
-            Event::Metric(ref mut metric) => {
-                merge_tags(&self.tags, &mut metric.tags, self.overwrite);
-
-                output.push(event);
-            }
-
-            Event::Log(ref mut log) => {
-                merge_tags(&self.tags, &mut log.tags, self.overwrite);
-                output.push(event);
+        for (key, value) in &self.tags {
+            match (event.tag_entry(key), self.overwrite) {
+                (Entry::Vacant(entry), _) => {
+                    entry.insert(value.clone());
+                }
+                (Entry::Occupied(mut entry), true) => {
+                    entry.insert(value.clone());
+                }
+                (Entry::Occupied(_entry), false) => {}
             }
         }
-    }
-}
 
-fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>, overwrite: bool) {
-    if overwrite {
-        for (k, v) in from {
-            to.insert(k.clone(), v.clone());
-        }
-
-        return;
-    }
-
-    for (k, v) in from {
-        if to.contains_key(k) {
-            continue;
-        }
-
-        to.insert(k.clone(), v.clone());
+        output.push(event)
     }
 }
 
@@ -76,6 +56,10 @@ fn merge_tags(from: &BTreeMap<String, String>, to: &mut BTreeMap<String, String>
 #[typetag::serde(name = "add_tags")]
 impl TransformConfig for AddTagsConfig {
     async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+        if self.tags.is_empty() {
+            return Err("At least one key/value pair required".into());
+        }
+
         Ok(Transform::function(AddTags::new(
             self.tags.clone(),
             self.overwrite,
@@ -103,16 +87,20 @@ inventory::submit! {
 }
 
 impl GenerateConfig for AddTagsConfig {
-    fn generate_config() -> serde_yaml::Value {
-        let mut tags = BTreeMap::new();
-        tags.insert("key1".to_string(), "value1".to_string());
-        tags.insert("key2".to_string(), "value2".to_string());
+    fn generate_config() -> String {
+        r#"
+# Tags add to the event
+tags:
+  foo: bar
+  host: ${HOSTNAME}
 
-        serde_yaml::to_value(Self {
-            tags,
-            overwrite: default_overwrite(),
-        })
-        .unwrap()
+# Controls how tag conflicts are handled if the event has tags that
+# Vertex would add.
+#
+# overwrite: false
+
+"#
+        .into()
     }
 }
 
@@ -123,7 +111,12 @@ mod tests {
     use event::{tags, Metric};
 
     #[test]
-    fn add_tags() {
+    fn generate_config() {
+        crate::testing::test_generate_config::<AddTagsConfig>();
+    }
+
+    #[test]
+    fn add_tags_without_overwrite() {
         let metric = Metric::sum_with_tags(
             "foo",
             "",

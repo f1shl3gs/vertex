@@ -1,6 +1,6 @@
 use super::{read_to_string, Error, ErrorContext};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::num::ParseIntError;
@@ -255,7 +255,7 @@ impl DeviceStatus {
         let transmit_compressed = parts[16].parse()?;
 
         Ok(Self {
-            name: name.to_string(),
+            name,
             recv_bytes,
             recv_packets,
             recv_errs,

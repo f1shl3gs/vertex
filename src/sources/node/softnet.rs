@@ -39,40 +39,36 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
         .await
         .context("read softnet_stat lines failed")?
     {
-        match parse_softnet(&line) {
-            Ok(stat) => {
-                let cpu = &n.to_string();
-                n += 1;
+        if let Ok(stat) = parse_softnet(&line) {
+            let cpu = &n.to_string();
+            n += 1;
 
-                metrics.push(Metric::sum_with_tags(
-                    "node_softnet_processed_total",
-                    "Number of processed packets",
-                    stat.processed,
-                    tags!(
-                        "cpu" => cpu
-                    ),
-                ));
+            metrics.push(Metric::sum_with_tags(
+                "node_softnet_processed_total",
+                "Number of processed packets",
+                stat.processed,
+                tags!(
+                    "cpu" => cpu
+                ),
+            ));
 
-                metrics.push(Metric::sum_with_tags(
-                    "node_softnet_dropped_total",
-                    "Number of dropped packets",
-                    stat.dropped,
-                    tags!(
-                        "cpu" => cpu,
-                    ),
-                ));
+            metrics.push(Metric::sum_with_tags(
+                "node_softnet_dropped_total",
+                "Number of dropped packets",
+                stat.dropped,
+                tags!(
+                    "cpu" => cpu,
+                ),
+            ));
 
-                metrics.push(Metric::sum_with_tags(
-                    "node_softnet_times_squeezed_total",
-                    "Number of times processing packets ran out of quota",
-                    stat.time_squeezed,
-                    tags!(
-                        "cpu" => cpu,
-                    ),
-                ));
-            }
-
-            _ => {}
+            metrics.push(Metric::sum_with_tags(
+                "node_softnet_times_squeezed_total",
+                "Number of times processing packets ran out of quota",
+                stat.time_squeezed,
+                tags!(
+                    "cpu" => cpu,
+                ),
+            ));
         }
     }
 

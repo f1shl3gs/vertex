@@ -1,19 +1,18 @@
-use futures_util::FutureExt;
 use std::collections::HashMap;
 use std::time::Duration;
 
 use event::encoding::{EncodingConfig, StandardEncodings};
+use framework::batch::{BatchConfig, NoDefaultBatchSettings};
+use framework::config::{
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
+};
+use framework::{Healthcheck, Sink};
+use futures_util::FutureExt;
 use rdkafka::ClientConfig;
 use serde::{Deserialize, Serialize};
 
-use crate::batch::{BatchConfig, NoDefaultBatchSettings};
-use crate::common::kafka::{KafkaAuthConfig, KafkaCompression};
-use crate::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, HealthCheck, SinkConfig,
-    SinkContext,
-};
-use crate::sinks::kafka::sink::health_check;
-use crate::sinks::Sink;
+use super::sink::health_check;
+use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaSaslConfig};
 
 pub const QUEUE_MIN_MESSAGES: u64 = 100000;
 
@@ -30,6 +29,7 @@ pub struct KafkaSinkConfig {
     #[serde(default)]
     pub compression: KafkaCompression,
 
+    #[serde(default = "default_auth")]
     pub auth: KafkaAuthConfig,
     #[serde(default = "default_socket_timeout")]
     #[serde(
@@ -48,14 +48,21 @@ pub struct KafkaSinkConfig {
     pub headers_field: Option<String>,
 }
 
-fn default_socket_timeout() -> Duration {
+const fn default_socket_timeout() -> Duration {
     // default in librdkafka
     Duration::from_millis(60000)
 }
 
-fn default_message_timeout() -> Duration {
+const fn default_message_timeout() -> Duration {
     // default in libkafka
     Duration::from_millis(300000)
+}
+
+const fn default_auth() -> KafkaAuthConfig {
+    KafkaAuthConfig {
+        sasl: None,
+        tls: None,
+    }
 }
 
 /// Used to determine the options to set in configs, since both kafka consumers and providers have
@@ -182,28 +189,110 @@ fn to_string(value: impl serde::Serialize) -> String {
 }
 
 impl GenerateConfig for KafkaSinkConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            bootstrap_servers: "10.14.22.123.9092,10.14.22.123.9092".to_string(),
-            topic: "some-topic".to_string(),
-            key_field: Some("uid".to_string()),
-            encoding: StandardEncodings::Json.into(),
-            batch: Default::default(),
-            compression: KafkaCompression::None,
-            auth: Default::default(),
-            socket_timeout: default_socket_timeout(),
-            message_timeout: default_message_timeout(),
-            librdkafka_options: Default::default(),
-            headers_field: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# A comma-separated list of host and port pairs that are the addresses of
+# the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
+# connects to initially ot bootstrap itself.
+#
+bootstrap_servers: 127.0.0.1:9092,127.0.0.2:9092
+
+# The Kafka topic name to write events to
+#
+topic: some-topic
+
+# The log field name or tags key to use for the topic key. If the field
+# does not exist in the log or in tags, a blank value will be used. If
+# unspecified, the key is not sent. Kafka uses a hash of the key to choose
+# the partition or uses round-robin if the record has no key.
+#
+# key_field: user_id
+
+# Configures the encoding specific sink behavior.
+#
+
+# Configures the encoding specific sink behavior.
+#
+encoding:
+  # The encoding codec used to serialize the events before outputting.
+  #
+  # Availabel values:
+  # json      JSON encoded event
+  # logfmt    logfmt encoded event, see https://brandur.org/logfmt
+  # text      The message field from the event
+  #
+  codec: json
+
+  # Prevent the sink from encoding the specified fields.
+  #
+  # except_fields:
+  # - foo
+  # - bar.key
+
+  # Makes the sink encode only the specified fields.
+  #
+  # only_fields:
+  # - k01
+  # - k02.k03
+
+  # How to format event timestamps
+  #
+  # Availabel values:
+  # rfc3339     Formats as a RFC3339 string
+  # unix        Formats as a unix timestamp
+  #
+  # timestamp_format: rfc3339
+
+# Configures the sink batching behavior
+#
+# batch:
+{}
+
+# The compression strategy used to compress the encoded event
+# data before transmission.
+#
+# Available values:
+# gzip           Gzip standard DEFLATE compression
+# lz4            lz4 compression
+# none           none compression
+# snappy         snappy compression
+# zstd           zstd compression
+
+# Options for SASL/SCRAM authentication support
+# sasl:
+{}
+
+# Default timeout for network requests
+#
+# socket_timeout: {}
+
+# Local message timeout
+#
+# message_timeout: {}
+
+# Advanced options. See librdkafka decumentation for details.
+# https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
+#
+# librdkafka_options: {{}}
+
+# The log field name to use for the Kafka headers. If omitted,
+# no headers will be written.
+#
+# headers_key: null
+"#,
+            BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2),
+            KafkaSaslConfig::generate_commented_with_indent(2),
+            humanize::duration_to_string(&default_socket_timeout()),
+            humanize::duration_to_string(&default_message_timeout()),
+        )
     }
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = super::sink::KafkaSink::new(self.clone(), ctx.acker())?;
         let hc = health_check(self.clone()).boxed();
         Ok((Sink::Stream(Box::new(sink)), hc))
@@ -221,10 +310,9 @@ impl SinkConfig for KafkaSinkConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::test_generate_config;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<KafkaSinkConfig>();
+        crate::testing::test_generate_config::<KafkaSinkConfig>();
     }
 }

@@ -1,6 +1,6 @@
 use super::{read_to_string, Error};
-use crate::config::{deserialize_regex, serialize_regex};
 use event::{tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -164,8 +164,10 @@ async fn power_supply_class<P: AsRef<Path>>(root: P) -> Result<Vec<PowerSupply>,
 async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
     // parse name from path
     let name = path.file_name().unwrap().to_str().unwrap();
-    let mut ps = PowerSupply::default();
-    ps.name = name.to_string();
+    let mut ps = PowerSupply {
+        name: name.to_string(),
+        ..Default::default()
+    };
 
     let mut readdir = tokio::fs::read_dir(path).await?;
     while let Some(entry) = readdir.next_entry().await? {

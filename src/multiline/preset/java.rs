@@ -1,8 +1,7 @@
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
+    #[allow(clippy::missing_const_for_fn)]
     fn merge() {
         let input = [
             "Exception in thread \"main\" java.lang.IllegalStateException: ..null property\n",

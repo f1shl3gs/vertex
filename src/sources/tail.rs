@@ -1,24 +1,25 @@
-use crate::encoding_transcode::{Decoder, Encoder};
+use std::path::PathBuf;
+use std::time::Duration;
+
 use bytes::Bytes;
 use chrono::Utc;
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
-use futures::Stream;
-use futures_util::{FutureExt, SinkExt, StreamExt, TryFutureExt};
-use humanize::{deserialize_bytes, serialize_bytes};
-use log_schema::log_schema;
-use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
-use std::time::Duration;
-use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
-
-use crate::config::{
+use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
     SourceContext, SourceDescription,
 };
+use framework::source::util::OrderedFinalizer;
+use framework::Source;
+use futures::Stream;
+use futures_util::{FutureExt, StreamExt, TryFutureExt};
+use humanize::{deserialize_bytes, serialize_bytes};
+use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
+use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
+
+use crate::encoding_transcode::{Decoder, Encoder};
 use crate::hostname;
 use crate::multiline::{LineAgg, Logic, MultilineConfig, Parser};
-use crate::sources::utils::OrderedFinalizer;
-use crate::sources::Source;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -79,19 +80,19 @@ struct TailConfig {
     multiline: Option<MultilineConfig>,
 }
 
-fn default_ignore_older_than() -> Duration {
+const fn default_ignore_older_than() -> Duration {
     Duration::from_secs(12 * 60 * 60)
 }
 
-fn default_glob_interval() -> Duration {
+const fn default_glob_interval() -> Duration {
     Duration::from_secs(3)
 }
 
-fn default_max_read_bytes() -> usize {
+const fn default_max_read_bytes() -> usize {
     2 * 1024
 }
 
-fn default_max_line_bytes() -> usize {
+const fn default_max_line_bytes() -> usize {
     100 * 1024 // 100kb
 }
 
@@ -100,22 +101,80 @@ fn default_line_delimiter() -> String {
 }
 
 impl GenerateConfig for TailConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            ignore_older_than: default_ignore_older_than(),
-            host_key: None,
-            include: vec!["/path/to/include/*.log".into()],
-            exclude: vec!["/path/to/exclude/noop.log".into()],
-            read_from: Some(ReadFromConfig::End),
-            max_line_bytes: default_max_line_bytes(),
-            max_read_bytes: default_max_read_bytes(),
-            line_delimiter: "\n".to_string(),
-            glob_interval: default_glob_interval(),
-            acknowledgement: Default::default(),
-            charset: None,
-            multiline: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# Array of file patterns to include. Globbing is support.
+#
+include:
+- /path/to/some-*.log
+
+# Array of file patterns to exclude. Globbing is supported.
+# Takes precedence over the "include" option
+#
+# exlucde:
+# - /path/to/some-exclude.log
+
+# In the absence of a checkpoint, this setting tells Vertex where to
+# start reading files that are present at startup.
+#
+# Availabel options:
+# - beginning:  Read from the beginning of the file.
+# - end:        Start reading from the current end of the file.
+#
+# read_from: beginning
+
+# Ignore files with a data modification date older than the specified
+# duration.
+#
+# ignore_older: 1h
+
+# The maximum number of a bytes a line can contain before being discarded.
+# This protects against malformed lines or tailing incorrect files.
+#
+# max_line_bytes: {}
+
+# An approximate limit on the amount of data read from a single file at
+# a given time.
+#
+# max_read_bytes: {}
+
+# Delay between file discovery calls. This controls the interval at which
+# Vertex searches for files. Higher value result in greater chances of some
+# short living files being missed between searches, but lower value increases
+# performance impact of file discovery.
+#
+# glob_interval: {}
+
+# The key name added to each event representing the current host. This can
+# be globally set via the global "host_key" option.
+#
+# host_key: host
+
+# Encoding of the source messages. Takes one of the encoding "label strings"
+# defined as part of the "Encoding Standard"
+# https://encoding.spec.whatwg.org/#concept-encoding-get
+#
+# When set, the messages are transcoded from the specified encoding to UTF-8,
+# which is the encoding vertex assumes internally for string-like data.
+# Enable this transcoding operation if you need your data to be in UTF-8 for
+# further processing. At the time of transcoding, any malformed sequences(that's
+# can't be mapped to UTF-8) will be replaced with "replacement character (see:
+# https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character)
+# and warnings will be logged.
+#
+# charset: utf-16be
+
+# Controls how acknowledgements are handled by this source
+#
+# acknowledgements: false
+
+#
+            "#,
+            humanize::bytes(default_max_line_bytes()),
+            humanize::bytes(default_max_read_bytes()),
+            humanize::duration_to_string(&default_glob_interval()),
+        )
     }
 }
 
@@ -158,7 +217,7 @@ impl SourceConfig for TailConfig {
         let host_key = self
             .host_key
             .clone()
-            .unwrap_or(log_schema().host_key().to_string());
+            .unwrap_or_else(|| log_schema().host_key().to_string());
         let hostname = hostname().unwrap();
         let timestamp_key = log_schema().timestamp_key();
         let source_type_key = log_schema().source_type_key();
@@ -169,9 +228,9 @@ impl SourceConfig for TailConfig {
             })
         });
 
-        let charset = self.charset.clone();
+        let charset = self.charset;
         let line_delimiter = match charset {
-            Some(e) => Encoder::new(&e).encode_from_utf8(&self.line_delimiter),
+            Some(e) => Encoder::new(e).encode_from_utf8(&self.line_delimiter),
             None => Bytes::from(self.line_delimiter.clone()),
         };
 
@@ -318,5 +377,15 @@ impl SourceConfig for TailConfig {
 
     fn source_type(&self) -> &'static str {
         "tail"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<TailConfig>()
     }
 }

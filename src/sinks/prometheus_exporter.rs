@@ -1,17 +1,21 @@
-use std::{
-    convert::Infallible,
-    fmt::Write,
-    hash::Hasher,
-    net::{IpAddr, Ipv4Addr, SocketAddr},
-    ops::{Deref, DerefMut},
-    sync::{Arc, RwLock},
-};
+use std::convert::Infallible;
+use std::fmt::Write;
+use std::hash::Hasher;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::ops::{Deref, DerefMut};
+use std::sync::{Arc, RwLock};
 
 use async_trait::async_trait;
 use buffers::Acker;
 use chrono::Utc;
 use event::MetricValue;
 use event::{Event, Metric};
+use framework::config::{
+    default_false, DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
+};
+use framework::stream::tripwire_handler;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::{Healthcheck, Sink, StreamSink};
 use futures::prelude::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
 use hyper::http::HeaderValue;
@@ -21,21 +25,9 @@ use indexmap::set::IndexSet;
 use serde::{Deserialize, Serialize};
 use stream_cancel::{Trigger, Tripwire};
 
-use crate::stream::tripwire_handler;
-use crate::{
-    config::{
-        default_false, DataType, HealthCheck, Resource, SinkConfig, SinkContext, SinkDescription,
-    },
-    impl_generate_config_from_default,
-    sinks::{Sink, StreamSink},
-    tls::TlsConfig,
-};
-
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct PrometheusExporterConfig {
-    pub namespace: Option<String>,
-
     pub tls: Option<TlsConfig>,
 
     #[serde(default = "default_listen_address")]
@@ -51,7 +43,6 @@ pub struct PrometheusExporterConfig {
 impl Default for PrometheusExporterConfig {
     fn default() -> Self {
         Self {
-            namespace: None,
             tls: None,
             listen: default_listen_address(),
             telemetry_path: default_telemetry_path(),
@@ -68,16 +59,31 @@ fn default_telemetry_path() -> String {
     "/metrics".into()
 }
 
+impl GenerateConfig for PrometheusExporterConfig {
+    fn generate_config() -> String {
+        r#"
+# Which address the prometheus server will listen at
+# lisent: 0.0.0.0:9100
+
+# Telemetry path for this HTTP server
+# telemetry_path: /metric
+
+# Compress response
+# compression: false
+
+"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<PrometheusExporterConfig>("prometheus_exporter")
 }
 
-impl_generate_config_from_default!(PrometheusExporterConfig);
-
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for PrometheusExporterConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = PrometheusExporter::new(self.clone(), ctx.acker);
         let health_check = futures::future::ok(()).boxed();
 
@@ -118,17 +124,13 @@ impl DerefMut for ExpiringEntry {
 
 impl std::hash::Hash for ExpiringEntry {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        let metric = &self.metric;
-        metric.tags.hash(state);
-        metric.name.hash(state);
-
-        // TODO: maybe handle metric value too?
+        self.series.hash(state)
     }
 }
 
 impl PartialEq<Self> for ExpiringEntry {
     fn eq(&self, other: &Self) -> bool {
-        self.metric.tags == other.metric.tags && self.metric.name == other.metric.name
+        self.series.eq(&other.series)
     }
 }
 
@@ -172,7 +174,7 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                 |mut result, ent| {
                     match ent.metric.value {
                         MetricValue::Gauge(v) | MetricValue::Sum(v) => {
-                            write_metric!(result, ent.name, ent.tags, v);
+                            write_metric!(result, ent.name(), ent.tags(), v);
                         }
                         MetricValue::Summary {
                             ref quantiles,
@@ -180,13 +182,18 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                             count,
                         } => {
                             for q in quantiles {
-                                let mut tags = ent.tags.clone();
-                                tags.insert("quantile".to_string(), q.upper.to_string());
-                                write_metric!(result, ent.name, tags, q.value)
+                                let mut tags = ent.tags().clone();
+                                tags.insert("quantile".to_string(), q.quantile.to_string());
+                                write_metric!(result, ent.name(), tags, q.value)
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
+                            write_metric!(result, format!("{}_sum", ent.name()), ent.tags(), sum);
+                            write_metric!(
+                                result,
+                                format!("{}_count", ent.name()),
+                                ent.tags(),
+                                count
+                            );
                         }
                         MetricValue::Histogram {
                             ref buckets,
@@ -194,13 +201,18 @@ fn handle(req: Request<Body>, metrics: &IndexSet<ExpiringEntry>, now: i64) -> Re
                             count,
                         } => {
                             for b in buckets {
-                                let mut tags = ent.tags.clone();
+                                let mut tags = ent.tags().clone();
                                 tags.insert("le".to_string(), b.upper.to_string());
-                                write_metric!(result, ent.name, tags, b.count);
+                                write_metric!(result, ent.name(), tags, b.count);
                             }
 
-                            write_metric!(result, format!("{}_sum", ent.name), ent.tags, sum);
-                            write_metric!(result, format!("{}_count", ent.name), ent.tags, count);
+                            write_metric!(result, format!("{}_sum", ent.name()), ent.tags(), sum);
+                            write_metric!(
+                                result,
+                                format!("{}_count", ent.name()),
+                                ent.tags(),
+                                count
+                            );
                         }
                     }
 
@@ -259,22 +271,16 @@ impl PrometheusExporter {
 
         let (trigger, tripwire) = Tripwire::new();
         let address = self.config.listen;
+        let tls = self.config.tls.clone();
         tokio::spawn(async move {
-            /*
-                        let tls = MaybeTLSSettings::from_config(&self.config.tls)
-                            .map_err(|err| warn!(message = "Server TLS error: {}", err))?;
+            let tls = MaybeTlsSettings::from_config(&tls, true).map_err(|err| {
+                error!(message = "Server TLS error", ?err);
+            })?;
+            let listener = tls.bind(&address).await.map_err(|err| {
+                error!(message = "Server TLS error", ?err);
+            })?;
 
-                        let listener = tls.bind(&address)
-                            .await
-                            .map_err(|err| warn!(message = "Server bind error: {}", err))?;
-            */
-            /*Server::builder()
-                            .serve(new_service)
-                            .with_graceful_shutdown(tripwire.then(tripwire_handler))
-                            .await
-                            .map_err(|err| warn!(message = "Server error", ?err))?;
-            */
-            Server::bind(&address)
+            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                 .serve(new_service)
                 .with_graceful_shutdown(tripwire.then(tripwire_handler))
                 .await
@@ -359,7 +365,7 @@ mod tests {
 
         assert_eq!(set.len(), 1);
         assert_eq!(
-            set.iter().enumerate().nth(0).unwrap().1.expired_at,
+            set.iter().enumerate().next().unwrap().1.expired_at,
             now + 60
         );
     }

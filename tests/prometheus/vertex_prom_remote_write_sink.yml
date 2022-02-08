@@ -1,0 +1,15 @@
+sources:
+  selfstat:
+    type: selfstat
+
+sinks:
+  prw:
+    type: prometheus_remote_write
+    inputs:
+      - selfstat
+    endpoint: http://localhost:9009/api/v1/push
+
+  stdout:
+    type: stdout
+    inputs:
+      - selfstat

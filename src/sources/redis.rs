@@ -2,19 +2,17 @@ use std::collections::{BTreeMap, BTreeSet};
 use std::time::Duration;
 
 use event::{tags, Metric};
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use snafu::Snafu;
-use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::{
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
 };
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::Source;
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::Source;
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use snafu::Snafu;
+use tokio_stream::wrappers::IntervalStream;
 
 lazy_static!(
     static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {
@@ -245,15 +243,19 @@ pub struct RedisSourceConfig {
 }
 
 impl GenerateConfig for RedisSourceConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            url: "127.0.0.1:1111".to_string(),
-            interval: default_interval(),
-            namespace: None,
-            user: None,
-            password: Some("some_password".to_string()),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        r#"
+# The endpoints to connect to redis
+#
+endpoint: redis://localhost:6379
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# TODO: example for configuring "user" and password
+"#
+        .into()
     }
 }
 
@@ -338,9 +340,9 @@ impl RedisSource {
             let timestamp = chrono::Utc::now();
             let mut stream = futures::stream::iter(metrics).map(|mut m| {
                 m.timestamp = Some(timestamp);
-                m.tags.insert("instance".to_string(), self.url.to_owned());
+                m.insert_tag("instance", &self.url);
                 if let Some(ref namespace) = self.namespace {
-                    m.name = format!("{}_{}", namespace, m.name)
+                    m.set_name(format!("{}_{}", namespace, m.name()));
                 }
 
                 m.into()
@@ -452,7 +454,7 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
 
     let mut last_id: i64 = 0;
     let mut last_slow_execution_second: f64 = 0.0;
-    if values.len() > 0 {
+    if !values.is_empty() {
         last_id = values[0];
         if values.len() > 2 {
             last_slow_execution_second = values[2] as f64 / 1e6
@@ -538,12 +540,12 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
 
     for line in infos.lines() {
         let line = line.trim();
-        if line.len() == 0 {
+        if line.is_empty() {
             continue;
         }
 
-        if line.starts_with("# ") {
-            field_class = line[2..].to_string();
+        if let Some(stripped) = line.strip_prefix("# ") {
+            field_class = stripped.to_string();
             continue;
         }
 
@@ -716,7 +718,7 @@ fn parse_and_generate(key: &str, value: &str) -> Result<Metric, Error> {
 
     if name == "latest_fork_usec" {
         name = "latest_fork_seconds".to_string();
-        val = val / 1e6;
+        val /= 1e6;
     }
 
     let metric = if let Some(name) = GAUGE_METRICS.get(name.as_str()) {
@@ -872,7 +874,7 @@ fn validate_slave_line(line: &str) -> bool {
     }
 
     let c = line.as_bytes()[5];
-    c >= b'0' && c <= b'9'
+    c.is_ascii_digit()
 }
 
 fn handle_server_metrics(key: &str, value: &str) -> Result<Vec<Metric>, Error> {

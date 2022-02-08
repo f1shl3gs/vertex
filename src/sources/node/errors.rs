@@ -46,13 +46,14 @@ impl Error {
     ///
     /// This method is considered to be an internal API
     /// and should not be used by external parties
-    pub fn new(source: io::Error, context: Context) -> Self {
+    pub const fn new(source: io::Error, context: Context) -> Self {
         Self {
             source,
             context: Some(context),
         }
     }
 
+    #[inline]
     pub fn is_not_found(&self) -> bool {
         self.source.kind() == io::ErrorKind::NotFound
     }

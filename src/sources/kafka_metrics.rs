@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::config::{GenerateConfig, SourceDescription};
+use framework::config::{GenerateConfig, SourceDescription};
 
 #[derive(Debug, Deserialize, Serialize)]
 struct KafkaMetricsConfig {
@@ -8,11 +8,8 @@ struct KafkaMetricsConfig {
 }
 
 impl GenerateConfig for KafkaMetricsConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            servers: "10.32.1.10:9092".to_string(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        "".into()
     }
 }
 

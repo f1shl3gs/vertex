@@ -2,22 +2,19 @@ use std::time::Duration;
 use std::{fmt::Debug, io::Read};
 
 use event::{Event, Metric};
-use futures::StreamExt;
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use tokio::sync::RwLock;
-use tokio_stream::wrappers::IntervalStream;
-
-use crate::config::Output;
-use crate::{
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::{
     config::{
         default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        SourceConfig, SourceContext, SourceDescription,
+        Output, SourceConfig, SourceContext, SourceDescription,
     },
-    pipeline::Pipeline,
-    shutdown::ShutdownSignal,
-    sources::Source,
+    Source,
 };
+use futures::StreamExt;
+use serde::{Deserialize, Serialize};
+use tokio::sync::RwLock;
+use tokio_stream::wrappers::IntervalStream;
 
 const USER_HZ: f64 = 100.0;
 
@@ -50,11 +47,15 @@ impl SourceConfig for SelfStatConfig {
 }
 
 impl GenerateConfig for SelfStatConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The interval between scrapes.
+#
+interval: {}
+"#,
+            humanize::duration_to_string(&default_interval())
+        )
     }
 }
 
@@ -216,14 +217,19 @@ async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64)
 mod tests {
     use super::*;
 
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<SelfStatConfig>()
+    }
+
     #[tokio::test]
     async fn test_proc_stat() {
         let (cpu_time, threads, _, vsize, rss) =
             get_proc_stat("tests/fixtures/proc", 26231).await.unwrap();
 
-        assert_eq!(cpu_time, 17.21 as f64);
-        assert_eq!(threads, 1.0 as f64);
-        assert_eq!(vsize, 56274944.0 as f64);
-        assert_eq!(rss, 1981.0 as f64);
+        assert_eq!(cpu_time, 17.21);
+        assert_eq!(threads, 1.0);
+        assert_eq!(vsize, 56274944.0);
+        assert_eq!(rss, 1981.0);
     }
 }

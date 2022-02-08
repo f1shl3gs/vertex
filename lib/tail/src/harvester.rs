@@ -146,7 +146,7 @@ where
                 next_scan = now.checked_add(Duration::from_secs(1)).unwrap();
 
                 // Start scan
-                for (_fp, watcher) in &mut watchers {
+                for watcher in watchers.values_mut() {
                     watcher.set_findable(false); // assume not findable until found
                 }
 
@@ -240,7 +240,7 @@ where
                 }
             });
 
-            if lines.len() > 0 {
+            if !lines.is_empty() {
                 let sending = std::mem::take(&mut lines);
                 let mut stream = stream::once(futures::future::ok(sending));
                 if let Err(err) = self.handle.block_on(chans.send_all(&mut stream)) {

@@ -1,11 +1,13 @@
-#![allow(clippy::print_stdout)] // tests
+mod validate;
+
+use std::path::PathBuf;
 
 use argh::FromArgs;
-use vertex::config::{
+use framework::config::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
     TransformDescription,
 };
-use vertex::get_version;
+use framework::{config, get_version};
 
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
@@ -15,11 +17,19 @@ pub struct RootCommand {
 
     #[argh(
         option,
-        short = 'c',
-        default = "String::from(\"/etc/vertex/vertex.yml\")",
-        description = "specify config file"
+        short = 'l',
+        default = "\"info\".to_string()",
+        description = "log level"
     )]
-    pub config: String,
+    pub log_level: String,
+
+    #[argh(
+        option,
+        short = 'c',
+        long = "config",
+        description = "read configuration from one or more files, wildcard paths are supported"
+    )]
+    pub configs: Vec<PathBuf>,
 
     #[argh(
         option,
@@ -33,8 +43,15 @@ pub struct RootCommand {
 }
 
 impl RootCommand {
+    #![allow(clippy::print_stdout)]
     pub fn show_version(&self) {
-        println!("{}", get_version());
+        println!("vertex {}", get_version());
+    }
+
+    pub fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {
+        config::merge_path_lists(vec![(&self.configs, None)])
+            .map(|(path, hint)| config::ConfigPath::File(path, hint))
+            .collect::<Vec<_>>()
     }
 }
 
@@ -46,6 +63,7 @@ pub enum Commands {
     Sinks(Sinks),
     Extensions(Extensions),
     Providers(Providers),
+    Validate(validate::Validate),
 }
 
 impl Commands {
@@ -56,6 +74,9 @@ impl Commands {
             Commands::Sinks(sinks) => sinks.run(),
             Commands::Extensions(extensions) => extensions.run(),
             Commands::Providers(providers) => providers.run(),
+            Commands::Validate(validate) => {
+                validate.run();
+            }
         }
     }
 }
@@ -63,10 +84,11 @@ impl Commands {
 macro_rules! impl_list_and_example {
     ($typ:ident, $desc:ident) => {
         impl $typ {
+            #![allow(clippy::print_stdout)]
             pub fn run(&self) {
                 match &self.name {
                     Some(name) => match $desc::example(&name) {
-                        Ok(example) => println!("{}", serde_yaml::to_string(&example).unwrap()),
+                        Ok(example) => println!("{}", example.trim()),
                         Err(err) => {
                             println!("Generate example failed: {}", err);
                             std::process::exit(exitcode::UNAVAILABLE);
@@ -94,7 +116,7 @@ pub struct Sources {
 impl_list_and_example!(Sources, SourceDescription);
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "transforms", description = "supported transforms")]
+#[argh(subcommand, name = "transforms", description = "List transforms")]
 pub struct Transforms {
     #[argh(positional, description = "transform name")]
     name: Option<String>,
@@ -103,7 +125,7 @@ pub struct Transforms {
 impl_list_and_example!(Transforms, TransformDescription);
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sinks", description = "supported sinks")]
+#[argh(subcommand, name = "sinks", description = "List sinks")]
 pub struct Sinks {
     #[argh(positional, description = "sink name")]
     name: Option<String>,
@@ -112,7 +134,7 @@ pub struct Sinks {
 impl_list_and_example!(Sinks, SinkDescription);
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "extensions", description = "supported extensions")]
+#[argh(subcommand, name = "extensions", description = "List extensions")]
 pub struct Extensions {
     #[argh(positional, description = "extension name")]
     name: Option<String>,
@@ -121,13 +143,14 @@ pub struct Extensions {
 impl_list_and_example!(Extensions, ExtensionDescription);
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "providers", description = "supported providers")]
+#[argh(subcommand, name = "providers", description = "List providers")]
 pub struct Providers {
     #[argh(positional, description = "provider name")]
     name: Option<String>,
 }
 
 impl Providers {
+    #![allow(clippy::print_stdout)]
     pub fn run(&self) {
         match &self.name {
             Some(name) => match ProviderDescription::example(name) {

@@ -34,8 +34,8 @@ fn parse_sequence(line: Bytes) -> u64 {
 async fn test_move_and_create() {
     let log_count = 10;
     let log_size = 100;
-    let mut writes = Arc::new(AtomicU64::new(0));
-    let mut reads = Arc::new(AtomicU64::new(0));
+    let writes = Arc::new(AtomicU64::new(0));
+    let reads = Arc::new(AtomicU64::new(0));
     let tempdir = tempdir().unwrap();
     let dir = tempdir.path();
 
@@ -57,7 +57,7 @@ async fn test_move_and_create() {
     let shutdown = ShutdownHandle(r);
 
     let (tx, mut rx) = futures::channel::mpsc::channel::<Vec<Line>>(2);
-    let checkpointer = Checkpointer::new(&dir);
+    let checkpointer = Checkpointer::new(dir);
 
     // start writer
     let log_path = dir.join("test.log");
@@ -66,7 +66,7 @@ async fn test_move_and_create() {
         for i in 0..log_count {
             let mut f = std::fs::File::create(&log_path).unwrap();
             for j in 0..log_size {
-                write!(f, "{} abcedefghijklmnopqrstuvwxyz0123456789\n", i * 100 + j)
+                writeln!(f, "{} abcedefghijklmnopqrstuvwxyz0123456789", i * 100 + j)
                     .expect("write log success");
                 cw.fetch_add(1, Ordering::Relaxed);
             }

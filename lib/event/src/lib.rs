@@ -5,6 +5,7 @@ mod logfmt;
 mod macros;
 mod metadata;
 mod metric;
+mod proto;
 mod trace;
 
 // re-export
@@ -16,17 +17,19 @@ pub use finalization::{
 pub use log::value::Value;
 pub use log::LogRecord;
 pub use macros::EventDataEq;
+pub use metadata::EventMetadata;
 pub use metric::*;
 
+use std::collections::btree_map;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use crate::log::Logs;
+use crate::proto::EventWrapper;
 use bytes::{Buf, BufMut};
+use prost::Message;
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
-
-use crate::metadata::EventMetadata;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone)]
 pub enum Event {
@@ -137,6 +140,20 @@ impl Event {
         }
     }
 
+    pub fn tags(&self) -> &BTreeMap<String, String> {
+        match self {
+            Event::Log(log) => &log.tags,
+            Event::Metric(metric) => metric.tags(),
+        }
+    }
+
+    pub fn tag_entry(&mut self, key: impl Into<String>) -> btree_map::Entry<String, String> {
+        match self {
+            Self::Log(log) => log.tags.entry(key.into()),
+            Self::Metric(metric) => metric.series.tags.entry(key.into()),
+        }
+    }
+
     pub fn metadata(&self) -> &EventMetadata {
         match self {
             Self::Log(log) => log.metadata(),
@@ -202,30 +219,6 @@ impl From<Metric> for Event {
     }
 }
 
-impl EncodeBytes<Event> for Event {
-    type Error = EncodeError;
-
-    fn encode<B>(self, _buffer: &mut B) -> Result<(), Self::Error>
-    where
-        B: BufMut,
-        Self: Sized,
-    {
-        todo!()
-    }
-}
-
-impl DecodeBytes<Event> for Event {
-    type Error = DecodeError;
-
-    fn decode<B>(_buffer: B) -> Result<Event, Self::Error>
-    where
-        Event: Sized,
-        B: Buf,
-    {
-        todo!()
-    }
-}
-
 impl From<LogRecord> for Event {
     fn from(r: LogRecord) -> Self {
         Self::Log(r)
@@ -280,5 +273,29 @@ impl<'a> From<&'a LogRecord> for EventRef<'a> {
 impl<'a> From<&'a Metric> for EventRef<'a> {
     fn from(metric: &'a Metric) -> Self {
         Self::Metric(metric)
+    }
+}
+
+impl EncodeBytes for Event {
+    type Error = EncodeError;
+
+    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error>
+    where
+        B: BufMut,
+        Self: Sized,
+    {
+        EventWrapper::from(self).encode(buffer)
+    }
+}
+
+impl DecodeBytes for crate::Event {
+    type Error = DecodeError;
+
+    fn decode<B>(buffer: B) -> Result<Event, Self::Error>
+    where
+        Event: Sized,
+        B: Buf,
+    {
+        EventWrapper::decode(buffer).map(Into::into)
     }
 }

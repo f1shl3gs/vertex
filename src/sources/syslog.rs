@@ -1,27 +1,29 @@
-use crate::codecs;
-use crate::codecs::framing::bytes::BytesDecoder;
-use crate::codecs::framing::octet_counting::OctetCountingDecoder;
-use crate::codecs::{Decoder, SyslogDeserializer};
-use crate::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
-use crate::config::{Output, SourceDescription};
-use crate::pipeline::Pipeline;
-use crate::shutdown::ShutdownSignal;
-use crate::sources::utils::{build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource};
-use crate::sources::Source;
-use crate::tcp::TcpKeepaliveConfig;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
-use crate::udp;
+use std::net::SocketAddr;
+use std::path::PathBuf;
+use std::time::Duration;
+
 use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
+use framework::codecs::framing::bytes::BytesDecoder;
+use framework::codecs::framing::octet_counting::OctetCountingDecoder;
+use framework::codecs::{Decoder, SyslogDeserializer};
+use framework::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
+use framework::config::{Output, SourceDescription};
+use framework::pipeline::Pipeline;
+use framework::shutdown::ShutdownSignal;
+use framework::source::util::{
+    build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource,
+};
+use framework::tcp::TcpKeepaliveConfig;
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::Source;
+use framework::{codecs, udp};
 use futures_util::StreamExt;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
-use std::net::SocketAddr;
-use std::path::PathBuf;
-use std::time::Duration;
 use tokio::net::UdpSocket;
 use tokio_util::udp::UdpFramed;
 
@@ -70,19 +72,60 @@ pub struct SyslogConfig {
 }
 
 impl GenerateConfig for SyslogConfig {
-    fn generate_config() -> serde_yaml::Value {
-        serde_yaml::to_value(Self {
-            mode: Mode::Tcp {
-                address: SocketListenAddr::SocketAddr("0.0.0.0:514".parse().unwrap()),
-                keepalive: None,
-                tls: None,
-                receive_buffer_bytes: None,
-                connection_limit: None,
-            },
-            max_length: default_max_length(),
-            host_key: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# The type of socket to use
+#
+# Available values:
+# tcp:      TCP socket
+# udp:      UDP socket
+# unix:     Unix domain stream socket (*nix only)
+mode: tcp
+
+# The address to listen for connections on, or systemd#N to use the Nth
+# socket passed by systemd socket activation. If an address is used it
+# must inlucde a port
+#
+address: 0.0.0.0:514
+
+# The max number of TCP connections that will be processed
+#
+# Availabel only when mode is "tcp"
+# connection_limit: 1024
+
+# Configures the TCP keepalive behavior for the connection to the source.
+#
+# Availabel only when mode is "tcp"
+# keepalive:
+{}
+
+# Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
+#
+# Availabel only when mode is "tcp"
+# receive_buffer_bytes: 64ki
+
+# Configures the TLS options for incoming connections
+#
+# Availabel only when mode is "tcp"
+# tls:
+{}
+
+# The maximum buffer size of incoming messages. Messages larger than
+# this are truncated.
+#
+# max_length: {}
+
+# The key name added to each event representing the current host. This can
+# be globally set via the global "host_key" option.
+#
+# host_key: host
+
+        "#,
+            TcpKeepaliveConfig::generate_commented_with_indent(2),
+            TlsConfig::generate_commented_with_indent(2),
+            humanize::bytes(default_max_length()),
+        )
     }
 }
 
@@ -211,7 +254,7 @@ pub fn udp(
     receive_buffer_bytes: Option<usize>,
     shutdown: ShutdownSignal,
     mut output: Pipeline,
-) -> super::Source {
+) -> framework::Source {
     Box::pin(async move {
         let socket = UdpSocket::bind(&addr)
             .await
@@ -321,14 +364,13 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::codecs::decoding::Deserializer;
-    use crate::config::test_generate_config;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
+    use framework::codecs::decoding::Deserializer;
 
     #[test]
     fn generate_config() {
-        test_generate_config::<SyslogConfig>();
+        crate::testing::test_generate_config::<SyslogConfig>();
     }
 
     #[test]
@@ -353,7 +395,7 @@ mod tests {
             _ => unreachable!(),
         };
 
-        assert_eq!(receive_buffer_bytes, Some(1024 as usize));
+        assert_eq!(receive_buffer_bytes, Some(1024usize));
     }
 
     #[test]

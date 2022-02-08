@@ -1,30 +1,27 @@
 /// Collect messages from /dev/kmsg
 ///
 /// https://www.kernel.org/doc/Documentation/ABI/testing/dev-kmsg
-use std::{
-    io::{self, Read},
-    time,
-};
+use std::io::{self, Read};
+use std::time;
 
 use chrono::{TimeZone, Utc};
 use event::{fields, LogRecord};
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use tokio::io::AsyncReadExt;
-
-use crate::config::Output;
-use crate::{
-    config::{DataType, GenerateConfig, SourceConfig, SourceContext, SourceDescription},
-    sources::Source,
+use framework::{
+    config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription},
+    Source,
 };
+use serde::{Deserialize, Serialize};
+use tokio::io::AsyncReadExt;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct KmsgConfig {}
 
 impl GenerateConfig for KmsgConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {}).unwrap()
+    fn generate_config() -> String {
+        r#"# No more config option is needed
+{}"#
+        .into()
     }
 }
 
@@ -68,12 +65,10 @@ impl SourceConfig for KmsgConfig {
                             }
                         };
 
-                        match parse_line(&buf, n) {
-                            Ok((priority, seq, ts, msg)) => {
-                                let nano_seconds = boot + ts * 1000;
+                        if let Ok((priority, seq, ts, msg)) = parse_line(&buf, n) {
+                            let nano_seconds = boot + ts * 1000;
                                 let timestamp = Utc.timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32);
                                 let timestamp_key = log_schema::log_schema().timestamp_key();
-
                                 let record = LogRecord::from(fields!(
                                         "priority" => priority,
                                         "sequence" => seq,
@@ -82,9 +77,6 @@ impl SourceConfig for KmsgConfig {
                                     ));
 
                                 output.send(record.into()).await.unwrap();
-                            }
-
-                            _ => {}
                         }
                     }
                 }
@@ -112,7 +104,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     for i in consumed..size {
         consumed += 1;
         let c = buf[i];
-        if c < b'0' || c > b'9' {
+        if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
             }
@@ -127,7 +119,7 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
     for i in consumed..size {
         consumed += 1;
         let c = buf[i];
-        if c < b'0' || c > b'9' {
+        if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
             }
@@ -207,6 +199,11 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<KmsgConfig>()
+    }
 
     #[test]
     fn test_boot_time() {

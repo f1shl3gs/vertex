@@ -81,7 +81,7 @@ pub struct SummaryMetric {
 #[derive(Debug, Default, PartialEq, PartialOrd)]
 pub struct HistogramBucket {
     pub bucket: f64,
-    pub count: u32,
+    pub count: u64,
 }
 
 #[derive(Debug, Default, PartialEq)]
@@ -171,7 +171,7 @@ impl GroupKind {
                     let (_, bucket) = line::Metric::parse_value(&bucket)
                         .map_err(Into::into)
                         .context(ParseLabelValue)?;
-                    let count = try_f64_to_u32(metric.value)?;
+                    let count = metric.value as u64;
                     matching_group(metrics, key)
                         .buckets
                         .push(HistogramBucket { bucket, count });

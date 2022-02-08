@@ -1,7 +1,8 @@
+/// Exposes thermal zone & cooling device statistics from /sys/class/thermal
+use std::path::Path;
+
 use super::{read_into, read_to_string, Error};
 use event::{tags, Metric};
-/// Exposes thermal zone & cooling device statistics from /sys/class/thermal
-use std::path::PathBuf;
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>
@@ -40,7 +41,7 @@ async fn thermal_zone_stats(root: &str) -> Result<Vec<ThermalZoneStats>, Error> 
     Ok(stats)
 }
 
-async fn parse_thermal_zone(root: &PathBuf) -> Result<ThermalZoneStats, Error> {
+async fn parse_thermal_zone(root: &Path) -> Result<ThermalZoneStats, Error> {
     let name = root.file_name().unwrap();
     let name = name
         .to_str()
@@ -116,7 +117,7 @@ async fn cooling_device_stats(root: &str) -> Result<Vec<CoolingDeviceStats>, Err
     Ok(stats)
 }
 
-async fn parse_cooling_device_stats(root: &PathBuf) -> Result<CoolingDeviceStats, Error> {
+async fn parse_cooling_device_stats(root: &Path) -> Result<CoolingDeviceStats, Error> {
     let name = root.file_name().unwrap();
     let name = name
         .to_str()

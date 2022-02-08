@@ -102,16 +102,11 @@ async fn class_drm_card_amdgpu_stats(
     let paths = glob::glob(&pattern).context("glob drm failed")?;
 
     let mut stats = Vec::new();
-    for path in paths {
-        match path {
-            Ok(path) => {
-                let card = path.to_str().unwrap();
-                if let Ok(stat) = parse_class_drm_amdgpu_card(card).await {
-                    stats.push(stat);
-                };
-            }
-            _ => {}
-        }
+    for path in paths.flatten() {
+        let card = path.to_str().unwrap();
+        if let Ok(stat) = parse_class_drm_amdgpu_card(card).await {
+            stats.push(stat);
+        };
     }
 
     Ok(stats)
@@ -196,19 +191,19 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
     let path = format!("{}/device/mem_info_vram_vendor", card);
     let memory_vram_vendor = read_to_string(path)
         .await
-        .unwrap_or("".to_string())
+        .unwrap_or_default()
         .trim()
         .to_string();
     let path = format!("{}/device/power_dpm_force_performance_level", card);
     let power_dpm_force_performance_level = read_to_string(path)
         .await
-        .unwrap_or("".to_string())
+        .unwrap_or_default()
         .trim()
         .to_string();
     let path = format!("{}/device/unique_id", card);
     let unique_id = read_to_string(path)
         .await
-        .unwrap_or("".to_string())
+        .unwrap_or_default()
         .trim()
         .to_string();
 

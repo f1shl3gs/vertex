@@ -3,20 +3,17 @@ use std::time::Duration;
 
 use bytes::Buf;
 use event::{tags, Event, Metric};
-use futures::StreamExt;
-use http::{StatusCode, Uri};
-use serde::{Deserialize, Serialize};
-use serde_yaml::Value;
-use snafu::Snafu;
-
-use crate::config::{
+use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
-use crate::http::{Auth, HttpClient};
-use crate::sources::Source;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
-use crate::Error;
+use framework::http::{Auth, HttpClient};
+use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::{Error, Source};
+use futures::StreamExt;
+use http::{StatusCode, Uri};
+use serde::{Deserialize, Serialize};
+use snafu::Snafu;
 
 // HAProxy 1.4
 // # pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,
@@ -58,17 +55,28 @@ struct HaproxyConfig {
 }
 
 impl GenerateConfig for HaproxyConfig {
-    fn generate_config() -> Value {
-        serde_yaml::to_value(Self {
-            interval: default_interval(),
-            endpoints: vec![
-                "http://127.0.0.1:1111/metrics".to_string(),
-                "http://127.0.0.1:2222/metrics".to_string(),
-            ],
-            tls: None,
-            auth: None,
-        })
-        .unwrap()
+    fn generate_config() -> String {
+        format!(
+            r#"
+# HTTP/HTTPS endpoint to Consul server.
+endpoints:
+- http://localhost:8500
+
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Configures the TLS options for outgoing connections.
+# tls:
+{}
+
+# Configures the authentication strategy.
+# auth:
+{}
+"#,
+            TlsConfig::generate_commented_with_indent(2),
+            Auth::generate_commented_with_indent(2),
+        )
     }
 }
 
@@ -90,9 +98,7 @@ impl SourceConfig for HaproxyConfig {
         let auth = self.auth.clone();
         let proxy = ctx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(self.interval)
-            .unwrap()
-            .take_until(ctx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
         let mut output = ctx.output;
 
         Ok(Box::pin(async move {
@@ -191,7 +197,7 @@ async fn gather(
         }
     };
     let elapsed = start.elapsed().as_secs_f64();
-    let up = if metrics.len() != 0 { 1 } else { 0 };
+    let up = if !metrics.is_empty() { 1 } else { 0 };
     let instance = format!("{}:{}", uri.host().unwrap(), uri.port_u16().unwrap());
     metrics.extend_from_slice(&[
         Metric::gauge(
@@ -1106,6 +1112,11 @@ mod tests {
     use std::io::BufReader;
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<HaproxyConfig>()
+    }
+
+    #[test]
     fn test_parse_info() {
         let input = "Release_date: test date\nVersion: test version\n";
         let reader = BufReader::new(io::Cursor::new(input));
@@ -1121,7 +1132,7 @@ mod tests {
         let reader = BufReader::new(io::Cursor::new(content));
         let metrics = parse_csv(reader).unwrap();
 
-        assert!(metrics.len() > 0);
+        assert!(!metrics.is_empty());
     }
 
     #[test]

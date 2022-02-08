@@ -5,30 +5,34 @@ use async_trait::async_trait;
 use buffers::Acker;
 use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
+use framework::{
+    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
+    Healthcheck, Sink, StreamSink,
+};
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio_stream::StreamExt;
-
-use crate::{
-    config::{DataType, HealthCheck, SinkConfig, SinkContext, SinkDescription},
-    impl_generate_config_from_default,
-    sinks::{Sink, StreamSink},
-};
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct StdoutConfig {}
 
+impl GenerateConfig for StdoutConfig {
+    fn generate_config() -> String {
+        r#"# Nothing need to be config
+{}"#
+        .into()
+    }
+}
+
 inventory::submit! {
     SinkDescription::new::<StdoutConfig>("stdout")
 }
 
-impl_generate_config_from_default!(StdoutConfig);
-
 #[async_trait]
 #[typetag::serde(name = "stdout")]
 impl SinkConfig for StdoutConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, HealthCheck)> {
+    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         Ok((
             Sink::Stream(Box::new(StdoutSink { acker: ctx.acker })),
             futures::future::ok(()).boxed(),
@@ -97,7 +101,7 @@ impl StreamSink for StdoutSink {
         let mut stdout = std::io::stdout();
         let encoding = EncodingConfig::from(Encoding::Json);
 
-        while let Some(mut event) = input.next().await {
+        while let Some(event) = input.next().await {
             self.acker.ack(1);
 
             if let Some(mut text) = encode_event(event, &encoding) {
@@ -114,5 +118,15 @@ impl StreamSink for StdoutSink {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<StdoutConfig>();
     }
 }

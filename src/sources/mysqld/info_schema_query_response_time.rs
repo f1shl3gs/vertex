@@ -30,7 +30,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
         RESPONSE_TIME_READ_QUERY,
         RESPONSE_TIME_WRITE_QUERY,
     ] {
-        metrics.push(query_response_time(&pool, query).await?);
+        metrics.push(query_response_time(pool, query).await?);
     }
 
     Ok(metrics)
@@ -61,7 +61,7 @@ async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
 
 struct Statistic {
     time: f64,
-    count: u32,
+    count: u64,
     total: f64,
 }
 
@@ -72,7 +72,7 @@ impl<'r> FromRow<'r, MySqlRow> for Statistic {
             .trim()
             .parse::<f64>()
             .unwrap_or(0.0);
-        let count = row.try_get::<u32, _>("COUNT")?;
+        let count = row.try_get::<u64, _>("COUNT")?;
         let total = row
             .try_get::<String, _>("TOTAL")?
             .trim()
