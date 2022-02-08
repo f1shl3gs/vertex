@@ -18,3 +18,10 @@ where
         }
     }
 }
+
+pub async fn collect_n<S>(rx: S, n: usize) -> Vec<S::Item>
+where
+    S: Stream + Unpin,
+{
+    rx.take(n).collect().await
+}

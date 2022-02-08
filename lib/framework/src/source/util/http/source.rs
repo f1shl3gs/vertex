@@ -158,7 +158,7 @@ async fn handle_request(
                         "Failed to forward events",
                     )
                 })
-                .and_then(|r| handle_batch_status(receiver))
+                .and_then(|_r| handle_batch_status(receiver))
                 .await
             {
                 Ok(resp) => resp,

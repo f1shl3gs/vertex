@@ -216,12 +216,18 @@ impl InternalEvent for KafkaEventReceived {
     }
 }
 
-pub struct KafkaEventFailed {}
+pub struct KafkaEventFailed {
+    pub error: rdkafka::error::KafkaError,
+}
 
-pub struct KafkaOffsetUpdateFailed {}
+pub struct KafkaOffsetUpdateFailed {
+    pub error: rdkafka::error::KafkaError,
+}
 
 impl InternalEvent for KafkaOffsetUpdateFailed {
-    fn emit_logs(&self) {}
+    fn emit_logs(&self) {
+        warn!(message = "Failed to read message", ?self.error, internal_log_rate_secs = 30 );
+    }
 
     fn emit_metrics(&self) {
         counter!("kafka_consumer_offset_updates_failed_total", 1);
