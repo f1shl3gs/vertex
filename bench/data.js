@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644301012651,
+  "lastUpdate": 1644301016404,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2746,6 +2746,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1012800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f78262527bd7164ab28bf32818c5b9c25cc0086e",
+          "message": "Merge pull request #179 from f1shl3gs/dependabot/cargo/console-subscriber-0.1.2\n\nchore(deps): bump console-subscriber from 0.1.1 to 0.1.2",
+          "timestamp": "2022-02-08T14:09:36+08:00",
+          "tree_id": "cc9ce60f3e92f2c887e4fbcf60fdebb716658129",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f78262527bd7164ab28bf32818c5b9c25cc0086e"
+        },
+        "date": 1644301015602,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1296500,
             "unit": "ns/op"
           }
         ]
