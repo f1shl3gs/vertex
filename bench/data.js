@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644301841963,
+  "lastUpdate": 1644304703451,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2775,6 +2775,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1296500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8396df75b3d430d5dee7c7837039829f2e1a3f12",
+          "message": "Merge pull request #180 from f1shl3gs/transform_aggregate\n\nimplement aggregate transform",
+          "timestamp": "2022-02-08T15:12:22+08:00",
+          "tree_id": "6a908170c71c642a3da4fce18fd4bb2cf8af593d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8396df75b3d430d5dee7c7837039829f2e1a3f12"
+        },
+        "date": 1644304702688,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1145500,
             "unit": "ns/op"
           }
         ]
