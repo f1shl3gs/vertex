@@ -132,7 +132,7 @@ pub struct TcpNullAcker;
 impl TcpSourceAcker for TcpNullAcker {
     // This function builds an acknowledgement from the source data in
     // the acker and the given acknowledgement code
-    fn build_ack(self, ack: TcpSourceAck) -> Option<Bytes> {
+    fn build_ack(self, _ack: TcpSourceAck) -> Option<Bytes> {
         None
     }
 }

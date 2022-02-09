@@ -10,6 +10,11 @@ use tokio::sync::mpsc;
 
 use crate::shutdown::ShutdownSignal;
 
+/// The `OrderedFinalizer` framework here is a mechanism for marking
+/// events from a source as done in a single background task *in
+/// the order they are received from the source*. The type `T` is the
+/// source-specific data associated with each entry to be used to
+/// complete the finalization.
 pub struct OrderedFinalizer<T> {
     sender: Option<mpsc::UnboundedSender<(BatchStatusReceiver, T)>>,
 }
