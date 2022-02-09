@@ -58,7 +58,6 @@ target-x86_64-unknown-linux-musl = [
     "sources",
     "transforms",
     "rdkafka-cmake",
-    "vendor-all",
     "unix",
 ]
 
@@ -71,9 +70,6 @@ target-x86_64-unknown-linux-gnu = [
     "rdkafka-cmake",
     "unix",
 ]
-
-vendor-all = ["vendor-sasl"]
-vendor-sasl = ["rdkafka/gssapi-vendored"]
 
 # Integration tests
 all-integration-tests = [
@@ -371,7 +367,7 @@ num_cpus = { version = "1.13.1" }
 nom = { version = "7.1.0", default-features = false }
 # pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 percent-encoding = { version = "2.1.0", default-features = false }
-rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz", "ssl"] }
+rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 regex = { version = "1.5.4" }
 rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
