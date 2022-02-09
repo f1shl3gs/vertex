@@ -170,6 +170,14 @@ impl LogRecord {
         self
     }
 
+    pub fn insert_tag(
+        &mut self,
+        key: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Option<String> {
+        self.tags.insert(key.into(), value.into())
+    }
+
     pub fn insert_field(
         &mut self,
         key: impl AsRef<str>,

@@ -6,7 +6,7 @@ use std::time::Duration;
 use async_stream::stream;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
-use event::{BatchNotifier, Event, LogRecord, Value};
+use event::{BatchNotifier, Event, Value};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
 use framework::codecs::StreamDecodingError;
 use framework::codecs::{BytesDecoderConfig, BytesDeserializerConfig};
@@ -28,8 +28,7 @@ use snafu::{ResultExt, Snafu};
 use tokio_util::codec::FramedRead;
 
 use crate::common::kafka::{
-    KafkaAuthConfig, KafkaEventFailed, KafkaEventReceived, KafkaOffsetUpdateFailed,
-    KafkaStatisticsContext,
+    KafkaAuthConfig, KafkaEventReceived, KafkaOffsetUpdateFailed, KafkaStatisticsContext,
 };
 
 fn default_auto_offset_reset() -> String {
@@ -216,9 +215,14 @@ enum BuildError {
 
 impl KafkaSourceConfig {
     fn create_consumer(&self) -> Result<StreamConsumer<KafkaStatisticsContext>, Error> {
-        let mut conf = ClientConfig::new();
-        conf.set("group.id", &self.group)
+        let mut client_config = ClientConfig::new();
+
+        client_config
+            .set("group.id", &self.group)
             .set("bootstrap.servers", &self.bootstrap_servers)
+            .set("enable.partition.eof", "false")
+            .set("session.timeout.ms", "6000")
+            .set("enable.auto.commit", "true")
             .set("auto.offset.reset", &self.auto_offset_reset)
             .set(
                 "session.timeout.ms",
@@ -232,8 +236,6 @@ impl KafkaSourceConfig {
                 "fetch.wait.max.ms",
                 self.fetch_wait_max.as_millis().to_string(),
             )
-            .set("enable.partition.eof", "false")
-            .set("enable.auto.commit", "true")
             .set(
                 "auto.commit.interval.ms",
                 self.commit_interval.as_millis().to_string(),
@@ -242,17 +244,18 @@ impl KafkaSourceConfig {
             .set("statistics.interval.ms", "1000")
             .set("client.id", "vertex");
 
-        self.auth.apply(&mut conf)?;
+        self.auth.apply(&mut client_config)?;
 
         if let Some(ref options) = self.librdkafka_options {
             for (key, value) in options {
-                conf.set(key, value);
+                client_config.set(key, value);
             }
         }
 
-        let consumer = conf
+        let consumer = client_config
             .create_with_context::<_, StreamConsumer<_>>(KafkaStatisticsContext)
             .context(KafkaCreateError)?;
+
         let topics: Vec<&str> = self.topics.iter().map(|s| s.as_str()).collect();
         consumer.subscribe(&topics).context(KafkaSubscribeError)?;
 
@@ -295,10 +298,10 @@ fn mark_done(consumer: Arc<StreamConsumer<KafkaStatisticsContext>>) -> impl Fn(F
 #[typetag::serde(name = "kafka")]
 impl SourceConfig for KafkaSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let consumer = self.create_consumer()?;
         let framing = BytesDecoderConfig::new();
         let decoder = DecodingConfig::new(Box::new(framing), self.decoding.clone()).build()?;
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
+        let consumer = self.create_consumer()?;
 
         Ok(Box::pin(kafka_source(
             consumer,
@@ -407,7 +410,8 @@ async fn kafka_source(
                             Some(Ok((events, _))) => {
                                 for mut event in events {
                                     if let Event::Log(ref mut log) = event {
-                                        log.insert_field(schema.source_type_key(), "kafka");
+                                        log.insert_tag(schema.source_type_key(), "kafka");
+
                                         log.insert_field(schema.timestamp_key(), timestamp);
                                         log.insert_field(key_field, msg_key.clone());
                                         log.insert_field(topic_key, msg_topic.clone());
@@ -479,9 +483,13 @@ mod tests {
 
     const BOOTSTRAP_SERVER: &str = "localhost:9091";
 
-    pub(super) fn make_config(topic: &str, group: &str) -> KafkaSourceConfig {
+    pub(super) fn make_config(
+        bootstrap_servers: &str,
+        topic: &str,
+        group: &str,
+    ) -> KafkaSourceConfig {
         KafkaSourceConfig {
-            bootstrap_servers: BOOTSTRAP_SERVER.into(),
+            bootstrap_servers: bootstrap_servers.into(),
             topics: vec![topic.into()],
             group: group.into(),
             auto_offset_reset: "beginning".to_string(),
@@ -503,7 +511,7 @@ mod tests {
 
     #[tokio::test]
     async fn consumer_create_ok() {
-        let config = make_config("topic", "group");
+        let config = make_config(BOOTSTRAP_SERVER, "topic", "group");
         assert!(config.create_consumer().is_ok())
     }
 
@@ -511,17 +519,16 @@ mod tests {
     async fn consumer_create_incorrect_auto_offset_reset() {
         let conf = KafkaSourceConfig {
             auto_offset_reset: "incorrect-auto-offset-reset".to_string(),
-            ..make_config("topic", "group")
+            ..make_config(BOOTSTRAP_SERVER, "topic", "group")
         };
         assert!(conf.create_consumer().is_err())
     }
 }
 
-// #[cfg(all(test, feature = "integration-tests-kafka"))]
-#[cfg(test)]
+#[cfg(all(test, feature = "integration-tests-kafka"))]
 mod integration_tests {
     use crate::sources::kafka::kafka_source;
-    use chrono::Utc;
+    use chrono::{SubsecRound, Utc};
     use event::{EventStatus, Value};
     use framework::{codecs, Pipeline, ShutdownSignal};
     use log_schema::log_schema;
@@ -529,7 +536,6 @@ mod integration_tests {
     use rdkafka::consumer::{BaseConsumer, Consumer};
     use rdkafka::message::OwnedHeaders;
     use rdkafka::producer::{FutureProducer, FutureRecord};
-    use rdkafka::util::Timeout;
     use rdkafka::{ClientConfig, Offset, TopicPartitionList};
     use std::time::Duration;
     use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
@@ -537,55 +543,94 @@ mod integration_tests {
     use testify::collect_n;
     use testify::random::random_string;
 
-    #[tokio::test]
-    async fn consume() {
-        // let network = "test-source-kafka".to_string();
-        // let cli = clients::Cli::default();
-        //
-        // let image = GenericImage::new("bitnami/zookeeper:3.7")
-        //     .with_env_var("ALLOW_ANONYMOUS_LOGIN", "yes")
-        //     .with_wait_for(WaitFor::LogMessage {
-        //         message: "Started AdminServer on address".to_string(),
-        //         stream: Stream::StdOut,
-        //     });
-        // let args = RunArgs::default()
-        //     .with_network(network.clone())
-        //     .with_name("zookeeper");
-        // let zk = cli.run_with_args(image, args);
-        //
-        // let image = GenericImage::new("bitnami/kafka:2.6.0")
-        //     .with_env_var("KAFKA_CFG_ZOOKEEPER_CONNECT", "zookeeper:2181")
-        //     .with_env_var("ALLOW_PLAINTEXT_LISTENER", "yes")
-        //     .with_env_var("KAFKA_BROKER_ID", "1")
-        //     .with_wait_for(WaitFor::LogMessage {
-        //         message: "started (kafka.server.KafkaServer)".to_string(),
-        //         stream: Stream::StdOut,
-        //     });
-        // let args = RunArgs::default()
-        //     .with_network(network)
-        //     .with_name("kafka");
-        // let kafka = cli.run_with_args(image, args);
-        //
-        // let host_port = kafka.get_host_port(9092).unwrap();
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn consume_with_ack() {
+        let network = format!("test-source-kafka-{}", random_string(10));
+        let cli = clients::Cli::default();
 
-        let host_port = 9092;
+        let image = GenericImage::new("bitnami/zookeeper:3.7")
+            .with_env_var("ALLOW_ANONYMOUS_LOGIN", "yes")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "Started AdminServer on address".to_string(),
+                stream: Stream::StdOut,
+            });
+        let zk_container_name = format!("zookeeper-{}", random_string(10));
+        let args = RunArgs::default()
+            .with_network(network.clone())
+            .with_name(&zk_container_name);
+        let _zk = cli.run_with_args(image, args);
 
-        consume_event(format!("localhost:{}", host_port), true).await;
+        let image = GenericImage::new("wurstmeister/kafka:2.13-2.7.0")
+            .with_env_var(
+                "KAFKA_ZOOKEEPER_CONNECT",
+                format!("{}:2181", &zk_container_name),
+            )
+            .with_env_var("KAFKA_ADVERTISED_HOST_NAME", "127.0.0.1")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "started (kafka.server.KafkaServer)".to_string(),
+                stream: Stream::StdOut,
+            });
+
+        let random_port = testify::pick_unused_local_port();
+        let args = RunArgs::default()
+            .with_network(network)
+            .with_mapped_port((random_port, 9092));
+        let _kafka = cli.run_with_args(image, args);
+
+        consume_event(format!("localhost:{}", random_port), true).await;
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+    async fn consume_without_ack() {
+        // NOTE: The code bellow is duplicated, but we just can't be moved into an
+        // individual function(e.g. setup).
+        let network = format!("test-source-kafka-{}", random_string(10));
+        let cli = clients::Cli::default();
+
+        let image = GenericImage::new("bitnami/zookeeper:3.7")
+            .with_env_var("ALLOW_ANONYMOUS_LOGIN", "yes")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "Started AdminServer on address".to_string(),
+                stream: Stream::StdOut,
+            });
+        let zk_container_name = format!("zookeeper-{}", random_string(10));
+        let args = RunArgs::default()
+            .with_network(network.clone())
+            .with_name(&zk_container_name);
+        let _zk = cli.run_with_args(image, args);
+
+        let image = GenericImage::new("wurstmeister/kafka:2.13-2.7.0")
+            .with_env_var(
+                "KAFKA_ZOOKEEPER_CONNECT",
+                format!("{}:2181", &zk_container_name),
+            )
+            .with_env_var("KAFKA_ADVERTISED_HOST_NAME", "127.0.0.1")
+            .with_wait_for(WaitFor::LogMessage {
+                message: "started (kafka.server.KafkaServer)".to_string(),
+                stream: Stream::StdOut,
+            });
+
+        let random_port = testify::pick_unused_local_port();
+        let args = RunArgs::default()
+            .with_network(network)
+            .with_mapped_port((random_port, 9092));
+        let _kafka = cli.run_with_args(image, args);
+
+        consume_event(format!("localhost:{}", random_port), false).await;
     }
 
     async fn consume_event(servers: String, ack: bool) {
-        // let topic = format!("test-topic-{}", random_string(10));
-        // let group = format!("test-group-{}", random_string(10));
-        let topic = format!("test-topic-{}", 1);
-        let group = format!("test-group-{}", 1);
+        let count = 10;
+        let topic = format!("test-topic-{}", random_string(10));
+        let group = format!("test-group-{}", random_string(10));
 
         let now = Utc::now();
-        let config = super::tests::make_config(&topic, &group);
+        let config = super::tests::make_config(&servers, &topic, &group);
 
         send_events(
             &servers,
             topic.clone(),
-            10,
+            count,
             "key",
             "payload",
             now.timestamp_millis(),
@@ -596,9 +641,9 @@ mod integration_tests {
 
         let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
-
+        let consumer = config.create_consumer().unwrap();
         tokio::spawn(kafka_source(
-            config.create_consumer().unwrap(),
+            consumer,
             config.key_field,
             config.topic_key,
             config.partition_key,
@@ -611,9 +656,13 @@ mod integration_tests {
         ));
 
         let events = collect_n(rx, 10).await;
+
+        // wait mark_done complete!?
+        tokio::time::sleep(Duration::from_secs(1)).await;
         drop(trigger_shutdown);
         shutdown_done.await;
 
+        // 1. Make sure the test did consume `count` message
         let client: BaseConsumer = client_config(Some(&group), &servers);
         client.subscribe(&[&topic]).expect("Subscribing failed");
 
@@ -627,18 +676,18 @@ mod integration_tests {
             tpl.find_partition(&topic, 0)
                 .expect("TPL is missing topic")
                 .offset(),
-            Offset::from_raw(10)
+            Offset::from_raw(count as i64)
         );
 
-        assert_eq!(events.len(), 10);
+        // 2. assert every message's timestamp and content
+        assert_eq!(events.len(), count);
         for (i, event) in events.into_iter().enumerate() {
             let log = event.as_log();
             let message = log.get_field(log_schema().message_key()).unwrap();
             let timestamp = log.get_field(log_schema().timestamp_key()).unwrap();
 
             assert_eq!(*message, format!("{} payload", i).into());
-
-            // assert_eq!(timestamp, now.trunc_subsecs(3).into());
+            assert_eq!(*timestamp, Value::from(now.trunc_subsecs(3)));
             assert_eq!(*log.get_field("topic").unwrap(), Value::from(topic.clone()));
         }
     }
@@ -668,41 +717,24 @@ mod integration_tests {
         let producer: FutureProducer = client_config(None, servers);
 
         for i in 0..count {
-            let text = format!("{} {}", i, text);
+            let payload = format!("{} {}", i, text);
             let record = FutureRecord::to(&topic)
-                .payload(&text)
+                .payload(&payload)
                 .key(key)
                 .timestamp(timestamp)
                 .headers(OwnedHeaders::new().add(header_key, header_value));
 
-            if let Err(err) = producer
-                .send(record, Timeout::After(Duration::from_secs(3)))
-                .await
-            {
-                println!("send event failed, {:?}", err);
-                // panic!("Cannot send event to Kafka, server: {}, err: {:?}", servers, err)
-            } else {
-                println!("send {}", i);
+            match producer.send(record, Duration::from_secs(3)).await {
+                Ok((_partition, _offset)) => {
+                    // dbg!("partition: {}, offset: {}", partition, offset);
+                }
+                Err(err) => {
+                    panic!(
+                        "Cannot send event to Kafka, server: {}, err: {:?}",
+                        servers, err
+                    )
+                }
             }
         }
-    }
-
-    #[tokio::test]
-    async fn sample_produce() {
-        let topic = "simple_write";
-        let broker = "localhost:9092";
-
-        let producer: &FutureProducer = &ClientConfig::new()
-            .set("bootstrap.servers", broker)
-            .set("message.timeout.ms", "5000")
-            .create()
-            .unwrap();
-
-        let record = FutureRecord::to(topic)
-            .payload("message")
-            .key("key")
-            .headers(OwnedHeaders::new().add("hk", "hv"));
-        let status = producer.send(record, Duration::from_secs(3)).await;
-        println!("delivery status {:?}", status);
     }
 }
