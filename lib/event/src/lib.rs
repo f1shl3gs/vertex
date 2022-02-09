@@ -1,6 +1,6 @@
 pub mod encoding;
 mod finalization;
-mod log;
+pub mod log;
 mod logfmt;
 mod macros;
 mod metadata;
