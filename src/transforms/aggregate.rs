@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
-use event::{Event, EventMetadata, Metric, MetricSeries, MetricValue, Value};
+use event::{Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue, Value};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     TransformConfig, TransformContext,
@@ -16,6 +16,12 @@ use serde::{Deserialize, Serialize};
 
 const fn default_increase_by_value() -> bool {
     false
+}
+
+fn default_buckets() -> Vec<f64> {
+    vec![
+        0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0,
+    ]
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -37,10 +43,90 @@ struct GaugeConfig {
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
+struct HistogramConfig {
+    name: String,
+    field: String,
+    #[serde(default)]
+    tags: BTreeMap<String, String>,
+    #[serde(default = "default_buckets")]
+    buckets: Vec<f64>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 enum MetricConfig {
     Counter(CounterConfig),
     Gauge(GaugeConfig),
+    Histogram(HistogramConfig),
+}
+
+impl MetricConfig {
+    fn build_series_and_value(
+        &self,
+        fields: &BTreeMap<String, Value>,
+    ) -> Option<(MetricSeries, f64)> {
+        let (name, tags, field, parse_value) = match self {
+            MetricConfig::Counter(config) => (
+                &config.name,
+                &config.tags,
+                &config.field,
+                config.increment_by_value,
+            ),
+            MetricConfig::Histogram(config) => (&config.name, &config.tags, &config.field, true),
+            MetricConfig::Gauge(config) => (&config.name, &config.tags, &config.field, true),
+        };
+
+        let value = match event::log::get::get(fields, field)? {
+            Value::Int64(i) => *i as f64,
+            Value::Uint64(u) => *u as f64,
+            Value::Float(f) => *f,
+            Value::Bytes(b) => {
+                if parse_value {
+                    String::from_utf8_lossy(b.as_ref()).parse().ok()?
+                } else {
+                    1.0
+                }
+            }
+            _ => return None,
+        };
+
+        let mut t = BTreeMap::new();
+        for (k, v) in tags {
+            let value = match event::log::get::get(fields, v) {
+                Some(value) => value.to_string_lossy(),
+                None => String::new(),
+            };
+
+            t.insert(k.to_string(), value);
+        }
+
+        Some((
+            MetricSeries {
+                name: name.to_string(),
+                tags: t,
+            },
+            value,
+        ))
+    }
+
+    fn new_metric_value(&self, value: f64) -> MetricValue {
+        match self {
+            MetricConfig::Counter(_) => MetricValue::Sum(value),
+            MetricConfig::Gauge(_) => MetricValue::Gauge(value),
+            MetricConfig::Histogram(config) => MetricValue::Histogram {
+                count: 1,
+                sum: value,
+                buckets: config
+                    .buckets
+                    .iter()
+                    .map(|upper| Bucket {
+                        upper: *upper,
+                        count: if value <= *upper { 1 } else { 0 },
+                    })
+                    .collect(),
+            },
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -70,6 +156,7 @@ metrics:
 # Availabel values
 # counter:     Counter
 # gauge:       Gauge
+# histogram:   Histogram
 #
 - type: counter
   # Metric name, it's highly recomment to see
@@ -83,15 +170,26 @@ metrics:
   # field: value.i64
   field: value
 
-  # Tags to set
+  # Tags to set, this field is not required,
+  # but is is recomment to set some tags to identify your metrics.
   #
-  # foo: bar.value is also supported
-  tags:
-    foo: bar
+  # tags:
+  #   foo: bar
+  #   hostname: ${ HOSTNAME }
+  #   inner: some.inner1.array[0]
 
-  # Controls how to increase the counter
+  # Controls how to increase the counter.
+  # Available for "counter" only.
   #
   # increase_by_value: false
+
+  # Specify histogram buckets.
+  # Available for "histogram" only
+  # Default: 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0
+  #
+  # buckets:
+  # - 0.1
+  # - 0.2
 "#
         .into()
     }
@@ -175,86 +273,33 @@ impl Aggregate {
         let (_, fields, metadata) = event.into_log().into_parts();
 
         for config in &self.configs {
-            match config {
-                MetricConfig::Counter(config) => {
-                    match extract_tags_and_value(
-                        config.field.as_str(),
-                        &config.tags,
-                        &fields,
-                        config.increment_by_value,
-                    ) {
-                        Some((tags, value)) => {
-                            let series = MetricSeries {
-                                name: config.name.clone(),
-                                tags,
-                            };
-                            match self.states.entry(series) {
-                                Entry::Occupied(mut entry) => {
-                                    let existing = entry.get_mut();
+            match config.build_series_and_value(&fields) {
+                Some((series, value)) => {
+                    match self.states.entry(series) {
+                        Entry::Occupied(mut entry) => {
+                            let existing = entry.get_mut();
 
-                                    // In order to update the new and old kind must match
-                                    match existing.0 {
-                                        MetricValue::Sum(_) => {
-                                            existing.0.add(value);
-                                            existing.1.merge(metadata.clone());
-                                        }
-                                        _ => {
-                                            *existing = (MetricValue::Sum(value), metadata.clone());
-                                            counter!("aggregate_failed_total", 1);
-                                        }
-                                    }
+                            // In order to update the new and old kind must match
+                            match (&existing.0, config) {
+                                (MetricValue::Sum(_), MetricConfig::Counter(_))
+                                | (MetricValue::Gauge(_), MetricConfig::Gauge(_))
+                                | (MetricValue::Histogram { .. }, MetricConfig::Histogram(_)) => {
+                                    existing.0.merge(value);
+                                    existing.1.merge(metadata.clone());
                                 }
-
-                                Entry::Vacant(entry) => {
-                                    entry.insert((MetricValue::Sum(value), metadata.clone()));
+                                _ => {
+                                    *existing = (config.new_metric_value(value), metadata.clone());
+                                    counter!("aggregate_failed_total", 1);
                                 }
                             }
                         }
-                        None => {
-                            counter!("aggregate_failed_total", 1);
+
+                        Entry::Vacant(entry) => {
+                            entry.insert((config.new_metric_value(value), metadata.clone()));
                         }
                     }
                 }
-
-                MetricConfig::Gauge(config) => {
-                    match extract_tags_and_value(
-                        config.field.as_str(),
-                        &config.tags,
-                        &fields,
-                        false,
-                    ) {
-                        Some((tags, value)) => {
-                            let series = MetricSeries {
-                                name: config.name.clone(),
-                                tags,
-                            };
-                            match self.states.entry(series) {
-                                Entry::Occupied(mut entry) => {
-                                    let existing = entry.get_mut();
-
-                                    // In order to update the new and old kind must match
-                                    match existing.0 {
-                                        MetricValue::Sum(_) => {
-                                            existing.0.update(value);
-                                            existing.1.merge(metadata.clone());
-                                        }
-                                        _ => {
-                                            *existing = (MetricValue::Sum(value), metadata.clone());
-                                            counter!("aggregate_failed_total", 1);
-                                        }
-                                    }
-                                }
-
-                                Entry::Vacant(entry) => {
-                                    entry.insert((MetricValue::Sum(value), metadata.clone()));
-                                }
-                            }
-                        }
-                        None => {
-                            counter!("aggregate_failed_total", 1);
-                        }
-                    }
-                }
+                None => counter!("aggregate_failed_total", 1),
             }
         }
     }
@@ -269,43 +314,10 @@ impl Aggregate {
     }
 }
 
-fn extract_tags_and_value(
-    field: &str,
-    tags: &BTreeMap<String, String>,
-    fields: &BTreeMap<String, Value>,
-    parse_value: bool,
-) -> Option<(BTreeMap<String, String>, f64)> {
-    let value = match event::log::get::get(fields, field)? {
-        Value::Int64(i) => *i as f64,
-        Value::Uint64(u) => *u as f64,
-        Value::Float(f) => *f,
-        Value::Bytes(b) => {
-            if parse_value {
-                String::from_utf8_lossy(b.as_ref()).parse().ok()?
-            } else {
-                1.0
-            }
-        }
-        _ => return None,
-    };
-
-    let mut t = BTreeMap::new();
-    for (k, v) in tags {
-        let value = match event::log::get::get(fields, v) {
-            Some(value) => value.to_string_lossy(),
-            None => String::new(),
-        };
-
-        t.insert(k.to_string(), value);
-    }
-
-    Some((t, value))
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, tags};
+    use event::{fields, tags, Bucket};
 
     #[test]
     fn generate_config() {
@@ -392,6 +404,70 @@ mod tests {
                 }),
                 vec![fields!("foo" => "1"), fields!("foo" => 2.1)],
                 vec![("test", tags!(), MetricValue::Gauge(2.1))],
+            ),
+            (
+                "histogram",
+                MetricConfig::Histogram(HistogramConfig {
+                    name: "test".to_string(),
+                    field: "foo".to_string(),
+                    tags: Default::default(),
+                    buckets: default_buckets(),
+                }),
+                vec![fields!("foo" => 0.0005), fields!("foo" => "5")],
+                vec![(
+                    "test",
+                    tags!(),
+                    MetricValue::Histogram {
+                        count: 2,
+                        sum: 5.0005,
+                        buckets: vec![
+                            Bucket {
+                                count: 1,
+                                upper: 0.005,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.01,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.025,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.05,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.1,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.25,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 0.5,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 1.0,
+                            },
+                            Bucket {
+                                count: 1,
+                                upper: 2.5,
+                            },
+                            Bucket {
+                                count: 2,
+                                upper: 5.0,
+                            },
+                            Bucket {
+                                count: 2,
+                                upper: 10.0,
+                            },
+                        ],
+                    },
+                )],
             ),
         ];
 

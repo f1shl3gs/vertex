@@ -47,17 +47,26 @@ pub enum MetricValue {
 }
 
 impl MetricValue {
-    pub fn add(&mut self, f: impl IntoF64) {
-        match self {
-            MetricValue::Sum(v) => *v += f.into_f64(),
-            _ => unreachable!(),
-        }
-    }
+    pub fn merge(&mut self, f: impl IntoF64) {
+        let f = f.into_f64();
 
-    pub fn update(&mut self, f: impl IntoF64) {
         match self {
-            MetricValue::Sum(v) => *v = f.into_f64(),
-            MetricValue::Gauge(v) => *v = f.into_f64(),
+            MetricValue::Sum(s) => *s = f,
+            MetricValue::Gauge(g) => *g = f,
+            MetricValue::Histogram {
+                buckets,
+                count,
+                sum,
+            } => {
+                *count += 1;
+                *sum += f;
+
+                buckets.iter_mut().for_each(|b| {
+                    if f <= b.upper {
+                        b.count += 1;
+                    }
+                });
+            }
             _ => unreachable!(),
         }
     }
