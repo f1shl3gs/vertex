@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644305557977,
+  "lastUpdate": 1644420822734,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6136,6 +6136,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 73.804,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1931ef3c5cf1ea330627c91d15bbd4a5fe874d78",
+          "message": "Merge pull request #182 from f1shl3gs/kafka_source_integration_test\n\nKafka source integration test",
+          "timestamp": "2022-02-09T23:27:15+08:00",
+          "tree_id": "8ed89daf4e44736aba63fc499534216015f8275e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1931ef3c5cf1ea330627c91d15bbd4a5fe874d78"
+        },
+        "date": 1644420820762,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 28.042,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 74.698,
             "unit": "ns/op"
           }
         ]
