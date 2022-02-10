@@ -1,5 +1,6 @@
 mod contains;
 pub mod get;
+pub mod get_mut;
 mod insert;
 mod keys;
 pub mod path_iter;
@@ -214,6 +215,10 @@ impl LogRecord {
 
     pub fn get_field(&self, key: impl AsRef<str>) -> Option<&Value> {
         get::get(&self.fields, key.as_ref())
+    }
+
+    pub fn get_field_mut(&mut self, key: impl AsRef<str>) -> Option<&mut Value> {
+        self::get_mut::get_mut(&mut self.fields, key.as_ref())
     }
 
     pub fn remove_field(&mut self, key: impl AsRef<str>) -> Option<Value> {

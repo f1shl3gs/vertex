@@ -177,13 +177,15 @@ transforms = [
     "transforms-add_fields",
     "transforms-aggregate",
     "transforms-cardinality",
-    "transforms-sample"
+    "transforms-sample",
+    "transforms-substr"
 ]
 transforms-add_tags = []
 transforms-add_fields = []
 transforms-aggregate = ["async-stream"]
 transforms-cardinality = ["bloom"]
 transforms-sample = ["seahash"]
+transforms-substr = []
 
 # sinks
 sinks = [

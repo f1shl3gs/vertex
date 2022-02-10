@@ -20,6 +20,8 @@ mod rename_tags;
 mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;
+#[cfg(feature = "transforms-substr")]
+mod substr;
 
 /// Transform a single `Event` through the `FunctionTransform`
 ///
