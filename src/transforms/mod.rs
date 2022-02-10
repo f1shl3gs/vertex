@@ -22,6 +22,8 @@ mod route;
 mod sample;
 #[cfg(feature = "transforms-substr")]
 mod substr;
+#[cfg(feature = "transforms-throttle")]
+mod throttle;
 
 /// Transform a single `Event` through the `FunctionTransform`
 ///

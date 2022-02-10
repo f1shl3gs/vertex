@@ -178,7 +178,8 @@ transforms = [
     "transforms-aggregate",
     "transforms-cardinality",
     "transforms-sample",
-    "transforms-substr"
+    "transforms-substr",
+    "transforms-throttle"
 ]
 transforms-add_tags = []
 transforms-add_fields = []
@@ -186,6 +187,7 @@ transforms-aggregate = ["async-stream"]
 transforms-cardinality = ["bloom"]
 transforms-sample = ["seahash"]
 transforms-substr = []
+transforms-throttle = ["governor"]
 
 # sinks
 sinks = [
@@ -359,6 +361,7 @@ dyn-clone = { version = "1.0.4" }
 encoding_rs = { version = "0.8.30", features = ["serde"]}
 exitcode = { version = "1.1.2" }
 glob = { version = "0.3.0" }
+governor = { version = "0.4.2", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }

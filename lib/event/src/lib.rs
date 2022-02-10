@@ -1,3 +1,4 @@
+mod array;
 pub mod encoding;
 mod finalization;
 pub mod log;
@@ -9,6 +10,7 @@ mod proto;
 mod trace;
 
 // re-export
+pub use array::EventContainer;
 pub use buffers::{DecodeBytes, EncodeBytes};
 pub use finalization::{
     BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,

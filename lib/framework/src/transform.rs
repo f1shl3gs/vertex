@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::pin::Pin;
 
 use async_trait::async_trait;
-use event::Event;
+use event::{Event, EventContainer};
 use futures::Stream;
-use futures_util::SinkExt;
+use futures_util::{stream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
@@ -55,6 +55,18 @@ pub trait TaskTransform: Send {
         self: Box<Self>,
         task: Pin<Box<dyn Stream<Item = Event> + Send>>,
     ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
+
+    /// Wrap the transform task to process and emit individual
+    /// events. This is used to simplify testing task transforms.
+    fn transform_events(
+        self: Box<Self>,
+        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Event> + Send>> {
+        self.transform(task.map(Into::into).boxed())
+            .map(EventContainer::into_events)
+            .flat_map(stream::iter)
+            .boxed()
+    }
 }
 
 // TODO: this is a bit ugly when we already have the above impl
@@ -106,6 +118,18 @@ impl Transform {
     /// over this where possible.
     pub fn event_task(v: impl TaskTransform + 'static) -> Self {
         Transform::Task(Box::new(v))
+    }
+
+    /// Transmute the inner transform into a task transform.
+    ///
+    /// # Panics
+    ///
+    /// If the transform is not a `TaskTransform` this will panic.
+    pub fn into_task(self) -> Box<dyn TaskTransform> {
+        match self {
+            Transform::Task(task) => task,
+            _ => panic!("Called `into_task` on something that was not a task variant"),
+        }
     }
 }
 
