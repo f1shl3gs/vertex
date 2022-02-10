@@ -8,7 +8,7 @@ use async_trait::async_trait;
 use event::{Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue, Value};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    TransformConfig, TransformContext,
+    TransformConfig, TransformContext, TransformDescription,
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
@@ -193,6 +193,10 @@ metrics:
 "#
         .into()
     }
+}
+
+inventory::submit! {
+    TransformDescription::new::<AggregateConfig>("aggregate")
 }
 
 #[async_trait]
