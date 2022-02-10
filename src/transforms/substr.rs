@@ -81,6 +81,7 @@ impl FunctionTransform for Substr {
 
         if let Some(Value::Bytes(value)) = log.get_field_mut(&self.field) {
             if let Some(offset) = self.offset {
+                let offset = value.remaining().min(offset);
                 value.advance(offset);
             }
 
