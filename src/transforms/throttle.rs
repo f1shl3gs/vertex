@@ -209,8 +209,9 @@ rate: 2
         )
         .unwrap();
 
-        let transform =
-            Transform::event_task(Throttle::new(config.rate, clock.clone(), config.key_field).unwrap());
+        let transform = Transform::event_task(
+            Throttle::new(config.rate, clock.clone(), config.key_field).unwrap(),
+        );
         let throttle = transform.into_task();
 
         let (mut tx, rx) = futures::channel::mpsc::channel(10);
