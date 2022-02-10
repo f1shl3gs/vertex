@@ -4,6 +4,8 @@ mod blackbox;
 mod chrony;
 #[cfg(feature = "sources-consul")]
 mod consul;
+#[cfg(feature = "sources-demo_logs")]
+mod demo_logs;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
 #[cfg(feature = "sources-fluentd")]

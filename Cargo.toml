@@ -114,6 +114,7 @@ allocator-jemalloc = ["jemallocator"]
 sources = [
     "sources-bind",
     "sources-consul",
+    "sources-demo_logs",
     "sources-generator",
     "sources-node_metrics",
     "sources-ntp",
@@ -144,6 +145,7 @@ sources = [
 
 sources-bind = []
 sources-consul = []
+sources-demo_logs = []
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
