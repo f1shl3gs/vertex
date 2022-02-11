@@ -22,7 +22,14 @@ pub enum ParseDurationError {
 
 impl Display for ParseDurationError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self)
+        let msg = match self {
+            ParseDurationError::BadInteger => "bad integer",
+            ParseDurationError::InvalidDuration => "invalid duration",
+            ParseDurationError::MissingUnit => "missing unit",
+            ParseDurationError::UnknownUnit => "unknown unit",
+        };
+
+        write!(f, "{}", msg)
     }
 }
 
@@ -208,7 +215,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
 /// Leading zero units are omitted. As a special case, durations less than one
 /// second format use a smaller unit (milli-, micro-, or nanoseconds) to ensure
 /// that the leading digit is non-zero. The zero duration formats as 0s
-pub fn duration_to_string(d: &Duration) -> String {
+pub fn duration(d: &Duration) -> String {
     // Largest time is 2540400h10m10.000000000s
     let mut w = 32;
     let mut buf = [0u8; 32];
@@ -555,8 +562,8 @@ mod tests {
         ];
 
         for (want, input) in tests {
-            let duration = Duration::from_nanos(input);
-            assert_eq!(duration_to_string(&duration), want)
+            let d = Duration::from_nanos(input);
+            assert_eq!(duration(&d), want)
         }
     }
 }

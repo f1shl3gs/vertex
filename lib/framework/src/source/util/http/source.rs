@@ -55,7 +55,6 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
             counter!("http_source_connection_total", 1);
             let inner = Arc::clone(&inner);
             let builder = self.clone();
-            let output = inner.output.clone();
 
             async move {
                 Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| {
@@ -106,8 +105,6 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         });
 
         Ok(Box::pin(async move {
-            let path = path.as_str();
-
             if let Err(err) =
                 Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                     .serve(service)
