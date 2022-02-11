@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1644568305748,
+  "lastUpdate": 1644568346720,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2978,6 +2978,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1153000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c7b019788b7251efbf195047ca0eefcad7a067e",
+          "message": "Merge pull request #189 from f1shl3gs/throttle_transform\n\nThrottle transform",
+          "timestamp": "2022-02-11T16:23:43+08:00",
+          "tree_id": "f26d1b468276dd9ccc83074b10e527aa1680aff8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c7b019788b7251efbf195047ca0eefcad7a067e"
+        },
+        "date": 1644568345608,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1162300,
             "unit": "ns/op"
           }
         ]
