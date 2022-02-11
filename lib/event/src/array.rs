@@ -35,6 +35,6 @@ impl EventContainer for Event {
     }
 
     fn into_events(self) -> Self::IntoIter {
-        iter::once(self.into())
+        iter::once(self)
     }
 }

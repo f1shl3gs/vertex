@@ -2,35 +2,44 @@ use std::num::NonZeroU32;
 use std::pin::Pin;
 use std::time::Duration;
 
-use crate::common::events::TemplateRenderingFailed;
 use async_stream::stream;
 use async_trait::async_trait;
 use event::Event;
 use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
+    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, TransformConfig,
+    TransformContext, TransformDescription,
 };
 use framework::template::Template;
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use futures_util::stream;
 use governor::{clock, Quota, RateLimiter};
-use internal::emit;
+use internal::{emit, InternalEvent};
 use serde::{Deserialize, Serialize};
 use snafu::{OptionExt, Snafu};
 
+use crate::common::events::TemplateRenderingFailed;
+
+const fn default_window() -> Duration {
+    Duration::from_secs(1)
+}
+
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct ThrottleConfig {
-    rate: u32,
+    threshold: u32,
+    #[serde(
+        default = "default_window",
+        deserialize_with = "deserialize_duration",
+        serialize_with = "serialize_duration"
+    )]
+    window: Duration,
     key_field: Option<Template>,
 }
 
 impl GenerateConfig for ThrottleConfig {
     fn generate_config() -> String {
-        r#"
-# Rate of each log stream, n/s
-#
-rate: 100
-
+        format!(
+            r#"
 # The name of the log field whose value will be hashed to determine if the
 # event should be rate limited.
 #
@@ -39,8 +48,17 @@ rate: 100
 #
 key_field: hostname
 
-"#
-        .into()
+# The number of events allowed for a given bucket per configured window.
+# Each unique key will have its own threshold
+#
+threshold: 100
+
+# The time frame in which the configured "threshold" is applied
+#
+# window: {}
+"#,
+            humanize::duration(&default_window())
+        )
     }
 }
 
@@ -52,18 +70,12 @@ inventory::submit! {
 #[typetag::serde(name = "throttle")]
 impl TransformConfig for ThrottleConfig {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let flush_keys_interval = Duration::from_secs(1);
-        let threshold = NonZeroU32::new(self.rate).unwrap();
-
-        let quota = Quota::with_period(Duration::from_secs(1)).unwrap();
-        quota.allow_burst(threshold);
-
-        let throttle = Throttle {
-            quota,
-            clock: clock::MonotonicClock,
-            flush_keys_interval,
-            key_field: self.key_field.clone(),
-        };
+        let throttle = Throttle::new(
+            self.threshold,
+            self.window,
+            clock::MonotonicClock,
+            self.key_field.clone(),
+        )?;
 
         Ok(Transform::event_task(throttle))
     }
@@ -100,12 +112,20 @@ where
     C: clock::Clock<Instant = I>,
     I: clock::Reference,
 {
-    pub fn new(rate: u32, clock: C, key_field: Option<Template>) -> crate::Result<Self> {
-        let flush_keys_interval = Duration::from_secs(1);
-        let threshold = NonZeroU32::new(rate).context(NonZero)?;
+    pub fn new(
+        threshold: u32,
+        window: Duration,
+        clock: C,
+        key_field: Option<Template>,
+    ) -> crate::Result<Self> {
+        let flush_keys_interval = window;
+        let threshold = NonZeroU32::new(threshold).context(NonZero)?;
 
-        let quota = Quota::with_period(Duration::from_secs(1)).unwrap();
-        quota.allow_burst(threshold);
+        let quota = Quota::with_period(Duration::from_secs_f64(
+            window.as_secs_f64() / threshold.get() as f64,
+        ))
+        .context(NonZero)?
+        .allow_burst(threshold);
 
         let throttle = Throttle {
             quota,
@@ -155,10 +175,14 @@ where
                                         });
 
                                     match limiter.check_key(&key) {
-                                        Ok(()) => {
-
-                                        },
-                                        _ => {}
+                                        Ok(()) => output.push(event),
+                                        _ => {
+                                            if let Some(key) = key {
+                                                emit!(&ThrottleEventDiscarded{ key });
+                                            } else {
+                                                emit!(&ThrottleEventDiscarded { key: "None".to_string() })
+                                            }
+                                        }
                                     }
 
                                     false
@@ -188,9 +212,25 @@ where
     }
 }
 
+#[derive(Debug)]
+pub struct ThrottleEventDiscarded {
+    key: String,
+}
+
+impl InternalEvent for ThrottleEventDiscarded {
+    fn emit_logs(&self) {
+        debug!(message = "Rate limit exceeded", ?self.key);
+    }
+
+    fn emit_metrics(&self) {
+        counter!("events_discarded_total", 1, "key" => self.key.to_owned())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use event::fields;
     use futures_util::{SinkExt, StreamExt};
     use std::task::Poll;
 
@@ -204,18 +244,25 @@ mod tests {
         let clock = clock::FakeRelativeClock::default();
         let config = serde_yaml::from_str::<ThrottleConfig>(
             r#"
-rate: 2
+threshold: 2
+window: 5s
 "#,
         )
         .unwrap();
 
         let transform = Transform::event_task(
-            Throttle::new(config.rate, clock.clone(), config.key_field).unwrap(),
+            Throttle::new(
+                config.threshold,
+                config.window,
+                clock.clone(),
+                config.key_field,
+            )
+            .unwrap(),
         );
         let throttle = transform.into_task();
 
         let (mut tx, rx) = futures::channel::mpsc::channel(10);
-        let mut out_stream = throttle.transform(Box::pin(rx));
+        let mut out_stream = throttle.transform_events(Box::pin(rx));
 
         // tokio interval is always immediately ready, so we poll once to make sure
         // we trip it/set the interval in the future.
@@ -224,7 +271,7 @@ rate: 2
         tx.send(Event::from("")).await.unwrap();
         tx.send(Event::from("")).await.unwrap();
 
-        let mut count = 0u8;
+        let mut count = 0_u8;
         while count < 2 {
             if let Some(_event) = out_stream.next().await {
                 count += 1;
@@ -232,8 +279,8 @@ rate: 2
                 panic!("Unexpectedly received None in output stream");
             }
         }
-
         assert_eq!(2, count);
+
         clock.advance(Duration::from_secs(2));
 
         tx.send(Event::from("")).await.unwrap();
@@ -251,6 +298,57 @@ rate: 2
             .next()
             .await
             .expect("Unexpectedly received None in output stream");
+
+        // We should be back to pending, having nothing waiting for us
+        assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));
+
+        tx.disconnect();
+
+        // And still nothing there
+        assert_eq!(Poll::Ready(None), futures::poll!(out_stream.next()));
+    }
+
+    #[tokio::test]
+    async fn throttle_buckets() {
+        let clock = clock::FakeRelativeClock::default();
+        let config = serde_yaml::from_str::<ThrottleConfig>(
+            r#"
+threshold: 1
+window: 5s
+key_field: "{{ bucket }}"
+"#,
+        )
+        .unwrap();
+
+        assert!(config.key_field.is_some());
+        let throttle = Throttle::new(config.threshold, config.window, clock, config.key_field)
+            .map(Transform::event_task)
+            .unwrap();
+
+        let throttle = throttle.into_task();
+
+        let (mut tx, rx) = futures::channel::mpsc::channel(10);
+        let mut out_stream = throttle.transform_events(Box::pin(rx));
+
+        // tokio interval is always immediately ready, so we poll once to
+        // make sure we trip it/set the interval in the furture
+        assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));
+
+        let log_a = Event::from(fields!("bucket" => "a"));
+        let log_b = Event::from(fields!("bucket" => "b"));
+        tx.send(log_a).await.unwrap();
+        tx.send(log_b).await.unwrap();
+
+        let mut count = 0u8;
+        while count < 2 {
+            if let Some(_event) = out_stream.next().await {
+                count += 1;
+            } else {
+                panic!("Unexpectedly received None in output stream");
+            }
+        }
+
+        assert_eq!(2, count);
 
         // We should be back to pending, having nothing waiting for us
         assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));

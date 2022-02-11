@@ -27,6 +27,9 @@ macro_rules! fields {
     ( $($x:expr => $y:expr,)* ) => (
         fields!{$($x => $y),*}
     );
+    () => ({
+        std::collections::BTreeMap<String, $crate::Value> = std::collections::BTreeMap::new();
+    })
 }
 
 #[macro_export]

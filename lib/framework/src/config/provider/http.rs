@@ -119,7 +119,7 @@ url: http://config.example.com/config
 #
 
         "#,
-            humanize::duration_to_string(&default_interval()),
+            humanize::duration(&default_interval()),
             TlsConfig::generate_commented_with_indent(2),
             ProxyConfig::generate_commented_with_indent(2)
         )

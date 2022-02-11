@@ -283,8 +283,8 @@ encoding:
 "#,
             BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2),
             KafkaSaslConfig::generate_commented_with_indent(2),
-            humanize::duration_to_string(&default_socket_timeout()),
-            humanize::duration_to_string(&default_message_timeout()),
+            humanize::duration(&default_socket_timeout()),
+            humanize::duration(&default_message_timeout()),
         )
     }
 }

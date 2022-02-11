@@ -16,7 +16,7 @@ pub fn deserialize_duration<'de, D: Deserializer<'de>>(
 }
 
 pub fn serialize_duration<S: Serializer>(d: &std::time::Duration, s: S) -> Result<S::Ok, S::Error> {
-    s.serialize_str(&humanize::duration_to_string(d))
+    s.serialize_str(&humanize::duration(d))
 }
 
 pub fn deserialize_duration_option<'de, D: Deserializer<'de>>(
@@ -37,7 +37,7 @@ pub fn serialize_duration_option<S: Serializer>(
     s: S,
 ) -> Result<S::Ok, S::Error> {
     match d {
-        Some(d) => s.serialize_str(&humanize::duration_to_string(d)),
+        Some(d) => s.serialize_str(&humanize::duration(d)),
         None => s.serialize_none(),
     }
 }
