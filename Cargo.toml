@@ -321,7 +321,7 @@ metrics = { version = "0.18.0", default-features = false }
 tracing = { version = "0.1.30", default-features = false }
 
 # HTTP
-hyper = { version = "0.14.16", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.17", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 http = { version = "0.2.6", default-features = false }
 headers = { version = "0.3.7" }
 
