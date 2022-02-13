@@ -1,0 +1,10 @@
+[package]
+name = "jaeger"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+event = { path = "../event" }
+thrift = { version = "0.15.0" }
+tokio = { version = "1.16.1", default-features = false, features = ["net"] }

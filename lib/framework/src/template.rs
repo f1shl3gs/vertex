@@ -155,6 +155,7 @@ fn render_fields<'a>(src: &str, event: EventRef<'a>) -> Result<String, TemplateR
             match event {
                 EventRef::Log(log) => log.get_field(&key).map(|val| val.to_string_lossy()),
                 EventRef::Metric(metric) => render_metric_field(key, metric),
+                EventRef::Trace(span) => todo!(),
             }
             .unwrap_or_else(|| {
                 missing_keys.push(key.to_owned());
@@ -186,6 +187,7 @@ fn render_timestamp(src: &str, event: EventRef<'_>) -> String {
             .and_then(Value::as_timestamp)
             .copied(),
         EventRef::Metric(metric) => metric.timestamp(),
+        _ => todo!(),
     };
 
     if let Some(ts) = timestamp {

@@ -201,6 +201,8 @@ impl FunctionTransform for MockTransform {
 
                 metric.value = value
             }
+
+            Event::Trace(trace) => trace.service = format!("{}{}", trace.service, self.suffix),
         }
 
         output.push(event);

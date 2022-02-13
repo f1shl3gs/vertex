@@ -29,6 +29,7 @@ members = [
     "lib/humanize",
     "lib/sysinfo",
     "lib/virt",
+    "lib/jaeger",
 ]
 
 [features]
@@ -156,7 +157,7 @@ sources-internal_metrics = []
 sources-internal_logs = []
 sources-redis = ["redis"]
 sources-pulsar = []
-sources-prometheus_scrape = []
+sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
 sources-nginx_stub = []
 sources-zookeeper = []
@@ -194,13 +195,14 @@ sinks = [
     "sinks-blackhole",
     "sinks-clickhouse",
     "sinks-elasticsearch",
-    "sinks-loki",
+    "sinks-jaeger",
     "sinks-kafka",
+    "sinks-loki",
     "sinks-prometheus_exporter",
     "sinks-prometheus_remote_write",
     "sinks-pulsar",
-    "sinks-stdout",
     "sinks-socket",
+    "sinks-stdout",
     "sinks-vertex",
 ]
 
@@ -209,6 +211,7 @@ sinks-prometheus_remote_write = ["snap"]
 sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka"]
+sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
 sinks-loki = []
@@ -292,8 +295,9 @@ event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
 internal = { path = "lib/internal" }
+jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
-prometheus = { path = "lib/prometheus" }
+prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
 tail = { path = "lib/tail" }

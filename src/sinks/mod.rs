@@ -4,6 +4,8 @@ pub mod blackhole;
 mod clickhouse;
 #[cfg(feature = "sinks-elasticsearch")]
 mod elasticsearch;
+#[cfg(feature = "sinks-jaeger")]
+mod jaeger;
 #[cfg(any(feature = "sinks-kafka", feature = "rdkafka"))]
 mod kafka;
 #[cfg(feature = "sinks-loki")]
