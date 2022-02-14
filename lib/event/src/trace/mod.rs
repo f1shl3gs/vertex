@@ -1,5 +1,6 @@
 mod evicted_hash_map;
 mod evicted_queue;
+pub mod generator;
 
 use std::borrow::Cow;
 use std::collections::BTreeMap;
@@ -12,6 +13,7 @@ use shared::ByteSizeOf;
 use crate::{BatchNotifier, EventFinalizer, EventFinalizers, EventMetadata, Finalizable};
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
+pub use generator::RngGenerator;
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]
@@ -61,6 +63,13 @@ impl Key {
     }
 }
 
+impl From<&'static str> for Key {
+    /// Convert a `&str` to a `Key`.
+    fn from(key_str: &'static str) -> Self {
+        Key(Cow::from(key_str))
+    }
+}
+
 impl From<String> for Key {
     fn from(s: String) -> Self {
         Key(Cow::from(s))
@@ -79,6 +88,42 @@ pub enum AnyValue {
     Float(f64),
     Boolean(bool),
     Int64(i64),
+}
+
+impl From<i64> for AnyValue {
+    fn from(i: i64) -> Self {
+        Self::Int64(i)
+    }
+}
+
+impl From<u32> for AnyValue {
+    fn from(u: u32) -> Self {
+        Self::Int64(u as i64)
+    }
+}
+
+impl From<f64> for AnyValue {
+    fn from(f: f64) -> Self {
+        Self::Float(f)
+    }
+}
+
+impl From<bool> for AnyValue {
+    fn from(b: bool) -> Self {
+        Self::Boolean(b)
+    }
+}
+
+impl From<&str> for AnyValue {
+    fn from(s: &str) -> Self {
+        Self::String(s.to_string().into())
+    }
+}
+
+impl From<String> for AnyValue {
+    fn from(s: String) -> Self {
+        Self::String(s.into())
+    }
 }
 
 #[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
@@ -116,7 +161,7 @@ impl ByteSizeOf for KeyValue {
 #[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
 pub struct Event {
     /// name of the event.
-    pub name: String,
+    pub name: Cow<'static, str>,
 
     /// `timestamp` is the time the event occurred.
     pub timestamp: i64,
@@ -126,7 +171,7 @@ pub struct Event {
 
 impl ByteSizeOf for Event {
     fn allocated_bytes(&self) -> usize {
-        self.name.allocated_bytes() + self.attributes.allocated_bytes()
+        self.name.len() + self.attributes.allocated_bytes()
     }
 }
 
@@ -259,6 +304,43 @@ impl Display for SpanKind {
     }
 }
 
+#[derive(Clone, Debug, Default, PartialEq, Eq, Copy, Hash, Deserialize, Serialize)]
+pub struct TraceFlags(u8);
+
+impl TraceFlags {
+    /// Trace flags with the `sampled` flag set to `1`.
+    ///
+    /// Spans that are not sampled will be ignored by most tracing tools.
+    /// See the `sampled` section of the
+    /// [W3C TraceContext specification](https://www.w3.org/TR/trace-context/#sampled-flag)
+    /// for details.
+    pub const SAMPLED: TraceFlags = TraceFlags(0x01);
+
+    /// Construct new trace flags
+    pub const fn new(flag: u8) -> Self {
+        TraceFlags(flag)
+    }
+
+    /// Returns `true` if the `sampled` flag is set
+    pub fn is_sampled(&self) -> bool {
+        (*self & TraceFlags::SAMPLED) == TraceFlags::SAMPLED
+    }
+
+    /// Returns copy  of the current flags with the `sampled` flag set.
+    pub fn with_sampled(&self, sampled: bool) -> Self {
+        if sampled {
+            *self | TraceFlags::SAMPLED
+        } else {
+            *self & !TraceFlags::SAMPLED
+        }
+    }
+
+    /// Returns the flags as a `u8`
+    pub fn to_u8(self) -> u8 {
+        self.0
+    }
+}
+
 /// A pointer from the current span to another span in the same trace or
 /// in a different trace. For example, this can be used in batching
 /// operations, where a single batch handler processes multiple requests
@@ -302,6 +384,13 @@ impl StatusCode {
             StatusCode::Error => "ERROR",
         }
     }
+
+    pub fn is_unset(&self) -> bool {
+        match self {
+            StatusCode::Unset => true,
+            _ => false,
+        }
+    }
 }
 
 /// The Status type defines a logical error model  that is suitable for
@@ -312,6 +401,15 @@ pub struct Status {
     pub message: Cow<'static, str>,
     /// The status code
     pub status_code: StatusCode,
+}
+
+impl Default for Status {
+    fn default() -> Self {
+        Self {
+            message: Cow::from(""),
+            status_code: StatusCode::Unset,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
@@ -377,7 +475,48 @@ pub struct Span {
     pub status: Status,
 }
 
-pub type Spans = Vec<Span>;
+impl Span {
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            trace_id: TraceId::INVALID,
+            span_id: SpanId::INVALID,
+            parent_span_id: SpanId::INVALID,
+            name: name.into(),
+            kind: SpanKind::Client,
+            start_time: 0,
+            end_time: 0,
+            attributes: EvictedHashMap::new(128, 0),
+            events: vec![],
+            links: EvictedQueue::new(128),
+            status: Status::default(),
+        }
+    }
+
+    pub fn with_start_time(mut self, start_time: i64) -> Self {
+        self.start_time = start_time;
+        self
+    }
+
+    pub fn with_span_id(mut self, id: SpanId) -> Self {
+        self.span_id = id;
+        self
+    }
+
+    pub fn with_trace_id(mut self, id: TraceId) -> Self {
+        self.trace_id = id;
+        self
+    }
+
+    pub fn with_parent_span_id(mut self, id: SpanId) -> Self {
+        self.parent_span_id = id;
+        self
+    }
+
+    pub fn with_end_time(mut self, end_time: i64) -> Self {
+        self.end_time = end_time;
+        self
+    }
+}
 
 impl ByteSizeOf for Span {
     fn allocated_bytes(&self) -> usize {

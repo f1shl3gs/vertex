@@ -41,9 +41,7 @@ impl EvictedHashMap {
         }
     }
 
-    /// Inserts a key-value pair into the map.
-    pub fn insert(&mut self, kv: KeyValue) {
-        let KeyValue { key, value } = kv;
+    pub fn insert(&mut self, key: Key, value: AnyValue) {
         let mut already_exists = false;
         // Check for existing item
         match self.map.entry(key.clone()) {
@@ -69,6 +67,12 @@ impl EvictedHashMap {
             self.remove_oldest();
             self.dropped_count += 1;
         }
+    }
+
+    /// Inserts a key-value pair into the map.
+    pub fn insert_key_value(&mut self, kv: KeyValue) {
+        let KeyValue { key, value } = kv;
+        self.insert(key, value)
     }
 
     /// Returns the number of elements in the map.
@@ -121,6 +125,23 @@ impl EvictedHashMap {
     fn remove_oldest(&mut self) {
         if let Some(oldest_item) = self.evict_list.pop_back() {
             self.map.remove(&oldest_item);
+        }
+    }
+}
+
+impl From<Vec<KeyValue>> for EvictedHashMap {
+    fn from(kvs: Vec<KeyValue>) -> Self {
+        let map = kvs
+            .into_iter()
+            .map(|kv| (kv.key, kv.value))
+            .collect::<HashMap<Key, AnyValue>>();
+
+        Self {
+            map,
+            evict_list: Default::default(),
+            // TODO: const
+            max_len: 128,
+            dropped_count: 0,
         }
     }
 }
@@ -178,7 +199,7 @@ mod tests {
         let mut map = EvictedHashMap::new(max_len, max_len as usize);
 
         for i in 0..=max_len {
-            map.insert(Key::new(i.to_string()).bool(true))
+            map.insert_key_value(Key::new(i.to_string()).bool(true))
         }
 
         assert_eq!(map.dropped_count, 1);

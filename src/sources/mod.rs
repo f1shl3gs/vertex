@@ -16,6 +16,8 @@ pub mod haproxy;
 mod internal_logs;
 #[cfg(feature = "sources-internal_metrics")]
 mod internal_metrics;
+#[cfg(feature = "sources-internal_traces")]
+mod internal_traces;
 #[cfg(all(target_os = "linux", feature = "sources-journald"))]
 mod journald;
 #[cfg(feature = "sources-kafka")]

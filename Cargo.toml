@@ -115,32 +115,33 @@ allocator-jemalloc = ["jemallocator"]
 sources = [
     "sources-bind",
     "sources-consul",
+    "sources-elasticsearch",
+    "sources-fluentd",
     "sources-generator",
-    "sources-node_metrics",
-    "sources-ntp",
+    "sources-haproxy",
+    "sources-internal_logs",
+    "sources-internal_metrics",
+    "sources-internal_traces",
+    "sources-journald",
     "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
-    "sources-selfstat",
-    "sources-journald",
-    "sources-internal_metrics",
-    "sources-internal_logs",
     "sources-libvirt",
-    "sources-redis",
-    "sources-pulsar",
+    "sources-memcached",
+    "sources-mongodb",
+    "sources-mysqld",
+    "sources-nginx_stub",
+    "sources-node_metrics",
+    "sources-ntp",
+    "sources-nvidia_smi",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
-    "sources-nginx_stub",
-    "sources-zookeeper",
-    "sources-haproxy",
-    "sources-memcached",
-    "sources-fluentd",
+    "sources-pulsar",
+    "sources-redis",
+    "sources-selfstat",
     "sources-syslog",
     "sources-tail",
-    "sources-mysqld",
-    "sources-nvidia_smi",
-    "sources-mongodb",
-    "sources-elasticsearch"
+    "sources-zookeeper",
 ]
 
 sources-bind = []
@@ -153,8 +154,9 @@ sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
 sources-journald = []
-sources-internal_metrics = []
 sources-internal_logs = []
+sources-internal_metrics = []
+sources-internal_traces = ["tracing-subscriber"]
 sources-redis = ["redis"]
 sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
@@ -325,6 +327,9 @@ metrics = { version = "0.18.0", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.30", default-features = false }
+tracing-log = { version = "0.1.2", default-features = false }
+tracing-subscriber = { version = "0.3.8", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-core = { version = "0.1.22" }
 
 # HTTP
 hyper = { version = "0.14.17", features = ["client", "runtime", "http1", "http2", "server", "stream"] }

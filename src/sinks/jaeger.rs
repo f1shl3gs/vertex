@@ -1,7 +1,6 @@
 use async_trait::async_trait;
 use event::trace::{
-    self, Trace,
-    EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode,
+    EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode, Trace,
 };
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
 use framework::sink::util::udp::UdpSinkConfig;

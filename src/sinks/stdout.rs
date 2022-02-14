@@ -92,8 +92,8 @@ fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option
                 Some(f)
             }
         },
-        Event::Trace(span) => match encoding.codec() {
-            Encoding::Json => serde_json::to_string(&span)
+        Event::Trace(trace) => match encoding.codec() {
+            Encoding::Json => serde_json::to_string(&trace)
                 .map_err(|err| {
                     error!(
                         message = "Error encoding json",
@@ -102,7 +102,7 @@ fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option
                 })
                 .ok(),
 
-            Encoding::Text => Some(format!("{:?}", span)),
+            Encoding::Text => Some(format!("{:?}", trace)),
         },
     }
 }

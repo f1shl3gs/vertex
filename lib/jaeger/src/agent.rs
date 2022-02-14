@@ -27,8 +27,8 @@ impl Debug for BufferClient {
     }
 }
 
-impl BufferClient {
-    pub fn new() -> Self {
+impl Default for BufferClient {
+    fn default() -> Self {
         let (buffer, write) = TBufferChannel::with_capacity(UDP_PACKET_MAX_LENGTH)
             .split()
             .unwrap();
