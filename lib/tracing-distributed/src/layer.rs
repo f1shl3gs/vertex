@@ -2,19 +2,20 @@ use std::any::TypeId;
 use std::collections::HashMap;
 use std::time::SystemTime;
 
-use event::trace::{SpanId, TraceId};
+use event::trace::{Span, SpanId, TraceId};
 use parking_lot::RwLock;
 use tracing::span::{Attributes, Id, Record};
 use tracing::{Event, Subscriber};
 use tracing_subscriber::{layer::Context, registry, Layer};
 
 use crate::telemetry::Telemetry;
-use crate::trace;
+use crate::trace::{SpanAttributeVisitor, SpanEventVisitor};
 
 /// A `tracing_subscriber::Layer` that publishes events and spans to some backend
 /// using the provided `Telemetry` capability.
 pub struct TelemetryLayer<Telemetry> {
     service_name: &'static str,
+
     pub(crate) telemetry: Telemetry,
     // used to construct span ids to avoid collisions
     pub(crate) trace_ctx_registry: TraceContextRegistry,
@@ -81,7 +82,7 @@ impl TraceContextRegistry {
                                 local_trace_root.clone()
                             } else {
                                 TraceContext {
-                                    trace_id: local_trace_root.trace_id.clone(),
+                                    trace_id: local_trace_root.trace_id,
                                     parent_span: None,
                                 }
                             };
@@ -90,7 +91,7 @@ impl TraceContextRegistry {
                                 let mut write_guard = span_ref.extensions_mut();
                                 write_guard.replace::<LazyTraceContext>(LazyTraceContext(
                                     TraceContext {
-                                        trace_id: local_trace_root.trace_id.clone(),
+                                        trace_id: local_trace_root.trace_id,
                                         parent_span: None,
                                     },
                                 ));
@@ -104,7 +105,7 @@ impl TraceContextRegistry {
                         already_evaluated.clone()
                     } else {
                         TraceContext {
-                            trace_id: already_evaluated.trace_id.clone(),
+                            trace_id: already_evaluated.trace_id,
                             parent_span: None,
                         }
                     };
@@ -112,7 +113,7 @@ impl TraceContextRegistry {
                     for span_ref in path.into_iter() {
                         let mut write_guard = span_ref.extensions_mut();
                         write_guard.replace::<LazyTraceContext>(LazyTraceContext(TraceContext {
-                            trace_id: already_evaluated.trace_id.clone(),
+                            trace_id: already_evaluated.trace_id,
                             parent_span: None,
                         }));
                     }
@@ -154,27 +155,26 @@ impl<T> TelemetryLayer<T> {
     }
 }
 
-impl<S, V, T> Layer<S> for TelemetryLayer<T>
+impl<S, T> Layer<S> for TelemetryLayer<T>
 where
     S: Subscriber + for<'a> registry::LookupSpan<'a>,
-    V: 'static + tracing::field::Visit + Send + Sync,
-    T: 'static + Telemetry<Visitor = V>,
+    T: 'static + Telemetry,
 {
     fn on_new_span(&self, attrs: &Attributes, id: &Id, ctx: Context<S>) {
         let span = ctx.span(id).expect("span data not found during new_span");
-        let mut extensions_mut = span.extensions_mut();
-        extensions_mut.insert(SpanInitAt::new());
+        let mut extensions = span.extensions_mut();
+        extensions.insert(SpanInitAt::new());
 
-        let mut visitor: V = self.telemetry.mk_visitor();
+        let mut visitor = SpanAttributeVisitor(Span::new(""));
         attrs.record(&mut visitor);
-        extensions_mut.insert::<V>(visitor);
+        extensions.insert::<SpanAttributeVisitor>(visitor);
     }
 
     fn on_record(&self, id: &Id, values: &Record, ctx: Context<S>) {
         let span = ctx.span(id).expect("span data not found during on_record");
-        let mut extensions_mut = span.extensions_mut();
-        let visitor: &mut V = extensions_mut
-            .get_mut()
+        let mut extensions = span.extensions_mut();
+        let visitor = extensions
+            .get_mut::<SpanAttributeVisitor>()
             .expect("fields extension not found during on_record");
         values.record(visitor);
     }
@@ -196,7 +196,11 @@ where
             Some(parent_id) => {
                 let initialized_at = SystemTime::now();
 
-                let mut visitor = self.telemetry.mk_visitor();
+                let mut visitor = SpanEventVisitor(event::trace::Event {
+                    name: Default::default(),
+                    timestamp: 0,
+                    attributes: Default::default(),
+                });
                 event.record(&mut visitor);
 
                 // TODO: dedup
@@ -245,13 +249,12 @@ where
 
         // if span's enclosing ctx has a trace id, eval & use to report telemetry
         if let Some(trace_ctx) = self.trace_ctx_registry.eval_ctx(iter) {
-            let mut extensions_mut = span.extensions_mut();
-            let visitor: V = extensions_mut
-                .remove()
+            let mut extensions = span.extensions_mut();
+            let visitor = extensions
+                .remove::<SpanAttributeVisitor>()
                 .expect("should be present on all spans");
-            let SpanInitAt(initialized_at) = extensions_mut
-                .remove()
-                .expect("should be present on all spans");
+            let SpanInitAt(initialized_at) =
+                extensions.remove().expect("should be present on all spans");
 
             let completed_at = SystemTime::now();
 
@@ -311,7 +314,8 @@ impl SpanInitAt {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::telemetry::test::{SpanId, TestTelemetry, TraceId};
+    use crate::telemetry::test::TestTelemetry;
+    use crate::trace;
     use std::sync::Arc;
     use std::sync::Mutex;
     use std::time::Duration;
@@ -320,11 +324,11 @@ mod tests {
     use tracing_subscriber::layer::Layer;
 
     fn explicit_trace_id() -> TraceId {
-        135
+        TraceId(135_u128)
     }
 
     fn explicit_parent_span_id() -> SpanId {
-        Id::from_u64(246)
+        SpanId(246_u64)
     }
 
     #[test]
@@ -352,9 +356,7 @@ mod tests {
                 );
 
                 assert_eq!(
-                    trace::current_dist_trace_ctx::<SpanId, TraceId>()
-                        .map(|x| x.0)
-                        .unwrap(),
+                    trace::current_dist_trace_ctx().map(|x| x.0).unwrap(),
                     explicit_trace_id(),
                 );
             }
@@ -391,9 +393,7 @@ mod tests {
                 );
 
                 assert_eq!(
-                    trace::current_dist_trace_ctx::<SpanId, TraceId>()
-                        .map(|x| x.0)
-                        .unwrap(),
+                    trace::current_dist_trace_ctx().map(|x| x.0).unwrap(),
                     explicit_trace_id(),
                 );
             }
@@ -410,7 +410,7 @@ mod tests {
         let spans = Arc::new(Mutex::new(Vec::new()));
         let events = Arc::new(Mutex::new(Vec::new()));
         let cap: TestTelemetry = TestTelemetry::new(spans.clone(), events.clone());
-        let layer = TelemetryLayer::new("test_svc_name", cap, |x| x);
+        let layer = TelemetryLayer::new("test_svc_name", cap, |x| SpanId(x.into_u64()));
 
         let subscriber = layer.with_subscriber(registry::Registry::default());
         tracing::subscriber::with_default(subscriber, f);
@@ -429,8 +429,8 @@ mod tests {
 
         for (span, event) in child_spans.iter().zip(events.iter()) {
             // confirm parent and trace ids are as expected
-            assert_eq!(span.parent_id, Some(root_span.id.clone()));
-            assert_eq!(event.parent_id, Some(span.id.clone()));
+            assert_eq!(span.parent_id, Some(root_span.id));
+            assert_eq!(event.parent_id, Some(span.id));
             assert_eq!(span.trace_id, explicit_trace_id());
             assert_eq!(event.trace_id, explicit_trace_id());
         }

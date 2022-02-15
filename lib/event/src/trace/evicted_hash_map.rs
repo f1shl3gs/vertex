@@ -17,6 +17,12 @@ pub struct EvictedHashMap {
     dropped_count: u32,
 }
 
+impl Default for EvictedHashMap {
+    fn default() -> Self {
+        Self::new(128, 0)
+    }
+}
+
 impl PartialOrd for EvictedHashMap {
     fn partial_cmp(&self, _other: &Self) -> Option<Ordering> {
         todo!()

@@ -13,7 +13,7 @@ use tracing::subscriber::Interest;
 use tracing::{dispatcher::set_global_default, Dispatch, Event, Id, Metadata, Subscriber};
 use tracing_core::span::Current;
 use tracing_core::Field;
-use tracing_distributed::{Span, Telemetry};
+use tracing_distributed::Telemetry;
 use tracing_limit::RateLimitedLayer;
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;

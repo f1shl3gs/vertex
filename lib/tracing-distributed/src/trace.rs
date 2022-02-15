@@ -1,24 +1,18 @@
 use crate::layer::TraceContextRegistry;
-use event::trace::{EvictedHashMap, SpanId, TraceId};
+use event::trace::{SpanId, SpanKind, StatusCode, TraceId};
 use std::fmt::Debug;
 use std::time::SystemTime;
 use tracing::field::Field;
 use tracing_subscriber::registry::LookupSpan;
 
 /// Register the current span as the local root of a distributed trace.
-pub fn register_dist_tracing_root<SpanId, TraceId>(
+pub fn register_dist_tracing_root(
     trace_id: TraceId,
     remote_parent_span: Option<SpanId>,
-) -> Result<(), TraceContextError>
-where
-    SpanId: 'static + Clone + Send + Sync,
-    TraceId: 'static + Clone + Send + Sync,
-{
+) -> Result<(), TraceContextError> {
     let span = tracing::Span::current();
     span.with_subscriber(|(current_span_id, dispatch)| {
-        if let Some(trace_ctx_registry) =
-            dispatch.downcast_ref::<TraceContextRegistry<SpanId, TraceId>>()
-        {
+        if let Some(trace_ctx_registry) = dispatch.downcast_ref::<TraceContextRegistry>() {
             trace_ctx_registry.record_trace_ctx(
                 trace_id,
                 remote_parent_span,
@@ -35,15 +29,11 @@ where
 /// Retrieve the distributed trace context associated with the current span. Returns the
 /// `TraceId`, if any, that the current span is associated with along with the `SpanId`
 /// belonging to the current span.
-pub fn current_dist_trace_ctx<SpanId, TraceId>() -> Result<(TraceId, SpanId), TraceContextError>
-where
-    SpanId: 'static + Clone + Send + Sync,
-    TraceId: 'static + Clone + Send + Sync,
-{
+pub fn current_dist_trace_ctx() -> Result<(TraceId, SpanId), TraceContextError> {
     let span = tracing::Span::current();
     span.with_subscriber(|(current_span_id, dispatch)| {
         let trace_ctx_registry = dispatch
-            .downcast_ref::<TraceContextRegistry<SpanId, TraceId>>()
+            .downcast_ref::<TraceContextRegistry>()
             .ok_or(TraceContextError::TelemetryLayerNotRegistered)?;
 
         let registry = dispatch
@@ -105,25 +95,89 @@ impl std::fmt::Display for TraceContextError {
 
 impl std::error::Error for TraceContextError {}
 
-pub struct SpanAttributeVisitor<'a>(&'a mut EvictedHashMap);
+const SPAN_NAME_FIELD: &str = "otel.name";
+const SPAN_KIND_FIELD: &str = "otel.kind";
+const SPAN_STATUS_CODE_FIELD: &str = "otel.status_code";
+const SPAN_STATUS_MESSAGE_FIELD: &str = "otel.status_message";
 
-impl<'a> tracing::field::Visit for SpanAttributeVisitor<'a> {
+pub struct SpanAttributeVisitor(pub(crate) event::trace::Span);
+
+impl tracing::field::Visit for SpanAttributeVisitor {
+    fn record_f64(&mut self, field: &Field, value: f64) {
+        self.0.attributes.insert(field.name().into(), value.into())
+    }
+
+    fn record_i64(&mut self, field: &Field, value: i64) {
+        self.0.attributes.insert(field.name().into(), value.into())
+    }
+
+    fn record_bool(&mut self, field: &Field, value: bool) {
+        self.0.attributes.insert(field.name().into(), value.into())
+    }
+
+    fn record_str(&mut self, field: &Field, value: &str) {
+        self.0.attributes.insert(field.name().into(), value.into())
+    }
+
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        todo!()
+        let value = format!("{:?}", value);
+
+        match field.name() {
+            SPAN_NAME_FIELD => self.0.name = value,
+            SPAN_KIND_FIELD => {
+                if let Some(kind) = str_to_span_kind(&value) {
+                    self.0.kind = kind;
+                }
+            }
+            SPAN_STATUS_CODE_FIELD => {
+                if let Some(status_code) = str_to_status_code(&value) {
+                    self.0.status.status_code = status_code;
+                }
+            }
+            SPAN_STATUS_MESSAGE_FIELD => self.0.status.message = value.into(),
+            _ => self.0.attributes.insert(field.name().into(), value.into()),
+        }
     }
 }
 
-pub struct SpanEventVisitor<'a>(&'a mut event::trace::Event);
+fn str_to_span_kind(s: &str) -> Option<SpanKind> {
+    match s {
+        s if s.eq_ignore_ascii_case("server") => Some(SpanKind::Server),
+        s if s.eq_ignore_ascii_case("client") => Some(SpanKind::Server),
+        s if s.eq_ignore_ascii_case("producer") => Some(SpanKind::Producer),
+        s if s.eq_ignore_ascii_case("consumer") => Some(SpanKind::Consumer),
+        s if s.eq_ignore_ascii_case("internal") => Some(SpanKind::Internal),
+        _ => None,
+    }
+}
 
-impl<'a> tracing::field::Visit for SpanEventVisitor<'a> {
+fn str_to_status_code(s: &str) -> Option<StatusCode> {
+    match s {
+        s if s.eq_ignore_ascii_case("unset") => Some(StatusCode::Unset),
+        s if s.eq_ignore_ascii_case("ok") => Some(StatusCode::Ok),
+        s if s.eq_ignore_ascii_case("error") => Some(StatusCode::Error),
+        _ => None,
+    }
+}
+
+pub struct SpanEventVisitor(pub(crate) event::trace::Event);
+
+impl tracing::field::Visit for SpanEventVisitor {
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        todo!()
+        match field.name() {
+            "message" => self.0.name = format!("{:?}", value).into(),
+            name if name.starts_with("log.") => (),
+            name => self
+                .0
+                .attributes
+                .insert(name.into(), format!("{:?}", value).into()),
+        }
     }
 }
 
 /// A `Span` holds ready-to-publish information gathered during the lifetime of a `tracing::Span`.
 #[derive(Debug, Clone)]
-pub struct Span<Visitor> {
+pub struct Span<V> {
     /// id identifying this span
     pub id: SpanId,
     /// `TraceId` identifying the trace to which this span belongs
@@ -139,12 +193,12 @@ pub struct Span<Visitor> {
     /// name of the service on which this span occurred
     pub service_name: &'static str,
     /// values accumulated by visiting fields observed by the `tracing::Span` this span was derived from
-    pub values: Visitor,
+    pub values: V,
 }
 
 /// An `Event` holds ready-to-publish information derived from a `tracing::Event`.
 #[derive(Clone, Debug)]
-pub struct Event<Visitor> {
+pub struct Event<V> {
     /// `TraceId` identifying the trace to which this event belongs
     pub trace_id: TraceId,
     /// optional parent span id
@@ -156,5 +210,5 @@ pub struct Event<Visitor> {
     /// name of the service on which this event occurred
     pub service_name: &'static str,
     /// values accumulated by visiting the fields of the `tracing::Event` this event was derived from
-    pub values: Visitor,
+    pub values: V,
 }

@@ -1,7 +1,3 @@
-use std::fmt::Debug;
-
-use event::trace::EvictedHashMap;
-
 use super::trace::{Event, Span, SpanAttributeVisitor, SpanEventVisitor};
 
 /// Represents the ability to publish events and spans to some arbitrary backend.
@@ -27,30 +23,29 @@ pub(crate) mod test {
         fn record_debug(&mut self, _: &tracing::field::Field, _: &dyn std::fmt::Debug) {}
     }
 
-    // simplified ID types
-    pub(crate) type TraceId = u64;
-    pub(crate) type SpanId = tracing::Id;
-
     /// Mock telemetry capability
     pub struct TestTelemetry {
-        spans: Arc<Mutex<Vec<Span>>>,
-        events: Arc<Mutex<Vec<Event>>>,
+        spans: Arc<Mutex<Vec<Span<SpanAttributeVisitor>>>>,
+        events: Arc<Mutex<Vec<Event<SpanEventVisitor>>>>,
     }
 
     impl TestTelemetry {
-        pub fn new(spans: Arc<Mutex<Vec<Span>>>, events: Arc<Mutex<Vec<Event>>>) -> Self {
+        pub fn new(
+            spans: Arc<Mutex<Vec<Span<SpanAttributeVisitor>>>>,
+            events: Arc<Mutex<Vec<Event<SpanEventVisitor>>>>,
+        ) -> Self {
             TestTelemetry { spans, events }
         }
     }
 
     impl Telemetry for TestTelemetry {
-        fn report_span(&self, span: Span) {
+        fn report_span(&self, span: Span<SpanAttributeVisitor>) {
             // succeed or die. failure is unrecoverable (mutex poisoned)
             let mut spans = self.spans.lock().unwrap();
             spans.push(span);
         }
 
-        fn report_event(&self, event: Event) {
+        fn report_event(&self, event: Event<SpanEventVisitor>) {
             // succeed or die. failure is unrecoverable (mutex poisoned)
             let mut events = self.events.lock().unwrap();
             events.push(event);

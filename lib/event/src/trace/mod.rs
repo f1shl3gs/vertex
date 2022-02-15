@@ -6,7 +6,7 @@ mod span;
 use std::borrow::Cow;
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::{Debug, Formatter};
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 use std::sync::Arc;
