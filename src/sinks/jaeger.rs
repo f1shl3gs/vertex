@@ -51,7 +51,7 @@ impl SinkConfig for JaegerConfig {
             Mode::Agent(config) => {
                 config.build(cx, move |event| {
                     // TODO: This buffer_client is dummy, rework it in the future
-                    let mut buffer_client = BufferClient::new();
+                    let mut buffer_client = BufferClient::default();
 
                     let trace = event.into_trace();
                     let batch = trace_to_batch(trace);
@@ -104,7 +104,7 @@ fn trace_to_batch(trace: Trace) -> jaeger::Batch {
         .spans
         .into_iter()
         .map(|span| {
-            let trace_id_bytes = span.trace_id.to_bytes();
+            let trace_id_bytes = span.trace_id().unwrap().to_bytes();
             let (high, low) = trace_id_bytes.split_at(8);
             let trace_id_high = i64::from_be_bytes(high.try_into().unwrap());
             let trace_id_low = i64::from_be_bytes(low.try_into().unwrap());
@@ -112,7 +112,7 @@ fn trace_to_batch(trace: Trace) -> jaeger::Batch {
             jaeger::Span {
                 trace_id_low,
                 trace_id_high,
-                span_id: span.span_id.into_i64(),
+                span_id: span.span_id().into_i64(),
                 parent_span_id: span.parent_span_id.into_i64(),
                 operation_name: "".to_string(),
                 references: links_to_references(span.links),

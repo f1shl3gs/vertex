@@ -1,6 +1,8 @@
 use std::any::TypeId;
+use std::fmt::Debug;
 use std::sync::{Mutex, MutexGuard};
 
+use event::trace::EvictedHashMap;
 use event::LogRecord;
 use metrics_tracing_context::MetricsLayer;
 use once_cell::sync::OnceCell;
@@ -10,6 +12,8 @@ use tracing::span::{Attributes, Record};
 use tracing::subscriber::Interest;
 use tracing::{dispatcher::set_global_default, Dispatch, Event, Id, Metadata, Subscriber};
 use tracing_core::span::Current;
+use tracing_core::Field;
+use tracing_distributed::{Span, Telemetry};
 use tracing_limit::RateLimitedLayer;
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;

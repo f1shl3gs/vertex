@@ -35,7 +35,7 @@ use shared::ByteSizeOf;
 use crate::log::Logs;
 use crate::proto::EventWrapper;
 
-#[derive(PartialEq, PartialOrd, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),

@@ -929,6 +929,7 @@ dependencies = [
 name = "event"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "atomig",
  "buffers",
  "bytes",
@@ -1096,6 +1097,7 @@ dependencies = [
  "tower-test",
  "tracing",
  "tracing-core",
+ "tracing-distributed",
  "tracing-futures",
  "tracing-limit",
  "tracing-log",
@@ -1657,9 +1659,9 @@ dependencies = [
 
 [[package]]
 name = "itertools"
-version = "0.10.1"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69ddb889f9d0d08a67338271fa9b62996bc788c7796a5c18cf057420aaed5eaf"
+checksum = "a9a9d19fa1e79b6215ff29b9d6880b706147f16e9b1dbb1e4e5947b5b02bc5e3"
 dependencies = [
  "either",
 ]
@@ -4234,6 +4236,18 @@ checksum = "03cfcb51380632a72d3111cb8d3447a8d908e577d31beeac006f836383d29a23"
 dependencies = [
  "lazy_static 1.4.0",
  "valuable",
+]
+
+[[package]]
+name = "tracing-distributed"
+version = "0.1.0"
+dependencies = [
+ "event",
+ "itertools",
+ "parking_lot 0.11.2",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

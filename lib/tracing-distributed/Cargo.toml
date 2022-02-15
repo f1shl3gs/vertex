@@ -1,0 +1,15 @@
+[package]
+name = "tracing-distributed"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dev-dependencies]
+tokio = { version = "1.16.1", features = ["test-util", "time", "macros", "rt-multi-thread"] }
+
+[dependencies]
+event = { path = "../event" }
+itertools = { version = "0.10.3" }
+parking_lot = { version = "0.11.2" }
+tracing = { version = "0.1.29" }
+tracing-subscriber = { version = "0.3.6" }

@@ -1,10 +1,14 @@
 mod evicted_hash_map;
 mod evicted_queue;
 pub mod generator;
+mod span;
 
 use std::borrow::Cow;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
+use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
+use std::ops::{BitAnd, BitOr, Not};
+use std::str::FromStr;
 use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
@@ -14,6 +18,7 @@ use crate::{BatchNotifier, EventFinalizer, EventFinalizers, EventMetadata, Final
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
+pub use span::*;
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]
@@ -158,27 +163,231 @@ impl ByteSizeOf for KeyValue {
     }
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
-pub struct Event {
-    /// name of the event.
-    pub name: Cow<'static, str>,
+/// Error returned by `TraceState` operations.
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum TraceStateError {
+    /// The key is invalid. See <https://www.w3.org/TR/trace-context/#key> for requirement for keys.
+    // #[error("{0} is not a valid key in TraceState, see https://www.w3.org/TR/trace-context/#key for more details")]
+    InvalidKey(String),
 
-    /// `timestamp` is the time the event occurred.
-    pub timestamp: i64,
+    /// The value is invalid. See <https://www.w3.org/TR/trace-context/#value> for requirement for values.
+    // #[error("{0} is not a valid value in TraceState, see https://www.w3.org/TR/trace-context/#value for more details")]
+    InvalidValue(String),
 
-    pub attributes: EvictedHashMap,
+    /// The value is invalid. See <https://www.w3.org/TR/trace-context/#list> for requirement for list members.
+    // #[error("{0} is not a valid list member in TraceState, see https://www.w3.org/TR/trace-context/#list for more details")]
+    InvalidList(String),
 }
 
-impl ByteSizeOf for Event {
-    fn allocated_bytes(&self) -> usize {
-        self.name.len() + self.attributes.allocated_bytes()
+/// TraceState carries system-specific configuration data, represented as a list
+/// of key-value pairs. TraceState allows multiple tracing systems to
+/// participate in the same trace.
+///
+/// Please review the [W3C specification] for details on this field.
+///
+/// [W3C specification]: https://www.w3.org/TR/trace-context/#tracestate-header
+#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Deserialize, Serialize)]
+pub struct TraceState(Option<VecDeque<(String, String)>>);
+
+impl TraceState {
+    /// Validates that the given `TraceState` list-member key is valid per the [W3 Spec].
+    ///
+    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#key
+    fn valid_key(key: &str) -> bool {
+        if key.len() > 256 {
+            return false;
+        }
+
+        let allowed_special = |b: u8| (b == b'_' || b == b'-' || b == b'*' || b == b'/');
+        let mut vendor_start = None;
+        for (i, &b) in key.as_bytes().iter().enumerate() {
+            if !(b.is_ascii_lowercase() || b.is_ascii_digit() || allowed_special(b) || b == b'@') {
+                return false;
+            }
+
+            if i == 0 && (!b.is_ascii_lowercase() && !b.is_ascii_digit()) {
+                return false;
+            } else if b == b'@' {
+                if vendor_start.is_some() || i + 14 < key.len() {
+                    return false;
+                }
+                vendor_start = Some(i);
+            } else if let Some(start) = vendor_start {
+                if i == start + 1 && !(b.is_ascii_lowercase() || b.is_ascii_digit()) {
+                    return false;
+                }
+            }
+        }
+
+        true
+    }
+
+    /// Validates that the given `TraceState` list-member value is valid per the [W3 Spec].
+    ///
+    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#value
+    fn valid_value(value: &str) -> bool {
+        if value.len() > 256 {
+            return false;
+        }
+
+        !(value.contains(',') || value.contains('='))
+    }
+
+    /// Creates a new `TraceState` from the given key-value collection.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use opentelemetry::trace::{TraceState, TraceStateError};
+    ///
+    /// let kvs = vec![("foo", "bar"), ("apple", "banana")];
+    /// let trace_state: Result<TraceState, TraceStateError> = TraceState::from_key_value(kvs);
+    ///
+    /// assert!(trace_state.is_ok());
+    /// assert_eq!(trace_state.unwrap().header(), String::from("foo=bar,apple=banana"))
+    /// ```
+    pub fn from_key_value<T, K, V>(trace_state: T) -> Result<Self, TraceStateError>
+    where
+        T: IntoIterator<Item = (K, V)>,
+        K: ToString,
+        V: ToString,
+    {
+        let ordered_data = trace_state
+            .into_iter()
+            .map(|(key, value)| {
+                let (key, value) = (key.to_string(), value.to_string());
+                if !TraceState::valid_key(key.as_str()) {
+                    return Err(TraceStateError::InvalidKey(key));
+                }
+                if !TraceState::valid_value(value.as_str()) {
+                    return Err(TraceStateError::InvalidValue(value));
+                }
+
+                Ok((key, value))
+            })
+            .collect::<Result<VecDeque<_>, TraceStateError>>()?;
+
+        if ordered_data.is_empty() {
+            Ok(TraceState(None))
+        } else {
+            Ok(TraceState(Some(ordered_data)))
+        }
+    }
+
+    /// Retrieves a value for a given key from the `TraceState` if it exists.
+    pub fn get(&self, key: &str) -> Option<&str> {
+        self.0.as_ref().and_then(|kvs| {
+            kvs.iter().find_map(|item| {
+                if item.0.as_str() == key {
+                    Some(item.1.as_str())
+                } else {
+                    None
+                }
+            })
+        })
+    }
+
+    /// Inserts the given key-value pair into the `TraceState`. If a value already exists for the
+    /// given key, this updates the value and updates the value's position. If the key or value are
+    /// invalid per the [W3 Spec] an `Err` is returned, else a new `TraceState` with the
+    /// updated key/value is returned.
+    ///
+    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field
+    pub fn insert<K, V>(&self, key: K, value: V) -> Result<TraceState, TraceStateError>
+    where
+        K: Into<String>,
+        V: Into<String>,
+    {
+        let (key, value) = (key.into(), value.into());
+        if !TraceState::valid_key(key.as_str()) {
+            return Err(TraceStateError::InvalidKey(key));
+        }
+        if !TraceState::valid_value(value.as_str()) {
+            return Err(TraceStateError::InvalidValue(value));
+        }
+
+        let mut trace_state = self.delete_from_deque(key.clone());
+        let kvs = trace_state.0.get_or_insert(VecDeque::with_capacity(1));
+
+        kvs.push_front((key, value));
+
+        Ok(trace_state)
+    }
+
+    /// Removes the given key-value pair from the `TraceState`. If the key is invalid per the
+    /// [W3 Spec] an `Err` is returned. Else, a new `TraceState`
+    /// with the removed entry is returned.
+    ///
+    /// If the key is not in `TraceState`. The original `TraceState` will be cloned and returned.
+    ///
+    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field
+    pub fn delete<K: Into<String>>(&self, key: K) -> Result<TraceState, TraceStateError> {
+        let key = key.into();
+        if !TraceState::valid_key(key.as_str()) {
+            return Err(TraceStateError::InvalidKey(key));
+        }
+
+        Ok(self.delete_from_deque(key))
+    }
+
+    /// Delete key from trace state's deque. The key MUST be valid
+    fn delete_from_deque(&self, key: String) -> TraceState {
+        let mut owned = self.clone();
+        if let Some(kvs) = owned.0.as_mut() {
+            if let Some(index) = kvs.iter().position(|x| *x.0 == *key) {
+                kvs.remove(index);
+            }
+        }
+        owned
+    }
+
+    /// Creates a new `TraceState` header string, delimiting each key and value with a `=` and each
+    /// entry with a `,`.
+    pub fn header(&self) -> String {
+        self.header_delimited("=", ",")
+    }
+
+    /// Creates a new `TraceState` header string, with the given key/value delimiter and entry delimiter.
+    pub fn header_delimited(&self, entry_delimiter: &str, list_delimiter: &str) -> String {
+        self.0
+            .as_ref()
+            .map(|kvs| {
+                kvs.iter()
+                    .map(|(key, value)| format!("{}{}{}", key, entry_delimiter, value))
+                    .collect::<Vec<String>>()
+                    .join(list_delimiter)
+            })
+            .unwrap_or_default()
+    }
+}
+
+impl FromStr for TraceState {
+    type Err = TraceStateError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let list_members: Vec<&str> = s.split_terminator(',').collect();
+        let mut key_value_pairs: Vec<(String, String)> = Vec::with_capacity(list_members.len());
+
+        for list_member in list_members {
+            match list_member.find('=') {
+                None => return Err(TraceStateError::InvalidList(list_member.to_string())),
+                Some(separator_index) => {
+                    let (key, value) = list_member.split_at(separator_index);
+                    key_value_pairs
+                        .push((key.to_string(), value.trim_start_matches('=').to_string()));
+                }
+            }
+        }
+
+        TraceState::from_key_value(key_value_pairs)
     }
 }
 
 /// A 16-type value which identifies a given trace.
 ///
 /// The id is valid if it contains at least one non-zero byte.
-#[derive(Clone, Copy, Deserialize, Hash, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Copy, Deserialize, Hash, PartialEq, PartialOrd, Serialize, Eq)]
 pub struct TraceId(pub u128);
 
 impl Debug for TraceId {
@@ -205,7 +414,7 @@ impl TraceId {
 /// An 8-byte value which identifies a given span.
 ///
 /// The id is valid if it contains at least one non-zero byte.
-#[derive(Clone, Copy, Deserialize, Hash, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Copy, Deserialize, Hash, PartialEq, PartialOrd, Serialize, Eq)]
 pub struct SpanId(pub u64);
 
 impl Debug for SpanId {
@@ -230,77 +439,6 @@ impl SpanId {
 
     pub fn into_i64(self) -> i64 {
         i64::from_be_bytes(self.to_bytes())
-    }
-}
-
-/// `SpanKind` describes the relationship between the Span, its parents,
-/// and its children in a `Trace`. `SpanKind` describes two independent
-/// properties that benefit tracing systems during analysis.
-///
-/// The first property described by `SpanKind` reflects whether the `Span`
-/// is a remote child or parent. `Span`s with a remote parent are
-/// interesting because they are sources of external load. `Span`s with a
-/// remote child are interesting because they reflect a non-local system
-/// dependency.
-///
-/// The second property described by `SpanKind` reflects whether a child
-/// `Span` represents a synchronous call.  When a child span is synchronous,
-/// the parent is expected to wait for it to complete under ordinary
-/// circumstances.  It can be useful for tracing systems to know this
-/// property, since synchronous `Span`s may contribute to the overall trace
-/// latency. Asynchronous scenarios can be remote or local.
-///
-/// In order for `SpanKind` to be meaningful, callers should arrange that
-/// a single `Span` does not serve more than one purpose.  For example, a
-/// server-side span should not be used directly as the parent of another
-/// remote span.  As a simple guideline, instrumentation should create a
-/// new `Span` prior to extracting and serializing the span context for a
-/// remote call.
-///
-/// To summarize the interpretation of these kinds:
-///
-/// | `SpanKind` | Synchronous | Asynchronous | Remote Incoming | Remote Outgoing |
-/// |------------|-----|-----|-----|-----|
-/// | `Client`   | yes |     |     | yes |
-/// | `Server`   | yes |     | yes |     |
-/// | `Producer` |     | yes |     | yes |
-/// | `Consumer` |     | yes | yes |     |
-/// | `Internal` |     |     |     |     |
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
-pub enum SpanKind {
-    /// Indicates that the span describes a synchronous request to
-    /// some remote service.  This span is the parent of a remote `Server`
-    /// span and waits for its response.
-    Client,
-    /// Indicates that the span covers server-side handling of a
-    /// synchronous RPC or other remote request.  This span is the child of
-    /// a remote `Client` span that was expected to wait for a response.
-    Server,
-    /// Indicates that the span describes the parent of an
-    /// asynchronous request.  This parent span is expected to end before
-    /// the corresponding child `Consumer` span, possibly even before the
-    /// child span starts. In messaging scenarios with batching, tracing
-    /// individual messages requires a new `Producer` span per message to
-    /// be created.
-    Producer,
-    /// Indicates that the span describes the child of an
-    /// asynchronous `Producer` request.
-    Consumer,
-    /// Default value. Indicates that the span represents an
-    /// internal operation within an application, as opposed to an
-    /// operations with remote parents or children.
-    Internal,
-}
-
-impl Display for SpanKind {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            SpanKind::Client => write!(f, "client"),
-            SpanKind::Server => write!(f, "server"),
-            SpanKind::Producer => write!(f, "producer"),
-            SpanKind::Consumer => write!(f, "consumer"),
-            SpanKind::Internal => write!(f, "internal"),
-        }
     }
 }
 
@@ -341,192 +479,37 @@ impl TraceFlags {
     }
 }
 
-/// A pointer from the current span to another span in the same trace or
-/// in a different trace. For example, this can be used in batching
-/// operations, where a single batch handler processes multiple requests
-/// from different traces or when the handler receives a request from a
-/// different project.
-#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
-pub struct Link {
-    /// A unique identifier of a trace that this linked span is part of.
-    /// The ID is a 16-byte array.
-    pub trace_id: TraceId,
+impl BitAnd for TraceFlags {
+    type Output = Self;
 
-    /// A unique identifier for the linked span. The ID is an 8-byte array.
-    pub span_id: SpanId,
-
-    /// The trace_state associated with the link.
-    pub trace_state: String,
-
-    /// `attributes` is a collection of key/value pairs on the link.
-    pub attributes: Vec<KeyValue>,
-}
-
-/// For the semantics of status codes see
-/// https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status
-#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
-pub enum StatusCode {
-    /// The default status
-    Unset,
-    /// The Span has been validated by an Application developers or Operator
-    /// to have completed successfully.
-    Ok,
-    /// The Span contains an error.
-    Error,
-}
-
-impl StatusCode {
-    /// Return a static str that represent the status code
-    pub fn as_str(&self) -> &'static str {
-        match self {
-            StatusCode::Unset => "",
-            StatusCode::Ok => "OK",
-            StatusCode::Error => "ERROR",
-        }
-    }
-
-    pub fn is_unset(&self) -> bool {
-        match self {
-            StatusCode::Unset => true,
-            _ => false,
-        }
+    fn bitand(self, rhs: Self) -> Self::Output {
+        Self(self.0 & rhs.0)
     }
 }
 
-/// The Status type defines a logical error model  that is suitable for
-/// different programing environments, including REST APIs and RPC APIs.
-#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
-pub struct Status {
-    /// A developer-facing human readable error message.
-    pub message: Cow<'static, str>,
-    /// The status code
-    pub status_code: StatusCode,
-}
+impl BitOr for TraceFlags {
+    type Output = Self;
 
-impl Default for Status {
-    fn default() -> Self {
-        Self {
-            message: Cow::from(""),
-            status_code: StatusCode::Unset,
-        }
+    fn bitor(self, rhs: Self) -> Self::Output {
+        Self(self.0 | rhs.0)
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
-pub struct Span {
-    /// A unique identifier for a trace. All spans from the same trace share the same
-    /// `trace_id`.
-    ///
-    /// This field is semantically required. Receiver should generate new random
-    /// trace_id if empty or invalid trace_id was received.
-    ///
-    /// This field is required.
-    pub trace_id: TraceId,
+impl Not for TraceFlags {
+    type Output = Self;
 
-    /// A unique identifier for a span within a trace, assigned when the span is
-    /// created. Zero is considered invalid.
-    ///
-    /// This field is semantically required. Receiver should generate new random
-    /// `span_id` if empty or invalid `span_id` was received
-    pub span_id: SpanId,
-
-    /// The `span_id` of this span's parent span. If this is a root span, then this
-    /// field must be zero.
-    pub parent_span_id: SpanId,
-
-    /// A description of the span's operation.
-    pub name: String,
-
-    /// Distinguishes between spans generated in a particular context.
-    /// For example, two spans with the same name may be distinguished using
-    /// `CLIENT`(caller) and `SERVER` (callee) to identify queueing latency
-    /// associated with the span.
-    pub kind: SpanKind,
-
-    /// start_time is the start time of the span. On the client side, this is the time
-    /// kept by the local machine where the span execution starts. On the server side,
-    /// this is the time when the server's application handler starts running.
-    /// Value is UNIX Epoch time in nanoseconds since 00:000::00 UTC on 1 January 1970.
-    ///
-    /// This field is semantically required and it is expected that end_time >= start_time.
-    pub start_time: i64,
-
-    /// `end_time` is the end time of the span. On the client side, this is the time kept
-    /// by the local machine where the span execution ends. On the server side, this is
-    /// the time when the server application handler stops running.
-    /// Value is UNIX Epoch time in nanoseconds since 00::00:00 UTC on 1 January 1970.
-    ///
-    /// This field is semantically required and it is expected that end_time >= start_time.
-    pub end_time: i64,
-
-    /// `tags` is a collection of key/value pairs. The value can be a string, an
-    /// integer, a double or the Boolean value `true` or `false`.
-    pub attributes: EvictedHashMap,
-
-    /// `events` is a collection of event items.
-    pub events: Vec<Event>,
-
-    /// links is a collection of Links, which are references from this span to a span
-    /// in the same or different trace.
-    pub links: EvictedQueue<Link>,
-
-    /// An optional final status for this span. Semantically when Status isn't set,
-    /// it span's status code is unset, i.e. assume STATUS_CODE_UNSET (code = 0)
-    pub status: Status,
-}
-
-impl Span {
-    pub fn new(name: impl Into<String>) -> Self {
-        Self {
-            trace_id: TraceId::INVALID,
-            span_id: SpanId::INVALID,
-            parent_span_id: SpanId::INVALID,
-            name: name.into(),
-            kind: SpanKind::Client,
-            start_time: 0,
-            end_time: 0,
-            attributes: EvictedHashMap::new(128, 0),
-            events: vec![],
-            links: EvictedQueue::new(128),
-            status: Status::default(),
-        }
-    }
-
-    pub fn with_start_time(mut self, start_time: i64) -> Self {
-        self.start_time = start_time;
-        self
-    }
-
-    pub fn with_span_id(mut self, id: SpanId) -> Self {
-        self.span_id = id;
-        self
-    }
-
-    pub fn with_trace_id(mut self, id: TraceId) -> Self {
-        self.trace_id = id;
-        self
-    }
-
-    pub fn with_parent_span_id(mut self, id: SpanId) -> Self {
-        self.parent_span_id = id;
-        self
-    }
-
-    pub fn with_end_time(mut self, end_time: i64) -> Self {
-        self.end_time = end_time;
-        self
+    fn not(self) -> Self::Output {
+        Self(!self.0)
     }
 }
 
-impl ByteSizeOf for Span {
-    fn allocated_bytes(&self) -> usize {
-        self.name.allocated_bytes()
-            + self.attributes.allocated_bytes()
-            + self.events.allocated_bytes()
+impl fmt::LowerHex for TraceFlags {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::LowerHex::fmt(&self.0, f)
     }
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Trace {
     pub service: String,
 
