@@ -15,6 +15,7 @@ use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
+use tracing::Instrument;
 
 const USER_HZ: f64 = 100.0;
 
@@ -83,7 +84,7 @@ impl SelfStat {
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            match gather().await {
+            match gather().instrument(info_span!("selfstat.gather")).await {
                 Ok(metrics) => {
                     let now = Some(chrono::Utc::now());
 
@@ -114,11 +115,7 @@ impl SelfStat {
     }
 }
 
-#[instrument]
 async fn gather() -> Result<Vec<Metric>, std::io::Error> {
-    span!(tracing::Level::TRACE, "selfstat");
-    event!(tracing::Level::INFO, "gather");
-
     let pid = unsafe { libc::getpid() as i32 };
     let fds = open_fds(pid)? as f64;
     let max_fds = max_fds(pid)? as f64;

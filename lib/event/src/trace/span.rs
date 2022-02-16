@@ -216,6 +216,23 @@ impl SpanContext {
             trace_state: Default::default(),
         }
     }
+
+    /// Construct a new SpanContext
+    pub fn new(
+        trace_id: TraceId,
+        span_id: SpanId,
+        trace_flags: TraceFlags,
+        is_remote: bool,
+        trace_state: TraceState,
+    ) -> Self {
+        Self {
+            trace_id,
+            span_id,
+            trace_flags,
+            is_remote,
+            trace_state,
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]

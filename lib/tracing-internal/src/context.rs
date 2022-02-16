@@ -89,8 +89,15 @@ impl TraceContext {
 
     /// Used to see if a span has been marked as active
     pub fn has_active_span(&self) -> bool {
-        // TODO:
-        false
+        self.get::<SynchronizedSpan>().is_some()
+    }
+
+    /// Returns a copy of this context with the span context included.
+    pub fn with_remote_span_context(&self, span_context: SpanContext) -> Self {
+        self.with_value(SynchronizedSpan {
+            span_context,
+            inner: None,
+        })
     }
 
     /// Returns a reference to the entry for the corresponding value type.
@@ -98,6 +105,17 @@ impl TraceContext {
         self.entries
             .get(&TypeId::of::<T>())
             .and_then(|rc| (&*rc).downcast_ref())
+    }
+
+    /// Returns a copy of the context with the new value included.
+    pub fn with_value<T: 'static + Send + Sync>(&self, value: T) -> Self {
+        let mut new_context = self.clone();
+
+        new_context
+            .entries
+            .insert(TypeId::of::<T>(), Arc::new(value));
+
+        new_context
     }
 
     /// Returns a reference to this context's span, or the default no-op span if
@@ -135,6 +153,7 @@ impl SpanRef<'_> {
             match inner.lock() {
                 Ok(mut locked) => f(&mut *locked),
                 Err(err) => {
+                    #[allow(clippy::print_stderr)]
                     eprintln!("Trace error occurred. {}", err)
                 }
             }
@@ -156,72 +175,8 @@ impl SpanRef<'_> {
         self.with_inner_mut(|inner| inner.record_exception(err))
     }
 
-    // /// Convenience method to record a exception/error as an `Event` with custom stacktrace
-    // pub fn record_exception_with_stacktrace<T>(&self, err: &dyn Error, stacktrace: T)
-    // where
-    //     T: Into<Cow<'static, str>>,
-    // {
-    //     self.with_inner_mut(|inner| inner.record_exception_with_stacktrace(err, stacktrace))
-    // }
-
-    // /// An API to record events at a specific time in the context of a given `Span`.
-    // pub fn add_event_with_timestamp<T>(
-    //     &self,
-    //     name: T,
-    //     timestamp: std::time::SystemTime,
-    //     attributes: Vec<KeyValue>,
-    // ) where
-    //     T: Into<Cow<'static, str>>,
-    // {
-    //     self.with_inner_mut(move |inner| {
-    //         inner.add_event_with_timestamp(name, timestamp, attributes)
-    //     })
-    // }
-
     /// Returns the `SpanContext` for the given `Span`.
     pub fn span_context(&self) -> &SpanContext {
         &self.0.span_context
     }
-
-    // /// Returns true if this `Span` is recording information like events with the `add_event`
-    // /// operation, attributes using `set_attributes`, status with `set_status`, etc.
-    // pub fn is_recording(&self) -> bool {
-    //     self.0
-    //         .inner
-    //         .as_ref()
-    //         .and_then(|inner| inner.lock().ok().map(|active| active.is_recording()))
-    //         .unwrap_or(false)
-    // }
-
-    // /// An API to set a single `Attribute` where the attribute properties are passed
-    // /// as arguments. To avoid extra allocations some implementations may offer a separate API for
-    // /// each of the possible value types.
-    // pub fn set_attribute(&self, attribute: KeyValue) {
-    //     self.with_inner_mut(move |inner| inner.set_attribute(attribute))
-    // }
-
-    // /// Sets the status of the `Span`. If used, this will override the default `Span`
-    // /// status, which is `Unset`. `message` MUST be ignored when the status is `OK` or `Unset`
-    // pub fn set_status(&self, code: StatusCode, message: String) {
-    //     self.with_inner_mut(move |inner| inner.set_status(code, message))
-    // }
-
-    // /// Updates the `Span`'s name. After this update, any sampling behavior based on the
-    // /// name will depend on the implementation.
-    // pub fn update_name<T>(&self, new_name: String)
-    // where
-    //     T: Into<Cow<'static, str>>,
-    // {
-    //     self.with_inner_mut(move |inner| inner.update_name(new_name))
-    // }
-
-    // /// Finishes the `Span`.
-    // pub fn end(&self) {
-    //     self.end_with_timestamp(SystemTime::now());
-    // }
-
-    // /// Finishes the `Span` with given timestamp
-    // pub fn end_with_timestamp(&self, timestamp: std::time::SystemTime) {
-    //     self.with_inner_mut(move |inner| inner.end_with_timestamp(timestamp))
-    // }
 }

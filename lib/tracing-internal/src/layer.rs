@@ -3,7 +3,7 @@ use std::fmt::Debug;
 use std::marker::PhantomData;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
-use event::trace::{EvictedHashMap, Link, Span, StatusCode};
+use event::trace::{EvictedHashMap, Link, Span, StatusCode, TraceId};
 use tracing::span::Attributes;
 use tracing::{span, Subscriber};
 use tracing_core::span::{Id, Record};
@@ -281,10 +281,12 @@ where
                 None
             };
 
-            if let Some(spc) = parent_span.as_ref().map(|parent| parent.span_context()) {
-                println!("got parent {:?}", spc);
+            if let Some(psc) = parent_span.as_ref().map(|parent| parent.span_context()) {
+                span.span_context.trace_id = psc.trace_id;
             } else {
-                // set trace id!?
+                if span.span_context.trace_id == TraceId::INVALID {
+                    span.span_context.trace_id = self.tracer.new_trace_id()
+                }
             }
 
             // println!("span: {}, parent: {}", span.span_context.span_id.into_i64(), parent_cx.span().span_context().span_id.into_i64());

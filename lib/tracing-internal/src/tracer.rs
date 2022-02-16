@@ -1,5 +1,5 @@
 use event::trace::generator::IdGenerator;
-use event::trace::{RngGenerator, Span, SpanId, TraceId};
+use event::trace::{RngGenerator, Span, SpanContext, SpanId, TraceFlags, TraceId, TraceState};
 
 use crate::context::TraceContext;
 
@@ -19,9 +19,30 @@ pub trait PreSampledTracer {
     fn export(&self, span: Span);
 
     fn sampled_context(&self, data: &mut TraceData) -> TraceContext {
-        println!("{} {}", data.span.span_id().into_i64(), data.span.name);
+        let parent_cx = &data.parent_cx;
+        let span = &mut data.span;
 
-        data.parent_cx.clone()
+        // Gather trace state
+        let (no_parent, trace_id, remote_parent, parent_trace_flags) =
+            current_trace_state(span, parent_cx);
+        let trace_id = if trace_id == TraceId::INVALID {
+            self.new_trace_id()
+        } else {
+            trace_id
+        };
+
+        // TODO: Sample or defer to existing sampling decisions
+
+        let span_id = span.span_context.span_id;
+        let span_context = SpanContext::new(
+            trace_id,
+            span_id,
+            TraceFlags::SAMPLED,
+            false,
+            TraceState::default(),
+        );
+
+        parent_cx.with_remote_span_context(span_context)
     }
 
     fn new_trace_id(&self) -> TraceId;
@@ -29,32 +50,35 @@ pub trait PreSampledTracer {
     fn new_span_id(&self) -> SpanId;
 }
 
-pub struct FormatTracer {
+fn current_trace_state(span: &Span, parent_cx: &TraceContext) -> (bool, TraceId, bool, TraceFlags) {
+    if parent_cx.has_active_span() {
+        let span = parent_cx.span();
+        let sc = span.span_context();
+        (false, sc.trace_id, sc.is_remote, sc.trace_flags)
+    } else {
+        (
+            true,
+            span.trace_id().unwrap_or(TraceId::INVALID),
+            false,
+            Default::default(),
+        )
+    }
+}
+
+pub struct Tracer {
     gen: RngGenerator,
 }
 
-impl FormatTracer {
-    pub fn new() -> Self {
-        Self {
-            gen: RngGenerator::default(),
-        }
-    }
-}
-
-impl PreSampledTracer for FormatTracer {
+impl PreSampledTracer for Tracer {
     fn export(&self, span: Span) {
-        println!("{:#?}", span);
-    }
-
-    fn sampled_context(&self, data: &mut TraceData) -> TraceContext {
-        data.parent_cx.clone()
+        todo!()
     }
 
     fn new_trace_id(&self) -> TraceId {
-        self.gen.new_trace_id()
+        todo!()
     }
 
     fn new_span_id(&self) -> SpanId {
-        self.gen.new_span_id()
+        todo!()
     }
 }
