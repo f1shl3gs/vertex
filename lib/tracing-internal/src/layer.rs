@@ -287,7 +287,6 @@ where
                 // set trace id!?
             }
 
-
             // println!("span: {}, parent: {}", span.span_context.span_id.into_i64(), parent_cx.span().span_context().span_id.into_i64());
 
             // Assign end time, build and start span, drop span to exporter
