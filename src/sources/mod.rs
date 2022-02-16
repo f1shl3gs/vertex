@@ -61,6 +61,8 @@ pub mod syslog;
 mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
+#[cfg(feature = "jaeger")]
+mod jaeger;
 
 use snafu::Snafu;
 

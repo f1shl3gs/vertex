@@ -123,6 +123,7 @@ sources = [
     "sources-internal_logs",
     "sources-internal_metrics",
     "sources-internal_traces",
+    "sources-jaeger",
     "sources-journald",
     "sources-kafka",
     "sources-kafka_metrics",
@@ -154,6 +155,7 @@ sources-kafka = ["rdkafka", "async-stream"]
 sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
+sources-jaeger = ["jaeger"]
 sources-journald = []
 sources-internal_logs = []
 sources-internal_metrics = []
