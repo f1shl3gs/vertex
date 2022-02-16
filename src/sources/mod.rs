@@ -18,6 +18,8 @@ mod internal_logs;
 mod internal_metrics;
 #[cfg(feature = "sources-internal_traces")]
 mod internal_traces;
+#[cfg(feature = "jaeger")]
+mod jaeger;
 #[cfg(all(target_os = "linux", feature = "sources-journald"))]
 mod journald;
 #[cfg(feature = "sources-kafka")]
@@ -61,8 +63,6 @@ pub mod syslog;
 mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
-#[cfg(feature = "jaeger")]
-mod jaeger;
 
 use snafu::Snafu;
 

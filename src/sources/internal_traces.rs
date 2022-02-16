@@ -40,6 +40,8 @@ impl SourceConfig for InternalTracesConfig {
         let shutdown = cx.shutdown;
         let mut output = cx.output;
         let service: Cow<'static, str> = self.service.clone().into();
+        let hostname = crate::hostname().unwrap();
+        let version = crate::get_version();
 
         Ok(Box::pin(async move {
             let mut rx = stream::iter(vec![])
@@ -51,7 +53,11 @@ impl SourceConfig for InternalTracesConfig {
                 .take_until(shutdown);
 
             while let Some(span) = rx.next().await {
-                let trace = Trace::new(service.clone(), vec![span]);
+                let mut trace = Trace::new(service.clone(), vec![span]);
+
+                trace.insert_tag("hostanme", hostname.clone());
+                trace.insert_tag("version", version.clone());
+
                 if let Err(err) = output.send(trace.into()).await {
                     warn!(message = "Sending internal trace failed", ?err);
                 }

@@ -148,12 +148,12 @@ struct SynchronizedSpan {
 }
 
 impl SpanRef<'_> {
+    #![allow(clippy::print_stderr)]
     fn with_inner_mut<F: FnOnce(&mut Span)>(&self, f: F) {
         if let Some(ref inner) = self.0.inner {
             match inner.lock() {
                 Ok(mut locked) => f(&mut *locked),
                 Err(err) => {
-                    #[allow(clippy::print_stderr)]
                     eprintln!("Trace error occurred. {}", err)
                 }
             }

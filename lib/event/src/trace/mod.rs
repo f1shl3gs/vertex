@@ -551,6 +551,10 @@ impl Trace {
         }
     }
 
+    pub fn insert_tag(&mut self, key: impl Into<String>, value: impl Into<String>) {
+        self.tags.insert(key.into(), value.into());
+    }
+
     #[inline]
     pub fn metadata(&self) -> &EventMetadata {
         &self.metadata
