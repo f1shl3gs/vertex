@@ -47,7 +47,10 @@ impl EvictedHashMap {
         }
     }
 
-    pub fn insert(&mut self, key: Key, value: AnyValue) {
+    pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<AnyValue>) {
+        let key = key.into();
+        let value = value.into();
+
         let mut already_exists = false;
         // Check for existing item
         match self.map.entry(key.clone()) {

@@ -114,7 +114,11 @@ impl SelfStat {
     }
 }
 
+#[instrument]
 async fn gather() -> Result<Vec<Metric>, std::io::Error> {
+    span!(tracing::Level::TRACE, "selfstat");
+    event!(tracing::Level::INFO, "gather");
+
     let pid = unsafe { libc::getpid() as i32 };
     let fds = open_fds(pid)? as f64;
     let max_fds = max_fds(pid)? as f64;
@@ -183,6 +187,7 @@ fn find_statistic(all: &str, pat: &str) -> Result<f64, std::io::Error> {
 
 const MAXFD_PATTERN: &str = "Max open files";
 
+#[instrument]
 fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
     let mut buffer = String::new();
     std::fs::File::open(&format!("/proc/{}/limits", pid))
@@ -191,6 +196,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
     find_statistic(&buffer, MAXFD_PATTERN)
 }
 
+#[instrument]
 async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
     let content = tokio::fs::read_to_string(&path).await?;

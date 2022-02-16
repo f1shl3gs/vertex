@@ -99,7 +99,7 @@ fn trace_to_batch(trace: Trace) -> jaeger::Batch {
             )
         })
         .collect();
-    let process = jaeger::Process::new(trace.service, Some(tags));
+    let process = jaeger::Process::new(trace.service.to_string(), Some(tags));
     let spans = trace
         .spans
         .into_iter()
@@ -114,11 +114,12 @@ fn trace_to_batch(trace: Trace) -> jaeger::Batch {
                 trace_id_high,
                 span_id: span.span_id().into_i64(),
                 parent_span_id: span.parent_span_id.into_i64(),
-                operation_name: "".to_string(),
+                operation_name: span.name,
                 references: links_to_references(span.links),
                 flags: 0,
-                start_time: span.start_time,
-                duration: span.end_time - span.start_time,
+                // nanosecond to microsecond
+                start_time: span.start_time / 1000,
+                duration: (span.end_time - span.start_time) / 1000,
                 tags: Some(build_span_tags(
                     span.attributes,
                     span.status.status_code,

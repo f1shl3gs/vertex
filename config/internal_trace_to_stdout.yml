@@ -1,0 +1,25 @@
+sources:
+  traces:
+    type: internal_traces
+  selfstat:
+    type: selfstat
+  internal_metrics:
+    type: internal_metrics
+
+sinks:
+  stdout:
+    type: stdout
+    inputs:
+      - traces
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - internal_metrics
+
+  jaeger:
+    type: jaeger
+    inputs:
+      - traces
+    propagator: agent
+    address: 127.0.0.1:6831
+

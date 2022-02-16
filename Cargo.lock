@@ -1097,8 +1097,8 @@ dependencies = [
  "tower-test",
  "tracing",
  "tracing-core",
- "tracing-distributed",
  "tracing-futures",
+ "tracing-internal",
  "tracing-limit",
  "tracing-log",
  "tracing-subscriber",
@@ -4239,18 +4239,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracing-distributed"
-version = "0.1.0"
-dependencies = [
- "event",
- "itertools",
- "parking_lot 0.11.2",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "tracing-fluent-assertions"
 version = "0.2.0"
 source = "git+https://github.com/vectordotdev/tracing-fluent-assertions?branch=bump-tracing-subscriber#0b32307299b832bfbcaf6026e2f53436b8b9abee"
@@ -4270,6 +4258,17 @@ dependencies = [
  "futures-task",
  "pin-project",
  "tracing",
+]
+
+[[package]]
+name = "tracing-internal"
+version = "0.1.0"
+dependencies = [
+ "event",
+ "lazy_static 1.4.0",
+ "tracing",
+ "tracing-core",
+ "tracing-subscriber",
 ]
 
 [[package]]

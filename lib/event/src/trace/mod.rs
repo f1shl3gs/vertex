@@ -423,6 +423,12 @@ impl Debug for SpanId {
     }
 }
 
+impl From<u64> for SpanId {
+    fn from(u: u64) -> Self {
+        Self(u)
+    }
+}
+
 impl SpanId {
     /// Invalid span id
     pub const INVALID: SpanId = SpanId(0);
@@ -511,7 +517,7 @@ impl fmt::LowerHex for TraceFlags {
 
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct Trace {
-    pub service: String,
+    pub service: Cow<'static, str>,
 
     pub tags: BTreeMap<String, String>,
 
@@ -525,7 +531,7 @@ pub type Traces = Vec<Trace>;
 
 impl ByteSizeOf for Trace {
     fn allocated_bytes(&self) -> usize {
-        self.service.allocated_bytes() + self.tags.allocated_bytes() + self.spans.allocated_bytes()
+        0 + self.tags.allocated_bytes() + self.spans.allocated_bytes()
     }
 }
 
@@ -536,6 +542,15 @@ impl Finalizable for Trace {
 }
 
 impl Trace {
+    pub fn new(service: impl Into<Cow<'static, str>>, spans: Vec<Span>) -> Trace {
+        Self {
+            service: service.into(),
+            tags: Default::default(),
+            spans,
+            metadata: Default::default(),
+        }
+    }
+
     #[inline]
     pub fn metadata(&self) -> &EventMetadata {
         &self.metadata

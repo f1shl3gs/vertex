@@ -258,13 +258,15 @@ impl StreamSink for UdpSink {
 
                 match udp_send(&mut socket, &input).await {
                     Ok(()) => {
-                        // TODO: add metrics
+                        counter!("socket_event_send_total", 1, "mode" => "udp");
                     }
                     Err(err) => {
-                        // TODO: add metrics
+                        counter!("socket_event_send_errors_total", 1, "mode" => "udp");
+
                         debug!(
                             message = "UDP socket error",
-                            %err
+                            %err,
+                            internal_log_rate_secs = 10
                         );
 
                         break;

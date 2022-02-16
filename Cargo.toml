@@ -30,7 +30,7 @@ members = [
     "lib/sysinfo",
     "lib/virt",
     "lib/jaeger",
-    "lib/tracing-distributed",
+    "lib/tracing-internal",
 ]
 
 [features]

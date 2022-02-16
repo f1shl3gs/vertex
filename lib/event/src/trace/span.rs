@@ -1,4 +1,6 @@
+use chrono::Utc;
 use std::borrow::Cow;
+use std::error::Error;
 use std::fmt::{Display, Formatter};
 
 use serde::{Deserialize, Serialize};
@@ -115,6 +117,17 @@ pub struct Link {
     pub attributes: Vec<KeyValue>,
 }
 
+impl Link {
+    pub fn new(trace_id: TraceId, span_id: SpanId) -> Self {
+        Self {
+            trace_id,
+            span_id,
+            trace_state: "".to_string(),
+            attributes: vec![],
+        }
+    }
+}
+
 /// For the semantics of status codes see
 /// https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
@@ -190,6 +203,19 @@ pub struct SpanContext {
     pub trace_flags: TraceFlags,
     pub is_remote: bool,
     pub trace_state: TraceState,
+}
+
+impl SpanContext {
+    /// Create an invalid empty span context
+    pub fn empty_context() -> Self {
+        Self {
+            trace_id: TraceId::INVALID,
+            span_id: SpanId::INVALID,
+            trace_flags: Default::default(),
+            is_remote: false,
+            trace_state: Default::default(),
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
@@ -303,6 +329,31 @@ impl Span {
     /// Returns the `SpanContext` for the given `Span`
     pub fn span_context(&self) -> &SpanContext {
         &self.span_context
+    }
+
+    /// Records events in the context of a given `Span`.
+    ///
+    /// Events have a time associated with the moment when they are added to the `Span`.
+    ///
+    /// Events should preserve the order in which they're set. This will typically
+    /// match the ordering of the events' timestamp.
+    pub fn add_event(&mut self, name: impl Into<Cow<'static, str>>, attributes: Vec<KeyValue>) {
+        let timestamp = Utc::now().timestamp_nanos();
+
+        self.events.push(Event {
+            name: name.into(),
+            timestamp,
+            attributes: attributes.into(),
+        })
+    }
+
+    /// Convenience method to record an exception/error as an `Event`.
+    ///
+    /// An exception SHOULD be recorded as an Event on the span during which it occurred.
+    /// The name of the event MUST be "exception".
+    pub fn record_exception(&mut self, err: &dyn Error) {
+        let attrs = vec![KeyValue::new("exception.message", err.to_string())];
+        self.add_event("exception", attrs);
     }
 }
 
