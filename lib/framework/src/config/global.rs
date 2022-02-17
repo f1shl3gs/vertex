@@ -101,7 +101,7 @@ impl GlobalOptions {
     /// Function will error if it is unable to make data subdirectory
     pub fn make_subdir(&self, subdir: &str) -> Result<PathBuf, DataDirError> {
         let root = self.validate_data_dir()?;
-        let subdir = root.clone().join(subdir);
+        let subdir = root.join(subdir);
         let rt = subdir.clone();
 
         DirBuilder::new()

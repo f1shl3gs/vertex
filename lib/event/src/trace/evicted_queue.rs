@@ -1,12 +1,46 @@
 use std::collections::VecDeque;
 
 use serde::{Deserialize, Serialize};
+use shared::ByteSizeOf;
 
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct EvictedQueue<T> {
     queue: Option<VecDeque<T>>,
     max_len: u32,
     dropped_count: u32,
+}
+
+impl<T> ByteSizeOf for EvictedQueue<T>
+where
+    T: ByteSizeOf,
+{
+    fn allocated_bytes(&self) -> usize {
+        if self.queue.is_none() {
+            return 0;
+        }
+
+        self.queue
+            .as_ref()
+            .unwrap()
+            .iter()
+            .map(|item| item.allocated_bytes())
+            .sum()
+    }
+}
+
+impl<T> From<Vec<T>> for EvictedQueue<T> {
+    fn from(items: Vec<T>) -> Self {
+        let mut queue = EvictedQueue::new(128);
+        items.into_iter().for_each(|item| queue.push_back(item));
+
+        queue
+    }
+}
+
+impl<T> Default for EvictedQueue<T> {
+    fn default() -> Self {
+        Self::new(128)
+    }
 }
 
 impl<T> EvictedQueue<T> {

@@ -1,41 +1,20 @@
 pub mod agent;
 mod thrift;
+mod translate;
 mod transport;
 
+use std::fmt::{Debug, Formatter};
+
 pub use crate::thrift::jaeger::{Batch, Log, Process, Span, SpanRef, SpanRefType, Tag, TagType};
-use event::trace::{AnyValue, KeyValue};
 
-impl From<KeyValue> for Tag {
-    fn from(kv: KeyValue) -> Self {
-        let KeyValue { key, value } = kv;
-
-        match value {
-            AnyValue::String(s) => Tag::new(
-                key.into(),
-                TagType::String,
-                Some(s.into()),
-                None,
-                None,
-                None,
-                None,
-            ),
-            AnyValue::Float(f) => Tag::new(
-                key.into(),
-                TagType::Double,
-                None,
-                Some(f.into()),
-                None,
-                None,
-                None,
-            ),
-            AnyValue::Boolean(b) => {
-                Tag::new(key.into(), TagType::Bool, None, None, Some(b), None, None)
-            }
-            AnyValue::Int64(i) => {
-                Tag::new(key.into(), TagType::Long, None, None, None, Some(i), None)
-            }
-            // TODO: better Array handling, jaeger thrift doesn't support arrays
-            // v @ Value::Array(_) => Tag::new(key.into(), TagType::String, Some(v.to_string()), None, None, None, None),
+impl Debug for Tag {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self.v_type {
+            TagType::String => write!(f, "Tag {{ key: {}, value: {:?} }}", self.key, self.v_str),
+            TagType::Double => write!(f, "Tag {{ key: {}, value: {:?} }}", self.key, self.v_double),
+            TagType::Bool => write!(f, "Tag {{ key: {}, value: {:?} }}", self.key, self.v_bool),
+            TagType::Long => write!(f, "Tag {{ key: {}, value: {:?} }}", self.key, self.v_long),
+            TagType::Binary => write!(f, "Tag {{ key: {}, value: {:?} }}", self.key, self.v_binary),
         }
     }
 }

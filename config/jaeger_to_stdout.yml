@@ -1,0 +1,12 @@
+sources:
+  jaeger:
+    type: jaeger
+    protocols:
+      thrift_compact:
+        max_packet_size: 65000
+
+sinks:
+  stdout:
+    type: stdout
+    inputs:
+      - jaeger

@@ -82,7 +82,7 @@ fn main() {
         framework::trace::init(true, false, &levels);
 
         info!(
-            message = "start vertex",
+            message = "Start vertex",
             threads = threads,
             configs = ?opts.configs
         );

@@ -170,7 +170,7 @@ where
             .clone();
 
         let follows_link = Link::new(follows_context.trace_id, follows_context.span_id);
-        let ref mut links = data.span.links;
+        let links = &mut data.span.links;
         links.push_back(follows_link);
     }
 
@@ -220,7 +220,7 @@ where
                     }
                 }
 
-                span.events.push(te);
+                span.events.push_back(te);
             }
         }
     }
@@ -283,10 +283,8 @@ where
 
             if let Some(psc) = parent_span.as_ref().map(|parent| parent.span_context()) {
                 span.span_context.trace_id = psc.trace_id;
-            } else {
-                if span.span_context.trace_id == TraceId::INVALID {
-                    span.span_context.trace_id = self.tracer.new_trace_id()
-                }
+            } else if span.span_context.trace_id == TraceId::INVALID {
+                span.span_context.trace_id = self.tracer.new_trace_id()
             }
 
             // println!("span: {}, parent: {}", span.span_context.span_id.into_i64(), parent_cx.span().span_context().span_id.into_i64());

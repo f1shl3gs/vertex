@@ -82,6 +82,8 @@ pub enum SpanKind {
     /// internal operation within an application, as opposed to an
     /// operations with remote parents or children.
     Internal,
+
+    Unspecified,
 }
 
 impl Display for SpanKind {
@@ -92,6 +94,7 @@ impl Display for SpanKind {
             SpanKind::Producer => write!(f, "producer"),
             SpanKind::Consumer => write!(f, "consumer"),
             SpanKind::Internal => write!(f, "internal"),
+            SpanKind::Unspecified => write!(f, "unspecified"),
         }
     }
 }
@@ -152,10 +155,7 @@ impl StatusCode {
     }
 
     pub fn is_unset(&self) -> bool {
-        match self {
-            StatusCode::Unset => true,
-            _ => false,
-        }
+        matches!(self, StatusCode::Unset)
     }
 }
 
@@ -273,7 +273,7 @@ pub struct Span {
     pub attributes: EvictedHashMap,
 
     /// `events` is a collection of event items.
-    pub events: Vec<Event>,
+    pub events: EvictedQueue<Event>,
 
     /// links is a collection of Links, which are references from this span to a span
     /// in the same or different trace.
@@ -300,7 +300,7 @@ impl Span {
             start_time: 0,
             end_time: 0,
             attributes: EvictedHashMap::new(128, 0),
-            events: vec![],
+            events: EvictedQueue::new(128),
             links: EvictedQueue::new(128),
             status: Status::default(),
         }
@@ -357,7 +357,7 @@ impl Span {
     pub fn add_event(&mut self, name: impl Into<Cow<'static, str>>, attributes: Vec<KeyValue>) {
         let timestamp = Utc::now().timestamp_nanos();
 
-        self.events.push(Event {
+        self.events.push_back(Event {
             name: name.into(),
             timestamp,
             attributes: attributes.into(),

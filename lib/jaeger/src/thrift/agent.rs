@@ -261,12 +261,12 @@ impl AgentEmitZipkinBatchArgs {
 //
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-struct AgentEmitBatchArgs {
-  batch: jaeger::Batch,
+pub(crate) struct AgentEmitBatchArgs {
+  pub(crate) batch: jaeger::Batch,
 }
 
 impl AgentEmitBatchArgs {
-  fn read_from_in_protocol(i_prot: &mut dyn TInputProtocol) -> thrift::Result<AgentEmitBatchArgs> {
+  pub fn read_from_in_protocol(i_prot: &mut dyn TInputProtocol) -> thrift::Result<AgentEmitBatchArgs> {
     i_prot.read_struct_begin()?;
     let mut f_1: Option<jaeger::Batch> = None;
     loop {

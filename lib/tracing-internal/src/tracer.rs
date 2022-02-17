@@ -1,5 +1,4 @@
-use event::trace::generator::IdGenerator;
-use event::trace::{RngGenerator, Span, SpanContext, SpanId, TraceFlags, TraceId, TraceState};
+use event::trace::{Span, SpanContext, SpanId, TraceFlags, TraceId, TraceState};
 
 use crate::context::TraceContext;
 
@@ -23,7 +22,7 @@ pub trait PreSampledTracer {
         let span = &mut data.span;
 
         // Gather trace state
-        let (no_parent, trace_id, remote_parent, parent_trace_flags) =
+        let (_no_parent, trace_id, _remote_parent, _parent_trace_flags) =
             current_trace_state(span, parent_cx);
         let trace_id = if trace_id == TraceId::INVALID {
             self.new_trace_id()
@@ -62,23 +61,5 @@ fn current_trace_state(span: &Span, parent_cx: &TraceContext) -> (bool, TraceId,
             false,
             Default::default(),
         )
-    }
-}
-
-pub struct Tracer {
-    gen: RngGenerator,
-}
-
-impl PreSampledTracer for Tracer {
-    fn export(&self, span: Span) {
-        todo!()
-    }
-
-    fn new_trace_id(&self) -> TraceId {
-        todo!()
-    }
-
-    fn new_span_id(&self) -> SpanId {
-        todo!()
     }
 }

@@ -2,13 +2,14 @@ use std::borrow::Cow;
 use std::fmt::Debug;
 
 use async_trait::async_trait;
-use event::Trace;
+use event::{tags, Trace};
 use framework::config::{
     DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
+use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 
 pub fn default_service() -> String {
@@ -53,7 +54,13 @@ impl SourceConfig for InternalTracesConfig {
                 .take_until(shutdown);
 
             while let Some(span) = rx.next().await {
-                let mut trace = Trace::new(service.clone(), vec![span]);
+                let mut trace = Trace::new(
+                    service.clone(),
+                    tags!(
+                        log_schema().source_type_key() => "internal_traces"
+                    ),
+                    vec![span],
+                );
 
                 trace.insert_tag("hostanme", hostname.clone());
                 trace.insert_tag("version", version.clone());

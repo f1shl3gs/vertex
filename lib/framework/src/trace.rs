@@ -155,7 +155,7 @@ struct InternalTracer {
 impl PreSampledTracer for InternalTracer {
     fn export(&self, span: Span) {
         let sender = SPAN_SENDER.get_or_init(|| broadcast::channel(100).0);
-        sender.send(span);
+        let _ = sender.send(span);
     }
 
     fn new_trace_id(&self) -> TraceId {

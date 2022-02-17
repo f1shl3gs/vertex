@@ -17,6 +17,22 @@ pub struct EvictedHashMap {
     dropped_count: u32,
 }
 
+impl From<HashMap<Key, AnyValue>> for EvictedHashMap {
+    fn from(map: HashMap<Key, AnyValue>) -> Self {
+        let evict_list = map.keys()
+            .into_iter()
+            .cloned()
+            .collect();
+
+        Self {
+            map,
+            evict_list,
+            max_len: 128,
+            dropped_count: 0,
+        }
+    }
+}
+
 impl Default for EvictedHashMap {
     fn default() -> Self {
         Self::new(128, 0)
@@ -78,6 +94,16 @@ impl EvictedHashMap {
         }
     }
 
+    pub fn remove(&mut self, key: Key) -> Option<AnyValue> {
+        if let Some(value) = self.map.remove(&key) {
+            self.move_key_to_front(key);
+            self.evict_list.pop_front();
+            Some(value)
+        } else {
+            None
+        }
+    }
+
     /// Inserts a key-value pair into the map.
     pub fn insert_key_value(&mut self, kv: KeyValue) {
         let KeyValue { key, value } = kv;
@@ -108,6 +134,10 @@ impl EvictedHashMap {
     /// if it exists
     pub fn get(&self, key: &Key) -> Option<&AnyValue> {
         self.map.get(key)
+    }
+
+    pub fn contains_key(&self, key: impl Into<Key>) -> bool {
+        self.map.contains_key(&(key.into()))
     }
 
     fn move_key_to_front(&mut self, key: Key) {

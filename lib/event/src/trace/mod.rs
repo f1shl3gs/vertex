@@ -131,6 +131,17 @@ impl From<String> for AnyValue {
     }
 }
 
+impl ToString for AnyValue {
+    fn to_string(&self) -> String {
+        match self {
+            AnyValue::String(s) => s.to_string(),
+            AnyValue::Int64(i) => i.to_string(),
+            AnyValue::Float(f) => f.to_string(),
+            AnyValue::Boolean(b) => b.to_string(),
+        }
+    }
+}
+
 #[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
 pub struct KeyValue {
     pub key: Key,
@@ -396,6 +407,12 @@ impl Debug for TraceId {
     }
 }
 
+impl From<[u8; 16]> for TraceId {
+    fn from(b: [u8; 16]) -> Self {
+        TraceId::from_bytes(b)
+    }
+}
+
 impl TraceId {
     /// Invalid trace id
     pub const INVALID: TraceId = TraceId(0);
@@ -426,6 +443,12 @@ impl Debug for SpanId {
 impl From<u64> for SpanId {
     fn from(u: u64) -> Self {
         Self(u)
+    }
+}
+
+impl From<i64> for SpanId {
+    fn from(i: i64) -> Self {
+        SpanId::from_bytes(i64::to_be_bytes(i))
     }
 }
 
@@ -531,7 +554,7 @@ pub type Traces = Vec<Trace>;
 
 impl ByteSizeOf for Trace {
     fn allocated_bytes(&self) -> usize {
-        0 + self.tags.allocated_bytes() + self.spans.allocated_bytes()
+        self.tags.allocated_bytes() + self.spans.allocated_bytes()
     }
 }
 
@@ -542,10 +565,14 @@ impl Finalizable for Trace {
 }
 
 impl Trace {
-    pub fn new(service: impl Into<Cow<'static, str>>, spans: Vec<Span>) -> Trace {
+    pub fn new(
+        service: impl Into<Cow<'static, str>>,
+        tags: BTreeMap<String, String>,
+        spans: Vec<Span>,
+    ) -> Trace {
         Self {
             service: service.into(),
-            tags: Default::default(),
+            tags,
             spans,
             metadata: Default::default(),
         }
