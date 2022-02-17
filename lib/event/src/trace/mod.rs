@@ -246,18 +246,6 @@ impl TraceState {
     }
 
     /// Creates a new `TraceState` from the given key-value collection.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// use opentelemetry::trace::{TraceState, TraceStateError};
-    ///
-    /// let kvs = vec![("foo", "bar"), ("apple", "banana")];
-    /// let trace_state: Result<TraceState, TraceStateError> = TraceState::from_key_value(kvs);
-    ///
-    /// assert!(trace_state.is_ok());
-    /// assert_eq!(trace_state.unwrap().header(), String::from("foo=bar,apple=banana"))
-    /// ```
     pub fn from_key_value<T, K, V>(trace_state: T) -> Result<Self, TraceStateError>
     where
         T: IntoIterator<Item = (K, V)>,
