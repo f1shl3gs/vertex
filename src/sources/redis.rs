@@ -312,7 +312,7 @@ impl RedisSource {
         let mut ticker =
             IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);
 
-        while let Some(_) = ticker.next().await {
+        while ticker.next().await.is_some() {
             let metrics = match self.gather().await {
                 Err(err) => {
                     warn!(
@@ -651,7 +651,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
 
     for i in 0..dbcount {
         let name = format!("db{}", i);
-        if let None = handled_dbs.get(name.as_str()) {
+        if handled_dbs.get(name.as_str()).is_none() {
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "db_keys",

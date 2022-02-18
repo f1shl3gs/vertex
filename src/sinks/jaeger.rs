@@ -87,7 +87,7 @@ fn trace_to_batch(trace: Trace) -> jaeger::Batch {
         .into_iter()
         .map(|(k, v)| {
             jaeger::Tag::new(
-                k.into(),
+                k,
                 jaeger::TagType::String,
                 Some(v.into()),
                 None,

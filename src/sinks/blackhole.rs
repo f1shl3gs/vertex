@@ -62,7 +62,7 @@ impl BlackholeSink {
 #[async_trait]
 impl StreamSink for BlackholeSink {
     async fn run(self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
-        while let Some(_) = input.next().await {
+        while input.next().await.is_some() {
             self.acker.ack(1);
         }
 

@@ -24,15 +24,16 @@ pub struct GeneratorConfig {
 }
 
 impl GeneratorConfig {
-    async fn inner(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
+    async fn inner(self, shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {
         let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
-        while let Some(_) = ticker.next().await {
+        while ticker.next().await.is_some() {
             let now = Some(chrono::Utc::now());
             let event = Event::Metric(Metric::gauge("ge", "", 6).with_timestamp(now));
 
-            out.send(event)
+            output
+                .send(event)
                 .await
                 .map_err(|err| error!("error: {:?}", err))?;
         }

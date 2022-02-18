@@ -233,10 +233,10 @@ fn build_attributes() -> IndexMap<String, String> {
     let kernel = kernel_version().unwrap_or_else(|| "unknown".to_string());
     attrs.insert("kernel".to_string(), kernel);
 
-    let hostname = crate::hostname().unwrap_or("unknown".to_string());
+    let hostname = crate::hostname().unwrap_or_default();
     attrs.insert("hostname".to_string(), hostname);
 
-    attrs.insert("os".to_string(), os_version().unwrap_or("".to_string()));
+    attrs.insert("os".to_string(), os_version().unwrap_or_default());
 
     attrs
 }

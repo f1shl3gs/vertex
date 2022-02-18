@@ -15,7 +15,7 @@ pub trait GenerateConfig {
     fn generate_config() -> String;
 
     fn generate_config_with_indent(n: usize) -> String {
-        let prefix = std::iter::repeat(' ').take(n).collect::<String>();
+        let prefix = " ".repeat(n);
 
         with_prefix(&prefix, &Self::generate_config())
     }
