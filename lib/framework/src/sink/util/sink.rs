@@ -344,7 +344,11 @@ where
                 let status = logic.result_status(result);
                 finalizers.update_status(status);
                 if status == EventStatus::Delivered {
-                    emit!(&EventsSent { count, byte_size });
+                    emit!(&EventsSent {
+                        count,
+                        byte_size,
+                        output: None
+                    });
                 }
 
                 // If the rx end is dropped we still completed the request

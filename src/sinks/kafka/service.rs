@@ -41,6 +41,7 @@ impl DriverResponse for KafkaResponse {
         EventsSent {
             count: 1,
             byte_size: self.event_byte_size,
+            output: None,
         }
     }
 }

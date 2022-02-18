@@ -30,6 +30,25 @@ impl From<HashMap<Key, AnyValue>> for EvictedHashMap {
     }
 }
 
+impl<T> From<Vec<T>> for EvictedHashMap
+where
+    T: Into<(Key, AnyValue)>,
+{
+    fn from(kvs: Vec<T>) -> Self {
+        kvs.into_iter().map(Into::into).collect()
+    }
+}
+
+impl FromIterator<(Key, AnyValue)> for EvictedHashMap {
+    fn from_iter<T: IntoIterator<Item = (Key, AnyValue)>>(iter: T) -> Self {
+        iter.into_iter()
+            .fold(EvictedHashMap::default(), |mut map, (key, value)| {
+                map.insert(key, value);
+                map
+            })
+    }
+}
+
 impl Default for EvictedHashMap {
     fn default() -> Self {
         Self::new(128, 0)
@@ -91,7 +110,8 @@ impl EvictedHashMap {
         }
     }
 
-    pub fn remove(&mut self, key: Key) -> Option<AnyValue> {
+    pub fn remove(&mut self, key: impl Into<Key>) -> Option<AnyValue> {
+        let key = key.into();
         if let Some(value) = self.map.remove(&key) {
             self.move_key_to_front(key);
             self.evict_list.pop_front();

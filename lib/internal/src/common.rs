@@ -21,17 +21,29 @@ impl InternalEvent for EventsReceived {
 }
 
 #[derive(Debug)]
-pub struct EventsSent {
+pub struct EventsSent<'a> {
     pub count: usize,
     pub byte_size: usize,
+    pub output: Option<&'a str>,
 }
 
-impl InternalEvent for EventsSent {
+impl<'a> InternalEvent for EventsSent<'a> {
     fn emit_metrics(&self) {
-        if self.count > 0 {
-            counter!("events_out_total", self.count as u64);
-            counter!("component_sent_events_total", self.count as u64);
-            counter!("component_sent_event_bytes_total", self.byte_size as u64);
+        if self.count == 0 {
+            return;
+        }
+
+        match self.output {
+            Some(output) => {
+                counter!("events_out_total", self.count as u64, "output" => output.to_owned());
+                counter!("component_sent_events_total", self.count as u64, "output" => output.to_owned());
+                counter!("component_sent_event_bytes_total", self.byte_size as u64, "output" => output.to_owned());
+            }
+            None => {
+                counter!("events_out_total", self.count as u64);
+                counter!("component_sent_events_total", self.count as u64);
+                counter!("component_sent_event_bytes_total", self.byte_size as u64);
+            }
         }
     }
 }

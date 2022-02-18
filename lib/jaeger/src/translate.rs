@@ -1,12 +1,14 @@
-use event::Trace;
 use std::collections::{BTreeMap, HashMap};
 
+use event::trace::{
+    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanId,
+    SpanKind, Status, StatusCode, Trace, TraceId, TraceState,
+};
+
+use super::proto;
+use crate::proto::ValueType;
 use crate::thrift::jaeger;
 use crate::{Batch, Log, Span, SpanRef, Tag, TagType};
-use event::trace::{
-    AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
-    Status, StatusCode, TraceId,
-};
 
 impl From<KeyValue> for Tag {
     fn from(kv: KeyValue) -> Self {
@@ -72,19 +74,9 @@ impl From<Span> for event::trace::Span {
         let end_time = js.start_time + js.duration;
         let mut attributes = tags_to_attributes(js.tags);
 
-        let status = if let Some(value) = attributes.remove("error".into()) {
-            Status {
-                message: value.to_string().into(),
-                status_code: StatusCode::Error,
-            }
-        } else {
-            Status {
-                message: "".into(),
-                status_code: StatusCode::Ok,
-            }
-        };
+        let status = status_from_attributes(&mut attributes);
 
-        let kind = if let Some(value) = attributes.remove("span.kind".into()) {
+        let kind = if let Some(value) = attributes.remove("span.kind") {
             let value = value.to_string();
             match value.as_str() {
                 "client" => SpanKind::Client,
@@ -139,7 +131,7 @@ impl From<Log> for Event {
     fn from(log: Log) -> Self {
         let timestamp = log.timestamp * 1000;
         let mut attributes = tags_to_attributes(Some(log.fields));
-        let name = if let Some(value) = attributes.remove("message".into()) {
+        let name = if let Some(value) = attributes.remove("message") {
             value.to_string().into()
         } else {
             "".into()
@@ -416,6 +408,192 @@ impl From<Batch> for Trace {
 impl From<Batch> for event::Event {
     fn from(batch: Batch) -> Self {
         event::Event::Trace(batch.into())
+    }
+}
+
+// From proto to internal
+
+impl From<proto::Batch> for event::Event {
+    fn from(batch: proto::Batch) -> Self {
+        let trace: Trace = batch.into();
+        trace.into()
+    }
+}
+
+impl From<proto::KeyValue> for (Key, AnyValue) {
+    fn from(kv: proto::KeyValue) -> Self {
+        let value = if kv.v_type == ValueType::String as i32 {
+            kv.v_str.into()
+        } else if kv.v_type == ValueType::Bool as i32 {
+            kv.v_bool.into()
+        } else if kv.v_type == ValueType::Int64 as i32 {
+            kv.v_int64.into()
+        } else if kv.v_type == ValueType::Float64 as i32 {
+            kv.v_float64.into()
+        } else {
+            base64::encode(kv.v_binary).into()
+        };
+
+        (kv.key.into(), value)
+    }
+}
+
+impl From<proto::Log> for event::trace::Event {
+    fn from(log: proto::Log) -> Self {
+        let timestamp = log.timestamp.unwrap();
+        let mut attributes: EvictedHashMap = log.fields.into();
+
+        let name = if let Some(value) = attributes.remove("message") {
+            value.to_string()
+        } else {
+            String::new()
+        };
+
+        Self {
+            name: name.into(),
+            timestamp: timestamp.seconds * 1000 * 1000 * 1000 + timestamp.nanos as i64,
+            attributes,
+        }
+    }
+}
+
+fn prost_timestamp_to_nano_seconds(timestamp: Option<prost_types::Timestamp>) -> i64 {
+    timestamp
+        .map(|ts| ts.seconds * 1000 * 1000 * 1000 + ts.nanos as i64)
+        .unwrap_or(0)
+}
+
+fn prost_duration_to_nano_seconds(duration: Option<prost_types::Duration>) -> i64 {
+    duration
+        .map(|ts| ts.seconds * 1000 * 1000 * 1000 + ts.nanos as i64)
+        .unwrap_or(0)
+}
+
+const W3C_TRACESTATE: &str = "w3c.tracestate";
+
+fn trace_state_from_attributes(attributes: &mut EvictedHashMap) -> TraceState {
+    if let Some(value) = attributes.remove(W3C_TRACESTATE) {
+        let value = value.to_string();
+        // TODO: log errors
+        value.parse().unwrap_or_default()
+    } else {
+        TraceState::default()
+    }
+}
+
+fn span_kind_from_attributes(attributes: &mut EvictedHashMap) -> SpanKind {
+    if let Some(value) = attributes.remove(SPAN_KIND) {
+        match value {
+            AnyValue::String(s) => match s.as_ref() {
+                "client" => SpanKind::Client,
+                "server" => SpanKind::Server,
+                "producer" => SpanKind::Producer,
+                "consumer" => SpanKind::Consumer,
+                "internal" => SpanKind::Internal,
+                _ => SpanKind::Unspecified,
+            },
+            _ => SpanKind::Unspecified,
+        }
+    } else {
+        SpanKind::Unspecified
+    }
+}
+
+/// Translate `proto::Span` into internal `event::trace::Span`
+impl From<proto::Span> for event::trace::Span {
+    fn from(span: proto::Span) -> Self {
+        let mut trace_id_bytes = [0u8; 16];
+        trace_id_bytes.clone_from_slice(span.trace_id.as_slice());
+        let mut span_id_bytes = [0u8; 8];
+        span_id_bytes.clone_from_slice(span.trace_id.as_slice());
+
+        let trace_id = TraceId::from_bytes(trace_id_bytes);
+        let span_id = SpanId::from_bytes(span_id_bytes);
+        let parent_span_id = span.parent_span_id();
+        let name = span.operation_name;
+        let mut attributes = span.tags.into();
+        let start_time = prost_timestamp_to_nano_seconds(span.start_time);
+        let end_time = start_time + prost_duration_to_nano_seconds(span.duration);
+        let trace_state = trace_state_from_attributes(&mut attributes);
+        let kind = span_kind_from_attributes(&mut attributes);
+
+        event::trace::Span {
+            span_context: SpanContext {
+                trace_id,
+                span_id,
+                trace_flags: Default::default(),
+                is_remote: false,
+                trace_state,
+            },
+            parent_span_id,
+            name,
+            kind,
+            start_time,
+            end_time,
+            attributes,
+            events: span.logs.into_iter().map(Into::into).collect(),
+            links: Default::default(),
+            status: Default::default(),
+        }
+    }
+}
+
+fn status_from_attributes(attributes: &mut EvictedHashMap) -> Status {
+    if let Some(value) = attributes.remove("error") {
+        let msg = if matches!(value, AnyValue::Boolean(_)) {
+            String::new()
+        } else {
+            value.to_string()
+        };
+
+        Status {
+            message: msg.into(),
+            status_code: StatusCode::Error,
+        }
+    } else {
+        Status {
+            message: "".into(),
+            status_code: StatusCode::Ok,
+        }
+    }
+}
+
+impl From<proto::Batch> for Trace {
+    fn from(batch: crate::proto::Batch) -> Self {
+        let (service, tags) = match batch.process {
+            Some(process) => {
+                let tags = process
+                    .tags
+                    .into_iter()
+                    .map(|kv| {
+                        let value = if kv.v_type == ValueType::String as i32 {
+                            kv.v_str
+                        } else if kv.v_type == ValueType::Bool as i32 {
+                            if kv.v_bool {
+                                "true".to_string()
+                            } else {
+                                "false".to_string()
+                            }
+                        } else if kv.v_type == ValueType::Int64 as i32 {
+                            kv.v_int64.to_string()
+                        } else if kv.v_type == ValueType::Float64 as i32 {
+                            kv.v_float64.to_string()
+                        } else {
+                            base64::encode(kv.v_binary)
+                        };
+
+                        (kv.key, value)
+                    })
+                    .collect::<BTreeMap<String, String>>();
+
+                (process.service_name, tags)
+            }
+            None => (String::new(), BTreeMap::new()),
+        };
+
+        let spans = batch.spans.into_iter().map(Into::into).collect();
+
+        Trace::new(service, tags, spans)
     }
 }
 

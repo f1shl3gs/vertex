@@ -10,6 +10,16 @@ pub struct EvictedQueue<T> {
     dropped_count: u32,
 }
 
+impl FromIterator<crate::trace::Event> for EvictedQueue<crate::trace::Event> {
+    fn from_iter<T: IntoIterator<Item = crate::trace::Event>>(iter: T) -> Self {
+        iter.into_iter()
+            .fold(EvictedQueue::default(), |mut queue, event| {
+                queue.push_back(event);
+                queue
+            })
+    }
+}
+
 impl<T> ByteSizeOf for EvictedQueue<T>
 where
     T: ByteSizeOf,

@@ -106,7 +106,7 @@ impl TryFrom<i32> for SpanRefType {
 // Tag
 //
 
-#[derive(Clone, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Tag {
   pub key: String,
   pub v_type: TagType,

@@ -1684,7 +1684,11 @@ version = "0.1.0"
 dependencies = [
  "base64",
  "event",
+ "prost",
+ "prost-types",
  "thrift",
+ "tonic",
+ "tonic-build",
 ]
 
 [[package]]
@@ -4610,6 +4614,7 @@ dependencies = [
  "tokio-stream",
  "tokio-test",
  "tokio-util",
+ "tonic",
  "tower",
  "tower-test",
  "tracing",

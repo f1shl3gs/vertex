@@ -1,3 +1,5 @@
+mod grpc;
+mod http;
 mod udp;
 
 use std::net::SocketAddr;
@@ -18,7 +20,7 @@ const fn default_max_packet_size() -> usize {
     65000
 }
 
-fn default_compact_thrift_sockaddr() -> SocketAddr {
+fn default_compact_thrift_socketaddr() -> SocketAddr {
     SocketAddr::new([0, 0, 0, 0].into(), 6831)
 }
 
@@ -28,8 +30,8 @@ fn default_thrift_http_endpoint() -> SocketAddr {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct UdpConfig {
-    #[serde(default)]
-    endpoint: Option<SocketAddr>,
+    #[serde(default = "default_compact_thrift_socketaddr")]
+    endpoint: SocketAddr,
     max_packet_size: usize,
     #[serde(default)]
     socket_buffer_size: Option<usize>,
@@ -42,6 +44,13 @@ struct HttpServerConfig {
     endpoint: SocketAddr,
     #[serde(default)]
     tls: Option<TlsConfig>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct GrpcServerConfig {
+    #[serde(default = "default_thrift_http_endpoint")]
+    endpoint: SocketAddr,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -77,9 +86,7 @@ impl SourceConfig for JaegerConfig {
                 config.max_packet_size
             };
 
-            let endpoint = config
-                .endpoint
-                .unwrap_or_else(default_compact_thrift_sockaddr);
+            let endpoint = config.endpoint;
 
             Ok(udp::source(
                 cx.key.to_string(),
@@ -107,7 +114,16 @@ impl SourceConfig for JaegerConfig {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        // TODO
-        vec![]
+        let mut resources = vec![];
+
+        if let Some(config) = &self.protocols.thrift_http {
+            resources.push(Resource::tcp(config.endpoint));
+        }
+
+        if let Some(config) = &self.protocols.thrift_compact {
+            resources.push(Resource::udp(config.endpoint))
+        }
+
+        resources
     }
 }
