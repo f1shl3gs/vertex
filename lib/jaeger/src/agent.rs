@@ -1,6 +1,10 @@
+use prost::bytes::BytesMut;
 use std::fmt::{Debug, Formatter};
 
-use thrift::protocol::{TCompactInputProtocol, TCompactOutputProtocol, TInputProtocol};
+use thrift::protocol::{
+    TBinaryInputProtocol, TBinaryOutputProtocol, TCompactInputProtocol, TCompactOutputProtocol,
+    TInputProtocol,
+};
 use thrift::transport::{ReadHalf, TIoChannel, WriteHalf};
 
 use crate::thrift::agent::{AgentEmitBatchArgs, TAgentSyncClient};
@@ -48,6 +52,23 @@ pub fn deserialize_compact_batch(input: Vec<u8>) -> thrift::Result<Batch> {
     input.read_message_begin()?;
     let args = AgentEmitBatchArgs::read_from_in_protocol(&mut input)?;
     Ok(args.batch)
+}
+
+pub fn deserialize_binary_batch(input: Vec<u8>) -> thrift::Result<Batch> {
+    let reader = std::io::Cursor::new(input);
+    let mut input = TBinaryInputProtocol::new(reader, false);
+    input.read_message_begin()?;
+    let args = AgentEmitBatchArgs::read_from_in_protocol(&mut input)?;
+    Ok(args.batch)
+}
+
+pub fn serialize_binary_batch(batch: jaeger::Batch) -> thrift::Result<Vec<u8>> {
+    let buf = BytesMut::new();
+    let mut op = TBinaryOutputProtocol::new(buf, false);
+
+    batch.write_to_out_protocol(&mut op)?;
+
+    Ok(buf.to_vec())
 }
 
 pub fn serialize_batch(

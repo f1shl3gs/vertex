@@ -10,6 +10,7 @@ use framework::config::{
 };
 use framework::tls::TlsConfig;
 use framework::Source;
+use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
 
 // See https://www.jaegertracing.io/docs/1.31/getting-started/
@@ -20,44 +21,85 @@ const fn default_max_packet_size() -> usize {
     65000
 }
 
-fn default_compact_thrift_socketaddr() -> SocketAddr {
+fn default_thrift_compact_socketaddr() -> SocketAddr {
     SocketAddr::new([0, 0, 0, 0].into(), 6831)
 }
 
-fn default_thrift_http_endpoint() -> SocketAddr {
-    SocketAddr::new([127, 0, 0, 1].into(), 14268)
+fn default_thrift_binary_socketaddr() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), 6832)
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-struct UdpConfig {
-    #[serde(default = "default_compact_thrift_socketaddr")]
+fn default_thrift_http_endpoint() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), 14268)
+}
+
+fn default_grpc_endpoint() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), 14250)
+}
+
+/// The Agent can only receive spans over UDP in Thrift format.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct ThriftCompactConfig {
+    #[serde(default = "default_thrift_compact_socketaddr")]
     endpoint: SocketAddr,
+    #[serde(default = "default_max_packet_size")]
     max_packet_size: usize,
     #[serde(default)]
     socket_buffer_size: Option<usize>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+/// Most Jaeger Clients use Thrift’s compact encoding, however some client libraries
+/// do not support it (notably, Node.js) and use Thrift’s binary encoding.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-struct HttpServerConfig {
+struct ThriftBinaryConfig {
+    #[serde(default = "default_thrift_binary_socketaddr")]
+    endpoint: SocketAddr,
+    #[serde(default = "default_max_packet_size")]
+    max_packet_size: usize,
+    #[serde(default)]
+    socket_buffer_size: Option<usize>,
+}
+
+/// In some cases it is not feasible to deploy Jaeger Agent next to the application,
+/// for example, when the application code is running as AWS Lambda function.
+/// In these scenarios the Jaeger Clients can be configured to submit spans directly
+/// to the Collectors over HTTP/HTTPS.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ThriftHttpConfig {
     #[serde(default = "default_thrift_http_endpoint")]
     endpoint: SocketAddr,
     #[serde(default)]
     tls: Option<TlsConfig>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+/// In a typical Jaeger deployment, Agents receive spans from Clients and forward them to Collectors
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#protobuf-via-grpc-stable
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct GrpcServerConfig {
-    #[serde(default = "default_thrift_http_endpoint")]
+    #[serde(default = "default_grpc_endpoint")]
     endpoint: SocketAddr,
 }
 
+/// There a lot APIs for receiving spans
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/
 #[derive(Debug, Deserialize, Serialize)]
 struct Protocols {
-    thrift_http: Option<HttpServerConfig>,
-    thrift_compact: Option<UdpConfig>,
-    thrift_binary: Option<UdpConfig>,
+    thrift_http: Option<ThriftHttpConfig>,
+    thrift_compact: Option<ThriftCompactConfig>,
+    thrift_binary: Option<ThriftBinaryConfig>,
+    grpc: Option<GrpcServerConfig>,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -79,30 +121,61 @@ inventory::submit! {
 #[typetag::serde(name = "jaeger")]
 impl SourceConfig for JaegerConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        if let Some(ref config) = self.protocols.thrift_compact {
-            let max_packet_size = if config.max_packet_size == 0 {
-                default_max_packet_size()
-            } else {
-                config.max_packet_size
-            };
+        let shutdown = cx.shutdown.shared();
+        let source = cx.key.to_string();
+        let mut handles = vec![];
 
-            let endpoint = config.endpoint;
-
-            Ok(udp::source(
-                cx.key.to_string(),
-                endpoint,
-                max_packet_size,
+        if let Some(config) = &self.protocols.thrift_compact {
+            handles.push(tokio::spawn(udp::serve(
+                source.clone(),
+                config.endpoint,
+                config.max_packet_size,
                 config.socket_buffer_size,
-                cx.shutdown,
+                shutdown.clone(),
                 |data| match jaeger::agent::deserialize_compact_batch(data) {
                     Ok(batch) => Ok(batch),
                     Err(err) => Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, err)),
                 },
-                cx.output,
-            ))
-        } else {
-            panic!()
+                cx.output.clone(),
+            )));
         }
+
+        if let Some(config) = &self.protocols.thrift_binary {
+            handles.push(tokio::spawn(udp::serve(
+                source.clone(),
+                config.endpoint,
+                config.max_packet_size,
+                config.socket_buffer_size,
+                shutdown.clone(),
+                |data| match jaeger::agent::deserialize_binary_batch(data) {
+                    Ok(batch) => Ok(batch),
+                    Err(err) => Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, err)),
+                },
+                cx.output.clone(),
+            )));
+        }
+
+        if let Some(config) = &self.protocols.grpc {
+            handles.push(tokio::spawn(grpc::serve(
+                config.clone(),
+                shutdown.clone(),
+                cx.output.clone(),
+            )));
+        }
+
+        if let Some(config) = &self.protocols.thrift_http {
+            handles.push(tokio::spawn(http::serve(
+                config.clone(),
+                shutdown.clone(),
+                cx.output.clone(),
+            )));
+        }
+
+        Ok(Box::pin(async move {
+            let err = futures::future::join_all(handles).await;
+
+            Ok(())
+        }))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -121,7 +194,15 @@ impl SourceConfig for JaegerConfig {
         }
 
         if let Some(config) = &self.protocols.thrift_compact {
+            resources.push(Resource::udp(config.endpoint));
+        }
+
+        if let Some(config) = &self.protocols.thrift_binary {
             resources.push(Resource::udp(config.endpoint))
+        }
+
+        if let Some(config) = &self.protocols.grpc {
+            resources.push(Resource::tcp(config.endpoint))
         }
 
         resources

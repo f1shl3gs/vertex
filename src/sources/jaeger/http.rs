@@ -2,17 +2,18 @@ use std::convert::Infallible;
 
 use framework::tls::MaybeTlsSettings;
 use framework::{Pipeline, ShutdownSignal};
+use futures_util::future::Shared;
 use futures_util::FutureExt;
 use http::{Request, Response};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
 
-use super::HttpServerConfig;
+use super::ThriftHttpConfig;
 
-async fn ingest(
-    config: HttpServerConfig,
-    mut shutdown: ShutdownSignal,
-    mut output: Pipeline,
+pub async fn serve(
+    config: ThriftHttpConfig,
+    shutdown: Shared<ShutdownSignal>,
+    _output: Pipeline,
 ) -> framework::Result<()> {
     let tls = MaybeTlsSettings::from_config(&config.tls, true)?;
     let listener = tls.bind(&config.endpoint).await?;

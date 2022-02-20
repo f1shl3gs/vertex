@@ -1,8 +1,13 @@
+mod grpc;
+mod http;
+mod udp;
+
 use async_trait::async_trait;
 use event::trace::Trace;
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
 use framework::sink::util::udp::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
+use http::HttpSinkConfig;
 use jaeger::agent::{serialize_batch, BufferClient};
 use serde::{Deserialize, Serialize};
 
@@ -10,10 +15,10 @@ use serde::{Deserialize, Serialize};
 struct CollectorConfig {}
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(tag = "propagator", rename_all = "snake_case")]
+#[serde(tag = "protocol", rename_all = "snake_case")]
 enum Mode {
-    Agent(UdpSinkConfig),
-    Collector(CollectorConfig),
+    Udp(UdpSinkConfig),
+    Http(HttpSinkConfig),
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -27,10 +32,10 @@ impl GenerateConfig for JaegerConfig {
         r#"
 # The type jaeger compoent
 #
-propagator: agent
+protocol: agent
 
 # The address to connect to. The address must include a port.
-address: localhost:6831
+address: 127.0.0.1:6831
 
 "#
         .into()
@@ -46,7 +51,7 @@ inventory::submit! {
 impl SinkConfig for JaegerConfig {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         match &self.mode {
-            Mode::Agent(config) => {
+            Mode::Udp(config) => {
                 config.build(cx, move |event| {
                     // TODO: This buffer_client is dummy, rework it in the future
                     let mut buffer_client = BufferClient::default();

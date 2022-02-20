@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fmt;
+use std::fmt::{Debug, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
 use std::pin::Pin;
@@ -15,11 +16,12 @@ use internal::EventsSent;
 use pin_project::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{sleep, Sleep};
-use tower::Service;
+use tower::{Service, ServiceBuilder};
 use tracing_futures::Instrument;
 
 use crate::batch::{Batch, EncodedBatch, EncodedEvent, FinalizersBatch, PushResult, StatefulBatch};
-use crate::sink::util::partition::Partition;
+use crate::sink::util::partition::{Partition, PartitionBuffer, PartitionInnerBuffer};
+use crate::sink::util::service::{Map, ServiceBuilderExt};
 
 /// A Partition based batcher, given some `Service` and `Batch` where the
 /// input is partitionable via the `Partition` trait, it will hold many
@@ -57,6 +59,20 @@ where
     lingers: HashMap<K, Pin<Box<Sleep>>>,
     inflight: Option<HashMap<K, BoxFuture<'static, ()>>>,
     closing: bool,
+}
+
+impl<S, B, K, SL> Debug for PartitionBatchSink<S, B, K, SL>
+where
+    S: Service<B::Output> + Debug,
+    B: Batch + Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("PartitionBatchSink")
+            .field("service", &self.service)
+            .field("batch", &self.batch)
+            .field("timeout", &self.timeout)
+            .finish()
+    }
 }
 
 impl<S, B, K> PartitionBatchSink<S, B, K, StdServiceLogic<S::Response>>
@@ -278,6 +294,21 @@ struct ServiceSink<S, R, L> {
     _pd: PhantomData<R>,
 }
 
+impl<S, R, SL> Debug for ServiceSink<S, R, SL>
+where
+    S: Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.debug_struct("ServiceSink")
+            .field("service", &self.service)
+            .field("acker", &self.acker)
+            .field("seq_head", &self.seq_head)
+            .field("seq_tail", &self.seq_tail)
+            .field("pending_acks", &self.pending_acks)
+            .finish()
+    }
+}
+
 impl<S, R> ServiceSink<S, R, StdServiceLogic<S::Response>>
 where
     S: Service<R>,
@@ -455,3 +486,113 @@ pub trait Response: fmt::Debug {
 impl Response for () {}
 
 impl<'a> Response for &'a str {}
+
+/// A `Sink` interface that wraps a `Service` and a `Batch`.
+///
+/// Provided a batching schema, a service and batch settings
+/// this type will handle buffering events via the batching
+/// scheme and dispatching requests via the service based on
+/// either the size of the batch or a batch linger timeout.
+///
+/// # Acking
+///
+/// Service based acking will only ack events when all prior
+/// request batches have been acked. This means if sequential
+/// request r1, r2, and r3 are dispatched and r2 and r3 complete,
+/// all events contained in all requests will not be acked
+/// until r1 has completed.
+#[pin_project]
+#[derive(Debug)]
+pub struct BatchSink<S, B, L>
+where
+    S: Service<B::Output>,
+    B: Batch,
+{
+    #[pin]
+    inner: PartitionBatchSink<
+        Map<S, PartitionInnerBuffer<B::Output, ()>, B::Output>,
+        PartitionBuffer<B, ()>,
+        (),
+        L,
+    >,
+}
+
+impl<S, B> BatchSink<S, B, StdServiceLogic<S::Response>>
+where
+    S: Service<B::Output>,
+    S::Future: Send + 'static,
+    S::Error: Into<crate::Error> + Send + 'static,
+    S::Response: Response + Send + 'static,
+    B: Batch,
+{
+    pub fn new(service: S, batch: B, timeout: Duration, acker: Acker) -> Self {
+        Self::new_with_logic(service, batch, timeout, acker, StdServiceLogic::default())
+    }
+}
+
+impl<S, B, SL> BatchSink<S, B, SL>
+where
+    S: Service<B::Output>,
+    S::Future: Send + 'static,
+    S::Error: Into<crate::Error> + Send + 'static,
+    S::Response: Response + Send + 'static,
+    B: Batch,
+    SL: ServiceLogic<Response = S::Response> + Send + 'static,
+{
+    pub fn new_with_logic(
+        service: S,
+        batch: B,
+        timeout: Duration,
+        acker: Acker,
+        logic: SL,
+    ) -> Self {
+        let service = ServiceBuilder::new()
+            .map(|req: PartitionInnerBuffer<B::Output, ()>| req.into_parts().0)
+            .service(service);
+
+        let batch = PartitionBuffer::new(batch);
+        let inner = PartitionBatchSink::new_with_logic(service, batch, timeout, acker, logic);
+        Self { inner }
+    }
+}
+
+#[cfg(test)]
+impl<S, B, L> BatchSink<S, B, L>
+where
+    B: Batch,
+    S: Service<B::Output>,
+{
+    pub fn get_ref(&self) -> &S {
+        &self.inner.service.service.inner
+    }
+}
+
+impl<S, B, SL> Sink<EncodedEvent<B::Input>> for BatchSink<S, B, SL>
+where
+    B: Batch,
+    S: Service<B::Output>,
+    S::Future: Send + 'static,
+    S::Error: Into<crate::Error> + Send + 'static,
+    S::Response: Response + Send + 'static,
+    SL: ServiceLogic<Response = S::Response> + Send + 'static,
+{
+    type Error = crate::Error;
+
+    fn poll_ready(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.project().inner.poll_ready(cx)
+    }
+
+    fn start_send(self: Pin<&mut Self>, item: EncodedEvent<B::Input>) -> Result<(), Self::Error> {
+        self.project()
+            .inner
+            .start_send(item.map(|item| PartitionInnerBuffer::new(item, ())))
+    }
+
+    fn poll_flush(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.project().inner.poll_flush(cx)
+    }
+
+    fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.project().inner.poll_close(cx)
+    }
+}

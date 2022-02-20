@@ -4,6 +4,9 @@ sources:
     protocols:
       thrift_compact:
         max_packet_size: 65000
+      thrift_binary: {}
+      thrift_http: {}
+      grpc: {}
 
 sinks:
   stdout:
