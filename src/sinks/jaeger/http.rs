@@ -57,7 +57,7 @@ impl HttpSinkConfig {
             error!(message = "Error sending spans", ?err);
         });
 
-        let healthcheck = healthcheck(client.clone(), "".to_string()).boxed();
+        let healthcheck = healthcheck(client, "".to_string()).boxed();
 
         Ok((Sink::Sink(Box::new(sink)), healthcheck))
     }
@@ -91,7 +91,7 @@ impl HttpSink for HttpSinkConfig {
     }
 }
 
-pub async fn healthcheck(client: HttpClient, uri: String) -> framework::Result<()> {
+pub async fn healthcheck(_client: HttpClient, _uri: String) -> framework::Result<()> {
     // TODO
     Ok(())
 }

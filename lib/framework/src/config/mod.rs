@@ -12,6 +12,8 @@ mod proxy;
 mod resource;
 mod uri;
 mod validation;
+#[cfg(all(unix, not(target_os = "macos")))]
+pub mod watcher;
 
 // re-export
 pub use component::{ComponentDescription, ExampleError, GenerateConfig};

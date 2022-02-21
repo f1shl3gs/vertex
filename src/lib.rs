@@ -3,6 +3,7 @@
 #![allow(clippy::too_many_arguments)]
 #![deny(clippy::clone_on_ref_ptr)]
 #![deny(clippy::trivially_copy_pass_by_ref)]
+#![allow(clippy::type_complexity)]
 #![deny(clippy::disallowed_method)] // [nursery] mark some functions as verboten
 #![deny(clippy::missing_const_for_fn)] // [nursery] valuable to the optimizer, but may produce false positives
 
@@ -10,7 +11,6 @@ mod common;
 mod encoding_transcode;
 pub mod extensions;
 mod multiline;
-mod sink;
 pub mod sinks;
 pub mod sources;
 pub mod testing;
