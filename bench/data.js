@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645428699335,
+  "lastUpdate": 1645428822069,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6606,6 +6606,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 72.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9700bc946ecf8cec581b335661962dca0bfdc85",
+          "message": "Merge pull request #195 from f1shl3gs/trace\n\nIntroduce trace support",
+          "timestamp": "2022-02-21T15:23:49+08:00",
+          "tree_id": "aa65a36a7c604e36ce3fa3ec224a88f58686591d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9700bc946ecf8cec581b335661962dca0bfdc85"
+        },
+        "date": 1645428820359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.176,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 67.793,
             "unit": "ns/op"
           }
         ]
