@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645446480696,
+  "lastUpdate": 1645446638631,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -17297,6 +17297,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1048,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "405b0189d893b298e4bad25c92415e70acf62f2c",
+          "message": "Merge pull request #194 from f1shl3gs/dependabot/cargo/rand-0.8.5\n\nchore(deps): bump rand from 0.8.4 to 0.8.5",
+          "timestamp": "2022-02-21T20:05:51+08:00",
+          "tree_id": "04250f0e7e2f0c854a8224775a1555194e2cfd9c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/405b0189d893b298e4bad25c92415e70acf62f2c"
+        },
+        "date": 1645446637252,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1202,
             "unit": "s"
           }
         ]
