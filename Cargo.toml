@@ -29,6 +29,8 @@ members = [
     "lib/humanize",
     "lib/sysinfo",
     "lib/virt",
+    "lib/jaeger",
+    "lib/tracing-internal",
 ]
 
 [features]
@@ -114,32 +116,34 @@ allocator-jemalloc = ["jemallocator"]
 sources = [
     "sources-bind",
     "sources-consul",
+    "sources-elasticsearch",
+    "sources-fluentd",
     "sources-generator",
-    "sources-node_metrics",
-    "sources-ntp",
+    "sources-haproxy",
+    "sources-internal_logs",
+    "sources-internal_metrics",
+    "sources-internal_traces",
+    "sources-jaeger",
+    "sources-journald",
     "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
-    "sources-selfstat",
-    "sources-journald",
-    "sources-internal_metrics",
-    "sources-internal_logs",
     "sources-libvirt",
-    "sources-redis",
-    "sources-pulsar",
+    "sources-memcached",
+    "sources-mongodb",
+    "sources-mysqld",
+    "sources-nginx_stub",
+    "sources-node_metrics",
+    "sources-ntp",
+    "sources-nvidia_smi",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
-    "sources-nginx_stub",
-    "sources-zookeeper",
-    "sources-haproxy",
-    "sources-memcached",
-    "sources-fluentd",
+    "sources-pulsar",
+    "sources-redis",
+    "sources-selfstat",
     "sources-syslog",
     "sources-tail",
-    "sources-mysqld",
-    "sources-nvidia_smi",
-    "sources-mongodb",
-    "sources-elasticsearch"
+    "sources-zookeeper",
 ]
 
 sources-bind = []
@@ -151,12 +155,14 @@ sources-kafka = ["rdkafka", "async-stream"]
 sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
 sources-selfstat = ["libc"]
+sources-jaeger = ["jaeger", "tonic"]
 sources-journald = []
-sources-internal_metrics = []
 sources-internal_logs = []
+sources-internal_metrics = []
+sources-internal_traces = ["tracing-subscriber"]
 sources-redis = ["redis"]
 sources-pulsar = []
-sources-prometheus_scrape = []
+sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
 sources-nginx_stub = []
 sources-zookeeper = []
@@ -194,13 +200,14 @@ sinks = [
     "sinks-blackhole",
     "sinks-clickhouse",
     "sinks-elasticsearch",
-    "sinks-loki",
+    "sinks-jaeger",
     "sinks-kafka",
+    "sinks-loki",
     "sinks-prometheus_exporter",
     "sinks-prometheus_remote_write",
     "sinks-pulsar",
-    "sinks-stdout",
     "sinks-socket",
+    "sinks-stdout",
     "sinks-vertex",
 ]
 
@@ -209,6 +216,7 @@ sinks-prometheus_remote_write = ["snap"]
 sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka"]
+sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
 sinks-loki = []
@@ -292,8 +300,9 @@ event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
 internal = { path = "lib/internal" }
+jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
-prometheus = { path = "lib/prometheus" }
+prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
 tail = { path = "lib/tail" }
@@ -321,6 +330,9 @@ metrics = { version = "0.18.0", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.30", default-features = false }
+tracing-log = { version = "0.1.2", default-features = false }
+tracing-subscriber = { version = "0.3.8", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-core = { version = "0.1.22" }
 
 # HTTP
 hyper = { version = "0.14.17", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
@@ -382,5 +394,6 @@ snafu = { version = "0.6.10", default-features = false }
 snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+tonic = { version = "0.6.2", optional = true }
 typetag = { version = "0.1.8" }
 url = { version = "2.2.2", features = ["serde"] }

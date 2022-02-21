@@ -197,7 +197,7 @@ lazy_static! {
 }
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
-    let size_str = status_line.split_ascii_whitespace().nth(0).unwrap();
+    let size_str = status_line.split_ascii_whitespace().next().unwrap();
     let size = size_str.parse().context("unexpected status line")?;
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {

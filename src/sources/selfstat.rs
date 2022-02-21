@@ -15,6 +15,7 @@ use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
+use tracing::Instrument;
 
 const USER_HZ: f64 = 100.0;
 
@@ -83,7 +84,7 @@ impl SelfStat {
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            match gather().await {
+            match gather().instrument(info_span!("selfstat.gather")).await {
                 Ok(metrics) => {
                     let now = Some(chrono::Utc::now());
 
@@ -183,6 +184,7 @@ fn find_statistic(all: &str, pat: &str) -> Result<f64, std::io::Error> {
 
 const MAXFD_PATTERN: &str = "Max open files";
 
+#[instrument]
 fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
     let mut buffer = String::new();
     std::fs::File::open(&format!("/proc/{}/limits", pid))
@@ -191,6 +193,7 @@ fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
     find_statistic(&buffer, MAXFD_PATTERN)
 }
 
+#[instrument]
 async fn get_proc_stat(root: &str, pid: i32) -> Result<(f64, f64, f64, f64, f64), std::io::Error> {
     let path = format!("{}/{}/stat", root, pid);
     let content = tokio::fs::read_to_string(&path).await?;

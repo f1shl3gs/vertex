@@ -7,7 +7,7 @@ mod macros;
 mod metadata;
 mod metric;
 mod proto;
-mod trace;
+pub mod trace;
 
 // re-export
 pub use array::EventContainer;
@@ -21,22 +21,25 @@ pub use log::LogRecord;
 pub use macros::EventDataEq;
 pub use metadata::EventMetadata;
 pub use metric::*;
+pub use trace::{Trace, Traces};
 
 use std::collections::btree_map;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use crate::log::Logs;
-use crate::proto::EventWrapper;
 use bytes::{Buf, BufMut};
 use prost::Message;
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
 
-#[derive(PartialEq, PartialOrd, Debug, Clone)]
+use crate::log::Logs;
+use crate::proto::EventWrapper;
+
+#[derive(PartialEq, Debug, Clone)]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),
+    Trace(Trace),
 }
 
 /// An array of one of the `Event` variants exclusively
@@ -45,6 +48,8 @@ pub enum Events {
     Logs(Logs),
     /// An array of type `Metric`
     Metrics(Metrics),
+    /// An array of type `Trace`
+    Traces(Traces),
 }
 
 impl From<Event> for Events {
@@ -52,6 +57,7 @@ impl From<Event> for Events {
         match event {
             Event::Log(log) => Self::Logs(vec![log]),
             Event::Metric(metric) => Self::Metrics(vec![metric]),
+            Event::Trace(trace) => Self::Traces(vec![trace]),
         }
     }
 }
@@ -61,6 +67,7 @@ impl ByteSizeOf for Events {
         match self {
             Self::Logs(logs) => logs.allocated_bytes(),
             Self::Metrics(metrics) => metrics.allocated_bytes(),
+            Self::Traces(spans) => spans.allocated_bytes(),
         }
     }
 }
@@ -70,6 +77,7 @@ impl ByteSizeOf for Event {
         match self {
             Event::Log(log) => log.allocated_bytes(),
             Event::Metric(metric) => metric.allocated_bytes(),
+            Event::Trace(trace) => trace.allocated_bytes(),
         }
     }
 }
@@ -79,6 +87,7 @@ impl Finalizable for Event {
         match self {
             Event::Log(log) => log.take_finalizers(),
             Event::Metric(metric) => metric.take_finalizers(),
+            Event::Trace(span) => span.take_finalizers(),
         }
     }
 }
@@ -142,10 +151,32 @@ impl Event {
         }
     }
 
+    pub fn as_trace(&self) -> &Trace {
+        match self {
+            Event::Trace(trace) => trace,
+            _ => panic!("Failed type coercion, {:?} is not a trace", self),
+        }
+    }
+
+    pub fn into_trace(self) -> Trace {
+        match self {
+            Event::Trace(trace) => trace,
+            _ => panic!("Failed type coercion, {:?} is not a trace", self),
+        }
+    }
+
+    pub fn as_mut_trace(&mut self) -> &mut Trace {
+        match self {
+            Event::Trace(trace) => trace,
+            _ => panic!("Failed type coercion, {:?} is not a log", self),
+        }
+    }
+
     pub fn tags(&self) -> &BTreeMap<String, String> {
         match self {
             Event::Log(log) => &log.tags,
             Event::Metric(metric) => metric.tags(),
+            Event::Trace(trace) => &trace.tags,
         }
     }
 
@@ -153,6 +184,7 @@ impl Event {
         match self {
             Self::Log(log) => log.tags.entry(key.into()),
             Self::Metric(metric) => metric.series.tags.entry(key.into()),
+            _ => unreachable!(),
         }
     }
 
@@ -160,6 +192,7 @@ impl Event {
         match self {
             Self::Log(log) => log.metadata(),
             Self::Metric(metric) => metric.metadata(),
+            Self::Trace(span) => span.metadata(),
         }
     }
 
@@ -167,6 +200,7 @@ impl Event {
         match self {
             Self::Metric(metric) => metric.metadata_mut(),
             Self::Log(log) => log.metadata_mut(),
+            Self::Trace(span) => span.metadata_mut(),
         }
     }
 
@@ -180,6 +214,7 @@ impl Event {
         match self {
             Self::Log(log) => log.add_finalizer(finalizer),
             Self::Metric(metric) => metric.add_finalizer(finalizer),
+            Self::Trace(span) => span.add_finalizer(finalizer),
         }
     }
 
@@ -187,6 +222,7 @@ impl Event {
         match self {
             Self::Log(log) => log.with_batch_notifier(batch).into(),
             Self::Metric(metric) => metric.with_batch_notifier(batch).into(),
+            Self::Trace(span) => span.with_batch_notifier(batch).into(),
         }
     }
 
@@ -196,6 +232,7 @@ impl Event {
         match self {
             Self::Log(log) => log.with_batch_notifier_option(batch).into(),
             Self::Metric(metric) => metric.with_batch_notifier_option(batch).into(),
+            Self::Trace(span) => span.with_batch_notifier_option(batch).into(),
         }
     }
 }
@@ -211,6 +248,7 @@ impl Event {
         match self {
             Event::Metric(metric) => metric.allocated_bytes(),
             Event::Log(log) => log.allocated_bytes(),
+            Event::Trace(span) => span.allocated_bytes(),
         }
     }
 }
@@ -224,6 +262,12 @@ impl From<Metric> for Event {
 impl From<LogRecord> for Event {
     fn from(r: LogRecord) -> Self {
         Self::Log(r)
+    }
+}
+
+impl From<Trace> for Event {
+    fn from(trace: Trace) -> Self {
+        Self::Trace(trace)
     }
 }
 
@@ -250,11 +294,12 @@ impl From<&str> for Event {
 }
 
 /// A wrapper for references to inner event types, where reconstituting
-/// a full `Event` from a `LogEvent` or `Metric` might be inconvenient.
+/// a full `Event` from a `LogRecord`, `Metric` or `Span` might be inconvenient.
 #[derive(Clone, Copy, Debug)]
 pub enum EventRef<'a> {
     Log(&'a LogRecord),
     Metric(&'a Metric),
+    Trace(&'a Trace),
 }
 
 impl<'a> From<&'a Event> for EventRef<'a> {
@@ -262,6 +307,7 @@ impl<'a> From<&'a Event> for EventRef<'a> {
         match event {
             Event::Log(log) => log.into(),
             Event::Metric(metric) => metric.into(),
+            Event::Trace(span) => span.into(),
         }
     }
 }
@@ -275,6 +321,12 @@ impl<'a> From<&'a LogRecord> for EventRef<'a> {
 impl<'a> From<&'a Metric> for EventRef<'a> {
     fn from(metric: &'a Metric) -> Self {
         Self::Metric(metric)
+    }
+}
+
+impl<'a> From<&'a Trace> for EventRef<'a> {
+    fn from(trace: &'a Trace) -> Self {
+        Self::Trace(trace)
     }
 }
 

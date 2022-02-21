@@ -260,6 +260,7 @@ impl From<crate::Event> for WithMetadata<Event> {
         match event {
             crate::Event::Log(log) => WithMetadata::<Log>::from(log).into(),
             crate::Event::Metric(metric) => WithMetadata::<Metric>::from(metric).into(),
+            crate::Event::Trace(_span) => todo!(),
         }
     }
 }

@@ -385,6 +385,7 @@ mod tests {
             EventsSent {
                 count: 1,
                 byte_size: 1,
+                output: None,
             }
         }
     }

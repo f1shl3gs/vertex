@@ -33,26 +33,11 @@ pub enum Parser {
 impl PartialEq for Parser {
     fn eq(&self, other: &Self) -> bool {
         match self {
-            Self::Cri => match other {
-                Parser::Cri => true,
-                _ => false,
-            },
-            Self::Docker => match other {
-                Parser::Docker => true,
-                _ => false,
-            },
-            Self::Go => match other {
-                Parser::Go => true,
-                _ => false,
-            },
-            Self::Java => match other {
-                Parser::Java => true,
-                _ => false,
-            },
-            Self::NoIndent => match other {
-                Parser::NoIndent => true,
-                _ => false,
-            },
+            Self::Cri => matches!(other, Parser::Cri),
+            Self::Docker => matches!(other, Parser::Docker),
+            Self::Go => matches!(other, Parser::Go),
+            Self::Java => matches!(other, Parser::Java),
+            Self::NoIndent => matches!(other, Parser::NoIndent),
             Self::Custom {
                 mode,
                 condition_pattern,

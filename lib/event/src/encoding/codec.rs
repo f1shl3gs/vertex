@@ -187,6 +187,9 @@ impl Encoder<Event> for StandardJsonEncoding {
             Event::Metric(metric) => as_tracked_write(writer, &metric, |writer, item| {
                 serde_json::to_writer(writer, item)
             }),
+            Event::Trace(span) => as_tracked_write(writer, &span, |writer, span| {
+                serde_json::to_writer(writer, span)
+            }),
         }
     }
 }
@@ -215,6 +218,10 @@ impl Encoder<Event> for StandardTextEncoding {
                 let msg = metric.to_string().into_bytes();
                 writer.write_all(&msg).map(|()| msg.len())
             }
+
+            Event::Trace(span) => as_tracked_write(writer, &span, |writer, span| {
+                serde_json::to_writer(writer, span)
+            }),
         }
     }
 }

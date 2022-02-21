@@ -6,12 +6,15 @@ use std::task::{Context, Poll};
 use event::Event;
 use futures::Stream;
 use futures_util::StreamExt;
+use internal::EventsSent;
 use pin_project::pin_project;
+use shared::ByteSizeOf;
 use tokio::sync::mpsc;
 
 use crate::config::Output;
 
 const CHUNK_SIZE: usize = 1000;
+pub const DEFAULT_OUTPUT: &str = "_default";
 
 #[derive(Debug)]
 pub struct ClosedError;
@@ -75,16 +78,20 @@ impl Builder {
     }
 
     pub fn add_output(&mut self, output: Output) -> ReceiverStream<Event> {
-        let (inner, rx) = Inner::new_with_buffer(self.buf_size);
         match output.port {
             None => {
+                let (inner, rx) = Inner::new_with_buffer(self.buf_size, DEFAULT_OUTPUT.to_owned());
                 self.inner = Some(inner);
+
+                rx
             }
             Some(name) => {
+                let (inner, rx) = Inner::new_with_buffer(self.buf_size, name.to_owned());
                 self.named_inners.insert(name, inner);
+
+                rx
             }
         }
-        rx
     }
 
     // https://github.com/rust-lang/rust/issues/73255
@@ -113,7 +120,7 @@ impl Pipeline {
     }
 
     pub fn new_with_buffer(n: usize) -> (Self, ReceiverStream<Event>) {
-        let (inner, rx) = Inner::new_with_buffer(n);
+        let (inner, rx) = Inner::new_with_buffer(n, DEFAULT_OUTPUT.to_owned());
 
         (
             Self {
@@ -153,7 +160,7 @@ impl Pipeline {
         status: event::EventStatus,
         name: String,
     ) -> impl Stream<Item = Event> + Unpin {
-        let (inner, recv) = Inner::new_with_buffer(100);
+        let (inner, recv) = Inner::new_with_buffer(100, name.clone());
         let recv = recv.map(move |mut event| {
             let metadata = event.metadata_mut();
             metadata.update_status(status);
@@ -191,7 +198,11 @@ impl Pipeline {
             .await
     }
 
-    pub async fn send_batch(&mut self, events: Vec<Event>) -> Result<(), ClosedError> {
+    pub async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
+    where
+        E: Into<Event> + ByteSizeOf,
+        I: IntoIterator<Item = E>,
+    {
         self.inner
             .as_mut()
             .expect("no default output")
@@ -214,13 +225,14 @@ impl Pipeline {
 #[derive(Clone, Debug)]
 struct Inner {
     inner: mpsc::Sender<Event>,
+    output: String,
 }
 
 impl Inner {
-    fn new_with_buffer(n: usize) -> (Self, ReceiverStream<Event>) {
+    fn new_with_buffer(n: usize, output: String) -> (Self, ReceiverStream<Event>) {
         let (tx, rx) = mpsc::channel(n);
         let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
-        (Self { inner: tx }, ReceiverStream::new(rx))
+        (Self { inner: tx, output }, ReceiverStream::new(rx))
     }
 
     async fn send(&mut self, event: Event) -> Result<(), ClosedError> {
@@ -242,13 +254,17 @@ impl Inner {
         Ok(())
     }
 
-    async fn send_batch(&mut self, events: Vec<Event>) -> Result<(), ClosedError> {
+    async fn send_batch<E, I>(&mut self, events: I) -> Result<(), ClosedError>
+    where
+        E: Into<Event> + ByteSizeOf,
+        I: IntoIterator<Item = E>,
+    {
         let mut count = 0;
         let mut byte_size = 0;
 
-        for event in events {
+        for event in events.into_iter() {
             let event_size = event.size_of();
-            match self.inner.send(event).await {
+            match self.inner.send(event.into()).await {
                 Ok(()) => {
                     count += 1;
                     byte_size += event_size;
@@ -265,7 +281,11 @@ impl Inner {
             }
         }
 
-        // TODO: add metrics for event sends
+        emit!(&EventsSent {
+            count,
+            byte_size,
+            output: Some(&self.output)
+        });
 
         Ok(())
     }

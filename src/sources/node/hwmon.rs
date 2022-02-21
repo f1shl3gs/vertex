@@ -95,22 +95,19 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             }
         };
 
-        match props.get("label") {
-            Some(v) => {
-                if !v.is_empty() {
-                    metrics.push(Metric::gauge_with_tags(
-                        "node_hwmon_sensor_label",
-                        "Label for given chip and sensor",
-                        1f64,
-                        tags!(
-                           "label" => v,
-                           "chip" => chip,
-                           "sensor" => sensor,
-                        ),
-                    ));
-                }
+        if let Some(v) = props.get("label") {
+            if !v.is_empty() {
+                metrics.push(Metric::gauge_with_tags(
+                    "node_hwmon_sensor_label",
+                    "Label for given chip and sensor",
+                    1f64,
+                    tags!(
+                       "label" => v,
+                       "chip" => chip,
+                       "sensor" => sensor,
+                    ),
+                ));
             }
-            _ => {}
         }
 
         if sensor_type == "beep_enable" {

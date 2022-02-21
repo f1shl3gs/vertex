@@ -73,7 +73,7 @@ async fn run(
     let interval = tokio::time::interval(interval);
     let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
-    while let Some(_) = ticker.next().await {
+    while ticker.next().await.is_some() {
         let timestamp = Some(chrono::Utc::now());
         let metrics = recorder.capture_metrics();
         let events = metrics.map(|mut m| {

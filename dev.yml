@@ -29,8 +29,6 @@ sources:
     type: tail
     include:
       - "/home/f1shl3gs/Workspaces/clion/vertex/tmp.txt"
-  prw:
-    type: prometheus_remote_write
 
 transforms:
   add_extra_tags:
