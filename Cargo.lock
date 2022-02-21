@@ -378,7 +378,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util",
+ "tokio-util 0.7.0",
  "tracing",
  "tracing-fluent-assertions",
  "tracing-subscriber",
@@ -552,7 +552,7 @@ dependencies = [
  "memchr 2.4.1",
  "pin-project-lite",
  "tokio",
- "tokio-util",
+ "tokio-util 0.6.9",
 ]
 
 [[package]]
@@ -1092,7 +1092,7 @@ dependencies = [
  "tokio-openssl",
  "tokio-stream",
  "tokio-test",
- "tokio-util",
+ "tokio-util 0.7.0",
  "tower",
  "tower-test",
  "tracing",
@@ -1317,7 +1317,7 @@ dependencies = [
  "indexmap",
  "slab",
  "tokio",
- "tokio-util",
+ "tokio-util 0.6.9",
  "tracing",
 ]
 
@@ -3139,7 +3139,7 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "tokio",
- "tokio-util",
+ "tokio-util 0.6.9",
  "url",
 ]
 
@@ -3521,9 +3521,9 @@ checksum = "76a77a8fd93886010f05e7ea0720e569d6d16c65329dbe3ec033bbbccccb017b"
 
 [[package]]
 name = "slab"
-version = "0.4.3"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f173ac3d1a7e3b28003f40de0b5ce7fe2710f9b9dc3fc38664cebee46b3b6527"
+checksum = "9def91fd1e018fe007022791f865d0ccc9b3a0d5001e01aabb8b40e46000afb5"
 
 [[package]]
 name = "smallvec"
@@ -4081,7 +4081,7 @@ dependencies = [
  "futures-core",
  "pin-project-lite",
  "tokio",
- "tokio-util",
+ "tokio-util 0.6.9",
 ]
 
 [[package]]
@@ -4102,6 +4102,20 @@ name = "tokio-util"
 version = "0.6.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e99e1983e5d376cd8eb4b66604d2e99e79f5bd988c3055891dcd8c9e2604cc0"
+dependencies = [
+ "bytes",
+ "futures-core",
+ "futures-sink",
+ "log 0.4.14",
+ "pin-project-lite",
+ "tokio",
+]
+
+[[package]]
+name = "tokio-util"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "64910e1b9c1901aaf5375561e35b9c057d95ff41a44ede043a03e09279eabaf1"
 dependencies = [
  "bytes",
  "futures-core",
@@ -4144,7 +4158,7 @@ dependencies = [
  "prost-derive",
  "tokio",
  "tokio-stream",
- "tokio-util",
+ "tokio-util 0.6.9",
  "tower",
  "tower-layer",
  "tower-service",
@@ -4179,7 +4193,7 @@ dependencies = [
  "slab",
  "tokio",
  "tokio-stream",
- "tokio-util",
+ "tokio-util 0.6.9",
  "tower-layer",
  "tower-service",
  "tracing",
@@ -4616,7 +4630,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util",
+ "tokio-util 0.7.0",
  "tonic",
  "tower",
  "tower-test",
