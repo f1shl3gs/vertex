@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645445638985,
+  "lastUpdate": 1645445648622,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3094,6 +3094,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1184300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5502fc50566c2e1834e300babcb5b5f17d3b0265",
+          "message": "Merge pull request #193 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.0\n\nchore(deps): bump netlink-packet-sock-diag from 0.3.0 to 0.4.0",
+          "timestamp": "2022-02-21T20:06:32+08:00",
+          "tree_id": "ba6f3208a72ebf896922d0f53d84efcdb8daecae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5502fc50566c2e1834e300babcb5b5f17d3b0265"
+        },
+        "date": 1645445647716,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1329800,
             "unit": "ns/op"
           }
         ]
