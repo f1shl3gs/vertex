@@ -1,6 +1,6 @@
-use prost::bytes::BytesMut;
 use std::fmt::{Debug, Formatter};
 
+use prost::bytes::{BufMut, BytesMut};
 use thrift::protocol::{
     TBinaryInputProtocol, TBinaryOutputProtocol, TCompactInputProtocol, TCompactOutputProtocol,
     TInputProtocol,
@@ -63,12 +63,12 @@ pub fn deserialize_binary_batch(input: Vec<u8>) -> thrift::Result<Batch> {
 }
 
 pub fn serialize_binary_batch(batch: jaeger::Batch) -> thrift::Result<Vec<u8>> {
-    let buf = BytesMut::new();
-    let mut op = TBinaryOutputProtocol::new(buf, false);
+    let mut buf = BytesMut::new().writer();
+    let mut op = TBinaryOutputProtocol::new(&mut buf, false);
 
     batch.write_to_out_protocol(&mut op)?;
 
-    Ok(buf.to_vec())
+    Ok(buf.into_inner().to_vec())
 }
 
 pub fn serialize_batch(

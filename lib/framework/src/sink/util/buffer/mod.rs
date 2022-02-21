@@ -2,11 +2,12 @@ mod compression;
 pub mod metrics;
 pub mod partition;
 
+use bytes::{BufMut, BytesMut};
 pub use compression::*;
 use flate2::write::GzEncoder;
 use std::io::Write;
 
-use crate::batch::{Batch, BatchSize, PushResult};
+use crate::batch::{err_event_too_large, Batch, BatchSize, PushResult};
 
 #[derive(Debug)]
 pub struct Buffer {
@@ -19,8 +20,8 @@ pub struct Buffer {
 
 #[derive(Debug)]
 pub enum InnerBuffer {
-    Plain(Vec<u8>),
-    Gzip(GzEncoder<Vec<u8>>),
+    Plain(bytes::buf::Writer<BytesMut>),
+    Gzip(GzEncoder<bytes::buf::Writer<BytesMut>>),
 }
 
 impl Buffer {
@@ -39,11 +40,11 @@ impl Buffer {
         let compression = self.compression;
 
         self.inner.get_or_insert_with(|| {
-            let buffer = Vec::with_capacity(bytes);
+            let writer = BytesMut::with_capacity(bytes).writer();
 
             match compression {
-                Compression::None => InnerBuffer::Plain(buffer),
-                Compression::Gzip(level) => InnerBuffer::Gzip(GzEncoder::new(buffer, level)),
+                Compression::None => InnerBuffer::Plain(writer),
+                Compression::Gzip(level) => InnerBuffer::Gzip(GzEncoder::new(writer, level)),
             }
         })
     }
@@ -53,7 +54,7 @@ impl Buffer {
 
         match self.buffer() {
             InnerBuffer::Plain(inner) => {
-                inner.extend_from_slice(input);
+                inner.write_all(input).unwrap();
             }
             InnerBuffer::Gzip(inner) => {
                 inner.write_all(input).unwrap();
@@ -65,34 +66,57 @@ impl Buffer {
         self.inner
             .as_ref()
             .map(|inner| match inner {
-                InnerBuffer::Plain(inner) => inner.is_empty(),
-                InnerBuffer::Gzip(inner) => inner.get_ref().is_empty(),
+                InnerBuffer::Plain(inner) => inner.get_ref().is_empty(),
+                InnerBuffer::Gzip(inner) => inner.get_ref().get_ref().is_empty(),
             })
             .unwrap_or(true)
     }
 }
 
 impl Batch for Buffer {
-    type Input = Vec<u8>;
-    type Output = Vec<u8>;
+    type Input = BytesMut;
+    type Output = BytesMut;
 
     fn push(&mut self, item: Self::Input) -> PushResult<Self::Input> {
-        todo!()
+        // The compressed encoders don't flush bytes immediately, so we
+        // can't trace compressed sizes. Keep a running count of the
+        // number of bytes written instead.
+        let new_bytes = self.num_bytes + item.len();
+
+        if self.is_empty() && item.len() > self.settings.bytes {
+            err_event_too_large(item.len(), self.settings.bytes)
+        } else if self.num_items >= self.settings.events || new_bytes > self.settings.bytes {
+            PushResult::Overflow(item)
+        } else {
+            self.push(&item);
+            self.num_bytes = new_bytes;
+
+            PushResult::Ok(
+                self.num_bytes >= self.settings.events || new_bytes >= self.settings.bytes,
+            )
+        }
     }
 
     fn is_empty(&self) -> bool {
-        todo!()
+        self.is_empty()
     }
 
     fn fresh(&self) -> Self {
-        todo!()
+        Self::new(self.settings, self.compression)
     }
 
     fn finish(self) -> Self::Output {
-        todo!()
+        match self.inner {
+            Some(InnerBuffer::Plain(inner)) => inner.into_inner(),
+            Some(InnerBuffer::Gzip(inner)) => inner
+                .finish()
+                .expect("This can't fail because the inner writer is a Vec")
+                .into_inner(),
+            None => BytesMut::new(),
+        }
     }
 
     fn num_items(&self) -> usize {
-        todo!()
+        self.num_items
     }
 }

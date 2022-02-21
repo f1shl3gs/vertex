@@ -1,6 +1,9 @@
+use crate::thrift::jaeger;
+use crate::Batch;
 use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanKind, StatusCode,
 };
+use event::Trace;
 
 use crate::thrift::jaeger::{Log, Span, SpanRef, SpanRefType, Tag, TagType};
 use crate::translate::id::internal_trace_id_to_jaeger_trace_id;
@@ -189,4 +192,28 @@ fn build_span_tags(
     }
 
     tags
+}
+
+impl From<Trace> for Batch {
+    fn from(trace: Trace) -> Self {
+        let tags = trace
+            .tags
+            .into_iter()
+            .map(|(k, v)| {
+                jaeger::Tag::new(
+                    k,
+                    jaeger::TagType::String,
+                    Some(v.into()),
+                    None,
+                    None,
+                    None,
+                    None,
+                )
+            })
+            .collect();
+        let process = jaeger::Process::new(trace.service.to_string(), Some(tags));
+        let spans = trace.spans.into_iter().map(Into::into).collect();
+
+        jaeger::Batch::new(process, spans)
+    }
 }

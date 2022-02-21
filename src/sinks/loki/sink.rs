@@ -1,3 +1,4 @@
+use bytes::Bytes;
 use std::collections::HashMap;
 use std::io::Error;
 use std::num::NonZeroUsize;
@@ -95,7 +96,7 @@ impl RequestBuilder<(PartitionKey, Vec<LokiRecord>)> for LokiRequestBuilder {
     type Metadata = (Option<String>, usize, EventFinalizers, usize);
     type Events = Vec<LokiRecord>;
     type Encoder = LokiBatchEncoder;
-    type Payload = Vec<u8>;
+    type Payload = Bytes;
     type Request = LokiRequest;
     type Error = RequestBuildError;
 

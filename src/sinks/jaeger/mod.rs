@@ -2,12 +2,11 @@ mod grpc;
 mod http;
 mod udp;
 
+use self::http::HttpSinkConfig;
 use async_trait::async_trait;
-use event::trace::Trace;
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
 use framework::sink::util::udp::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
-use http::HttpSinkConfig;
 use jaeger::agent::{serialize_batch, BufferClient};
 use serde::{Deserialize, Serialize};
 
@@ -55,13 +54,11 @@ impl SinkConfig for JaegerConfig {
                 config.build(cx, move |event| {
                     // TODO: This buffer_client is dummy, rework it in the future
                     let mut buffer_client = BufferClient::default();
-
                     let trace = event.into_trace();
-                    let batch = trace_to_batch(trace);
 
                     match serialize_batch(
                         &mut buffer_client,
-                        batch,
+                        trace.into(),
                         jaeger::agent::UDP_PACKET_MAX_LENGTH,
                     ) {
                         Ok(data) => Some(data.into()),
@@ -73,7 +70,8 @@ impl SinkConfig for JaegerConfig {
                     }
                 })
             }
-            _ => unimplemented!(),
+
+            Mode::Http(config) => config.build(cx.proxy, cx.acker),
         }
     }
 
@@ -84,26 +82,4 @@ impl SinkConfig for JaegerConfig {
     fn sink_type(&self) -> &'static str {
         "jaeger"
     }
-}
-
-fn trace_to_batch(trace: Trace) -> jaeger::Batch {
-    let tags = trace
-        .tags
-        .into_iter()
-        .map(|(k, v)| {
-            jaeger::Tag::new(
-                k,
-                jaeger::TagType::String,
-                Some(v.into()),
-                None,
-                None,
-                None,
-                None,
-            )
-        })
-        .collect();
-    let process = jaeger::Process::new(trace.service.to_string(), Some(tags));
-    let spans = trace.spans.into_iter().map(Into::into).collect();
-
-    jaeger::Batch::new(process, spans)
 }

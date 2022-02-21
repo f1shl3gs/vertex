@@ -7,7 +7,7 @@ use std::{
 
 use async_trait::async_trait;
 use buffers::Acker;
-use bytes::Bytes;
+use bytes::{Bytes, BytesMut};
 use event::Event;
 use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -172,7 +172,7 @@ impl UdpService {
     }
 }
 
-impl tower::Service<Bytes> for UdpService {
+impl tower::Service<BytesMut> for UdpService {
     type Response = ();
     type Error = UdpError;
     type Future = BoxFuture<'static, Result<(), Self::Error>>;
@@ -203,7 +203,7 @@ impl tower::Service<Bytes> for UdpService {
         Poll::Ready(Ok(()))
     }
 
-    fn call(&mut self, msg: Bytes) -> Self::Future {
+    fn call(&mut self, msg: BytesMut) -> Self::Future {
         let (sender, receiver) = oneshot::channel();
 
         let mut socket =
