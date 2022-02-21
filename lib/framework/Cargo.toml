@@ -68,7 +68,7 @@ regex = { version = "1.5.4" }
 smallvec = { version = "1.8.0", features = ["union"] }
 serde = { version = "1.0.136", default-features = false, features = ["derive", "std"] }
 serde_yaml = { version = "0.8.23" }
-serde_json = { version = "1.0.78", default-features = false }
+serde_json = { version = "1.0.79", default-features = false }
 # remove shared after "shared" merged into this crate
 shared = { path = "../shared" }
 snafu = { version = "0.6.10", default-features = false }
