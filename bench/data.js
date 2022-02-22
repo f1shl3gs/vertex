@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645496778521,
+  "lastUpdate": 1645496843361,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3152,6 +3152,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1221700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5466866f24e20d989c9030720c255a997739533b",
+          "message": "Merge pull request #196 from f1shl3gs/cleanup\n\nconfig watch & clean up",
+          "timestamp": "2022-02-22T10:18:54+08:00",
+          "tree_id": "a0d5c663e2f42234860b450ef3fa4d618274519c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5466866f24e20d989c9030720c255a997739533b"
+        },
+        "date": 1645496841855,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1426600,
             "unit": "ns/op"
           }
         ]
