@@ -22,11 +22,11 @@ const fn default_max_packet_size() -> usize {
 }
 
 fn default_thrift_compact_socketaddr() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), 6831)
+    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_COMPACT_THRIFT_OVER_UDP_PORT)
 }
 
 fn default_thrift_binary_socketaddr() -> SocketAddr {
-    SocketAddr::new([0, 0, 0, 0].into(), 6832)
+    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_BINARY_THRIFT_OVER_UDP_PORT)
 }
 
 fn default_thrift_http_endpoint() -> SocketAddr {
@@ -142,7 +142,7 @@ impl SourceConfig for JaegerConfig {
 
         if let Some(config) = &self.protocols.thrift_binary {
             handles.push(tokio::spawn(udp::serve(
-                source.clone(),
+                source,
                 config.endpoint,
                 config.max_packet_size,
                 config.socket_buffer_size,
@@ -167,7 +167,7 @@ impl SourceConfig for JaegerConfig {
             handles.push(tokio::spawn(http::serve(
                 config.clone(),
                 shutdown.clone(),
-                cx.output.clone(),
+                cx.output,
             )));
         }
 

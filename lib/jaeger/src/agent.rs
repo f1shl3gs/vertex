@@ -95,6 +95,7 @@ pub fn serialize_batch(
     Ok(payload)
 }
 
+/*
 fn serialize_batch_vectored(
     client: &mut BufferClient,
     mut batch: jaeger::Batch,
@@ -131,3 +132,4 @@ fn serialize_batch_vectored(
 
     Ok(())
 }
+*/

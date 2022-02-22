@@ -18,7 +18,6 @@ use shared::ByteSizeOf;
 use tower::Service;
 
 use crate::batch::{Batch, EncodedEvent};
-use crate::config::protocol_endpoint;
 use crate::http::{HttpClient, HttpError};
 use crate::sink::util::retries::{RetryAction, RetryLogic};
 use crate::sink::util::service::BatchedSink;
@@ -265,7 +264,7 @@ where
     type Error = crate::Error;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
     }
 
@@ -275,9 +274,9 @@ where
 
         Box::pin(async move {
             let request = builder(body).await?;
-            let byte_size = request.body().len();
+            // let byte_size = request.body().len();
             let request = request.map(Body::from);
-            let (protocol, endpoint) = protocol_endpoint(request.uri().clone());
+            // let (protocol, endpoint) = protocol_endpoint(request.uri().clone());
             let response = http_client.call(request).await?;
 
             if response.status().is_success() {

@@ -67,7 +67,7 @@ mod tests {
 
         let event = events.next().unwrap();
         let log = event.as_log();
-        let n = log.get_field(log_schema().message_key()).unwrap();
+        let _n = log.get_field(log_schema().message_key()).unwrap();
         assert_eq!(
             log.get_field(log_schema().message_key()).unwrap(),
             &Value::from("foo")

@@ -188,7 +188,7 @@ mod tests {
     #[test]
     fn test_adjtimex() {
         let result = adjtimex();
-        let (tx, eno) = result.unwrap();
+        let (_tx, eno) = result.unwrap();
         assert!(eno == 0 || eno == libc::TIME_ERROR)
     }
 }
