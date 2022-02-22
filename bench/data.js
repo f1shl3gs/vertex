@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645544991280,
+  "lastUpdate": 1645545004797,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3413,6 +3413,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1358900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bd8d0394d4cde77d4afeae749c1697f74f211843",
+          "message": "Merge pull request #202 from f1shl3gs/dependabot/cargo/tower-0.4.12\n\nchore(deps): bump tower from 0.4.11 to 0.4.12",
+          "timestamp": "2022-02-22T23:42:41+08:00",
+          "tree_id": "5892cf58dd0f2354353431b39b327487eccb9b4e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bd8d0394d4cde77d4afeae749c1697f74f211843"
+        },
+        "date": 1645545003794,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1375700,
             "unit": "ns/op"
           }
         ]
