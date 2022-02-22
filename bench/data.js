@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645544941932,
+  "lastUpdate": 1645544952619,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3355,6 +3355,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1145500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4969b0272fa874bf359f5902859936a424f6ff4e",
+          "message": "Merge pull request #201 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.2\n\nchore(deps): bump netlink-sys from 0.8.1 to 0.8.2",
+          "timestamp": "2022-02-22T23:42:12+08:00",
+          "tree_id": "d9fae9f18765f949b6f0c70219ec8555b7157695",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4969b0272fa874bf359f5902859936a424f6ff4e"
+        },
+        "date": 1645544951801,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1146100,
             "unit": "ns/op"
           }
         ]
