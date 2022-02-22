@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645498418168,
+  "lastUpdate": 1645498440722,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3239,6 +3239,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1018000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "043ed5cb0fb4c14c98b1a1b438dbb700ba827e32",
+          "message": "Merge pull request #200 from f1shl3gs/dependabot/cargo/hyper-openssl-0.9.2\n\nchore(deps): bump hyper-openssl from 0.9.1 to 0.9.2",
+          "timestamp": "2022-02-22T10:47:33+08:00",
+          "tree_id": "57c9a983d14d3463f14a44432a5b7d2df013f5c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/043ed5cb0fb4c14c98b1a1b438dbb700ba827e32"
+        },
+        "date": 1645498439812,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1181300,
             "unit": "ns/op"
           }
         ]
