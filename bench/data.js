@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645496775171,
+  "lastUpdate": 1645496778521,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3123,6 +3123,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1329800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4bd9f9c2c3ebc54272b6d680fc0c0cbc314a5a6e",
+          "message": "Merge pull request #199 from f1shl3gs/dependabot/cargo/rkyv-0.7.33\n\nchore(deps): bump rkyv from 0.7.31 to 0.7.33",
+          "timestamp": "2022-02-22T10:19:28+08:00",
+          "tree_id": "96da8a3a01d7b663d0a8ac18c8b4271b0dafd058",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4bd9f9c2c3ebc54272b6d680fc0c0cbc314a5a6e"
+        },
+        "date": 1645496777738,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1221700,
             "unit": "ns/op"
           }
         ]
