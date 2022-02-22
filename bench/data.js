@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645498440722,
+  "lastUpdate": 1645498499047,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14026,6 +14026,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 315380,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "043ed5cb0fb4c14c98b1a1b438dbb700ba827e32",
+          "message": "Merge pull request #200 from f1shl3gs/dependabot/cargo/hyper-openssl-0.9.2\n\nchore(deps): bump hyper-openssl from 0.9.1 to 0.9.2",
+          "timestamp": "2022-02-22T10:47:33+08:00",
+          "tree_id": "57c9a983d14d3463f14a44432a5b7d2df013f5c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/043ed5cb0fb4c14c98b1a1b438dbb700ba827e32"
+        },
+        "date": 1645498498258,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 684.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 68490,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 341920,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 683990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 262.67,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 26212,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 131020,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 262150,
             "unit": "ns/op"
           }
         ]
