@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645498499047,
+  "lastUpdate": 1645498527015,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7144,6 +7144,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.892,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "32becb599d1204d4618960b76a6c5196c48c5aef",
+          "message": "Merge pull request #204 from f1shl3gs/downgrade_tokio_util\n\ndowngrade tokio-util to 0.6.9",
+          "timestamp": "2022-02-22T10:49:50+08:00",
+          "tree_id": "bbe72b42997ecb933cf20ecd2e4afce06410beec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/32becb599d1204d4618960b76a6c5196c48c5aef"
+        },
+        "date": 1645498526235,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 18.829,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 57.337,
             "unit": "ns/op"
           }
         ]
