@@ -1,9 +1,10 @@
-use super::{Error, ErrorContext};
+/// Exposes statistics from `/proc/vmstat`
 use event::Metric;
 use framework::config::{deserialize_regex, serialize_regex};
-/// Exposes statistics from `/proc/vmstat`
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
+
+use super::{Error, ErrorContext};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
