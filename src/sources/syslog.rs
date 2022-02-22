@@ -5,9 +5,8 @@ use std::time::Duration;
 use bytes::Bytes;
 use chrono::Utc;
 use event::Event;
-use framework::codecs::framing::bytes::BytesDecoder;
-use framework::codecs::framing::octet_counting::OctetCountingDecoder;
-use framework::codecs::{Decoder, SyslogDeserializer};
+use framework::codecs::decoding::BytesDecoder;
+use framework::codecs::{Decoder, OctetCountingDecoder, SyslogDeserializer};
 use framework::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
 use framework::config::{Output, SourceDescription};
 use framework::pipeline::Pipeline;
@@ -184,8 +183,8 @@ impl SourceConfig for SyslogConfig {
             #[cfg(unix)]
             Mode::Unix { path } => {
                 let decoder = Decoder::new(
-                    Box::new(OctetCountingDecoder::new_with_max_length(self.max_length)),
-                    Box::new(SyslogDeserializer),
+                    OctetCountingDecoder::new_with_max_length(self.max_length).into(),
+                    SyslogDeserializer.into(),
                 );
 
                 Ok(build_unix_stream_source(
@@ -233,8 +232,8 @@ impl TcpSource for SyslogTcpSource {
 
     fn decoder(&self) -> Self::Decoder {
         codecs::Decoder::new(
-            Box::new(OctetCountingDecoder::new_with_max_length(self.max_length)),
-            Box::new(SyslogDeserializer),
+            OctetCountingDecoder::new_with_max_length(self.max_length).into(),
+            SyslogDeserializer.into(),
         )
     }
 
@@ -277,7 +276,7 @@ pub fn udp(
 
         let mut stream = UdpFramed::new(
             socket,
-            codecs::Decoder::new(Box::new(BytesDecoder::new()), Box::new(SyslogDeserializer)),
+            codecs::Decoder::new(BytesDecoder::new().into(), SyslogDeserializer.into()),
         )
         .take_until(shutdown)
         .filter_map(|frame| {
@@ -366,7 +365,7 @@ mod tests {
     use super::*;
     use chrono::{DateTime, Datelike, TimeZone};
     use event::{assert_event_data_eq, fields, LogRecord};
-    use framework::codecs::decoding::Deserializer;
+    use framework::codecs::decoding::format::Deserializer;
 
     #[test]
     fn generate_config() {

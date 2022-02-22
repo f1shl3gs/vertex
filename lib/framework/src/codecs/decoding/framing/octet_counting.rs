@@ -1,9 +1,11 @@
-use crate::codecs::decoding::{BoxedFramer, BoxedFramingError, FramingConfig};
-use crate::config::skip_serializing_if_default;
+use std::io;
+
 use bytes::{Buf, Bytes, BytesMut};
 use serde::{Deserialize, Serialize};
-use std::io;
 use tokio_util::codec::{LinesCodec, LinesCodecError};
+
+use crate::codecs::decoding::BoxedFramingError;
+use crate::config::skip_serializing_if_default;
 
 /// Options for building a `OctetCountingDecoder`
 #[derive(Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
@@ -19,15 +21,12 @@ pub struct OctetCountingDecoderConfig {
     octet_counting: OctetCountingOptions,
 }
 
-#[typetag::serde(name = "octet_counting")]
-impl FramingConfig for OctetCountingDecoderConfig {
-    fn build(&self) -> crate::Result<BoxedFramer> {
+impl OctetCountingDecoderConfig {
+    fn build(&self) -> OctetCountingDecoder {
         if let Some(max_length) = self.octet_counting.max_length {
-            Ok(Box::new(OctetCountingDecoder::new_with_max_length(
-                max_length,
-            )))
+            OctetCountingDecoder::new_with_max_length(max_length)
         } else {
-            Ok(Box::new(OctetCountingDecoder::new()))
+            OctetCountingDecoder::new()
         }
     }
 }

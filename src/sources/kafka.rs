@@ -71,8 +71,8 @@ fn default_headers_key() -> String {
     "headers".to_string()
 }
 
-fn default_decoding() -> Box<dyn DeserializerConfig> {
-    Box::new(BytesDeserializerConfig::new())
+fn default_decoding() -> DeserializerConfig {
+    BytesDeserializerConfig::new().into()
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -120,7 +120,7 @@ struct KafkaSourceConfig {
     #[serde(flatten)]
     auth: KafkaAuthConfig,
     #[serde(default = "default_decoding")]
-    decoding: Box<dyn DeserializerConfig>,
+    decoding: DeserializerConfig,
     #[serde(default)]
     acknowledgement: bool,
 
@@ -299,7 +299,7 @@ fn mark_done(consumer: Arc<StreamConsumer<KafkaStatisticsContext>>) -> impl Fn(F
 impl SourceConfig for KafkaSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let framing = BytesDecoderConfig::new();
-        let decoder = DecodingConfig::new(Box::new(framing), self.decoding.clone()).build()?;
+        let decoder = DecodingConfig::new(framing, self.decoding.clone()).build();
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
         let consumer = self.create_consumer()?;
 

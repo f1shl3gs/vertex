@@ -117,6 +117,7 @@ sources = [
     "sources-bind",
     "sources-consul",
     "sources-elasticsearch",
+    "sources-exec",
     "sources-fluentd",
     "sources-generator",
     "sources-haproxy",
@@ -148,6 +149,7 @@ sources = [
 
 sources-bind = []
 sources-consul = []
+sources-exec = ["tokio/process"]
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]

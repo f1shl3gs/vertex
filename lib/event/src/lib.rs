@@ -353,3 +353,38 @@ impl DecodeBytes for crate::Event {
         EventWrapper::decode(buffer).map(Into::into)
     }
 }
+
+impl TryInto<serde_json::Value> for Event {
+    type Error = serde_json::Error;
+
+    fn try_into(self) -> Result<serde_json::Value, Self::Error> {
+        match self {
+            Event::Log(log) => serde_json::to_value(log),
+            Event::Metric(metric) => serde_json::to_value(metric),
+            Event::Trace(trace) => serde_json::to_value(trace),
+        }
+    }
+}
+
+/// TODO: Share this Error type
+/// Vector's basic error type, dynamically dispatched and safe to send across
+/// threads.
+pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+impl TryFrom<serde_json::Value> for Event {
+    type Error = crate::Error;
+
+    fn try_from(map: serde_json::Value) -> Result<Self, Self::Error> {
+        match map {
+            serde_json::Value::Object(fields) => Ok(Event::from(
+                fields
+                    .into_iter()
+                    .map(|(k, v)| (k, v.into()))
+                    .collect::<BTreeMap<_, _>>(),
+            )),
+            _ => Err(crate::Error::from(
+                "Attempted to convert non-Object JSON into an Event.",
+            )),
+        }
+    }
+}

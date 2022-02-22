@@ -6,6 +6,7 @@ mod chrony;
 mod consul;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
+mod exec;
 #[cfg(feature = "sources-fluentd")]
 mod fluentd;
 #[cfg(feature = "sources-generator")]

@@ -1,9 +1,10 @@
-use crate::codecs::decoding::{BoxedDeserializer, Deserializer, DeserializerConfig};
 use bytes::Bytes;
 use event::{Event, LogRecord};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
+
+use super::Deserializer;
 
 /// Config used to build a `BytesDeserializer`
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -14,12 +15,9 @@ impl BytesDeserializerConfig {
     pub const fn new() -> Self {
         Self
     }
-}
 
-#[typetag::serde(name = "bytes")]
-impl DeserializerConfig for BytesDeserializerConfig {
-    fn build(&self) -> crate::Result<BoxedDeserializer> {
-        Ok(Box::new(BytesDeserializer::new()))
+    pub fn build(&self) -> BytesDeserializer {
+        BytesDeserializer::new()
     }
 }
 

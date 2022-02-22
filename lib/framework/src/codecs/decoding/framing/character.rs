@@ -5,7 +5,7 @@ use memchr::memchr;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::{Decoder, Encoder};
 
-use crate::codecs::decoding::{BoxedFramer, BoxedFramingError, FramingConfig};
+use crate::codecs::decoding::BoxedFramingError;
 use crate::config::skip_serializing_if_default;
 
 /// Options for building a `CharacterDelimitedDecoder`
@@ -22,21 +22,18 @@ pub struct CharacterDelimitedDecoderOptions {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CharacterDelimitedDecoderConfig {
-    character_delimited: CharacterDelimitedDecoderOptions,
+    pub(crate) character_delimited: CharacterDelimitedDecoderOptions,
 }
 
-#[typetag::serde(name = "character_delimited")]
-impl FramingConfig for CharacterDelimitedDecoderConfig {
-    fn build(&self) -> crate::Result<BoxedFramer> {
+impl CharacterDelimitedDecoderConfig {
+    pub fn build(&self) -> CharacterDelimitedDecoder {
         if let Some(max_length) = self.character_delimited.max_length {
-            Ok(Box::new(CharacterDelimitedDecoder::new_with_max_length(
+            CharacterDelimitedDecoder::new_with_max_length(
                 self.character_delimited.delimiter,
                 max_length,
-            )))
+            )
         } else {
-            Ok(Box::new(CharacterDelimitedDecoder::new(
-                self.character_delimited.delimiter,
-            )))
+            CharacterDelimitedDecoder::new(self.character_delimited.delimiter)
         }
     }
 }
