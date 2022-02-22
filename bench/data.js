@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645497029139,
+  "lastUpdate": 1645497170097,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6989,6 +6989,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 69.803,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd2a02665e5aff27560542125eab37e498e20881",
+          "message": "Merge pull request #188 from f1shl3gs/dependabot/cargo/tokio-util-0.7.0\n\nchore(deps): bump tokio-util from 0.6.9 to 0.7.0",
+          "timestamp": "2022-02-22T10:20:48+08:00",
+          "tree_id": "3fde30370d0520fb9d101296418ba73c81490209",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd2a02665e5aff27560542125eab37e498e20881"
+        },
+        "date": 1645497168881,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.993,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 63.023,
             "unit": "ns/op"
           }
         ]
