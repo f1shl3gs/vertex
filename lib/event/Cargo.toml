@@ -28,5 +28,5 @@ serde_json = { version = "1.0.79" }
 serde_yaml = { version = "0.8.23" }
 shared = { path = "../shared" }
 substring = { version = "1.4.5" }
-tokio = { version = "1.16.1", default-features = false, features = ["sync"] }
+tokio = { version = "1.17.0", default-features = false, features = ["sync"] }
 tracing = { version = "0.1.30", default-features = false }
