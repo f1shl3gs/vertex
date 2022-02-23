@@ -311,7 +311,7 @@ tail = { path = "lib/tail" }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
-mimalloc = { version = "0.1.27", default-features = false, optional = true }
+mimalloc = { version = "0.1.28", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
@@ -379,7 +379,7 @@ governor = { version = "0.4.2", default-features = false, optional = true, featu
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.117", optional = true }
+libc = { version = "0.2.119", optional = true }
 memchr = { version = "2.4.1", optional = true, default-features = false}
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
