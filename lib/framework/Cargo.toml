@@ -15,14 +15,14 @@ tokio-console = ["console-subscriber", "tokio/tracing"]
 
 [dev-dependencies]
 env-test-util = { version = "1.0.1" }
-indoc = { version = "1.0.3", default-features = false }
+indoc = { version = "1.0.4", default-features = false }
 pretty_assertions = { version = "1.1.0" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
 rand_distr = { version = "0.4.3", default-features = false }
 tempfile = { version = "3.2.0" }
 testify = { path = "../testify" }
-tokio = { version = "1.16.1", features = ["test-util"] }
+tokio = { version = "1.17.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -77,18 +77,18 @@ socket2 = { version = "0.4.4", default-features = false }
 stream-cancel = { version = "0.8.1" }
 sysinfo = { path = "../sysinfo" }
 syslog_loose = { version = "0.16.0", default-features = false }
-tokio = { version = "1.16.1", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
+tokio = { version = "1.17.0", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-openssl = { version = "0.6.3", default-features = false }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
-tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
-tracing = { version = "0.1.30", default-features = false }
+tower = { version = "0.4.12", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tracing = { version = "0.1.31", default-features = false }
 tracing-core = { version = "0.1.22", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-limit = { path = "../tracing-limit" }
 tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
-tracing-subscriber = { version = "0.3.8", default-features = false, features = ["env-filter", "json", "ansi"] }
+tracing-subscriber = { version = "0.3.9", default-features = false, features = ["env-filter", "json", "ansi"] }
 twox-hash = { version = "1.6.2", default-features = false }
 typetag = { version = "0.1.8" }
 url = { version = "2.2.2", features = ["serde"] }

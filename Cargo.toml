@@ -284,14 +284,14 @@ assert_cmd = { version = "2.0.2" }
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"]}
-indoc = { version = "1.0.3", default-features = false }
+indoc = { version = "1.0.4", default-features = false }
 pretty_assertions = { version = "1.1.0" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.16.1", features = ["test-util"] }
+tokio = { version = "1.17.0", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -317,7 +317,7 @@ jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profi
 jemalloc-ctl = { version = "0.3.3", optional = true }
 
 # Futrures & Tokio
-tokio = { version = "1.16.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.17.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
@@ -331,9 +331,9 @@ stream-cancel = { version = "0.8.1" }
 metrics = { version = "0.18.0", default-features = false }
 
 # Tracing
-tracing = { version = "0.1.30", default-features = false }
+tracing = { version = "0.1.31", default-features = false }
 tracing-log = { version = "0.1.2", default-features = false }
-tracing-subscriber = { version = "0.3.8", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-subscriber = { version = "0.3.9", optional = true, default-features = false, features = ["std", "registry"] }
 tracing-core = { version = "0.1.22" }
 
 # HTTP
@@ -342,7 +342,7 @@ http = { version = "0.2.6", default-features = false }
 headers = { version = "0.3.7" }
 
 # Tower
-tower = { version = "0.4.11", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
+tower = { version = "0.4.12", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
 serde = { version = "1.0.136", features = ["derive", "std", "rc"] }
