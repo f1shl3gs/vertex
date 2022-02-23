@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645584123628,
+  "lastUpdate": 1645584126949,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7614,6 +7614,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 72.346,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "42d6e39bf9632785c725f8946c71b848b1b80dd3",
+          "message": "Merge pull request #208 from f1shl3gs/dependabot/cargo/metrics-util-0.11.1\n\nchore(deps): bump metrics-util from 0.11.0 to 0.11.1",
+          "timestamp": "2022-02-23T10:36:19+08:00",
+          "tree_id": "5f641784631b291a2a8c0f63b268c14e5612733c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/42d6e39bf9632785c725f8946c71b848b1b80dd3"
+        },
+        "date": 1645584126036,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.914,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 64.035,
             "unit": "ns/op"
           }
         ]
