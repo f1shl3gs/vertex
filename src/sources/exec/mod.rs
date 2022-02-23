@@ -327,6 +327,8 @@ async fn run_command(
 
     let pid = child.id();
 
+    spawn_reader_thread(stdout_reader, decoder.clone(), STDOUT, sender);
+
     'send: while let Some(((events, _byte_size), stream)) = receiver.recv().await {
         // TODO: metric
 
@@ -548,9 +550,155 @@ async fn run_streaming(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use bytes::Bytes;
+    use event::Value;
+    use std::io::Cursor;
+    use std::task::Poll;
 
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<ExecConfig>()
+    }
+
+    #[test]
+    fn test_handle_event() {
+        let command = vec!["ls".to_string()];
+        let hostname = Some("localhost".to_string());
+        let data_stream = Some(STDOUT);
+        let pid = Some(123);
+
+        let mut event = Bytes::from("hello").into();
+        handle_event(&command, &hostname, &data_stream, pid, &mut event);
+
+        let log = event.as_log();
+
+        assert_eq!(
+            log.get_field(log_schema().host_key()).unwrap(),
+            &Value::from("localhost")
+        );
+        assert_eq!(log.get_field(STREAM_KEY).unwrap(), &Value::from(STDOUT));
+        assert_eq!(log.get_field(PID_KEY).unwrap(), &Value::from(123));
+        assert_eq!(
+            log.get_field(COMMAND_KEY).unwrap(),
+            &Value::from(vec!["ls"])
+        );
+        assert_eq!(
+            log.get_field(log_schema().message_key()).unwrap(),
+            &Value::from("hello")
+        );
+        assert!(log.get_field(log_schema().timestamp_key()).is_some())
+    }
+
+    #[test]
+    fn test_build_command() {
+        let command = vec![
+            "./runner".to_string(),
+            "arg1".to_string(),
+            "arg2".to_string(),
+        ];
+
+        let command = build_command(
+            command,
+            Some(PathBuf::from("/tmp")),
+            default_include_stderr(),
+        );
+
+        let mut expected_command = Command::new("./runner");
+        expected_command.kill_on_drop(true);
+        expected_command.current_dir("/tmp");
+        expected_command.args(vec!["arg1".to_string(), "arg2".to_string()]);
+
+        // Unfortunately the current_dir is not included in the formatted string
+        let expected_command_string = format!("{:?}", expected_command);
+        let command_string = format!("{:?}", command);
+
+        assert_eq!(expected_command_string, command_string);
+    }
+
+    #[tokio::test]
+    async fn test_spawn_reader_thread() {
+        let buf = Cursor::new("hello\nworld");
+        let reader = BufReader::new(buf);
+        let decoder = codecs::Decoder::default();
+        let (sender, mut receiver) = channel(1024);
+
+        spawn_reader_thread(reader, decoder, STDOUT, sender);
+
+        let mut counter = 0;
+        if let Some(((events, bytes), origin)) = receiver.recv().await {
+            assert_eq!(bytes, 5);
+            assert_eq!(events.len(), 1);
+
+            let log = events[0].as_log();
+            assert_eq!(
+                log.get_field(log_schema().message_key()).unwrap(),
+                &Value::from("hello")
+            );
+            assert_eq!(origin, STDOUT);
+            counter += 1;
+        }
+
+        if let Some(((events, byte_size), origin)) = receiver.recv().await {
+            assert_eq!(byte_size, 5);
+            assert_eq!(events.len(), 1);
+
+            let log = events[0].as_log();
+            assert_eq!(
+                log.get_field(log_schema().message_key()).unwrap(),
+                &Value::from("world"),
+            );
+            assert_eq!(origin, STDOUT);
+            counter += 1;
+        }
+
+        assert_eq!(counter, 2);
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    #[tokio::test]
+    async fn run_command_on_unix_like() {
+        let command = vec!["echo".into(), "hello".into()];
+        let hostname = Some("localhost".to_string());
+        let decoder = Default::default();
+        let shutdown = ShutdownSignal::noop();
+        let (tx, mut rx) = Pipeline::new_test();
+
+        // Wait for our task to finish, wrapping it in a timeout
+        let timeout = tokio::time::timeout(
+            Duration::from_secs(3),
+            run_command(
+                command.clone(),
+                None,
+                default_include_stderr(),
+                hostname,
+                shutdown,
+                decoder,
+                tx,
+            ),
+        );
+
+        let timeout_result = timeout.await;
+        let exit_status = timeout_result
+            .expect("command timed out")
+            .expect("command error");
+
+        assert_eq!(0, exit_status.unwrap().code().unwrap());
+
+        if let Poll::Ready(Some(event)) = futures::poll!(rx.next()) {
+            let log = event.as_log();
+            assert_eq!(log.get_field(COMMAND_KEY).unwrap(), &Value::from(command));
+            assert_eq!(log.get_field(STREAM_KEY).unwrap(), &Value::from(STDOUT));
+            assert_eq!(
+                log.get_field(log_schema().message_key()).unwrap(),
+                &Value::from("hello")
+            );
+            assert_eq!(
+                log.get_field(log_schema().host_key()).unwrap(),
+                &Value::from("localhost")
+            );
+            assert!(log.get_field(PID_KEY).is_some());
+            assert!(log.get_field(log_schema().timestamp_key()).is_some());
+            assert_eq!(7, log.all_fields().count());
+        }
     }
 }

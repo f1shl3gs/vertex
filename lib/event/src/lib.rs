@@ -27,7 +27,7 @@ use std::collections::btree_map;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use bytes::{Buf, BufMut};
+use bytes::{Buf, BufMut, Bytes};
 use prost::Message;
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
@@ -283,6 +283,13 @@ impl From<String> for Event {
         fields.insert("message".to_string(), Value::Bytes(s.into()));
 
         Self::Log(fields.into())
+    }
+}
+
+impl From<Bytes> for Event {
+    fn from(b: Bytes) -> Self {
+        let log = LogRecord::from(b);
+        log.into()
     }
 }
 

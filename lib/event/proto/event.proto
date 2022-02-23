@@ -19,13 +19,12 @@ message Value {
   oneof kind {
     bytes bytes = 1;
     double float = 2;
-    uint64 u64 = 3;
-    int64 i64 = 4;
-    bool boolean = 5;
-    google.protobuf.Timestamp timestamp = 6;
-    ValueArray array = 7;
-    ValueMap map = 8;
-    ValueNull null = 9;
+    int64 i64 = 3;
+    bool boolean = 4;
+    google.protobuf.Timestamp timestamp = 5;
+    ValueArray array = 6;
+    ValueMap map = 7;
+    ValueNull null = 8;
   }
 }
 

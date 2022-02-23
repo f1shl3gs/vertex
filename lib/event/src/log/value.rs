@@ -10,7 +10,6 @@ use shared::ByteSizeOf;
 pub enum Value {
     Bytes(Bytes),
     Float(f64),
-    Uint64(u64),
     Int64(i64),
     Boolean(bool),
     Array(Vec<Value>),
@@ -25,7 +24,6 @@ impl Value {
             Value::Timestamp(ts) => timestamp_to_string(ts),
             Value::Bytes(bytes) => String::from_utf8_lossy(bytes).into_owned(),
             Value::Float(f) => format!("{}", f),
-            Value::Uint64(u) => format!("{}", u),
             Value::Int64(i) => format!("{}", i),
             Value::Array(arr) => serde_json::to_string(arr).expect("Cannot serialize array"),
             Value::Boolean(b) => format!("{}", b),
@@ -38,7 +36,6 @@ impl Value {
         match self {
             Value::Bytes(b) => b.clone(),
             Value::Float(f) => Bytes::from(format!("{}", f)),
-            Value::Uint64(u) => Bytes::from(format!("{}", u)),
             Value::Int64(i) => Bytes::from(format!("{}", i)),
             Value::Array(arr) => {
                 Bytes::from(serde_json::to_vec(arr).expect("Cannot serialize array"))
@@ -80,7 +77,6 @@ impl Value {
             | Value::Bytes(_)
             | Value::Timestamp(_)
             | Value::Float(_)
-            | Value::Uint64(_)
             | Value::Int64(_) => false,
             Value::Null => true,
             Value::Map(m) => m.is_empty(),
@@ -112,7 +108,6 @@ impl Serialize for Value {
         S: Serializer,
     {
         match &self {
-            Value::Uint64(u) => serializer.serialize_u64(*u),
             Value::Float(f) => serializer.serialize_f64(*f),
             Value::Bytes(_) | Value::Timestamp(_) => {
                 serializer.serialize_str(&self.to_string_lossy())
@@ -164,7 +159,6 @@ impl TryInto<serde_json::Value> for Value {
             Value::Boolean(v) => Ok(serde_json::Value::from(v)),
             Value::Bytes(v) => Ok(serde_json::Value::from(String::from_utf8(v.to_vec())?)),
             Value::Float(v) => Ok(serde_json::Value::from(v)),
-            Value::Uint64(v) => Ok(serde_json::Value::from(v)),
             Value::Int64(v) => Ok(serde_json::Value::from(v)),
             Value::Array(v) => Ok(serde_json::to_value(v)?),
             Value::Map(v) => Ok(serde_json::to_value(v)?),
@@ -182,7 +176,7 @@ impl From<f64> for Value {
 
 impl From<u8> for Value {
     fn from(u: u8) -> Self {
-        Self::Uint64(u as u64)
+        Self::Int64(u as i64)
     }
 }
 
@@ -194,7 +188,7 @@ impl From<i32> for Value {
 
 impl From<u64> for Value {
     fn from(u: u64) -> Self {
-        Self::Uint64(u)
+        Self::Int64(u as i64)
     }
 }
 
@@ -248,7 +242,7 @@ impl From<bool> for Value {
 
 impl From<u32> for Value {
     fn from(v: u32) -> Self {
-        Self::Uint64(v as u64)
+        Self::Int64(v as i64)
     }
 }
 
@@ -390,7 +384,6 @@ mod tests {
                             let is_match = match value {
                                 Value::Boolean(_) => expected_type.eq("boolean"),
                                 Value::Int64(_) => expected_type.eq("integer"),
-                                Value::Uint64(_) => expected_type.eq("integer"),
                                 Value::Bytes(_) => expected_type.eq("bytes"),
                                 Value::Map(_) => expected_type.eq("map"),
                                 Value::Array(_) => expected_type.eq("array"),
