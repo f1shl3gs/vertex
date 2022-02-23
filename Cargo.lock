@@ -2093,9 +2093,9 @@ dependencies = [
 
 [[package]]
 name = "metrics-util"
-version = "0.11.0"
+version = "0.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eb8e50225c0fa6146fe721a6fa9c556acdfa2910f2120caff5b25b03362c7033"
+checksum = "0296c9cffd3d72c61d8fcd25efc381fd589f7b155a81f2fa5670010430f60c57"
 dependencies = [
  "aho-corasick 0.7.18",
  "atomic-shim",
