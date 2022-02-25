@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645588264512,
+  "lastUpdate": 1645777032223,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3587,6 +3587,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1184300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bfbb7281c2c47dbfaf94789f05344304a557d91",
+          "message": "Merge pull request #212 from f1shl3gs/bump_rsntp\n\nbump rsntp from 2.1.0 to 3.0.0",
+          "timestamp": "2022-02-25T16:09:37+08:00",
+          "tree_id": "d2df245640b1a7da7ba9d0ad2c71594c2089ebcf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bfbb7281c2c47dbfaf94789f05344304a557d91"
+        },
+        "date": 1645777031222,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1384500,
             "unit": "ns/op"
           }
         ]
