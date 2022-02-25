@@ -389,7 +389,7 @@ percent-encoding = { version = "2.1.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 regex = { version = "1.5.4" }
-rsntp = { version = "2.1.0", default-features = false, features = ["tokio"], optional = true }
+rsntp = { version = "3.0.0", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.8.0", optional = true, features = ["union"] }
 snafu = { version = "0.6.10", default-features = false }
