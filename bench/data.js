@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645778074484,
+  "lastUpdate": 1645778955010,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7866,6 +7866,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 72.482,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c2d2adbf993d8f8fd5ef34bd74fb643be95de4b",
+          "message": "Merge pull request #214 from f1shl3gs/move_encoding_to_framework\n\nmove encoding to framework",
+          "timestamp": "2022-02-25T16:44:01+08:00",
+          "tree_id": "e89bdaa071f0503f4eaa522ffe967e9c1b3a2152",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c2d2adbf993d8f8fd5ef34bd74fb643be95de4b"
+        },
+        "date": 1645778953957,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.958,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 63.661,
             "unit": "ns/op"
           }
         ]
