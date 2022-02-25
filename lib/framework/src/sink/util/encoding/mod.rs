@@ -5,10 +5,9 @@ use std::io;
 use std::io::Write;
 use std::sync::Arc;
 
+use event::log::path_iter::{PathComponent, PathIter};
+use event::{Event, LogRecord, MaybeAsLogMut, Value};
 use serde::{Deserialize, Serialize};
-
-use crate::log::path_iter::{PathComponent, PathIter};
-use crate::{Event, LogRecord, Value};
 
 // re-export
 pub use codec::*;
@@ -36,19 +35,6 @@ where
 {
     fn encode(&self, input: T, writer: &mut dyn Write) -> io::Result<usize> {
         (**self).encode(input, writer)
-    }
-}
-
-pub trait MaybeAsLogMut {
-    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord>;
-}
-
-impl MaybeAsLogMut for Event {
-    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
-        match self {
-            Event::Log(log) => Some(log),
-            _ => None,
-        }
     }
 }
 
@@ -219,7 +205,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::Value;
+    use event::Value;
     use indoc::indoc;
     use log_schema::log_schema;
     use std::collections::BTreeMap;

@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::io::Write;
 
-use event::encoding::Encoder;
 use event::{EventFinalizers, Finalizable};
+use framework::sink::util::encoding::Encoder;
 use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
 use shared::ByteSizeOf;

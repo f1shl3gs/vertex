@@ -1,5 +1,5 @@
-use event::encoding::EncodingConfig;
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
+use framework::sink::util::encoding::EncodingConfig;
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 

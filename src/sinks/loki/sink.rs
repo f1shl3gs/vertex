@@ -4,12 +4,12 @@ use std::io::Error;
 use std::num::NonZeroUsize;
 
 use buffers::Acker;
-use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::{Event, EventFinalizers, Finalizable, Value};
 use framework::config::SinkContext;
 use framework::http::HttpClient;
 use framework::partition::Partitioner;
 use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::util::encoding::{EncodingConfig, EncodingConfiguration};
 use framework::sink::util::{Compression, RequestBuilder};
 use framework::stream::BatcherSettings;
 use framework::template::Template;

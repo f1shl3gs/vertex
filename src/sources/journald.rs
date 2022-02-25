@@ -643,7 +643,7 @@ mod tests {
     struct TestJournal {}
 
     impl TestJournal {
-        fn new(
+        fn stream(
             _checkpoint: &Option<String>,
         ) -> (
             BoxStream<'static, Result<BTreeMap<String, Value>, io::Error>>,
@@ -774,7 +774,7 @@ MESSAGE=audit log
         tokio::spawn(source.run_shutdown(
             checkpointer,
             shutdown,
-            Box::new(|checkpoint| Ok(TestJournal::new(checkpoint))),
+            Box::new(|checkpoint| Ok(TestJournal::stream(checkpoint))),
         ));
 
         sleep(Duration::from_millis(200)).await;

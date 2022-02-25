@@ -1,10 +1,11 @@
-use serde::de::{DeserializeOwned, Error, IntoDeserializer, MapAccess, Visitor};
-use serde::{Deserialize, Deserializer, Serialize};
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
 
-use crate::encoding::{EncodingConfiguration, TimestampFormat};
-use crate::log::path_iter::{PathComponent, PathIter};
+use event::log::path_iter::{PathComponent, PathIter};
+use serde::de::{DeserializeOwned, Error, IntoDeserializer, MapAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+
+use super::{EncodingConfiguration, TimestampFormat};
 
 // Deduplicate codes
 #[inline]

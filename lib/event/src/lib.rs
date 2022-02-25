@@ -1,5 +1,4 @@
 mod array;
-pub mod encoding;
 mod finalization;
 pub mod log;
 mod logfmt;
@@ -392,6 +391,19 @@ impl TryFrom<serde_json::Value> for Event {
             _ => Err(crate::Error::from(
                 "Attempted to convert non-Object JSON into an Event.",
             )),
+        }
+    }
+}
+
+pub trait MaybeAsLogMut {
+    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord>;
+}
+
+impl MaybeAsLogMut for Event {
+    fn maybe_as_log_mut(&mut self) -> Option<&mut LogRecord> {
+        match self {
+            Event::Log(log) => Some(log),
+            _ => None,
         }
     }
 }

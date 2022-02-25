@@ -1,10 +1,10 @@
-use bytes::Bytes;
 use std::io;
 
-use event::encoding::Encoder;
+use bytes::Bytes;
 
 use super::buffer::Compression;
 use super::compressor::Compressor;
+use super::encoding::Encoder;
 
 /// Generalized interface for defining how a batch of events will be turned into a request.
 pub trait RequestBuilder<Input> {
