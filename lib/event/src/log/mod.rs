@@ -18,9 +18,9 @@ use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 use tracing::field::Field;
 
-use crate::encoding::MaybeAsLogMut;
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
+use crate::MaybeAsLogMut;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
 
 /// The type alias for an array of `LogRecord` elements

@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use event::encoding::{EncodingConfig, StandardEncodings};
 use framework::batch::{BatchConfig, NoDefaultBatchSettings};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
 };
+use framework::sink::util::encoding::{EncodingConfig, StandardEncodings};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rdkafka::ClientConfig;

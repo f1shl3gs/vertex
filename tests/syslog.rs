@@ -1,6 +1,5 @@
-use event::encoding::EncodingConfig;
 use framework::sink::util::tcp::TcpSinkConfig;
-use framework::sink::util::Encoding;
+use framework::sink::util::{encoding::EncodingConfig, Encoding};
 use framework::testing::CountReceiver;
 use rand::{thread_rng, Rng};
 use serde::Deserialize;

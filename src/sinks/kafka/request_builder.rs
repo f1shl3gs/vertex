@@ -1,9 +1,6 @@
 use bytes::Bytes;
-use event::encoding::Encoder;
-use event::{
-    encoding::{EncodingConfig, StandardEncodings},
-    Event, Finalizable, Value,
-};
+use event::{Event, Finalizable, Value};
+use framework::sink::util::encoding::{Encoder, EncodingConfig, StandardEncodings};
 use framework::template::Template;
 use internal::emit;
 use log_schema::LogSchema;

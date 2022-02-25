@@ -1,10 +1,10 @@
 use std::io::{self, Write};
 
+use event::{Event, LogRecord};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 
-use crate::encoding::Encoder;
-use crate::{Event, LogRecord};
+use super::Encoder;
 
 static DEFAULT_TEXT_ENCODER: StandardTextEncoding = StandardTextEncoding;
 static DEFAULT_JSON_ENCODER: StandardJsonEncoding = StandardJsonEncoding;
@@ -229,7 +229,7 @@ impl Encoder<Event> for StandardTextEncoding {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::Metric;
+    use event::Metric;
 
     fn encode_event(event: Event, encoding: StandardEncodings) -> io::Result<Vec<u8>> {
         let mut buf = Vec::new();

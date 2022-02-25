@@ -3,8 +3,8 @@ use std::io::Write;
 
 use async_trait::async_trait;
 use buffers::Acker;
-use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
+use framework::sink::util::encoding::{EncodingConfig, EncodingConfiguration};
 use framework::{
     config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
     Healthcheck, Sink, StreamSink,

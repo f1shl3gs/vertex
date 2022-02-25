@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use event::encoding::EncodingConfig;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSerde};
 use framework::http::{Auth, HttpClient, MaybeAuth};
+use framework::sink::util::encoding::EncodingConfig;
 use framework::sink::util::service::RequestConfig;
 use framework::tls::{TlsConfig, TlsOptions, TlsSettings};
 use framework::Sink;
