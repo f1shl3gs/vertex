@@ -265,7 +265,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
     Ok(ps)
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PowerSupplyConfig {
     #[serde(
         deserialize_with = "deserialize_regex",

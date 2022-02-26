@@ -9,7 +9,7 @@ use tokio::io::AsyncBufReadExt;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DiskStatsConfig {
     #[serde(
         deserialize_with = "deserialize_regex",

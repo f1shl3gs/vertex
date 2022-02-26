@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use tokio::io::AsyncBufReadExt;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
     #[serde(default = "default_labels")]
     labels: Vec<String>,

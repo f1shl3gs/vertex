@@ -4,7 +4,7 @@ use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use tokio::fs;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]
