@@ -6,7 +6,7 @@ use tokio::io::AsyncBufReadExt;
 
 use super::{Error, ErrorContext};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
     #[serde(default = "default_fields")]
     #[serde(
