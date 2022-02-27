@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645946791652,
+  "lastUpdate": 1645947624398,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20105,6 +20105,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1246,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d7cecf993d29e2ca07e1cc8f87551f94acabc572",
+          "message": "Merge pull request #215 from f1shl3gs/remove_arc_in_node_config\n\nremove serde/rc feature",
+          "timestamp": "2022-02-27T15:19:00+08:00",
+          "tree_id": "2d8c937e9e68805ab701df41e6b2940c94c13f56",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d7cecf993d29e2ca07e1cc8f87551f94acabc572"
+        },
+        "date": 1645947623220,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1096,
             "unit": "s"
           }
         ]
