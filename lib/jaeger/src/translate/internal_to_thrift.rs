@@ -200,7 +200,15 @@ impl From<Trace> for Batch {
             .tags
             .into_iter()
             .map(|(k, v)| {
-                jaeger::Tag::new(k, jaeger::TagType::String, Some(v), None, None, None, None)
+                jaeger::Tag::new(
+                    k.to_string(),
+                    jaeger::TagType::String,
+                    Some(v.to_string()),
+                    None,
+                    None,
+                    None,
+                    None,
+                )
             })
             .collect();
         let process = jaeger::Process::new(trace.service.to_string(), Some(tags));

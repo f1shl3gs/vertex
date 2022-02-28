@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter, Write};
 use std::sync::Arc;
 
@@ -6,8 +5,27 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
+use crate::attributes::{Attributes, Key, Value};
 use crate::metadata::EventMetadata;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+
+#[macro_export]
+macro_rules! buckets {
+    ( $( $limit:expr => $count:expr),* ) => {
+        vec![
+            $( event::Bucket { upper: $limit, count: $count}, )*
+        ]
+    };
+}
+
+#[macro_export]
+macro_rules! quantiles {
+    ( $( $q:expr => $value:expr),* ) => {
+        vec![
+            $( event::Quantile { quantile: $q, value: $value }, )*
+        ]
+    };
+}
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub enum Kind {
@@ -75,7 +93,7 @@ impl MetricValue {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub struct MetricSeries {
     pub name: String,
-    pub tags: BTreeMap<String, String>,
+    pub tags: Attributes,
 }
 
 impl ByteSizeOf for MetricSeries {
@@ -85,12 +103,8 @@ impl ByteSizeOf for MetricSeries {
 }
 
 impl MetricSeries {
-    pub fn insert_tag(
-        &mut self,
-        key: impl Into<String>,
-        value: impl Into<String>,
-    ) -> Option<String> {
-        self.tags.insert(key.into(), value.into())
+    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
+        self.tags.insert(key, value)
     }
 }
 
@@ -254,7 +268,7 @@ impl Metric {
     pub fn new(
         name: impl ToString,
         description: Option<String>,
-        tags: BTreeMap<String, String>,
+        tags: Attributes,
         ts: DateTime<Utc>,
         value: MetricValue,
     ) -> Self {
@@ -271,9 +285,10 @@ impl Metric {
         }
     }
 
+    #[inline]
     pub fn new_with_metadata(
         name: String,
-        tags: BTreeMap<String, String>,
+        tags: Attributes,
         value: MetricValue,
         timestamp: Option<DateTime<Utc>>,
         metadata: EventMetadata,
@@ -309,21 +324,17 @@ impl Metric {
     }
 
     #[inline]
-    pub fn gauge_with_tags<N, D, V>(
-        name: N,
-        desc: D,
-        value: V,
-        tags: BTreeMap<String, String>,
-    ) -> Metric
+    pub fn gauge_with_tags<N, D, V, A>(name: N, desc: D, value: V, tags: A) -> Metric
     where
         N: Into<String>,
         D: Into<String>,
         V: IntoF64,
+        A: Into<Attributes>,
     {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags,
+                tags: tags.into(),
             },
             description: Some(desc.into()),
             unit: None,
@@ -354,21 +365,17 @@ impl Metric {
     }
 
     #[inline]
-    pub fn sum_with_tags<N, D, V>(
-        name: N,
-        desc: D,
-        value: V,
-        tags: BTreeMap<String, String>,
-    ) -> Metric
+    pub fn sum_with_tags<N, D, V, A>(name: N, desc: D, value: V, tags: A) -> Metric
     where
         N: Into<String>,
         D: Into<String>,
         V: IntoF64,
+        A: Into<Attributes>,
     {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags,
+                tags: tags.into(),
             },
             description: Some(desc.into()),
             unit: None,
@@ -404,10 +411,10 @@ impl Metric {
     }
 
     #[inline]
-    pub fn histogram_with_tags<N, D, C, S>(
+    pub fn histogram_with_tags<N, D, A, C, S>(
         name: N,
         desc: D,
-        tags: BTreeMap<String, String>,
+        tags: A,
         count: C,
         sum: S,
         buckets: Vec<Bucket>,
@@ -415,13 +422,14 @@ impl Metric {
     where
         N: Into<String>,
         D: Into<String>,
+        A: Into<Attributes>,
         C: Into<u64>,
         S: IntoF64,
     {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags,
+                tags: tags.into(),
             },
             description: Some(desc.into()),
             unit: None,
@@ -509,32 +517,30 @@ impl Metric {
     }
 
     #[inline]
-    pub fn tags(&self) -> &BTreeMap<String, String> {
+    pub fn tags(&self) -> &Attributes {
         &self.series.tags
     }
 
     #[inline]
-    pub fn with_tags(mut self, tags: BTreeMap<String, String>) -> Self {
+    pub fn with_tags(mut self, tags: Attributes) -> Self {
         self.series.tags = tags;
         self
     }
 
+    #[inline]
     pub fn has_tag(&self, key: &str) -> bool {
-        self.series.tags.contains_key(key)
+        // TODO: avoid allocation
+        self.series.tags.contains_key(key.to_string())
     }
 
     #[inline]
-    pub fn tag_value(&self, name: &str) -> Option<&str> {
-        self.series.tags.get(name).map(|k| k.as_str())
+    pub fn tag_value(&self, name: &str) -> Option<&Value> {
+        self.series.tags.get(&Key::from(name.to_string()))
     }
 
     #[inline]
-    pub fn insert_tag(
-        &mut self,
-        name: impl Into<String>,
-        value: impl Into<String>,
-    ) -> Option<String> {
-        self.series.insert_tag(name.into(), value.into())
+    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
+        self.series.insert_tag(key, value)
     }
 
     #[inline]
@@ -543,15 +549,18 @@ impl Metric {
         self
     }
 
+    #[inline]
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {
         self.metadata.add_finalizer(finalizer);
     }
 
+    #[inline]
     pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
     }
 
+    #[inline]
     pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self

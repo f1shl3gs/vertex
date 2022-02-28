@@ -1,13 +1,18 @@
-use super::{Error, ErrorContext};
-use event::{tags, Metric};
-use framework::config::{deserialize_regex, serialize_regex};
 /// Exposes disk I/O statistics
 ///
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
+use std::borrow::Cow;
+
+use event::{attributes::Key, tags, Metric};
+use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
+use super::{Error, ErrorContext};
+
 const DISK_SECTOR_SIZE: f64 = 512.0;
+
+const DEVICE_KEY: Key = Key::from_static_str("device");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DiskStatsConfig {
@@ -43,11 +48,14 @@ impl DiskStatsConfig {
 
         while let Some(line) = lines.next_line().await? {
             let mut parts = line.split_ascii_whitespace();
+            let device = {
+                let device = parts.nth(2).unwrap();
+                if self.ignored.is_match(device) {
+                    continue;
+                }
 
-            let device = parts.nth(2).unwrap();
-            if self.ignored.is_match(device) {
-                continue;
-            }
+                Cow::from(device.to_string())
+            };
 
             // the content looks like this
             // 259       0 nvme0n1 366 0 23480 41 3 0 0 0 0 41 41 0 0 0 0
@@ -59,7 +67,7 @@ impl DiskStatsConfig {
                         "The total number of reads completed successfully",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     1 => metrics.push(Metric::sum_with_tags(
@@ -67,7 +75,7 @@ impl DiskStatsConfig {
                         "The total number of reads merged",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     2 => metrics.push(Metric::sum_with_tags(
@@ -75,7 +83,7 @@ impl DiskStatsConfig {
                         "The total number of bytes read successfully",
                         v * DISK_SECTOR_SIZE,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     3 => metrics.push(Metric::sum_with_tags(
@@ -83,7 +91,7 @@ impl DiskStatsConfig {
                         "The total number of seconds spent by all reads",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     4 => metrics.push(Metric::sum_with_tags(
@@ -91,7 +99,7 @@ impl DiskStatsConfig {
                         "The total number of writes completed successfully",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     5 => metrics.push(Metric::sum_with_tags(
@@ -99,7 +107,7 @@ impl DiskStatsConfig {
                         "The number of writes merged.",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     6 => metrics.push(Metric::sum_with_tags(
@@ -107,7 +115,7 @@ impl DiskStatsConfig {
                         "The total number of bytes written successfully.",
                         v * DISK_SECTOR_SIZE,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     7 => metrics.push(Metric::sum_with_tags(
@@ -115,7 +123,7 @@ impl DiskStatsConfig {
                         "This is the total number of seconds spent by all writes.",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     8 => metrics.push(Metric::gauge_with_tags(
@@ -123,7 +131,7 @@ impl DiskStatsConfig {
                         "The number of I/Os currently in progress",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     9 => metrics.push(Metric::sum_with_tags(
@@ -131,7 +139,7 @@ impl DiskStatsConfig {
                         "Total seconds spent doing I/Os.",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     10 => metrics.push(Metric::sum_with_tags(
@@ -139,7 +147,7 @@ impl DiskStatsConfig {
                         "The weighted # of seconds spent doing I/Os.",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     11 => metrics.push(Metric::sum_with_tags(
@@ -147,7 +155,7 @@ impl DiskStatsConfig {
                         "The total number of discards completed successfully.",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     12 => metrics.push(Metric::sum_with_tags(
@@ -155,7 +163,7 @@ impl DiskStatsConfig {
                         "The total number of discards merged.",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     13 => metrics.push(Metric::sum_with_tags(
@@ -163,7 +171,7 @@ impl DiskStatsConfig {
                         "The total number of sectors discarded successfully.",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     14 => metrics.push(Metric::sum_with_tags(
@@ -171,7 +179,7 @@ impl DiskStatsConfig {
                         "This is the total number of seconds spent by all discards.",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     15 => metrics.push(Metric::sum_with_tags(
@@ -179,7 +187,7 @@ impl DiskStatsConfig {
                         "The total number of flush requests completed successfully",
                         v,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     16 => metrics.push(Metric::sum_with_tags(
@@ -187,7 +195,7 @@ impl DiskStatsConfig {
                         "This is the total number of seconds spent by all flush requests.",
                         v * 0.001,
                         tags!(
-                            "device" => device
+                            DEVICE_KEY => device.clone()
                         ),
                     )),
                     _ => {}

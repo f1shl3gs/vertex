@@ -1,6 +1,7 @@
-use super::Value;
-use crate::log::path_iter::{PathComponent, PathIter};
 use std::collections::BTreeMap;
+
+use super::path_iter::{PathComponent, PathIter};
+use super::Value;
 
 /// Returns a reference to a field value specified by the given path.
 pub fn get<'a>(fields: &'a BTreeMap<String, Value>, path: &str) -> Option<&'a Value> {

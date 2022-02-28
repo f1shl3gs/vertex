@@ -1,6 +1,7 @@
+use std::collections::BTreeMap;
+
 use super::Value;
 use crate::log::path_iter::{PathComponent, PathIter};
-use std::collections::BTreeMap;
 
 /// Checks whether a field specified by a given path is present
 pub fn contains(fields: &BTreeMap<String, Value>, path: &str) -> bool {

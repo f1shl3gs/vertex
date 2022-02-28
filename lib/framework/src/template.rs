@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use bytes::Bytes;
 use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
-use event::{EventRef, Metric, Value};
+use event::{log::Value, EventRef, Metric};
 use log_schema::log_schema;
 use regex::{Captures, Regex};
 use serde::de::{Error, Visitor};
@@ -175,7 +175,7 @@ fn render_metric_field(key: &str, metric: &Metric) -> Option<String> {
     match key {
         "name" => Some(metric.name().into()),
         // "namespace" => Some()
-        _ if key.starts_with("tags.") => metric.tag_value(&key[5..]).map(Into::into),
+        _ if key.starts_with("tags.") => metric.tag_value(&key[5..]).map(|v| v.to_string()),
         _ => None,
     }
 }

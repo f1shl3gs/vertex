@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
-use event::{Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue, Value};
+use event::{log::Value, Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     TransformConfig, TransformContext, TransformDescription,

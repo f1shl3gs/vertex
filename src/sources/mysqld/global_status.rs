@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 
 use event::{tags, Metric};
@@ -44,7 +45,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
         };
 
         let (split_key, name) = match key.split_once("_") {
-            Some((key, name)) => (key, name),
+            Some((key, name)) => (key, Cow::from(name.to_string())),
             None => {
                 // TODO: handle those metrics
                 //   GlobalStatus { name: "Connections", value: "20" }
@@ -81,7 +82,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
                 ),
             )),
             "innodb_buffer_pool_pages" => {
-                match name {
+                match name.as_ref() {
                     "data" | "free" | "misc" | "old" => {
                         metrics.push(Metric::gauge_with_tags(
                             "mysql_global_status_buffer_pool_pages",

@@ -1,6 +1,7 @@
-use crate::log::path_iter::{PathComponent, PathIter};
-use crate::Value;
 use std::collections::BTreeMap;
+
+use super::path_iter::{PathComponent, PathIter};
+use super::Value;
 
 /// Returns a mutable reference to field value specified by the given path.
 pub fn get_mut<'a>(fields: &'a mut BTreeMap<String, Value>, path: &str) -> Option<&'a mut Value> {

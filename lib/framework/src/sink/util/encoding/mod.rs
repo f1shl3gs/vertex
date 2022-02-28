@@ -6,7 +6,7 @@ use std::io::Write;
 use std::sync::Arc;
 
 use event::log::path_iter::{PathComponent, PathIter};
-use event::{Event, LogRecord, MaybeAsLogMut, Value};
+use event::{log::Value, Event, LogRecord, MaybeAsLogMut};
 use serde::{Deserialize, Serialize};
 
 // re-export
@@ -205,7 +205,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::Value;
+    use event::log::Value;
     use indoc::indoc;
     use log_schema::log_schema;
     use std::collections::BTreeMap;

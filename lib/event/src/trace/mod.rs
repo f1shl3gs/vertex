@@ -4,7 +4,7 @@ pub mod generator;
 mod span;
 
 use std::borrow::Cow;
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::ops::{BitAnd, BitOr, Not};
@@ -14,6 +14,7 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
+use crate::attributes::Attributes;
 use crate::{BatchNotifier, EventFinalizer, EventFinalizers, EventMetadata, Finalizable};
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
@@ -530,7 +531,7 @@ impl fmt::LowerHex for TraceFlags {
 pub struct Trace {
     pub service: Cow<'static, str>,
 
-    pub tags: BTreeMap<String, String>,
+    pub tags: Attributes,
 
     pub spans: Vec<Span>,
 
@@ -553,11 +554,7 @@ impl Finalizable for Trace {
 }
 
 impl Trace {
-    pub fn new(
-        service: impl Into<Cow<'static, str>>,
-        tags: BTreeMap<String, String>,
-        spans: Vec<Span>,
-    ) -> Trace {
+    pub fn new(service: impl Into<Cow<'static, str>>, tags: Attributes, spans: Vec<Span>) -> Trace {
         Self {
             service: service.into(),
             tags,

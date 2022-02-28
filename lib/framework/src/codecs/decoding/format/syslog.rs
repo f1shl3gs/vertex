@@ -1,7 +1,7 @@
 use bytes::Bytes;
 use chrono::DateTime;
 use chrono::{Datelike, Utc};
-use event::{Event, Value};
+use event::{log::Value, Event};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};

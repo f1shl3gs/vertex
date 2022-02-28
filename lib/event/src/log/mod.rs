@@ -17,18 +17,20 @@ use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 use tracing::field::Field;
+pub use value::Value;
 
+use crate::attributes::{Attributes, Key};
 use crate::log::keys::all_fields;
 use crate::metadata::EventMetadata;
 use crate::MaybeAsLogMut;
-use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, Value};
+use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
-    pub tags: BTreeMap<String, String>,
+    pub tags: Attributes,
 
     pub fields: BTreeMap<String, Value>,
 
@@ -147,7 +149,7 @@ impl Finalizable for LogRecord {
 }
 
 impl LogRecord {
-    pub fn new(tags: BTreeMap<String, String>, fields: BTreeMap<String, Value>) -> Self {
+    pub fn new(tags: Attributes, fields: BTreeMap<String, Value>) -> Self {
         Self {
             tags,
             fields,
@@ -156,13 +158,7 @@ impl LogRecord {
     }
 
     #[inline]
-    pub fn into_parts(
-        self,
-    ) -> (
-        BTreeMap<String, String>,
-        BTreeMap<String, Value>,
-        EventMetadata,
-    ) {
+    pub fn into_parts(self) -> (Attributes, BTreeMap<String, Value>, EventMetadata) {
         (self.tags, self.fields, self.metadata)
     }
 
@@ -171,12 +167,8 @@ impl LogRecord {
         self
     }
 
-    pub fn insert_tag(
-        &mut self,
-        key: impl Into<String>,
-        value: impl Into<String>,
-    ) -> Option<String> {
-        self.tags.insert(key.into(), value.into())
+    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::attributes::Value>) {
+        self.tags.insert(key, value)
     }
 
     pub fn insert_field(
@@ -261,4 +253,22 @@ pub fn fields_from_json(json_value: serde_json::Value) -> BTreeMap<String, Value
         Value::Map(map) => map,
         sth => panic!("Expected a map, got {:?}", sth),
     }
+}
+
+#[macro_export]
+macro_rules! fields {
+    ( $($x:expr => $y:expr),* ) => ({
+        let mut _map: std::collections::BTreeMap<String, $crate::log::Value> = std::collections::BTreeMap::new();
+        $(
+            _map.insert($x.into(), $y.into());
+        )*
+        _map
+    });
+    // Done with trailing comma
+    ( $($x:expr => $y:expr,)* ) => (
+        fields!{$($x => $y),*}
+    );
+    () => ({
+        std::collections::BTreeMap<String, $crate::Value> = std::collections::BTreeMap::new();
+    })
 }

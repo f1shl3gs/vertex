@@ -551,7 +551,7 @@ async fn run_streaming(
 mod tests {
     use super::*;
     use bytes::Bytes;
-    use event::Value;
+    use event::log::Value;
     use std::io::Cursor;
     use std::task::Poll;
 

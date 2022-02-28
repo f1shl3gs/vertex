@@ -6,7 +6,7 @@ use std::time::Duration;
 use async_stream::stream;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
-use event::{BatchNotifier, Event, Value};
+use event::{log::Value, BatchNotifier, Event};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
 use framework::codecs::StreamDecodingError;
 use framework::codecs::{BytesDecoderConfig, BytesDeserializerConfig};
