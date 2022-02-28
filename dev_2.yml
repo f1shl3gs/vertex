@@ -1,5 +1,0 @@
-sinks:
-  prom_dummy:
-    type: prometheus_exporter
-    inputs:
-      - dummy
