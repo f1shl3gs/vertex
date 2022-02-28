@@ -273,7 +273,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                 for (key, metric) in map {
                     let counter = Metric::sum(name, "", metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels);
+                        .with_tags(key.labels.into());
 
                     events.push(counter.into());
                 }
@@ -282,7 +282,7 @@ fn convert_events(groups: Vec<MetricGroup>) -> Vec<Event> {
                 for (key, metric) in metrics {
                     let gauge = Metric::gauge(name, "", metric.value)
                         .with_timestamp(utc_timestamp(key.timestamp, start))
-                        .with_tags(key.labels);
+                        .with_tags(key.labels.into());
 
                     events.push(gauge.into());
                 }

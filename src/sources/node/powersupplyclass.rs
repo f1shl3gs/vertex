@@ -506,47 +506,47 @@ pub async fn gather(sys_path: &str, conf: &PowerSupplyConfig) -> Result<Vec<Metr
             "power_supply" => &ps.name
         );
         if !ps.capacity_level.is_empty() {
-            m.insert("capacity_level".into(), ps.capacity_level);
+            m.insert("capacity_level", ps.capacity_level);
         }
 
         if !ps.charge_type.is_empty() {
-            m.insert("charge_type".into(), ps.charge_type);
+            m.insert("charge_type", ps.charge_type);
         }
 
         if !ps.health.is_empty() {
-            m.insert("health".into(), ps.health);
+            m.insert("health", ps.health);
         }
 
         if !ps.manufacturer.is_empty() {
-            m.insert("manufacturer".into(), ps.manufacturer);
+            m.insert("manufacturer", ps.manufacturer);
         }
 
         if !ps.model_name.is_empty() {
-            m.insert("model_name".into(), ps.model_name);
+            m.insert("model_name", ps.model_name);
         }
 
         if !ps.serial_number.is_empty() {
-            m.insert("serial_number".into(), ps.serial_number);
+            m.insert("serial_number", ps.serial_number);
         }
 
         if !ps.status.is_empty() {
-            m.insert("status".into(), ps.status);
+            m.insert("status", ps.status);
         }
 
         if !ps.technology.is_empty() {
-            m.insert("technology".into(), ps.technology);
+            m.insert("technology", ps.technology);
         }
 
         if !ps.typ.is_empty() {
-            m.insert("type".into(), ps.typ);
+            m.insert("type", ps.typ);
         }
 
         if !ps.usb_type.is_empty() {
-            m.insert("usb_type".into(), ps.usb_type);
+            m.insert("usb_type", ps.usb_type);
         }
 
         if !ps.scope.is_empty() {
-            m.insert("scope".into(), ps.scope);
+            m.insert("scope", ps.scope);
         }
 
         metrics.push(Metric::gauge_with_tags(

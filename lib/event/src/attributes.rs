@@ -49,6 +49,12 @@ impl From<Key> for String {
     }
 }
 
+impl From<&String> for Key {
+    fn from(s: &String) -> Self {
+        Key(Cow::from(s.to_string()))
+    }
+}
+
 impl fmt::Display for Key {
     fn fmt(&self, fmt: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.0.fmt(fmt)
@@ -314,6 +320,11 @@ impl Attributes {
         }
     }
 
+    /// Returns a front-to-back iterator.
+    pub fn iter(&self) -> Iter<'_> {
+        Iter(self.map.iter())
+    }
+
     pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
         match self.map.entry(key.into()) {
             Entry::Occupied(mut entry) => {
@@ -463,5 +474,21 @@ macro_rules! tags {
     // Done with trailing comma
     ( $($x:expr => $y:expr,)* ) => (
         tags!{$($x => $y),*}
+    );
+}
+
+#[macro_export]
+macro_rules! btreemap {
+    // Done without trailing comma
+    ( $($x:expr => $y:expr),* ) => ({
+        let mut _map: std::collections::BTreeMap<String, String> = std::collections::BTreeMap::new();
+        $(
+            _map.insert($x.into(), $y.into());
+        )*
+        _map
+    });
+    // Done with trailing comma
+    ( $($x:expr => $y:expr,)* ) => (
+        btreemap!{$($x => $y),*}
     );
 }

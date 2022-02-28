@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
+use event::attributes::Key;
 use event::Event;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, Transform};
@@ -98,7 +99,7 @@ impl TagValueSet {
 struct Cardinality {
     limit: usize,
     action: LimitExceededAction,
-    accepted_tags: HashMap<String, TagValueSet>,
+    accepted_tags: HashMap<Key, TagValueSet>,
 }
 
 impl Clone for Cardinality {

@@ -529,7 +529,7 @@ mod tests {
 mod integration_tests {
     use crate::sources::kafka::kafka_source;
     use chrono::{SubsecRound, Utc};
-    use event::{EventStatus, Value};
+    use event::{log::Value, EventStatus};
     use framework::{codecs, Pipeline, ShutdownSignal};
     use log_schema::log_schema;
     use rdkafka::config::FromClientConfig;

@@ -39,10 +39,10 @@ impl FunctionTransform for AddTags {
         for (key, value) in &self.tags {
             match (event.tag_entry(key), self.overwrite) {
                 (Entry::Vacant(entry), _) => {
-                    entry.insert(value.clone());
+                    entry.insert(value.into());
                 }
                 (Entry::Occupied(mut entry), true) => {
-                    entry.insert(value.clone());
+                    entry.insert(value.into());
                 }
                 (Entry::Occupied(_entry), false) => {}
             }
@@ -108,7 +108,7 @@ tags:
 mod tests {
     use super::*;
     use crate::transforms::transform_one;
-    use event::{tags, Metric};
+    use event::{btreemap, tags, Metric};
 
     #[test]
     fn generate_config() {
@@ -126,7 +126,7 @@ mod tests {
             ),
         );
 
-        let m = tags!(
+        let m = btreemap!(
             "k1" => "v1_new",
             "k2" => "v2"
         );
@@ -158,7 +158,7 @@ mod tests {
                 "k1" => "v1"
             ),
         );
-        let m = tags!(
+        let m = btreemap!(
             "k1" => "v1_new",
             "k2" => "v2"
         );

@@ -1,5 +1,6 @@
 use super::{read_into, read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
@@ -119,18 +120,19 @@ fn stats_to_metrics(stats: &Stats) -> Vec<Metric> {
 }
 
 fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
+    let typ = Cow::from(typ.to_string());
     let mut metrics = vec![Metric::gauge_with_tags(
         "node_btrfs_reserved_bytes",
         "Amount of space reserved for a data type",
         stats.reserved_bytes as f64,
         tags!(
-            "block_group_type" => typ
+            "block_group_type" => typ.clone()
         ),
     )];
 
     // Add all layout statistics
-    for (layout, s) in &stats.layouts {
-        let mode = layout;
+    for (layout, s) in stats.layouts {
+        let mode = Cow::from(layout);
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
@@ -138,8 +140,8 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
                 "Amount of used space by a layout/data type",
                 s.used_bytes as f64,
                 tags!(
-                    "block_group_type" => typ,
-                    "mode" => mode
+                    "block_group_type" => typ.clone(),
+                    "mode" => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -147,8 +149,8 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
                 "Amount of space allocated for a layout/data type",
                 s.total_bytes as f64,
                 tags!(
-                    "block_group_type" => typ,
-                    "mode" => mode
+                    "block_group_type" => typ.clone(),
+                    "mode" => mode.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -156,7 +158,7 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
                 "Data allocation ratio for a layout/data type",
                 s.ratio,
                 tags!(
-                    "block_group_type" => typ,
+                    "block_group_type" => typ.clone(),
                     "mode" => mode
                 ),
             ),
@@ -167,14 +169,17 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
 }
 
 fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
+    let typ = Cow::from(typ.to_string());
+    let mode = Cow::from(mode.to_string());
+
     vec![
         Metric::gauge_with_tags(
             "node_btrfs_used_bytes",
             "Amount of used space by a layout/data type",
             s.used_bytes as f64,
             tags!(
-                "block_group_type" => typ,
-                "mode" => mode
+                "block_group_type" => typ.clone(),
+                "mode" => mode.clone()
             ),
         ),
         Metric::gauge_with_tags(
@@ -182,8 +187,8 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
             "Amount of space allocated for a layout/data type",
             s.total_bytes as f64,
             tags!(
-                "block_group_type" => typ,
-                "mode" => mode
+                "block_group_type" => typ.clone(),
+                "mode" => mode.clone()
             ),
         ),
         Metric::gauge_with_tags(

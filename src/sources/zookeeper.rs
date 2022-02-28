@@ -1,8 +1,10 @@
 // mntr
 
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::time::Duration;
 
+use event::attributes::Key;
 use event::{tags, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
@@ -16,6 +18,8 @@ use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
+
+const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -69,9 +73,9 @@ impl ZookeeperSource {
         let interval = tokio::time::interval(interval);
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
-        let endpoint = self.endpoint.as_str();
+        let endpoint = Cow::from(self.endpoint.clone());
         while let Some(_ts) = ticker.next().await {
-            let metrics = match fetch_stats(endpoint).await {
+            let metrics = match fetch_stats(endpoint.as_ref()).await {
                 Ok((version, state, peer_state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
                     metrics.extend_from_slice(&[
@@ -80,7 +84,7 @@ impl ZookeeperSource {
                             "",
                             1,
                             tags!(
-                                "instance" => endpoint
+                                INSTANCE_KEY => endpoint.clone()
                             ),
                         ),
                         Metric::gauge_with_tags(
@@ -89,7 +93,7 @@ impl ZookeeperSource {
                             1,
                             tags!(
                                 "version" => version,
-                                "instance" => endpoint
+                                INSTANCE_KEY => endpoint.clone()
                             ),
                         ),
                         Metric::gauge_with_tags(
@@ -98,7 +102,7 @@ impl ZookeeperSource {
                             1,
                             tags!(
                                 "state" => state,
-                                "instance" => endpoint
+                                INSTANCE_KEY => endpoint.clone()
                             ),
                         ),
                         Metric::gauge_with_tags(
@@ -107,7 +111,7 @@ impl ZookeeperSource {
                             1,
                             tags!(
                                 "state" => peer_state,
-                                "instance" => endpoint,
+                                INSTANCE_KEY => endpoint.clone(),
                             ),
                         ),
                     ]);
@@ -118,7 +122,7 @@ impl ZookeeperSource {
                             format!("{} value of mntr", key),
                             value,
                             tags!(
-                                "instance" => endpoint
+                                INSTANCE_KEY => endpoint.clone()
                             ),
                         ));
                     }
@@ -136,7 +140,7 @@ impl ZookeeperSource {
                         "",
                         0,
                         tags!(
-                            "instance" => endpoint
+                            INSTANCE_KEY => endpoint.clone()
                         ),
                     )]
                 }

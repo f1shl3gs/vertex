@@ -258,7 +258,7 @@ impl MetricNormalize for PrometheusMetricNormalize {
 mod tests {
     use super::*;
     use chrono::Utc;
-    use event::{tags, Metric};
+    use event::{btreemap, tags, Metric};
     use framework::sink::util::testing::build_test_server;
     use futures_util::StreamExt;
     use http::HeaderMap;
@@ -335,7 +335,7 @@ mod tests {
             vec![test_gauge(
                 "gauge_2",
                 32.0,
-                tags!("foo" => "bar", "bar" => "foo"),
+                btreemap!("foo" => "bar", "bar" => "foo"),
             )],
         )
         .await;
@@ -360,7 +360,7 @@ mod tests {
     async fn sends_with_authenticated() {
         let outputs = send_request(
             "auth:\n  strategy: basic\n  user: user\n  password: password",
-            vec![test_gauge("gauge_2", 32.0, tags!("foo" => "bar"))],
+            vec![test_gauge("gauge_2", 32.0, btreemap!("foo" => "bar"))],
         )
         .await;
 
@@ -383,7 +383,7 @@ mod tests {
     async fn send_x_scope_orgid_header() {
         let outputs = send_request(
             "tenant_id: tenant",
-            vec![test_gauge("gauge_3", 12.1, tags!())],
+            vec![test_gauge("gauge_3", 12.1, btreemap!())],
         )
         .await;
 
@@ -396,7 +396,7 @@ mod tests {
     async fn sends_templated_x_scope_orgid_header() {
         let outputs = send_request(
             "tenant_id: tenant_%Y",
-            vec![test_gauge("gauge_3", 12.3, tags!())],
+            vec![test_gauge("gauge_3", 12.3, btreemap!())],
         )
         .await;
 

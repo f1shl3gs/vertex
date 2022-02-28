@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::time::Duration;
 
@@ -484,7 +485,7 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
         .await?;
 
     for parts in values {
-        let event = parts[0].as_str();
+        let event = Cow::from(parts[0].clone());
         let spike_last = parts[1].parse::<f64>()?;
         let spike_duration = parts[2].parse::<f64>()?;
 
@@ -494,7 +495,7 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
                 "When the latency spike last occurred",
                 spike_last,
                 tags!(
-                    "event_name" => event
+                    "event_name" => event.clone()
                 ),
             ),
             Metric::gauge_with_tags(
@@ -567,7 +568,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
         }
 
         if instance_info_fields.contains(&key) {
-            instance_infos.insert(key, value);
+            instance_infos.insert(key.to_string(), value.to_string());
             continue;
         }
 
@@ -602,13 +603,15 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
             "Keyspace" => {
                 if let Ok((keys, expired, avg_ttl)) = parse_db_keyspace(key, value) {
                     let dbname = key.to_string();
+                    let key = Cow::from(key.to_string());
+
                     metrics.extend_from_slice(&[
                         Metric::gauge_with_tags(
                             "db_keys",
                             "Total number of keys by DB",
                             keys,
                             tags!(
-                                "db" => key
+                                "db" => key.clone()
                             ),
                         ),
                         Metric::gauge_with_tags(
@@ -616,7 +619,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                             "Total number of expiring keys by DB",
                             expired,
                             tags!(
-                                "db" => key
+                                "db" => key.clone()
                             ),
                         ),
                     ]);
@@ -673,17 +676,17 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
         }
     }
 
-    let role = instance_infos.get("slave_info").map_or("", |v| *v);
+    let role = instance_infos.get("slave_info").map_or("", |v| v);
 
     metrics.push(Metric::gauge_with_tags(
         "instance_info",
         "Information about the Redis instance",
         1,
         tags!(
-            "role" => instance_infos.get("role").map_or("", |v| v),
-            "redis_version" => instance_infos.get("redis_version").map_or("", |v| *v),
-            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| *v),
-            "os" => instance_infos.get("os").map_or("", |v| *v)
+            "role" => role.to_string(),
+            "redis_version" => instance_infos.get("redis_version").map_or("", |v| v),
+            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| v),
+            "os" => instance_infos.get("os").map_or("", |v| v)
         ),
     ));
 
@@ -766,8 +769,8 @@ fn handle_replication_metrics(
             "",
             v,
             tags!(
-                "master_host" => host,
-                "master_port" => port
+                "master_host" => host.to_string(),
+                "master_port" => port.to_string()
             ),
         )]);
     }
@@ -780,8 +783,8 @@ fn handle_replication_metrics(
                 "",
                 v,
                 tags!(
-                    "master_host" => host,
-                    "master_port" => port
+                    "master_host" => host.to_string(),
+                    "master_port" => port.to_string()
                 ),
             )]);
         }
@@ -797,9 +800,9 @@ fn handle_replication_metrics(
             "Offset of connected slave",
             offset,
             tags!(
-                "slave_ip" => ip,
-                "slave_port" => port,
-                "slave_state" => state
+                "slave_ip" => ip.to_string(),
+                "slave_port" => port.to_string(),
+                "slave_state" => state.to_string()
             ),
         ));
 
@@ -809,9 +812,9 @@ fn handle_replication_metrics(
                 "Lag of connected slave",
                 lag,
                 tags!(
-                    "slave_ip" => ip,
-                    "slave_port" => port,
-                    "slave_state" => state
+                    "slave_ip" => ip.to_string(),
+                    "slave_port" => port.to_string(),
+                    "slave_state" => state.to_string()
                 ),
             ))
         }
@@ -921,7 +924,7 @@ fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
         .ok_or(Error::InvalidCommandStats)?
         .parse::<f64>()?;
 
-    let cmd = key.strip_prefix("cmdstat_").unwrap();
+    let cmd = Cow::from(key.strip_prefix("cmdstat_").unwrap().to_string());
 
     Ok(vec![
         Metric::sum_with_tags(
@@ -929,7 +932,7 @@ fn handle_command_stats(key: &str, value: &str) -> Result<Vec<Metric>, Error> {
             "Total number of calls per command",
             calls,
             tags!(
-                "cmd" => cmd
+                "cmd" => cmd.clone()
             ),
         ),
         Metric::sum_with_tags(

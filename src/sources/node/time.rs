@@ -24,7 +24,7 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
             "System time zone offset in seconds",
             offset,
             tags!(
-                "time_zone" => tz.as_str(),
+                "time_zone" => tz,
             ),
         ),
     ])
