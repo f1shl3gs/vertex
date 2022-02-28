@@ -1,6 +1,6 @@
 # Vertex
 
-Inspired by `OpenTelemetry` and `Vector`(some code is copied from it).
+Vertex is a fork/rewrite/rebranding of [Vector](https://github.com/vectordotdev/vector), and it is inspired by [OpenTelemetry](https://opentelemetry.io/).
 
 ## Sources
 
