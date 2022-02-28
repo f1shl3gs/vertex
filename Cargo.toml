@@ -116,6 +116,7 @@ allocator-jemalloc = ["jemallocator"]
 sources = [
     "sources-bind",
     "sources-consul",
+    "sources-demo_logs",
     "sources-elasticsearch",
     "sources-exec",
     "sources-fluentd",
@@ -149,6 +150,7 @@ sources = [
 
 sources-bind = []
 sources-consul = []
+sources-demo_logs = []
 sources-exec = ["tokio/process"]
 sources-generator = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
