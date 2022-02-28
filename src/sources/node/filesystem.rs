@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::{ffi::CString, path::Path};
 use tokio::io::AsyncBufReadExt;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FileSystemConfig {
     #[serde(default = "default_mount_points_exclude")]
     #[serde(

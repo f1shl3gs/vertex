@@ -28,7 +28,6 @@ fn encode_value(value: crate::Value) -> Value {
         kind: match value {
             crate::Value::Bytes(bytes) => Some(value::Kind::Bytes(bytes)),
             crate::Value::Float(f) => Some(value::Kind::Float(f)),
-            crate::Value::Uint64(u) => Some(value::Kind::U64(u)),
             crate::Value::Int64(i) => Some(value::Kind::I64(i)),
             crate::Value::Boolean(b) => Some(value::Kind::Boolean(b)),
             crate::Value::Array(arr) => Some(value::Kind::Array(encode_array(arr))),
@@ -46,7 +45,6 @@ fn decode_value(input: Value) -> Option<crate::Value> {
     match input.kind {
         Some(value::Kind::Bytes(b)) => Some(crate::Value::Bytes(b)),
         Some(value::Kind::Float(f)) => Some(crate::Value::Float(f)),
-        Some(value::Kind::U64(u)) => Some(crate::Value::Uint64(u)),
         Some(value::Kind::I64(i)) => Some(crate::Value::Int64(i)),
         Some(value::Kind::Boolean(b)) => Some(crate::Value::Boolean(b)),
         Some(value::Kind::Array(a)) => decode_array(a.items),
@@ -260,6 +258,7 @@ impl From<crate::Event> for WithMetadata<Event> {
         match event {
             crate::Event::Log(log) => WithMetadata::<Log>::from(log).into(),
             crate::Event::Metric(metric) => WithMetadata::<Metric>::from(metric).into(),
+            crate::Event::Trace(_span) => todo!(),
         }
     }
 }

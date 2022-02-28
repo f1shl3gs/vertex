@@ -151,7 +151,7 @@ mod tests {
         type Error = TestError;
         type Response = String;
 
-        fn is_retriable_error(&self, err: &Self::Error) -> bool {
+        fn is_retriable_error(&self, _err: &Self::Error) -> bool {
             true
         }
     }

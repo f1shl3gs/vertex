@@ -1,3 +1,4 @@
+use bytes::{Bytes, BytesMut};
 use std::collections::BTreeMap;
 
 pub trait ByteSizeOf {
@@ -79,5 +80,17 @@ where
 {
     fn allocated_bytes(&self) -> usize {
         self.as_ref().map_or(0, ByteSizeOf::allocated_bytes)
+    }
+}
+
+impl ByteSizeOf for Bytes {
+    fn allocated_bytes(&self) -> usize {
+        self.len()
+    }
+}
+
+impl ByteSizeOf for BytesMut {
+    fn allocated_bytes(&self) -> usize {
+        self.len()
     }
 }

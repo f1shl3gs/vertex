@@ -117,8 +117,8 @@ impl Ntp {
             match client.synchronize(addr).await {
                 Ok(result) => {
                     let timestamp = Some(chrono::Utc::now());
-                    let clock_offset = result.clock_offset().num_milliseconds() as f64 / 1000.0;
-                    let rtt = result.round_trip_delay().num_milliseconds() as f64 / 1000.0;
+                    let clock_offset = result.clock_offset().as_secs_f64();
+                    let rtt = result.round_trip_delay().as_secs_f64();
                     let leap = result.leap_indicator() as u8 as f64;
 
                     let metrics = vec![

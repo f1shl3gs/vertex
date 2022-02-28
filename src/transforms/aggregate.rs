@@ -78,7 +78,6 @@ impl MetricConfig {
 
         let value = match event::log::get::get(fields, field)? {
             Value::Int64(i) => *i as f64,
-            Value::Uint64(u) => *u as f64,
             Value::Float(f) => *f,
             Value::Bytes(b) => {
                 if parse_value {

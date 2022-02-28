@@ -1,0 +1,14 @@
+sources:
+  hotrod:
+    type: jaeger
+    protocols:
+      thrift_compact:
+        max_packet_size: 65000
+
+sinks:
+  jaeger:
+    type: jaeger
+    inputs:
+      - hotrod
+    propagator: agent
+    address: 127.0.0.1:7831

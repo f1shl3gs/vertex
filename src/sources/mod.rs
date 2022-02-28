@@ -8,6 +8,7 @@ mod consul;
 mod demo_logs;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
+mod exec;
 #[cfg(feature = "sources-fluentd")]
 mod fluentd;
 #[cfg(feature = "sources-generator")]
@@ -18,6 +19,10 @@ pub mod haproxy;
 mod internal_logs;
 #[cfg(feature = "sources-internal_metrics")]
 mod internal_metrics;
+#[cfg(feature = "sources-internal_traces")]
+mod internal_traces;
+#[cfg(feature = "jaeger")]
+mod jaeger;
 #[cfg(all(target_os = "linux", feature = "sources-journald"))]
 mod journald;
 #[cfg(feature = "sources-kafka")]

@@ -385,6 +385,7 @@ mod tests {
             EventsSent {
                 count: 1,
                 byte_size: 1,
+                output: None,
             }
         }
     }
@@ -457,7 +458,7 @@ mod tests {
             Poll::Ready(Ok(()))
         }
 
-        fn call(&mut self, req: DelayRequest) -> Self::Future {
+        fn call(&mut self, _req: DelayRequest) -> Self::Future {
             let permit = self
                 .permit
                 .take()

@@ -216,10 +216,6 @@ impl InternalEvent for KafkaEventReceived {
     }
 }
 
-pub struct KafkaEventFailed {
-    pub error: rdkafka::error::KafkaError,
-}
-
 pub struct KafkaOffsetUpdateFailed {
     pub error: rdkafka::error::KafkaError,
 }

@@ -29,7 +29,7 @@ where
 
 pub struct Map<S, R1, R2> {
     f: Arc<dyn Fn(R1) -> R2 + Send + Sync + 'static>,
-    inner: S,
+    pub(crate) inner: S,
 }
 
 impl<S, R1, R2> Service<R1> for Map<S, R1, R2>

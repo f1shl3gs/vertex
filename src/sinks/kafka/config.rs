@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
-use event::encoding::{EncodingConfig, StandardEncodings};
 use framework::batch::{BatchConfig, NoDefaultBatchSettings};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
 };
+use framework::sink::util::encoding::{EncodingConfig, StandardEncodings};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rdkafka::ClientConfig;
@@ -283,8 +283,8 @@ encoding:
 "#,
             BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2),
             KafkaSaslConfig::generate_commented_with_indent(2),
-            humanize::duration_to_string(&default_socket_timeout()),
-            humanize::duration_to_string(&default_message_timeout()),
+            humanize::duration(&default_socket_timeout()),
+            humanize::duration(&default_message_timeout()),
         )
     }
 }

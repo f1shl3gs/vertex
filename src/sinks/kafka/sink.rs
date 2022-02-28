@@ -1,9 +1,11 @@
 use std::time::Duration;
 
 use buffers::Acker;
-use event::encoding::{EncodingConfig, StandardEncodings};
 use event::Event;
-use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::util::{
+    builder::SinkBuilderExt,
+    encoding::{EncodingConfig, StandardEncodings},
+};
 use framework::template::{Template, TemplateParseError};
 use framework::StreamSink;
 use futures::{stream::BoxStream, StreamExt};

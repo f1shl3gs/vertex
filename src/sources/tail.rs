@@ -173,7 +173,7 @@ include:
             "#,
             humanize::bytes(default_max_line_bytes()),
             humanize::bytes(default_max_read_bytes()),
-            humanize::duration_to_string(&default_glob_interval()),
+            humanize::duration(&default_glob_interval()),
         )
     }
 }

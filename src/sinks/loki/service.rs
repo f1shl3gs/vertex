@@ -1,3 +1,4 @@
+use bytes::Bytes;
 use std::task::{Context, Poll};
 
 use buffers::Ackable;
@@ -24,7 +25,7 @@ pub enum LokiError {
 pub struct LokiRequest {
     pub batch_size: usize,
     pub finalizers: EventFinalizers,
-    pub payload: Vec<u8>,
+    pub payload: Bytes,
     pub tenant: Option<String>,
     pub events_byte_size: usize,
 }
@@ -56,6 +57,7 @@ impl DriverResponse for LokiResponse {
         EventsSent {
             count: self.batch_size,
             byte_size: self.events_byte_size,
+            output: None,
         }
     }
 }

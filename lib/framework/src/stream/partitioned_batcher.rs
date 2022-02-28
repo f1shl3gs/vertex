@@ -482,7 +482,7 @@ mod tests {
             self.valid_keys.insert(key);
         }
 
-        fn poll_expired(&mut self, cx: &mut Context) -> Poll<Option<u8>> {
+        fn poll_expired(&mut self, _cx: &mut Context) -> Poll<Option<u8>> {
             match self.responses.pop() {
                 Some(Poll::Pending) => unreachable!(),
                 None | Some(Poll::Ready(None)) => Poll::Ready(None),

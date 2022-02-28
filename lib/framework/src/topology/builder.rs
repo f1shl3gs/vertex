@@ -667,7 +667,6 @@ fn filter_event_type(event: &Event, data_type: DataType) -> bool {
         DataType::Any => true,
         DataType::Log => matches!(event, Event::Log(_)),
         DataType::Metric => matches!(event, Event::Metric(_)),
-        // DataType::Trace => matches!(event, Event::)
-        _ => panic!("unknown event type"),
+        DataType::Trace => matches!(event, Event::Trace(_)),
     }
 }

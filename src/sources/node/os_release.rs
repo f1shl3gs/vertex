@@ -78,18 +78,13 @@ async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error>
     let mut envs = BTreeMap::new();
 
     for line in content.lines() {
-        match tuple((
+        if let Ok((_, (key, _, value))) = tuple((
             take_while(|c: char| c.is_uppercase() || c == '_'),
             tag("="),
             alt((parse_quoted, parse_none_quoted)),
         ))(line)
         {
-            Ok((_, (key, _, value))) => {
-                envs.insert(key.to_string(), value.to_string());
-            }
-            _ => {
-                // do nothing for now
-            }
+            envs.insert(key.to_string(), value.to_string());
         }
     }
 

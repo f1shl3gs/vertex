@@ -1,23 +1,31 @@
 mod concurrency;
 mod map;
 
+use std::marker::PhantomData;
+use std::sync::Arc;
 // re-export
 pub use concurrency::*;
+pub use map::Map;
 
 use std::time::Duration;
 
+use crate::batch::Batch;
+use buffers::Acker;
 use serde::{Deserialize, Serialize};
+use tower::layer::util::Stack;
 use tower::limit::RateLimit;
 use tower::retry::Retry;
 use tower::timeout::Timeout;
-use tower::{Service, ServiceBuilder};
+use tower::util::BoxService;
+use tower::{Layer, Service, ServiceBuilder};
 
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
 use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
 use crate::sink::util::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use crate::sink::util::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use crate::sink::util::retries::{FixedRetryPolicy, RetryLogic};
-use crate::sink::util::sink::Response;
+use crate::sink::util::service::map::MapLayer;
+use crate::sink::util::sink::{BatchSink, PartitionBatchSink, Response, ServiceLogic};
 
 pub const CONCURRENCY_DEFAULT: Concurrency = Concurrency::None;
 pub const RATE_LIMIT_DURATION_DEFAULT: Duration = Duration::from_secs(1);
@@ -28,6 +36,8 @@ pub const RETRY_INITIAL_BACKOFF_DEFAULT: Duration = Duration::from_secs(1);
 pub const TIMEOUT_DEFAULT: Duration = Duration::from_secs(60);
 
 pub type Svc<S, L> = RateLimit<AdaptiveConcurrencyLimit<Retry<FixedRetryPolicy<L>, Timeout<S>>, L>>;
+pub type BatchedSink<S, B, RL, SL> = BatchSink<Svc<S, RL>, B, SL>;
+pub type PartitionSink<S, B, RL, K, SL> = PartitionBatchSink<Svc<S, RL>, B, K, SL>;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -196,5 +206,101 @@ impl RequestSettings {
             .retry(policy)
             .timeout(self.timeout)
             .service(service)
+    }
+
+    pub fn batch_sink<B, RL, S, SL>(
+        &self,
+        retry_logic: RL,
+        service: S,
+        batch: B,
+        batch_timeout: Duration,
+        acker: Acker,
+        service_logic: SL,
+    ) -> BatchedSink<S, B, RL, SL>
+    where
+        B: Batch,
+        RL: RetryLogic<Response = S::Response>,
+        S: Service<B::Output> + Clone + Send + 'static,
+        S::Error: Into<crate::Error> + Send + Sync + 'static,
+        S::Response: Send + Response,
+        S::Future: Send + 'static,
+        B::Output: Send + Clone + 'static,
+        SL: ServiceLogic<Response = S::Response> + Send + 'static,
+    {
+        BatchSink::new_with_logic(
+            self.service(retry_logic, service),
+            batch,
+            batch_timeout,
+            acker,
+            service_logic,
+        )
+    }
+}
+
+pub trait ServiceBuilderExt<L> {
+    fn map<R1, R2, F>(self, f: F) -> ServiceBuilder<Stack<MapLayer<R1, R2>, L>>
+    where
+        F: Fn(R1) -> R2 + Send + Sync + 'static;
+
+    fn settings<RL, R>(
+        self,
+        settings: RequestSettings,
+        retry_logic: RL,
+    ) -> ServiceBuilder<Stack<RequestLayer<RL, R>, L>>;
+}
+
+impl<L> ServiceBuilderExt<L> for ServiceBuilder<L> {
+    fn map<R1, R2, F>(self, f: F) -> ServiceBuilder<Stack<MapLayer<R1, R2>, L>>
+    where
+        F: Fn(R1) -> R2 + Send + Sync + 'static,
+    {
+        self.layer(MapLayer::new(Arc::new(f)))
+    }
+
+    fn settings<RL, R>(
+        self,
+        settings: RequestSettings,
+        retry_logic: RL,
+    ) -> ServiceBuilder<Stack<RequestLayer<RL, R>, L>> {
+        self.layer(RequestLayer {
+            settings,
+            retry_logic,
+            _req: PhantomData,
+        })
+    }
+}
+
+#[derive(Clone, Debug)]
+pub struct RequestLayer<L, R> {
+    settings: RequestSettings,
+    retry_logic: L,
+    _req: PhantomData<R>,
+}
+
+impl<S, RL, R> Layer<S> for RequestLayer<RL, R>
+where
+    S: Service<R> + Send + Clone + 'static,
+    S::Response: Send + 'static,
+    S::Error: Into<crate::Error> + Send + Sync + 'static,
+    S::Future: Send + 'static,
+    RL: RetryLogic<Response = S::Response> + Send + 'static,
+    R: Clone + Send + 'static,
+{
+    type Service = BoxService<R, S::Response, crate::Error>;
+
+    fn layer(&self, inner: S) -> Self::Service {
+        let policy = self.settings.retry_policy(self.retry_logic.clone());
+
+        let l = ServiceBuilder::new()
+            .concurrency_limit(self.settings.concurrency.unwrap_or(5))
+            .rate_limit(
+                self.settings.rate_limit_num,
+                self.settings.rate_limit_duration,
+            )
+            .retry(policy)
+            .timeout(self.settings.timeout)
+            .service(inner);
+
+        BoxService::new(l)
     }
 }

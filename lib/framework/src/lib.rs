@@ -1,3 +1,5 @@
+#![allow(clippy::type_complexity)]
+
 pub mod async_read;
 pub mod batch;
 pub mod codecs;

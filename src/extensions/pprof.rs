@@ -6,6 +6,7 @@ use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription,
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
 use futures::FutureExt;
+use http::StatusCode;
 use hyper::{
     service::{make_service_fn, service_fn},
     Body, Request, Response, Server,
@@ -75,12 +76,21 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         Ok(report) => {
             let file = std::fs::File::create("flamegraph.svg").unwrap();
             report.flamegraph(file).unwrap();
+
+            Ok(Response::new(Body::from(vec![])))
         }
 
-        Err(_) => {}
-    }
+        Err(err) => {
+            error!(message = "Build report failed", ?err);
 
-    Ok(Response::new(Body::from(vec![])))
+            let resp = Response::builder()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .body(Body::empty())
+                .unwrap();
+
+            Ok(resp)
+        }
+    }
 }
 
 impl GenerateConfig for PProfConfig {

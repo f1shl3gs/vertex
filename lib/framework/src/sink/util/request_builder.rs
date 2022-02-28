@@ -1,16 +1,17 @@
 use std::io;
 
-use event::encoding::Encoder;
+use bytes::Bytes;
 
 use super::buffer::Compression;
 use super::compressor::Compressor;
+use super::encoding::Encoder;
 
 /// Generalized interface for defining how a batch of events will be turned into a request.
 pub trait RequestBuilder<Input> {
     type Metadata;
     type Events;
     type Encoder: Encoder<Self::Events>;
-    type Payload: From<Vec<u8>>;
+    type Payload: From<Bytes>;
     type Request;
     type Error: From<io::Error>;
 
@@ -30,7 +31,8 @@ pub trait RequestBuilder<Input> {
         let mut compressor = Compressor::from(self.compression());
         let _ = self.encoder().encode(events, &mut compressor)?;
 
-        Ok(compressor.into_inner().into())
+        let payload = compressor.into_inner().freeze();
+        Ok(payload.into())
     }
 
     /// Builds a request for the given metadata and payload

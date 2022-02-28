@@ -40,6 +40,18 @@ pub struct BatchSize<B> {
     _b: PhantomData<B>,
 }
 
+impl<B> Clone for BatchSize<B> {
+    fn clone(&self) -> Self {
+        Self {
+            bytes: self.bytes,
+            events: self.events,
+            _b: PhantomData,
+        }
+    }
+}
+
+impl<B> Copy for BatchSize<B> {}
+
 impl<B> BatchSize<B> {
     pub const fn const_default() -> Self {
         BatchSize {

@@ -1,6 +1,8 @@
 use std::any::TypeId;
 use std::sync::{Mutex, MutexGuard};
 
+use event::trace::generator::IdGenerator;
+use event::trace::{RngGenerator, Span, SpanId, TraceId};
 use event::LogRecord;
 use metrics_tracing_context::MetricsLayer;
 use once_cell::sync::OnceCell;
@@ -10,6 +12,7 @@ use tracing::span::{Attributes, Record};
 use tracing::subscriber::Interest;
 use tracing::{dispatcher::set_global_default, Dispatch, Event, Id, Metadata, Subscriber};
 use tracing_core::span::Current;
+use tracing_internal::PreSampledTracer;
 use tracing_limit::RateLimitedLayer;
 use tracing_log::LogTracer;
 use tracing_subscriber::layer::SubscriberExt;
@@ -22,6 +25,8 @@ static BUFFER: OnceCell<Mutex<Option<Vec<LogRecord>>>> = OnceCell::new();
 /// SENDER holds the sender/receiver handle that will received a copy of all the
 /// internal log events *after* the topology has been initialized
 static SENDER: OnceCell<Sender<LogRecord>> = OnceCell::new();
+
+static SPAN_SENDER: OnceCell<Sender<Span>> = OnceCell::new();
 
 pub struct TraceSubscription {
     pub buffer: Vec<LogRecord>,
@@ -36,6 +41,18 @@ pub fn subscribe() -> TraceSubscription {
 
     let receiver = SENDER.get_or_init(|| broadcast::channel(100).0).subscribe();
     TraceSubscription { buffer, receiver }
+}
+
+pub struct SpanSubscription {
+    pub receiver: Receiver<Span>,
+}
+
+pub fn subscribe_spans() -> SpanSubscription {
+    let receiver = SPAN_SENDER
+        .get_or_init(|| broadcast::channel(100).0)
+        .subscribe();
+
+    SpanSubscription { receiver }
 }
 
 fn early_buffer() -> MutexGuard<'static, Option<Vec<LogRecord>>> {
@@ -130,6 +147,26 @@ impl<S: Subscriber + 'static> Subscriber for BroadcastSubscriber<S> {
     }
 }
 
+#[derive(Default)]
+struct InternalTracer {
+    gen: RngGenerator,
+}
+
+impl PreSampledTracer for InternalTracer {
+    fn export(&self, span: Span) {
+        let sender = SPAN_SENDER.get_or_init(|| broadcast::channel(100).0);
+        let _ = sender.send(span);
+    }
+
+    fn new_trace_id(&self) -> TraceId {
+        self.gen.new_trace_id()
+    }
+
+    fn new_span_id(&self) -> SpanId {
+        self.gen.new_span_id()
+    }
+}
+
 pub fn init(color: bool, json: bool, levels: &str) {
     let _ = BUFFER.set(Mutex::new(Some(vec![])));
 
@@ -170,7 +207,11 @@ pub fn init(color: bool, json: bool, levels: &str) {
             .flatten_event(true)
             .with_test_writer(); // ensures output is captured
 
-        let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
+        let tracer = InternalTracer::default();
+        let tl = tracing_internal::TracingLayer::new(tracer);
+
+        let subscriber = subscriber.with(RateLimitedLayer::new(formatter)).with(tl);
+
         if metrics_layer_enabled {
             let subscriber = subscriber.with(MetricsLayer::new());
             Dispatch::new(BroadcastSubscriber { subscriber })
@@ -188,7 +229,10 @@ pub fn init(color: bool, json: bool, levels: &str) {
             .with_ansi(color)
             .with_test_writer(); // ensures output is captured
 
-        let subscriber = subscriber.with(RateLimitedLayer::new(formatter));
+        let tracer = InternalTracer::default();
+        let tl = tracing_internal::TracingLayer::new(tracer);
+
+        let subscriber = subscriber.with(RateLimitedLayer::new(formatter)).with(tl);
 
         if metrics_layer_enabled {
             let subscriber = subscriber.with(MetricsLayer::new());

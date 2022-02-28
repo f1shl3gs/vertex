@@ -1,9 +1,6 @@
 use bytes::Bytes;
-use event::encoding::Encoder;
-use event::{
-    encoding::{EncodingConfig, StandardEncodings},
-    Event, Finalizable, Value,
-};
+use event::{Event, Finalizable, Value};
+use framework::sink::util::encoding::{Encoder, EncodingConfig, StandardEncodings};
 use framework::template::Template;
 use internal::emit;
 use log_schema::LogSchema;
@@ -48,6 +45,7 @@ fn get_key(event: &Event, key_field: &Option<String>) -> Option<Bytes> {
     key_field.as_ref().and_then(|key_field| match event {
         Event::Log(log) => log.get_field(key_field).map(|v| v.as_bytes()),
         Event::Metric(metric) => metric.tag_value(key_field).map(|v| v.to_string().into()),
+        Event::Trace(_span) => unreachable!(),
     })
 }
 
@@ -58,6 +56,7 @@ fn get_timestamp_millis(event: &Event, log_schema: &'static LogSchema) -> Option
             .and_then(|v| v.as_timestamp())
             .copied(),
         Event::Metric(metric) => metric.timestamp,
+        Event::Trace(_span) => unreachable!(),
     }
     .map(|ts| ts.timestamp_millis())
 }

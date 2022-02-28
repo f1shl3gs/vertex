@@ -1,14 +1,13 @@
 pub mod decoding;
-mod encoding;
-mod format;
-pub mod framing;
+pub mod encoding;
 mod ready_frames;
 
 // re-export
 pub use decoding::Decoder;
-pub use format::bytes::{BytesDeserializer, BytesDeserializerConfig};
-pub use format::syslog::{SyslogDeserializer, SyslogDeserializerConfig};
-pub use framing::bytes::{BytesDecoder, BytesDecoderConfig};
+pub use decoding::{
+    BytesDecoderConfig, BytesDeserializerConfig, NewlineDelimitedDecoderConfig,
+    OctetCountingDecoder, SyslogDeserializer,
+};
 pub use ready_frames::ReadyFrames;
 
 /// An error that occurs while decoding a stream

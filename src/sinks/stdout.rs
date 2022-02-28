@@ -3,8 +3,8 @@ use std::io::Write;
 
 use async_trait::async_trait;
 use buffers::Acker;
-use event::encoding::{EncodingConfig, EncodingConfiguration};
 use event::Event;
+use framework::sink::util::encoding::{EncodingConfig, EncodingConfiguration};
 use framework::{
     config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
     Healthcheck, Sink, StreamSink,
@@ -91,6 +91,18 @@ fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option
                 let f = format!("{:?}", metric);
                 Some(f)
             }
+        },
+        Event::Trace(trace) => match encoding.codec() {
+            Encoding::Json => serde_json::to_string(&trace)
+                .map_err(|err| {
+                    error!(
+                        message = "Error encoding json",
+                        %err
+                    );
+                })
+                .ok(),
+
+            Encoding::Text => Some(format!("{:?}", trace)),
         },
     }
 }
