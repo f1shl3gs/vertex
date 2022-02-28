@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1646046629738,
+  "lastUpdate": 1646046660058,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8026,6 +8026,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 55.826,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "60c6ccd66f84d61f32ff44db71e4c8e85b8321ff",
+          "message": "Merge pull request #217 from f1shl3gs/downgrade_toolchain_to_1_58_1\n\ndowngrade toolchain to 1.58.1 & cleanup",
+          "timestamp": "2022-02-28T19:05:04+08:00",
+          "tree_id": "82246d6af96c56b4092e2784edd324fd51e2e0c9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/60c6ccd66f84d61f32ff44db71e4c8e85b8321ff"
+        },
+        "date": 1646046659036,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 26.537,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 71.777,
             "unit": "ns/op"
           }
         ]
