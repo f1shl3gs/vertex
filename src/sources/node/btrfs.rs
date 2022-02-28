@@ -1,8 +1,10 @@
-use super::{read_into, read_to_string, Error, ErrorContext};
-use event::{tags, Metric};
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
+
+use event::{tags, Metric};
+
+use super::{read_into, read_to_string, Error, ErrorContext};
 
 const SECTOR_SIZE: u64 = 512;
 
@@ -131,8 +133,8 @@ fn get_allocation_stats(typ: &str, stats: &AllocationStats) -> Vec<Metric> {
     )];
 
     // Add all layout statistics
-    for (layout, s) in stats.layouts {
-        let mode = Cow::from(layout);
+    for (layout, s) in &stats.layouts {
+        let mode = Cow::from(layout.clone());
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(

@@ -132,11 +132,13 @@ impl TimeSeries {
     }
 
     fn make_labels(
-        mut attrs: &Attributes,
+        attrs: &Attributes,
         name: &str,
         suffix: Option<&str>,
         extra: Option<(&str, String)>,
     ) -> Labels {
+        let mut attrs = attrs.clone();
+
         // Each Prometheus metric is grouped by its labels, which contains all the labels
         // from the source metric, plus the name label for the actual metric name. For
         // convenience below, an optional extra tag is added.

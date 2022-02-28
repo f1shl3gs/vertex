@@ -8,6 +8,7 @@ mod slave_status;
 #[cfg(all(test, feature = "integration-tests-mysql"))]
 mod integration_tests;
 
+use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
 use event::{Event, Metric};
@@ -203,11 +204,11 @@ impl SourceConfig for MysqldConfig {
 
         Ok(Box::pin(async move {
             let pool = MySqlPool::connect_lazy_with(options);
-            let instance = instance.as_str();
+            let instance = Cow::from(instance);
 
             while ticker.next().await.is_some() {
                 let start = Instant::now();
-                let result = gather(instance, pool.clone()).await;
+                let result = gather(instance.as_ref(), pool.clone()).await;
                 let elapsed = start.elapsed().as_secs_f64();
                 let up = result.is_ok();
 
@@ -220,7 +221,7 @@ impl SourceConfig for MysqldConfig {
                 let now = chrono::Utc::now();
                 let mut stream = futures::stream::iter(metrics).map(|mut m| {
                     m.timestamp = Some(now);
-                    m.insert_tag("instance", instance);
+                    m.insert_tag("instance", instance.clone());
                     Event::Metric(m)
                 });
 

@@ -655,13 +655,15 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
     for i in 0..dbcount {
         let name = format!("db{}", i);
         if handled_dbs.get(name.as_str()).is_none() {
+            let name = Cow::from(name);
+
             metrics.extend_from_slice(&[
                 Metric::gauge_with_tags(
                     "db_keys",
                     "Total number of keys by DB",
                     0,
                     tags!(
-                        "db" => name.as_str()
+                        "db" => name.clone()
                     ),
                 ),
                 Metric::gauge_with_tags(
@@ -669,7 +671,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
                     "Total number of expiring keys by DB",
                     0,
                     tags!(
-                        "db" => name.as_str()
+                        "db" => name
                     ),
                 ),
             ])
@@ -684,9 +686,9 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
         1,
         tags!(
             "role" => role.to_string(),
-            "redis_version" => instance_infos.get("redis_version").map_or("", |v| v),
-            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| v),
-            "os" => instance_infos.get("os").map_or("", |v| v)
+            "redis_version" => instance_infos.get("redis_version").map_or("", |v| v).to_string(),
+            "redis_build_id" => instance_infos.get("redis_mode").map_or("", |v| v).to_string(),
+            "os" => instance_infos.get("os").map_or("", |v| v).to_string()
         ),
     ));
 
