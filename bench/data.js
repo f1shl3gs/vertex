@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1645947624398,
+  "lastUpdate": 1646020183532,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20134,6 +20134,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1096,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "707eed7d8a7775fb5bbd527186545b78d2ccf42d",
+          "message": "Merge pull request #218 from f1shl3gs/update\n\nupdate",
+          "timestamp": "2022-02-28T11:23:16+08:00",
+          "tree_id": "af3732e7b11d7bf8114a06bc181cc85b8d4d186e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/707eed7d8a7775fb5bbd527186545b78d2ccf42d"
+        },
+        "date": 1646020182033,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1354,
             "unit": "s"
           }
         ]
