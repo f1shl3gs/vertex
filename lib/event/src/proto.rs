@@ -1,20 +1,22 @@
 include!(concat!(env!("OUT_DIR"), "/event.rs"));
 
 use chrono::TimeZone;
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use tracing::error;
 
+use crate::attributes::Array;
 use crate::metadata::WithMetadata;
 use crate::proto::event_wrapper::Event;
-use crate::{LogRecord, MetricValue};
+use crate::{Attributes, Key, LogRecord, MetricValue};
 
-fn encode_array(items: Vec<crate::Value>) -> ValueArray {
+fn encode_array(items: Vec<crate::log::Value>) -> ValueArray {
     ValueArray {
         items: items.into_iter().map(encode_value).collect(),
     }
 }
 
-fn encode_map(fields: BTreeMap<String, crate::Value>) -> ValueMap {
+fn encode_map(fields: BTreeMap<String, crate::log::Value>) -> ValueMap {
     ValueMap {
         map: fields
             .into_iter()
@@ -23,36 +25,38 @@ fn encode_map(fields: BTreeMap<String, crate::Value>) -> ValueMap {
     }
 }
 
-fn encode_value(value: crate::Value) -> Value {
+fn encode_value(value: crate::log::Value) -> Value {
     Value {
         kind: match value {
-            crate::Value::Bytes(bytes) => Some(value::Kind::Bytes(bytes)),
-            crate::Value::Float(f) => Some(value::Kind::Float(f)),
-            crate::Value::Int64(i) => Some(value::Kind::I64(i)),
-            crate::Value::Boolean(b) => Some(value::Kind::Boolean(b)),
-            crate::Value::Array(arr) => Some(value::Kind::Array(encode_array(arr))),
-            crate::Value::Map(m) => Some(value::Kind::Map(encode_map(m))),
-            crate::Value::Timestamp(ts) => Some(value::Kind::Timestamp(prost_types::Timestamp {
-                seconds: ts.timestamp(),
-                nanos: ts.timestamp_subsec_nanos() as i32,
-            })),
-            crate::Value::Null => Some(value::Kind::Null(0)),
+            crate::log::Value::Bytes(bytes) => Some(value::Kind::Bytes(bytes)),
+            crate::log::Value::Float(f) => Some(value::Kind::Float(f)),
+            crate::log::Value::Int64(i) => Some(value::Kind::I64(i)),
+            crate::log::Value::Boolean(b) => Some(value::Kind::Boolean(b)),
+            crate::log::Value::Array(arr) => Some(value::Kind::Array(encode_array(arr))),
+            crate::log::Value::Map(m) => Some(value::Kind::Map(encode_map(m))),
+            crate::log::Value::Timestamp(ts) => {
+                Some(value::Kind::Timestamp(prost_types::Timestamp {
+                    seconds: ts.timestamp(),
+                    nanos: ts.timestamp_subsec_nanos() as i32,
+                }))
+            }
+            crate::log::Value::Null => Some(value::Kind::Null(0)),
         },
     }
 }
 
-fn decode_value(input: Value) -> Option<crate::Value> {
+fn decode_value(input: Value) -> Option<crate::log::Value> {
     match input.kind {
-        Some(value::Kind::Bytes(b)) => Some(crate::Value::Bytes(b)),
-        Some(value::Kind::Float(f)) => Some(crate::Value::Float(f)),
-        Some(value::Kind::I64(i)) => Some(crate::Value::Int64(i)),
-        Some(value::Kind::Boolean(b)) => Some(crate::Value::Boolean(b)),
+        Some(value::Kind::Bytes(b)) => Some(crate::log::Value::Bytes(b)),
+        Some(value::Kind::Float(f)) => Some(crate::log::Value::Float(f)),
+        Some(value::Kind::I64(i)) => Some(crate::log::Value::Int64(i)),
+        Some(value::Kind::Boolean(b)) => Some(crate::log::Value::Boolean(b)),
         Some(value::Kind::Array(a)) => decode_array(a.items),
         Some(value::Kind::Map(m)) => decode_map(m.map),
-        Some(value::Kind::Timestamp(ts)) => Some(crate::Value::Timestamp(
+        Some(value::Kind::Timestamp(ts)) => Some(crate::log::Value::Timestamp(
             chrono::Utc.timestamp(ts.seconds, ts.nanos as u32),
         )),
-        Some(value::Kind::Null(_)) => Some(crate::Value::Null),
+        Some(value::Kind::Null(_)) => Some(crate::log::Value::Null),
         None => {
             error!(message = "Encode event contains unknown value kind.");
             None
@@ -60,8 +64,8 @@ fn decode_value(input: Value) -> Option<crate::Value> {
     }
 }
 
-fn decode_map(fields: BTreeMap<String, Value>) -> Option<crate::Value> {
-    let mut accum: BTreeMap<String, crate::Value> = BTreeMap::new();
+fn decode_map(fields: BTreeMap<String, Value>) -> Option<crate::log::Value> {
+    let mut accum: BTreeMap<String, crate::log::Value> = BTreeMap::new();
 
     for (key, value) in fields {
         match decode_value(value) {
@@ -72,10 +76,10 @@ fn decode_map(fields: BTreeMap<String, Value>) -> Option<crate::Value> {
         }
     }
 
-    Some(crate::Value::Map(accum))
+    Some(crate::log::Value::Map(accum))
 }
 
-fn decode_array(items: Vec<Value>) -> Option<crate::Value> {
+fn decode_array(items: Vec<Value>) -> Option<crate::log::Value> {
     let mut accum = Vec::with_capacity(items.len());
 
     for value in items {
@@ -85,7 +89,82 @@ fn decode_array(items: Vec<Value>) -> Option<crate::Value> {
         }
     }
 
-    Some(crate::Value::Array(accum))
+    Some(crate::log::Value::Array(accum))
+}
+
+impl From<TagValueArray> for crate::attributes::Array {
+    fn from(array: TagValueArray) -> Self {
+        match array.kind {
+            0 => crate::attributes::Array::Bool(array.bool),
+            1 => crate::attributes::Array::I64(array.i64),
+            2 => crate::attributes::Array::F64(array.f64),
+            3 => {
+                crate::attributes::Array::String(array.string.into_iter().map(Cow::from).collect())
+            }
+            _ => unreachable!(), // TryFrom is what we need
+        }
+    }
+}
+
+impl From<crate::attributes::Array> for TagValueArray {
+    fn from(array: Array) -> Self {
+        match array {
+            Array::Bool(b) => TagValueArray {
+                kind: 0,
+                bool: b,
+                ..Default::default()
+            },
+            Array::I64(i) => TagValueArray {
+                kind: 1,
+                i64: i,
+                ..Default::default()
+            },
+            Array::F64(f) => TagValueArray {
+                kind: 2,
+                f64: f,
+                ..Default::default()
+            },
+            Array::String(s) => TagValueArray {
+                kind: 3,
+                string: s.into_iter().map(|s| s.to_string()).collect(),
+                ..Default::default()
+            },
+        }
+    }
+}
+
+impl From<TagValue> for crate::attributes::Value {
+    fn from(value: TagValue) -> Self {
+        match value.value.unwrap() {
+            tag_value::Value::Bool(b) => crate::attributes::Value::Bool(b),
+            tag_value::Value::I64(i) => crate::attributes::Value::I64(i),
+            tag_value::Value::F64(f) => crate::attributes::Value::F64(f),
+            tag_value::Value::String(s) => crate::attributes::Value::String(Cow::from(s)),
+            tag_value::Value::Array(a) => crate::attributes::Value::Array(a.into()),
+        }
+    }
+}
+
+impl From<crate::attributes::Value> for TagValue {
+    fn from(value: crate::attributes::Value) -> Self {
+        let tv = match value {
+            crate::attributes::Value::Bool(b) => tag_value::Value::Bool(b),
+            crate::attributes::Value::I64(i) => tag_value::Value::I64(i),
+            crate::attributes::Value::F64(f) => tag_value::Value::F64(f),
+            crate::attributes::Value::String(s) => tag_value::Value::String(s.to_string()),
+            crate::attributes::Value::Array(a) => tag_value::Value::Array(a.into()),
+        };
+
+        TagValue { value: Some(tv) }
+    }
+}
+
+impl From<BTreeMap<String, TagValue>> for Attributes {
+    fn from(m: BTreeMap<String, TagValue>) -> Self {
+        m.into_iter()
+            .map(|(k, v)| (Key::from(k), crate::attributes::Value::from(v)))
+            .collect()
+    }
 }
 
 impl From<Log> for crate::LogRecord {
@@ -96,7 +175,7 @@ impl From<Log> for crate::LogRecord {
             .filter_map(|(k, v)| decode_value(v).map(|value| (k, value)))
             .collect::<BTreeMap<_, _>>();
 
-        crate::LogRecord::new(log.tags, fields)
+        crate::LogRecord::new(log.tags.into(), fields)
     }
 }
 
@@ -157,7 +236,11 @@ impl From<crate::Metric> for WithMetadata<Metric> {
 
         let data = Metric {
             name: series.name,
-            tags: series.tags,
+            tags: series
+                .tags
+                .into_iter()
+                .map(|(k, v)| (k.to_string(), TagValue::from(v)))
+                .collect(),
             description: "".to_string(),
             unit: "".to_string(),
             timestamp,
@@ -216,6 +299,11 @@ impl From<Metric> for crate::Metric {
             },
         };
 
+        let tags = tags
+            .into_iter()
+            .map(|(k, v)| (Key::from(k), crate::attributes::Value::from(v)))
+            .collect();
+
         crate::Metric::new(name, Some(description), tags, timestamp.unwrap(), value)
     }
 }
@@ -245,6 +333,11 @@ impl From<crate::LogRecord> for WithMetadata<Log> {
             .into_iter()
             .map(|(k, v)| (k, encode_value(v)))
             .collect::<BTreeMap<_, _>>();
+
+        let tags = tags
+            .into_iter()
+            .map(|(k, v)| (k.to_string(), TagValue::from(v)))
+            .collect();
 
         Self {
             data: Log { tags, fields },

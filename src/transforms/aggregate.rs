@@ -5,7 +5,8 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
-use event::{Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue, Value};
+use event::attributes::Attributes;
+use event::{log::Value, Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     TransformConfig, TransformContext, TransformDescription,
@@ -89,20 +90,20 @@ impl MetricConfig {
             _ => return None,
         };
 
-        let mut t = BTreeMap::new();
+        let mut attrs = Attributes::new();
         for (k, v) in tags {
             let value = match event::log::get::get(fields, v) {
                 Some(value) => value.to_string_lossy(),
                 None => String::new(),
             };
 
-            t.insert(k.to_string(), value);
+            attrs.insert(k.to_string(), value);
         }
 
         Some((
             MetricSeries {
                 name: name.to_string(),
-                tags: t,
+                tags: attrs,
             },
             value,
         ))
@@ -320,7 +321,7 @@ impl Aggregate {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{fields, tags, Bucket};
+    use event::{btreemap, fields, tags, Bucket};
 
     #[test]
     fn generate_config() {
@@ -368,7 +369,7 @@ mod tests {
                 MetricConfig::Counter(CounterConfig {
                     name: "test".to_string(),
                     field: "foo.bar".to_string(),
-                    tags: tags!(
+                    tags: btreemap!(
                         "tag1" => "tag1",
                         "tag2" => "tags.k1",
                         "tag3" => "tags.k2"

@@ -1,5 +1,6 @@
 use super::{read_to_string, Error};
 use event::{tags, Metric};
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 /// Exposes ZFS performance statistics
 use tokio::io::AsyncBufReadExt;
@@ -67,11 +68,11 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
             metrics.push(Metric::gauge_with_tags(
                 format!("node_zfs_zpool_dataset_{}", k),
-                k,
+                k.to_string(),
                 v as f64,
                 tags!(
-                    "zpool" => pool_name,
-                    "dataset" => dataset
+                    "zpool" => pool_name.to_string(),
+                    "dataset" => dataset.to_string()
                 ),
             ));
         }
@@ -81,7 +82,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let paths = glob::glob(&pattern)?;
     for path in paths.filter_map(Result::ok) {
         let path = path.to_str().unwrap();
-        let pool_name = parse_pool_name(path)?;
+        let pool_name = Cow::from(parse_pool_name(path)?);
         let kvs = parse_pool_state_file(path).await?;
         for (k, v) in kvs {
             let v = match v {
@@ -94,7 +95,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "kstat.zfs.misc.state",
                 v,
                 tags!(
-                    "zpool" => pool_name.to_string(),
+                    "zpool" => pool_name.clone(),
                     "state" => k
                 ),
             ))

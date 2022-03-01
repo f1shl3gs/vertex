@@ -4,7 +4,7 @@ use std::io::Error;
 use std::num::NonZeroUsize;
 
 use buffers::Acker;
-use event::{Event, EventFinalizers, Finalizable, Value};
+use event::{log::Value, Event, EventFinalizers, Finalizable};
 use framework::config::SinkContext;
 use framework::http::HttpClient;
 use framework::partition::Partitioner;
@@ -197,7 +197,7 @@ impl EventEncoder {
         let schema = log_schema::log_schema();
         let timestamp_key = schema.timestamp_key();
         let timestamp = match event.as_log().get_field(timestamp_key) {
-            Some(event::Value::Timestamp(ts)) => ts.timestamp_nanos(),
+            Some(event::log::Value::Timestamp(ts)) => ts.timestamp_nanos(),
             _ => chrono::Utc::now().timestamp_nanos(),
         };
 

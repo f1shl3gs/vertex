@@ -1,5 +1,6 @@
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
+use event::attributes::{Key, Value};
 use event::Event;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, Transform};
@@ -98,7 +99,7 @@ impl TagValueSet {
 struct Cardinality {
     limit: usize,
     action: LimitExceededAction,
-    accepted_tags: HashMap<String, TagValueSet>,
+    accepted_tags: HashMap<Key, TagValueSet>,
 }
 
 impl Clone for Cardinality {
@@ -128,14 +129,14 @@ impl Cardinality {
     /// for the key and returns true, otherwise returns false. A false return
     /// value indicates to the caller that the value is not accepted for this
     /// key, and the configured limit_execeed_action should be taken.
-    fn try_accept_tag(&mut self, key: &str, value: &str) -> bool {
+    fn try_accept_tag(&mut self, key: &Key, value: &Value) -> bool {
         if !self.accepted_tags.contains_key(key) {
             self.accepted_tags
-                .insert(key.to_string(), TagValueSet::new(self.limit));
+                .insert(key.clone(), TagValueSet::new(self.limit));
         }
 
         let set = self.accepted_tags.get_mut(key).unwrap();
-        if set.contains(value) {
+        if set.contains(&value.as_str()) {
             // Tag value has already been accepted, nothing more to do
             return true;
         }
@@ -143,7 +144,7 @@ impl Cardinality {
         // Tag value not yet part of the accepted set
         if set.len() < self.limit {
             // accept the new value
-            set.insert(value);
+            set.insert(&value.as_str());
             if set.len() == self.limit {
                 // emit limit reached event
             }

@@ -53,7 +53,7 @@ impl Deserializer for BytesDeserializer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::Value;
+    use event::log::Value;
 
     #[test]
     fn parse_bytes() {

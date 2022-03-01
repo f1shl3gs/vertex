@@ -4,7 +4,7 @@ use std::task::Poll;
 
 use async_trait::async_trait;
 use buffers::Acker;
-use event::{Event, MetricValue, Value};
+use event::{log::Value, Event, MetricValue};
 use futures::{FutureExt, StreamExt};
 use futures_util::stream;
 use futures_util::stream::BoxStream;

@@ -280,11 +280,11 @@ mod test {
 
         assert_eq!(
             event.as_log().get_flat_field("field.with.dots"),
-            Some(&event::Value::from("hello")),
+            Some(&event::log::Value::from("hello")),
         );
         assert_eq!(
             event.as_log().get_flat_field("sub.field"),
-            Some(&event::Value::from(json!({ "another.one": "bob", }))),
+            Some(&event::log::Value::from(json!({ "another.one": "bob", }))),
         );
         assert_eq!(event.metadata(), &metadata);
     }
@@ -532,7 +532,7 @@ mod test {
         );
         assert_eq!(
             *event.as_log().get_field("null").unwrap(),
-            event::Value::Null
+            event::log::Value::Null
         );
         assert_eq!(*event.as_log().get_field("float").unwrap(), 12.34.into());
         assert_eq!(*event.as_log().get_field("int").unwrap(), 56.into());
@@ -659,7 +659,7 @@ mod test {
         let event = event.as_log();
 
         match event.get_field("message") {
-            Some(event::Value::Map(_)) => (),
+            Some(event::log::Value::Map(_)) => (),
             _ => panic!("\"message\" is not a map"),
         }
         assert_eq!(

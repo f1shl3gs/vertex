@@ -203,7 +203,7 @@ impl SourceConfig for ExecConfig {
                 self.working_directory.clone(),
                 self.include_stderr,
                 hostname,
-                config.interval.clone(),
+                config.interval,
                 decoder,
                 cx.shutdown,
                 cx.output,
@@ -215,7 +215,7 @@ impl SourceConfig for ExecConfig {
                 self.include_stderr,
                 hostname,
                 config.restart_policy.clone(),
-                config.delay.clone(),
+                config.delay,
                 decoder,
                 cx.shutdown,
                 cx.output,
@@ -551,7 +551,7 @@ async fn run_streaming(
 mod tests {
     use super::*;
     use bytes::Bytes;
-    use event::Value;
+    use event::log::Value;
     use std::io::Cursor;
     use std::task::Poll;
 

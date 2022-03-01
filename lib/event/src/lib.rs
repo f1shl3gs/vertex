@@ -1,8 +1,8 @@
 mod array;
+pub mod attributes;
 mod finalization;
 pub mod log;
 mod logfmt;
-mod macros;
 mod metadata;
 mod metric;
 mod proto;
@@ -15,9 +15,7 @@ pub use finalization::{
     BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,
     Finalizable,
 };
-pub use log::value::Value;
 pub use log::LogRecord;
-pub use macros::EventDataEq;
 pub use metadata::EventMetadata;
 pub use metric::*;
 pub use trace::{Trace, Traces};
@@ -31,6 +29,7 @@ use prost::Message;
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
 
+use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
 use crate::proto::EventWrapper;
 
@@ -171,7 +170,7 @@ impl Event {
         }
     }
 
-    pub fn tags(&self) -> &BTreeMap<String, String> {
+    pub fn tags(&self) -> &Attributes {
         match self {
             Event::Log(log) => &log.tags,
             Event::Metric(metric) => metric.tags(),
@@ -179,11 +178,11 @@ impl Event {
         }
     }
 
-    pub fn tag_entry(&mut self, key: impl Into<String>) -> btree_map::Entry<String, String> {
+    pub fn tag_entry(&mut self, key: impl Into<Key>) -> btree_map::Entry<Key, attributes::Value> {
         match self {
-            Self::Log(log) => log.tags.entry(key.into()),
-            Self::Metric(metric) => metric.series.tags.entry(key.into()),
-            _ => unreachable!(),
+            Self::Log(log) => log.tags.entry(key),
+            Self::Metric(metric) => metric.series.tags.entry(key),
+            Self::Trace(trace) => trace.tags.entry(key),
         }
     }
 
@@ -270,16 +269,16 @@ impl From<Trace> for Event {
     }
 }
 
-impl From<BTreeMap<String, Value>> for Event {
-    fn from(m: BTreeMap<String, Value>) -> Self {
+impl From<BTreeMap<String, log::Value>> for Event {
+    fn from(m: BTreeMap<String, log::Value>) -> Self {
         Self::Log(m.into())
     }
 }
 
 impl From<String> for Event {
     fn from(s: String) -> Self {
-        let mut fields: BTreeMap<String, Value> = BTreeMap::new();
-        fields.insert("message".to_string(), Value::Bytes(s.into()));
+        let mut fields: BTreeMap<String, log::Value> = BTreeMap::new();
+        fields.insert("message".to_string(), log::Value::Bytes(s.into()));
 
         Self::Log(fields.into())
     }
@@ -406,4 +405,53 @@ impl MaybeAsLogMut for Event {
             _ => None,
         }
     }
+}
+
+/// A related trait to `PartialEq`, `EventDataEq` tests if two events
+/// contain the same data, exclusive of the metadata. This is used to
+/// test for events having the same values but potentially different
+/// parts of the metadata that not fixed between runs, without removing
+/// the ability to compare them for exact equality.
+pub trait EventDataEq<Rhs: ?Sized = Self> {
+    fn event_data_eq(&self, other: &Rhs) -> bool;
+}
+
+impl<T: EventDataEq> EventDataEq for &[T] {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.len() == other.len()
+            && self
+                .iter()
+                .zip(other.iter())
+                .all(|(a, b)| a.event_data_eq(b))
+    }
+}
+
+impl<T: EventDataEq> EventDataEq for Vec<T> {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.as_slice().event_data_eq(&other.as_slice())
+    }
+}
+
+#[macro_export]
+macro_rules! assert_event_data_eq {
+    ($left:expr, $right:expr, $message:expr) => {{
+        use $crate::EventDataEq as _;
+        match (&($left), &($right)) {
+            (left, right) => {
+                if !left.event_data_eq(right) {
+                    panic!(
+                        "assertion failed: {}\n\n{}\n",
+                        $message,
+                        pretty_assertions::Comparison::new(left, right)
+                    );
+                }
+            }
+        }
+    }};
+    ($left:expr, $right:expr,) => {
+        $crate::assert_event_data_eq!($left, $right)
+    };
+    ($left:expr, $right:expr) => {
+        $crate::assert_event_data_eq!($left, $right, "`left.event_data_eq(right)`")
+    };
 }

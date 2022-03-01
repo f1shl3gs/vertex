@@ -1,7 +1,9 @@
+use std::borrow::Cow;
 use std::io::BufRead;
 use std::time::Duration;
 
 use bytes::Buf;
+use event::attributes::Key;
 use event::{tags, Event, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
@@ -34,6 +36,11 @@ const QTIME_MS_FIELD: usize = 58;
 const CTIME_MS_FIELD: usize = 59;
 const RTIME_MS_FIELD: usize = 60;
 const TTIME_MS_FIELD: usize = 61;
+
+const BACKEND_KEY: Key = Key::from_static_str("backend");
+const FRONTEND_KEY: Key = Key::from_static_str("frontend");
+const INSTANCE_KEY: Key = Key::from_static_str("instance");
+const SERVER_KEY: Key = Key::from_static_str("server");
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -209,7 +216,7 @@ async fn gather(
     ]);
 
     metrics.iter_mut().for_each(|m| {
-        m.insert_tag("instance", &instance);
+        m.insert_tag(INSTANCE_KEY, &instance);
     });
 
     metrics
@@ -596,9 +603,12 @@ fn parse_server(row: Vec<&str>, pxname: &str, svname: &str) -> Vec<Metric> {
         "gauge"
     );
 
+    let pxname = Cow::from(pxname.to_string());
+    let svname = Cow::from(svname.to_string());
+
     metrics.iter_mut().for_each(|m| {
-        m.insert_tag("backend", pxname);
-        m.insert_tag("server", svname);
+        m.insert_tag(BACKEND_KEY, pxname.clone());
+        m.insert_tag(SERVER_KEY, svname.clone());
     });
 
     metrics
@@ -799,8 +809,9 @@ fn parse_frontend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
         "counter"
     );
 
+    let pxname = Cow::from(pxname.to_string());
     metrics.iter_mut().for_each(|m| {
-        m.insert_tag("frontend", pxname);
+        m.insert_tag(FRONTEND_KEY, pxname.clone());
     });
 
     metrics
@@ -1089,8 +1100,9 @@ fn parse_backend(row: Vec<&str>, pxname: &str) -> Vec<Metric> {
         "gauge"
     );
 
+    let pxname = Cow::from(pxname.to_string());
     metrics.iter_mut().for_each(|m| {
-        m.insert_tag("backend", pxname);
+        m.insert_tag(BACKEND_KEY, pxname.clone());
     });
 
     metrics

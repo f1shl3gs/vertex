@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use bytes::Buf;
-use event::{Event, Value};
+use event::{log::Value, Event};
 use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };

@@ -1,5 +1,6 @@
 use super::{read_into, Error, ErrorContext};
 use event::{tags, Metric};
+use std::path::PathBuf;
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -98,45 +99,43 @@ async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
     let mut stats = Vec::new();
 
     for path in cpus.flatten() {
-        let cp = path.to_str().unwrap();
-        let mut stat = parse_cpu_freq_cpu_info(cp).await?;
-
-        // this looks terrible
-        stat.name = path
-            .file_name()
-            .unwrap()
-            .to_str()
-            .unwrap()
-            .replace("cpu", "");
-
+        let stat = parse_cpu_freq_cpu_info(path).await?;
         stats.push(stat)
     }
 
     Ok(stats)
 }
 
-async fn parse_cpu_freq_cpu_info(cpu_path: &str) -> Result<Stat, Error> {
+async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
     let mut stat = Stat::default();
 
-    let path = format!("{}/cpufreq/cpuinfo_cur_freq", cpu_path);
+    // this looks terrible
+    stat.name = root
+        .file_name()
+        .unwrap()
+        .to_str()
+        .unwrap()
+        .replace("cpu", "");
+
+    let path = root.join("cpufreq/cpuinfo_cur_freq");
     stat.current_frequency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/cpuinfo_max_freq", cpu_path);
+    let path = root.join("cpufreq/cpuinfo_max_freq");
     stat.maximum_frequency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/cpuinfo_min_freq", cpu_path);
+    let path = root.join("cpufreq/cpuinfo_min_freq");
     stat.minimum_frequency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/cpuinfo_transition_latency", cpu_path);
+    let path = root.join("cpufreq/cpuinfo_transition_latency");
     stat.transition_latency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/scaling_cur_freq", cpu_path);
+    let path = root.join("cpufreq/scaling_cur_freq");
     stat.scaling_current_frequency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/scaling_max_freq", cpu_path);
+    let path = root.join("cpufreq/scaling_max_freq");
     stat.scaling_maximum_frequency = read_into(path).await.ok();
 
-    let path = format!("{}/cpufreq/scaling_min_freq", cpu_path);
+    let path = root.join("cpufreq/scaling_min_freq");
     stat.scaling_minimum_frequency = read_into(path).await.ok();
 
     Ok(stat)
@@ -145,10 +144,11 @@ async fn parse_cpu_freq_cpu_info(cpu_path: &str) -> Result<Stat, Error> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::PathBuf;
 
     #[tokio::test]
     async fn test_parse_cpu_freq_cpu_info() {
-        let cpu_path = "tests/fixtures/sys/devices/system/cpu/cpu0";
+        let cpu_path = PathBuf::from("tests/fixtures/sys/devices/system/cpu/cpu0");
         let v = parse_cpu_freq_cpu_info(cpu_path).await.unwrap();
         assert_eq!(v.minimum_frequency, Some(800000));
         assert_eq!(v.maximum_frequency, Some(2400000));

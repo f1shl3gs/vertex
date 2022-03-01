@@ -1,6 +1,8 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
+use event::attributes::Key;
 use event::{tags, Event, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
@@ -15,6 +17,9 @@ use tokio::net::TcpStream;
 
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
+
+const SLAB_KEY: Key = Key::from_static_str("slab");
+const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
 #[derive(Debug, Deserialize, Serialize)]
 struct MemcachedConfig {
@@ -325,14 +330,14 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
             ]);
 
             for (slab, stats) in slabs {
-                let slab = slab.as_str();
+                let slab = Cow::from(slab);
                 for op in ["get", "delete", "incr", "decr", "cas", "touch"] {
                     metrics.push(Metric::sum_with_tags(
                         "memcached_slab_commands_total",
                         "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                         get_value!(stats, (op.to_owned() + "_hits").as_str()),
                         tags!(
-                            "slab" => slab,
+                            SLAB_KEY => slab.clone(),
                             "command" => op,
                             "status" => "hit"
                         ),
@@ -344,7 +349,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                     "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                     get_value!(stats, "cas_badval"),
                     tags!(
-                        "slab" => slab,
+                        SLAB_KEY => slab.clone(),
                         "command" => "cas",
                         "status" => "badval"
                     ),
@@ -357,7 +362,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                     "Total number of all requests broken down by command (get, set, etc.) and status per slab.",
                     sets - cases,
                     tags!(
-                        "slab" => slab,
+                        SLAB_KEY => slab.clone(),
                         "command" => "set",
                         "status" => "hit"
                     ),
@@ -369,7 +374,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of bytes allocated to each chunk within this slab class.",
                         get_value!(stats, "chunk_size"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -377,7 +382,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of chunks within a single page for this slab class.",
                         get_value!(stats, "chunks_per_page"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -385,7 +390,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of pages allocated to this slab class.",
                         get_value!(stats, "total_pages"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -393,7 +398,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of chunks allocated to this slab class.",
                         get_value!(stats, "total_chunks"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -401,7 +406,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of chunks allocated to an item",
                         get_value!(stats, "used_chunks"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -409,7 +414,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of chunks not yet allocated items",
                         get_value!(stats, "free_chunks"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -417,7 +422,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of free chunks at the end of the last allocated page",
                         get_value!(stats, "free_chunks_end"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -425,14 +430,14 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of bytes of memory actual items take up within a slab",
                         get_value!(stats, "mem_requested"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                 ]);
             }
 
             for (slab, stats) in items {
-                let slab = slab.as_str();
+                let slab = Cow::from(slab);
 
                 metrics.extend_from_slice(&[
                     Metric::gauge_with_tags(
@@ -440,7 +445,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of items currently stored in this slab class",
                         get_value!(stats, "number"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::gauge_with_tags(
@@ -448,7 +453,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of seconds the oldest item has been in the slab class",
                         get_value!(stats, "age"),
                         tags!(
-                            "slab" => slab
+                            SLAB_KEY => slab.clone()
                         ),
                     ),
                     Metric::sum_with_tags(
@@ -456,7 +461,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_hot"),
                         tags!(
-                            "slab" => slab,
+                            SLAB_KEY => slab.clone(),
                             "lru" => "hot"
                         ),
                     ),
@@ -465,7 +470,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_warm"),
                         tags!(
-                            "slab" => slab,
+                            SLAB_KEY => slab.clone(),
                             "lru" => "warm"
                         ),
                     ),
@@ -474,7 +479,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_cold"),
                         tags!(
-                            "slab" => slab,
+                            SLAB_KEY => slab.clone(),
                             "lru" => "cold"
                         ),
                     ),
@@ -483,7 +488,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                         "Number of get_hits to the LRU",
                         get_value!(stats, "hits_to_temporary"),
                         tags!(
-                            "slab" => slab,
+                            SLAB_KEY => slab.clone(),
                             "lru" => "temporary"
                         ),
                     ),
@@ -562,7 +567,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                             desc,
                             *v,
                             tags!(
-                                "slab" => slab
+                                SLAB_KEY => slab.clone()
                             ),
                         ));
                     }
@@ -606,7 +611,7 @@ async fn fetch_stats_metrics(addr: &str) -> Result<Vec<Metric>, ParseError> {
                             desc,
                             *v,
                             tags!(
-                                "slab" => slab
+                                SLAB_KEY => slab.clone()
                             ),
                         ))
                     }
@@ -727,7 +732,7 @@ async fn gather(addr: &str) -> Vec<Metric> {
     ]);
 
     for metric in metrics.iter_mut() {
-        metric.insert_tag("instance", addr);
+        metric.insert_tag(INSTANCE_KEY, addr.to_string());
     }
 
     metrics

@@ -1,7 +1,8 @@
-use super::Value;
-use crate::log::path_iter::{PathComponent, PathIter};
 use std::collections::BTreeMap;
 use std::iter::Peekable;
+
+use super::path_iter::{PathComponent, PathIter};
+use super::Value;
 
 /// Inserts fields value using a path specified using `a.b[1].c` notation.
 pub fn insert(fields: &mut BTreeMap<String, Value>, path: &str, value: Value) -> Option<Value> {

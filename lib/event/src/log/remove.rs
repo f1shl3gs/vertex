@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 use std::collections::BTreeMap;
 use std::iter::Peekable;
 
-use crate::log::path_iter::{PathComponent, PathIter};
-use crate::Value;
+use super::path_iter::{PathComponent, PathIter};
+use super::Value;
 
 /// Removes field value specified by the given path and return its value.
 ///

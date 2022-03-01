@@ -11,7 +11,7 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 
 use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
-use event::{Event, Value};
+use event::{log::Value, Event};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;

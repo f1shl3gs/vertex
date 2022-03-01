@@ -14,6 +14,8 @@ use framework::{config, get_version, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
+
+#[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
 
 #[derive(FromArgs)]

@@ -163,6 +163,7 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
                     result.push(counter.into())
                 }
             }
+
             GroupKind::Gauge(metrics) | GroupKind::Untyped(metrics) => {
                 for (key, metric) in metrics {
                     let gauge =
@@ -214,7 +215,7 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
                             })
                             .collect(),
                     )
-                    .with_tags(key.labels)
+                    .with_tags(key.labels.into())
                     .with_timestamp(utc_timestamp(key.timestamp, start));
 
                     result.push(summary.into())

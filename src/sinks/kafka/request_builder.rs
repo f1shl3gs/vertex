@@ -1,5 +1,5 @@
 use bytes::Bytes;
-use event::{Event, Finalizable, Value};
+use event::{log::Value, Event, Finalizable};
 use framework::sink::util::encoding::{Encoder, EncodingConfig, StandardEncodings};
 use framework::template::Template;
 use internal::emit;

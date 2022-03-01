@@ -1,10 +1,14 @@
+use std::collections::BTreeMap;
+
 use chrono::Utc;
+use event::attributes::{Attributes, Key};
 use event::{Metric, MetricValue};
 use indexmap::IndexMap;
 use prometheus::{proto, METRIC_NAME_LABEL};
-use std::collections::BTreeMap;
 
 type Labels = Vec<proto::Label>;
+
+const METRIC_NAME_KEY: Key = Key::from_static_str("__name__");
 
 pub struct TimeSeries {
     buffer: IndexMap<Labels, Vec<proto::Sample>>,
@@ -47,7 +51,7 @@ impl TimeSeries {
         name: &str,
         suffix: Option<&str>,
         value: f64,
-        tags: &BTreeMap<String, String>,
+        tags: &Attributes,
         extra: Option<(&str, String)>,
     ) {
         let timestamp = timestamp.unwrap_or_else(|| self.default_timestamp());
@@ -128,31 +132,35 @@ impl TimeSeries {
     }
 
     fn make_labels(
-        tags: &BTreeMap<String, String>,
+        attrs: &Attributes,
         name: &str,
         suffix: Option<&str>,
         extra: Option<(&str, String)>,
     ) -> Labels {
+        let mut attrs = attrs.clone();
+
         // Each Prometheus metric is grouped by its labels, which contains all the labels
         // from the source metric, plus the name label for the actual metric name. For
         // convenience below, an optional extra tag is added.
-        let mut labels = tags.clone();
         let name = match suffix {
             Some(suffix) => [name, suffix].join(""),
             None => name.to_string(),
         };
 
-        labels.insert(METRIC_NAME_LABEL.into(), name);
+        attrs.insert(METRIC_NAME_KEY, name);
 
         if let Some((name, value)) = extra {
-            labels.insert(name.to_string(), value);
+            attrs.insert(name.to_string(), value);
         }
 
         // Extract the labels into a vec and sort to produce a consistent key for the
         // buffer
-        let mut labels = labels
+        let mut labels = attrs
             .into_iter()
-            .map(|(name, value)| proto::Label { name, value })
+            .map(|(key, value)| proto::Label {
+                name: key.to_string(),
+                value: value.to_string(),
+            })
             .collect::<Labels>();
 
         labels.sort();

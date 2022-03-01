@@ -105,7 +105,7 @@ async fn run(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::Value;
+    use event::log::Value;
     use framework::pipeline::ReceiverStream;
     use std::time::Duration;
     use testify::collect_ready;

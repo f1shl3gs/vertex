@@ -1,6 +1,7 @@
-use serde::{Deserialize, Serialize};
 use std::borrow::Cow;
 use std::str::Chars;
+
+use serde::{Deserialize, Serialize};
 use substring::Substring;
 
 enum State {

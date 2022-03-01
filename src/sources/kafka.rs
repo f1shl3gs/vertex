@@ -6,7 +6,7 @@ use std::time::Duration;
 use async_stream::stream;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
-use event::{BatchNotifier, Event, Value};
+use event::{log::Value, BatchNotifier, Event};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
 use framework::codecs::StreamDecodingError;
 use framework::codecs::{BytesDecoderConfig, BytesDeserializerConfig};
@@ -529,7 +529,7 @@ mod tests {
 mod integration_tests {
     use crate::sources::kafka::kafka_source;
     use chrono::{SubsecRound, Utc};
-    use event::{EventStatus, Value};
+    use event::{log::Value, EventStatus};
     use framework::{codecs, Pipeline, ShutdownSignal};
     use log_schema::log_schema;
     use rdkafka::config::FromClientConfig;

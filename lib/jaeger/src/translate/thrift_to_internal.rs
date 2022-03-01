@@ -1,4 +1,5 @@
-use std::collections::{BTreeMap, HashMap};
+use event::attributes::Value;
+use std::collections::HashMap;
 
 use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
@@ -26,25 +27,19 @@ impl From<Batch> for Trace {
             .into_iter()
             .map(|tag| {
                 let value = match tag.v_type {
-                    TagType::String => tag.v_str.unwrap_or_default(),
-                    TagType::Double => tag.v_double.unwrap_or_default().to_string(),
-                    TagType::Bool => {
-                        if tag.v_bool.unwrap_or(false) {
-                            "true".to_string()
-                        } else {
-                            "false".to_string()
-                        }
-                    }
-                    TagType::Long => tag.v_long.unwrap_or_default().to_string(),
+                    TagType::String => Value::from(tag.v_str.unwrap_or_default()),
+                    TagType::Double => Value::from(tag.v_double.unwrap_or_default().0),
+                    TagType::Bool => Value::from(tag.v_bool.unwrap_or_default()),
+                    TagType::Long => Value::from(tag.v_long.unwrap_or_default()),
                     TagType::Binary => {
                         let value = tag.v_binary.unwrap_or_default();
-                        base64::encode(value)
+                        Value::from(base64::encode(value))
                     }
                 };
 
-                (tag.key, value)
+                (event::attributes::Key::from(tag.key), value)
             })
-            .collect::<BTreeMap<String, String>>();
+            .collect();
 
         Trace::new(
             service,

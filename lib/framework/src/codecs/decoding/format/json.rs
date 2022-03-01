@@ -65,7 +65,7 @@ impl Deserializer for JsonDeserializer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::Value;
+    use event::log::Value;
 
     #[test]
     fn deserialize_json() {

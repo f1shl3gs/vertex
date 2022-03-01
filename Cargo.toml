@@ -223,7 +223,7 @@ sinks-kafka = ["rdkafka"]
 sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
-sinks-loki = []
+sinks-loki = ["snap"]
 sinks-vertex = []
 sinks-clickhouse = []
 sinks-socket = []
@@ -273,6 +273,11 @@ path = "benches/node_source_hwmon.rs"
 name = "haproxy"
 harness = false
 path = "benches/haproxy.rs"
+
+[[bench]]
+name = "attributes"
+harness = false
+path = "benches/attributes.rs"
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"

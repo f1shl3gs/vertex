@@ -1,5 +1,4 @@
-use std::collections::BTreeMap;
-
+use event::attributes::{Attributes, Value};
 use event::{
     trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId, SpanKind, TraceId, TraceState},
     Trace,
@@ -57,33 +56,29 @@ impl From<proto::Batch> for Trace {
     fn from(batch: crate::proto::Batch) -> Self {
         let (service, tags) = match batch.process {
             Some(process) => {
-                let tags = process
+                let attrs = process
                     .tags
                     .into_iter()
                     .map(|kv| {
                         let value = if kv.v_type == ValueType::String as i32 {
-                            kv.v_str
+                            Value::from(kv.v_str)
                         } else if kv.v_type == ValueType::Bool as i32 {
-                            if kv.v_bool {
-                                "true".to_string()
-                            } else {
-                                "false".to_string()
-                            }
+                            Value::from(kv.v_bool)
                         } else if kv.v_type == ValueType::Int64 as i32 {
-                            kv.v_int64.to_string()
+                            Value::from(kv.v_int64)
                         } else if kv.v_type == ValueType::Float64 as i32 {
-                            kv.v_float64.to_string()
+                            Value::from(kv.v_float64)
                         } else {
-                            base64::encode(kv.v_binary)
+                            Value::from(base64::encode(kv.v_binary))
                         };
 
-                        (kv.key, value)
+                        (event::attributes::Key::new(kv.key), value)
                     })
-                    .collect::<BTreeMap<String, String>>();
+                    .collect();
 
-                (process.service_name, tags)
+                (process.service_name, attrs)
             }
-            None => (String::new(), BTreeMap::new()),
+            None => (String::new(), Attributes::default()),
         };
 
         let spans = batch.spans.into_iter().map(Into::into).collect();
