@@ -166,7 +166,7 @@ impl SourceConfig for JaegerConfig {
         if let Some(config) = &self.protocols.thrift_http {
             handles.push(tokio::spawn(http::serve(
                 config.clone(),
-                shutdown.clone(),
+                shutdown,
                 cx.output,
             )));
         }

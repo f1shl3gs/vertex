@@ -280,7 +280,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 .disks
                 .iter()
                 .find(|dev| dev.target.dev == block.name)
-                .map(|d| d.clone())
+                .cloned()
                 .unwrap_or_default();
 
             let disk_source = if !block.path.is_empty() {
