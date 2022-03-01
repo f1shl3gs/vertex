@@ -32,7 +32,7 @@ impl GenerateConfig for JaegerConfig {
         r#"
 # The type jaeger compoent
 #
-protocol: agent
+protocol: udp
 
 # The address to connect to. The address must include a port.
 address: 127.0.0.1:6831
@@ -82,5 +82,15 @@ impl SinkConfig for JaegerConfig {
 
     fn sink_type(&self) -> &'static str {
         "jaeger"
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<JaegerConfig>()
     }
 }
