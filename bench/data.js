@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1646128659471,
+  "lastUpdate": 1646129430980,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20602,6 +20602,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1340,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd48297e33c800a01c4e9a235456c2657f06b146",
+          "message": "Merge pull request #219 from f1shl3gs/replace_tags_with_attributes\n\nReplace tags with attributes",
+          "timestamp": "2022-03-01T17:50:15+08:00",
+          "tree_id": "cfb7f67b6a633627b1b8485a57c53ba4825c9b52",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd48297e33c800a01c4e9a235456c2657f06b146"
+        },
+        "date": 1646129429683,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 994,
             "unit": "s"
           }
         ]
