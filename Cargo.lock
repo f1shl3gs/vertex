@@ -960,6 +960,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "evmap"
+version = "10.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e3ea06a83f97d3dc2eb06e51e7a729b418f0717a5558a5c870e3d5156dc558d"
+dependencies = [
+ "hashbag",
+ "slab",
+ "smallvec",
+]
+
+[[package]]
 name = "exitcode"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1383,6 +1394,12 @@ name = "half"
 version = "1.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "62aca2aba2d62b4a7f5b33f3712cb1b0692779a56fb510499d5c0aa594daeaf3"
+
+[[package]]
+name = "hashbag"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "461d126adae37fcc356c78b4c46966ac5dca1d41244e617af36bd4e09c7673d3"
 
 [[package]]
 name = "hashbrown"
@@ -1834,6 +1851,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ce791b7ca6638aae45be056e068fc756d871eb3b3b10b8efa62d1c9cec616752"
 dependencies = [
  "wasm-bindgen",
+]
+
+[[package]]
+name = "k8s-openapi"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0489fc937cc7616a9abfa61bf39c250d7e32e1325ef028c8d9278dd24ea395b3"
+dependencies = [
+ "base64",
+ "bytes",
+ "chrono",
+ "http",
+ "percent-encoding",
+ "serde",
+ "serde-value",
+ "serde_json",
+ "url",
 ]
 
 [[package]]
@@ -3562,6 +3596,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde-value"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3a1a3341211875ef120e117ea7fd5228530ae7e7036a779fdc9117be6b3282c"
+dependencies = [
+ "ordered-float 2.8.0",
+ "serde",
+]
+
+[[package]]
 name = "serde-xml-rs"
 version = "0.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4738,6 +4782,7 @@ dependencies = [
  "encoding_rs",
  "env-test-util",
  "event",
+ "evmap",
  "exitcode",
  "framework",
  "futures",
@@ -4756,6 +4801,7 @@ dependencies = [
  "jemalloc-ctl",
  "jemalloc-sys",
  "jemallocator",
+ "k8s-openapi",
  "lazy_static 1.4.0",
  "libc",
  "log_schema",

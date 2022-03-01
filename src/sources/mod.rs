@@ -8,11 +8,8 @@ mod consul;
 mod demo_logs;
 #[cfg(feature = "sources-elasticsearch")]
 mod elasticsearch;
+#[cfg(feature = "sources-exec")]
 mod exec;
-#[cfg(feature = "sources-fluentd")]
-mod fluentd;
-#[cfg(feature = "sources-generator")]
-mod generator;
 #[cfg(feature = "sources-haproxy")]
 pub mod haproxy;
 #[cfg(feature = "sources-internal_logs")]
@@ -21,7 +18,7 @@ mod internal_logs;
 mod internal_metrics;
 #[cfg(feature = "sources-internal_traces")]
 mod internal_traces;
-#[cfg(feature = "jaeger")]
+#[cfg(feature = "sources-jaeger")]
 mod jaeger;
 #[cfg(all(target_os = "linux", feature = "sources-journald"))]
 mod journald;
@@ -34,6 +31,8 @@ mod kmsg;
 mod kube_events;
 mod kube_state_metrics;
 mod kubelet;
+#[cfg(feature = "sources-kubernetes_logs")]
+mod kubernetes_logs;
 #[cfg(feature = "sources-libvirt")]
 mod libvirt;
 #[cfg(feature = "sources-memcached")]

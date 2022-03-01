@@ -117,10 +117,7 @@ sources = [
     "sources-bind",
     "sources-consul",
     "sources-demo_logs",
-    "sources-elasticsearch",
     "sources-exec",
-    "sources-fluentd",
-    "sources-generator",
     "sources-haproxy",
     "sources-internal_logs",
     "sources-internal_metrics",
@@ -130,6 +127,7 @@ sources = [
     "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
+    "sources-kubernetes_logs",
     "sources-libvirt",
     "sources-memcached",
     "sources-mongodb",
@@ -152,34 +150,32 @@ sources-bind = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
-sources-generator = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
-sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-kafka = ["rdkafka", "async-stream"]
-sources-kafka_metrics = ["rdkafka"]
-sources-kmsg = []
-sources-selfstat = ["libc"]
-sources-jaeger = ["jaeger", "tonic"]
-sources-journald = []
+sources-haproxy = []
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = ["tracing-subscriber"]
-sources-redis = ["redis"]
+sources-jaeger = ["jaeger", "tonic"]
+sources-journald = []
+sources-kafka = ["rdkafka", "async-stream"]
+sources-kafka_metrics = ["rdkafka"]
+sources-kmsg = []
+sources-kubernetes_logs = ["tail", "kubernetes"]
+sources-libvirt = ["virt"]
+sources-memcached = []
+sources-mongodb = []
+sources-mysqld = ["sqlx"]
+sources-nginx_stub = []
+sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
+sources-ntp = ["rsntp/tokio", "rsntp/async"]
+sources-nvidia_smi = ["serde-xml-rs"]
 sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
-sources-nginx_stub = []
-sources-zookeeper = []
-sources-haproxy = []
-sources-memcached = []
-sources-fluentd = []
+sources-redis = ["redis"]
+sources-selfstat = ["libc"]
 sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
-sources-tail = []
-sources-libvirt = ["virt"]
-sources-mysqld = ["sqlx"]
-sources-nvidia_smi = ["serde-xml-rs"]
-sources-mongodb = []
-sources-elasticsearch = []
+sources-tail = ["tail"]
+sources-zookeeper = []
 
 # transforms
 transforms = [
@@ -239,6 +235,10 @@ extensions-healthcheck = []
 
 # Codecs
 codecs = ["smallvec", "memchr"]
+
+# Enables kubernetes dependencies and shared code. Kubernetes-related sources,
+# transforms and sinks should depend on this feature.
+kubernetes = ["k8s-openapi", "evmap"]
 
 # Misc
 sources-utils-tcp-keepalive = []
@@ -314,7 +314,7 @@ log_schema = { path = "lib/log_schema" }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
-tail = { path = "lib/tail" }
+tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
@@ -380,11 +380,13 @@ chrono-tz = { version = "0.6.1", features = ["serde"] }
 colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.4" }
 encoding_rs = { version = "0.8.30", features = ["serde"]}
+evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 glob = { version = "0.3.0" }
 governor = { version = "0.4.2", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
+k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 lazy_static = { version = "1.4.0" }
 libc = { version = "0.2.119", optional = true }
 memchr = { version = "2.4.1", optional = true, default-features = false}
