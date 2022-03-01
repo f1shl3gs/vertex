@@ -5,7 +5,7 @@ pub mod log;
 mod logfmt;
 mod metadata;
 mod metric;
-// mod proto;
+mod proto;
 pub mod trace;
 
 // re-export
@@ -25,13 +25,13 @@ use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use bytes::{Buf, BufMut, Bytes};
-// use prost::Message;
-use crate::attributes::{Attributes, Key};
+use prost::Message;
 use prost::{DecodeError, EncodeError};
 use shared::ByteSizeOf;
 
+use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
-// use crate::proto::EventWrapper;
+use crate::proto::EventWrapper;
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum Event {
@@ -338,26 +338,24 @@ impl<'a> From<&'a Trace> for EventRef<'a> {
 impl EncodeBytes for Event {
     type Error = EncodeError;
 
-    fn encode<B>(self, _buffer: &mut B) -> Result<(), Self::Error>
+    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error>
     where
         B: BufMut,
         Self: Sized,
     {
-        // EventWrapper::from(self).encode(buffer)
-        todo!()
+        EventWrapper::from(self).encode(buffer)
     }
 }
 
 impl DecodeBytes for crate::Event {
     type Error = DecodeError;
 
-    fn decode<B>(_buffer: B) -> Result<Event, Self::Error>
+    fn decode<B>(buffer: B) -> Result<Event, Self::Error>
     where
         Event: Sized,
         B: Buf,
     {
-        // EventWrapper::decode(buffer).map(Into::into)
-        todo!()
+        EventWrapper::decode(buffer).map(Into::into)
     }
 }
 
