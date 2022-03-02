@@ -10,13 +10,13 @@
 mod common;
 mod encoding_transcode;
 pub mod extensions;
+#[cfg(feature = "kubernetes")]
+mod kubernetes;
 mod multiline;
 pub mod sinks;
 pub mod sources;
 pub mod testing;
 pub mod transforms;
-#[cfg(feature = "kubernetes")]
-mod kubernetes;
 
 pub use framework::hostname;
 

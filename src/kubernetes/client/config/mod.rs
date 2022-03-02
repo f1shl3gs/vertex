@@ -7,6 +7,4 @@
 /// The implementation is fairly limited, and only covers the use cases we
 /// support.
 #[derive(Clone, Debug)]
-pub struct Config {
-
-}
+pub struct Config {}

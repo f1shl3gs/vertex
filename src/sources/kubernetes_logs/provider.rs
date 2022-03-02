@@ -1,8 +1,8 @@
 use std::path::PathBuf;
+
 use evmap::ReadHandle;
 use futures_util::StreamExt;
 use k8s_openapi::api::core::v1::{Namespace, Pod};
-use tokio_stream::StreamExt;
 use tail::provider::Provider;
 
 use crate::kubernetes;
@@ -11,16 +11,20 @@ use crate::kubernetes;
 /// k8s API.
 pub struct KubernetesPathsProvider {
     pods_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Pod>>,
-    namespace_state_reader: ReadHandle<String, k8s::state::evmap::Value<Namespace>>,
+    namespace_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Namespace>>,
 }
 
 impl KubernetesPathsProvider {
-
+    pub fn new() -> Self {
+        todo!()
+    }
 }
 
 impl Provider for KubernetesPathsProvider {
     fn scan(&self) -> Vec<PathBuf> {
-        let read_ref = match self.pods_state_reader.read() {
+        vec![]
+
+        /*let read_ref = match self.pods_state_reader.read() {
             Some(v) => v,
             None => {
                 // The state is not initialized or gone, fallback to using an empty
@@ -29,9 +33,7 @@ impl Provider for KubernetesPathsProvider {
                 // TODO: consider `panic`ing here instead - fail-fast approach
                 // is always better if possible, but it's not clear if it's
                 // a sane strategy here.
-                warn!(
-                    message = "Unable to read the state of the pods"
-                );
+                warn!(message = "Unable to read the state of the pods");
 
                 return Vec::new();
             }
@@ -64,20 +66,28 @@ impl Provider for KubernetesPathsProvider {
                 let paths_iter = list_pod_log_paths(real_glob, pod);
                 exclude_paths(paths_iter, &self.exclude_paths)
             })
-            .collect()
+            .collect()*/
     }
 }
+/*
 
 fn list_pod_log_paths<'a, G, GI>(
     mut glob_impl: G,
-    pod: &'a Pod
+    pod: &'a Pod,
 ) -> impl Iterator<Item = PathBuf> + 'a
 where
     G: FnMut(&str) -> GI + 'a,
     GI: Iterator<Item = PathBuf> + 'a,
 {
-    extract_pod_logs_directory(pod)
-        .into_iter()
-
+    todo!()
 }
 
+/// This function takes a `Pod` resource and return the path to where the logs
+/// for the said `Pod` are expected to be found.
+///
+/// In the common case, the effective path is built using the `namespace`,
+/// `name` and `uid` of the Pod. However, there's a special case for
+/// `Static Pod`s: they keep their logs at the path that consists of config
+/// hashsum instead of the `Pod`
+
+*/

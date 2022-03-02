@@ -20,7 +20,7 @@ pub struct FieldsSpec {
     pub owner: String,
     pub container_name: String,
     pub container_id: String,
-    pub container_image: String
+    pub container_image: String,
 }
 
 impl Default for FieldsSpec {
@@ -37,12 +37,12 @@ impl Default for FieldsSpec {
             owner: "kubernetes.pod_owner".to_string(),
             container_name: "kubernetes.container_name".to_string(),
             container_id: "kubernetes.container_id".to_string(),
-            container_image: "kubernetes.container_image".to_string()
+            container_image: "kubernetes.container_image".to_string(),
         }
     }
 }
 
 /// Annotate the event with pod metadata
 pub struct PodMetadataAnnotator {
-    pods_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Pod>>
+    pods_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Pod>>,
 }

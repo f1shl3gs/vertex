@@ -21,7 +21,7 @@ pub enum HashKey {
 
 impl<T> HashValue<T>
 where
-    T: Metadata<Ty = ObjectMeta>
+    T: Metadata<Ty = ObjectMeta>,
 {
     /// Crate a new `HashValue` by wrapping a value of `T`
     pub fn new(value: T) -> Self {

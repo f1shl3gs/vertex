@@ -1,8 +1,8 @@
 mod config;
 
-use http::{HeaderValue, uri};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
+use http::{uri, HeaderValue};
 
 /// A client to the k8s API
 ///
@@ -22,7 +22,5 @@ impl Client {
     ///
     /// Consumes the configuration to populate the internal state.
     /// Returns an error if the configuration is not valid.
-    pub fn new(config: config::Config, proxy: &ProxyConfig) -> framework::Result<Self> {
-
-    }
+    pub fn new(config: config::Config, proxy: &ProxyConfig) -> framework::Result<Self> {}
 }
