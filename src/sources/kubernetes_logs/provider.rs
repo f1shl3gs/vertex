@@ -68,7 +68,6 @@ impl Provider for KubernetesPathsProvider {
     }
 }
 
-
 fn list_pod_log_paths<'a, G, GI>(
     mut glob_impl: G,
     pod: &'a Pod,
@@ -113,4 +112,3 @@ fn extract_pod_logs_directory(pod: &Pod) -> Option<PathBuf> {
 
     Some(build_pod_logs_directory(namespace, name, uid))
 }
-

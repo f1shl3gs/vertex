@@ -174,7 +174,8 @@ impl LogSource {
             let result = harvester.run(file_source_tx, shutdown, checkpointer);
 
             result.unwrap();
-        }).await;
+        })
+        .await;
 
         Ok(())
     }
