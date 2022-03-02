@@ -6,19 +6,19 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use async_trait::async_trait;
+use bytes::Bytes;
+use chrono::Utc;
+use event::attributes::Key;
+use event::{Event, LogRecord};
 use framework::config::{
     ComponentKey, DataType, GenerateConfig, GlobalOptions, Output, ProxyConfig, SourceConfig,
     SourceContext,
 };
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
-use serde::{Deserialize, Serialize};
-use bytes::Bytes;
-use chrono::Utc;
 use futures_util::{FutureExt, StreamExt};
-use event::{Event, LogRecord};
-use event::attributes::Key;
 use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Line};
 
 use crate::kubernetes;
@@ -115,7 +115,7 @@ struct LogSource {
     data_dir: PathBuf,
     max_read_bytes: usize,
     max_line_bytes: usize,
-    ingestion_timestamp_field: Option<String>
+    ingestion_timestamp_field: Option<String>,
 }
 
 impl LogSource {
@@ -125,6 +125,7 @@ impl LogSource {
         key: &ComponentKey,
         proxy: &ProxyConfig,
     ) -> crate::Result<Self> {
+        todo!()
     }
 
     async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> crate::Result<()> {
@@ -145,18 +146,37 @@ impl LogSource {
             handle: tokio::runtime::Handle::current(),
             ignore_before: None,
             max_line_bytes,
-            line_delimiter: Default::default()
+            line_delimiter: Default::default(),
         };
 
         let (file_source_tx, file_source_rx) = futures::channel::mpsc::channel::<Vec<Line>>(2);
         let checkpoints = checkpointer.view();
-        let events = file_source_rx.map(futures::stream::iter).flatten().map(move |line| {
-            let bytes = line.text.len();
-            // TODO: metrics
+        let events = file_source_rx
+            .map(futures::stream::iter)
+            .flatten()
+            .map(move |line| {
+                let bytes = line.text.len();
+                counter!("component_received_bytes_total", bytes as u64);
 
-            let mut event = create_event(line.text, &line.filename, ingestion_timestamp_field.as_deref());
+                let mut event = create_event(
+                    line.text,
+                    &line.filename,
+                    ingestion_timestamp_field.as_deref(),
+                );
 
-        });
+                // TODO: enrich event
+
+                checkpoints.update(line.file_id, line.offset);
+                event
+            });
+
+        tokio::task::spawn_blocking(move || {
+            let result = harvester.run(file_source_tx, shutdown, checkpointer);
+
+            result.unwrap();
+        }).await;
+
+        Ok(())
     }
 }
 

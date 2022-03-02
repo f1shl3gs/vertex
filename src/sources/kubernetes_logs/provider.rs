@@ -22,9 +22,7 @@ impl KubernetesPathsProvider {
 
 impl Provider for KubernetesPathsProvider {
     fn scan(&self) -> Vec<PathBuf> {
-        vec![]
-
-        /*let read_ref = match self.pods_state_reader.read() {
+        let read_ref = match self.pods_state_reader.read() {
             Some(v) => v,
             None => {
                 // The state is not initialized or gone, fallback to using an empty
@@ -66,10 +64,10 @@ impl Provider for KubernetesPathsProvider {
                 let paths_iter = list_pod_log_paths(real_glob, pod);
                 exclude_paths(paths_iter, &self.exclude_paths)
             })
-            .collect()*/
+            .collect()
     }
 }
-/*
+
 
 fn list_pod_log_paths<'a, G, GI>(
     mut glob_impl: G,
@@ -88,6 +86,31 @@ where
 /// In the common case, the effective path is built using the `namespace`,
 /// `name` and `uid` of the Pod. However, there's a special case for
 /// `Static Pod`s: they keep their logs at the path that consists of config
-/// hashsum instead of the `Pod`
+/// hashsum instead of the `Pod` or `uid`. The reason for this is `kubelet`
+/// is locally authoritative over those `Pod`s, and the API only has `Monitor Pod`s
+/// the "dummy" entries useful for discovery and association. Their UIDs are
+/// generated at the Kubernetes API side, and do not represent the actual
+/// config hashsum as one would expect.
+///
+/// To work around this, we use the mirror pod annotations(if any) to obtain
+/// the effective config hashsum, see `extract_static_pod_config_hashsum`
+/// function that does this.
+///
+/// See https://github.com/kubernetes/kubernetes/blob/ef3337a443b402756c9f0bfb1f844b1b45ce289d/pkg/kubelet/pod/pod_manager.go#L30-L44
+/// See https://github.com/kubernetes/kubernetes/blob/cea1d4e20b4a7886d8ff65f34c6d4f95efcb4742/pkg/kubelet/pod/mirror_client.go#L80-L81
+fn extract_pod_logs_directory(pod: &Pod) -> Option<PathBuf> {
+    let metadata = &pod.metadata;
+    let name = metadata.name.as_ref();
+    let namespace = metadata.namespace.as_ref();
 
-*/
+    let uid = if let Some(static_pod_config_hashsum) = extract_static_pod_config_hashsum(metadata) {
+        // If there's a static pod config hashsum - use it instead of uid
+        static_pod_config_hashsum
+    } else {
+        // In the common case - just fallback to the real pod uid
+        metadata.uid.as_ref()?
+    };
+
+    Some(build_pod_logs_directory(namespace, name, uid))
+}
+
