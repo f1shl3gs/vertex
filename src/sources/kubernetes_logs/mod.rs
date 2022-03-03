@@ -11,8 +11,8 @@ use chrono::Utc;
 use event::attributes::Key;
 use event::{Event, LogRecord};
 use framework::config::{
-    ComponentKey, DataType, GenerateConfig, GlobalOptions, Output, ProxyConfig, SourceConfig,
-    SourceContext,
+    deserialize_duration, serialize_duration, ComponentKey, DataType, GenerateConfig,
+    GlobalOptions, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -138,7 +138,7 @@ impl LogSource {
         } = self;
 
         let provider = KubernetesPathsProvider::new();
-        let checkpointer = Checkpointer::new(data_dir);
+        let checkpointer = Checkpointer::new(&data_dir);
         let harvester = tail::Harvester {
             provider,
             read_from: Default::default(),
@@ -166,7 +166,7 @@ impl LogSource {
 
                 // TODO: enrich event
 
-                checkpoints.update(line.file_id, line.offset);
+                checkpoints.update(line.fingerprint, line.offset);
                 event
             });
 
@@ -190,7 +190,7 @@ fn create_event(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>
     log.insert_tag(log_schema().source_type_key(), "kubernetes_log");
 
     // Add file
-    log.insert_tag(FILE_KEY, file);
+    log.insert_tag(FILE_KEY, file.to_owned());
 
     // Add ingestion timestamp if requested
     let now = Utc::now();
@@ -201,4 +201,17 @@ fn create_event(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>
     log.try_insert_field(log_schema().timestamp_key(), now);
 
     log.into()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>();
+    }
+
+    #[test]
+    fn prepare_exclude_paths() {}
 }
