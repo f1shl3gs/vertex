@@ -17,11 +17,13 @@ use framework::config::{
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{FutureExt, StreamExt};
+use k8s_openapi::api::core::v1::Pod;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Line};
 
 use crate::kubernetes;
+use crate::kubernetes::state::hash_value::HashKey;
 use crate::sources::kubernetes_logs::provider::KubernetesPathsProvider;
 
 /// Configuration for the `kubernetes_logs` source.
@@ -130,6 +132,7 @@ impl LogSource {
 
     async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> crate::Result<()> {
         let LogSource {
+            client,
             data_dir,
             max_read_bytes,
             max_line_bytes,
@@ -137,7 +140,20 @@ impl LogSource {
             ..
         } = self;
 
-        let provider = KubernetesPathsProvider::new();
+        // Start watching pod
+        let watcher =
+            kubernetes::watch::Watcher::new(client.clone(), Pod::watch_pod_for_all_namespaces);
+        let (state_reader, state_writer) = evmap::new();
+        let state_writer = kubernetes::state::evmap::Writer::new(
+            state_writer,
+            Some(Duration::from_millis(10)),
+            HashKey::Uid,
+        );
+        // let state_writer = kubernetes::state::
+
+        // let mut reflector = kubernetes::
+
+        let provider = KubernetesPathsProvider::new(state_reader.clone(), state_writer.clone());
         let checkpointer = Checkpointer::new(&data_dir);
         let harvester = tail::Harvester {
             provider,
