@@ -1,3 +1,6 @@
+#[cfg(feature = "kubernetes")]
+pub mod kubernetes;
+
 use std::collections::BTreeMap;
 
 /// TargetGroup is a set of targets with a common tags

@@ -4,7 +4,7 @@ mod builder;
 mod chunk;
 mod multi_response_decoder;
 mod response;
-mod watcher;
+pub mod watcher;
 
 use builder::WatchRequestBuilder;
 use futures::{Stream, StreamExt};
