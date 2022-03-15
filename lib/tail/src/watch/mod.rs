@@ -205,18 +205,22 @@ impl Watcher {
         self.position
     }
 
+    #[inline]
     pub fn file_findable(&self) -> bool {
         self.findable
     }
 
+    #[inline]
     pub fn set_findable(&mut self, b: bool) {
         self.findable = b;
     }
 
+    #[inline]
     pub fn dead(&self) -> bool {
         self.dead
     }
 
+    #[inline]
     pub fn set_dead(&mut self) {
         self.dead = true
     }

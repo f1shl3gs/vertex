@@ -1,11 +1,14 @@
 use std::collections::HashMap;
 use std::io::Write;
 
+use crate::sinks::loki::sanitize::sanitize_label_value;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::encoding::Encoder;
 use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
 use shared::ByteSizeOf;
+
+use super::sanitize::sanitize_label_key;
 
 pub type Labels = Vec<(String, String)>;
 
@@ -124,7 +127,7 @@ impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
             input[0]
                 .labels
                 .iter()
-                .map(|(k, v)| format!(r#"{}="{}""#, k, v))
+                .map(|(k, v)| format!(r#"{}="{}""#, sanitize_label_key(k), sanitize_label_value(v)))
                 .collect::<Vec<_>>()
                 .join(", ")
         );

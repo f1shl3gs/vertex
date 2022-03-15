@@ -55,7 +55,13 @@ impl Discoverer for PodDiscovery {
             .iter()
             .map(|pod| {
                 let mut map = BTreeMap::new();
-                map.insert(POD_NAME.to_string(), pod.metadata.name.as_ref().map_or("".to_string(), |s| s.to_string()));
+                map.insert(
+                    POD_NAME.to_string(),
+                    pod.metadata
+                        .name
+                        .as_ref()
+                        .map_or("".to_string(), |s| s.to_string()),
+                );
                 map.insert(
                     POD_IP.to_string(),
                     pod.status

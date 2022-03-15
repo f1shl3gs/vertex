@@ -83,7 +83,7 @@ impl RootCommand {
             return Ok(());
         }
 
-        let mut config_paths = self.config_paths_with_formats();
+        let config_paths = self.config_paths_with_formats();
         #[cfg(all(unix, not(target_os = "macos")))]
         let watch_config = self.watch;
         let threads = self.threads.unwrap_or_else(num_cpus::get);
@@ -101,6 +101,8 @@ impl RootCommand {
                 #[cfg(feature = "tokio-console")]
                 level => [
                     format!("vertex={}", level),
+                    format!("framework={}", level),
+                    format!("tail={}", level),
                     format!("codec={}", level),
                     format!("tail={}", level),
                     "tower_limit=trace".to_owned(),
@@ -113,6 +115,8 @@ impl RootCommand {
                 #[cfg(not(feature = "tokio-console"))]
                 level => [
                     format!("vertex={}", level),
+                    format!("framework={}", level),
+                    format!("tail={}", level),
                     format!("codec={}", level),
                     format!("vrl={}", level),
                     format!("file_source={}", level),
@@ -125,11 +129,12 @@ impl RootCommand {
 
         runtime.block_on(async move {
             framework::trace::init(true, false, &levels);
+            let mut config_paths = config::process_paths(&config_paths).ok_or(exitcode::CONFIG)?;
 
             info!(
                 message = "Start vertex",
                 threads = threads,
-                configs = ?self.configs
+                configs = ?config_paths
             );
 
             openssl_probe::init_ssl_cert_env_vars();

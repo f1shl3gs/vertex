@@ -4,10 +4,6 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
-default = [
-    "kubernetes"
-]
-
 [features]
 kubernetes = ["kube", "zeroize", "k8s-openapi"]
 

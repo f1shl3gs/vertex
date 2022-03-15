@@ -194,10 +194,6 @@ encoding:
 #[typetag::serde(name = "loki")]
 impl SinkConfig for LokiConfig {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        if self.labels.is_empty() {
-            return Err("`labels` must include at least one label".into());
-        }
-
         for label in self.labels.keys() {
             if !valid_label_name(label) {
                 return Err(format!("Invalid label name {:?}", label.get_ref()).into());

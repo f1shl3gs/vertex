@@ -9,6 +9,7 @@ pub use config::valid_label_name;
 
 #[cfg(all(test, feature = "integration-tests-loki"))]
 mod integration_tests;
+mod sanitize;
 #[cfg(test)]
 mod tests;
 

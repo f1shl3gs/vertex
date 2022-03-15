@@ -99,7 +99,7 @@ fn create_watcher(
 }
 
 fn add_paths(watcher: &mut RecommendedWatcher, config_paths: &[PathBuf]) -> Result<(), Error> {
-    config_paths.into_iter().try_for_each(|path| {
+    config_paths.iter().try_for_each(|path| {
         watcher
             .watch(path, RecursiveMode::NonRecursive)
             .map_err(Into::into)

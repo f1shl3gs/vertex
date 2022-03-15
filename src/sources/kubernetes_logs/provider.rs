@@ -1,12 +1,10 @@
 use std::path::PathBuf;
 
-use evmap::ReadHandle;
-use futures_util::StreamExt;
-use k8s_openapi::api::core::v1::{Namespace, Pod};
+use k8s_openapi::api::core::v1::Pod;
+use k8s_openapi::apimachinery::pkg::apis::meta::v1::ObjectMeta;
 use tail::provider::Provider;
 
-use crate::kubernetes;
-use crate::kubernetes::pod_manager_logic::extract_static_pod_config_hashsum;
+use super::reflector::Store;
 
 /// The root directory for pod logs.
 const K8S_LOGS_DIR: &str = "/var/log/pods";
@@ -16,71 +14,28 @@ const LOG_PATH_DELIMITER: &str = "_";
 /// A paths provider implementation that uses the state obtained from the
 /// k8s API.
 pub struct KubernetesPathsProvider {
-    pods_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Pod>>,
-    namespace_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Namespace>>,
     exclude_paths: Vec<glob::Pattern>,
+    store: Store<Pod>,
 }
 
 impl KubernetesPathsProvider {
     /// Create a new KubernetesPathsProvider
-    pub fn new(
-        pods_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Pod>>,
-        namespace_state_reader: ReadHandle<String, kubernetes::state::evmap::Value<Namespace>>,
-        exclude_paths: Vec<glob::Pattern>,
-    ) -> Self {
-        Self {
-            pods_state_reader,
-            namespace_state_reader,
+    pub async fn new(store: Store<Pod>, exclude_paths: Vec<glob::Pattern>) -> crate::Result<Self> {
+        Ok(Self {
             exclude_paths,
-        }
+            store,
+        })
     }
 }
 
 impl Provider for KubernetesPathsProvider {
     fn scan(&self) -> Vec<PathBuf> {
-        let read_ref = match self.pods_state_reader.read() {
-            Some(v) => v,
-            None => {
-                // The state is not initialized or gone, fallback to using an empty
-                // array.
-
-                // TODO: consider `panic`ing here instead - fail-fast approach
-                // is always better if possible, but it's not clear if it's
-                // a sane strategy here.
-                warn!(message = "Unable to read the state of the pods");
-
-                return Vec::new();
-            }
-        };
-
-        // filter out pods where we haven't fetched the namespace metadata yet
-        // they will be picked up on a later run
-        read_ref
-            .into_iter()
-            .filter(|(uid, values)| {
-                let pod: &Pod = values
-                    .get_one()
-                    .expect("we are supposed to be woring with single-item values only")
-                    .as_ref();
-
-                trace!(message = "Verifying Namespace metadata for pod", ?uid);
-
-                if let Some(namespace) = pod.metadata.namespace.as_ref() {
-                    self.namespace_state_reader.get(namespace).is_some()
-                } else {
-                    false
-                }
-            })
-            .flat_map(|(uid, values)| {
-                let pod = values
-                    .get_one()
-                    .expect("we are supposed to be working with single-item values only");
-                trace!(message = "Providing log paths for pod", ?uid);
-
-                let paths_iter = list_pod_log_paths(real_glob, pod);
-                exclude_paths(paths_iter, &self.exclude_paths)
-            })
-            .collect()
+        self.store
+            .state()
+            .iter()
+            .map(|pod| exclude_paths(list_pod_log_paths(real_glob, pod), &self.exclude_paths))
+            .flatten()
+            .collect::<Vec<_>>()
     }
 }
 
@@ -158,6 +113,19 @@ fn exclude_paths<'a>(
             )
         })
     })
+}
+
+/// Extract the static pod config hashsum from the mirror pod annotations
+///
+/// This part of Kubernetes changed a bit over time, so we're implementing
+/// support up to 1.14, which is an MSKV at this time.
+///
+/// See: <https://github.com/kubernetes/kubernetes/blob/cea1d4e20b4a7886d8ff65f34c6d4f95efcb4742/pkg/kubelet/pod/mirror_client.go#L80-L81>
+pub fn extract_static_pod_config_hashsum(meta: &ObjectMeta) -> Option<&str> {
+    let annotations = meta.annotations.as_ref()?;
+    annotations
+        .get("kubernetes.io/config.mirror")
+        .map(String::as_str)
 }
 
 /// This function takes a `Pod` resource and return the path to where the logs

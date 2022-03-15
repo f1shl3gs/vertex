@@ -1436,6 +1436,7 @@ dependencies = [
  "no-std-compat",
  "nonzero_ext",
  "parking_lot 0.12.0",
+ "quanta",
  "rand 0.8.5",
  "smallvec",
 ]
@@ -1720,6 +1721,19 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-io-timeout",
+]
+
+[[package]]
+name = "hyper-tls"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
+dependencies = [
+ "bytes",
+ "hyper",
+ "native-tls",
+ "tokio",
+ "tokio-native-tls",
 ]
 
 [[package]]
@@ -2022,9 +2036,11 @@ dependencies = [
  "hyper",
  "hyper-rustls",
  "hyper-timeout",
+ "hyper-tls",
  "jsonpath_lib",
  "k8s-openapi",
  "kube-core",
+ "openssl",
  "pem",
  "pin-project",
  "rustls 0.20.4",
@@ -2035,6 +2051,7 @@ dependencies = [
  "serde_yaml",
  "thiserror",
  "tokio",
+ "tokio-native-tls",
  "tokio-util 0.6.9",
  "tower",
  "tower-http",
@@ -2206,6 +2223,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710"
 dependencies = [
  "cfg-if 1.0.0",
+]
+
+[[package]]
+name = "log_generator"
+version = "0.1.0"
+dependencies = [
+ "argh",
+ "governor",
 ]
 
 [[package]]
@@ -2455,6 +2480,24 @@ name = "multimap"
 version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
+
+[[package]]
+name = "native-tls"
+version = "0.2.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48ba9f7719b5a0f42f338907614285fb5fd70e53858141f69898a1fb7203b24d"
+dependencies = [
+ "lazy_static 1.4.0",
+ "libc",
+ "log 0.4.14",
+ "openssl",
+ "openssl-probe",
+ "openssl-sys",
+ "schannel",
+ "security-framework",
+ "security-framework-sys",
+ "tempfile",
+]
 
 [[package]]
 name = "net2"
@@ -4575,6 +4618,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-native-tls"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7d995660bd2b7f8c1568414c1126076c13fbb725c40112dc0120b78eb9b717b"
+dependencies = [
+ "native-tls",
+ "tokio",
+]
+
+[[package]]
 name = "tokio-openssl"
 version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5114,6 +5167,7 @@ checksum = "5fecdca9a5291cc2b8dcf7dc02453fee791a280f3743cb0905f8822ae463b3fe"
 name = "vertex"
 version = "0.1.0"
 dependencies = [
+ "ahash 0.7.6",
  "argh",
  "assert_cmd",
  "async-stream",
@@ -5150,6 +5204,7 @@ dependencies = [
  "jemalloc-sys",
  "jemallocator",
  "k8s-openapi",
+ "kube",
  "lazy_static 1.4.0",
  "libc",
  "log_schema",
@@ -5162,6 +5217,7 @@ dependencies = [
  "nom 7.1.0",
  "num_cpus",
  "openssl-probe",
+ "parking_lot 0.12.0",
  "percent-encoding",
  "pin-project",
  "pprof",
