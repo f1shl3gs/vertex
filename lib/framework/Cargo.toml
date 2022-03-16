@@ -27,7 +27,7 @@ tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
 [dependencies]
-async-stream = { version = "0.3.2" }
+async-stream = { version = "0.3.3" }
 async-trait = { version = "0.1.52" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
@@ -64,7 +64,7 @@ once_cell = { version = "1.10", default-features = false }
 openssl = { version = "0.10.36", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 pin-project = { version = "1.0.10" }
-regex = { version = "1.5.4" }
+regex = { version = "1.5.5" }
 smallvec = { version = "1.8.0", features = ["union"] }
 serde = { version = "1.0.136", default-features = false, features = ["derive", "std"] }
 serde_yaml = { version = "0.8.23" }

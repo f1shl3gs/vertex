@@ -136,9 +136,9 @@ dependencies = [
 
 [[package]]
 name = "async-stream"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "171374e7e3b2504e0e5236e3b59260560f9fe94bfe9ac39ba5e4e929c5590625"
+checksum = "dad5c83079eae9969be7fadefe640a1c566901f05ff91ab221de4b6f68d9507e"
 dependencies = [
  "async-stream-impl",
  "futures-core",
@@ -146,9 +146,9 @@ dependencies = [
 
 [[package]]
 name = "async-stream-impl"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "648ed8c8d2ce5409ccd57453d9d1b214b342a0d69376a6feda1fd6cae3299308"
+checksum = "10f203db73a71dfa2fb6dd22763990fa26f3d2625a6da2da900d23b87d26be27"
 dependencies = [
  "proc-macro2 1.0.36",
  "quote 1.0.14",
@@ -498,7 +498,7 @@ dependencies = [
  "num-bigint 0.4.2",
  "num-traits",
  "once_cell",
- "regex 1.5.4",
+ "regex 1.5.5",
 ]
 
 [[package]]
@@ -629,7 +629,7 @@ dependencies = [
  "oorandom",
  "plotters",
  "rayon",
- "regex 1.5.4",
+ "regex 1.5.5",
  "serde",
  "serde_cbor",
  "serde_derive",
@@ -901,7 +901,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
 dependencies = [
  "log 0.4.14",
- "regex 1.5.4",
+ "regex 1.5.5",
 ]
 
 [[package]]
@@ -1085,7 +1085,7 @@ dependencies = [
  "proptest",
  "rand 0.8.5",
  "rand_distr",
- "regex 1.5.4",
+ "regex 1.5.5",
  "serde",
  "serde_json",
  "serde_yaml",
@@ -2645,7 +2645,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c705f256449c60da65e11ff6626e0c16a0a0b96aaa348de61376b249bc340f41"
 dependencies = [
- "regex 1.5.4",
+ "regex 1.5.5",
 ]
 
 [[package]]
@@ -2995,7 +2995,7 @@ dependencies = [
  "petgraph",
  "prost",
  "prost-types",
- "regex 1.5.4",
+ "regex 1.5.5",
  "tempfile",
  "which",
 ]
@@ -3333,9 +3333,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.5.4"
+version = "1.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d07a8629359eb56f1e2fb1652bb04212c072a87ba68546a04065d525673ac461"
+checksum = "1a11647b6b25ff05a515cb92c365cec08801e83423a235b51e231e1808747286"
 dependencies = [
  "aho-corasick 0.7.18",
  "memchr 2.4.1",
@@ -4500,7 +4500,7 @@ dependencies = [
  "ansi_term 0.12.1",
  "lazy_static 1.4.0",
  "matchers",
- "regex 1.5.4",
+ "regex 1.5.5",
  "serde",
  "serde_json",
  "sharded-slab",
@@ -4773,7 +4773,7 @@ dependencies = [
  "rand 0.8.5",
  "rdkafka",
  "redis",
- "regex 1.5.4",
+ "regex 1.5.5",
  "rsntp",
  "seahash",
  "serde",
