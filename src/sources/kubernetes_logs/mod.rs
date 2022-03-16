@@ -10,6 +10,7 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::Utc;
 use event::attributes::Key;
+use event::log::Value;
 use event::LogRecord;
 use framework::config::{
     default_true, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
@@ -370,7 +371,19 @@ impl LogSource {
 const FILE_KEY: Key = Key::from_static_str("file");
 
 fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) -> LogRecord {
-    let mut log = LogRecord::from(line);
+    let mut log = match serde_json::from_slice::<Value>(line.as_ref()) {
+        Ok(value) => LogRecord::from(value),
+        Err(err) => {
+            // TODO: metrics
+
+            warn!(
+                message = "Parse kubernetes container logs failed",
+                ?err,
+                internal_log_rate_secs = 30
+            );
+            LogRecord::from(line)
+        }
+    };
 
     // Add source type
     log.insert_tag(log_schema().source_type_key(), "kubernetes_log");
