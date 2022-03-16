@@ -292,7 +292,7 @@ criterion = { version = "0.3.5", default-features = false, features = ["async_to
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"]}
 indoc = { version = "1.0.4", default-features = false }
-pretty_assertions = { version = "1.1.0" }
+pretty_assertions = { version = "1.2.0" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
 tempfile = { version = "3.2.0" }
@@ -395,7 +395,7 @@ nom = { version = "7.1.0", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
-regex = { version = "1.5.4" }
+regex = { version = "1.5.5" }
 rsntp = { version = "3.0.0", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.8.0", optional = true, features = ["union"] }
