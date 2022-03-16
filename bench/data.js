@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647425187550,
+  "lastUpdate": 1647425192620,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3993,6 +3993,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1185100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe022ffbe385fb1bf6c8132c733a328a5e566290",
+          "message": "Merge pull request #231 from f1shl3gs/dependabot/cargo/async-stream-0.3.3\n\nchore(deps): bump async-stream from 0.3.2 to 0.3.3",
+          "timestamp": "2022-03-16T17:59:11+08:00",
+          "tree_id": "c0c8256bdb6fc28f58cc7d14c3a24c49d90477a4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe022ffbe385fb1bf6c8132c733a328a5e566290"
+        },
+        "date": 1647425191067,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1130900,
             "unit": "ns/op"
           }
         ]
