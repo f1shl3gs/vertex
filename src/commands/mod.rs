@@ -127,8 +127,13 @@ impl RootCommand {
                 .join(","),
             });
 
+        #[cfg(unix)]
+        let color = atty::is(atty::Stream::Stdout);
+        #[cfg(not(unix))]
+        let color = false;
+        framework::trace::init(false, false, &levels);
+
         runtime.block_on(async move {
-            framework::trace::init(true, false, &levels);
             let mut config_paths = config::process_paths(&config_paths).ok_or(exitcode::CONFIG)?;
 
             info!(
