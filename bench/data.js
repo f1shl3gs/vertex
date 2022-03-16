@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647455459460,
+  "lastUpdate": 1647456732277,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20826,6 +20826,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.998,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "01b43ff526a5f192610235d202ce5cafa028f958",
+          "message": "Merge pull request #237 from f1shl3gs/dependabot/cargo/nom-7.1.1\n\nchore(deps): bump nom from 7.1.0 to 7.1.1",
+          "timestamp": "2022-03-17T02:19:41+08:00",
+          "tree_id": "3b5ed2e5f354af3b517004886d09bf79106185b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/01b43ff526a5f192610235d202ce5cafa028f958"
+        },
+        "date": 1647456730455,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 67.664,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 196.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 427.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1215.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 46922000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1421800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 30.602,
             "unit": "ns/op"
           }
         ]
