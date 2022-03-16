@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 event = { path = "../event" }
 
-metrics = { version = "0.18.0" }
+metrics = { version = "0.18.1" }
 metrics-util = { version = "0.11.1", default-features = false, features = ["recency"] }
 once_cell = { version = "1.10.0" }
 parking_lot = { version = "0.12.0" }
