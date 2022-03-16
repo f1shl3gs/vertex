@@ -341,7 +341,7 @@ fn tail_source(
                 tags!(
                     "filename" => line.filename,
                     &host_key => &hostname,
-                    source_type_key => "file"
+                    source_type_key => "tail"
                 ),
                 fields!(
                     "message" => line.text,
