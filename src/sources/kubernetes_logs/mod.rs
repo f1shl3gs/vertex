@@ -372,10 +372,12 @@ const FILE_KEY: Key = Key::from_static_str("file");
 
 fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) -> LogRecord {
     let mut log = match serde_json::from_slice::<Value>(line.as_ref()) {
-        Ok(value) => LogRecord::from(value),
+        Ok(value) => match value {
+            Value::Map(map) => LogRecord::from(map),
+            _ => LogRecord::from(line),
+        },
         Err(err) => {
             // TODO: metrics
-
             warn!(
                 message = "Parse kubernetes container logs failed",
                 ?err,
