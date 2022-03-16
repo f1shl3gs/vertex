@@ -10,5 +10,5 @@ sinks:
     type: jaeger
     inputs:
       - hotrod
-    propagator: agent
+    mod: udp
     address: 127.0.0.1:7831

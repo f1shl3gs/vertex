@@ -172,7 +172,8 @@ impl SourceConfig for JaegerConfig {
         }
 
         Ok(Box::pin(async move {
-            let err = futures::future::join_all(handles).await;
+            // TODO: we need something like `errgroup` in Golang
+            let _result = futures::future::join_all(handles).await;
 
             Ok(())
         }))

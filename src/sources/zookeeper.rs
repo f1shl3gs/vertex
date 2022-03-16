@@ -331,13 +331,6 @@ mod integration_tests {
         }
 
         impl Zookeeper {
-            pub fn with_tag(self, tag_str: &str) -> Self {
-                Zookeeper {
-                    tag: tag_str.to_string(),
-                    ..self
-                }
-            }
-
             pub fn with_env(self, key: &str, value: &str) -> Self {
                 let mut envs = self.envs.clone();
                 envs.insert(key.to_string(), value.to_string());
@@ -359,6 +352,6 @@ mod integration_tests {
         let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
         assert_eq!(version, "3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b");
         assert_eq!(state, "standalone");
-        assert_eq!(*stats.get("zk_uptime").unwrap() > 0.0, true);
+        assert!(*stats.get("zk_uptime").unwrap() > 0.0);
     }
 }

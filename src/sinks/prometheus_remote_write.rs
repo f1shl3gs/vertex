@@ -258,7 +258,7 @@ impl MetricNormalize for PrometheusMetricNormalize {
 mod tests {
     use super::*;
     use chrono::Utc;
-    use event::{btreemap, tags, Metric};
+    use event::{btreemap, Metric};
     use framework::sink::util::testing::build_test_server;
     use futures_util::StreamExt;
     use http::HeaderMap;
@@ -347,7 +347,7 @@ mod tests {
         assert_eq!(req.timeseries.len(), 1);
         assert_eq!(
             req.timeseries[0].labels,
-            labels!("__name__" => "gauge_2", "bar" => "foo", "foo" => "bar")
+            labels!(prometheus::METRIC_NAME_LABEL => "gauge_2", "bar" => "foo", "foo" => "bar")
         );
         assert_eq!(req.timeseries[0].samples.len(), 1);
         assert_eq!(req.timeseries[0].samples[0].value, 32.0);
@@ -370,7 +370,7 @@ mod tests {
         assert_eq!(req.timeseries.len(), 1);
         assert_eq!(
             req.timeseries[0].labels,
-            labels!("__name__" => "gauge_2", "foo" => "bar")
+            labels!(prometheus::METRIC_NAME_LABEL => "gauge_2", "foo" => "bar")
         );
         assert_eq!(req.timeseries[0].samples.len(), 1);
         assert_eq!(req.timeseries[0].samples[0].value, 32.0);

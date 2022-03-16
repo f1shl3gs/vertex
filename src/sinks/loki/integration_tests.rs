@@ -1,15 +1,15 @@
-use crate::sinks::loki::config::LokiConfig;
+use std::time::Duration;
+
 use event::Event;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
 use hyper::Body;
 use serde::{Deserialize, Serialize};
-use std::time::Duration;
-use testcontainers::clients::Cli;
 use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
 use testcontainers::{Docker, RunArgs};
 use testify::random::random_string;
-use tokio::time::sleep;
+
+use super::config::LokiConfig;
 
 const LOKI_PORT: u16 = 3100;
 

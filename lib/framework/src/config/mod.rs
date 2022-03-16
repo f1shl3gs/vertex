@@ -148,6 +148,9 @@ pub struct SourceOuter {
 
     #[serde(flatten)]
     pub(super) inner: Box<dyn SourceConfig>,
+
+    #[serde(default, skip)]
+    pub(super) acknowledgements: bool,
 }
 
 impl SourceOuter {
@@ -155,6 +158,7 @@ impl SourceOuter {
         Self {
             inner: Box::new(source),
             proxy: Default::default(),
+            acknowledgements: false,
         }
     }
 
@@ -396,9 +400,15 @@ pub struct SourceContext {
     pub shutdown: ShutdownSignal,
     pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
+    pub acknowledgements: bool,
 }
 
 impl SourceContext {
+    #[inline]
+    pub fn acknowledgements(&self) -> bool {
+        self.acknowledgements || self.globals.acknowledgements
+    }
+
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_test(output: Pipeline) -> Self {
         Self {
@@ -407,9 +417,11 @@ impl SourceContext {
             shutdown: ShutdownSignal::noop(),
             globals: Default::default(),
             proxy: Default::default(),
+            acknowledgements: false,
         }
     }
 
+    #[cfg(test)]
     pub fn new_shutdown(
         key: &ComponentKey,
         output: Pipeline,
@@ -424,6 +436,7 @@ impl SourceContext {
                 shutdown: shutdown_signal,
                 output,
                 proxy: Default::default(),
+                acknowledgements: false,
             },
             shutdown,
         )

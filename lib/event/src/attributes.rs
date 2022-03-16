@@ -164,6 +164,14 @@ into_array!(
     (Vec<Cow<'static, str>>, Array::String),
 );
 
+impl From<Vec<String>> for Array {
+    fn from(ss: Vec<String>) -> Self {
+        let ss = ss.into_iter().map(Into::into).collect::<Vec<_>>();
+
+        Self::String(ss)
+    }
+}
+
 /// Value types for use in `KeyValue` pairs.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
 pub enum Value {
@@ -272,6 +280,7 @@ from_values!(
     (i64, Value::I64);
     (f64, Value::F64);
     (Cow<'static, str>, Value::String);
+    (Array, Value::Array);
 );
 
 impl From<&'static str> for Value {
@@ -291,6 +300,25 @@ impl From<String> for Value {
 impl From<&String> for Value {
     fn from(s: &String) -> Self {
         s.to_string().into()
+    }
+}
+
+impl From<Vec<String>> for Value {
+    fn from(ss: Vec<String>) -> Self {
+        let array: Array = ss.into();
+        Self::Array(array)
+    }
+}
+
+impl From<Vec<&str>> for Value {
+    fn from(ss: Vec<&str>) -> Self {
+        let array: Array = ss
+            .into_iter()
+            .map(|s| s.to_string())
+            .collect::<Vec<_>>()
+            .into();
+
+        Self::Array(array)
     }
 }
 

@@ -1,0 +1,14 @@
+global:
+  data_dir: /tmp
+
+sources:
+  tail:
+    type: tail
+    include:
+      - 0.log
+
+sinks:
+  stdout:
+    type: stdout
+    inputs:
+      - tail

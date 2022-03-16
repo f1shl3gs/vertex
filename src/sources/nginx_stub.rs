@@ -471,7 +471,7 @@ mod integration_tests {
         let s = hyper::body::to_bytes(body).await.unwrap();
 
         let s = std::str::from_utf8(&s).unwrap();
-        let status: NginxStubStatus = s.try_into().unwrap();
+        let _status: NginxStubStatus = s.try_into().unwrap();
     }
 
     #[tokio::test]

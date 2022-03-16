@@ -4,6 +4,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
 use regex::{Captures, Regex};
+use tracing::error;
 
 use super::validation;
 use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};

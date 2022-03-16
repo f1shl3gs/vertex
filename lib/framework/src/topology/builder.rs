@@ -418,6 +418,7 @@ pub async fn build_pieces(
             shutdown: shutdown_signal,
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, &source.proxy),
+            acknowledgements: source.acknowledgements,
         };
         let server = match source.inner.build(ctx).await {
             Ok(server) => server,

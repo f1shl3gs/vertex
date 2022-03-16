@@ -17,9 +17,12 @@ debug = true
 [workspace]
 members = [
     "lib/buffers",
+    "lib/discovery",
     "lib/event",
     "lib/framework",
+    "lib/multiline",
     "lib/procfs",
+    "lib/serde_regex",
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
@@ -31,6 +34,7 @@ members = [
     "lib/virt",
     "lib/jaeger",
     "lib/tracing-internal",
+    "tools/log_generator",
 ]
 
 [features]
@@ -117,10 +121,7 @@ sources = [
     "sources-bind",
     "sources-consul",
     "sources-demo_logs",
-    "sources-elasticsearch",
     "sources-exec",
-    "sources-fluentd",
-    "sources-generator",
     "sources-haproxy",
     "sources-internal_logs",
     "sources-internal_metrics",
@@ -130,6 +131,7 @@ sources = [
     "sources-kafka",
     "sources-kafka_metrics",
     "sources-kmsg",
+    "sources-kubernetes_logs",
     "sources-libvirt",
     "sources-memcached",
     "sources-mongodb",
@@ -152,34 +154,32 @@ sources-bind = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
-sources-generator = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
-sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-kafka = ["rdkafka", "async-stream"]
-sources-kafka_metrics = ["rdkafka"]
-sources-kmsg = []
-sources-selfstat = ["libc"]
-sources-jaeger = ["jaeger", "tonic"]
-sources-journald = []
+sources-haproxy = []
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = ["tracing-subscriber"]
-sources-redis = ["redis"]
+sources-jaeger = ["jaeger", "tonic"]
+sources-journald = []
+sources-kafka = ["rdkafka", "async-stream"]
+sources-kafka_metrics = ["rdkafka"]
+sources-kmsg = []
+sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
+sources-libvirt = ["virt"]
+sources-memcached = []
+sources-mongodb = []
+sources-mysqld = ["sqlx"]
+sources-nginx_stub = []
+sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
+sources-ntp = ["rsntp/tokio", "rsntp/async"]
+sources-nvidia_smi = ["serde-xml-rs"]
 sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
-sources-nginx_stub = []
-sources-zookeeper = []
-sources-haproxy = []
-sources-memcached = []
-sources-fluentd = []
+sources-redis = ["redis"]
+sources-selfstat = ["libc"]
 sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
-sources-tail = []
-sources-libvirt = ["virt"]
-sources-mysqld = ["sqlx"]
-sources-nvidia_smi = ["serde-xml-rs"]
-sources-mongodb = []
-sources-elasticsearch = []
+sources-tail = ["tail", "multiline"]
+sources-zookeeper = []
 
 # transforms
 transforms = [
@@ -240,6 +240,10 @@ extensions-healthcheck = []
 # Codecs
 codecs = ["smallvec", "memchr"]
 
+# Enables kubernetes dependencies and shared code. Kubernetes-related sources,
+# transforms and sinks should depend on this feature.
+kubernetes = ["k8s-openapi", "kube"]
+
 # Misc
 sources-utils-tcp-keepalive = []
 sources-utils-tcp-socket = []
@@ -290,7 +294,7 @@ prost-build = { version = "0.9" }
 assert_cmd = { version = "2.0.2" }
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
-framework = { path = "lib/framework", features = ["test-util"]}
+framework = { path = "lib/framework", features = ["test-util"] }
 indoc = { version = "1.0.4", default-features = false }
 pretty_assertions = { version = "1.2.0" }
 proptest = { version = "1.0" }
@@ -311,10 +315,11 @@ humanize = { path = "lib/humanize" }
 internal = { path = "lib/internal" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
+multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
-tail = { path = "lib/tail" }
+tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
@@ -372,6 +377,7 @@ openssl-probe = { version = "0.1.5", default-features = false }
 pprof = { version = "0.7.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # External libs
+ahash = { version = "0.7.6", default-features = false, optional = true }
 argh = { version = "0.1.7" }
 async-stream = { version = "0.3.3", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
@@ -379,19 +385,23 @@ chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.4" }
-encoding_rs = { version = "0.8.30", features = ["serde"]}
+encoding_rs = { version = "0.8.30", features = ["serde"] }
+evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 glob = { version = "0.3.0" }
 governor = { version = "0.4.2", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.7.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
+k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_18"] }
+kube = { version = "0.69.1", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 lazy_static = { version = "1.4.0" }
 libc = { version = "0.2.119", optional = true }
-memchr = { version = "2.4.1", optional = true, default-features = false}
+memchr = { version = "2.4.1", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
 nom = { version = "7.1.0", default-features = false }
 # pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
+parking_lot = { version = "0.12.0", optional = true }
 percent-encoding = { version = "2.1.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
 redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }

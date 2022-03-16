@@ -1,3 +1,7 @@
+// The `to_forget` mutex needs to be both a lock and a counter, so
+// clippy's warning that an AtomicUsize would work better is incorrect.
+#![allow(clippy::mutex_atomic)]
+
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::{Arc, Mutex};

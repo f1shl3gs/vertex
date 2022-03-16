@@ -259,6 +259,7 @@ impl StreamSink for UdpSink {
                 match udp_send(&mut socket, &input).await {
                     Ok(()) => {
                         counter!("socket_event_send_total", 1, "mode" => "udp");
+                        counter!("processed_bytes_total", input.len() as u64);
                     }
                     Err(err) => {
                         counter!("socket_event_send_errors_total", 1, "mode" => "udp");
@@ -292,7 +293,7 @@ async fn udp_send(socket: &mut UdpSocket, buf: &[u8]) -> tokio::io::Result<()> {
             internal_log_rate_secs = 30
         );
 
-        // TODO: metrics
+        counter!("connection_send_errors_total", 1, "mode" => "udp");
     }
     Ok(())
 }

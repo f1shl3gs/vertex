@@ -1,14 +1,10 @@
-use std::collections::BTreeMap;
-
 use chrono::Utc;
-use event::attributes::{Attributes, Key};
+use event::attributes::Attributes;
 use event::{Metric, MetricValue};
 use indexmap::IndexMap;
 use prometheus::{proto, METRIC_NAME_LABEL};
 
 type Labels = Vec<proto::Label>;
-
-const METRIC_NAME_KEY: Key = Key::from_static_str("__name__");
 
 pub struct TimeSeries {
     buffer: IndexMap<Labels, Vec<proto::Sample>>,
@@ -147,7 +143,7 @@ impl TimeSeries {
             None => name.to_string(),
         };
 
-        attrs.insert(METRIC_NAME_KEY, name);
+        attrs.insert(METRIC_NAME_LABEL, name);
 
         if let Some((name, value)) = extra {
             attrs.insert(name.to_string(), value);

@@ -9,17 +9,16 @@ use framework::config::{
     SourceContext, SourceDescription,
 };
 use framework::source::util::OrderedFinalizer;
-use framework::Source;
+use framework::{hostname, Pipeline, ShutdownSignal, Source};
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
+use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 
 use crate::encoding_transcode::{Decoder, Encoder};
-use crate::hostname;
-use crate::multiline::{LineAgg, Logic, MultilineConfig, Parser};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -74,8 +73,7 @@ struct TailConfig {
         serialize_with = "serialize_duration"
     )]
     glob_interval: Duration,
-    #[serde(default)]
-    acknowledgement: bool,
+
     charset: Option<&'static encoding_rs::Encoding>,
     multiline: Option<MultilineConfig>,
 }
@@ -191,184 +189,14 @@ pub(crate) struct FinalizerEntry {
 #[async_trait::async_trait]
 #[typetag::serde(name = "tail")]
 impl SourceConfig for TailConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         // add the source name as a subdir, so that multiple sources can operate
         // within the same given data_dir(e.g. the global one) without the file
         // servers' checkpointers interfering with each other
-        let data_dir = ctx.globals.make_subdir(&ctx.key.to_string())?;
-        let glob = tail::provider::Glob::new(&self.include, &self.exclude)
-            .ok_or("glob provider create failed")?;
+        let data_dir = cx.globals.make_subdir(cx.key.id())?;
+        let acknowledgements = cx.acknowledgements();
 
-        let read_from = match &self.read_from {
-            Some(read_from) => match read_from {
-                ReadFromConfig::Beginning => ReadFrom::Beginning,
-                ReadFromConfig::End => ReadFrom::End,
-            },
-            None => ReadFrom::default(),
-        };
-
-        let mut output = ctx.output;
-        let include = self.include.clone();
-        let exclude = self.exclude.clone();
-        let multiline = self.multiline.clone();
-        let shutdown = ctx.shutdown.shared();
-        let checkpointer = Checkpointer::new(&data_dir);
-        let checkpoints = checkpointer.view();
-        let host_key = self
-            .host_key
-            .clone()
-            .unwrap_or_else(|| log_schema().host_key().to_string());
-        let hostname = hostname().unwrap();
-        let timestamp_key = log_schema().timestamp_key();
-        let source_type_key = log_schema().source_type_key();
-        let finalizer = self.acknowledgement.then(|| {
-            let checkpoints = checkpointer.view();
-            OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
-                checkpoints.update(entry.fingerprint, entry.offset)
-            })
-        });
-
-        let charset = self.charset;
-        let line_delimiter = match charset {
-            Some(e) => Encoder::new(e).encode_from_utf8(&self.line_delimiter),
-            None => Bytes::from(self.line_delimiter.clone()),
-        };
-
-        let harvester = Harvester {
-            provider: glob,
-            read_from,
-            max_read_bytes: self.max_read_bytes,
-            handle: tokio::runtime::Handle::current(),
-            ignore_before: None,
-            max_line_bytes: self.max_line_bytes,
-            line_delimiter,
-        };
-
-        Ok(Box::pin(async move {
-            info!(
-                message = "Starting harvest files",
-                include = ?include,
-                exclude = ?exclude,
-            );
-
-            let mut encoding_decoder = charset.map(Decoder::new);
-
-            // sizing here is just a guess
-            let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
-            let rx = rx
-                .map(futures::stream::iter)
-                .flatten()
-                .map(move |mut line| {
-                    // transcode each line from the file's encoding charset to utf8
-                    line.text = match encoding_decoder.as_mut() {
-                        Some(decoder) => decoder.decode_to_utf8(line.text),
-                        None => line.text,
-                    };
-
-                    line
-                });
-
-            let messages: Box<dyn Stream<Item = Line> + Send + std::marker::Unpin> =
-                if let Some(ref conf) = multiline {
-                    // This match looks ugly, but it does not need `dyn`
-                    match conf.parser {
-                        Parser::Cri => {
-                            let logic = Logic::new(crate::multiline::preset::Cri, conf.timeout);
-                            Box::new(
-                                LineAgg::new(
-                                    rx.map(|line| {
-                                        (line.filename, line.text, (line.fingerprint, line.offset))
-                                    }),
-                                    logic,
-                                )
-                                .map(
-                                    |(filename, text, (fingerprint, offset))| Line {
-                                        text,
-                                        filename,
-                                        fingerprint,
-                                        offset,
-                                    },
-                                ),
-                            )
-                        }
-                        Parser::NoIndent => {
-                            let logic =
-                                Logic::new(crate::multiline::preset::NoIndent, conf.timeout);
-                            Box::new(
-                                LineAgg::new(
-                                    rx.map(|line| {
-                                        (line.filename, line.text, (line.fingerprint, line.offset))
-                                    }),
-                                    logic,
-                                )
-                                .map(
-                                    |(filename, text, (fingerprint, offset))| Line {
-                                        text,
-                                        filename,
-                                        fingerprint,
-                                        offset,
-                                    },
-                                ),
-                            )
-                        }
-                        _ => unreachable!(),
-                    }
-                } else {
-                    Box::new(rx)
-                };
-
-            // Once harvester ends this will run until it has finished processing remaining
-            // logs in the queue
-            let mut messages = messages.map(move |line| {
-                let mut event: Event = LogRecord::new(
-                    tags!(
-                        "filename" => line.filename,
-                        &host_key => &hostname,
-                        source_type_key => "file"
-                    ),
-                    fields!(
-                        "message" => line.text,
-                        "offset" => line.offset,
-                        timestamp_key =>  Utc::now()
-                    ),
-                )
-                .into();
-
-                if let Some(finalizer) = &finalizer {
-                    let (batch, receiver) = BatchNotifier::new_with_receiver();
-                    event = event.with_batch_notifier(&batch);
-
-                    finalizer.add(
-                        FinalizerEntry {
-                            fingerprint: line.fingerprint,
-                            offset: line.offset,
-                        },
-                        receiver,
-                    );
-                } else {
-                    checkpoints.update(line.fingerprint, line.offset);
-                }
-
-                event
-            });
-
-            tokio::spawn(async move { output.send_all(&mut messages).await });
-
-            tokio::task::spawn_blocking(move || {
-                let result = harvester.run(tx, shutdown, checkpointer);
-                // Panic if we encounter any error originating from the harvester.
-                // We're at the `spawn_blocking` call, the panic will be caught and
-                // passed to the `JoinHandle` error, similar to the usual threads.
-                result.unwrap();
-            })
-            .map_err(|err| {
-                error!(
-                    message = "Harvester unexpectedly stopped",
-                    %err
-                );
-            })
-            .await
-        }))
+        tail_source(self, data_dir, cx.shutdown, cx.output, acknowledgements)
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -380,12 +208,336 @@ impl SourceConfig for TailConfig {
     }
 }
 
+fn tail_source(
+    config: &TailConfig,
+    data_dir: PathBuf,
+    shutdown: ShutdownSignal,
+    mut output: Pipeline,
+    acknowledgements: bool,
+) -> crate::Result<Source> {
+    let provider = tail::provider::Glob::new(&config.include, &config.exclude)
+        .ok_or("glob provider create failed")?;
+
+    let read_from = match &config.read_from {
+        Some(read_from) => match read_from {
+            ReadFromConfig::Beginning => ReadFrom::Beginning,
+            ReadFromConfig::End => ReadFrom::End,
+        },
+        None => ReadFrom::default(),
+    };
+
+    let include = config.include.clone();
+    let exclude = config.exclude.clone();
+    let shutdown = shutdown.shared();
+    let multiline = config.multiline.clone();
+    let checkpointer = Checkpointer::new(&data_dir);
+    let checkpoints = checkpointer.view();
+    let host_key = config
+        .host_key
+        .clone()
+        .unwrap_or_else(|| log_schema().host_key().to_string());
+    let hostname = hostname().unwrap();
+    let timestamp_key = log_schema().timestamp_key();
+    let source_type_key = log_schema().source_type_key();
+    let finalizer = acknowledgements.then(|| {
+        let checkpoints = checkpointer.view();
+        OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
+            checkpoints.update(entry.fingerprint, entry.offset)
+        })
+    });
+
+    let charset = config.charset;
+    let line_delimiter = match charset {
+        Some(e) => Encoder::new(e).encode_from_utf8(&config.line_delimiter),
+        None => Bytes::from(config.line_delimiter.clone()),
+    };
+
+    let harvester = Harvester {
+        provider,
+        read_from,
+        max_read_bytes: config.max_read_bytes,
+        handle: tokio::runtime::Handle::current(),
+        ignore_before: None,
+        max_line_bytes: config.max_line_bytes,
+        line_delimiter,
+    };
+
+    Ok(Box::pin(async move {
+        info!(
+            message = "Starting harvest files",
+            include = ?include,
+            exclude = ?exclude,
+        );
+
+        let mut encoding_decoder = charset.map(Decoder::new);
+
+        // sizing here is just a guess
+        let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
+        let rx = rx
+            .map(futures::stream::iter)
+            .flatten()
+            .map(move |mut line| {
+                // transcode each line from the file's encoding charset to utf8
+                line.text = match encoding_decoder.as_mut() {
+                    Some(decoder) => decoder.decode_to_utf8(line.text),
+                    None => line.text,
+                };
+
+                line
+            });
+
+        let messages: Box<dyn Stream<Item = Line> + Send + std::marker::Unpin> =
+            if let Some(ref conf) = multiline {
+                // This match looks ugly, but it does not need `dyn`
+                match conf.parser {
+                    Parser::Cri => {
+                        let logic = Logic::new(multiline::preset::Cri, conf.timeout);
+                        Box::new(
+                            LineAgg::new(
+                                rx.map(|line| {
+                                    (line.filename, line.text, (line.fingerprint, line.offset))
+                                }),
+                                logic,
+                            )
+                            .map(
+                                |(filename, text, (fingerprint, offset))| Line {
+                                    text,
+                                    filename,
+                                    fingerprint,
+                                    offset,
+                                },
+                            ),
+                        )
+                    }
+                    Parser::NoIndent => {
+                        let logic = Logic::new(multiline::preset::NoIndent, conf.timeout);
+                        Box::new(
+                            LineAgg::new(
+                                rx.map(|line| {
+                                    (line.filename, line.text, (line.fingerprint, line.offset))
+                                }),
+                                logic,
+                            )
+                            .map(
+                                |(filename, text, (fingerprint, offset))| Line {
+                                    text,
+                                    filename,
+                                    fingerprint,
+                                    offset,
+                                },
+                            ),
+                        )
+                    }
+                    _ => unreachable!(),
+                }
+            } else {
+                Box::new(rx)
+            };
+
+        // Once harvester ends this will run until it has finished processing remaining
+        // logs in the queue
+        let mut messages = messages.map(move |line| {
+            let mut event: Event = LogRecord::new(
+                tags!(
+                    "filename" => line.filename,
+                    &host_key => &hostname,
+                    source_type_key => "tail"
+                ),
+                fields!(
+                    "message" => line.text,
+                    "offset" => line.offset,
+                    timestamp_key =>  Utc::now()
+                ),
+            )
+            .into();
+
+            if let Some(finalizer) = &finalizer {
+                let (batch, receiver) = BatchNotifier::new_with_receiver();
+                event = event.with_batch_notifier(&batch);
+
+                finalizer.add(
+                    FinalizerEntry {
+                        fingerprint: line.fingerprint,
+                        offset: line.offset,
+                    },
+                    receiver,
+                );
+            } else {
+                checkpoints.update(line.fingerprint, line.offset);
+            }
+
+            event
+        });
+
+        tokio::spawn(async move { output.send_all(&mut messages).await });
+
+        tokio::task::spawn_blocking(move || {
+            let result = harvester.run(tx, shutdown, checkpointer);
+            // Panic if we encounter any error originating from the harvester.
+            // We're at the `spawn_blocking` call, the panic will be caught and
+            // passed to the `JoinHandle` error, similar to the usual threads.
+            result.unwrap();
+        })
+        .map_err(|err| {
+            error!(
+                message = "Harvester unexpectedly stopped",
+                %err
+            );
+        })
+        .await
+    }))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use event::attributes::Key;
+    use event::EventStatus;
+    use framework::{Pipeline, ShutdownSignal};
+    use std::fs::File;
+    use std::future::Future;
+    use std::io::Write;
+    use tempfile::tempdir;
+    use tokio::time::timeout;
+
+    fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
+        TailConfig {
+            ignore_older_than: default_ignore_older_than(),
+            host_key: None,
+            include: vec![dir.path().join("*")],
+            exclude: vec![],
+            read_from: None,
+            max_line_bytes: default_max_line_bytes(),
+            max_read_bytes: default_max_read_bytes(),
+            line_delimiter: default_line_delimiter(),
+            glob_interval: default_glob_interval(),
+            charset: None,
+            multiline: None,
+        }
+    }
+
+    #[derive(Debug, Eq, PartialEq)]
+    enum AckingMode {
+        No,
+        Unfinalized,
+        Acks,
+    }
+
+    async fn wait_with_timeout<F, R>(fut: F) -> R
+    where
+        F: Future<Output = R> + Send,
+        R: Send,
+    {
+        timeout(Duration::from_secs(5), fut)
+            .await
+            .unwrap_or_else(|_| {
+                panic!("Unclosed channel: may indicate harvester could not shutdown gracefully")
+            })
+    }
+
+    async fn run_tail(
+        config: &TailConfig,
+        data_dir: PathBuf,
+        wait_shutdown: bool,
+        acking_mode: AckingMode,
+        inner: impl Future<Output = ()>,
+    ) -> Vec<Event> {
+        let (tx, rx) = if acking_mode == AckingMode::Acks {
+            let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
+            (tx, rx.boxed())
+        } else {
+            let (tx, rx) = Pipeline::new_test();
+            (tx, rx.boxed())
+        };
+
+        let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
+        let acks = !matches!(acking_mode, AckingMode::No);
+
+        tokio::spawn(tail_source(config, data_dir, shutdown, tx, acks).unwrap());
+
+        inner.await;
+
+        drop(trigger_shutdown);
+
+        let result = wait_with_timeout(rx.collect::<Vec<_>>()).await;
+        if wait_shutdown {
+            shutdown_done.await;
+        }
+
+        result
+    }
+
+    async fn sleep_500_millis() {
+        tokio::time::sleep(Duration::from_millis(500)).await
+    }
 
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<TailConfig>()
+    }
+
+    #[tokio::test]
+    async fn happy_path() {
+        let n = 5;
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let path1 = dir.path().join("file1");
+        let path2 = dir.path().join("file2");
+
+        let received = run_tail(
+            &config,
+            dir.path().to_path_buf(),
+            false,
+            AckingMode::No,
+            async {
+                let mut file1 = File::create(&path1).unwrap();
+                let mut file2 = File::create(&path2).unwrap();
+
+                // The files must be observed at their original lengths before writing to them
+                sleep_500_millis().await;
+
+                for i in 0..n {
+                    writeln!(file1, "foo {}", i).unwrap();
+                    writeln!(file2, "bar {}", i).unwrap();
+                }
+
+                sleep_500_millis().await;
+            },
+        )
+        .await;
+
+        let mut foo = 0;
+        let mut bar = 0;
+
+        for event in received {
+            let log = event.as_log();
+            let line = log
+                .get_field(log_schema().message_key())
+                .unwrap()
+                .to_string_lossy();
+
+            if line.starts_with("foo") {
+                assert_eq!(line, format!("foo {}", foo));
+                assert_eq!(
+                    log.tags.get(&Key::from("filename")).unwrap().to_string(),
+                    path1.to_str().unwrap()
+                );
+                foo += 1;
+            } else {
+                assert_eq!(line, format!("bar {}", bar));
+                assert_eq!(
+                    log.tags.get(&Key::from("filename")).unwrap().to_string(),
+                    path2.to_str().unwrap()
+                );
+                bar += 1;
+            }
+        }
+
+        assert_eq!(foo, n);
+        assert_eq!(bar, n);
     }
 }
