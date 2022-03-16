@@ -20,7 +20,9 @@ members = [
     "lib/discovery",
     "lib/event",
     "lib/framework",
+    "lib/multiline",
     "lib/procfs",
+    "lib/serde_regex",
     "lib/internal",
     "lib/prometheus",
     "lib/testify",
@@ -161,7 +163,7 @@ sources-journald = []
 sources-kafka = ["rdkafka", "async-stream"]
 sources-kafka_metrics = ["rdkafka"]
 sources-kmsg = []
-sources-kubernetes_logs = ["tail", "kubernetes", "ahash", "parking_lot"]
+sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
 sources-libvirt = ["virt"]
 sources-memcached = []
 sources-mongodb = []
@@ -176,7 +178,7 @@ sources-prometheus_remote_write = ["snap"]
 sources-redis = ["redis"]
 sources-selfstat = ["libc"]
 sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
-sources-tail = ["tail"]
+sources-tail = ["tail", "multiline"]
 sources-zookeeper = []
 
 # transforms
@@ -292,7 +294,7 @@ prost-build = { version = "0.9" }
 assert_cmd = { version = "2.0.2" }
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
-framework = { path = "lib/framework", features = ["test-util"]}
+framework = { path = "lib/framework", features = ["test-util"] }
 indoc = { version = "1.0.4", default-features = false }
 pretty_assertions = { version = "1.1.0" }
 proptest = { version = "1.0" }
@@ -313,6 +315,7 @@ humanize = { path = "lib/humanize" }
 internal = { path = "lib/internal" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
+multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
@@ -382,7 +385,7 @@ chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.4" }
-encoding_rs = { version = "0.8.30", features = ["serde"]}
+encoding_rs = { version = "0.8.30", features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 glob = { version = "0.3.0" }
@@ -393,7 +396,7 @@ k8s-openapi = { version = "0.14.0", default-features = false, optional = true, f
 kube = { version = "0.69.1", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 lazy_static = { version = "1.4.0" }
 libc = { version = "0.2.119", optional = true }
-memchr = { version = "2.4.1", optional = true, default-features = false}
+memchr = { version = "2.4.1", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
 nom = { version = "7.1.0", default-features = false }

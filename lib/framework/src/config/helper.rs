@@ -1,11 +1,10 @@
 mod charset;
-mod regex;
 
-pub use self::regex::*;
-
-use serde::{Deserialize, Deserializer, Serializer};
 use std::borrow::Cow;
 use std::time::Duration;
+
+use serde::{Deserialize, Deserializer, Serializer};
+pub use serde_regex::*;
 use tokio_stream::wrappers::IntervalStream;
 
 pub fn deserialize_duration<'de, D: Deserializer<'de>>(
@@ -40,17 +39,6 @@ pub fn serialize_duration_option<S: Serializer>(
         Some(d) => s.serialize_str(&humanize::duration(d)),
         None => s.serialize_none(),
     }
-}
-
-pub fn deserialize_regex<'de, D: Deserializer<'de>>(
-    deserializer: D,
-) -> Result<::regex::Regex, D::Error> {
-    let s: String = serde::Deserialize::deserialize(deserializer)?;
-    ::regex::Regex::new(&s).map_err(serde::de::Error::custom)
-}
-
-pub fn serialize_regex<S: Serializer>(re: &::regex::Regex, s: S) -> Result<S::Ok, S::Error> {
-    s.serialize_str(re.as_str())
 }
 
 pub const fn default_true() -> bool {

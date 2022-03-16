@@ -4,7 +4,7 @@ pub fn deserialize_regex<'de, D: Deserializer<'de>>(
     deserializer: D,
 ) -> Result<::regex::Regex, D::Error> {
     let s: String = serde::Deserialize::deserialize(deserializer)?;
-    ::regex::Regex::new(&s).map_err(serde::de::Error::custom)
+    regex::Regex::new(&s).map_err(serde::de::Error::custom)
 }
 
 pub fn serialize_regex<S: Serializer>(re: &::regex::Regex, s: S) -> Result<S::Ok, S::Error> {

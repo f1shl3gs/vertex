@@ -1,5 +1,6 @@
-use crate::multiline::{Mode, Rule};
 use bytes::Bytes;
+
+use crate::{Mode, Rule};
 
 pub struct NoIndent;
 

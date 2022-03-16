@@ -1180,6 +1180,7 @@ dependencies = [
  "regex 1.5.4",
  "serde",
  "serde_json",
+ "serde_regex",
  "serde_yaml",
  "shared",
  "smallvec",
@@ -2474,6 +2475,24 @@ name = "mock_instant"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "717e29a243b81f8130e31e24e04fb151b04a44b5a7d05370935f7d937e9de06d"
+
+[[package]]
+name = "multiline"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "futures",
+ "humanize",
+ "pin-project",
+ "regex 1.5.4",
+ "serde",
+ "serde_json",
+ "serde_regex",
+ "serde_yaml",
+ "tokio",
+ "tokio-stream",
+ "tokio-util 0.6.9",
+]
 
 [[package]]
 name = "multimap"
@@ -4001,6 +4020,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_regex"
+version = "0.1.0"
+dependencies = [
+ "regex 1.5.4",
+ "serde",
+]
+
+[[package]]
 name = "serde_yaml"
 version = "0.8.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5211,6 +5238,7 @@ dependencies = [
  "memchr 2.4.1",
  "metrics",
  "mimalloc",
+ "multiline",
  "netlink-packet-sock-diag",
  "netlink-sys",
  "nix",

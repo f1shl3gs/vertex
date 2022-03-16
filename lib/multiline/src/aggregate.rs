@@ -5,12 +5,12 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
-use framework::config::{deserialize_bytes_regex, serialize_bytes_regex};
 use futures::Stream;
 use futures::StreamExt;
 use pin_project::pin_project;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
+use serde_regex::{deserialize_bytes_regex, serialize_bytes_regex};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
 

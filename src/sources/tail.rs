@@ -9,16 +9,16 @@ use framework::config::{
     SourceContext, SourceDescription,
 };
 use framework::source::util::OrderedFinalizer;
-use framework::{Pipeline, ShutdownSignal, Source, hostname};
+use framework::{hostname, Pipeline, ShutdownSignal, Source};
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
 use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
+use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
 
 use crate::encoding_transcode::{Decoder, Encoder};
-use crate::multiline::{LineAgg, Logic, MultilineConfig, Parser};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -291,7 +291,7 @@ fn tail_source(
                 // This match looks ugly, but it does not need `dyn`
                 match conf.parser {
                     Parser::Cri => {
-                        let logic = Logic::new(crate::multiline::preset::Cri, conf.timeout);
+                        let logic = Logic::new(multiline::preset::Cri, conf.timeout);
                         Box::new(
                             LineAgg::new(
                                 rx.map(|line| {
@@ -310,7 +310,7 @@ fn tail_source(
                         )
                     }
                     Parser::NoIndent => {
-                        let logic = Logic::new(crate::multiline::preset::NoIndent, conf.timeout);
+                        let logic = Logic::new(multiline::preset::NoIndent, conf.timeout);
                         Box::new(
                             LineAgg::new(
                                 rx.map(|line| {
@@ -391,6 +391,7 @@ fn tail_source(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use event::attributes::Key;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
     use std::fs::File;
@@ -398,7 +399,6 @@ mod tests {
     use std::io::Write;
     use tempfile::tempdir;
     use tokio::time::timeout;
-    use event::attributes::Key;
 
     fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
         TailConfig {

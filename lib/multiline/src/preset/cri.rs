@@ -1,6 +1,17 @@
-use crate::multiline::aggregate::{Mode, Rule};
 use bytes::Bytes;
 
+use crate::aggregate::{Mode, Rule};
+
+/// CRI log format: `TIMESTAMP STREAM TAG CONTENT`.
+/// Tag `P` for partial
+/// Tag `F` for full
+///
+/// Example:
+/// ```text
+/// 2016-10-06T00:17:09.669794202Z stdout P log content 1
+/// 2016-10-06T00:17:09.669794203Z stdout P log content 2
+/// 2016-10-06T00:17:09.669794203Z stdout F log content 3
+/// ```
 pub struct Cri;
 
 impl Rule for Cri {

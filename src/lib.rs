@@ -10,7 +10,6 @@
 mod common;
 mod encoding_transcode;
 pub mod extensions;
-mod multiline;
 pub mod sinks;
 pub mod sources;
 pub mod testing;
