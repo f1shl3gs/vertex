@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-nom = { version = "7.1.0" }
+nom = { version = "7.1.1" }
 snafu = { version = "0.6.10" }
 prost = { version = "0.9" }
 num_enum = { version = "0.5.7" }
