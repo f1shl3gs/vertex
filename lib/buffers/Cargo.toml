@@ -13,7 +13,7 @@ async-trait = { version = "0.1", default-features = false }
 bytes = { version = "1.0.1", default-features = false }
 bytecheck = { version = "0.6.5", default-features = false, features = ["std"] }
 crc32fast = { version = "1.3.2", default-features = false, features = ["std"] }
-crossbeam-utils = { version = "0.8.7", default-features = false }
+crossbeam-utils = { version = "0.8.8", default-features = false }
 dyn-clone = { version = "1.0.4", default-features = false }
 fslock = { version = "0.2.0", default-features = false, features = ["std"] }
 futures = { version = "0.3.21", default-features = false, features = ["std"] }
@@ -27,7 +27,7 @@ snafu = { version = "0.6.10" }
 tokio = { version = "1.17.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-stream = { version = "0.1", default-features = false, features = ["sync"] }
 tokio-util = { version = "0.6.9", default-features = false }
-tracing = { version = "0.1.31", default-features = false, features = ["attributes"] }
+tracing = { version = "0.1.32", default-features = false, features = ["attributes"] }
 
 [dev-dependencies]
 criterion = { version = "0.3.5", default-features = false, features = ["async_tokio"] }
