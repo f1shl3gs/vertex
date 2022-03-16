@@ -23,6 +23,7 @@ impl Rule for Cri {
         todo!()
     }
 
+    #[inline]
     fn mode(&self) -> Mode {
         todo!()
     }
