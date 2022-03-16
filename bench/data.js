@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647426864327,
+  "lastUpdate": 1647426905143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8811,6 +8811,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 59.799,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c0d7dbed4d7464ac63663e99edddb4098b29d9b7",
+          "message": "Merge pull request #234 from f1shl3gs/dependabot/cargo/dashmap-5.2.0\n\nchore(deps): bump dashmap from 5.1.0 to 5.2.0",
+          "timestamp": "2022-03-16T18:27:50+08:00",
+          "tree_id": "8dfb85fcb646282ab9b7cee5616b4d5c2072602f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c0d7dbed4d7464ac63663e99edddb4098b29d9b7"
+        },
+        "date": 1647426901676,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.428,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 59.708,
             "unit": "ns/op"
           }
         ]
