@@ -158,7 +158,7 @@ where
                 return Ok(Some(record_len));
             }
 
-            let buf = self.reader.fill_buf().await.context(Io)?;
+            let buf = self.reader.fill_buf().await.context(IoSnafu)?;
             if buf.is_empty() {
                 return Ok(None);
             }
@@ -204,7 +204,7 @@ where
         self.aligned_buf.clear();
         while self.aligned_buf.len() < record_len {
             let needed = record_len - self.aligned_buf.len();
-            let buf = self.reader.fill_buf().await.context(Io)?;
+            let buf = self.reader.fill_buf().await.context(IoSnafu)?;
 
             let available = cmp::min(buf.len(), needed);
             self.aligned_buf.extend_from_slice(&buf[..available]);
@@ -251,7 +251,7 @@ where
         // - `try_next_record` does all the archive checks, checksum validation, etc
         let archived_record = unsafe { archived_root::<Record<'_>>(&self.aligned_buf) };
 
-        T::decode(archived_record.payload()).context(FailedToDecode)
+        T::decode(archived_record.payload()).context(FailedToDecodeSnafu)
     }
 }
 
@@ -626,7 +626,7 @@ where
                 // need to set `self.last_reader_record_id` to match what the ledger has.
                 self.update_reader_last_record_id(ledger_last)
                     .await
-                    .context(Io)?;
+                    .context(IoSnafu)?;
                 break;
             }
         }
@@ -653,9 +653,11 @@ where
     pub async fn next(&mut self) -> Result<Option<T>, ReaderError<T>> {
         let token = loop {
             // Handle any pending acknowledgements first.
-            self.handle_pending_acknowledgements().await.context(Io)?;
+            self.handle_pending_acknowledgements()
+                .await
+                .context(IoSnafu)?;
 
-            self.ensure_ready_for_read().await.context(Io)?;
+            self.ensure_ready_for_read().await.context(IoSnafu)?;
 
             let reader = self
                 .reader
@@ -780,7 +782,7 @@ where
 
         self.update_reader_last_record_id(token.record_id())
             .await
-            .context(Io)?;
+            .context(IoSnafu)?;
         self.track_read(token.record_size() as u64);
         let reader = self
             .reader

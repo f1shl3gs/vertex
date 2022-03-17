@@ -16,9 +16,10 @@ use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 
 use super::{
-    AddCertToStore, AddExtraChainCert, CaStackPush, DerExportError, FileOpenFailed, FileReadFailed,
-    MaybeTls, NewCaStack, NewStoreBuilder, ParsePkcs12, Pkcs12Error, PrivateKeyParseError, Result,
-    SetCertificate, SetPrivateKey, SetVerifyCert, TlsError, TlsIdentityError, X509ParseError,
+    AddCertToStoreSnafu, AddExtraChainCertSnafu, CaStackPushSnafu, DerExportSnafu,
+    FileOpenFailedSnafu, FileReadFailedSnafu, MaybeTls, NewCaStackSnafu, NewStoreBuilderSnafu,
+    ParsePkcs12Snafu, Pkcs12Snafu, PrivateKeyParseSnafu, Result, SetCertificateSnafu,
+    SetPrivateKeySnafu, SetVerifyCertSnafu, TlsError, TlsIdentitySnafu, X509ParseSnafu,
 };
 use crate::config::GenerateConfig;
 
@@ -180,26 +181,28 @@ impl TlsSettings {
         if let Some(identity) = self.identity() {
             context
                 .set_certificate(&identity.cert)
-                .context(SetCertificate)?;
+                .context(SetCertificateSnafu)?;
             context
                 .set_private_key(&identity.pkey)
-                .context(SetPrivateKey)?;
+                .context(SetPrivateKeySnafu)?;
             if let Some(chain) = identity.chain {
                 for cert in chain {
                     context
                         .add_extra_chain_cert(cert)
-                        .context(AddExtraChainCert)?;
+                        .context(AddExtraChainCertSnafu)?;
                 }
             }
         }
         if !self.authorities.is_empty() {
-            let mut store = X509StoreBuilder::new().context(NewStoreBuilder)?;
+            let mut store = X509StoreBuilder::new().context(NewStoreBuilderSnafu)?;
             for authority in &self.authorities {
-                store.add_cert(authority.clone()).context(AddCertToStore)?;
+                store
+                    .add_cert(authority.clone())
+                    .context(AddCertToStoreSnafu)?;
             }
             context
                 .set_verify_cert_store(store.build())
-                .context(SetVerifyCert)?;
+                .context(SetVerifyCertSnafu)?;
         } else {
             debug!("Fetching system root certs.");
 
@@ -233,7 +236,7 @@ impl TlsOptions {
                             .collect()
                     },
                 )
-                .with_context(|| X509ParseError { filename })
+                .with_context(|_kind| X509ParseSnafu { filename })
             }
         }
     }
@@ -260,26 +263,26 @@ impl TlsOptions {
             Some(key_file) => {
                 let name = crt_file.to_string_lossy().to_string();
                 let mut crt_stack = X509::stack_from_pem(pem.as_bytes())
-                    .with_context(|| X509ParseError { filename: crt_file })?
+                    .with_context(|_kind| X509ParseSnafu { filename: crt_file })?
                     .into_iter();
 
                 let crt = crt_stack.next().ok_or(TlsError::MissingCertificate)?;
                 let key = load_key(key_file, &self.key_pass)?;
 
-                let mut ca_stack = Stack::new().context(NewCaStack)?;
+                let mut ca_stack = Stack::new().context(NewCaStackSnafu)?;
                 for intermediate in crt_stack {
-                    ca_stack.push(intermediate).context(CaStackPush)?;
+                    ca_stack.push(intermediate).context(CaStackPushSnafu)?;
                 }
 
                 let mut builder = Pkcs12::builder();
                 builder.ca(ca_stack);
-                let pkcs12 = builder.build("", &name, &key, &crt).context(Pkcs12Error)?;
-                let identity = pkcs12.to_der().context(DerExportError)?;
+                let pkcs12 = builder.build("", &name, &key, &crt).context(Pkcs12Snafu)?;
+                let identity = pkcs12.to_der().context(DerExportSnafu)?;
 
                 // Build the resulting parsed PKCS#12 archive,
                 // but don't store it, as it cannot be cloned.
                 // This is just for error checking.
-                pkcs12.parse("").context(TlsIdentityError)?;
+                pkcs12.parse("").context(TlsIdentitySnafu)?;
 
                 Ok(Some(IdentityStore(identity, "".into())))
             }
@@ -288,10 +291,10 @@ impl TlsOptions {
 
     /// Parse identity from a DER encoded PKCS#12 archive
     fn parse_pkcs12_identity(&self, der: Vec<u8>) -> Result<Option<IdentityStore>> {
-        let pkcs12 = Pkcs12::from_der(&der).context(ParsePkcs12)?;
+        let pkcs12 = Pkcs12::from_der(&der).context(ParsePkcs12Snafu)?;
         // Verify password
         let key_pass = self.key_pass.as_deref().unwrap_or("");
-        pkcs12.parse(key_pass).context(ParsePkcs12)?;
+        pkcs12.parse(key_pass).context(ParsePkcs12Snafu)?;
         Ok(Some(IdentityStore(der, key_pass.to_string())))
     }
 }
@@ -451,13 +454,13 @@ fn load_key(filename: &Path, pass_phrase: &Option<String>) -> Result<PKey<Privat
             |der| PKey::private_key_from_der(&der),
             |pem| PKey::private_key_from_pem(pem.as_bytes()),
         )
-        .with_context(|| PrivateKeyParseError { filename }),
+        .with_context(|_kind| PrivateKeyParseSnafu { filename }),
         Some(phrase) => der_or_pem(
             data,
             |der| PKey::private_key_from_pkcs8_passphrase(&der, phrase.as_bytes()),
             |pem| PKey::private_key_from_pem_passphrase(pem.as_bytes(), phrase.as_bytes()),
         )
-        .with_context(|| PrivateKeyParseError { filename }),
+        .with_context(|_kind| PrivateKeyParseSnafu { filename }),
     }
 }
 
@@ -489,9 +492,9 @@ fn open_read(filename: &Path, note: &'static str) -> Result<(Vec<u8>, PathBuf)> 
     let mut text = Vec::<u8>::new();
 
     File::open(filename)
-        .with_context(|| FileOpenFailed { note, filename })?
+        .with_context(|_kind| FileOpenFailedSnafu { note, filename })?
         .read_to_end(&mut text)
-        .with_context(|| FileReadFailed { note, filename })?;
+        .with_context(|_kind| FileReadFailedSnafu { note, filename })?;
 
     Ok((text, filename.into()))
 }

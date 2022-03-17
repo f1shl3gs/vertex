@@ -1,22 +1,24 @@
-use crate::{Error, FileOpenFailed, OtherErr, ProcFS};
-use snafu::ResultExt;
 use std::collections::BTreeMap;
+
+use snafu::ResultExt;
 use tokio::io::AsyncBufReadExt;
+
+use crate::{Error, FileOpenFailedSnafu, OtherErrSnafu, ProcFS};
 
 impl ProcFS {
     pub async fn arp_entries(&self) -> Result<BTreeMap<String, u64>, Error> {
         let path = &self.root.join("net/arp");
         let f = tokio::fs::File::open(path)
             .await
-            .context(FileOpenFailed { path })?;
+            .context(FileOpenFailedSnafu { path })?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
         let mut devices = BTreeMap::new();
 
         // skip the first line
-        lines.next_line().await.context(OtherErr)?;
+        lines.next_line().await.context(OtherErrSnafu)?;
 
-        while let Some(line) = lines.next_line().await.context(OtherErr)? {
+        while let Some(line) = lines.next_line().await.context(OtherErrSnafu)? {
             let dev = line.split_ascii_whitespace().nth(5).unwrap();
 
             match devices.get_mut(dev) {

@@ -119,12 +119,12 @@ where
         key_field: Option<Template>,
     ) -> crate::Result<Self> {
         let flush_keys_interval = window;
-        let threshold = NonZeroU32::new(threshold).context(NonZero)?;
+        let threshold = NonZeroU32::new(threshold).context(NonZeroSnafu)?;
 
         let quota = Quota::with_period(Duration::from_secs_f64(
             window.as_secs_f64() / threshold.get() as f64,
         ))
-        .context(NonZero)?
+        .context(NonZeroSnafu)?
         .allow_burst(threshold);
 
         let throttle = Throttle {

@@ -103,7 +103,7 @@ impl SinkConfig for RemoteWriteConfig {
         let endpoint = self
             .endpoint
             .parse::<Uri>()
-            .context(crate::sinks::UriParse)?;
+            .context(crate::sinks::UriParseSnafu)?;
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
