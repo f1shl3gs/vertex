@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647458380953,
+  "lastUpdate": 1647508617519,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9063,6 +9063,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 59.649,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aebeaa66ad1d1b3b7cc3fd9cf46c53c29d147e6b",
+          "message": "Merge pull request #242 from f1shl3gs/bump_snafu\n\nbump snafu to 0.7.0",
+          "timestamp": "2022-03-17T17:09:29+08:00",
+          "tree_id": "586a145464d2589dbb3e8f2ba170907b1ee203c4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aebeaa66ad1d1b3b7cc3fd9cf46c53c29d147e6b"
+        },
+        "date": 1647508615964,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.643,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 54.743,
             "unit": "ns/op"
           }
         ]
