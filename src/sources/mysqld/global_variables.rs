@@ -5,7 +5,7 @@ use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{valid_name, Error, QueryFailed};
+use super::{valid_name, Error, QueryFailedSnafu};
 
 lazy_static::lazy_static! {
     static ref GLOBAL_VARIABLES_DESC: std::collections::BTreeMap<String, String> = {
@@ -108,7 +108,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let variables = sqlx::query_as::<_, GlobalVariable>(GLOBAL_VARIABLES_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed {
+        .context(QueryFailedSnafu {
             query: GLOBAL_VARIABLES_QUERY,
         })?;
 

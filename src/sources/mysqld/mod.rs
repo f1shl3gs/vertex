@@ -306,7 +306,7 @@ pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Er
     // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
     let results = futures::future::try_join_all(tasks)
         .await
-        .context(TaskJoinFailed)?;
+        .context(TaskJoinFailedSnafu)?;
 
     // NOTE:
     // `results.into_iter().collect()` would be awesome, BUT
@@ -334,7 +334,7 @@ pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
         .await
-        .context(QueryFailed {
+        .context(QueryFailedSnafu {
             query: VERSION_QUERY,
         })?;
 

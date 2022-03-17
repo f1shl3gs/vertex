@@ -5,7 +5,7 @@ use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{valid_name, QueryFailed};
+use super::{valid_name, QueryFailedSnafu};
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
@@ -21,7 +21,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
     let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailed {
+        .context(QueryFailedSnafu {
             query: GLOBAL_STATUS_QUERY,
         })?;
 

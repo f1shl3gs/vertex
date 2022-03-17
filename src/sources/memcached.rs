@@ -779,7 +779,7 @@ impl Stats {
                 return Ok(());
             }
 
-            let v = parts[2].parse().context(InvalidValue)?;
+            let v = parts[2].parse().context(InvalidValueSnafu)?;
 
             let subs = parts[1].split(':').collect::<Vec<_>>();
             match subs.len() {
@@ -841,9 +841,11 @@ enum ParseError {
 async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     let mut stats = Stats::default();
     for cmd in ["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
-        let resp = query(addr, cmd).await.with_context(|| CommandExecFailed {
-            cmd: cmd.to_string(),
-        })?;
+        let resp = query(addr, cmd)
+            .await
+            .with_context(|_kind| CommandExecFailedSnafu {
+                cmd: cmd.to_string(),
+            })?;
 
         stats.append(&resp)?;
     }
@@ -854,7 +856,7 @@ async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
 async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
     let resp: String = query(addr, "stats settings\r\n")
         .await
-        .context(CommandExecFailed {
+        .context(CommandExecFailedSnafu {
             cmd: "stats settings".to_string(),
         })?;
 

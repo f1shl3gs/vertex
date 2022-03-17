@@ -155,7 +155,7 @@ impl NginxStub {
     }
 
     fn get_endpoint_host(endpoint: &str) -> crate::Result<String> {
-        let uri: Uri = endpoint.parse().context(HostInvalidUri)?;
+        let uri: Uri = endpoint.parse().context(HostInvalidUriSnafu)?;
 
         let host = match (uri.host().unwrap_or(""), uri.port()) {
             (host, None) => host.to_owned(),

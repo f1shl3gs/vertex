@@ -74,7 +74,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         tn = num.replace(",", "");
     }
 
-    let f = tn.parse::<f64>().context(ParseFloatFailed)?;
+    let f = tn.parse::<f64>().context(ParseFloatFailedSnafu)?;
     let extra = &s[last_digit..];
     let extra = extra.trim().to_lowercase();
 

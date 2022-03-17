@@ -89,7 +89,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             .iter()
             .map(|s| {
                 s.parse::<http::Uri>()
-                    .context(crate::sources::UriParseError)
+                    .context(crate::sources::UriParseSnafu)
             })
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
         let tls = MaybeTlsSettings::from_config(&self.tls, true)?;

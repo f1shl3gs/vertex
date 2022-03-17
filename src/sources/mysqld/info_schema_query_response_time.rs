@@ -4,7 +4,7 @@ use sqlx;
 use sqlx::mysql::MySqlRow;
 use sqlx::{FromRow, MySqlPool, Row};
 
-use super::{Error, QueryFailed};
+use super::{Error, QueryFailedSnafu};
 
 const RESPONSE_TIME_CHECK_QUERY: &str = r#"SELECT @@query_response_time_stats"#;
 const RESPONSE_TIME_QUERY: &str =
@@ -87,7 +87,7 @@ async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Me
     let records = sqlx::query_as::<_, Statistic>(query)
         .fetch_all(pool)
         .await
-        .context(QueryFailed { query })?;
+        .context(QueryFailedSnafu { query })?;
 
     let mut sum = 0.0;
     let mut count = 0;

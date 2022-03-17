@@ -24,8 +24,8 @@ pub enum ConsulError {
     DecodeError { source: serde_json::Error },
     #[snafu(display("Unexpected status {}", code))]
     UnexpectedStatusCode { code: u16 },
-    #[snafu(display("Redirection is needed"))]
-    NeedRedirection { location: String },
+    #[snafu(display("Redirection to {}", to))]
+    NeedRedirection { to: String },
     #[snafu(display("Redirection failed"))]
     RedirectionFailed,
 }
@@ -251,7 +251,7 @@ impl QueryOptions {
             }
         }
 
-        let uri = url::Url::parse_with_params(path, params).context(ParseUrl)?;
+        let uri = url::Url::parse_with_params(path, params).context(ParseUrlSnafu)?;
 
         Ok(builder.uri(uri.as_str()))
     }
@@ -302,7 +302,7 @@ impl Client {
         match self.fetch(uri.as_str(), opts).await {
             Ok(entries) => Ok(entries),
             Err(err) => match err {
-                ConsulError::NeedRedirection { location } => self.fetch(&location, opts).await,
+                ConsulError::NeedRedirection { to } => self.fetch(&to, opts).await,
                 _ => Err(err),
             },
         }
@@ -325,24 +325,24 @@ impl Client {
             None => http::Request::get(path),
         };
 
-        let req = builder.body(Body::empty()).context(BuildRequest)?;
+        let req = builder.body(Body::empty()).context(BuildRequestSnafu)?;
 
         return match self.client.send(req).await {
             Ok(resp) => {
                 let (parts, body) = resp.into_parts();
                 match parts.status {
                     StatusCode::OK => {
-                        let body = hyper::body::to_bytes(body).await.context(ReadBody)?;
+                        let body = hyper::body::to_bytes(body).await.context(ReadBodySnafu)?;
 
                         let body =
-                            serde_json::from_slice::<T>(body.chunk()).context(DecodeError)?;
+                            serde_json::from_slice::<T>(body.chunk()).context(DecodeSnafu)?;
 
                         Ok(body)
                     }
                     StatusCode::MOVED_PERMANENTLY => {
                         return match parts.headers.get("Location") {
                             Some(redirect) => Err(ConsulError::NeedRedirection {
-                                location: redirect.to_str().unwrap().to_string(),
+                                to: redirect.to_str().unwrap().to_string(),
                             }),
                             None => Err(ConsulError::RedirectionFailed),
                         };
