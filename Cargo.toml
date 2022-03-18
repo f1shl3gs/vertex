@@ -185,7 +185,7 @@ sources-zookeeper = []
 transforms = [
     "transforms-add_tags",
     "transforms-add_fields",
-    "transforms-aggregate",
+    "transforms-metricalize",
     "transforms-cardinality",
     "transforms-sample",
     "transforms-substr",
@@ -193,7 +193,7 @@ transforms = [
 ]
 transforms-add_tags = []
 transforms-add_fields = []
-transforms-aggregate = ["async-stream"]
+transforms-metricalize = ["async-stream"]
 transforms-cardinality = ["bloom"]
 transforms-sample = ["seahash"]
 transforms-substr = []

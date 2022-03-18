@@ -131,7 +131,7 @@ impl MetricConfig {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-struct AggregateConfig {
+struct MetricalizeConfig {
     #[serde(
         default = "default_interval",
         deserialize_with = "deserialize_duration",
@@ -141,7 +141,7 @@ struct AggregateConfig {
     metrics: Vec<MetricConfig>,
 }
 
-impl GenerateConfig for AggregateConfig {
+impl GenerateConfig for MetricalizeConfig {
     fn generate_config() -> String {
         r#"
 # The interval between flushes.
@@ -196,14 +196,14 @@ metrics:
 }
 
 inventory::submit! {
-    TransformDescription::new::<AggregateConfig>("aggregate")
+    TransformDescription::new::<MetricalizeConfig>("metricalize")
 }
 
 #[async_trait]
-#[typetag::serde(name = "aggregate")]
-impl TransformConfig for AggregateConfig {
+#[typetag::serde(name = "metricalize")]
+impl TransformConfig for MetricalizeConfig {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let agg = Aggregate::new(self.interval, self.metrics.clone());
+        let agg = Metricalize::new(self.interval, self.metrics.clone());
         Ok(Transform::event_task(agg))
     }
 
@@ -216,11 +216,11 @@ impl TransformConfig for AggregateConfig {
     }
 
     fn transform_type(&self) -> &'static str {
-        "aggregate"
+        "metricalize"
     }
 }
 
-impl TaskTransform for Aggregate {
+impl TaskTransform for Metricalize {
     fn transform(
         mut self: Box<Self>,
         mut input_rx: Pin<Box<dyn Stream<Item = Event> + Send>>,
@@ -258,13 +258,13 @@ impl TaskTransform for Aggregate {
 
 type MetricEntry = (MetricValue, EventMetadata);
 
-struct Aggregate {
+struct Metricalize {
     interval: Duration,
     configs: Vec<MetricConfig>,
     states: HashMap<MetricSeries, MetricEntry>,
 }
 
-impl Aggregate {
+impl Metricalize {
     fn new(interval: Duration, configs: Vec<MetricConfig>) -> Self {
         Self {
             interval,
@@ -293,7 +293,7 @@ impl Aggregate {
                                 }
                                 _ => {
                                     *existing = (config.new_metric_value(value), metadata.clone());
-                                    counter!("aggregate_failed_total", 1);
+                                    counter!("metricalize_failed_total", 1);
                                 }
                             }
                         }
@@ -303,7 +303,7 @@ impl Aggregate {
                         }
                     }
                 }
-                None => counter!("aggregate_failed_total", 1),
+                None => counter!("metricalize_failed_total", 1),
             }
         }
     }
@@ -325,7 +325,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<AggregateConfig>()
+        crate::testing::test_generate_config::<MetricalizeConfig>()
     }
 
     #[test]
@@ -476,7 +476,7 @@ mod tests {
         ];
 
         for (test, config, logs, wants) in cases {
-            let mut agg = Aggregate::new(default_interval(), vec![config]);
+            let mut agg = Metricalize::new(default_interval(), vec![config]);
 
             for log in logs {
                 agg.record(Event::from(log));

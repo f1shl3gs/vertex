@@ -2,9 +2,9 @@
 mod add_fields;
 #[cfg(feature = "transforms-add_tags")]
 mod add_tags;
-#[cfg(feature = "transforms-aggregate")]
-mod aggregate;
 mod ansii_striper;
+#[cfg(feature = "transforms-metricalize")]
+mod metricalize;
 
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
