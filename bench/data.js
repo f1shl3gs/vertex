@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647585330681,
+  "lastUpdate": 1647585353431,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4254,6 +4254,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1154700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "db99f2673dfa090496db29671a5b2c5792a01a75",
+          "message": "Merge remote-tracking branch 'origin/master'",
+          "timestamp": "2022-03-18T14:28:38+08:00",
+          "tree_id": "709bea842d471a88f4d8f4ff6bf4126e8df68e93",
+          "url": "https://github.com/f1shl3gs/vertex/commit/db99f2673dfa090496db29671a5b2c5792a01a75"
+        },
+        "date": 1647585352034,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1026600,
             "unit": "ns/op"
           }
         ]
