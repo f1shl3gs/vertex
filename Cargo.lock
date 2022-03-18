@@ -2479,7 +2479,6 @@ dependencies = [
  "serde_regex",
  "serde_yaml",
  "tokio",
- "tokio-stream",
  "tokio-util 0.6.9",
 ]
 

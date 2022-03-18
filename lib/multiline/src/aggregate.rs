@@ -406,7 +406,7 @@ impl Rule for RegexRule {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use tokio_stream::StreamExt;
+    use futures::StreamExt;
 
     type Filename = String;
 
