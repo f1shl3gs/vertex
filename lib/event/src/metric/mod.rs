@@ -9,6 +9,9 @@ use crate::attributes::{Attributes, Key, Value};
 use crate::metadata::EventMetadata;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
+pub const INSTANCE_KEY: Key = Key::from_static_str("instance");
+pub const EXPORTED_INSTANCE_KEY: Key = Key::from_static_str("exported_instance");
+
 #[macro_export]
 macro_rules! buckets {
     ( $( $limit:expr => $count:expr),* ) => {
@@ -541,6 +544,11 @@ impl Metric {
     #[inline]
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
         self.series.insert_tag(key, value)
+    }
+
+    #[inline]
+    pub fn remote_tag(&mut self, key: &Key) -> Option<Value> {
+        self.series.tags.remove(key)
     }
 
     #[inline]
