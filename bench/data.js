@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647705791353,
+  "lastUpdate": 1647705933204,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -24961,6 +24961,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1359,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "71b7cc6dd5c65e1a1fa1e78eb57463fe73433472",
+          "message": "Merge pull request #244 from f1shl3gs/scrape_with_tasks\n\nscrape targets with tasks",
+          "timestamp": "2022-03-19T23:34:20+08:00",
+          "tree_id": "2145642ee0b60f892549222108eb9cb3c1aecf74",
+          "url": "https://github.com/f1shl3gs/vertex/commit/71b7cc6dd5c65e1a1fa1e78eb57463fe73433472"
+        },
+        "date": 1647705931377,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1557,
             "unit": "s"
           }
         ]
