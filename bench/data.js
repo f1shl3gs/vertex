@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647700994460,
+  "lastUpdate": 1647701057326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4283,6 +4283,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1026600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f179cb058e6e63b6c7de1a340cd9f5fb09c6340",
+          "message": "Merge pull request #243 from f1shl3gs/remove_unused_deps\n\nremove unused deps",
+          "timestamp": "2022-03-19T22:36:05+08:00",
+          "tree_id": "e614f966fb2b343bc4706122f02b644500e32265",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f179cb058e6e63b6c7de1a340cd9f5fb09c6340"
+        },
+        "date": 1647701055595,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1383200,
             "unit": "ns/op"
           }
         ]
