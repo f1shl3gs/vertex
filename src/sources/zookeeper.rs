@@ -4,8 +4,7 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::time::Duration;
 
-use event::attributes::Key;
-use event::{tags, Metric};
+use event::{tags, Metric, INSTANCE_KEY};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
@@ -18,8 +17,6 @@ use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
-
-const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

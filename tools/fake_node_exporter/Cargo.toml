@@ -1,0 +1,8 @@
+[package]
+name = "fake_node_exporter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.17.0", features = ["macros", "rt-multi-thread"] }
+hyper = { version = "0.14.17", features = ["server", "tcp", "http1"] }

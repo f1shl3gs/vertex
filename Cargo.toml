@@ -35,6 +35,7 @@ members = [
     "lib/jaeger",
     "lib/tracing-internal",
     "tools/log_generator",
+    "tools/fake_node_exporter"
 ]
 
 [features]
@@ -230,7 +231,8 @@ sinks-socket = []
 
 # extensions
 extensions = [
-    "extensions-healthcheck"
+    "extensions-healthcheck",
+    "extensions-pprof"
 ]
 
 extensions-pprof = ["pprof/flamegraph"]
