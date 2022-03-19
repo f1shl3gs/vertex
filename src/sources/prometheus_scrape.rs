@@ -175,7 +175,7 @@ fn scrape(
                     tokio::time::Instant::now() + offset(&url, now, interval, jitter_seed),
                     interval,
                 );
-                let auth = auth.clone();
+                let auth = Arc::clone(&auth);
                 let instance = Cow::from(format!(
                     "{}:{}",
                     url.host().unwrap_or_default(),
@@ -392,10 +392,10 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-    use framework::config::default_interval;
-    use testify::random::random_string;
     use crate::sources::prometheus_scrape::{offset, PrometheusScrapeConfig};
+    use framework::config::default_interval;
+    use std::collections::BTreeMap;
+    use testify::random::random_string;
 
     #[test]
     fn generate_config() {

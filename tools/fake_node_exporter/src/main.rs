@@ -1,3 +1,5 @@
+#![allow(clippy::print_stdout)]
+
 use std::convert::Infallible;
 
 use hyper::service::{make_service_fn, service_fn};
@@ -26,7 +28,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 }
 
 async fn handle(_: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::new(Body::from(r##"# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
+    Ok(Response::new(Body::from(
+        r##"# HELP go_gc_duration_seconds A summary of the pause duration of garbage collection cycles.
 # TYPE go_gc_duration_seconds summary
 go_gc_duration_seconds{quantile="0"} 0
 go_gc_duration_seconds{quantile="0.25"} 0
@@ -1902,5 +1905,6 @@ promhttp_metric_handler_requests_in_flight 1
 # TYPE promhttp_metric_handler_requests_total counter
 promhttp_metric_handler_requests_total{code="200"} 0
 promhttp_metric_handler_requests_total{code="500"} 0
-promhttp_metric_handler_requests_total{code="503"} 0"##)))
+promhttp_metric_handler_requests_total{code="503"} 0"##,
+    )))
 }
