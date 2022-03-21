@@ -76,6 +76,8 @@ target-x86_64-unknown-linux-gnu = [
     "transforms",
     "rdkafka-cmake",
     "unix",
+
+    "extensions-pprof"
 ]
 
 # Integration tests
@@ -232,7 +234,9 @@ sinks-socket = []
 # extensions
 extensions = [
     "extensions-healthcheck",
-    "extensions-pprof"
+    # Musl does not provide "pthread_getname_np" in current release.
+    # https://github.com/tikv/pprof-rs/issues/41
+    # "extensions-pprof"
 ]
 
 extensions-pprof = ["pprof/flamegraph"]
