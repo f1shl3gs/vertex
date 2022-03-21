@@ -302,7 +302,7 @@ pub fn udp(
         })
         .boxed();
 
-        match output.send_all(&mut stream).await {
+        match output.send_event_stream(&mut stream).await {
             Ok(()) => {
                 info!(message = "Finished sending");
                 Ok(())

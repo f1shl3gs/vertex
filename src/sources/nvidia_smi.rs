@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{Duration, Instant};
 
-use event::{tags, Event, Metric};
+use event::{tags, Metric};
 use futures::StreamExt;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -68,9 +68,7 @@ impl SourceConfig for NvidiaSmiConfig {
             while ticker.next().await.is_some() {
                 match gather(&path).await {
                     Ok(metrics) => {
-                        let mut stream = futures::stream::iter(metrics).map(Event::Metric);
-
-                        if let Err(err) = output.send_all(&mut stream).await {
+                        if let Err(err) = output.send(metrics).await {
                             error!(
                                 message = "Error sending nvidia smi metrics",
                                 %err

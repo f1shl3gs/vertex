@@ -8,8 +8,6 @@ pub mod config;
 pub mod dns;
 mod extension;
 pub mod http;
-#[cfg(any(test, feature = "test-util"))]
-pub mod mock;
 pub mod partition;
 pub mod pipeline;
 pub mod shutdown;
@@ -38,7 +36,7 @@ pub use shutdown::*;
 pub use signal::*;
 pub use sink::{Healthcheck, HealthcheckError, Sink, StreamSink};
 pub use source::Source;
-pub use transform::{FunctionTransform, SyncTransform, TaskTransform, Transform};
+pub use transform::{FunctionTransform, OutputBuffer, SyncTransform, TaskTransform, Transform};
 pub(crate) use transform::{TransformOutputs, TransformOutputsBuf};
 
 #[macro_use]

@@ -1,4 +1,3 @@
-use event::Event;
 use framework::config::{default_interval, GenerateConfig, Output, SourceDescription};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -7,7 +6,6 @@ use framework::{
     Source,
 };
 use futures::StreamExt;
-use futures_util::stream;
 use internal::metric::{get_global, init_global, InternalRecorder};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -75,13 +73,12 @@ async fn run(
 
     while ticker.next().await.is_some() {
         let timestamp = Some(chrono::Utc::now());
-        let metrics = recorder.capture_metrics();
-        let events = metrics.map(|mut m| {
-            m.timestamp = timestamp;
-            Event::from(m)
-        });
+        let mut metrics = recorder.capture_metrics().collect::<Vec<_>>();
+        metrics
+            .iter_mut()
+            .for_each(|metric| metric.timestamp = timestamp);
 
-        if let Err(err) = output.send_all(&mut stream::iter(events)).await {
+        if let Err(err) = output.send(metrics).await {
             error!(
                 message = "Error sending internal metrics",
                 %err

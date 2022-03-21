@@ -3,7 +3,8 @@ mod client;
 use std::collections::HashSet;
 use std::time::Instant;
 
-use event::{tags, Event, Metric};
+use chrono::Utc;
+use event::{tags, Metric};
 use framework::config::{
     default_interval, default_true, deserialize_duration, serialize_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
@@ -88,17 +89,22 @@ impl SourceConfig for ConsulSourceConfig {
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics = futures::future::join_all(
+                let results = futures::future::join_all(
                     clients.iter().map(|cli| gather(cli, health_summary, &opts)),
                 )
                 .await;
 
-                let mut stream = futures::stream::iter(metrics)
-                    .map(futures::stream::iter)
+                let now = Utc::now();
+                let metrics = results
+                    .into_iter()
                     .flatten()
-                    .map(Event::Metric);
+                    .map(|mut m| {
+                        m.timestamp = Some(now);
+                        m
+                    })
+                    .collect::<Vec<_>>();
 
-                if let Err(err) = output.send_all(&mut stream).await {
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending consul metrics",
                         %err

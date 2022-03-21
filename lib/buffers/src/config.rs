@@ -1,3 +1,4 @@
+use std::num::{NonZeroU64, NonZeroUsize};
 use std::{fmt, path::PathBuf};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
@@ -9,7 +10,7 @@ use crate::{
         builder::{TopologyBuilder, TopologyError},
         channel::{BufferReceiver, BufferSender},
     },
-    variant::{DiskBuffer, MemoryBuffer},
+    variants::{DiskBuffer, MemoryBuffer},
     Acker, Bufferable, WhenFull,
 };
 
@@ -39,8 +40,8 @@ impl BufferTypeVisitor {
         A: de::MapAccess<'de>,
     {
         let mut kind: Option<BufferTypeKind> = None;
-        let mut max_events: Option<usize> = None;
-        let mut max_size: Option<u64> = None;
+        let mut max_events: Option<NonZeroUsize> = None;
+        let mut max_size: Option<NonZeroU64> = None;
         let mut when_full: Option<WhenFull> = None;
         while let Some(key) = map.next_key::<String>()? {
             match key.as_str() {
@@ -183,8 +184,9 @@ impl Serialize for BufferConfig {
     }
 }
 
-pub const fn memory_buffer_default_max_events() -> usize {
-    500
+pub fn memory_buffer_default_max_events() -> NonZeroUsize {
+    // Error shall never happened
+    NonZeroUsize::new(512).unwrap()
 }
 
 /// A specific type of buffer stage.
@@ -196,14 +198,14 @@ pub enum BufferType {
     #[serde(rename = "memory")]
     Memory {
         #[serde(default = "memory_buffer_default_max_events")]
-        max_events: usize,
+        max_events: NonZeroUsize,
         #[serde(default)]
         when_full: WhenFull,
     },
     /// A buffer stage backed by disk.
     #[serde(rename = "disk")]
     Disk {
-        max_size: u64,
+        max_size: NonZeroU64,
         #[serde(default)]
         when_full: WhenFull,
     },

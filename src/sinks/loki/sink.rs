@@ -4,7 +4,7 @@ use std::io::Error;
 use std::num::NonZeroUsize;
 
 use buffers::Acker;
-use event::{log::Value, Event, EventFinalizers, Finalizable};
+use event::{log::Value, Event, EventContainer, EventFinalizers, Events, Finalizable};
 use framework::config::SinkContext;
 use framework::http::HttpClient;
 use framework::partition::Partitioner;
@@ -307,7 +307,7 @@ impl LokiSink {
         })
     }
 
-    async fn run_inner(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run_inner(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let service = tower::ServiceBuilder::new()
             .concurrency_limit(1)
             .service(self.service);
@@ -315,7 +315,9 @@ impl LokiSink {
         let encoder = self.encoder.clone();
         let mut filter = RecordFilter::new(self.out_of_order_action);
 
+        // TODO: Batch events
         input
+            .flat_map(|events| futures::stream::iter(events.into_events()))
             .map(|event| encoder.encode_event(event))
             .filter_map(|record| {
                 let res = filter.filter_record(record);
@@ -344,7 +346,7 @@ impl LokiSink {
 
 #[async_trait::async_trait]
 impl StreamSink for LokiSink {
-    async fn run(mut self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(mut self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         self.run_inner(input).await
     }
 }

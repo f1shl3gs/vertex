@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package event;
 
 import "google/protobuf/timestamp.proto";
@@ -110,5 +111,20 @@ message EventWrapper {
   oneof event {
     Log log = 1;
     Metric metric = 2;
+  }
+}
+
+message Events {
+  message Logs {
+    repeated Log logs = 1;
+  }
+
+  message Metrics {
+    repeated Metric metrics = 1;
+  }
+
+  oneof events {
+    Logs logs = 1;
+    Metrics metrics = 2;
   }
 }

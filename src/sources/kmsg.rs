@@ -76,7 +76,7 @@ impl SourceConfig for KmsgConfig {
                                         timestamp_key => timestamp
                                     ));
 
-                                output.send(record.into()).await.unwrap();
+                                output.send(record).await.unwrap();
                         }
                     }
                 }

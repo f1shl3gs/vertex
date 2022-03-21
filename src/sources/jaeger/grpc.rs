@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use event::Event;
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::future::Shared;
 use futures_util::FutureExt;
@@ -23,7 +24,8 @@ impl CollectorService for JaegerCollector {
         if let Some(batch) = req.batch {
             let mut output = self.output.lock().await;
 
-            if let Err(err) = output.send(batch.into()).await {
+            let event = Event::from(batch);
+            if let Err(err) = output.send(event).await {
                 let err = format!("{:?}", err);
                 warn!(message = "Error sending trace", %err);
                 return Err(Status::internal(err));

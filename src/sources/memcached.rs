@@ -1,9 +1,10 @@
+use chrono::Utc;
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::{Duration, Instant};
 
 use event::attributes::Key;
-use event::{tags, Event, Metric};
+use event::{tags, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
@@ -62,15 +63,19 @@ impl SourceConfig for MemcachedConfig {
         let endpoints = self.endpoints.clone();
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics =
-                    futures::future::join_all(endpoints.iter().map(|addr| gather(addr))).await;
+                let mut metrics =
+                    futures::future::join_all(endpoints.iter().map(|addr| gather(addr)))
+                        .await
+                        .into_iter()
+                        .flatten()
+                        .collect::<Vec<_>>();
 
-                let mut stream = futures::stream::iter(metrics)
-                    .map(futures::stream::iter)
-                    .flatten()
-                    .map(Event::Metric);
+                let now = Utc::now();
+                metrics
+                    .iter_mut()
+                    .for_each(|metric| metric.timestamp = Some(now));
 
-                if let Err(err) = output.send_all(&mut stream).await {
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending memcached metrics",
                         %err

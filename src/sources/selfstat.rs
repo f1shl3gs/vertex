@@ -1,7 +1,7 @@
 use std::time::Duration;
 use std::{fmt::Debug, io::Read};
 
-use event::{Event, Metric};
+use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
@@ -85,15 +85,11 @@ impl SelfStat {
 
         while ticker.next().await.is_some() {
             match gather().instrument(info_span!("selfstat.gather")).await {
-                Ok(metrics) => {
+                Ok(mut metrics) => {
                     let now = Some(chrono::Utc::now());
+                    metrics.iter_mut().for_each(|m| m.timestamp = now);
 
-                    let mut stream = futures::stream::iter(metrics).map(|mut m| {
-                        m.timestamp = now;
-                        Event::Metric(m)
-                    });
-
-                    if let Err(err) = out.send_all(&mut stream).await {
+                    if let Err(err) = out.send(metrics).await {
                         error!(
                             message = "Error sending selfstat metrics",
                             %err

@@ -2,9 +2,9 @@ use std::collections::HashMap;
 use std::pin::Pin;
 
 use async_trait::async_trait;
-use event::{Event, EventContainer};
+use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
-use futures_util::{stream, SinkExt, StreamExt};
+use futures_util::{stream, StreamExt};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
@@ -14,7 +14,7 @@ use crate::topology::{ControlChannel, Fanout};
 /// Transforms that are simple, and don't require attention to coordination.
 /// You can run them as simple functions over events in any order
 pub trait FunctionTransform: Send + dyn_clone::DynClone + Sync {
-    fn transform(&mut self, output: &mut Vec<Event>, event: Event);
+    fn transform(&mut self, output: &mut OutputBuffer, events: Events);
 }
 
 dyn_clone::clone_trait_object!(FunctionTransform);
@@ -24,7 +24,7 @@ dyn_clone::clone_trait_object!(FunctionTransform);
 /// returned via `TransformConfig::outputs`. Attempting to send to any output
 /// not registered in advance is considered a bug and will cause a panic.
 pub trait SyncTransform: Send + dyn_clone::DynClone + Sync {
-    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf);
+    fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf);
 }
 
 dyn_clone::clone_trait_object!(SyncTransform);
@@ -33,11 +33,11 @@ impl<T> SyncTransform for T
 where
     T: FunctionTransform,
 {
-    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf) {
+    fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf) {
         FunctionTransform::transform(
             self,
             output.primary_buffer.as_mut().expect("no default output"),
-            event,
+            events,
         );
     }
 }
@@ -53,8 +53,8 @@ where
 pub trait TaskTransform: Send {
     fn transform(
         self: Box<Self>,
-        task: Pin<Box<dyn Stream<Item = Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item = Event> + Send>>;
+        task: Pin<Box<dyn Stream<Item = Events> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Events> + Send>>;
 
     /// Wrap the transform task to process and emit individual
     /// events. This is used to simplify testing task transforms.
@@ -71,11 +71,11 @@ pub trait TaskTransform: Send {
 
 // TODO: this is a bit ugly when we already have the above impl
 impl SyncTransform for Box<dyn FunctionTransform> {
-    fn transform(&mut self, event: Event, output: &mut TransformOutputsBuf) {
+    fn transform(&mut self, events: Events, output: &mut TransformOutputsBuf) {
         FunctionTransform::transform(
             self.as_mut(),
             output.primary_buffer.as_mut().expect("no default output"),
-            event,
+            events,
         );
     }
 }
@@ -134,8 +134,8 @@ impl Transform {
 }
 
 pub struct TransformOutputsBuf {
-    primary_buffer: Option<Vec<Event>>,
-    named_buffers: HashMap<String, Vec<Event>>,
+    primary_buffer: Option<OutputBuffer>,
+    named_buffers: HashMap<String, OutputBuffer>,
 }
 
 impl TransformOutputsBuf {
@@ -146,10 +146,10 @@ impl TransformOutputsBuf {
         for output in outpus {
             match output.port {
                 Some(name) => {
-                    named_buffers.insert(name.clone(), vec![]);
+                    named_buffers.insert(name.clone(), OutputBuffer::default());
                 }
                 None => {
-                    primary_buffer = Some(Vec::with_capacity(capacity));
+                    primary_buffer = Some(OutputBuffer::with_capacity(capacity));
                 }
             }
         }
@@ -160,58 +160,37 @@ impl TransformOutputsBuf {
         }
     }
 
-    pub fn push(&mut self, event: Event) {
-        self.primary_buffer
-            .as_mut()
-            .expect("no default output")
-            .push(event);
-    }
-
-    pub fn push_named(&mut self, name: &str, event: Event) {
+    pub fn push_named(&mut self, name: &str, events: Events) {
         self.named_buffers
             .get_mut(name)
             .expect("unknown output")
-            .push(event);
+            .push(events);
     }
 
-    pub fn append(&mut self, slice: &mut Vec<Event>) {
+    pub fn drain(&mut self) -> impl Iterator<Item = Events> + '_ {
         self.primary_buffer
             .as_mut()
             .expect("no default output")
-            .append(slice);
+            .drain()
     }
 
-    pub fn append_named(&mut self, name: &str, slice: &mut Vec<Event>) {
+    pub fn drain_named(&mut self, name: &str) -> impl Iterator<Item = Events> + '_ {
         self.named_buffers
             .get_mut(name)
             .expect("unknown output")
-            .append(slice);
+            .drain()
     }
 
-    pub fn drain(&mut self) -> impl Iterator<Item = Event> + '_ {
-        self.primary_buffer
-            .as_mut()
-            .expect("no default output")
-            .drain(..)
-    }
-
-    pub fn drain_named(&mut self, name: &str) -> impl Iterator<Item = Event> + '_ {
-        self.named_buffers
-            .get_mut(name)
-            .expect("unknown output")
-            .drain(..)
-    }
-
-    pub fn take_primary(&mut self) -> Vec<Event> {
+    pub fn take_primary(&mut self) -> OutputBuffer {
         std::mem::take(self.primary_buffer.as_mut().expect("no default output"))
     }
 
-    pub fn take_all_nmaed(&mut self) -> HashMap<String, Vec<Event>> {
+    pub fn take_all_nmaed(&mut self) -> HashMap<String, OutputBuffer> {
         std::mem::take(&mut self.named_buffers)
     }
 
     pub fn len(&self) -> usize {
-        self.primary_buffer.as_ref().map_or(0, Vec::len)
+        self.primary_buffer.as_ref().map_or(0, OutputBuffer::len)
             + self
                 .named_buffers
                 .iter()
@@ -278,29 +257,32 @@ impl TransformOutputs {
 
     pub async fn send(&mut self, buf: &mut TransformOutputsBuf) {
         if let Some(primary) = self.primary_output.as_mut() {
-            send_inner(
-                buf.primary_buffer.as_mut().expect("mismatched outputs"),
-                primary,
-            )
-            .await;
+            let count = buf.primary_buffer.as_ref().map_or(0, OutputBuffer::len);
+            let byte_size = buf.primary_buffer.as_ref().map_or(0, ByteSizeOf::size_of);
+
+            buf.primary_buffer
+                .as_mut()
+                .expect("mismatched outputs")
+                .send(primary)
+                .await;
+
+            // metrics
+            counter!("component_sent_events_total", count as u64);
+            counter!("component_sent_event_bytes_total", byte_size as u64);
         }
 
         for (key, buf) in &mut buf.named_buffers {
-            send_inner(
-                buf,
-                self.named_outputs.get_mut(key).expect("unknown output"),
-            )
-            .await;
+            let count = buf.len();
+            let byte_size = buf.size_of();
+
+            buf.send(self.named_outputs.get_mut(key).expect("unknown output"))
+                .await;
+
+            // metrics
+            counter!("component_sent_events_total", count as u64, "output" => key.to_owned());
+            counter!("component_sent_event_bytes_total", byte_size as u64, "output" => key.to_owned());
         }
     }
-}
-
-async fn send_inner(buf: &mut Vec<Event>, output: &mut Fanout) {
-    for event in buf.drain(..) {
-        output.feed(event).await.expect("unit error")
-    }
-
-    output.flush().await.expect("unit error")
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -327,7 +309,112 @@ impl TransformConfig for Noop {
 }
 
 impl FunctionTransform for Noop {
-    fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
-        output.push(event);
+    fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
+        output.push(events);
+    }
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct OutputBuffer(Vec<Events>);
+
+impl OutputBuffer {
+    pub fn with_capacity(capacity: usize) -> Self {
+        Self(Vec::with_capacity(capacity))
+    }
+
+    #[inline]
+    pub fn push(&mut self, events: Events) {
+        self.0.push(events)
+    }
+
+    #[inline]
+    pub fn push_one(&mut self, event: Event) {
+        self.push_event(event)
+    }
+
+    fn push_event(&mut self, event: Event) {
+        // Coalesce multiple pushes of the same type into one array.
+        match (event, self.0.last_mut()) {
+            (Event::Log(log), Some(Events::Logs(logs))) => {
+                logs.push(log);
+            }
+            (Event::Metric(metric), Some(Events::Metrics(metrics))) => {
+                metrics.push(metric);
+            }
+            (Event::Trace(trace), Some(Events::Traces(traces))) => {
+                traces.push(trace);
+            }
+            (event, _) => {
+                self.0.push(event.into());
+            }
+        }
+    }
+
+    pub fn extend(&mut self, events: impl Iterator<Item = Event>) {
+        for event in events {
+            self.push_event(event);
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.iter().map(Events::len).sum()
+    }
+
+    pub fn first(&self) -> Option<EventRef> {
+        self.0.first().and_then(|first| match first {
+            Events::Logs(l) => l.first().map(Into::into),
+            Events::Metrics(m) => m.first().map(Into::into),
+            Events::Traces(t) => t.first().map(Into::into),
+        })
+    }
+
+    pub fn drain(&mut self) -> impl Iterator<Item = Events> + '_ {
+        self.0.drain(..)
+    }
+
+    async fn send(&mut self, output: &mut Fanout) {
+        for array in std::mem::take(&mut self.0) {
+            output.send(array).await;
+        }
+    }
+
+    fn iter_events(&self) -> impl Iterator<Item = EventRef> {
+        self.0.iter().flat_map(Events::iter_events)
+    }
+
+    pub fn into_events(self) -> impl Iterator<Item = Event> {
+        self.0.into_iter().flat_map(Events::into_events)
+    }
+}
+
+impl ByteSizeOf for OutputBuffer {
+    fn allocated_bytes(&self) -> usize {
+        self.0.iter().map(ByteSizeOf::size_of).sum()
+    }
+}
+
+impl EventDataEq<Vec<Event>> for OutputBuffer {
+    fn event_data_eq(&self, other: &Vec<Event>) -> bool {
+        struct Comparator<'a>(EventRef<'a>);
+
+        impl<'a> PartialEq<&Event> for Comparator<'a> {
+            fn eq(&self, that: &&Event) -> bool {
+                self.0.event_data_eq(that)
+            }
+        }
+
+        self.iter_events().map(Comparator).eq(other.iter())
+    }
+}
+
+impl From<Vec<Event>> for OutputBuffer {
+    fn from(events: Vec<Event>) -> Self {
+        let mut result = Self::default();
+        result.extend(events.into_iter());
+        result
     }
 }

@@ -386,9 +386,9 @@ impl<I> EncodedEvent<I> {
     }
 
     /// Remap the item using an adapter
-    pub fn map<T>(self, doit: impl Fn(I) -> T) -> EncodedEvent<T> {
+    pub fn map<T>(self, f: impl Fn(I) -> T) -> EncodedEvent<T> {
         EncodedEvent {
-            item: doit(self.item),
+            item: f(self.item),
             finalizers: self.finalizers,
             byte_size: self.byte_size,
         }

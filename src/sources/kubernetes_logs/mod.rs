@@ -355,7 +355,7 @@ impl LogSource {
             log.into()
         });
 
-        tokio::spawn(async move { output.send_all(&mut events).await });
+        tokio::spawn(async move { output.send_all_v2(&mut events).await });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown, checkpointer);

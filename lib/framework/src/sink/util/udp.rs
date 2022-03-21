@@ -8,7 +8,7 @@ use std::{
 use async_trait::async_trait;
 use buffers::Acker;
 use bytes::{Bytes, BytesMut};
-use event::Event;
+use event::{Event, EventContainer, Events};
 use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
@@ -243,36 +243,37 @@ impl UdpSink {
 
 #[async_trait]
 impl StreamSink for UdpSink {
-    async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let mut input = input.peekable();
 
         while Pin::new(&mut input).peek().await.is_some() {
             let mut socket = self.connector.connect_backoff().await;
-            while let Some(event) = input.next().await {
-                self.acker.ack(1);
+            while let Some(events) = input.next().await {
+                for event in events.into_events() {
+                    self.acker.ack(1);
 
-                let input = match (self.encode_event)(event) {
-                    Some(input) => input,
-                    None => continue,
-                };
+                    let input = match (self.encode_event)(event) {
+                        Some(input) => input,
+                        None => continue,
+                    };
 
-                match udp_send(&mut socket, &input).await {
-                    Ok(()) => {
-                        counter!("socket_event_send_total", 1, "mode" => "udp");
-                        counter!("processed_bytes_total", input.len() as u64);
-                    }
-                    Err(err) => {
-                        counter!("socket_event_send_errors_total", 1, "mode" => "udp");
+                    match udp_send(&mut socket, &input).await {
+                        Ok(()) => {
+                            counter!("socket_event_send_total", 1, "mode" => "udp");
+                            counter!("processed_bytes_total", input.len() as u64);
+                        }
+                        Err(err) => {
+                            counter!("socket_event_send_errors_total", 1, "mode" => "udp");
+                            debug!(
+                                message = "UDP socket error",
+                                %err,
+                                internal_log_rate_secs = 10
+                            );
 
-                        debug!(
-                            message = "UDP socket error",
-                            %err,
-                            internal_log_rate_secs = 10
-                        );
-
-                        break;
-                    }
-                };
+                            break;
+                        }
+                    };
+                }
             }
         }
 

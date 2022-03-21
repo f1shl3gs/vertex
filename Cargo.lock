@@ -359,6 +359,7 @@ dependencies = [
  "bytes",
  "crc32fast",
  "criterion",
+ "crossbeam-queue",
  "crossbeam-utils",
  "dyn-clone",
  "fslock",
@@ -367,18 +368,22 @@ dependencies = [
  "metrics",
  "metrics-tracing-context",
  "metrics-util",
+ "num-traits",
  "once_cell",
+ "parking_lot 0.12.0",
  "pin-project",
+ "proptest",
  "quickcheck",
  "rkyv",
  "serde",
  "shared",
  "snafu",
+ "temp-dir",
  "tempdir",
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.0",
  "tracing",
  "tracing-fluent-assertions",
  "tracing-subscriber",
@@ -712,9 +717,9 @@ dependencies = [
 
 [[package]]
 name = "crossbeam-queue"
-version = "0.3.2"
+version = "0.3.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b10ddc024425c88c2ad148c1b0fd53f4c6d38db9697c9f1588381212fa657c9"
+checksum = "1f25d8400f4a7a5778f0e4e52384a48cbd9b5c495d110786187fc750075277a2"
 dependencies = [
  "cfg-if 1.0.0",
  "crossbeam-utils",
@@ -949,6 +954,26 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c34f04666d835ff5d62e058c3995147c06f42fe86ff053337632bca83e42702d"
 
 [[package]]
+name = "enumflags2"
+version = "0.7.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a25c90b056b3f84111cf183cbeddef0d3a0bbe9a674f057e1a1533c315f24def"
+dependencies = [
+ "enumflags2_derive",
+]
+
+[[package]]
+name = "enumflags2_derive"
+version = "0.7.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "144ec79496cbab6f84fa125dc67be9264aef22eb8a28da8454d9c33f15108da4"
+dependencies = [
+ "proc-macro2 1.0.36",
+ "quote 1.0.14",
+ "syn 1.0.84",
+]
+
+[[package]]
 name = "env-test-util"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1001,6 +1026,7 @@ dependencies = [
  "buffers",
  "bytes",
  "chrono",
+ "enumflags2",
  "futures",
  "indoc",
  "log_schema",
@@ -1013,6 +1039,7 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "shared",
+ "snafu",
  "substring",
  "tokio",
  "tracing",
@@ -4443,6 +4470,12 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
+
+[[package]]
+name = "temp-dir"
+version = "0.1.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af547b166dd1ea4b472165569fc456cfb6818116f854690b0ff205e636523dab"
 
 [[package]]
 name = "tempdir"

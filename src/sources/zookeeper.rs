@@ -72,7 +72,7 @@ impl ZookeeperSource {
 
         let endpoint = Cow::from(self.endpoint.clone());
         while let Some(_ts) = ticker.next().await {
-            let metrics = match fetch_stats(endpoint.as_ref()).await {
+            let mut metrics = match fetch_stats(endpoint.as_ref()).await {
                 Ok((version, state, peer_state, stats)) => {
                     let mut metrics = Vec::with_capacity(stats.len() + 2);
                     metrics.extend_from_slice(&[
@@ -144,12 +144,9 @@ impl ZookeeperSource {
             };
 
             let now = chrono::Utc::now();
-            let mut stream = futures::stream::iter(metrics).map(|mut m| {
-                m.timestamp = Some(now);
-                m.into()
-            });
+            metrics.iter_mut().for_each(|m| m.timestamp = Some(now));
 
-            if let Err(err) = output.send_all(&mut stream).await {
+            if let Err(err) = output.send(metrics).await {
                 error!(
                     message = "Error sending zookeeper metrics",
                     %err

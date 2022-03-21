@@ -6,7 +6,6 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use event::{BatchNotifier, BatchStatus, Event};
-use futures::stream;
 use futures::StreamExt;
 use futures_util::future::BoxFuture;
 use futures_util::FutureExt;
@@ -353,7 +352,8 @@ async fn handle_stream<T>(
                             }
                         }
                         source.handle_events(&mut events, host.clone(), byte_size);
-                        match output.send_all(&mut stream::iter(events)).await {
+
+                        match output.send_batch(events).await {
                             Ok(_) => {
                                 let ack = match receiver {
                                     None => TcpSourceAck::Ack,

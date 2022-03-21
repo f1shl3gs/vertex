@@ -15,7 +15,9 @@ use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
 use crate::attributes::Attributes;
-use crate::{BatchNotifier, EventFinalizer, EventFinalizers, EventMetadata, Finalizable};
+use crate::{
+    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
+};
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
@@ -199,7 +201,7 @@ pub enum TraceStateError {
 /// Please review the [W3C specification] for details on this field.
 ///
 /// [W3C specification]: https://www.w3.org/TR/trace-context/#tracestate-header
-#[derive(Clone, Debug, Default, Eq, PartialEq, Hash, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, PartialOrd, Hash, Deserialize, Serialize)]
 pub struct TraceState(Option<VecDeque<(String, String)>>);
 
 impl TraceState {
@@ -460,7 +462,7 @@ impl SpanId {
     }
 }
 
-#[derive(Clone, Debug, Default, PartialEq, Eq, Copy, Hash, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Eq, Copy, Hash, Deserialize, Serialize)]
 pub struct TraceFlags(u8);
 
 impl TraceFlags {
@@ -527,7 +529,7 @@ impl fmt::LowerHex for TraceFlags {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Trace {
     pub service: Cow<'static, str>,
 
@@ -550,6 +552,12 @@ impl ByteSizeOf for Trace {
 impl Finalizable for Trace {
     fn take_finalizers(&mut self) -> EventFinalizers {
         self.metadata.take_finalizers()
+    }
+}
+
+impl EventDataEq for Trace {
+    fn event_data_eq(&self, other: &Self) -> bool {
+        self.service == other.service && self.tags == other.tags && self.spans == other.spans
     }
 }
 

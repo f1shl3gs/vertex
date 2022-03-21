@@ -384,3 +384,42 @@ impl From<EventWrapper> for crate::Event {
         }
     }
 }
+
+impl events::Events {
+    fn from_logs(logs: crate::Logs) -> Self {
+        let logs = logs.into_iter().map(Into::into).collect();
+        Self::Logs(events::Logs { logs })
+    }
+
+    fn from_metrics(metrics: crate::Metrics) -> Self {
+        let metrics = metrics.into_iter().map(Into::into).collect();
+        Self::Metrics(events::Metrics { metrics })
+    }
+}
+
+impl From<crate::Events> for Events {
+    fn from(events: crate::Events) -> Self {
+        let events = Some(match events {
+            crate::Events::Logs(logs) => events::Events::from_logs(logs),
+            crate::Events::Metrics(metrics) => events::Events::from_metrics(metrics),
+            _ => unimplemented!(),
+        });
+
+        Self { events }
+    }
+}
+
+impl From<Events> for crate::Events {
+    fn from(events: Events) -> Self {
+        let events = events.events.unwrap();
+
+        match events {
+            events::Events::Logs(logs) => {
+                crate::Events::Logs(logs.logs.into_iter().map(Into::into).collect())
+            }
+            events::Events::Metrics(metrics) => {
+                crate::Events::Metrics(metrics.metrics.into_iter().map(Into::into).collect())
+            }
+        }
+    }
+}

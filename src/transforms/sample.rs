@@ -1,8 +1,8 @@
-use event::Event;
+use event::{Event, EventContainer, Events};
 use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 
@@ -77,28 +77,32 @@ impl Sample {
 }
 
 impl FunctionTransform for Sample {
-    fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
-        let value = self
-            .key_field
-            .as_ref()
-            .and_then(|field| {
-                let log = event.as_log();
-                log.fields.get(field)
-            })
-            .map(|v| v.to_string_lossy());
+    fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
+        let mut logs = vec![];
+        for event in events.into_events() {
+            if let Event::Log(log) = event {
+                let value = self
+                    .key_field
+                    .as_ref()
+                    .and_then(|field| log.fields.get(field))
+                    .map(|v| v.to_string_lossy());
 
-        let num = if let Some(value) = value {
-            seahash::hash(value.as_bytes())
-        } else {
-            self.count
-        };
+                let num = if let Some(value) = value {
+                    seahash::hash(value.as_bytes())
+                } else {
+                    self.count
+                };
 
-        self.count = (self.count + 1) % self.rate;
-        if num % self.rate == 0 {
-            output.push(event);
-        } else {
-            emit!(&SampleEventDiscarded);
+                self.count = (self.count + 1) % self.rate;
+                if num % self.rate == 0 {
+                    logs.push(log);
+                } else {
+                    emit!(&SampleEventDiscarded);
+                }
+            }
         }
+
+        output.push(logs.into());
     }
 }
 

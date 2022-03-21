@@ -1,24 +1,24 @@
 #[deny(clippy::cast_precision_loss)]
-mod acker;
+mod acknowledgements;
 mod buffer_usage_data;
 mod config;
-mod disk;
 pub mod encoding;
 pub mod topology;
-mod variant;
+mod variants;
 
 #[cfg(test)]
 mod test;
 
 // re-export
-pub use acker::{Ackable, Acker};
+pub use acknowledgements::{Ackable, Acker};
 pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
-pub use encoding::{DecodeBytes, EncodeBytes};
+pub use encoding::Encodable;
 pub use topology::{builder, channel};
+
+use std::fmt::Debug;
 
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
-use std::fmt::Debug;
 
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
@@ -60,12 +60,16 @@ impl Default for WhenFull {
 ///
 /// This supertrait serves as the base trait for any item that can be pushed into a buffer.
 pub trait Bufferable:
-    ByteSizeOf + EncodeBytes + DecodeBytes + Debug + Send + Sync + Unpin + Sized + 'static
+    ByteSizeOf + Encodable + EventCount + Debug + Send + Sync + Unpin + Sized + 'static
 {
 }
 
 // Blanket implementation for anything that is already bufferable.
 impl<T> Bufferable for T where
-    T: ByteSizeOf + EncodeBytes + DecodeBytes + Debug + Send + Sync + Unpin + Sized + 'static
+    T: ByteSizeOf + Encodable + EventCount + Debug + Send + Sync + Unpin + Sized + 'static
 {
+}
+
+pub trait EventCount {
+    fn event_count(&self) -> usize;
 }

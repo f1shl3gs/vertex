@@ -6,7 +6,7 @@ use std::time::Duration;
 use async_stream::stream;
 use async_trait::async_trait;
 use event::attributes::Attributes;
-use event::{log::Value, Bucket, Event, EventMetadata, Metric, MetricSeries, MetricValue};
+use event::{log::Value, Bucket, EventMetadata, Events, Metric, MetricSeries, MetricValue};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     TransformConfig, TransformContext, TransformDescription,
@@ -223,8 +223,8 @@ impl TransformConfig for MetricalizeConfig {
 impl TaskTransform for Metricalize {
     fn transform(
         mut self: Box<Self>,
-        mut input_rx: Pin<Box<dyn Stream<Item = Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item = Event> + Send>> {
+        mut input_rx: Pin<Box<dyn Stream<Item = Events> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Events> + Send>> {
         let mut ticker = tokio::time::interval(self.interval);
 
         Box::pin(stream! {
@@ -235,22 +235,23 @@ impl TaskTransform for Metricalize {
                 tokio::select! {
                     _ = ticker.tick() => {
                         self.flush_into(&mut output);
+                        yield Events::from(output);
+                        output = Vec::new();
                     },
 
-                    maybe_event = input_rx.next() => {
-                        match maybe_event {
-                            Some(event) => self.record(event),
+                    maybe_events = input_rx.next() => {
+                        match maybe_events {
+                            Some(events) => self.record(events),
                             None => {
                                 self.flush_into(&mut output);
+                                yield Events::from(output);
+                                output = Vec::new();
+
                                 done = true;
                             }
                         }
                     }
                 };
-
-                for event in output.drain(..) {
-                    yield event;
-                }
             }
         })
     }
@@ -273,47 +274,56 @@ impl Metricalize {
         }
     }
 
-    fn record(&mut self, event: Event) {
-        let (_, fields, metadata) = event.into_log().into_parts();
+    fn record(&mut self, events: Events) {
+        if let Events::Logs(logs) = events {
+            logs.into_iter().for_each(|log| {
+                let (_, fields, metadata) = log.into_parts();
 
-        for config in &self.configs {
-            match config.build_series_and_value(&fields) {
-                Some((series, value)) => {
-                    match self.states.entry(series) {
-                        Entry::Occupied(mut entry) => {
-                            let existing = entry.get_mut();
+                for config in &self.configs {
+                    match config.build_series_and_value(&fields) {
+                        Some((series, value)) => {
+                            match self.states.entry(series) {
+                                Entry::Occupied(mut entry) => {
+                                    let existing = entry.get_mut();
 
-                            // In order to update the new and old kind must match
-                            match (&existing.0, config) {
-                                (MetricValue::Sum(_), MetricConfig::Counter(_))
-                                | (MetricValue::Gauge(_), MetricConfig::Gauge(_))
-                                | (MetricValue::Histogram { .. }, MetricConfig::Histogram(_)) => {
-                                    existing.0.merge(value);
-                                    existing.1.merge(metadata.clone());
+                                    // In order to update the new and old kind must match
+                                    match (&existing.0, config) {
+                                        (MetricValue::Sum(_), MetricConfig::Counter(_))
+                                        | (MetricValue::Gauge(_), MetricConfig::Gauge(_))
+                                        | (
+                                            MetricValue::Histogram { .. },
+                                            MetricConfig::Histogram(_),
+                                        ) => {
+                                            existing.0.merge(value);
+                                            existing.1.merge(metadata.clone());
+                                        }
+                                        _ => {
+                                            *existing =
+                                                (config.new_metric_value(value), metadata.clone());
+                                            counter!("metricalize_failed_total", 1);
+                                        }
+                                    }
                                 }
-                                _ => {
-                                    *existing = (config.new_metric_value(value), metadata.clone());
-                                    counter!("metricalize_failed_total", 1);
+
+                                Entry::Vacant(entry) => {
+                                    entry
+                                        .insert((config.new_metric_value(value), metadata.clone()));
                                 }
                             }
                         }
-
-                        Entry::Vacant(entry) => {
-                            entry.insert((config.new_metric_value(value), metadata.clone()));
-                        }
+                        None => counter!("metricalize_failed_total", 1),
                     }
                 }
-                None => counter!("metricalize_failed_total", 1),
-            }
+            })
         }
     }
 
-    fn flush_into(&mut self, output: &mut Vec<Event>) {
+    fn flush_into(&mut self, output: &mut Vec<Metric>) {
         for (series, entry) in self.states.drain() {
             let metric =
                 Metric::new_with_metadata(series.name, series.tags, entry.0, None, entry.1);
 
-            output.push(metric.into());
+            output.push(metric);
         }
     }
 }
@@ -321,7 +331,7 @@ impl Metricalize {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::{btreemap, fields, tags, Bucket};
+    use event::{btreemap, fields, tags, Bucket, LogRecord};
 
     #[test]
     fn generate_config() {
@@ -478,16 +488,14 @@ mod tests {
         for (test, config, logs, wants) in cases {
             let mut agg = Metricalize::new(default_interval(), vec![config]);
 
-            for log in logs {
-                agg.record(Event::from(log));
-            }
+            let logs = logs.into_iter().map(LogRecord::from).collect::<Vec<_>>();
+            agg.record(logs.into());
 
             let mut output = vec![];
             agg.flush_into(&mut output);
 
             assert_eq!(output.len(), wants.len(), "case: {}", test);
             for (got, (want_name, want_tags, want_value)) in output.iter().zip(wants) {
-                let got = got.as_metric();
                 assert_eq!(got.name(), want_name, "case: {}", test);
                 assert_eq!(got.tags(), &want_tags, "case: {}", test);
                 assert!(matches!(&got.value, want_value), "case: {}", test);

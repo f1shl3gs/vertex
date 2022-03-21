@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use buffers::Acker;
-use event::Event;
+use event::{Event, EventContainer, Events};
 use framework::sink::util::{
     builder::SinkBuilderExt,
     encoding::{EncodingConfig, StandardEncodings},
@@ -62,7 +62,7 @@ impl KafkaSink {
         })
     }
 
-    async fn run_inner(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run_inner(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         // rdkafka will internally retry forever, so we need some limit to prevent this from
         // overflowing
         let service = ConcurrencyLimit::new(self.service, QUEUE_MIN_MESSAGES as usize);
@@ -75,6 +75,7 @@ impl KafkaSink {
         };
 
         let sink = input
+            .flat_map(|events| futures::stream::iter(events.into_events()))
             .filter_map(|event| futures_util::future::ready(request_builder.build_request(event)))
             .into_driver(service, self.acker);
         sink.run().await
@@ -117,7 +118,7 @@ pub async fn health_check(config: KafkaSinkConfig) -> crate::Result<()> {
 
 #[async_trait::async_trait]
 impl StreamSink for KafkaSink {
-    async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         self.run_inner(input).await
     }
 }

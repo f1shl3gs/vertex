@@ -1,12 +1,12 @@
 use std::{error, fmt, path::PathBuf};
 
 use buffers::{
-    encoding::{DecodeBytes, EncodeBytes},
+    encoding::FixedEncodable,
     topology::{
         builder::TopologyBuilder,
         channel::{BufferReceiver, BufferSender},
     },
-    BufferType,
+    BufferType, EventCount,
 };
 use bytes::{Buf, BufMut};
 use futures::{Sink, SinkExt, Stream, StreamExt};
@@ -37,6 +37,12 @@ impl<const N: usize> ByteSizeOf for Message<N> {
     }
 }
 
+impl<const N: usize> EventCount for Message<N> {
+    fn event_count(&self) -> usize {
+        1
+    }
+}
+
 #[derive(Debug)]
 pub struct EncodeError;
 
@@ -59,10 +65,11 @@ impl fmt::Display for DecodeError {
 
 impl error::Error for DecodeError {}
 
-impl<const N: usize> EncodeBytes for Message<N> {
-    type Error = EncodeError;
+impl<const N: usize> FixedEncodable for Message<N> {
+    type EncodeError = EncodeError;
+    type DecodeError = DecodeError;
 
-    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error>
+    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::EncodeError>
     where
         B: BufMut,
         Self: Sized,
@@ -74,12 +81,8 @@ impl<const N: usize> EncodeBytes for Message<N> {
         }
         Ok(())
     }
-}
 
-impl<const N: usize> DecodeBytes for Message<N> {
-    type Error = DecodeError;
-
-    fn decode<B>(mut buffer: B) -> Result<Self, Self::Error>
+    fn decode<B>(mut buffer: B) -> Result<Self, Self::DecodeError>
     where
         B: Buf,
         Self: Sized,

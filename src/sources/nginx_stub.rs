@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
-use event::{Event, Metric};
+use event::Metric;
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
     SourceConfig, SourceContext, SourceDescription,
@@ -90,14 +90,18 @@ impl SourceConfig for NginxStubConfig {
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {
-                let metrics = futures::future::join_all(sources.iter().map(|s| s.collect())).await;
-
-                let mut stream = futures::stream::iter(metrics)
-                    .map(futures::stream::iter)
+                let mut metrics = futures::future::join_all(sources.iter().map(|s| s.collect()))
+                    .await
+                    .into_iter()
                     .flatten()
-                    .map(Event::Metric);
+                    .collect::<Vec<_>>();
 
-                if let Err(err) = output.send_all(&mut stream).await {
+                let now = Utc::now();
+                metrics
+                    .iter_mut()
+                    .for_each(|metric| metric.timestamp = Some(now));
+
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending nginx stub metrics",
                         %err

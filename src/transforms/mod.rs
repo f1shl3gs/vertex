@@ -36,8 +36,12 @@ pub fn transform_one(
     ft: &mut dyn framework::FunctionTransform,
     event: impl Into<event::Event>,
 ) -> Option<event::Event> {
-    let mut buf = Vec::with_capacity(1);
+    use framework::OutputBuffer;
+
+    let event = event.into();
+    let mut buf = OutputBuffer::with_capacity(1);
+
     ft.transform(&mut buf, event.into());
     assert!(buf.len() < 2);
-    buf.into_iter().next()
+    buf.into_events().next()
 }

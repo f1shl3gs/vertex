@@ -221,7 +221,7 @@ impl LogRecord {
         remove::remove(&mut self.fields, key.as_ref(), prune)
     }
 
-    pub fn keys<'a>(&'a self) -> impl Iterator<Item = String> + 'a {
+    pub fn keys(&self) -> impl Iterator<Item = String> + '_ {
         keys::keys(&self.fields)
     }
 

@@ -65,7 +65,7 @@ impl SourceConfig for InternalTracesConfig {
                 trace.insert_tag("hostanme", hostname.clone());
                 trace.insert_tag("version", version.clone());
 
-                if let Err(err) = output.send(trace.into()).await {
+                if let Err(err) = output.send(trace).await {
                     warn!(message = "Sending internal trace failed", ?err);
                 }
             }

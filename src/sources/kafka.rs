@@ -442,7 +442,7 @@ async fn kafka_source(
                     Some(finalizer) => {
                         let (batch, receiver) = BatchNotifier::new_with_receiver();
                         let mut stream = stream.map(|event| event.with_batch_notifier(&batch));
-                        match output.send_all(&mut stream).await {
+                        match output.send_event_stream(&mut stream).await {
                             Ok(_) => {
                                 // Drop stream to avoid borrowing `msg`: [...] borrow might be used
                                 // here, when `stream` is dropped and runs the destructor [...].
@@ -459,7 +459,7 @@ async fn kafka_source(
                         }
                     }
 
-                    None => match output.send_all(&mut stream).await {
+                    None => match output.send_event_stream(&mut stream).await {
                         Ok(_) => {
                             if let Err(err) =
                                 consumer.store_offset(msg.topic(), msg.partition(), msg.offset())

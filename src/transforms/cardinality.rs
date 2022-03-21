@@ -1,9 +1,9 @@
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
 use event::attributes::{Key, Value};
-use event::Event;
+use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};
@@ -32,7 +32,7 @@ struct CardinalityConfig {
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for CardinalityConfig {
-    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Cardinality::new(self.limit)))
     }
 
@@ -158,17 +158,17 @@ impl Cardinality {
 }
 
 impl FunctionTransform for Cardinality {
-    fn transform(&mut self, output: &mut Vec<Event>, event: Event) {
-        let metric = event.as_metric();
-
-        for (k, v) in metric.tags() {
-            if !self.try_accept_tag(k, v) {
-                // rejected
-                return;
+    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+        events.for_each_event(|metric| {
+            for (k, v) in metric.attributes().iter() {
+                if !self.try_accept_tag(k, v) {
+                    // rejected
+                    return;
+                }
             }
-        }
+        });
 
-        output.push(event)
+        output.push(events)
     }
 }
 

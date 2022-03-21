@@ -19,6 +19,7 @@ pub struct KafkaRequestBuilder {
 }
 
 impl KafkaRequestBuilder {
+    // TODO: batch events
     pub fn build_request(&self, mut event: Event) -> Option<KafkaRequest> {
         let topic = self.topic_template.render_string(&event).ok()?;
         let metadata = KafkaRequestMetadata {

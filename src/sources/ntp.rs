@@ -1,4 +1,4 @@
-use event::{Event, Metric};
+use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
@@ -8,7 +8,7 @@ use framework::{
     },
     register_source_config, Source,
 };
-use futures::{stream, StreamExt};
+use futures::StreamExt;
 use rsntp;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
@@ -121,7 +121,7 @@ impl Ntp {
                     let rtt = result.round_trip_delay().as_secs_f64();
                     let leap = result.leap_indicator() as u8 as f64;
 
-                    let metrics = vec![
+                    let mut metrics = vec![
                         Metric::gauge("ntp_stratum", "NTPD stratum", result.stratum()),
                         Metric::gauge("ntp_leap", "NTPD leap second indicator, 2 bits", leap),
                         Metric::gauge("ntp_rtt_seconds", "RTT to NTPD", rtt),
@@ -136,12 +136,9 @@ impl Ntp {
                         // TODO: sanity
                     ];
 
-                    let mut stream = stream::iter(metrics).map(|mut m| {
-                        m.timestamp = timestamp;
-                        Event::Metric(m)
-                    });
+                    metrics.iter_mut().for_each(|m| m.timestamp = timestamp);
 
-                    if let Err(err) = out.send_all(&mut stream).await {
+                    if let Err(err) = out.send(metrics).await {
                         error!(
                             message = "Error sending ntp metrics",
                             %err

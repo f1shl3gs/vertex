@@ -55,7 +55,7 @@ use std::str::FromStr;
 use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
-use event::{tags, Event, Metric};
+use event::{tags, Metric};
 use framework::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
     DataType, GenerateConfig, Output, SourceConfig, SourceContext,
@@ -801,7 +801,7 @@ impl NodeMetrics {
                 }))
             }
 
-            let metrics = futures::future::join_all(tasks)
+            let mut metrics = futures::future::join_all(tasks)
                 .await
                 .iter()
                 .flatten()
@@ -811,13 +811,11 @@ impl NodeMetrics {
                 });
 
             let now = chrono::Utc::now();
-
-            let mut stream = futures::stream::iter(metrics).map(|mut m| {
-                m.timestamp = Some(now);
-                Event::Metric(m)
+            metrics.iter_mut().for_each(|metric| {
+                metric.timestamp = Some(now);
             });
 
-            if let Err(err) = out.send_all(&mut stream).await {
+            if let Err(err) = out.send(metrics).await {
                 error!(message = "Error sending node metrics", ?err);
 
                 return Err(());

@@ -1,4 +1,7 @@
-use std::{num::NonZeroU16, path::PathBuf};
+use std::{
+    num::{NonZeroU16, NonZeroU64, NonZeroUsize},
+    path::PathBuf,
+};
 
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
@@ -9,7 +12,7 @@ use crate::{
         builder::TopologyBuilder,
         channel::{BufferReceiver, BufferSender},
     },
-    variant::{DiskBuffer, MemoryBuffer},
+    variants::{DiskBuffer, MemoryBuffer},
     Bufferable, WhenFull,
 };
 
@@ -27,11 +30,11 @@ const ALPHABET: [&str; 27] = [
 #[derive(Debug, Clone)]
 pub enum Variant {
     Memory {
-        max_events: usize,
+        max_events: NonZeroUsize,
         when_full: WhenFull,
     },
     Disk {
-        max_size: u64,
+        max_size: NonZeroU64,
         when_full: WhenFull,
         data_dir: PathBuf,
         id: String,
@@ -100,10 +103,12 @@ impl Arbitrary for Variant {
 
         // Using a u16 ensures we avoid any allocation errors for our holding buffers, etc.
         let max_events = NonZeroU16::arbitrary(g)
-            .get()
             .try_into()
             .expect("we don't support 16-bit platforms");
-        let max_size = u64::from(NonZeroU16::arbitrary(g).get());
+        let max_size = NonZeroU16::arbitrary(g)
+            .try_into()
+            .expect("we don't support 16-bit platforms");
+
         let when_full = WhenFull::arbitrary(g);
 
         match idx {
@@ -117,7 +122,7 @@ impl Arbitrary for Variant {
                 id: Id::arbitrary(g).inner,
                 data_dir: PathBuf::arbitrary(g),
             },
-            _ => unreachable!("idx divisor should be 4"),
+            _ => unreachable!("idx divisor should be 2"),
         }
     }
 

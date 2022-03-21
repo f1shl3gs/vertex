@@ -59,7 +59,7 @@ impl HttpSinkConfig {
 
         let healthcheck = healthcheck(client, "".to_string()).boxed();
 
-        Ok((Sink::Sink(Box::new(sink)), healthcheck))
+        Ok((Sink::from_event_sink(sink), healthcheck))
     }
 }
 

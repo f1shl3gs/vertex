@@ -314,7 +314,7 @@ impl RedisSource {
             IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            let metrics = match self.gather().await {
+            let mut metrics = match self.gather().await {
                 Err(err) => {
                     warn!(
                         message = "collect redis metrics failed",
@@ -339,17 +339,15 @@ impl RedisSource {
             };
 
             let timestamp = chrono::Utc::now();
-            let mut stream = futures::stream::iter(metrics).map(|mut m| {
+            metrics.iter_mut().for_each(|m| {
                 m.timestamp = Some(timestamp);
                 m.insert_tag("instance", &self.url);
                 if let Some(ref namespace) = self.namespace {
                     m.set_name(format!("{}_{}", namespace, m.name()));
                 }
-
-                m.into()
             });
 
-            if let Err(err) = output.send_all(&mut stream).await {
+            if let Err(err) = output.send(metrics).await {
                 error!(
                     message = "Error sending redis metrics",
                     %err,
@@ -1107,7 +1105,7 @@ mod integration_tests {
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
+        let cli = redis::Client::open(url).unwrap();
         let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
 
         let _latency = ping_server(&mut cm).await.unwrap();
@@ -1139,7 +1137,7 @@ mod integration_tests {
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
+        let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
 
         write_testdata(&mut conn).await;
@@ -1154,7 +1152,7 @@ mod integration_tests {
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
+        let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
         let n = query_databases(&mut conn).await.unwrap();
         assert_eq!(n, 16)
@@ -1166,7 +1164,7 @@ mod integration_tests {
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port(REDIS_PORT).unwrap();
         let url = format!("redis://localhost:{}", host_port);
-        let mut cli = redis::Client::open(url).unwrap();
+        let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
 
         write_testdata(&mut conn).await;

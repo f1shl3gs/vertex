@@ -1,6 +1,7 @@
 use std::net::SocketAddr;
 
 use bytes::BytesMut;
+use event::Event;
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::future::Shared;
 use jaeger::Batch;
@@ -49,7 +50,7 @@ pub(super) async fn serve(
 
                         match decode(payload.to_vec()) {
                             Ok(batch) => {
-                                if let Err(err) = output.send(batch.into()).await {
+                                if let Err(err) = output.send(Event::from(batch)).await {
                                     error!(message = "Error sending trace", ?err);
 
                                     return Err(err.into());

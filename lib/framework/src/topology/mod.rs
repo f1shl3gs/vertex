@@ -12,7 +12,7 @@ pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
 
 use buffers::channel::{BufferReceiver, BufferSender};
-use event::Event;
+use event::Events;
 use futures::{Future, FutureExt};
 use std::panic::AssertUnwindSafe;
 use std::{
@@ -25,8 +25,8 @@ use tokio::sync::mpsc;
 use crate::config::{ComponentKey, Config, ConfigDiff, OutputId};
 
 type BuiltBuffer = (
-    BufferSender<Event>,
-    Arc<Mutex<Option<BufferReceiver<Event>>>>,
+    BufferSender<Events>,
+    Arc<Mutex<Option<BufferReceiver<Events>>>>,
     buffers::Acker,
 );
 
