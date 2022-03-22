@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647920087946,
+  "lastUpdate": 1647920180987,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9470,6 +9470,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.841,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8e358da4e9ddb9d7e89ecba29817cda4d4c98ef7",
+          "message": "Merge pull request #248 from f1shl3gs/events\n\nPassing events between components",
+          "timestamp": "2022-03-22T11:26:01+08:00",
+          "tree_id": "391c03bb6e7f8341d524215e5d13e6ccf7ea2481",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8e358da4e9ddb9d7e89ecba29817cda4d4c98ef7"
+        },
+        "date": 1647920179525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.012,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 61.925,
             "unit": "ns/op"
           }
         ]
