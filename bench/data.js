@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647940915888,
+  "lastUpdate": 1647941170689,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25762,6 +25762,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1596,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9b237de241f2629242d18a0d855f50eaead895f8",
+          "message": "Merge pull request #249 from f1shl3gs/add_profile_configs\n\nadd dev, bench and release profile config",
+          "timestamp": "2022-03-22T16:58:24+08:00",
+          "tree_id": "c3de4698fcd96fb6d604215d5952d1336908da2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9b237de241f2629242d18a0d855f50eaead895f8"
+        },
+        "date": 1647941169085,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1383,
             "unit": "s"
           }
         ]
