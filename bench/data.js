@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1647920180987,
+  "lastUpdate": 1647923352390,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4370,6 +4370,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1392900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd5a71c3db43d725b7d454909a984564812bf26d",
+          "message": "Merge pull request #247 from f1shl3gs/dependabot/cargo/kube-0.70.0\n\nchore(deps): bump kube from 0.69.1 to 0.70.0",
+          "timestamp": "2022-03-22T12:21:30+08:00",
+          "tree_id": "0a237382bfe9a4602e33c3ddc4b224a127b7810b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd5a71c3db43d725b7d454909a984564812bf26d"
+        },
+        "date": 1647923350710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1217600,
             "unit": "ns/op"
           }
         ]
