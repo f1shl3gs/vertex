@@ -8,8 +8,17 @@ exclude = [
     "tests/fixtures"
 ]
 
+# This profile optimizes for runtime performance and small binary size at the expense of longer
+# build times. It's most suitable for final release builds.
 [profile.release]
 debug = false
+lto = "thin"
+
+# This profile optimizes for short build times at the expense of larger binary size and slower
+# runtime performance.
+[profile.dev]
+lto = false
+incremental = true
 
 [profile.bench]
 debug = true
