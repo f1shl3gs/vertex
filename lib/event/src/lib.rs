@@ -1,4 +1,4 @@
-mod array;
+pub mod array;
 pub mod attributes;
 mod finalization;
 pub mod log;
@@ -9,8 +9,7 @@ mod proto;
 pub mod trace;
 
 // re-export
-pub use array::EventContainer;
-pub use buffers::{DecodeBytes, EncodeBytes};
+pub use array::{EventContainer, Events};
 pub use finalization::{
     BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,
     Finalizable,
@@ -24,14 +23,12 @@ use std::collections::btree_map;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
-use bytes::{Buf, BufMut, Bytes};
-use prost::Message;
-use prost::{DecodeError, EncodeError};
+use buffers::EventCount;
+use bytes::Bytes;
 use shared::ByteSizeOf;
 
 use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
-use crate::proto::EventWrapper;
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum Event {
@@ -40,33 +37,9 @@ pub enum Event {
     Trace(Trace),
 }
 
-/// An array of one of the `Event` variants exclusively
-pub enum Events {
-    /// An array of type `LogRecord`
-    Logs(Logs),
-    /// An array of type `Metric`
-    Metrics(Metrics),
-    /// An array of type `Trace`
-    Traces(Traces),
-}
-
-impl From<Event> for Events {
-    fn from(event: Event) -> Self {
-        match event {
-            Event::Log(log) => Self::Logs(vec![log]),
-            Event::Metric(metric) => Self::Metrics(vec![metric]),
-            Event::Trace(trace) => Self::Traces(vec![trace]),
-        }
-    }
-}
-
-impl ByteSizeOf for Events {
-    fn allocated_bytes(&self) -> usize {
-        match self {
-            Self::Logs(logs) => logs.allocated_bytes(),
-            Self::Metrics(metrics) => metrics.allocated_bytes(),
-            Self::Traces(spans) => spans.allocated_bytes(),
-        }
+impl EventCount for Event {
+    fn event_count(&self) -> usize {
+        1
     }
 }
 
@@ -335,27 +308,14 @@ impl<'a> From<&'a Trace> for EventRef<'a> {
     }
 }
 
-impl EncodeBytes for Event {
-    type Error = EncodeError;
-
-    fn encode<B>(self, buffer: &mut B) -> Result<(), Self::Error>
-    where
-        B: BufMut,
-        Self: Sized,
-    {
-        EventWrapper::from(self).encode(buffer)
-    }
-}
-
-impl DecodeBytes for crate::Event {
-    type Error = DecodeError;
-
-    fn decode<B>(buffer: B) -> Result<Event, Self::Error>
-    where
-        Event: Sized,
-        B: Buf,
-    {
-        EventWrapper::decode(buffer).map(Into::into)
+impl<'a> EventDataEq<Event> for EventRef<'a> {
+    fn event_data_eq(&self, other: &Event) -> bool {
+        match (self, other) {
+            (Self::Log(a), Event::Log(b)) => a.event_data_eq(b),
+            (Self::Metric(a), Event::Metric(b)) => a.event_data_eq(b),
+            (Self::Trace(a), Event::Trace(b)) => a.event_data_eq(b),
+            _ => false,
+        }
     }
 }
 

@@ -1,7 +1,7 @@
-use event::Event;
+use event::Events;
 use framework::config::{default_true, Output, TransformContext};
 use framework::config::{DataType, TransformConfig};
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
@@ -17,7 +17,11 @@ pub struct AddFieldsConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "add_fields")]
 impl TransformConfig for AddFieldsConfig {
-    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
+        if self.fields.is_empty() {
+            return Err("fields is required".into());
+        }
+
         Ok(Transform::function(AddFields::from(self)))
     }
 
@@ -50,16 +54,13 @@ impl AddFields {
 }
 
 impl FunctionTransform for AddFields {
-    fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        if self.fields.is_empty() {
-            return;
-        }
+    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+        events.for_each_log(|log| {
+            for (k, v) in self.fields.iter() {
+                log.fields.insert(k.clone(), v.as_str().into());
+            }
+        });
 
-        let log = event.as_mut_log();
-        for (k, v) in self.fields.iter() {
-            log.fields.insert(k.clone(), v.as_str().into());
-        }
-
-        output.push(event)
+        output.push(events)
     }
 }

@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::{error::Error, num::NonZeroUsize};
 
 use async_trait::async_trait;
 use snafu::{ResultExt, Snafu};
@@ -8,7 +8,7 @@ use super::channel::{ReceiverAdapter, SenderAdapter};
 use crate::{
     buffer_usage_data::{BufferUsage, BufferUsageHandle},
     topology::channel::{BufferReceiver, BufferSender},
-    variant::MemoryBuffer,
+    variants::MemoryBuffer,
     Acker, Bufferable, WhenFull,
 };
 
@@ -200,7 +200,38 @@ impl<T> TopologyBuilder<T>
 where
     T: Bufferable,
 {
-    /// Creates a memory-only buffer topology using the in-memory buffer.
+    /// Creates a memory-only buffer topology.
+    ///
+    /// The overflow mode (i.e. `WhenFull`) can be configured to either block or drop the newest
+    /// values, but cannot be configured to use overflow mode.  If overflow mode is selected, it
+    /// will be changed to blocking mode.
+    ///
+    /// This is a convenience method for `vector` as it is used for inter-transform channels, and we
+    /// can simplifying needing to require callers to do all the boilerplate to create the builder,
+    /// create the stage, installing buffer usage metrics that aren't required, and so on.
+    pub async fn standalone_memory(
+        max_events: NonZeroUsize,
+        when_full: WhenFull,
+    ) -> (BufferSender<T>, BufferReceiver<T>) {
+        let usage_handle = BufferUsageHandle::noop(when_full);
+
+        let memory_buffer = Box::new(MemoryBuffer::new(max_events));
+        let (sender, receiver, _) = memory_buffer
+            .into_buffer_parts(usage_handle.clone())
+            .await
+            .expect("should not fail to directly create a memory buffer");
+
+        let mode = match when_full {
+            WhenFull::Overflow => WhenFull::Block,
+            m => m,
+        };
+        let sender = BufferSender::new(sender, mode);
+        let receiver = BufferReceiver::new(receiver);
+
+        (sender, receiver)
+    }
+
+    /// Creates a memory-only buffer topology with the given buffer usage handle.
     ///
     /// This is specifically required for the tests that occur under `buffers`, as we assert things
     /// like channel capacity left, which cannot be done on in-memory v1 buffers as they use the
@@ -213,15 +244,15 @@ where
     /// This is a convenience method for `vector` as it is used for inter-transform channels, and we
     /// can simplifying needing to require callers to do all the boilerplate to create the builder,
     /// create the stage, installing buffer usage metrics that aren't required, and so on.
-    pub async fn memory(
-        max_events: usize,
+    #[cfg(test)]
+    pub async fn standalone_memory_test(
+        max_events: NonZeroUsize,
         when_full: WhenFull,
+        usage_handle: BufferUsageHandle,
     ) -> (BufferSender<T>, BufferReceiver<T>) {
-        let noop_usage_handle = BufferUsageHandle::noop();
-
         let memory_buffer = Box::new(MemoryBuffer::new(max_events));
         let (sender, receiver, _) = memory_buffer
-            .into_buffer_parts(noop_usage_handle)
+            .into_buffer_parts(usage_handle.clone())
             .await
             .expect("should not fail to directly create a memory buffer");
 
@@ -229,8 +260,11 @@ where
             WhenFull::Overflow => WhenFull::Block,
             m => m,
         };
-        let sender = BufferSender::new(sender, mode);
-        let receiver = BufferReceiver::new(receiver);
+        let mut sender = BufferSender::new(sender, mode);
+        let mut receiver = BufferReceiver::new(receiver);
+
+        sender.with_instrumentation(usage_handle.clone());
+        receiver.with_instrumentation(usage_handle);
 
         (sender, receiver)
     }
@@ -249,14 +283,19 @@ mod tests {
     use super::TopologyBuilder;
     use crate::{
         topology::{builder::TopologyError, test_util::assert_current_send_capacity},
-        variant::MemoryBuffer,
+        variants::MemoryBuffer,
         WhenFull,
     };
+
+    use std::num::NonZeroUsize;
 
     #[tokio::test]
     async fn single_stage_topology_block() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::Block);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Block,
+        );
         let result = builder.build(Span::none()).await;
         assert!(result.is_ok());
 
@@ -267,7 +306,10 @@ mod tests {
     #[tokio::test]
     async fn single_stage_topology_drop_newest() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::DropNewest);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::DropNewest,
+        );
         let result = builder.build(Span::none()).await;
         assert!(result.is_ok());
 
@@ -278,7 +320,10 @@ mod tests {
     #[tokio::test]
     async fn single_stage_topology_overflow() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::Overflow);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Overflow,
+        );
         let result = builder.build(Span::none()).await;
         match result {
             Err(TopologyError::OverflowWhenLast) => {}
@@ -289,8 +334,14 @@ mod tests {
     #[tokio::test]
     async fn two_stage_topology_block() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::Block);
-        builder.stage(MemoryBuffer::new(1), WhenFull::Block);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Block,
+        );
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Block,
+        );
         let result = builder.build(Span::none()).await;
         match result {
             Err(TopologyError::NextStageNotUsed { stage_idx }) => assert_eq!(stage_idx, 0),
@@ -301,8 +352,14 @@ mod tests {
     #[tokio::test]
     async fn two_stage_topology_drop_newest() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::DropNewest);
-        builder.stage(MemoryBuffer::new(1), WhenFull::Block);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::DropNewest,
+        );
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Block,
+        );
         let result = builder.build(Span::none()).await;
         match result {
             Err(TopologyError::NextStageNotUsed { stage_idx }) => assert_eq!(stage_idx, 0),
@@ -313,8 +370,14 @@ mod tests {
     #[tokio::test]
     async fn two_stage_topology_overflow() {
         let mut builder = TopologyBuilder::<u64>::default();
-        builder.stage(MemoryBuffer::new(1), WhenFull::Overflow);
-        builder.stage(MemoryBuffer::new(1), WhenFull::Block);
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Overflow,
+        );
+        builder.stage(
+            MemoryBuffer::new(NonZeroUsize::new(1).unwrap()),
+            WhenFull::Block,
+        );
 
         let result = builder.build(Span::none()).await;
         assert!(result.is_ok());

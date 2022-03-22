@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
 use event::attributes::Key;
-use event::{tags, Event, Metric};
+use event::{tags, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
@@ -79,10 +79,7 @@ impl SourceConfig for LibvirtSourceConfig {
 
                 let timestamp = Some(chrono::Utc::now());
                 metrics.iter_mut().for_each(|m| m.timestamp = timestamp);
-                if let Err(err) = output
-                    .send_all(&mut futures::stream::iter(metrics).map(Event::Metric))
-                    .await
-                {
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending libvirt metrics",
                         %err

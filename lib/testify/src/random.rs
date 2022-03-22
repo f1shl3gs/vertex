@@ -1,4 +1,4 @@
-use event::{BatchNotifier, Event, LogRecord};
+use event::{BatchNotifier, Event, Events, LogRecord};
 use futures::{stream, Stream, StreamExt};
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
@@ -37,7 +37,7 @@ pub fn random_lines_with_stream(
     len: usize,
     count: usize,
     batch: Option<Arc<BatchNotifier>>,
-) -> (Vec<String>, impl Stream<Item = Event>) {
+) -> (Vec<String>, impl Stream<Item = Events>) {
     let generator = move |_| random_string(len);
     generate_lines_with_stream(generator, count, batch)
 }
@@ -46,25 +46,25 @@ pub fn generate_lines_with_stream<Gen: FnMut(usize) -> String>(
     generator: Gen,
     count: usize,
     batch: Option<Arc<BatchNotifier>>,
-) -> (Vec<String>, impl Stream<Item = Event>) {
+) -> (Vec<String>, impl Stream<Item = Events>) {
     let lines = (0..count).map(generator).collect::<Vec<_>>();
     let stream = map_batch_stream(stream::iter(lines.clone()).map(LogRecord::from), batch);
     (lines, stream)
 }
 
-// TODO refactor to have a single implementation for `Event`, `LogEvent` and `Metric`.
+// TODO refactor to have a single implementation for `Event`, `LogRecord` and `Metric`.
 fn map_batch_stream(
     stream: impl Stream<Item = LogRecord>,
     batch: Option<Arc<BatchNotifier>>,
-) -> impl Stream<Item = Event> {
-    stream.map(move |log| log.with_batch_notifier_option(&batch).into())
+) -> impl Stream<Item = Events> {
+    stream.map(move |log| vec![log.with_batch_notifier_option(&batch)].into())
 }
 
 pub fn generate_events_with_stream<Gen: FnMut(usize) -> Event>(
     generator: Gen,
     count: usize,
     batch: Option<Arc<BatchNotifier>>,
-) -> (Vec<Event>, impl Stream<Item = Event>) {
+) -> (Vec<Event>, impl Stream<Item = Events>) {
     let events = (0..count).map(generator).collect::<Vec<_>>();
     let stream = map_batch_stream(
         stream::iter(events.clone()).map(|event| event.into_log()),

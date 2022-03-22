@@ -73,7 +73,7 @@ impl SourceConfig for DemoLogsConfig {
                 let mut log = LogRecord::from(message.clone());
                 log.insert_tag(log_schema().source_type_key(), "demo_logs");
 
-                output.send(log.into()).await.map_err(|err| {
+                output.send(log).await.map_err(|err| {
                     error!(message = "Error sending logs", ?err);
                 })?;
 

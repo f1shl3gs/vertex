@@ -17,6 +17,7 @@ atomig = { version = "0.3.3", features = ["derive", "serde"] }
 buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
+enumflags2 = { version = "0.7.3", default-features = false }
 futures = { version = "0.3.21", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 pin-project = { version = "1.0.10", default-features = false }
@@ -27,6 +28,7 @@ serde = { version = "1.0.136", features = ["derive"] }
 serde_json = { version = "1.0.79" }
 serde_yaml = { version = "0.8.23" }
 shared = { path = "../shared" }
+snafu = { version = "0.7.0", default-features = false }
 substring = { version = "1.4.5" }
 tokio = { version = "1.17.0", default-features = false, features = ["sync"] }
 tracing = { version = "0.1.32", default-features = false }

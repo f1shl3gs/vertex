@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
-use event::Event;
+use event::Events;
 use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -35,27 +35,31 @@ impl AddTags {
 }
 
 impl FunctionTransform for AddTags {
-    fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        for (key, value) in &self.tags {
-            match (event.tag_entry(key), self.overwrite) {
-                (Entry::Vacant(entry), _) => {
-                    entry.insert(value.into());
-                }
-                (Entry::Occupied(mut entry), true) => {
-                    entry.insert(value.into());
-                }
-                (Entry::Occupied(_entry), false) => {}
-            }
-        }
+    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+        events.for_each_event(|event| {
+            let attrs = event.attributes();
 
-        output.push(event)
+            for (key, value) in &self.tags {
+                match (attrs.entry(key), self.overwrite) {
+                    (Entry::Vacant(entry), _) => {
+                        entry.insert(value.into());
+                    }
+                    (Entry::Occupied(mut entry), true) => {
+                        entry.insert(value.into());
+                    }
+                    (Entry::Occupied(_entry), false) => {}
+                }
+            }
+        });
+
+        output.push(events)
     }
 }
 
 #[async_trait]
 #[typetag::serde(name = "add_tags")]
 impl TransformConfig for AddTagsConfig {
-    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         if self.tags.is_empty() {
             return Err("At least one key/value pair required".into());
         }

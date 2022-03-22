@@ -3,7 +3,7 @@ use std::{path::PathBuf, pin::Pin, sync::Arc, time::Duration};
 use async_trait::async_trait;
 use buffers::Acker;
 use bytes::Bytes;
-use event::Event;
+use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
@@ -136,20 +136,26 @@ impl UnixSink {
 #[async_trait]
 impl StreamSink for UnixSink {
     // Same as TcpSink, more details there.
-    async fn run(mut self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(mut self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let encode_event = Arc::clone(&self.encode_event);
         let mut input = input
-            .map(|mut event| {
-                let byte_size = event.size_of();
-                let finalizers = event.metadata_mut().take_finalizers();
-                encode_event(event)
-                    .map(|item| EncodedEvent {
-                        item,
-                        finalizers,
-                        byte_size,
+            .map(|events| {
+                events
+                    .into_events()
+                    .map(|mut event| {
+                        let byte_size = event.size_of();
+                        let finalizers = event.metadata_mut().take_finalizers();
+                        encode_event(event)
+                            .map(|item| EncodedEvent {
+                                item,
+                                finalizers,
+                                byte_size,
+                            })
+                            .unwrap_or_else(|| EncodedEvent::new(Bytes::new(), 0))
                     })
-                    .unwrap_or_else(|| EncodedEvent::new(Bytes::new(), 0))
+                    .collect::<Vec<_>>()
             })
+            .flat_map(futures::stream::iter)
             .peekable();
 
         while Pin::new(&mut input).peek().await.is_some() {

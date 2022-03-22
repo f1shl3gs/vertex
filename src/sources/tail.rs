@@ -369,7 +369,7 @@ fn tail_source(
             event
         });
 
-        tokio::spawn(async move { output.send_all(&mut messages).await });
+        tokio::spawn(async move { output.send_all_v2(&mut messages).await });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown, checkpointer);

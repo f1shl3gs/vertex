@@ -106,7 +106,7 @@ async fn run(
 mod tests {
     use super::*;
     use event::log::Value;
-    use framework::pipeline::ReceiverStream;
+    use futures::Stream;
     use std::time::Duration;
     use testify::collect_ready;
     use tokio::time::sleep;
@@ -160,7 +160,7 @@ mod tests {
         }
     }
 
-    async fn start_source() -> ReceiverStream<Event> {
+    async fn start_source() -> impl Stream<Item = Event> {
         let (tx, rx) = Pipeline::new_test();
         let source = InternalLogsConfig::default()
             .build(SourceContext::new_test(tx))

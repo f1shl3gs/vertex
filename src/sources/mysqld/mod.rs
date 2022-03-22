@@ -11,7 +11,7 @@ mod integration_tests;
 use std::borrow::Cow;
 use std::time::{Duration, Instant};
 
-use event::{Event, Metric};
+use event::{Metric, INSTANCE_KEY};
 use framework::config::{
     default_false, default_interval, default_true, deserialize_duration, serialize_duration,
     ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
@@ -219,13 +219,12 @@ impl SourceConfig for MysqldConfig {
                 ]);
 
                 let now = chrono::Utc::now();
-                let mut stream = futures::stream::iter(metrics).map(|mut m| {
+                metrics.iter_mut().for_each(|m| {
                     m.timestamp = Some(now);
-                    m.insert_tag("instance", instance.clone());
-                    Event::Metric(m)
+                    m.insert_tag(INSTANCE_KEY, instance.clone());
                 });
 
-                if let Err(err) = output.send_all(&mut stream).await {
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending mysqld metrics",
                         %err

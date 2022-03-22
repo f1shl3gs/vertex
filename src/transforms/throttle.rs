@@ -4,15 +4,14 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
-use event::Event;
+use event::{EventContainer, Events};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, TransformConfig,
     TransformContext, TransformDescription,
 };
 use framework::template::Template;
-use framework::{TaskTransform, Transform};
+use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
-use futures_util::stream;
 use governor::{clock, Quota, RateLimiter};
 use internal::{emit, InternalEvent};
 use serde::{Deserialize, Serialize};
@@ -145,37 +144,37 @@ where
 {
     fn transform(
         self: Box<Self>,
-        mut input_rx: Pin<Box<dyn Stream<Item = Event> + Send>>,
-    ) -> Pin<Box<dyn Stream<Item = Event> + Send>> {
+        mut input_rx: Pin<Box<dyn Stream<Item = Events> + Send>>,
+    ) -> Pin<Box<dyn Stream<Item = Events> + Send>> {
         let mut flush_keys = tokio::time::interval(self.flush_keys_interval);
         let mut flush_stream = tokio::time::interval(Duration::from_secs(1));
         let limiter = RateLimiter::dashmap_with_clock(self.quota, &self.clock);
 
-        Box::pin(
-            stream! {
-                loop {
-                    let mut output = Vec::new();
-                    let done = tokio::select! {
-                        biased;
+        Box::pin(stream! {
+            loop {
+                let mut output = OutputBuffer::with_capacity(128);
+                let done = tokio::select! {
+                    biased;
 
-                        maybe_event = input_rx.next() => {
-                            match maybe_event {
-                                None => true,
-                                Some(event) => {
+                    maybe_events = input_rx.next() => {
+                        match maybe_events {
+                            None => true,
+                            Some(events) => {
+                                for event in events.into_events() {
                                     let key = self.key_field.as_ref()
-                                        .and_then(|tmpl| {
-                                            tmpl.render_string(&event)
-                                                .map_err(|err| {
-                                                    emit!(&TemplateRenderingFailed {
-                                                        err,
-                                                        field: Some("key_field"),
-                                                        drop_event: false,
-                                                    });
-                                                }).ok()
-                                        });
+                                    .and_then(|tmpl| {
+                                        tmpl.render_string(&event)
+                                            .map_err(|err| {
+                                                emit!(&TemplateRenderingFailed {
+                                                    err,
+                                                    field: Some("key_field"),
+                                                    drop_event: false,
+                                                });
+                                            }).ok()
+                                    });
 
                                     match limiter.check_key(&key) {
-                                        Ok(()) => output.push(event),
+                                        Ok(()) => output.push_one(event),
                                         _ => {
                                             if let Some(key) = key {
                                                 emit!(&ThrottleEventDiscarded{ key });
@@ -184,31 +183,32 @@ where
                                             }
                                         }
                                     }
-
-                                    false
                                 }
+
+                                false
                             }
                         }
-
-                        _ = flush_keys.tick() => {
-                            limiter.retain_recent();
-                            false
-                        }
-
-                        _ = flush_stream.tick() => {
-                            false
-                        }
-                    };
-
-                    yield stream::iter(output.into_iter());
-
-                    if done {
-                        break
                     }
+
+                    _ = flush_keys.tick() => {
+                        limiter.retain_recent();
+                        false
+                    }
+
+                    _ = flush_stream.tick() => {
+                        false
+                    }
+                };
+
+                for events in output.drain() {
+                    yield events
+                }
+
+                if done {
+                    break
                 }
             }
-            .flatten(),
-        )
+        })
     }
 }
 
@@ -230,7 +230,7 @@ impl InternalEvent for ThrottleEventDiscarded {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use event::fields;
+    use event::{fields, Event};
     use futures_util::{SinkExt, StreamExt};
     use std::task::Poll;
 

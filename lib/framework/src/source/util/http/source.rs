@@ -139,7 +139,7 @@ async fn handle_request(
             let receiver = BatchNotifier::maybe_apply_to_events(acknowledgements, &mut events);
 
             match output
-                .send_all(&mut futures::stream::iter(events))
+                .send_batch(events)
                 .map_err(move |err| {
                     // can only fail if receiving end disconnected, so we are
                     // shutting down, probably not gracefully.

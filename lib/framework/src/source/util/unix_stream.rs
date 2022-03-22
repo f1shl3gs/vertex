@@ -3,7 +3,6 @@ use std::path::PathBuf;
 
 use bytes::Bytes;
 use event::Event;
-use futures::stream;
 use futures_util::{FutureExt, StreamExt};
 use tokio::io::AsyncWriteExt;
 use tokio::net::{UnixListener, UnixStream};
@@ -69,7 +68,7 @@ pub fn build_unix_stream_source(
                         Some(Ok((mut events, byte_size))) => {
                             handle_events(&mut events, received_from.clone(), byte_size);
 
-                            if let Err(err) = output.send_all(stream::iter(events)).await {
+                            if let Err(err) = output.send_batch(events).await {
                                 error!(
                                     message = "Error sending line",
                                     %err

@@ -1,9 +1,9 @@
-use event::Event;
+use event::Events;
 use framework::config::{
     default_true, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
     TransformDescription,
 };
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -62,7 +62,7 @@ drop_invalid: true
 #[async_trait::async_trait]
 #[typetag::serde(name = "json_parser")]
 impl TransformConfig for JsonParserConfig {
-    async fn build(&self, _context: &TransformContext) -> crate::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(JsonParser::from(self.clone())))
     }
 
@@ -109,81 +109,85 @@ impl From<JsonParserConfig> for JsonParser {
 }
 
 impl FunctionTransform for JsonParser {
-    fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        let log = event.as_mut_log();
-        let value = log.get_field(&self.field);
+    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+        if let Events::Logs(logs) = events {
+            for mut log in logs {
+                let value = log.get_field(&self.field);
 
-        let parsed = value
-            .and_then(|value| {
-                let to_parse = value.as_bytes();
-                serde_json::from_slice::<Value>(to_parse.as_ref())
-                    .map_err(|err| {
-                        if self.drop_field {
-                            debug!(
-                                message = "Event failed to parse as JSON",
-                                field = %self.field,
-                                ?value,
-                                ?err,
-                                internal_log_rate_secs = 30
-                            );
-                        } else {
-                            warn!(
-                                message = "Event failed to parse as JSON",
-                                field = %self.field,
-                                ?value,
-                                ?err,
-                                internal_log_rate_secs = 30
-                            );
-                        }
+                let parsed = value
+                    .and_then(|value| {
+                        let to_parse = value.as_bytes();
+                        serde_json::from_slice::<Value>(to_parse.as_ref())
+                            .map_err(|err| {
+                                if self.drop_field {
+                                    debug!(
+                                        message = "Event failed to parse as JSON",
+                                        field = %self.field,
+                                        ?value,
+                                        ?err,
+                                        internal_log_rate_secs = 30
+                                    );
+                                } else {
+                                    warn!(
+                                        message = "Event failed to parse as JSON",
+                                        field = %self.field,
+                                        ?value,
+                                        ?err,
+                                        internal_log_rate_secs = 30
+                                    );
+                                }
 
-                        // TODO: metrics
+                                // TODO: metrics
+                            })
+                            .ok()
                     })
-                    .ok()
-            })
-            .and_then(|value| {
-                if let Value::Object(object) = value {
-                    Some(object)
-                } else {
-                    None
-                }
-            });
-
-        if let Some(object) = parsed {
-            match self.target_field {
-                Some(ref target_field) => {
-                    let contains_target = log.contains(&target_field);
-
-                    if contains_target && !self.overwrite_target {
-                        warn!(
-                            message = "Target field already exists",
-                            target = target_field.as_str(),
-                            internal_log_rate_secs = 30
-                        );
-
-                        // TODO: metrics
-                    } else {
-                        if self.drop_field {
-                            log.remove_field(&self.field);
+                    .and_then(|value| {
+                        if let Value::Object(object) = value {
+                            Some(object)
+                        } else {
+                            None
                         }
+                    });
 
-                        log.insert_field(&target_field, Value::Object(object));
-                    }
-                }
-                None => {
-                    if self.drop_field {
-                        log.remove_field(&self.field);
-                    }
+                if let Some(object) = parsed {
+                    match self.target_field {
+                        Some(ref target_field) => {
+                            let contains_target = log.contains(&target_field);
 
-                    for (key, value) in object {
-                        log.insert_flat_field(key, value);
+                            if contains_target && !self.overwrite_target {
+                                warn!(
+                                    message = "Target field already exists",
+                                    target = target_field.as_str(),
+                                    internal_log_rate_secs = 30
+                                );
+
+                                // TODO: metrics
+                            } else {
+                                if self.drop_field {
+                                    log.remove_field(&self.field);
+                                }
+
+                                log.insert_field(&target_field, Value::Object(object));
+                            }
+                        }
+                        None => {
+                            if self.drop_field {
+                                log.remove_field(&self.field);
+                            }
+
+                            for (key, value) in object {
+                                log.insert_flat_field(key, value);
+                            }
+                        }
                     }
+                } else if self.drop_invalid {
+                    // TODO: metrics
+                    continue;
                 }
+
+                output.push_one(log.into());
             }
-        } else if self.drop_invalid {
-            return;
         }
-
-        output.push(event);
     }
 }
 
@@ -446,7 +450,8 @@ mod test {
         assert!(transform_one(&mut parser, event).is_some());
 
         let event = Event::from(invalid);
-        assert!(transform_one(&mut parser, event).is_none());
+        let n = transform_one(&mut parser, event);
+        assert!(n.is_none());
 
         let event = Event::from(not_object);
         assert!(transform_one(&mut parser, event).is_none());

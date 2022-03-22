@@ -1,13 +1,14 @@
-use buffers::channel::BufferReceiver;
-use buffers::Acker;
-use event::Event;
-use futures::future::{BoxFuture, Future, FutureExt};
-use pin_project::pin_project;
 use std::pin::Pin;
 use std::{
     fmt,
     task::{Context, Poll},
 };
+
+use buffers::channel::BufferReceiver;
+use buffers::Acker;
+use event::Events;
+use futures::future::{BoxFuture, Future, FutureExt};
+use pin_project::pin_project;
 
 use crate::config::ComponentKey;
 use crate::utilization::Utilization;
@@ -16,7 +17,7 @@ pub enum TaskOutput {
     Source,
     Transform,
     /// Buffer of sink
-    Sink(Utilization<BufferReceiver<Event>>, Acker),
+    Sink(Utilization<BufferReceiver<Events>>, Acker),
     HealthCheck,
     Extension,
 }

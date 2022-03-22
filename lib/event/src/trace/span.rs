@@ -182,7 +182,7 @@ impl Default for Status {
 ///
 /// Spans that do not have the `sampled` flag set in their [`TraceFlags`] will
 /// be ignored by most tracing tools.
-#[derive(Clone, Debug, PartialEq, Hash, Eq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash, Eq, Deserialize, Serialize)]
 pub struct SpanContext {
     /// A unique identifier for a trace. All spans from the same trace share the same
     /// `trace_id`.
@@ -235,7 +235,7 @@ impl SpanContext {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub struct Span {
     pub span_context: SpanContext,
 

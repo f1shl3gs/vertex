@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 use buffers::Acker;
-use event::Event;
+use event::{EventContainer, Events};
 use framework::{
     config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
     Healthcheck, Sink, StreamSink,
@@ -61,10 +61,12 @@ impl BlackholeSink {
 
 #[async_trait]
 impl StreamSink for BlackholeSink {
-    async fn run(self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
-        while input.next().await.is_some() {
-            counter!("blackhole_recv_events_total", 1);
-            self.acker.ack(1);
+    async fn run(self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
+        while let Some(events) = input.next().await {
+            let n = events.len();
+
+            counter!("blackhole_recv_events_total", n as u64);
+            self.acker.ack(n);
         }
 
         Ok(())

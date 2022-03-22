@@ -99,7 +99,7 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SinkConfig for RemoteWriteConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let endpoint = self
             .endpoint
             .parse::<Uri>()
@@ -108,7 +108,7 @@ impl SinkConfig for RemoteWriteConfig {
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
 
-        let client = HttpClient::new(tls, ctx.proxy())?;
+        let client = HttpClient::new(tls, cx.proxy())?;
         let tenant_id = self.tenant_id.clone();
         let auth = self.auth.clone();
 
@@ -125,7 +125,7 @@ impl SinkConfig for RemoteWriteConfig {
             let buffer = PartitionBuffer::new(MetricsBuffer::new(batch.size));
             let mut normalizer = MetricNormalizer::<PrometheusMetricNormalize>::default();
 
-            PartitionBatchSink::new(service, buffer, batch.timeout, ctx.acker)
+            PartitionBatchSink::new(service, buffer, batch.timeout, cx.acker)
                 .with_flat_map(move |event: Event| {
                     let byte_size = event.size_of();
                     stream::iter(normalizer.apply(event.into_metric()).map(|event| {
@@ -152,7 +152,7 @@ impl SinkConfig for RemoteWriteConfig {
                 .sink_map_err(|err| error!(message = "Prometheus remote write sink error", %err))
         };
 
-        Ok((Sink::Sink(Box::new(sink)), healthcheck))
+        Ok((Sink::from_event_sink(sink), healthcheck))
     }
 
     fn input_type(&self) -> DataType {

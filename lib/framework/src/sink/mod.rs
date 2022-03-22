@@ -5,12 +5,14 @@ mod vec;
 pub use vec::{SendAll, VecSinkExt};
 
 use std::fmt::{Debug, Formatter};
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
 use async_trait::async_trait;
-use event::Event;
+use event::{Event, EventContainer, Events};
 use futures::future::BoxFuture;
 use futures::stream::BoxStream;
-use futures::{Stream, StreamExt};
+use futures::{SinkExt, Stream, StreamExt};
 use snafu::Snafu;
 
 pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
@@ -24,11 +26,11 @@ pub enum HealthcheckError {
 
 #[async_trait]
 pub trait StreamSink {
-    async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()>;
+    async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()>;
 }
 
 pub enum Sink {
-    Sink(Box<dyn futures::Sink<Event, Error = ()> + Send + Unpin>),
+    Sink(Box<dyn futures::Sink<Events, Error = ()> + Send + Unpin>),
     Stream(Box<dyn StreamSink + Send>),
 }
 
@@ -46,7 +48,7 @@ impl Sink {
     /// It is unclear under what conditions this function will error.
     pub async fn run<S>(self, input: S) -> Result<(), ()>
     where
-        S: Stream<Item = Event> + Send,
+        S: Stream<Item = Events> + Send,
     {
         match self {
             Self::Sink(sink) => input.map(Ok).forward(sink).await,
@@ -70,7 +72,7 @@ impl Sink {
     /// # Panics
     ///
     /// This function will panic if the self instance is not `Sink`.
-    pub fn into_sink(self) -> Box<dyn futures::Sink<Event, Error = ()> + Send + Unpin> {
+    pub fn into_sink(self) -> Box<dyn futures::Sink<Events, Error = ()> + Send + Unpin> {
         match self {
             Self::Sink(sink) => sink,
             _ => panic!("Failed type coercion, {:?} is not a Sink", self),
@@ -87,5 +89,117 @@ impl Sink {
             Self::Stream(stream) => stream,
             _ => panic!("Failed type coercion, {:?} is not a Stream", self),
         }
+    }
+
+    pub fn from_event_sink(
+        sink: impl futures::Sink<Event, Error = ()> + Send + Unpin + 'static,
+    ) -> Self {
+        Sink::Sink(Box::new(EventSink::new(sink)))
+    }
+    /*
+    pub fn from_event_streamsink(sink: impl StreamSink + Send + 'static) -> Self {
+        let sink = Box::new(sink);
+        Self::Stream(Box::new(EventStream { sink }))
+    }*/
+}
+/*
+/// Wrapper for sinks implementing `Stream<Event>` to `Stream<Events>`.
+///
+/// This should be removed once the sinks are all refactored to be consume
+/// `Events` rather than `Event`.
+struct EventStream<T> {
+    sink: Box<T>,
+}
+
+#[async_trait]
+impl<T> StreamSink for EventStream<T>
+where
+    T: StreamSink + Send,
+{
+    async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
+        let input = Box::pin(input.flat_map(into_event_stream));
+        self.sink.run(input).await
+    }
+}
+
+*/
+
+/// Wrapper for sinks implementing `Sink<Event>` to implement
+/// `Sink<Events>`. This stores an iterator over the incoming
+/// `Events` to be pushed into the wrapped sink one at a time.
+///
+/// This should be removed once the sinks are all refactored to be consume
+/// `Events` rather than `Event`.
+struct EventSink<S> {
+    sink: S,
+    queue: Option<<Events as EventContainer>::IntoIter>,
+}
+
+macro_rules! poll_ready_ok {
+    ( $e:expr ) => {
+        match $e {
+            r @ (Poll::Pending | Poll::Ready(Err(_))) => return r,
+            Poll::Ready(Ok(ok)) => ok,
+        }
+    };
+}
+
+impl<S: futures::Sink<Event> + Send + Unpin> EventSink<S> {
+    fn new(sink: S) -> Self {
+        Self { sink, queue: None }
+    }
+
+    fn next_event(&mut self) -> Option<Event> {
+        match &mut self.queue {
+            #[allow(clippy::single_match_else)] // No, clippy, this isn't a single pattern
+            Some(queue) => match queue.next() {
+                Some(event) => Some(event),
+                None => {
+                    // Reset the queue to empty after the last event
+                    self.queue = None;
+                    None
+                }
+            },
+            None => None,
+        }
+    }
+
+    fn flush_queue(self: &mut Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), S::Error>> {
+        while self.queue.is_some() {
+            poll_ready_ok!(self.sink.poll_ready_unpin(cx));
+            let event = match self.next_event() {
+                None => break,
+                Some(event) => event,
+            };
+            if let Err(err) = self.sink.start_send_unpin(event) {
+                return Poll::Ready(Err(err));
+            }
+        }
+        Poll::Ready(Ok(()))
+    }
+}
+
+impl<S: futures::Sink<Event> + Send + Unpin> futures::Sink<Events> for EventSink<S> {
+    type Error = S::Error;
+    fn poll_ready(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        poll_ready_ok!(self.flush_queue(cx));
+        self.sink.poll_ready_unpin(cx)
+    }
+
+    fn start_send(mut self: Pin<&mut Self>, events: Events) -> Result<(), Self::Error> {
+        assert!(self.queue.is_none()); // Should be guaranteed by `poll_ready`
+        self.queue = Some(events.into_events());
+        self.next_event()
+            .map_or(Ok(()), |event| self.sink.start_send_unpin(event))
+    }
+
+    fn poll_flush(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        poll_ready_ok!(self.flush_queue(cx));
+        self.sink.poll_flush_unpin(cx)
+    }
+
+    fn poll_close(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        poll_ready_ok!(self.flush_queue(cx));
+        self.sink.poll_close_unpin(cx)
     }
 }

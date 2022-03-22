@@ -8,8 +8,8 @@ use std::sync::{Arc, RwLock};
 use async_trait::async_trait;
 use buffers::Acker;
 use chrono::Utc;
-use event::MetricValue;
-use event::{Event, Metric};
+use event::Metric;
+use event::{Events, MetricValue};
 use framework::config::{
     default_false, DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
 };
@@ -300,35 +300,38 @@ impl PrometheusExporter {
 
 #[async_trait]
 impl StreamSink for PrometheusExporter {
-    async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Event>) -> Result<(), ()> {
+    async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         self.start_server_if_needed().await;
 
         let expiration = 5 * 60;
 
-        while let Some(event) = input.next().await {
-            let metric = event.into_metric();
+        while let Some(events) = input.next().await {
+            if let Events::Metrics(metrics) = events {
+                let mut state = self.metrics.write().unwrap();
 
-            let mut metrics = self.metrics.write().unwrap();
-            let entry = match metric.timestamp {
-                None => {
-                    let now = Utc::now().timestamp();
-                    ExpiringEntry {
-                        metric,
-                        expired_at: now + expiration,
-                    }
-                }
-                Some(timestamp) => {
-                    let ts = timestamp.timestamp();
+                metrics.into_iter().for_each(|metric| {
+                    let entry = match metric.timestamp {
+                        None => {
+                            let now = Utc::now().timestamp();
+                            ExpiringEntry {
+                                metric,
+                                expired_at: now + expiration,
+                            }
+                        }
+                        Some(timestamp) => {
+                            let ts = timestamp.timestamp();
 
-                    ExpiringEntry {
-                        metric,
-                        expired_at: ts + expiration,
-                    }
-                }
-            };
+                            ExpiringEntry {
+                                metric,
+                                expired_at: ts + expiration,
+                            }
+                        }
+                    };
 
-            metrics.replace(entry);
-            self.acker.ack(1);
+                    state.replace(entry);
+                    self.acker.ack(1);
+                })
+            }
         }
 
         Ok(())

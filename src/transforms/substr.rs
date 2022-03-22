@@ -1,10 +1,10 @@
 use async_trait::async_trait;
 use bytes::Buf;
-use event::{log::Value, Event};
+use event::{log::Value, Events};
 use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
-use framework::{FunctionTransform, Transform};
+use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -76,21 +76,21 @@ struct Substr {
 }
 
 impl FunctionTransform for Substr {
-    fn transform(&mut self, output: &mut Vec<Event>, mut event: Event) {
-        let log = event.as_mut_log();
+    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+        events.for_each_log(|log| {
+            if let Some(Value::Bytes(value)) = log.get_field_mut(&self.field) {
+                if let Some(offset) = self.offset {
+                    let offset = value.remaining().min(offset);
+                    value.advance(offset);
+                }
 
-        if let Some(Value::Bytes(value)) = log.get_field_mut(&self.field) {
-            if let Some(offset) = self.offset {
-                let offset = value.remaining().min(offset);
-                value.advance(offset);
+                if let Some(length) = self.length {
+                    value.truncate(length);
+                }
             }
+        });
 
-            if let Some(length) = self.length {
-                value.truncate(length);
-            }
-        }
-
-        output.push(event);
+        output.push(events);
     }
 }
 
@@ -98,7 +98,7 @@ impl FunctionTransform for Substr {
 mod tests {
     use super::*;
     use crate::transforms::transform_one;
-    use event::{assert_event_data_eq, fields};
+    use event::{assert_event_data_eq, fields, Event};
 
     #[test]
     fn generate_config() {

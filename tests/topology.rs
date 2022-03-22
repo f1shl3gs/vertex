@@ -1,14 +1,20 @@
 mod util;
 
+use std::num::NonZeroU64;
+use std::time::Duration;
+
 use buffers::{BufferConfig, BufferType, WhenFull};
-use event::Event;
+use event::{Event, EventContainer};
 use framework::config::{Config, SinkOuter};
 use futures_util::StreamExt;
 use log_schema::log_schema;
-use std::time::Duration;
 use tempfile::tempdir;
 use util::{sink, source, transform};
 use vertex::testing::start_topology;
+
+fn default_max_size() -> NonZeroU64 {
+    NonZeroU64::new(1024).unwrap()
+}
 
 #[tokio::test]
 async fn topology_disk_buffer_flushes_on_idle() {
@@ -30,7 +36,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
     );
     sink1_outer.buffer = BufferConfig {
         stages: vec![BufferType::Disk {
-            max_size: 1024,
+            max_size: default_max_size(),
             when_full: WhenFull::DropNewest,
         }],
     };
@@ -45,7 +51,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
     let res = tokio::time::timeout(Duration::from_secs(1), out1.next())
         .await
         .expect("timeout 1")
-        .map(into_message)
+        .map(|events| into_message(events.into_events().next().unwrap()))
         .expect("no output");
     assert_eq!("foo", res);
 
@@ -53,7 +59,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
     let res = tokio::time::timeout(Duration::from_secs(1), out1.next())
         .await
         .expect("timeout 2")
-        .map(into_message)
+        .map(|events| into_message(events.into_events().next().unwrap()))
         .expect("no output");
     assert_eq!("foo", res);
 

@@ -394,7 +394,6 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 mod tests {
     use crate::sources::prometheus_scrape::{offset, PrometheusScrapeConfig};
     use framework::config::default_interval;
-    use std::collections::BTreeMap;
     use testify::random::random_string;
 
     #[test]

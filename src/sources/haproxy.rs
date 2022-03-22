@@ -3,8 +3,9 @@ use std::io::BufRead;
 use std::time::Duration;
 
 use bytes::Buf;
+use chrono::Utc;
 use event::attributes::Key;
-use event::{tags, Event, Metric};
+use event::{tags, Metric};
 use framework::config::{
     default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
     GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
@@ -115,12 +116,17 @@ impl SourceConfig for HaproxyConfig {
                 )
                 .await;
 
-                let mut stream = futures::stream::iter(metrics)
-                    .map(futures::stream::iter)
+                let now = Utc::now();
+                let metrics = metrics
+                    .into_iter()
                     .flatten()
-                    .map(Event::Metric);
+                    .map(|mut m| {
+                        m.timestamp = Some(now);
+                        m
+                    })
+                    .collect::<Vec<_>>();
 
-                if let Err(err) = output.send_all(&mut stream).await {
+                if let Err(err) = output.send(metrics).await {
                     error!(
                         message = "Error sending haproxy metrics",
                         %err
