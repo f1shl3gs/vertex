@@ -2023,6 +2023,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "kafka_generator"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "futures",
+ "governor",
+ "rdkafka",
+ "tokio",
+]
+
+[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

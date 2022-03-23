@@ -13,6 +13,7 @@ use pin_project::pin_project;
 use crate::config::ComponentKey;
 use crate::utilization::Utilization;
 
+#[allow(clippy::large_enum_variant)]
 pub enum TaskOutput {
     Source,
     Transform,

@@ -35,7 +35,8 @@ members = [
     "lib/jaeger",
     "lib/tracing-internal",
     "tools/log_generator",
-    "tools/fake_node_exporter"
+    "tools/fake_node_exporter",
+    "tools/kafka_generator"
 ]
 
 [features]

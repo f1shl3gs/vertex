@@ -5,11 +5,12 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
+use chrono::Utc;
 use event::attributes::Attributes;
 use event::{log::Value, Bucket, EventMetadata, Events, Metric, MetricSeries, MetricValue};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    TransformConfig, TransformContext, TransformDescription,
+    default_interval, deserialize_duration, serialize_duration, DataType, ExpandType,
+    GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
@@ -319,9 +320,18 @@ impl Metricalize {
     }
 
     fn flush_into(&mut self, output: &mut Vec<Metric>) {
-        for (series, entry) in self.states.drain() {
-            let metric =
-                Metric::new_with_metadata(series.name, series.tags, entry.0, None, entry.1);
+        let now = Utc::now();
+
+        for (series, entry) in self.states.iter_mut() {
+            let metadata = entry.1.take_finalizers().into();
+
+            let metric = Metric::new_with_metadata(
+                series.name.clone(),
+                series.tags.clone(),
+                entry.0.clone(),
+                Some(now),
+                metadata,
+            );
 
             output.push(metric);
         }
@@ -495,11 +505,40 @@ mod tests {
             agg.flush_into(&mut output);
 
             assert_eq!(output.len(), wants.len(), "case: {}", test);
+            #[allow(unused_variables)] // want_value did used
             for (got, (want_name, want_tags, want_value)) in output.iter().zip(wants) {
                 assert_eq!(got.name(), want_name, "case: {}", test);
                 assert_eq!(got.tags(), &want_tags, "case: {}", test);
                 assert!(matches!(&got.value, want_value), "case: {}", test);
             }
         }
+    }
+
+    #[test]
+    fn test_build_series_and_value() {
+        let config = MetricConfig::Counter(CounterConfig {
+            name: "name".to_string(),
+            field: "value".to_string(),
+            tags: Default::default(),
+            increment_by_value: false,
+        });
+
+        let (series, value) = config
+            .build_series_and_value(&fields!( "value" => "a"))
+            .unwrap();
+
+        println!("{:?} {}", series, value);
+
+        let config = MetricConfig::Counter(CounterConfig {
+            name: "name".to_string(),
+            field: "a.b".to_string(),
+            tags: Default::default(),
+            increment_by_value: false,
+        });
+
+        let (series, value) = config
+            .build_series_and_value(&fields!( "a" => fields!( "b" => 1)))
+            .unwrap();
+        println!("{:?} {}", series, value);
     }
 }

@@ -22,6 +22,7 @@ impl Rule for DockerParser {
 mod tests {
     #[test]
     #[allow(clippy::missing_const_for_fn)]
+    #[allow(unused_variables)]
     fn merge() {
         let input = [
             "{\"log\": \"aa\\n\", \"stream\": \"stdout\", \"time\": \"2021-02-01T16:45:03.01231z\"}",

@@ -12,6 +12,12 @@ pub struct EventMetadata {
     finalizers: EventFinalizers,
 }
 
+impl From<EventFinalizers> for EventMetadata {
+    fn from(finalizers: EventFinalizers) -> Self {
+        Self { finalizers }
+    }
+}
+
 impl ByteSizeOf for EventMetadata {
     fn allocated_bytes(&self) -> usize {
         // Note we don't count the `str` here because it's allocated

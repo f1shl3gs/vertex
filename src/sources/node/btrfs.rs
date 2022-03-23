@@ -491,6 +491,7 @@ mod tests {
             let got = &stats[i];
 
             assert_eq!(got.uuid, want.uuid);
+            assert_eq!(got.label, want.label);
             assert_eq!(got.devices.len(), want.devices);
             assert_eq!(got.features.len(), want.features);
             assert_eq!(
