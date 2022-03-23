@@ -364,7 +364,7 @@ tracing-subscriber = { version = "0.3.9", optional = true, default-features = fa
 tracing-core = { version = "0.1.23" }
 
 # HTTP
-hyper = { version = "0.14.17", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.18", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 http = { version = "0.2.6", default-features = false }
 headers = { version = "0.3.7" }
 
