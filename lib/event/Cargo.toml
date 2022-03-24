@@ -17,7 +17,7 @@ atomig = { version = "0.3.3", features = ["derive", "serde"] }
 buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
-enumflags2 = { version = "0.7.3", default-features = false }
+enumflags2 = { version = "0.7.4", default-features = false }
 futures = { version = "0.3.21", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 pin-project = { version = "1.0.10", default-features = false }
