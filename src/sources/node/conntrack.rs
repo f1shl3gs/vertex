@@ -96,6 +96,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 // A ConntrackStatEntry represents one line from net/stat/nf_conntrack
 // and contains netfilter conntrack statistics at one CPU core
+#[allow(dead_code)]
 #[derive(Debug, Default)]
 struct ConntrackStatEntry {
     entries: u64,

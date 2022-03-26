@@ -3,17 +3,19 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use chrono::Utc;
-use rdkafka::message::OwnedHeaders;
-use governor::{Quota, RateLimiter, state::StreamRateLimitExt};
-use rdkafka::producer::{FutureProducer, FutureRecord};
 use futures::StreamExt;
+use governor::{state::StreamRateLimitExt, Quota, RateLimiter};
+use rdkafka::message::OwnedHeaders;
+use rdkafka::producer::{FutureProducer, FutureRecord};
 use rdkafka::ClientConfig;
 
 #[tokio::main]
 async fn main() {
     let topic = "test";
     let bootstrap_servers = "10.32.10.100:9092";
-    let limiter = Arc::new(RateLimiter::direct(Quota::per_second(NonZeroU32::new(3000).unwrap())));
+    let limiter = Arc::new(RateLimiter::direct(Quota::per_second(
+        NonZeroU32::new(5000).unwrap(),
+    )));
 
     let mut handles = vec![];
     let threads = 32;
@@ -34,7 +36,7 @@ async fn main() {
 
             while stream.next().await.is_some() {
                 let ts = Utc::now().timestamp_millis();
-                let record = FutureRecord::to(&topic)
+                let record = FutureRecord::to(topic)
                     .payload(&payload)
                     .key("key")
                     .timestamp(ts)

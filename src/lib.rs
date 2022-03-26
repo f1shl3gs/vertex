@@ -8,7 +8,6 @@
 #![deny(clippy::missing_const_for_fn)] // [nursery] valuable to the optimizer, but may produce false positives
 
 mod common;
-mod encoding_transcode;
 pub mod extensions;
 pub mod sinks;
 pub mod sources;

@@ -29,7 +29,7 @@ async fn shutdown_while_active() {
     let (mut in1, rx) = Pipeline::new_with_buffer(10);
 
     let source1 = MockSourceConfig::new_with_event_counter(rx, source_event_counter);
-    let transform1 = transform("transformed", 0.0);
+    let transform1 = transform(" transformed", 0.0);
     let (out1, sink1) = sink(10);
 
     let mut config = Config::builder();
@@ -56,7 +56,9 @@ async fn shutdown_while_active() {
     // blocking forever, as the source should shut down and close its output channel.
     let processed_events = out1.collect::<Vec<_>>().await;
     assert_eq!(
-        processed_events.len(),
+        processed_events
+            .iter()
+            .fold(0, |acc, events| { acc + events.len() }),
         source_event_total.load(Ordering::Relaxed)
     );
 

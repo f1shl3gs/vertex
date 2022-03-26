@@ -735,17 +735,16 @@ fn parse_and_generate(key: &str, value: &str) -> Result<Metric, Error> {
 
 fn sanitize_metric_name(name: &str) -> String {
     let mut bytes = name.as_bytes().to_vec();
-    for i in 0..bytes.len() {
-        let b = bytes[i];
+    for b in &mut bytes {
         if b.is_ascii_alphanumeric() {
             continue;
         }
 
-        if b == b'_' {
+        if *b == b'_' {
             continue;
         }
 
-        bytes[i] = b'_';
+        *b = b'_';
     }
 
     String::from_utf8(bytes).unwrap_or_default()

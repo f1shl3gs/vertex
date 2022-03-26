@@ -9,8 +9,8 @@ use chrono::Utc;
 use event::attributes::Attributes;
 use event::{log::Value, Bucket, EventMetadata, Events, Metric, MetricSeries, MetricValue};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, ExpandType,
-    GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
+    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
+    TransformConfig, TransformContext, TransformDescription,
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
@@ -527,7 +527,7 @@ mod tests {
             .build_series_and_value(&fields!( "value" => "a"))
             .unwrap();
 
-        println!("{:?} {}", series, value);
+        assert_eq!(value, 1.0);
 
         let config = MetricConfig::Counter(CounterConfig {
             name: "name".to_string(),
@@ -539,6 +539,6 @@ mod tests {
         let (series, value) = config
             .build_series_and_value(&fields!( "a" => fields!( "b" => 1)))
             .unwrap();
-        println!("{:?} {}", series, value);
+        assert_eq!(value, 1.0);
     }
 }

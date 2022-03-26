@@ -86,6 +86,7 @@ struct FinalizerFuture<T> {
 
 impl<T> Future for FinalizerFuture<T> {
     type Output = (<BatchStatusReceiver as Future>::Output, T);
+
     fn poll(mut self: Pin<&mut Self>, cx: &mut std::task::Context<'_>) -> Poll<Self::Output> {
         let status = futures::ready!(self.receiver.poll_unpin(cx));
 

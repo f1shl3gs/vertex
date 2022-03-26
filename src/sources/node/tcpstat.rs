@@ -141,8 +141,11 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
                     error!(message = "Invalid netlink payload", ?err);
                     break 'RECV;
                 }
-                NetlinkPayload::Overrun(_) | _ => {
+                NetlinkPayload::Overrun(_) => {
                     panic!("overrun")
+                }
+                _ => {
+                    panic!("Unknown payload type")
                 }
             }
 

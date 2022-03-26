@@ -159,7 +159,7 @@ fn scrape(
     output: Pipeline,
 ) -> Source {
     let shutdown = shutdown.shared();
-    let client = HttpClient::new(tls.clone(), &proxy).expect("Building HTTP client failed");
+    let client = HttpClient::new(tls, &proxy).expect("Building HTTP client failed");
 
     Box::pin(async move {
         let auth = Arc::new(auth);
