@@ -172,7 +172,10 @@ impl FunctionTransform for MockTransform {
                     .unwrap()
                     .to_string_lossy();
 
-                log.insert_field(log_schema().message_key(), Value::from(v));
+                log.insert_field(
+                    log_schema().message_key(),
+                    Value::from(format!("{}{}", v, self.suffix)),
+                );
             }),
 
             Events::Metrics(metrics) => metrics.iter_mut().for_each(|metric| {

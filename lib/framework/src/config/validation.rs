@@ -197,53 +197,6 @@ enum Node {
     },
 }
 
-fn paths_rec(
-    nodes: &HashMap<String, Node>,
-    node: &str,
-    mut path: Vec<String>,
-) -> Result<Vec<Vec<String>>, String> {
-    if let Some(i) = path.iter().position(|p| p == node) {
-        let mut segment = path.split_off(i);
-
-        segment.push(node.into());
-        // I think this is maybe easier to grok from source -> sink,
-        // but i'm not married to either
-        segment.reverse();
-
-        return Err(format!(
-            "Cyclic dependency detected in the chain [ {} ]",
-            segment
-                .iter()
-                .map(|item| item.to_string())
-                .collect::<Vec<_>>()
-                .join(" -> ")
-        ));
-    }
-
-    path.push(node.to_owned());
-    match nodes.get(node) {
-        Some(Node::Source { .. }) | None => {
-            path.reverse();
-            Ok(vec![path])
-        }
-
-        Some(Node::Transform { inputs, .. }) | Some(Node::Sink { inputs, .. }) => {
-            let mut paths = Vec::new();
-
-            for input in inputs {
-                match paths_rec(nodes, input, path.clone()) {
-                    Ok(mut p) => paths.append(&mut p),
-                    Err(err) => {
-                        return Err(err);
-                    }
-                }
-            }
-
-            Ok(paths)
-        }
-    }
-}
-
 fn capitalize(s: &str) -> String {
     let mut s = s.to_owned();
     if let Some(r) = s.get_mut(0..1) {

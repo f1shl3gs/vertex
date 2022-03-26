@@ -34,6 +34,7 @@ mod tests {
 
     #[test]
     #[allow(clippy::missing_const_for_fn)]
+    #[allow(unused_variables)]
     fn merge() {
         let input = [
             "2019-05-07T18:57:50.904275087+00:00 stdout P 1a. some ",

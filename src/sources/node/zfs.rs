@@ -153,8 +153,6 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
         ));
     }
 
-    let zpool_file = zps[length - 1];
-
     let mut parse = false;
     let mut headers = vec![];
     while let Some(line) = lines.next_line().await? {
@@ -173,8 +171,8 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
             continue;
         }
 
-        for (i, header) in headers.iter().enumerate() {
-            let key = header.clone();
+        for (i, field) in headers.iter().enumerate() {
+            let key = field.clone();
             let value = fields[i].parse().unwrap_or(0u64);
             kvs.insert(key, value);
         }

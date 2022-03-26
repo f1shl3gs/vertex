@@ -77,7 +77,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
             let file = std::fs::File::create("flamegraph.svg").unwrap();
             report.flamegraph(file).unwrap();
 
-            Ok(Response::new(Body::from(vec![])))
+            Ok(Response::new(Body::empty()))
         }
 
         Err(err) => {

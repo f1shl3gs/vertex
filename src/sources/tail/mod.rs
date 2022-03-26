@@ -1,8 +1,11 @@
+mod encoding_transcode;
+
 use std::path::PathBuf;
 use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
+use encoding_transcode::{Decoder, Encoder};
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
@@ -17,8 +20,6 @@ use log_schema::log_schema;
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
-
-use crate::encoding_transcode::{Decoder, Encoder};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -394,6 +395,7 @@ mod tests {
     use event::attributes::Key;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
+    use std::fs;
     use std::fs::File;
     use std::future::Future;
     use std::io::Write;
@@ -539,5 +541,184 @@ mod tests {
 
         assert_eq!(foo, n);
         assert_eq!(bar, n);
+    }
+
+    #[tokio::test]
+    async fn file_read_empty_lines() {
+        let n = 5;
+
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+
+        let received = run_tail(
+            &config,
+            dir.path().to_path_buf(),
+            false,
+            AckingMode::No,
+            async {
+                let mut file = File::create(&path).unwrap();
+
+                // The files must be observed at their original
+                // lengths before writing to them
+                sleep_500_millis().await;
+
+                writeln!(&mut file, "line for checkpointing").unwrap();
+                for _i in 0..n {
+                    writeln!(&mut file).unwrap();
+                }
+
+                sleep_500_millis().await;
+            },
+        )
+        .await;
+
+        assert_eq!(received.len(), n + 1);
+    }
+
+    // TODO: support truncate ?
+
+    #[tokio::test]
+    #[ignore = "This test ignored for now, it need to be test and pass"]
+    async fn file_rotate() {
+        let n = 5;
+
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let archive_path = dir.path().join("file");
+        let received = run_tail(
+            &config,
+            dir.path().to_path_buf(),
+            false,
+            AckingMode::No,
+            async {
+                let mut file = File::create(&path).unwrap();
+
+                // The files must be observed at its original
+                // length before writing to it
+                sleep_500_millis().await;
+
+                for i in 0..n {
+                    writeln!(&mut file, "prerot {}", i).unwrap();
+                }
+
+                // The writes must be observed before rotating
+                sleep_500_millis().await;
+
+                fs::rename(&path, archive_path).expect("could not rename");
+                let mut file = File::create(&path).unwrap();
+
+                // The rotation must be observed before writing again
+                sleep_500_millis().await;
+
+                for i in 0..n {
+                    writeln!(&mut file, "postrot {}", i).unwrap();
+                }
+
+                sleep_500_millis().await
+            },
+        )
+        .await;
+
+        let mut i = 0;
+        let mut pre_rot = true;
+
+        for event in received {
+            assert_eq!(
+                event
+                    .tags()
+                    .get(&Key::from("filename"))
+                    .unwrap()
+                    .to_string(),
+                path.to_str().unwrap()
+            );
+
+            let line = event
+                .as_log()
+                .get_field(log_schema().message_key())
+                .unwrap()
+                .to_string_lossy();
+            if pre_rot {
+                assert_eq!(line, format!("prerot {}", i));
+            } else {
+                assert_eq!(line, format!("postrot {}", i));
+            }
+
+            i += 1;
+            if i == n {
+                i = 0;
+                pre_rot = false;
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn multiple_paths() {
+        let n = 5;
+
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*.txt"), dir.path().join("a.*")],
+            exclude: vec![dir.path().join("a.*.txt")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let path1 = dir.path().join("a.txt");
+        let path2 = dir.path().join("b.txt");
+        let path3 = dir.path().join("a.log");
+        let path4 = dir.path().join("a.ignore.txt");
+        let received = run_tail(
+            &config,
+            dir.path().to_path_buf(),
+            false,
+            AckingMode::No,
+            async {
+                let mut file1 = File::create(&path1).unwrap();
+                let mut file2 = File::create(&path2).unwrap();
+                let mut file3 = File::create(&path3).unwrap();
+                let mut file4 = File::create(&path4).unwrap();
+
+                // The files must be observed at their original
+                // lengths before writing to them
+                sleep_500_millis().await;
+
+                for i in 0..n {
+                    writeln!(&mut file1, "1 {}", i).unwrap();
+                    writeln!(&mut file2, "2 {}", i).unwrap();
+                    writeln!(&mut file3, "3 {}", i).unwrap();
+                    writeln!(&mut file4, "4 {}", i).unwrap();
+                }
+
+                sleep_500_millis().await;
+            },
+        )
+        .await;
+
+        let mut is = [0; 3];
+        for event in received {
+            let line = event
+                .as_log()
+                .get_field(log_schema().message_key())
+                .unwrap()
+                .to_string_lossy();
+            let mut split = line.split(' ');
+            let file = split.next().unwrap().parse::<usize>().unwrap();
+            assert_ne!(file, 4);
+            let i = split.next().unwrap().parse::<usize>().unwrap();
+
+            assert_eq!(is[file - 1], i);
+            is[file - 1] += 1;
+        }
+
+        assert_eq!(is, [n as usize; 3]);
     }
 }

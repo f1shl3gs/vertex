@@ -1,14 +1,11 @@
 use std::collections::{BTreeMap, HashMap};
-use std::io::Cursor;
 use std::sync::Arc;
 use std::time::Duration;
 
-use async_stream::stream;
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
-use event::{log::Value, BatchNotifier, Event};
+use event::{fields, log::Value, tags, BatchNotifier, LogRecord};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
-use framework::codecs::StreamDecodingError;
 use framework::codecs::{BytesDecoderConfig, BytesDeserializerConfig};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
@@ -19,17 +16,15 @@ use framework::shutdown::ShutdownSignal;
 use framework::source::util::OrderedFinalizer;
 use framework::{codecs, Error, Source};
 use futures::{FutureExt, StreamExt};
+use futures_batch::ChunksTimeoutStreamExt;
 use log_schema::log_schema;
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
 use rdkafka::{ClientConfig, Message, TopicPartitionList};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
-use tokio_util::codec::FramedRead;
 
-use crate::common::kafka::{
-    KafkaAuthConfig, KafkaEventReceived, KafkaOffsetUpdateFailed, KafkaStatisticsContext,
-};
+use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
 
 fn default_auto_offset_reset() -> String {
     "largest".to_string()
@@ -338,138 +333,128 @@ async fn kafka_source(
     shutdown: ShutdownSignal,
     acknowledgements: bool,
 ) -> Result<(), ()> {
+    let batch_size = 256;
     let consumer = Arc::new(consumer);
     let shutdown = shutdown.shared();
     let mut finalizer = acknowledgements
         .then(|| OrderedFinalizer::new(shutdown.clone(), mark_done(Arc::clone(&consumer))));
-    let mut stream = consumer.stream().take_until(shutdown);
+    let mut stream = consumer
+        .stream()
+        .chunks_timeout(batch_size, Duration::from_millis(500))
+        .take_until(shutdown);
     let schema = log_schema();
 
-    while let Some(message) = stream.next().await {
-        match message {
-            Err(err) => {
-                // TODO: metric
-                warn!(
-                    message = "Failed to read message",
-                    ?err,
-                    internal_log_rate_secs = 10
-                );
-            }
+    while let Some(messages) = stream.next().await {
+        let mut byte_size = 0;
+        let mut logs = Vec::with_capacity(messages.len());
 
-            Ok(msg) => {
-                emit!(&KafkaEventReceived {
-                    byte_size: msg.payload_len()
-                });
+        messages.into_iter().for_each(|message| {
+            match message {
+                Ok(msg) => {
+                    byte_size += msg.payload_len();
 
-                let payload = match msg.payload() {
-                    None => continue, // skip messages with empty payload,
-                    Some(payload) => payload,
-                };
+                    let payload = match msg.payload() {
+                        None => return, // skip messages with empty payload,
+                        Some(payload) => payload,
+                    };
 
-                // Extract timestamp from kafka message
-                let timestamp = msg
-                    .timestamp()
-                    .to_millis()
-                    .and_then(|millis| Utc.timestamp_millis_opt(millis).latest())
-                    .unwrap_or_else(Utc::now);
+                    // Extract timestamp from kafka message
+                    let timestamp = msg
+                        .timestamp()
+                        .to_millis()
+                        .and_then(|millis| Utc.timestamp_millis_opt(millis).latest())
+                        .unwrap_or_else(Utc::now);
 
-                let msg_key = msg
-                    .key()
-                    .map(|key| Value::from(String::from_utf8_lossy(key).to_string()))
-                    .unwrap_or(Value::Null);
+                    let msg_key = msg
+                        .key()
+                        .map(|key| Value::from(String::from_utf8_lossy(key).to_string()))
+                        .unwrap_or(Value::Null);
 
-                let mut headers_map = BTreeMap::new();
-                if let Some(headers) = msg.headers() {
-                    // Using index-based for loop because rdkafka's `Headers` trait
-                    // does not provide Iterator-based API
-                    for i in 0..headers.count() {
-                        if let Some(header) = headers.get(i) {
-                            headers_map.insert(
-                                header.0.to_string(),
-                                Bytes::from(header.1.to_owned()).into(),
-                            );
-                        }
-                    }
-                }
-
-                let msg_topic = Bytes::copy_from_slice(msg.topic().as_bytes());
-                let msg_partition = msg.partition();
-                let msg_offset = msg.offset();
-                let key_field = &key_field;
-                let topic_key = &topic_key;
-                let partition_key = &partition_key;
-                let offset_key = &offset_key;
-                let headers_key = &headers_key;
-
-                let payload = Cursor::new(Bytes::copy_from_slice(payload));
-                let mut stream = FramedRead::new(payload, decoder.clone());
-
-                let mut stream = stream! {
-                    loop {
-                        match stream.next().await {
-                            Some(Ok((events, _))) => {
-                                for mut event in events {
-                                    if let Event::Log(ref mut log) = event {
-                                        log.insert_tag(schema.source_type_key(), "kafka");
-
-                                        log.insert_field(schema.timestamp_key(), timestamp);
-                                        log.insert_field(key_field, msg_key.clone());
-                                        log.insert_field(topic_key, msg_topic.clone());
-                                        log.insert_field(partition_key, msg_partition);
-                                        log.insert_field(offset_key, msg_offset);
-                                        log.insert_field(headers_key, headers_map.clone());
-                                    }
-
-                                    yield event;
-                                }
-                            },
-
-                            Some(Err(err)) => {
-                                // Error is logged by `codecs::Decoder`, no further handling
-                                // is needed here.
-                                if !err.can_continue() {
-                                    break;
-                                }
-                            },
-
-                            None => break,
-                        }
-                    }
-                }
-                .boxed();
-
-                match &mut finalizer {
-                    Some(finalizer) => {
-                        let (batch, receiver) = BatchNotifier::new_with_receiver();
-                        let mut stream = stream.map(|event| event.with_batch_notifier(&batch));
-                        match output.send_event_stream(&mut stream).await {
-                            Ok(_) => {
-                                // Drop stream to avoid borrowing `msg`: [...] borrow might be used
-                                // here, when `stream` is dropped and runs the destructor [...].
-                                drop(stream);
-                                finalizer.add(msg.into(), receiver);
-                            }
-
-                            Err(err) => {
-                                error!(
-                                    message = "Error sending to sink",
-                                    %err
+                    let mut headers_map = BTreeMap::new();
+                    if let Some(headers) = msg.headers() {
+                        // Using index-based for loop because rdkafka's `Headers` trait
+                        // does not provide Iterator-based API
+                        for i in 0..headers.count() {
+                            if let Some(header) = headers.get(i) {
+                                headers_map.insert(
+                                    header.0.to_string(),
+                                    Bytes::from(header.1.to_owned()).into(),
                                 );
                             }
                         }
                     }
 
-                    None => match output.send_event_stream(&mut stream).await {
-                        Ok(_) => {
-                            if let Err(err) =
-                                consumer.store_offset(msg.topic(), msg.partition(), msg.offset())
-                            {
-                                emit!(&KafkaOffsetUpdateFailed { error: err })
-                            }
+                    let msg_topic = Bytes::copy_from_slice(msg.topic().as_bytes());
+                    let msg_partition = msg.partition();
+                    let msg_offset = msg.offset();
+                    let key_field = &key_field;
+                    let topic_key = &topic_key;
+                    let partition_key = &partition_key;
+                    let offset_key = &offset_key;
+                    let headers_key = &headers_key;
+
+                    logs.push(LogRecord::new(
+                        tags!(
+                            schema.source_type_key() => "kafka",
+                        ),
+                        fields!(
+                            schema.timestamp_key() => timestamp,
+                            key_field => msg_key,
+                            topic_key => msg_topic,
+                            partition_key => msg_partition,
+                            offset_key => msg_offset,
+                            headers_key => headers_map,
+                            schema.message_key() => Bytes::copy_from_slice(payload)
+                        ),
+                    ));
+
+                    if let None = &mut finalizer {
+                        if let Err(err) =
+                            consumer.store_offset(msg.topic(), msg.partition(), msg.offset())
+                        {
+                            counter!("kafka_consumer_offset_updates_failed_total", 1);
+                            warn!(
+                                message = "Failed to read message",
+                                ?err,
+                                internal_log_rate_secs = 30
+                            );
                         }
-                        Err(err) => error!(message = "Error sending to sink", %err),
-                    },
+                    }
                 }
+                Err(err) => {
+                    // TODO: metric
+                    warn!(
+                        message = "Failed to read message",
+                        ?err,
+                        internal_log_rate_secs = 10
+                    );
+                }
+            }
+        });
+
+        if let Some(finalizer) = &mut finalizer {
+            let (batch, receiver) = BatchNotifier::new_with_receiver();
+            logs = logs
+                .into_iter()
+                .map(|log| log.with_batch_notifier(&batch))
+                .collect::<Vec<_>>();
+
+            if let Err(err) = output.send(logs).await {
+                error!(message = "Error sending logs", ?err);
+
+                return Err(());
+            }
+
+            // messages.into_iter().for_each(|msg| {
+            //     if let Ok(msg) = msg {
+            //         finalizer.add(msg.into(), receiver);
+            //     }
+            // })
+        } else {
+            if let Err(err) = output.send(logs).await {
+                error!(message = "Error sending logs", ?err);
+
+                return Err(());
             }
         }
     }

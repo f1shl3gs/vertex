@@ -109,7 +109,7 @@ impl From<JsonParserConfig> for JsonParser {
 }
 
 impl FunctionTransform for JsonParser {
-    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
+    fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
         if let Events::Logs(logs) = events {
             for mut log in logs {
                 let value = log.get_field(&self.field);
@@ -119,22 +119,17 @@ impl FunctionTransform for JsonParser {
                         let to_parse = value.as_bytes();
                         serde_json::from_slice::<Value>(to_parse.as_ref())
                             .map_err(|err| {
+                                warn!(
+                                    message = "Event failed to parse as JSON",
+                                    field = %self.field,
+                                    ?value,
+                                    ?err,
+                                    internal_log_rate_secs = 30
+                                );
+
+                                counter!("component_errors_total", 1, "error" => "invalid_json");
                                 if self.drop_field {
-                                    debug!(
-                                        message = "Event failed to parse as JSON",
-                                        field = %self.field,
-                                        ?value,
-                                        ?err,
-                                        internal_log_rate_secs = 30
-                                    );
-                                } else {
-                                    warn!(
-                                        message = "Event failed to parse as JSON",
-                                        field = %self.field,
-                                        ?value,
-                                        ?err,
-                                        internal_log_rate_secs = 30
-                                    );
+                                    counter!("component_discarded_events_total", 1);
                                 }
 
                                 // TODO: metrics
@@ -338,7 +333,7 @@ mod test {
 
         let event = transform_one(&mut parser, event).unwrap();
 
-        let n = event.as_log().get_field("greeting").unwrap();
+        event.as_log().get_field("greeting").unwrap();
 
         assert_eq!(
             *event.as_log().get_field("greeting").unwrap(),

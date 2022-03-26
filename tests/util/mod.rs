@@ -3,7 +3,7 @@ mod mock;
 use event::Events;
 use framework::pipeline::Pipeline;
 use futures::Stream;
-use mock::{MockSinkConfig, MockSourceConfig, MockTransformConfig};
+pub use mock::{MockSinkConfig, MockSourceConfig, MockTransformConfig};
 
 pub fn source() -> (Pipeline, MockSourceConfig) {
     let (tx, rx) = Pipeline::new_with_buffer(1);

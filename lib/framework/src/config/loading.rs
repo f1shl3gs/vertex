@@ -214,7 +214,7 @@ pub fn merge_path_lists(
 #[cfg(unix)]
 fn default_config_paths() -> Vec<ConfigPath> {
     vec![ConfigPath::File(
-        "/etc/vertex/vertex.yml".into(),
+        "/etc/vertex/vertex.yaml".into(),
         Some(Format::YAML),
     )]
 }

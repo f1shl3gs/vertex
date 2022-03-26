@@ -72,7 +72,7 @@ impl MetricValue {
         let f = f.into_f64();
 
         match self {
-            MetricValue::Sum(s) => *s = f,
+            MetricValue::Sum(s) => *s += f,
             MetricValue::Gauge(g) => *g = f,
             MetricValue::Histogram {
                 buckets,

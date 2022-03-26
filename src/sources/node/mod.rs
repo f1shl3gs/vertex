@@ -1,4 +1,5 @@
-#[allow(dead_code)]
+#[allow(unused)]
+#[allow(unused_variables)]
 mod arp;
 mod bcache;
 mod bonding;
@@ -451,15 +452,15 @@ impl NodeMetrics {
 
         let proc_path = Arc::new(self.proc_path);
         let sys_path = Arc::new(self.sys_path);
-        let cpu_conf = self.collectors.cpu.map(|c| Arc::new(c));
-        let diskstats = self.collectors.diskstats.map(|d| Arc::new(d));
-        let filesystem = self.collectors.filesystem.map(|f| Arc::new(f));
-        let ipvs = self.collectors.ipvs.map(|i| Arc::new(i));
-        let netclass = self.collectors.netclass.map(|n| Arc::new(n));
-        let netdev = self.collectors.netdev.map(|n| Arc::new(n));
-        let netstat = self.collectors.netstat.map(|n| Arc::new(n));
-        let power_supply = self.collectors.power_supply.map(|p| Arc::new(p));
-        let vmstat = self.collectors.vmstat.map(|v| Arc::new(v));
+        let cpu_conf = self.collectors.cpu.map(Arc::new);
+        let diskstats = self.collectors.diskstats.map(Arc::new);
+        let filesystem = self.collectors.filesystem.map(Arc::new);
+        let ipvs = self.collectors.ipvs.map(Arc::new);
+        let netclass = self.collectors.netclass.map(Arc::new);
+        let netdev = self.collectors.netdev.map(Arc::new);
+        let netstat = self.collectors.netstat.map(Arc::new);
+        let power_supply = self.collectors.power_supply.map(Arc::new);
+        let vmstat = self.collectors.vmstat.map(Arc::new);
 
         while ticker.next().await.is_some() {
             let mut tasks = Vec::new();
@@ -787,10 +788,8 @@ impl NodeMetrics {
 
             if self.collectors.xfs {
                 let sys_path = Arc::clone(&sys_path);
-                let proc_path = Arc::clone(&proc_path);
-
                 tasks.push(tokio::spawn(async move {
-                    record_gather!("xfs", xfs::gather(proc_path.as_ref(), sys_path.as_ref()))
+                    record_gather!("xfs", xfs::gather(sys_path.as_ref()))
                 }))
             }
 
@@ -832,8 +831,8 @@ impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
             interval: self.interval,
-            proc_path: default_proc_path().into(),
-            sys_path: default_sys_path().into(),
+            proc_path: default_proc_path(),
+            sys_path: default_sys_path(),
             collectors: self.collectors.clone(),
         };
 

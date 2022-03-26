@@ -281,7 +281,6 @@ impl Inner {
         Ok(())
     }
 
-    #[deprecated]
     async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,

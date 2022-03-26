@@ -147,6 +147,7 @@ where
     SL: ServiceLogic<Response = http::Response<Bytes>> + Send + 'static,
     T: HttpSink<Input = B::Input, Output = B::Output>,
 {
+    #![allow(clippy::too_many_arguments)]
     pub fn with_logic(
         sink: T,
         batch: B,

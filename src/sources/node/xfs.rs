@@ -9,8 +9,8 @@ use super::{read_to_string, Error, ErrorContext};
 ///
 /// Linux (kernel 4.4+)
 
-pub async fn gather(proc_path: &str, sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = xfs_sys_stats(proc_path, sys_path)
+pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
+    let stats = xfs_sys_stats(sys_path)
         .await
         .context("read xfs stats failed")?;
 
@@ -397,6 +397,7 @@ struct InodeOperationStats {
 }
 
 // LogOperationStats contains statistics regarding the XFS log buffer
+#[allow(dead_code)]
 #[derive(Debug, Default)]
 struct LogOperationStats {
     writes: u32,
@@ -467,7 +468,7 @@ struct Stats {
 /// xfs_sys_stats retrieves XFS filesystem runtime statistics for each mounted
 /// XFS filesystem. Only available on kernel 4.4+. On older kernels, an empty
 /// vector will be returned.
-async fn xfs_sys_stats(proc_path: &str, sys_path: &str) -> Result<Vec<Stats>, Error> {
+async fn xfs_sys_stats(sys_path: &str) -> Result<Vec<Stats>, Error> {
     let paths = glob::glob(&format!("{}/fs/xfs/*/stats/stats", sys_path)).map_err(|err| {
         let msg = format!("glob xfs stats failed, {}", err);
         Error::new_invalid(msg)
@@ -705,7 +706,7 @@ mod tests {
     #[tokio::test]
     async fn test_xfs_sys_stats() {
         let sys_path = "tests/fixtures/sys";
-        let stats = xfs_sys_stats("", sys_path).await.unwrap();
+        let stats = xfs_sys_stats(sys_path).await.unwrap();
         assert_eq!(stats.len(), 2);
 
         assert_eq!(stats[0].name, "sda1");

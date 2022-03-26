@@ -216,10 +216,6 @@ impl Runner {
     }
 
     async fn run_concurrently(mut self) -> Result<TaskOutput, ()> {
-        // 1024 is an arbitrary, medium-ish constant, larger than the inline runner's batch
-        // size to try to balance out the increased overhead of spawning tasks
-        const CONCURRENT_BATCH_SIZE: usize = 1024;
-
         let mut input_rx = self
             .input_rx
             .take()

@@ -457,8 +457,7 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
     let mut num_end = 0;
 
     // consume type
-    for i in 0..s.len() {
-        let c = s[i];
+    for (i, c) in s.iter().enumerate() {
         if c.is_ascii_digit() {
             typ_end = i;
             break;
@@ -471,9 +470,8 @@ fn explode_sensor_filename(name: &str) -> Result<(&str, &str, &str), ()> {
     }
 
     // consume num until we meet '_'
-    for i in typ_end..s.len() {
-        let c = s[i];
-        if c == b'_' {
+    for (i, c) in s.iter().enumerate() {
+        if *c == b'_' {
             num_end = i;
             break;
         }
@@ -519,27 +517,24 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     let path = path.as_ref();
     let ap = path.join("device");
-    match tokio::fs::read_link(&ap).await {
-        Ok(dev_path) => {
-            let dev_path = tokio::fs::canonicalize(ap)
-                .await
-                .context("canonicalize failed")?;
-            let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
-            let dev_prefix = dev_path.parent().unwrap();
-            let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
+    if let Ok(_) = tokio::fs::read_link(&ap).await {
+        let dev_path = tokio::fs::canonicalize(ap)
+            .await
+            .context("canonicalize failed")?;
+        let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
+        let dev_prefix = dev_path.parent().unwrap();
+        let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();
 
-            let clean_dev_name = sanitized(dev_name);
-            let clean_dev_typ = sanitized(dev_type);
+        let clean_dev_name = sanitized(dev_name);
+        let clean_dev_typ = sanitized(dev_type);
 
-            if !clean_dev_typ.is_empty() && !clean_dev_name.is_empty() {
-                return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name));
-            }
-
-            if !clean_dev_name.is_empty() {
-                return Ok(clean_dev_name);
-            }
+        if !clean_dev_typ.is_empty() && !clean_dev_name.is_empty() {
+            return Ok(format!("{}_{}", clean_dev_typ, clean_dev_name));
         }
-        Err(err) => {}
+
+        if !clean_dev_name.is_empty() {
+            return Ok(clean_dev_name);
+        }
     }
 
     // preference 2: is there a name file

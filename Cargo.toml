@@ -44,7 +44,8 @@ members = [
     "lib/jaeger",
     "lib/tracing-internal",
     "tools/log_generator",
-    "tools/fake_node_exporter"
+    "tools/fake_node_exporter",
+    "tools/kafka_generator"
 ]
 
 [features]
@@ -190,7 +191,7 @@ sources-prometheus_remote_write = ["snap"]
 sources-redis = ["redis"]
 sources-selfstat = ["libc"]
 sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
-sources-tail = ["tail", "multiline"]
+sources-tail = ["tail", "multiline", "encoding_rs"]
 sources-zookeeper = []
 
 # transforms
@@ -350,6 +351,7 @@ tokio-util = { version = "0.6.9", default-features = false, features = ["codec",
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
+futures-batch = "0.6.0"
 async-trait = { version = "0.1.52" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
@@ -400,7 +402,7 @@ chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.5" }
-encoding_rs = { version = "0.8.30", features = ["serde"] }
+encoding_rs = { version = "0.8.30", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 glob = { version = "0.3.0" }
