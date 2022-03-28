@@ -179,6 +179,15 @@ lazy_static!(
 );
 
 #[derive(Debug, Snafu)]
+enum ParseError {
+    #[snafu(display("Parse integer failed, {}", source))]
+    Int { source: std::num::ParseIntError },
+
+    #[snafu(display("Parse float failed, {}", source))]
+    Float { source: std::num::ParseFloatError },
+}
+
+#[derive(Debug, Snafu)]
 enum Error {
     #[snafu(display("Invalid data: {}", desc))]
     InvalidData { desc: String },
@@ -193,30 +202,31 @@ enum Error {
     InvalidKeyspaceLine,
 
     #[snafu(display("Redis error: {}", source))]
-    RedisError { source: redis::RedisError },
+    Redis { source: redis::RedisError },
 
-    #[snafu(display("Parse integer error: {}", source))]
-    ParseIntError { source: std::num::ParseIntError },
-
-    #[snafu(display("Parse float error: {}", source))]
-    ParseFloatError { source: std::num::ParseFloatError },
+    #[snafu(display("Parse error: {}", source))]
+    Parse { source: ParseError },
 }
 
 impl From<redis::RedisError> for Error {
     fn from(source: redis::RedisError) -> Self {
-        Self::RedisError { source }
+        Self::Redis { source }
     }
 }
 
 impl From<std::num::ParseIntError> for Error {
     fn from(source: std::num::ParseIntError) -> Self {
-        Self::ParseIntError { source }
+        Self::Parse {
+            source: ParseError::Int { source },
+        }
     }
 }
 
 impl From<std::num::ParseFloatError> for Error {
     fn from(source: std::num::ParseFloatError) -> Self {
-        Self::ParseFloatError { source }
+        Self::Parse {
+            source: ParseError::Float { source },
+        }
     }
 }
 
@@ -287,7 +297,7 @@ impl SourceConfig for RedisSourceConfig {
 }
 
 struct RedisSource {
-    user: Option<String>,
+    _user: Option<String>,
     password: Option<String>,
     url: String,
     namespace: Option<String>,
@@ -300,7 +310,7 @@ struct RedisSource {
 impl RedisSource {
     fn from(conf: &RedisSourceConfig) -> Self {
         Self {
-            user: None,
+            _user: None,
             password: None,
             url: conf.url.clone(),
             namespace: conf.namespace.clone(),
@@ -386,8 +396,23 @@ impl RedisSource {
         let infos = query_infos(&mut conn).await?;
 
         if infos.contains("cluster_enabled:1") {
-            let cluster_info = cluster_info(&mut conn).await?;
-            db_count = 1;
+            match cluster_info(&mut conn).await {
+                Ok(info) => {
+                    if let Ok(ms) = extract_cluster_info_metrics(info) {
+                        metrics.extend(ms);
+                    }
+
+                    // in cluster mode Redis only supports one database so no extra DB number padding needed
+                    db_count = 1;
+                }
+                Err(err) => {
+                    error!(
+                        message = "Redis CLUSTER INFO failed",
+                        ?err,
+                        internal_log_rate_secs = 30
+                    );
+                }
+            }
         } else if db_count == 0 {
             // in non-cluster mode, if db_count is zero then "CONFIG" failed to retrieve a
             // valid number of databases and we use the Redis config default which is 16
@@ -506,6 +531,27 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
             ),
         ]);
     }
+
+    Ok(metrics)
+}
+
+fn extract_cluster_info_metrics(info: String) -> Result<Vec<Metric>, Error> {
+    let mut metrics = vec![];
+    info.split("\r\n").for_each(|line| {
+        let part = line.split(":").collect::<Vec<_>>();
+
+        if part.len() != 2 {
+            return;
+        }
+
+        if !include_metric(part[0]) {
+            return;
+        }
+
+        if let Ok(m) = parse_and_generate(part[0], part[1]) {
+            metrics.push(m);
+        }
+    });
 
     Ok(metrics)
 }

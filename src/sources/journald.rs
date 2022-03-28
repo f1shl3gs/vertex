@@ -449,20 +449,24 @@ impl EntryCodec {
 fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
     let mut pos = 0;
     let length = buf.len();
-    for i in pos..length {
-        pos += 1;
-        let c = buf[i];
-        if c == b'=' {
+
+    while pos < length {
+        if buf[pos] == b'=' {
             break;
         }
+
+        pos += 1;
     }
 
-    if pos == length {
+    if pos == length || pos + 1 == length {
         return Err(io::Error::from(io::ErrorKind::InvalidData));
     }
 
-    let key = String::from_utf8(buf[0..pos - 1].to_vec())
+    let key = String::from_utf8(buf[0..pos].to_vec())
         .map_err(|err| io::Error::new(io::ErrorKind::InvalidData, err))?;
+
+    // +1 to skip '='
+    pos += 1;
 
     return match key.as_ref() {
         "PRIORITY" => {
@@ -481,13 +485,15 @@ fn decode_kv(buf: &[u8]) -> Result<(String, Value), io::Error> {
         }
         "_SOURCE_MONOTONIC_TIMESTAMP" => {
             let mut ts = 0u64;
-            for i in pos..length {
-                let c = buf[i];
+            while pos < length {
+                let c = buf[pos];
                 if c.is_ascii_digit() {
                     ts = ts * 10 + (c - b'0') as u64
                 } else {
                     break;
                 }
+
+                pos += 1;
             }
 
             Ok((key, ts.into()))
@@ -620,7 +626,18 @@ mod tests {
         // unknown priority
         let (k, v) = decode_kv("PRIORITY=9".as_bytes()).unwrap();
         assert_eq!(k, "PRIORITY");
-        assert_eq!(v, Value::Bytes("UNKNOWN".into()))
+        assert_eq!(v, Value::Bytes("UNKNOWN".into()));
+
+        // decode timestamp
+        let (k, v) = decode_kv("_SOURCE_REALTIME_TIMESTAMP=1578529839140003".as_bytes()).unwrap();
+        assert_eq!(k, "_SOURCE_REALTIME_TIMESTAMP");
+        assert_eq!(v, Value::Bytes("1578529839140003".into()));
+
+        // no `=`
+        assert!(decode_kv("foo".as_bytes()).is_err());
+
+        // no value
+        assert!(decode_kv("foo=".as_bytes()).is_err());
     }
 
     #[tokio::test]

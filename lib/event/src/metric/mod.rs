@@ -307,6 +307,11 @@ impl Metric {
     }
 
     #[inline]
+    pub fn value(&self) -> &MetricValue {
+        &self.value
+    }
+
+    #[inline]
     pub fn gauge<N, D, V>(name: N, desc: D, v: V) -> Metric
     where
         N: Into<String>,

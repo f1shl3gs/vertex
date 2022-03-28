@@ -68,44 +68,40 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             .context("walk csrow directories failed")?;
 
         for csrow in csrows {
-            match csrow {
-                Ok(path) => {
-                    // looks horrible
-                    let num = path
-                        .file_name()
-                        .unwrap()
-                        .to_str()
-                        .unwrap()
-                        .strip_prefix("csrow")
-                        .unwrap();
-                    let path = path.to_str().unwrap();
+            if let Ok(path) = csrow {
+                // looks horrible
+                let num = path
+                    .file_name()
+                    .unwrap()
+                    .to_str()
+                    .unwrap()
+                    .strip_prefix("csrow")
+                    .unwrap();
+                let path = path.to_str().unwrap();
 
-                    if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(path).await {
-                        let num = Cow::from(num.to_string());
+                if let Ok((ce_count, ue_count)) = read_edac_csrow_stats(path).await {
+                    let num = Cow::from(num.to_string());
 
-                        metrics.push(Metric::sum_with_tags(
-                            "node_edac_csrow_correctable_errors_total",
-                            "Total correctable memory errors for this csrow.",
-                            ce_count as f64,
-                            tags!(
-                                CONTROLLER_KEY => controller.clone(),
-                                "csrow" => num.clone(),
-                            ),
-                        ));
+                    metrics.push(Metric::sum_with_tags(
+                        "node_edac_csrow_correctable_errors_total",
+                        "Total correctable memory errors for this csrow.",
+                        ce_count as f64,
+                        tags!(
+                            CONTROLLER_KEY => controller.clone(),
+                            "csrow" => num.clone(),
+                        ),
+                    ));
 
-                        metrics.push(Metric::sum_with_tags(
-                            "node_edac_csrow_uncorrectable_errors_total",
-                            "Total uncorrectable memory errors for this csrow.",
-                            ue_count as f64,
-                            tags!(
-                                CONTROLLER_KEY => controller.clone(),
-                                "csrow" => num.clone(),
-                            ),
-                        ))
-                    }
+                    metrics.push(Metric::sum_with_tags(
+                        "node_edac_csrow_uncorrectable_errors_total",
+                        "Total uncorrectable memory errors for this csrow.",
+                        ue_count as f64,
+                        tags!(
+                            CONTROLLER_KEY => controller.clone(),
+                            "csrow" => num.clone(),
+                        ),
+                    ))
                 }
-
-                _ => {}
             }
         }
     }

@@ -406,7 +406,7 @@ fn build_command(
 }
 
 fn handle_event(
-    command: &Vec<String>,
+    command: &[String],
     hostname: &Option<String>,
     data_stream: &Option<&str>,
     pid: Option<u32>,
@@ -435,7 +435,7 @@ fn handle_event(
         }
 
         // Add command
-        log.try_insert_field(COMMAND_KEY, command.clone())
+        log.try_insert_field(COMMAND_KEY, command.to_owned())
     }
 }
 

@@ -1,10 +1,13 @@
-use crate::ReadFrom;
-use bytes::Bytes;
-use quickcheck::{Arbitrary, Gen, QuickCheck, TestResult};
+mod experiment;
+
 use std::fs;
 use std::io::Write;
 
+use bytes::Bytes;
+use quickcheck::{Arbitrary, Gen, QuickCheck, TestResult};
+
 use crate::watch::Watcher;
+use crate::ReadFrom;
 
 #[derive(Clone, Debug)]
 enum FileWatcherAction {

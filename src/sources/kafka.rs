@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::{TimeZone, Utc};
-use event::{fields, log::Value, tags, BatchNotifier, LogRecord};
+use event::{fields, log::Value, tags, LogRecord};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
 use framework::codecs::{BytesDecoderConfig, BytesDeserializerConfig};
 use framework::config::{
@@ -328,7 +328,7 @@ async fn kafka_source(
     partition_key: String,
     offset_key: String,
     headers_key: String,
-    decoder: codecs::Decoder,
+    _decoder: codecs::Decoder,
     mut output: Pipeline,
     shutdown: ShutdownSignal,
     acknowledgements: bool,
@@ -336,7 +336,7 @@ async fn kafka_source(
     let batch_size = 256;
     let consumer = Arc::new(consumer);
     let shutdown = shutdown.shared();
-    let mut finalizer = acknowledgements
+    let finalizer = acknowledgements
         .then(|| OrderedFinalizer::new(shutdown.clone(), mark_done(Arc::clone(&consumer))));
     let mut stream = consumer
         .stream()
@@ -408,7 +408,7 @@ async fn kafka_source(
                         ),
                     ));
 
-                    if let None = &mut finalizer {
+                    if finalizer.is_none() {
                         if let Err(err) =
                             consumer.store_offset(msg.topic(), msg.partition(), msg.offset())
                         {
@@ -432,30 +432,9 @@ async fn kafka_source(
             }
         });
 
-        if let Some(finalizer) = &mut finalizer {
-            let (batch, receiver) = BatchNotifier::new_with_receiver();
-            logs = logs
-                .into_iter()
-                .map(|log| log.with_batch_notifier(&batch))
-                .collect::<Vec<_>>();
-
-            if let Err(err) = output.send(logs).await {
-                error!(message = "Error sending logs", ?err);
-
-                return Err(());
-            }
-
-            // messages.into_iter().for_each(|msg| {
-            //     if let Ok(msg) = msg {
-            //         finalizer.add(msg.into(), receiver);
-            //     }
-            // })
-        } else {
-            if let Err(err) = output.send(logs).await {
-                error!(message = "Error sending logs", ?err);
-
-                return Err(());
-            }
+        if let Err(err) = output.send(logs).await {
+            error!(message = "Error sending logs", ?err);
+            return Err(());
         }
     }
 

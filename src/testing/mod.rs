@@ -6,5 +6,4 @@ mod wait;
 
 pub use config::test_generate_config;
 pub use send_lines::{send_encodable, send_lines};
-pub use topology::start_topology;
 pub use wait::*;

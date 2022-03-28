@@ -88,9 +88,8 @@ impl Encodable for Events {
         EventEncodableMetadataFlags::DiskBufferV1CompatibilityMode.into()
     }
 
-    fn can_decode(_metadata: Self::Metadata) -> bool {
-        // TODO: implement
-        true
+    fn can_decode(metadata: Self::Metadata) -> bool {
+        metadata.contains(EventEncodableMetadataFlags::DiskBufferV1CompatibilityMode)
     }
 
     fn encode<B>(self, buf: &mut B) -> Result<(), Self::EncodeError>

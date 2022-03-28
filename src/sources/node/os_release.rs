@@ -69,7 +69,7 @@ fn parse_quoted(input: &str) -> IResult<&str, &str> {
 
 fn parse_none_quoted(input: &str) -> IResult<&str, &str> {
     // dummy but works
-    let n = take_while(|c| true)(input)?;
+    let n = take_while(|_c| true)(input)?;
     Ok(n)
 }
 

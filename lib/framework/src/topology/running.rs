@@ -191,7 +191,7 @@ impl RunningTopology {
         if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await
         {
             if self
-                .run_healthchecks(&diff, &mut new_pieces, new_config.health_checks)
+                .run_healthchecks(&diff, &mut new_pieces, new_config.healthchecks)
                 .await
             {
                 self.connect_diff(&diff, &mut new_pieces).await;
@@ -207,7 +207,7 @@ impl RunningTopology {
         let diff = diff.flip();
         if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
             if self
-                .run_healthchecks(&diff, &mut new_pieces, self.config.health_checks)
+                .run_healthchecks(&diff, &mut new_pieces, self.config.healthchecks)
                 .await
             {
                 self.connect_diff(&diff, &mut new_pieces).await;

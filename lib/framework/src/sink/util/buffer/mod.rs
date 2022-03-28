@@ -1,6 +1,7 @@
 mod compression;
 pub mod metrics;
 pub mod partition;
+pub mod vec;
 
 use bytes::{BufMut, BytesMut};
 pub use compression::*;

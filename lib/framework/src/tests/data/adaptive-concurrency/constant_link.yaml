@@ -1,0 +1,49 @@
+# With a constant response time link and enough responses, the limiter
+# will ramp up towards the maximum concurrency.
+
+params:
+  requests: 500
+  delay: 0.1
+stats:
+  in_flight:
+    max:
+      - 30
+      - 31
+    mean:
+      - 15
+      - 16
+controller:
+  in_flight:
+    max:
+      - 30
+      - 31
+    mean:
+      - 15
+      - 16
+  concurrency_limit:
+    max:
+      - 22
+      - 32
+    mean:
+      - 16
+      - 18
+  observed_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 0.102
+    mean:
+      - 0.1
+      - 0.102
+  averaged_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 0.102
+    mean:
+      - 0.1
+      - 0.102

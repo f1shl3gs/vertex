@@ -374,8 +374,7 @@ pub struct Config {
 
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
-    #[serde(rename = "health_checks")]
-    pub health_checks: HealthcheckOptions,
+    pub healthchecks: HealthcheckOptions,
 
     #[serde(skip_serializing, skip_deserializing)]
     expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,

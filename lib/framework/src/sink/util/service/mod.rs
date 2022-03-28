@@ -16,7 +16,6 @@ use tower::layer::util::Stack;
 use tower::limit::RateLimit;
 use tower::retry::Retry;
 use tower::timeout::Timeout;
-use tower::util::BoxService;
 use tower::{Layer, Service, ServiceBuilder};
 
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
@@ -25,7 +24,7 @@ use crate::sink::util::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use crate::sink::util::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use crate::sink::util::retries::{FixedRetryPolicy, RetryLogic};
 use crate::sink::util::service::map::MapLayer;
-use crate::sink::util::sink::{BatchSink, PartitionBatchSink, Response, ServiceLogic};
+use crate::sink::util::sink::{BatchSink, PartitionBatchSink, Response};
 
 pub const CONCURRENCY_DEFAULT: Concurrency = Concurrency::None;
 pub const RATE_LIMIT_DURATION_DEFAULT: Duration = Duration::from_secs(1);
@@ -36,8 +35,8 @@ pub const RETRY_INITIAL_BACKOFF_DEFAULT: Duration = Duration::from_secs(1);
 pub const TIMEOUT_DEFAULT: Duration = Duration::from_secs(60);
 
 pub type Svc<S, L> = RateLimit<AdaptiveConcurrencyLimit<Retry<FixedRetryPolicy<L>, Timeout<S>>, L>>;
-pub type BatchedSink<S, B, RL, SL> = BatchSink<Svc<S, RL>, B, SL>;
-pub type PartitionSink<S, B, RL, K, SL> = PartitionBatchSink<Svc<S, RL>, B, K, SL>;
+pub type BatchedSink<S, B, RL> = BatchSink<Svc<S, RL>, B>;
+pub type PartitionSink<S, B, RL, K> = PartitionBatchSink<Svc<S, RL>, B, K>;
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -208,32 +207,28 @@ impl RequestSettings {
             .service(service)
     }
 
-    pub fn batch_sink<B, RL, S, SL>(
+    pub fn batch_sink<B, RL, S>(
         &self,
         retry_logic: RL,
         service: S,
         batch: B,
         batch_timeout: Duration,
         acker: Acker,
-        service_logic: SL,
-    ) -> BatchedSink<S, B, RL, SL>
+    ) -> BatchedSink<S, B, RL>
     where
-        B: Batch,
         RL: RetryLogic<Response = S::Response>,
         S: Service<B::Output> + Clone + Send + 'static,
         S::Error: Into<crate::Error> + Send + Sync + 'static,
         S::Response: Send + Response,
         S::Future: Send + 'static,
+        B: Batch,
         B::Output: Send + Clone + 'static,
-        SL: ServiceLogic<Response = S::Response> + Send + 'static,
     {
-        BatchSink::new_with_logic(
-            self.service(retry_logic, service),
-            batch,
-            batch_timeout,
-            acker,
-            service_logic,
-        )
+        let service = ServiceBuilder::new()
+            .settings(self.clone(), retry_logic)
+            .service(service);
+
+        BatchSink::new(service, batch, batch_timeout, acker)
     }
 }
 
@@ -286,21 +281,23 @@ where
     RL: RetryLogic<Response = S::Response> + Send + 'static,
     R: Clone + Send + 'static,
 {
-    type Service = BoxService<R, S::Response, crate::Error>;
+    type Service = Svc<S, RL>;
 
     fn layer(&self, inner: S) -> Self::Service {
         let policy = self.settings.retry_policy(self.retry_logic.clone());
 
-        let l = ServiceBuilder::new()
-            .concurrency_limit(self.settings.concurrency.unwrap_or(5))
+        ServiceBuilder::new()
             .rate_limit(
                 self.settings.rate_limit_num,
                 self.settings.rate_limit_duration,
             )
+            .layer(AdaptiveConcurrencyLimitLayer::new(
+                self.settings.concurrency,
+                self.settings.adaptive_concurrency,
+                self.retry_logic.clone(),
+            ))
             .retry(policy)
             .timeout(self.settings.timeout)
-            .service(inner);
-
-        BoxService::new(l)
+            .service(inner)
     }
 }

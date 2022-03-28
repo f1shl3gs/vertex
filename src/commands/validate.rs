@@ -154,7 +154,7 @@ impl Validate {
         pieces: &mut Pieces,
         fmt: &mut Formatter,
     ) -> bool {
-        if !config.health_checks.enabled {
+        if !config.healthchecks.enabled {
             fmt.warning("Health checks are disabled");
             return !self.deny_warnings;
         }

@@ -21,9 +21,9 @@ pub async fn serve(
     let service = make_service_fn(|_conn| async move {
         Ok::<_, Infallible>(service_fn(move |req: Request<Body>| async move {
             let (_header, body) = req.into_parts();
-            let body = hyper::body::to_bytes(body).await.unwrap();
+            let _body = hyper::body::to_bytes(body).await.unwrap();
 
-            // TODO: consume this field
+            // TODO: decode body and consume it
 
             Ok::<_, Infallible>(Response::new(Body::empty()))
         }))

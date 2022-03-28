@@ -183,6 +183,40 @@ impl Display for TimeHistogram {
     }
 }
 
+/// A LevelTimeHistogram is a convenience wrapper for a TimeHistogram
+/// where the index is treated as a level which may be adjusted up or
+/// down instead of being handled directly.
+#[derive(Clone, Debug, Default)]
+pub struct LevelTimeHistogram {
+    level: usize,
+    histogram: TimeHistogram,
+}
+
+impl LevelTimeHistogram {
+    pub fn adjust(&mut self, adjustment: isize, instant: Instant) -> usize {
+        self.histogram.add(self.level, instant);
+        self.level = ((self.level as isize) + adjustment) as usize;
+        self.level
+    }
+
+    pub const fn level(&self) -> usize {
+        self.level
+    }
+}
+
+impl Deref for LevelTimeHistogram {
+    type Target = TimeHistogram;
+    fn deref(&self) -> &Self::Target {
+        &self.histogram
+    }
+}
+
+impl Display for LevelTimeHistogram {
+    fn fmt(&self, fmt: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+        self.histogram.fmt(fmt)
+    }
+}
+
 /// A TimeWeightedSum is a wrapper around WeightedSum that keeps track of the last Instant a
 /// value was observed, and uses the duration since that last observance to weight the added value.
 #[derive(Clone, Copy, Debug, Default)]

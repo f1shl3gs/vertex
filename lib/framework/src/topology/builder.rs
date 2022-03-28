@@ -484,7 +484,7 @@ pub async fn build_pieces(
     {
         let sink_inputs = &sink.inputs;
         let health_check = sink.health_check();
-        let enable_health_check = health_check && config.health_checks.enabled;
+        let enable_health_check = health_check && config.healthchecks.enabled;
         let typetag = sink.inner.sink_type();
         let input_type = sink.inner.input_type();
 

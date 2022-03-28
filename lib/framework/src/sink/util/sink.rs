@@ -46,12 +46,12 @@ use crate::sink::util::service::{Map, ServiceBuilderExt};
 /// request until it finishes. Until then all further requests in that
 /// partition are delayed.
 #[pin_project]
-pub struct PartitionBatchSink<S, B, K, L>
+pub struct PartitionBatchSink<S, B, K>
 where
     B: Batch,
     S: Service<B::Output>,
 {
-    service: ServiceSink<S, B::Output, L>,
+    service: ServiceSink<S, B::Output>,
     buffer: Option<(K, EncodedEvent<B::Input>)>,
     batch: StatefulBatch<FinalizersBatch<B>>,
     partitions: HashMap<K, StatefulBatch<FinalizersBatch<B>>>,
@@ -61,7 +61,7 @@ where
     closing: bool,
 }
 
-impl<S, B, K, SL> Debug for PartitionBatchSink<S, B, K, SL>
+impl<S, B, K> Debug for PartitionBatchSink<S, B, K>
 where
     S: Service<B::Output> + Debug,
     B: Batch + Debug,
@@ -75,7 +75,7 @@ where
     }
 }
 
-impl<S, B, K> PartitionBatchSink<S, B, K, StdServiceLogic<S::Response>>
+impl<S, B, K> PartitionBatchSink<S, B, K>
 where
     B: Batch,
     B::Input: Partition<K>,
@@ -86,26 +86,8 @@ where
     S::Response: Response + Send + 'static,
 {
     pub fn new(service: S, batch: B, timeout: Duration, acker: Acker) -> Self {
-        Self::new_with_logic(service, batch, timeout, acker, StdServiceLogic::default())
-    }
-}
-
-impl<S, B, K, L> PartitionBatchSink<S, B, K, L>
-where
-    B: Batch,
-    B::Input: Partition<K>,
-    K: Hash + Eq + Clone + Send + 'static,
-    S: Service<B::Output>,
-    S::Future: Send + 'static,
-    S::Error: Into<crate::Error> + Send + 'static,
-    S::Response: Response + Send + 'static,
-    L: ServiceLogic<Response = S::Response> + Send + 'static,
-{
-    pub fn new_with_logic(service: S, batch: B, timeout: Duration, acker: Acker, logic: L) -> Self {
-        let service = ServiceSink::new_with_logic(service, acker, logic);
-
         Self {
-            service,
+            service: ServiceSink::new(service, acker),
             buffer: None,
             batch: StatefulBatch::from(FinalizersBatch::from(batch)),
             partitions: HashMap::new(),
@@ -116,13 +98,13 @@ where
         }
     }
 
-    /// Enforces per partition ordering of request.
+    /// Enforces per partition ordering of request
     pub fn ordered(&mut self) {
         self.inflight = Some(HashMap::new())
     }
 }
 
-impl<S, B, K, L> Sink<EncodedEvent<B::Input>> for PartitionBatchSink<S, B, K, L>
+impl<S, B, K> Sink<EncodedEvent<B::Input>> for PartitionBatchSink<S, B, K>
 where
     B: Batch,
     B::Input: Partition<K>,
@@ -131,7 +113,6 @@ where
     S::Future: Send + 'static,
     S::Error: Into<crate::Error> + Send + 'static,
     S::Response: Response + Send + 'static,
-    L: ServiceLogic<Response = S::Response> + Send + 'static,
 {
     type Error = crate::Error;
 
@@ -281,7 +262,7 @@ where
     }
 }
 
-struct ServiceSink<S, R, L> {
+struct ServiceSink<S, R> {
     service: S,
     inflight: FuturesUnordered<oneshot::Receiver<(usize, usize)>>,
     acker: Acker,
@@ -289,12 +270,11 @@ struct ServiceSink<S, R, L> {
     seq_tail: usize,
     pending_acks: HashMap<usize, usize>,
     next_request_id: usize,
-    logic: L,
 
     _pd: PhantomData<R>,
 }
 
-impl<S, R, SL> Debug for ServiceSink<S, R, SL>
+impl<S, R> Debug for ServiceSink<S, R>
 where
     S: Debug,
 {
@@ -309,28 +289,14 @@ where
     }
 }
 
-impl<S, R> ServiceSink<S, R, StdServiceLogic<S::Response>>
+impl<S, R> ServiceSink<S, R>
 where
     S: Service<R>,
     S::Future: Send + 'static,
     S::Error: Into<crate::Error> + Send + 'static,
     S::Response: Response + Send + 'static,
 {
-    #[cfg(test)]
     fn new(service: S, acker: Acker) -> Self {
-        Self::new_with_logic(service, acker, StdServiceLogic::default())
-    }
-}
-
-impl<S, R, L> ServiceSink<S, R, L>
-where
-    S: Service<R>,
-    S::Future: Send + 'static,
-    S::Error: Into<crate::Error> + Send + 'static,
-    S::Response: Response + Send + 'static,
-    L: ServiceLogic<Response = S::Response> + Send + 'static,
-{
-    fn new_with_logic(service: S, acker: Acker, logic: L) -> Self {
         Self {
             service,
             inflight: FuturesUnordered::new(),
@@ -339,7 +305,6 @@ where
             seq_tail: 0,
             pending_acks: HashMap::new(),
             next_request_id: 0,
-            logic,
             _pd: PhantomData,
         }
     }
@@ -367,12 +332,11 @@ where
             message = "Submitting service request",
             inflight = self.inflight.len()
         );
-        let logic = self.logic.clone();
         self.service
             .call(items)
             .err_into()
             .map(move |result| {
-                let status = logic.result_status(result);
+                let status = result_status(result);
                 finalizers.update_status(status);
                 if status == EventStatus::Delivered {
                     emit!(&EventsSent {
@@ -447,27 +411,29 @@ where
 {
     type Response = R;
 
+    #[inline]
     fn result_status(&self, result: crate::Result<Self::Response>) -> EventStatus {
-        match result {
-            Ok(resp) => {
-                if resp.is_successful() {
-                    trace!(message = "Response successful", ?resp);
+        result_status(result)
+    }
+}
 
-                    EventStatus::Delivered
-                } else if resp.is_transient() {
-                    error!(message = "Response wasn't successful", ?resp);
-
-                    EventStatus::Errored
-                } else {
-                    error!(message = "Response failed", ?resp);
-
-                    EventStatus::Failed
-                }
-            }
-            Err(err) => {
-                error!(message = "Request failed", %err);
+fn result_status<R: Response + Send>(result: crate::Result<R>) -> EventStatus {
+    match result {
+        Ok(resp) => {
+            if resp.is_successful() {
+                trace!(message = "Response successful.", ?resp);
+                EventStatus::Delivered
+            } else if resp.is_transient() {
+                error!(message = "Response wasn't successful.", ?resp);
                 EventStatus::Errored
+            } else {
+                error!(message = "Response failed.", ?resp);
+                EventStatus::Failed
             }
+        }
+        Err(error) => {
+            error!(message = "Request failed.", %error);
+            EventStatus::Errored
         }
     }
 }
@@ -503,7 +469,7 @@ impl<'a> Response for &'a str {}
 /// until r1 has completed.
 #[pin_project]
 #[derive(Debug)]
-pub struct BatchSink<S, B, L>
+pub struct BatchSink<S, B>
 where
     S: Service<B::Output>,
     B: Batch,
@@ -513,11 +479,10 @@ where
         Map<S, PartitionInnerBuffer<B::Output, ()>, B::Output>,
         PartitionBuffer<B, ()>,
         (),
-        L,
     >,
 }
 
-impl<S, B> BatchSink<S, B, StdServiceLogic<S::Response>>
+impl<S, B> BatchSink<S, B>
 where
     S: Service<B::Output>,
     S::Future: Send + 'static,
@@ -526,38 +491,18 @@ where
     B: Batch,
 {
     pub fn new(service: S, batch: B, timeout: Duration, acker: Acker) -> Self {
-        Self::new_with_logic(service, batch, timeout, acker, StdServiceLogic::default())
-    }
-}
-
-impl<S, B, SL> BatchSink<S, B, SL>
-where
-    S: Service<B::Output>,
-    S::Future: Send + 'static,
-    S::Error: Into<crate::Error> + Send + 'static,
-    S::Response: Response + Send + 'static,
-    B: Batch,
-    SL: ServiceLogic<Response = S::Response> + Send + 'static,
-{
-    pub fn new_with_logic(
-        service: S,
-        batch: B,
-        timeout: Duration,
-        acker: Acker,
-        logic: SL,
-    ) -> Self {
         let service = ServiceBuilder::new()
             .map(|req: PartitionInnerBuffer<B::Output, ()>| req.into_parts().0)
             .service(service);
-
         let batch = PartitionBuffer::new(batch);
-        let inner = PartitionBatchSink::new_with_logic(service, batch, timeout, acker, logic);
+        let inner = PartitionBatchSink::new(service, batch, timeout, acker);
+
         Self { inner }
     }
 }
 
 #[cfg(test)]
-impl<S, B, L> BatchSink<S, B, L>
+impl<S, B> BatchSink<S, B>
 where
     B: Batch,
     S: Service<B::Output>,
@@ -567,14 +512,13 @@ where
     }
 }
 
-impl<S, B, SL> Sink<EncodedEvent<B::Input>> for BatchSink<S, B, SL>
+impl<S, B> Sink<EncodedEvent<B::Input>> for BatchSink<S, B>
 where
     B: Batch,
     S: Service<B::Output>,
     S::Future: Send + 'static,
     S::Error: Into<crate::Error> + Send + 'static,
     S::Response: Response + Send + 'static,
-    SL: ServiceLogic<Response = S::Response> + Send + 'static,
 {
     type Error = crate::Error;
 
@@ -594,5 +538,613 @@ where
 
     fn poll_close(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         self.project().inner.poll_close(cx)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::{
+        convert::Infallible,
+        sync::{atomic::Ordering::Relaxed, Arc, Mutex},
+    };
+
+    use crate::batch::BatchSettings;
+    use buffers::Acker;
+    use bytes::Bytes;
+    use futures::{future, stream, task::noop_waker_ref, SinkExt, StreamExt};
+    use tokio::{task::yield_now, time::Instant};
+
+    use super::*;
+    use crate::sink::util::vec::{EncodedLength, VecBuffer};
+
+    const TIMEOUT: Duration = Duration::from_secs(10);
+
+    impl EncodedLength for usize {
+        fn encoded_length(&self) -> usize {
+            22
+        }
+    }
+
+    async fn advance_time(duration: Duration) {
+        tokio::time::pause();
+        tokio::time::advance(duration).await;
+        tokio::time::resume();
+    }
+
+    #[tokio::test]
+    async fn batch_sink_acking_sequential() {
+        let (acker, ack_counter) = Acker::basic();
+
+        let svc = tower::service_fn(|_| future::ok::<_, std::io::Error>(()));
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+
+        let buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let _ = buffered
+            .sink_map_err(drop)
+            .send_all(&mut stream::iter(0..22).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        assert_eq!(ack_counter.load(Relaxed), 22);
+    }
+
+    #[tokio::test]
+    async fn batch_sink_acking_unordered() {
+        crate::trace::test_init();
+
+        // Services future will be spawned and work between `yield_now` calls.
+        let (acker, ack_counter) = Acker::basic();
+
+        let svc = tower::service_fn(|req: Vec<usize>| async move {
+            let duration = match req[0] {
+                0 => Duration::from_secs(1),
+                1 => Duration::from_secs(1),
+                2 => Duration::from_secs(1),
+
+                // The 4th request will introduce some sort of
+                // latency spike to ensure later events don't
+                // get acked.
+                3 => Duration::from_secs(5),
+                4 => Duration::from_secs(1),
+                5 => Duration::from_secs(1),
+                _ => unreachable!(),
+            };
+
+            sleep(duration).await;
+            Ok::<(), Infallible>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 1;
+
+        let mut sink = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let mut cx = Context::from_waker(noop_waker_ref());
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(0, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(1, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(2, 0)),
+            Ok(())
+        ));
+
+        // Clear internal buffer
+        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_eq!(ack_counter.load(Relaxed), 0);
+
+        yield_now().await;
+        advance_time(Duration::from_secs(3)).await;
+        yield_now().await;
+
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+
+        assert_eq!(ack_counter.load(Relaxed), 3);
+
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(3, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(4, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(5, 0)),
+            Ok(())
+        ));
+
+        // Clear internal buffer
+        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+        assert_eq!(ack_counter.load(Relaxed), 3);
+
+        yield_now().await;
+        advance_time(Duration::from_secs(2)).await;
+        yield_now().await;
+
+        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+
+        // Check that events 3,4,5 have not been acked yet
+        // only the three previous should be acked.
+        assert_eq!(ack_counter.load(Relaxed), 3);
+
+        yield_now().await;
+        advance_time(Duration::from_secs(5)).await;
+        yield_now().await;
+
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.poll_flush_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+
+        assert_eq!(ack_counter.load(Relaxed), 6);
+    }
+
+    #[tokio::test]
+    async fn batch_sink_buffers_messages_until_limit() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+
+            sent_requests.lock().unwrap().push(req);
+
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+        let buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let _ = buffered
+            .sink_map_err(drop)
+            .send_all(&mut stream::iter(0..22).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        let output = sent_requests.lock().unwrap();
+        assert_eq!(
+            &*output,
+            &vec![
+                vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                vec![10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+                vec![20, 21]
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn batch_sink_flushes_below_min_on_close() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+        let mut buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let mut cx = Context::from_waker(noop_waker_ref());
+        assert!(matches!(
+            buffered.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            buffered.start_send_unpin(EncodedEvent::new(0, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            buffered.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            buffered.start_send_unpin(EncodedEvent::new(1, 0)),
+            Ok(())
+        ));
+
+        buffered.close().await.unwrap();
+
+        let output = sent_requests.lock().unwrap();
+        assert_eq!(&*output, &vec![vec![0, 1]]);
+    }
+
+    #[tokio::test]
+    async fn batch_sink_expired_linger() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+        let mut buffered = BatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let mut cx = Context::from_waker(noop_waker_ref());
+        assert!(matches!(
+            buffered.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            buffered.start_send_unpin(EncodedEvent::new(0, 0)),
+            Ok(())
+        ));
+        assert!(matches!(
+            buffered.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            buffered.start_send_unpin(EncodedEvent::new(1, 0)),
+            Ok(())
+        ));
+
+        // Move clock forward by linger timeout + 1 sec
+        advance_time(TIMEOUT + Duration::from_secs(1)).await;
+
+        // Flush buffer and make sure that this didn't take long time (because linger elapsed).
+        let start = Instant::now();
+        buffered.flush().await.unwrap();
+        let elapsed = start.duration_since(start);
+        assert!(elapsed < Duration::from_millis(200));
+
+        let output = sent_requests.lock().unwrap();
+        assert_eq!(&*output, &vec![vec![0, 1]]);
+    }
+
+    #[tokio::test]
+    async fn partition_batch_sink_buffers_messages_until_limit() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+
+        let sink =
+            PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        sink.sink_map_err(drop)
+            .send_all(&mut stream::iter(0..22).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        let output = sent_requests.lock().unwrap();
+        assert_eq!(
+            &*output,
+            &vec![
+                vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                vec![10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+                vec![20, 21]
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn partition_batch_sink_buffers_by_partition_buffer_size_one() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 1;
+
+        let sink =
+            PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let input = vec![Partitions::A, Partitions::B];
+        sink.sink_map_err(drop)
+            .send_all(&mut stream::iter(input).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        let mut output = sent_requests.lock().unwrap();
+        output[..].sort();
+        assert_eq!(&*output, &vec![vec![Partitions::A], vec![Partitions::B]]);
+    }
+
+    #[tokio::test]
+    async fn partition_batch_sink_buffers_by_partition_buffer_size_two() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 2;
+
+        let sink =
+            PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let input = vec![Partitions::A, Partitions::B, Partitions::A, Partitions::B];
+        sink.sink_map_err(drop)
+            .send_all(&mut stream::iter(input).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        let mut output = sent_requests.lock().unwrap();
+        output[..].sort();
+        assert_eq!(
+            &*output,
+            &vec![
+                vec![Partitions::A, Partitions::A],
+                vec![Partitions::B, Partitions::B]
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn partition_batch_sink_submits_after_linger() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            sent_requests.lock().unwrap().push(req);
+            future::ok::<_, std::io::Error>(())
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+
+        let mut sink =
+            PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+
+        let mut cx = Context::from_waker(noop_waker_ref());
+        assert!(matches!(
+            sink.poll_ready_unpin(&mut cx),
+            Poll::Ready(Ok(()))
+        ));
+        assert!(matches!(
+            sink.start_send_unpin(EncodedEvent::new(1, 0)),
+            Ok(())
+        ));
+        assert!(matches!(sink.poll_flush_unpin(&mut cx), Poll::Pending));
+
+        advance_time(TIMEOUT + Duration::from_secs(1)).await;
+
+        let start = Instant::now();
+        sink.flush().await.unwrap();
+        let elapsed = start.duration_since(start);
+        assert!(elapsed < Duration::from_millis(200));
+
+        let output = sent_requests.lock().unwrap();
+        assert_eq!(&*output, &vec![vec![1]]);
+    }
+
+    #[tokio::test]
+    async fn service_sink_doesnt_propagate_error() {
+        // We need a mock executor here because we need to ensure
+        // that we poll the service futures within the mock clock
+        // context. This allows us to manually advance the time on the
+        // "spawned" futures.
+        let (acker, ack_counter) = Acker::basic();
+
+        let svc = tower::service_fn(|req: u8| {
+            if req == 3 {
+                future::err("bad")
+            } else {
+                future::ok("good")
+            }
+        });
+        let mut sink = ServiceSink::new(svc, acker);
+        let req = |items: u8| EncodedBatch {
+            items,
+            finalizers: Default::default(),
+            count: items as usize,
+            byte_size: 1,
+        };
+
+        // send some initial requests
+        let mut fut1 = sink.call(req(1), 1);
+        let mut fut2 = sink.call(req(2), 2);
+
+        assert_eq!(ack_counter.load(Relaxed), 0);
+
+        let mut cx = Context::from_waker(noop_waker_ref());
+        assert!(matches!(fut1.poll_unpin(&mut cx), Poll::Ready(())));
+        assert!(matches!(fut2.poll_unpin(&mut cx), Poll::Ready(())));
+        assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
+
+        assert_eq!(ack_counter.load(Relaxed), 3);
+
+        // send one request that will error and one normal
+        let mut fut3 = sink.call(req(3), 3); // I will error
+        let mut fut4 = sink.call(req(4), 4);
+
+        // make sure they all "worked"
+        assert!(matches!(fut3.poll_unpin(&mut cx), Poll::Ready(())));
+        assert!(matches!(fut4.poll_unpin(&mut cx), Poll::Ready(())));
+        assert!(matches!(sink.poll_complete(&mut cx), Poll::Ready(())));
+
+        assert_eq!(ack_counter.load(Relaxed), 10);
+    }
+
+    #[tokio::test]
+    async fn partition_batch_sink_ordering_per_partition() {
+        let (acker, _) = Acker::basic();
+        let sent_requests = Arc::new(Mutex::new(Vec::new()));
+
+        let mut delay = true;
+        let svc = tower::service_fn(|req| {
+            let sent_requests = Arc::clone(&sent_requests);
+            if delay {
+                // Delay and then error
+                delay = false;
+                sleep(Duration::from_secs(1))
+                    .map(move |_| {
+                        sent_requests.lock().unwrap().push(req);
+                        Result::<_, std::io::Error>::Ok(())
+                    })
+                    .boxed()
+            } else {
+                sent_requests.lock().unwrap().push(req);
+                future::ok::<_, std::io::Error>(()).boxed()
+            }
+        });
+
+        let mut batch_settings = BatchSettings::default();
+        batch_settings.size.bytes = 9999;
+        batch_settings.size.events = 10;
+
+        let mut sink =
+            PartitionBatchSink::new(svc, VecBuffer::new(batch_settings.size), TIMEOUT, acker);
+        sink.ordered();
+
+        let input = (0..20)
+            .into_iter()
+            .map(|i| (0, i))
+            .chain((0..20).into_iter().map(|i| (1, i)));
+        sink.sink_map_err(drop)
+            .send_all(&mut stream::iter(input).map(|item| Ok(EncodedEvent::new(item, 0))))
+            .await
+            .unwrap();
+
+        let output = sent_requests.lock().unwrap();
+        // We sended '0' partition first and delayed sending only first request, first 10 events,
+        // which should delay sending the second batch of events in the same partition until
+        // the first one succeeds.
+        assert_eq!(
+            &*output,
+            &vec![
+                (0..10).into_iter().map(|i| (1, i)).collect::<Vec<_>>(),
+                (10..20).into_iter().map(|i| (1, i)).collect(),
+                (0..10).into_iter().map(|i| (0, i)).collect(),
+                (10..20).into_iter().map(|i| (0, i)).collect(),
+            ]
+        );
+    }
+
+    #[derive(Debug, PartialEq, Eq, Ord, PartialOrd)]
+    enum Partitions {
+        A,
+        B,
+    }
+
+    impl EncodedLength for Partitions {
+        fn encoded_length(&self) -> usize {
+            10 // Dummy value
+        }
+    }
+
+    impl Partition<Bytes> for Partitions {
+        fn partition(&self) -> Bytes {
+            format!("{:?}", self).into()
+        }
+    }
+
+    impl Partition<Bytes> for usize {
+        fn partition(&self) -> Bytes {
+            "key".into()
+        }
+    }
+
+    impl Partition<Bytes> for u8 {
+        fn partition(&self) -> Bytes {
+            "key".into()
+        }
+    }
+
+    impl Partition<Bytes> for i32 {
+        fn partition(&self) -> Bytes {
+            "key".into()
+        }
+    }
+
+    impl Partition<Bytes> for Vec<i32> {
+        fn partition(&self) -> Bytes {
+            "key".into()
+        }
+    }
+
+    impl Partition<Bytes> for (usize, usize) {
+        fn partition(&self) -> Bytes {
+            self.0.to_string().into()
+        }
+    }
+
+    impl EncodedLength for (usize, usize) {
+        fn encoded_length(&self) -> usize {
+            16
+        }
     }
 }

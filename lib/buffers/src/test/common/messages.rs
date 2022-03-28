@@ -232,10 +232,6 @@ impl FixedEncodable for MultiEventRecord {
 pub(crate) struct PoisonPillMultiEventRecord(pub u32);
 
 impl PoisonPillMultiEventRecord {
-    pub fn poisoned() -> Self {
-        Self(42)
-    }
-
     pub fn encoded_size(&self) -> usize {
         usize::try_from(self.0).unwrap_or(usize::MAX) + std::mem::size_of::<u32>()
     }

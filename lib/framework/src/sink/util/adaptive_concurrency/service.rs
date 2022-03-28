@@ -23,7 +23,7 @@ enum State {
 /// request response behavior
 pub struct AdaptiveConcurrencyLimit<S, L> {
     inner: S,
-    controller: Arc<Controller<L>>,
+    pub(super) controller: Arc<Controller<L>>,
     state: State,
 }
 

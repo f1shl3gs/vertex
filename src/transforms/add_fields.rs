@@ -1,14 +1,15 @@
+use std::collections::HashMap;
+
 use event::Events;
 use framework::config::{default_true, Output, TransformContext};
 use framework::config::{DataType, TransformConfig};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use indexmap::IndexMap;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct AddFieldsConfig {
-    pub fields: IndexMap<String, String>,
+    pub fields: HashMap<String, String>,
 
     #[serde(default = "default_true")]
     pub overwrite: bool,
@@ -40,7 +41,7 @@ impl TransformConfig for AddFieldsConfig {
 
 #[derive(Clone, Debug)]
 struct AddFields {
-    fields: IndexMap<String, String>,
+    fields: HashMap<String, String>,
     overwrite: bool,
 }
 
@@ -57,6 +58,10 @@ impl FunctionTransform for AddFields {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
             for (k, v) in self.fields.iter() {
+                if log.fields.contains_key(k) && self.overwrite == false {
+                    continue;
+                }
+
                 log.fields.insert(k.clone(), v.as_str().into());
             }
         });

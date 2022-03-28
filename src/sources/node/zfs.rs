@@ -145,8 +145,7 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
 
-    let zps = path.split('/').collect::<Vec<_>>();
-    let length = zps.len();
+    let length = path.split('/').count();
     if length < 2 {
         return Err(Error::new_invalid(
             "zpool path did not return at least two elements",
