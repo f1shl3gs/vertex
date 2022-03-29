@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1648293039023,
+  "lastUpdate": 1648540019273,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4544,6 +4544,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1129700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4ab691d4f718595e27bec2e7d0d4546c018a7ef5",
+          "message": "Merge pull request #255 from f1shl3gs/dependabot/cargo/async-trait-0.1.53\n\nchore(deps): bump async-trait from 0.1.52 to 0.1.53",
+          "timestamp": "2022-03-29T15:40:00+08:00",
+          "tree_id": "6499ed7c6a548c9e7468800f8bc3253206fa57cb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4ab691d4f718595e27bec2e7d0d4546c018a7ef5"
+        },
+        "date": 1648540017914,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1131400,
             "unit": "ns/op"
           }
         ]
