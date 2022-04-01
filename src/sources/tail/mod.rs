@@ -450,7 +450,7 @@ mod tests {
 
     fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
         TailConfig {
-            ignore_older_than: default_ignore_older_than(),
+            ignore_older_than: None,
             host_key: None,
             include: vec![dir.path().join("*")],
             exclude: vec![],
@@ -1191,6 +1191,7 @@ mod tests {
     async fn test_gzipped_file() {
         let dir = tempdir().unwrap();
         let config = TailConfig {
+            ignore_older_than: None,
             include: vec![PathBuf::from("tests/fixtures/gzipped.log")],
             // TODO: remove this once files are fingerprinted after decompression
             //
