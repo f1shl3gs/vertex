@@ -6,8 +6,10 @@ on:
 
 env:
   CI: true
-  CARGO_INCREMENTAL: 0
-  RUST_BACKTRACE: short
+  PROFILE: debug
+  # RUSTFLAGS: "-D warnings"
+  VERBOSE: true
+  RUST_BACKTRACE: full
 
 jobs:
   cancel-previous:
