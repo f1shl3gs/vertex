@@ -19,7 +19,7 @@ lto = "thin"
 [profile.dev]
 # Disabling debug info speeds up builds a bunch,
 # and we don't rely on it for debugging that much.
-debug = 0
+debug = false
 
 [profile.bench]
 debug = true
