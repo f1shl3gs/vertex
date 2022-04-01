@@ -304,7 +304,7 @@ atty = "0.2.14"
 nix = ">=0.22.2"
 
 [build-dependencies]
-prost-build = { version = "0.9" }
+prost-build = { version = "0.10" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
@@ -347,7 +347,7 @@ jemalloc-ctl = { version = "0.3.3", optional = true }
 # Futrures & Tokio
 tokio = { version = "1.17.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
-tokio-util = { version = "0.6.9", default-features = false, features = ["codec", "time", "net"] }
+tokio-util = { version = "0.7.1", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
