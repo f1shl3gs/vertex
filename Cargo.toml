@@ -17,9 +17,8 @@ lto = "thin"
 # This profile optimizes for short build times at the expense of larger binary size and slower
 # runtime performance.
 [profile.dev]
-# Disabling debug info speeds up builds a bunch,
-# and we don't rely on it for debugging that much.
-debug = 0
+lto = false
+incremental = true
 
 [profile.bench]
 debug = true
