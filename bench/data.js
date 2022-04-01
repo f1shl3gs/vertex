@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1648821943522,
+  "lastUpdate": 1648822473416,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -27052,6 +27052,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1460,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d6d1401ee51fb7a8da7578e9a329c1e744854f8a",
+          "message": "Merge pull request #260 from f1shl3gs/speed_up_ci\n\nSpeed up ci",
+          "timestamp": "2022-04-01T21:49:19+08:00",
+          "tree_id": "d0473be0db787e79c44f666e9fdd387e1183e86e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d6d1401ee51fb7a8da7578e9a329c1e744854f8a"
+        },
+        "date": 1648822471811,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1335,
             "unit": "s"
           }
         ]
