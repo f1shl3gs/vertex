@@ -39,14 +39,6 @@ impl Graph {
         Self::new_inner(sources, transforms, sinks, false)
     }
 
-    pub fn new_unchecked(
-        sources: &IndexMap<ComponentKey, SourceOuter>,
-        transforms: &IndexMap<ComponentKey, TransformOuter<String>>,
-        sinks: &IndexMap<ComponentKey, SinkOuter<String>>,
-    ) -> Self {
-        Self::new_inner(sources, transforms, sinks, true).expect("errors ignored")
-    }
-
     fn new_inner(
         sources: &IndexMap<ComponentKey, SourceOuter>,
         transforms: &IndexMap<ComponentKey, TransformOuter<String>>,
@@ -305,6 +297,7 @@ impl Graph {
     /// components are relevant in a Vector unit test.
     ///
     /// Caller must check for cycles before calling this function.
+    #[cfg(test)]
     pub fn paths_to_sink_from(&self, root: &ComponentKey) -> Vec<Vec<ComponentKey>> {
         let mut traversal: VecDeque<(ComponentKey, Vec<_>)> = VecDeque::new();
         let mut paths = Vec::new();

@@ -39,7 +39,10 @@ rate: 10
 #[typetag::serde(name = "sample")]
 impl TransformConfig for SampleConfig {
     async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
-        todo!()
+        Ok(Transform::function(Sample::new(
+            self.rate,
+            self.key_field.clone(),
+        )))
     }
 
     fn input_type(&self) -> DataType {
@@ -67,11 +70,11 @@ struct Sample {
 }
 
 impl Sample {
-    pub const fn new(rate: u64) -> Self {
+    pub const fn new(rate: u64, key_field: Option<String>) -> Self {
         Self {
             rate,
             count: 0,
-            key_field: None,
+            key_field,
         }
     }
 }

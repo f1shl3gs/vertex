@@ -9,7 +9,7 @@ use crate::config::skip_serializing_if_default;
 
 /// Options for building a `OctetCountingDecoder`
 #[derive(Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
-pub struct OctetCountingOptions {
+pub struct OctetCountingDecoderOptions {
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     max_length: Option<usize>,
 }
@@ -18,11 +18,11 @@ pub struct OctetCountingOptions {
 #[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct OctetCountingDecoderConfig {
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-    octet_counting: OctetCountingOptions,
+    pub(crate) octet_counting: OctetCountingDecoderOptions,
 }
 
 impl OctetCountingDecoderConfig {
-    fn build(&self) -> OctetCountingDecoder {
+    pub fn build(&self) -> OctetCountingDecoder {
         if let Some(max_length) = self.octet_counting.max_length {
             OctetCountingDecoder::new_with_max_length(max_length)
         } else {

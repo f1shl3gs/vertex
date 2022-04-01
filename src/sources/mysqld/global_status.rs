@@ -5,7 +5,7 @@ use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{valid_name, QueryFailedSnafu};
+use super::{valid_name, QuerySnafu};
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
@@ -21,7 +21,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
     let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailedSnafu {
+        .context(QuerySnafu {
             query: GLOBAL_STATUS_QUERY,
         })?;
 
@@ -43,6 +43,15 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
                 continue;
             }
         };
+
+        if is_global_status(&key) {
+            metrics.push(Metric::gauge(
+                format!("mysql_global_status_{}", key),
+                "Generic metric from SHOW GLOBAL STATUS",
+                fv,
+            ));
+            continue;
+        }
 
         let (split_key, name) = match key.split_once("_") {
             Some((key, name)) => (key, Cow::from(name.to_string())),

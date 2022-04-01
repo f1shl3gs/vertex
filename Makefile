@@ -91,7 +91,7 @@ test:
 
 .PHONY: check_clippy
 check_clippy:
-	cargo clippy --workspace --all-targets --features all-integration-tests -- -A warnings
+	cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings
 
 .PHONY: check_shell
 check_shell:

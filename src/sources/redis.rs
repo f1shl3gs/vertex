@@ -297,8 +297,8 @@ impl SourceConfig for RedisSourceConfig {
 }
 
 struct RedisSource {
-    _user: Option<String>,
-    password: Option<String>,
+    // user: Option<String>,
+    // password: Option<String>,
     url: String,
     namespace: Option<String>,
     interval: std::time::Duration,
@@ -310,8 +310,6 @@ struct RedisSource {
 impl RedisSource {
     fn from(conf: &RedisSourceConfig) -> Self {
         Self {
-            _user: None,
-            password: None,
             url: conf.url.clone(),
             namespace: conf.namespace.clone(),
             interval: conf.interval,
@@ -374,8 +372,6 @@ impl RedisSource {
         let mut metrics = vec![];
         let cli = redis::Client::open(self.url.as_str())?;
         let mut conn = cli.get_async_connection().await?;
-
-        // Ping on connect?;
 
         if let Some(ref client_name) = self.client_name {
             redis::cmd("CLIENT")
@@ -538,7 +534,7 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
 fn extract_cluster_info_metrics(info: String) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
     info.split("\r\n").for_each(|line| {
-        let part = line.split(":").collect::<Vec<_>>();
+        let part = line.split(':').collect::<Vec<_>>();
 
         if part.len() != 2 {
             return;
@@ -554,15 +550,6 @@ fn extract_cluster_info_metrics(info: String) -> Result<Vec<Metric>, Error> {
     });
 
     Ok(metrics)
-}
-
-async fn scrap(url: &str) -> Result<String, Error> {
-    let cli = redis::Client::open(url)?;
-    let mut conn = cli.get_async_connection().await?;
-
-    let resp = redis::cmd("INFO").arg("ALL").query_async(&mut conn).await?;
-
-    Ok(resp)
 }
 
 fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::io::Error> {
@@ -1037,17 +1024,6 @@ fn include_metric(s: &str) -> bool {
     COUNTER_METRICS.contains_key(s)
 }
 
-/// fetch fetch necessary data from redis, which is `info`, `databases`
-async fn fetch(url: &str) -> Result<(String, i64), Error> {
-    let cli = redis::Client::open(url)?;
-    let mut conn = cli.get_async_connection().await?;
-
-    let databases = query_databases(&mut conn).await?;
-    let infos = query_infos(&mut conn).await?;
-
-    Ok((infos, databases))
-}
-
 async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<i64, Error> {
     let resp: Vec<String> = redis::cmd("CONFIG")
         .arg("GET")
@@ -1085,16 +1061,6 @@ async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<Stri
     let resp = redis::cmd("INFO").arg("ALL").query_async(conn).await?;
 
     Ok(resp)
-}
-
-// https://redis.io/commands/ping
-async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64, Error> {
-    let start = std::time::Instant::now();
-    let _s: String = redis::cmd("PING").query_async(conn).await?;
-
-    let elapsed = start.elapsed().as_secs_f64();
-
-    Ok(elapsed)
 }
 
 #[cfg(test)]
@@ -1142,18 +1108,6 @@ mod integration_tests {
                 .await
                 .unwrap();
         }
-    }
-
-    #[tokio::test]
-    async fn test_ping_server() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-        let cli = redis::Client::open(url).unwrap();
-        let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
-
-        let _latency = ping_server(&mut cm).await.unwrap();
     }
 
     #[tokio::test]

@@ -5,7 +5,6 @@ use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient};
-use framework::sink::util::Compression;
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
@@ -66,18 +65,13 @@ impl DriverResponse for LokiResponse {
 pub struct LokiService {
     endpoint: UriSerde,
     client: HttpClient,
-    compression: Compression,
 }
 
 impl LokiService {
     pub fn new(client: HttpClient, endpoint: UriSerde, auth: Option<Auth>) -> crate::Result<Self> {
         let endpoint = endpoint.append_path("loki/api/v1/push")?.with_auth(auth);
 
-        Ok(Self {
-            client,
-            endpoint,
-            compression: Compression::gzip_default(),
-        })
+        Ok(Self { client, endpoint })
     }
 }
 

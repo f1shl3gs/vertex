@@ -173,7 +173,11 @@ async fn scrap(
             match parse_csv(b.reader()) {
                 Ok(metrics) => metrics,
                 Err(err) => {
-                    warn!(message = "Parse haproxy response csv failed", ?err);
+                    warn!(
+                        message = "Parse haproxy response csv failed",
+                        ?err,
+                        internal_log_rate_secs = 30
+                    );
                     vec![]
                 }
             }
@@ -278,31 +282,34 @@ pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {
     Ok(metrics)
 }
 
-fn parse_info(reader: impl std::io::BufRead) -> Result<(String, String), Error> {
-    let lines = reader.lines();
-    let mut release_date = String::new();
-    let mut version = String::new();
-
-    for line in lines {
-        let line = match line {
-            Ok(line) => line,
-            Err(_) => continue,
-        };
-
-        match line.split_once(": ") {
-            Some((k, v)) => {
-                if k == "Release_date" {
-                    release_date = v.to_string();
-                } else if k == "Version" {
-                    version = v.to_string();
-                }
-            }
-            _ => continue,
-        }
-    }
-
-    Ok((release_date, version))
-}
+// Available on unix only, see
+// https://github.com/prometheus/haproxy_exporter/blob/master/haproxy_exporter.go#L267
+//
+// fn parse_info(reader: impl std::io::BufRead) -> Result<(String, String), Error> {
+//     let lines = reader.lines();
+//     let mut release_date = String::new();
+//     let mut version = String::new();
+//
+//     for line in lines {
+//         let line = match line {
+//             Ok(line) => line,
+//             Err(_) => continue,
+//         };
+//
+//         match line.split_once(": ") {
+//             Some((k, v)) => {
+//                 if k == "Release_date" {
+//                     release_date = v.to_string();
+//                 } else if k == "Version" {
+//                     version = v.to_string();
+//                 }
+//             }
+//             _ => continue,
+//         }
+//     }
+//
+//     Ok((release_date, version))
+// }
 
 macro_rules! try_push_metric {
     ($metrics:expr, $row:expr, $index:expr, $name:expr, $desc:expr, $typ:expr) => {
@@ -1134,15 +1141,17 @@ mod tests {
         crate::testing::test_generate_config::<HaproxyConfig>()
     }
 
-    #[test]
-    fn test_parse_info() {
-        let input = "Release_date: test date\nVersion: test version\n";
-        let reader = BufReader::new(io::Cursor::new(input));
-
-        let (release, version) = parse_info(reader).unwrap();
-        assert_eq!(release, "test date");
-        assert_eq!(version, "test version");
-    }
+    // Available on unix only, see
+    // https://github.com/prometheus/haproxy_exporter/blob/master/haproxy_exporter.go#L267
+    //
+    // #[test]
+    // fn test_parse_info() {
+    //     let input = "Release_date: test date\nVersion: test version\n";
+    //     let reader = BufReader::new(io::Cursor::new(input));
+    //     let (release, version) = parse_info(reader).unwrap();
+    //     assert_eq!(release, "test date");
+    //     assert_eq!(version, "test version");
+    // }
 
     #[test]
     fn test_parse_csv_resp() {

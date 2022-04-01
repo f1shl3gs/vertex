@@ -42,6 +42,23 @@ impl Difference {
         }
     }
 
+    /// Checks whether or not any components are being changed or added.
+    #[inline]
+    pub fn any_changed_or_added(&self) -> bool {
+        !(self.to_change.is_empty() && self.to_add.is_empty())
+    }
+
+    /// Checks whether or not any components are being changed or removed.
+    #[inline]
+    pub fn any_changed_or_removed(&self) -> bool {
+        !(self.to_change.is_empty() && self.to_remove.is_empty())
+    }
+
+    /// Checks whether the given component is present at all
+    pub fn contains(&self, id: &ComponentKey) -> bool {
+        self.to_add.contains(id) || self.to_change.contains(id) || self.to_remove.contains(id)
+    }
+
     /// True if name is present in new config and either not in the old
     /// one or is different.
     pub fn contains_new(&self, id: &ComponentKey) -> bool {
@@ -54,6 +71,11 @@ impl Difference {
 
     pub fn removed_and_changed(&self) -> impl Iterator<Item = &ComponentKey> {
         self.to_change.iter().chain(self.to_remove.iter())
+    }
+
+    /// Checks whether or not the given component is removed
+    pub fn is_removed(&self, key: &ComponentKey) -> bool {
+        self.to_remove.contains(key)
     }
 
     fn flip(&mut self) {
@@ -89,5 +111,17 @@ impl ConfigDiff {
         self.sinks.flip();
         self.extensions.flip();
         self
+    }
+
+    /// Checks whether or not the given component is present at all.
+    pub fn contains(&self, key: &ComponentKey) -> bool {
+        self.sources.contains(key) || self.transforms.contains(key) || self.sinks.contains(key)
+    }
+
+    /// Checks whether or not the given component is removed
+    pub fn is_removed(&self, key: &ComponentKey) -> bool {
+        self.sources.is_removed(key)
+            || self.transforms.is_removed(key)
+            || self.sinks.is_removed(key)
     }
 }

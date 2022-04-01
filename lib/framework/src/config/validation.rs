@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use super::builder::Builder;
-use super::{ComponentKey, Config, DataType, OutputId, Resource};
+use super::{ComponentKey, Config, OutputId, Resource};
 
 pub fn warnings(config: &Config) -> Vec<String> {
     let mut warnings = vec![];
@@ -179,22 +179,6 @@ pub fn check_provider(builder: &Builder) -> Result<(), Vec<String>> {
     } else {
         Ok(())
     }
-}
-
-#[derive(Debug, Clone)]
-enum Node {
-    Source {
-        ty: DataType,
-    },
-    Transform {
-        input_type: DataType,
-        output_type: DataType,
-        inputs: Vec<String>,
-    },
-    Sink {
-        ty: DataType,
-        inputs: Vec<String>,
-    },
 }
 
 fn capitalize(s: &str) -> String {

@@ -85,7 +85,7 @@ async fn handle_errors(
         .map_err(|_| ())
         .and_then(|res| res)
         .map_err(|_| {
-            error!("An error occurred that vector couldn't handle.");
+            error!("An error occurred that couldn't be handled.");
             let _ = abort_tx.send(());
         })
 }

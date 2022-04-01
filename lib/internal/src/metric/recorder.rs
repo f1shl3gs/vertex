@@ -65,6 +65,10 @@ impl InternalRecorder {
         }
     }
 
+    pub fn clear(&self) {
+        self.registry.clear()
+    }
+
     /// Take a snapshot of all gathered metrics and expose them as metric
     pub fn capture_metrics(&self) -> impl Iterator<Item = Metric> {
         let mut metrics = vec![];

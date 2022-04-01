@@ -29,18 +29,18 @@ const VERSION_QUERY: &str = "SELECT @@version";
 #[derive(Debug, Snafu)]
 pub enum Error {
     #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
-    QueryFailed {
+    Query {
         source: sqlx::Error,
         query: &'static str,
     },
     #[snafu(display("get server version failed, err: {}", source))]
-    GetServerVersionFailed { source: sqlx::Error },
+    GetServerVersion { source: sqlx::Error },
     #[snafu(display("parse mysql version failed, version: {}", version))]
-    ParseMysqlVersionFailed { version: String },
+    ParseMysqlVersion { version: String },
     #[snafu(display("query slave status failed"))]
-    QuerySlaveStatusFailed,
+    QuerySlaveStatus,
     #[snafu(display("task join failed, err: {}", source))]
-    TaskJoinFailed { source: tokio::task::JoinError },
+    TaskJoin { source: tokio::task::JoinError },
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -79,7 +79,7 @@ struct MysqldConfig {
     #[serde(default = "default_global_variables")]
     global_variables: bool,
     // Since 5.1, Collect from SHOW SLAVE STATUS (Enabled by default)
-    #[serde(default = "default_true")]
+    #[serde(default = "default_slave_status")]
     slave_status: bool,
 
     // Since 5.1, collect auto_increment columns and max values from information_schema.
@@ -305,7 +305,7 @@ pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Er
     // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
     let results = futures::future::try_join_all(tasks)
         .await
-        .context(TaskJoinFailedSnafu)?;
+        .context(TaskJoinSnafu)?;
 
     // NOTE:
     // `results.into_iter().collect()` would be awesome, BUT
@@ -333,13 +333,13 @@ pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
         .await
-        .context(QueryFailedSnafu {
+        .context(QuerySnafu {
             query: VERSION_QUERY,
         })?;
 
     let nums = version.split('.').collect::<Vec<_>>();
     if nums.len() < 2 {
-        return Err(Error::ParseMysqlVersionFailed {
+        return Err(Error::ParseMysqlVersion {
             version: version.clone(),
         });
     }

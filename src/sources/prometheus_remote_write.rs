@@ -18,10 +18,6 @@ use serde::{Deserialize, Serialize};
 
 const SOURCE_NAME: &str = "prometheus_remote_write";
 
-fn default_address() -> SocketAddr {
-    "0.0.0.0:9090".parse().unwrap()
-}
-
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct PrometheusRemoteWriteConfig {

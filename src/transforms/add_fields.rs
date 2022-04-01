@@ -58,7 +58,7 @@ impl FunctionTransform for AddFields {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
             for (k, v) in self.fields.iter() {
-                if log.fields.contains_key(k) && self.overwrite == false {
+                if log.fields.contains_key(k) && !self.overwrite {
                     continue;
                 }
 

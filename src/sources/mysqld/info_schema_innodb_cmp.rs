@@ -2,7 +2,7 @@ use event::{tags, Metric};
 use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{Error, QueryFailedSnafu};
+use super::{Error, QuerySnafu};
 
 const INNODB_CMP_QUERY: &str = r#"SELECT page_size, compress_ops, compress_ops_ok, compress_time, uncompress_ops, uncompress_time FROM information_schema.innodb_cmp"#;
 
@@ -20,7 +20,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     let records = sqlx::query_as::<_, Record>(INNODB_CMP_QUERY)
         .fetch_all(pool)
         .await
-        .context(QueryFailedSnafu {
+        .context(QuerySnafu {
             query: INNODB_CMP_QUERY,
         })?;
 
