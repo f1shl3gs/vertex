@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1648821423102,
+  "lastUpdate": 1648821429005,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4602,6 +4602,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1125500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0a5ebb3eb9a956bffe7f2eba6da9bbd99859b34",
+          "message": "Merge pull request #261 from f1shl3gs/revert-260-speed_up_ci\n\nRevert \"Speed up ci\"",
+          "timestamp": "2022-04-01T21:49:38+08:00",
+          "tree_id": "e0caa1358cb9ffccc3b171ffd258f64b1056c9ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0a5ebb3eb9a956bffe7f2eba6da9bbd99859b34"
+        },
+        "date": 1648821427224,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1140400,
             "unit": "ns/op"
           }
         ]
