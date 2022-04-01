@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1648821916145,
+  "lastUpdate": 1648821943522,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -27023,6 +27023,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1612,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "960a945b884ae8377b29bc64428fccdf81d1be56",
+          "message": "Merge pull request #258 from f1shl3gs/fix_clippy_warnings\n\nFix clippy warnings",
+          "timestamp": "2022-04-01T21:37:54+08:00",
+          "tree_id": "e0caa1358cb9ffccc3b171ffd258f64b1056c9ae",
+          "url": "https://github.com/f1shl3gs/vertex/commit/960a945b884ae8377b29bc64428fccdf81d1be56"
+        },
+        "date": 1648821941889,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1460,
             "unit": "s"
           }
         ]
