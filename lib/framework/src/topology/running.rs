@@ -191,7 +191,7 @@ impl RunningTopology {
         if let Some(mut new_pieces) = build_or_log_errors(&new_config, &diff, buffers.clone()).await
         {
             if self
-                .run_healthchecks(&diff, &mut new_pieces, new_config.health_checks)
+                .run_healthchecks(&diff, &mut new_pieces, new_config.healthchecks)
                 .await
             {
                 self.connect_diff(&diff, &mut new_pieces).await;
@@ -207,7 +207,7 @@ impl RunningTopology {
         let diff = diff.flip();
         if let Some(mut new_pieces) = build_or_log_errors(&self.config, &diff, buffers).await {
             if self
-                .run_healthchecks(&diff, &mut new_pieces, self.config.health_checks)
+                .run_healthchecks(&diff, &mut new_pieces, self.config.healthchecks)
                 .await
             {
                 self.connect_diff(&diff, &mut new_pieces).await;
@@ -262,74 +262,79 @@ impl RunningTopology {
         diff: &ConfigDiff,
         new_config: &Config,
     ) -> HashMap<ComponentKey, BuiltBuffer> {
-        // Sources
-        let timeout = Duration::from_secs(30); //sec
+        // First, we shutdown any changed/removed sources. This ensures that we can
+        // allow downstream components to terminate naturally by virtue of the flow
+        // of events stopping.
+        if diff.sources.any_changed_or_removed() {
+            let timeout = Duration::from_secs(30);
+            let mut source_shutdown_handles = Vec::new();
 
-        // First pass to tell the sources to shut down.
-        let mut source_shutdown_complete_futures = Vec::new();
+            let deadline = Instant::now() + timeout;
+            for key in &diff.sources.to_remove {
+                debug!(message = "Removing source", component = %key);
 
-        // Only log that we are waiting for shutdown if we are actually removing
-        // sources.
-        if !diff.sources.to_remove.is_empty() {
-            info!(
-                message = "Waiting for sources to finish shutting down.", timeout = ?timeout.as_secs()
-            );
-        }
+                let previous = self.tasks.remove(key).unwrap();
+                drop(previous); // detach and forget
 
-        let deadline = Instant::now() + timeout;
-        for key in &diff.sources.to_remove {
-            info!(message = "Removing source.", key = %key);
+                self.remove_outputs(key);
+                source_shutdown_handles
+                    .push(self.shutdown_coordinator.shutdown_source(key, deadline));
+            }
 
-            let previous = self.tasks.remove(key).unwrap();
-            drop(previous); // detach and forget
+            for key in &diff.sources.to_change {
+                debug!(message = "Changing source", component = %key);
 
-            self.remove_outputs(key);
-            source_shutdown_complete_futures
-                .push(self.shutdown_coordinator.shutdown_source(key, deadline));
-        }
-        for key in &diff.sources.to_change {
-            self.remove_outputs(key);
-            source_shutdown_complete_futures
-                .push(self.shutdown_coordinator.shutdown_source(key, deadline));
-        }
+                self.remove_outputs(key);
+                source_shutdown_handles
+                    .push(self.shutdown_coordinator.shutdown_source(key, deadline));
+            }
 
-        // Wait for the shutdowns to complete
-
-        // Only log message if there are actual futures to check.
-        if !source_shutdown_complete_futures.is_empty() {
-            info!(
-                "Waiting for up to {} seconds for sources to finish shutting down.",
+            debug!(
+                "Waiting for up to {} seconds for source(s) to finish shutting down",
                 timeout.as_secs()
             );
-        }
+            futures::future::join_all(source_shutdown_handles).await;
 
-        futures::future::join_all(source_shutdown_complete_futures).await;
-
-        // Second pass now that all sources have shut down for final cleanup.
-        for key in diff.sources.removed_and_changed() {
-            if let Some(task) = self.source_tasks.remove(key) {
-                task.await.unwrap().unwrap();
+            // Final cleanup pass now that all changed/removed sources have signalled as
+            // having shutdown.
+            for key in diff.sources.removed_and_changed() {
+                if let Some(task) = self.source_tasks.remove(key) {
+                    task.await.unwrap().unwrap();
+                }
             }
         }
 
-        // Transforms
+        // Next, we shutdown any changed/removed transforms. Same as before: we
+        // want allow downstream componets to terminate naturally by virtue of the
+        // flow of events stopping.
+        //
+        // Since transforms are entirely driven by the flow of events into them
+        // from upstream components, the shutdown of sources they depend on, or
+        // the shutdown of transforms they depend on, and thus the closing of
+        // their buffer, will naturally cause them to shutdown, which is why we
+        // don't do any manual triggering of shutdown here.
         for key in &diff.transforms.to_remove {
-            info!(message = "Removing transform.", key = %key);
+            debug!(message = "Removing transform", compoent = %key);
 
             let previous = self.tasks.remove(key).unwrap();
             drop(previous); // detach and forget
 
-            self.remove_inputs(key).await;
+            self.remove_inputs(key, diff).await;
             self.remove_outputs(key);
         }
 
-        // Sinks
+        for key in &diff.transforms.to_change {
+            debug!(message = "Changing transform", component = %key);
 
-        // Resource conflicts
-        // At this point both the old and the new config don't have
-        // conflicts in their resource usage. So if we combine their
-        // resources, all found conflicts are between
-        // to be removed and to be added components.
+            self.remove_inputs(key, diff).await;
+            self.remove_outputs(key);
+        }
+
+        // Now, we'll process any changed/removed sinks.
+        //
+        // At this point both the old and new config don't have conflicts
+        // in their resource usage. So if we combine their resources, all
+        // found conflicts are between to be removed and to be added components.
         let remove_sink = diff
             .sinks
             .removed_and_changed()
@@ -358,8 +363,8 @@ impl RunningTopology {
             .filter(|&(existing_sink, _)| existing_sink)
             .map(|(_, key)| key.clone());
 
-        // Buffer reuse
-        // We can reuse buffers whose configuration wasn't changed.
+        // For any sink whose buffer configuration didn't change, we can reuse their
+        // buffer.
         let reuse_buffers = diff
             .sinks
             .to_change
@@ -368,54 +373,84 @@ impl RunningTopology {
             .cloned()
             .collect::<HashSet<_>>();
 
+        // For any existing sink that has a conflicting resource dependency with a
+        // changed/added sink, or for any sink that we want to reuse their buffer,
+        // we need to explicit wait for them to finish processing so we can reclaim
+        // ownership of those resources/buffers.
         let wait_for_sinks = conflicting_sinks
             .chain(reuse_buffers.iter().cloned())
             .collect::<HashSet<_>>();
 
-        // First pass
-
-        // Detach removed sinks
+        // First, we remove any inputs to removed sinks so they can naturally shutdown.
         for key in &diff.sinks.to_remove {
-            info!(message = "Removing sink.", key = %key);
-            self.remove_inputs(key).await;
+            debug!(message = "Removing sink", component = %key);
+            self.remove_inputs(key, diff).await;
         }
 
-        // Detach changed sinks
+        // After that, for any changed sinks, we temporarily detach their inputs
+        // (not remove) so they can naturally shutdown and allow us to recover their
+        // buffers if possible
+        let mut buffer_tx = HashMap::new();
+
         for key in &diff.sinks.to_change {
+            debug!(message = "Changing sink", component = %key);
+
             if reuse_buffers.contains(key) {
                 self.detach_triggers
                     .remove(key)
                     .unwrap()
                     .into_inner()
                     .cancel();
-            } else if wait_for_sinks.contains(key) {
-                self.detach_inputs(key).await;
+
+                // We explicitly clone the input side of the buffer and store it
+                // so we don't lose it when we remove the inputs below.
+                //
+                // We clone instead of removeing here because otherwise the input
+                // will be missing for the rest of the reload process, which violates
+                // the assumption that all previous inputs for components not being removed are
+                // still available. It's simpler to allow the "old" input to stick around and be
+                // replaced (even though that's basically a no-op since we're reusing the same
+                // buffer) than it is to pass around info about which sinks are having their buffers
+                // reused and treat them differently at other stages.
+                buffer_tx.insert(key.clone(), self.inputs.get(key).unwrap().clone());
             }
+
+            self.remove_inputs(key, diff).await;
         }
 
-        // Second pass for final cleanup
-
-        // Cleanup removed
+        // Now that we've disconnected or temporarily detached the inputs to all changed/removed
+        // sinks, we can actually wait for them to shutdown before collecting any buffers that are
+        // marked for reuse.
+        //
+        // If a sink we're removing isn't tying up any resource that a changed/added sink depends
+        // on, we don't bother waiting for it to shutdown.
         for key in &diff.sinks.to_remove {
             let previous = self.tasks.remove(key).unwrap();
             if wait_for_sinks.contains(key) {
-                debug!(message = "Waiting for sink to shutdown.", %key);
+                debug!(message = "Waiting for sink to shutdown", %key);
                 previous.await.unwrap().unwrap();
             } else {
                 drop(previous); // detach and forget
             }
         }
 
-        // Cleanup changed and collect buffers to be reused
-        let mut buffers = HashMap::new();
+        let mut buffers = HashMap::<ComponentKey, BuiltBuffer>::new();
         for key in &diff.sinks.to_change {
             if wait_for_sinks.contains(key) {
+                debug!(message = "Waiting for sink to shutdown", %key);
+
                 let previous = self.tasks.remove(key).unwrap();
-                debug!(message = "Waiting for sink to shutdown.", %key);
                 let buffer = previous.await.unwrap().unwrap();
 
                 if reuse_buffers.contains(key) {
-                    let tx = self.inputs.remove(key).unwrap();
+                    // We clone instead of removing here because otherwise the input will be
+                    // missing for the rest of the reload process, which violates the assumption
+                    // that all previous inputs for components not being removed are still
+                    // available. It's simpler to allow the "old" input to stick around and be
+                    // replaced (even though that's basically a no-op since we're reusing the same
+                    // buffer) than it is  to pass around info about which sinks are having their
+                    // buffers reused and treat them differently at other stages.
+                    let tx = buffer_tx.remove(key).unwrap();
                     let (rx, acker) = match buffer {
                         TaskOutput::Sink(rx, acker) => (rx.into_inner(), acker),
                         _ => unreachable!(),
@@ -597,20 +632,41 @@ impl RunningTopology {
         self.outputs.retain(|id, _output| &id.component != key);
     }
 
-    async fn remove_inputs(&mut self, key: &ComponentKey) {
+    async fn remove_inputs(&mut self, key: &ComponentKey, diff: &ConfigDiff) {
         self.inputs.remove(key);
         self.detach_triggers.remove(key);
 
         let sink_inputs = self.config.sinks.get(key).map(|s| &s.inputs);
         let trans_inputs = self.config.transforms.get(key).map(|t| &t.inputs);
+        let old_inputs = sink_inputs.or(trans_inputs).unwrap();
 
-        let inputs = sink_inputs.or(trans_inputs);
+        for input in old_inputs {
+            if let Some(output) = self.outputs.get_mut(input) {
+                if diff.contains(&input.component) || diff.is_removed(key) {
+                    // If the input we're removing ourselves from is changing, that means its
+                    // outputs will be recreated, so instead of pausing the sink, we just delete
+                    // it outright to ensure things are clean. Additionally, if this component
+                    // itself is being removed, then pausing makes no sense because it isn't
+                    // coming back.
+                    debug!(
+                        message = "Removing component input from fanout",
+                        component = %key,
+                        fanout = %input
+                    );
 
-        if let Some(inputs) = inputs {
-            for input in inputs {
-                if let Some(output) = self.outputs.get_mut(input) {
-                    // This can only fail if we are disconnected, which is a valid situation.
                     let _ = output.send(ControlMessage::Remove(key.clone()));
+                } else {
+                    // We know that if this component is connected to a given input, and it isn't
+                    // being changed, then it will exist when we reconnect inputs, so we should
+                    // pause it now to pause further sends through that component until we
+                    // reconnect.
+                    debug!(
+                        message = "Pausing componnet input in fanout",
+                        component = %key,
+                        fanout = %input
+                    );
+
+                    let _ = output.send(ControlMessage::Replace(key.clone(), None));
                 }
             }
         }
@@ -734,25 +790,6 @@ impl RunningTopology {
             .detach_triggers
             .remove(key)
             .map(|trigger| self.detach_triggers.insert(key.clone(), trigger.into()));
-    }
-
-    async fn detach_inputs(&mut self, key: &ComponentKey) {
-        self.inputs.remove(key);
-        self.detach_triggers.remove(key);
-
-        let sink_inputs = self.config.sinks.get(key).map(|s| &s.inputs);
-        let trans_inputs = self.config.transforms.get(key).map(|t| &t.inputs);
-        let old_inputs = sink_inputs.or(trans_inputs).unwrap();
-
-        for input in old_inputs {
-            // This can only fail if we are disconnected, which is a valid
-            // situation.
-            let _ = self
-                .outputs
-                .get_mut(input)
-                .unwrap()
-                .send(ControlMessage::Replace(key.clone(), None));
-        }
     }
 
     /// Borrows the Config

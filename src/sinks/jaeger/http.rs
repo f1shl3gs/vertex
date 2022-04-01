@@ -5,9 +5,8 @@ use event::Event;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use framework::sink::util::http::{BatchedHttpSink, HttpRetryLogic, HttpSink};
+use framework::sink::util::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::util::service::RequestConfig;
-use framework::sink::util::sink::StdServiceLogic;
 use framework::sink::util::{Buffer, Compression};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Healthcheck, Sink};
@@ -51,7 +50,6 @@ impl HttpSinkConfig {
             batch.timeout,
             client.clone(),
             acker,
-            StdServiceLogic::default(),
         )
         .sink_map_err(|err| {
             error!(message = "Error sending spans", ?err);
@@ -63,12 +61,10 @@ impl HttpSinkConfig {
     }
 }
 
-#[async_trait]
-impl HttpSink for HttpSinkConfig {
-    type Input = BytesMut;
-    type Output = BytesMut;
+pub struct JaegerEventEncoder {}
 
-    fn encode_event(&self, event: Event) -> Option<Self::Input> {
+impl HttpEventEncoder<BytesMut> for JaegerEventEncoder {
+    fn encode_event(&mut self, event: Event) -> Option<BytesMut> {
         let trace = event.into_trace();
         jaeger::agent::serialize_binary_batch(trace.into())
             .map_err(|err| {
@@ -80,6 +76,17 @@ impl HttpSink for HttpSinkConfig {
             })
             .map(|data| BytesMut::from(data.as_slice()))
             .ok()
+    }
+}
+
+#[async_trait]
+impl HttpSink for HttpSinkConfig {
+    type Input = BytesMut;
+    type Output = BytesMut;
+    type Encoder = JaegerEventEncoder;
+
+    fn build_encoder(&self) -> Self::Encoder {
+        JaegerEventEncoder {}
     }
 
     async fn build_request(&self, events: Self::Output) -> framework::Result<Request<Bytes>> {

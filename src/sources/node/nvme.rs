@@ -64,7 +64,7 @@ mod tests {
         let mut rd = tokio::fs::read_dir(path).await.unwrap();
 
         let mut count = 0;
-        while let Some(dir) = rd.next_entry().await.unwrap() {
+        while let Some(_dir) = rd.next_entry().await.unwrap() {
             count += 1;
         }
 

@@ -282,7 +282,7 @@ mod tests {
 
     #[test]
     fn test_deserialize() {
-        let conf: NetdevConfig = serde_yaml::from_str(
+        let _conf: NetdevConfig = serde_yaml::from_str(
             r#"
 include: .*
         "#,

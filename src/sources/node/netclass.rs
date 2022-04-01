@@ -280,7 +280,7 @@ async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
 
 #[derive(Default, Debug)]
 struct NetClassInterface {
-    name: String,
+    _name: String,
 
     // /sys/class/net/<iface>/addr_assign_type
     addr_assign_type: Option<i64>,

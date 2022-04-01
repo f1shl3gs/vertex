@@ -244,6 +244,14 @@ impl MockSinkConfig {
             data: None,
         }
     }
+
+    pub fn new_with_data(sink: Pipeline, healthy: bool, data: &str) -> Self {
+        Self {
+            sink: Mode::Normal(sink),
+            healthy,
+            data: Some(data.into()),
+        }
+    }
 }
 
 #[derive(Debug, Snafu)]

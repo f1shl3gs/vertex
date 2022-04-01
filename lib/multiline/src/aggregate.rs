@@ -199,8 +199,7 @@ where
                 Poll::Pending => {
                     // We didn't get any lines from `inner`, so we just give a line from keys
                     // that have hit their timeout.
-                    while let Poll::Ready(Some(Ok(expired_key))) =
-                        this.logic.timeouts.poll_expired(cx)
+                    while let Poll::Ready(Some(expired_key)) = this.logic.timeouts.poll_expired(cx)
                     {
                         let key = expired_key.into_inner();
                         if let Some((_, aggregate)) = this.logic.buffers.remove(&key) {
@@ -379,14 +378,14 @@ pub struct RegexRule {
         deserialize_with = "deserialize_bytes_regex",
         serialize_with = "serialize_bytes_regex"
     )]
-    start_pattern: regex::bytes::Regex,
+    pub start_pattern: regex::bytes::Regex,
     #[serde(
         deserialize_with = "deserialize_bytes_regex",
         serialize_with = "serialize_bytes_regex"
     )]
-    condition_pattern: regex::bytes::Regex,
+    pub condition_pattern: regex::bytes::Regex,
 
-    mode: Mode,
+    pub mode: Mode,
 }
 
 impl Rule for RegexRule {

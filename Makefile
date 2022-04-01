@@ -7,7 +7,7 @@ build-timing:
 	cargo +nightly build -p vertex --bin vertex -Z timings --release
 
 bloat:
-	cargo bloat --release --crates --all-targets -n 100
+	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 100
 
 lines:
 	@./scripts/lines.sh
@@ -91,7 +91,7 @@ test:
 
 .PHONY: check_clippy
 check_clippy:
-	cargo clippy --workspace --all-targets --features all-integration-tests -- -A warnings
+	cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings
 
 .PHONY: check_shell
 check_shell:

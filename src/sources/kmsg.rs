@@ -101,9 +101,9 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
 
     let mut consumed = 2;
     let mut seq = 0u64;
-    for i in consumed..size {
+    while consumed < size {
+        let c = buf[consumed];
         consumed += 1;
-        let c = buf[i];
         if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
@@ -112,27 +112,29 @@ fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {
             break;
         }
 
-        seq = seq * 10 + (c - b'0') as u64
+        seq = seq * 10 + (c - b'0') as u64;
     }
 
     let mut ts = 0u64;
-    for i in consumed..size {
+    while consumed < size {
+        let c = buf[consumed];
         consumed += 1;
-        let c = buf[i];
         if !c.is_ascii_digit() {
             if c != b',' {
                 return Err(());
             }
+
             break;
         }
 
-        ts = ts * 10 + (c - b'0') as u64
+        ts = ts * 10 + (c - b'0') as u64;
     }
 
     // parse flags
-    for i in consumed..size {
+    while consumed < size {
+        let c = buf[consumed];
         consumed += 1;
-        let c = buf[i];
+
         if c == b';' {
             break;
         }
@@ -153,9 +155,9 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
     let mut ms = 0u64;
 
     // read the seconds part
-    for i in pos..size {
+    while pos < size {
+        let c = buf[pos];
         pos += 1;
-        let c = buf[i];
         if c == b'.' {
             break;
         }
@@ -170,9 +172,9 @@ fn boot_time(path: &str) -> Result<u64, io::Error> {
     pos += 1;
 
     // Then the microsecond part
-    for i in pos..size {
+    while pos < size {
+        let c = buf[pos];
         pos += 1;
-        let c = buf[i];
         if c == b' ' {
             break;
         }

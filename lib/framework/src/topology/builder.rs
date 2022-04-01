@@ -13,6 +13,7 @@ use futures_util::stream::FuturesOrdered;
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
+use tracing_futures::Instrument;
 
 use super::fanout;
 use super::fanout::Fanout;
@@ -349,23 +350,35 @@ pub async fn build_pieces(
         .iter()
         .filter(|(name, _)| diff.sources.contains_new(name))
     {
+        debug!(message = "Building new source", component = %key);
+
         let typetag = source.inner.source_type();
         let source_outputs = source.inner.outputs();
+
+        let span = error_span!(
+            "source",
+            component_kind = "source",
+            component_id = %key.id(),
+            component_type = %source.inner.source_type(),
+        );
+
         let mut builder = Pipeline::builder().with_buffer(DEFAULT_BUFFER_SIZE);
         let mut pumps = Vec::new();
         let mut controls = HashMap::new();
+
         for output in source_outputs {
             let mut rx = builder.add_output(output.clone());
             let (mut fanout, control) = Fanout::new();
             let pump = async move {
+                debug!(message = "Source pump starting");
                 while let Some(events) = rx.next().await {
                     fanout.send(events).await;
                 }
-
+                debug!(message = "Source pump finished");
                 Ok(TaskOutput::Source)
             };
 
-            pumps.push(pump);
+            pumps.push(pump.instrument(span.clone()));
             controls.insert(
                 OutputId {
                     component: key.clone(),
@@ -391,7 +404,7 @@ pub async fn build_pieces(
         let pipeline = builder.build();
 
         let (shutdown_signal, force_shutdown_tripwire) = shutdown_coordinator.register_source(key);
-        let ctx = SourceContext {
+        let cx = SourceContext {
             key: key.clone(),
             output: pipeline,
             shutdown: shutdown_signal,
@@ -399,7 +412,7 @@ pub async fn build_pieces(
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, &source.proxy),
             acknowledgements: source.acknowledgements,
         };
-        let server = match source.inner.build(ctx).await {
+        let server = match source.inner.build(cx).await {
             Ok(server) => server,
             Err(err) => {
                 errors.push(format!("Source \"{}\": {}", key, err));
@@ -429,7 +442,7 @@ pub async fn build_pieces(
                     debug!(message = "Finished");
                     Ok(TaskOutput::Source)
                 }
-                Err(_err) => Err(()),
+                Err(()) => Err(()),
             }
         };
 
@@ -484,7 +497,7 @@ pub async fn build_pieces(
     {
         let sink_inputs = &sink.inputs;
         let health_check = sink.health_check();
-        let enable_health_check = health_check && config.health_checks.enabled;
+        let enable_health_check = health_check && config.healthchecks.enabled;
         let typetag = sink.inner.sink_type();
         let input_type = sink.inner.input_type();
 

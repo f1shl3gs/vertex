@@ -16,11 +16,6 @@ impl<T, F> AfterRead<T, F> {
     pub const fn new(inner: T, after_read: F) -> Self {
         Self { inner, after_read }
     }
-
-    #[cfg(feature = "listenfd")]
-    pub const fn get_ref(&self) -> &T {
-        &self.inner
-    }
 }
 
 impl<T: AsyncRead, F> AsyncRead for AfterRead<T, F>

@@ -167,8 +167,14 @@ impl LogRecord {
         self
     }
 
+    #[inline]
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::attributes::Value>) {
         self.tags.insert(key, value)
+    }
+
+    #[inline]
+    pub fn get_tag(&self, key: &Key) -> Option<&crate::attributes::Value> {
+        self.tags.get(key)
     }
 
     pub fn insert_field(

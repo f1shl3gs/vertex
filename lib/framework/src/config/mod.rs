@@ -176,11 +176,6 @@ pub struct TransformOuter<T> {
 }
 
 impl<T> TransformOuter<T> {
-    fn map_inputs<U>(self, f: impl Fn(&T) -> U) -> TransformOuter<U> {
-        let inputs = self.inputs.iter().map(f).collect();
-        self.with_inputs(inputs)
-    }
-
     fn with_inputs<U>(self, inputs: Vec<U>) -> TransformOuter<U> {
         TransformOuter {
             inputs,
@@ -330,11 +325,6 @@ impl<T> SinkOuter<T> {
         &self.proxy
     }
 
-    fn map_inputs<U>(self, f: impl Fn(&T) -> U) -> SinkOuter<U> {
-        let inputs = self.inputs.iter().map(f).collect();
-        self.with_inputs(inputs)
-    }
-
     fn with_inputs<U>(self, inputs: Vec<U>) -> SinkOuter<U> {
         SinkOuter {
             inputs,
@@ -374,8 +364,7 @@ pub struct Config {
 
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
-    #[serde(rename = "health_checks")]
-    pub health_checks: HealthcheckOptions,
+    pub healthchecks: HealthcheckOptions,
 
     #[serde(skip_serializing, skip_deserializing)]
     expansions: IndexMap<ComponentKey, Vec<ComponentKey>>,

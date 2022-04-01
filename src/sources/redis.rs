@@ -179,6 +179,15 @@ lazy_static!(
 );
 
 #[derive(Debug, Snafu)]
+enum ParseError {
+    #[snafu(display("Parse integer failed, {}", source))]
+    Int { source: std::num::ParseIntError },
+
+    #[snafu(display("Parse float failed, {}", source))]
+    Float { source: std::num::ParseFloatError },
+}
+
+#[derive(Debug, Snafu)]
 enum Error {
     #[snafu(display("Invalid data: {}", desc))]
     InvalidData { desc: String },
@@ -193,30 +202,31 @@ enum Error {
     InvalidKeyspaceLine,
 
     #[snafu(display("Redis error: {}", source))]
-    RedisError { source: redis::RedisError },
+    Redis { source: redis::RedisError },
 
-    #[snafu(display("Parse integer error: {}", source))]
-    ParseIntError { source: std::num::ParseIntError },
-
-    #[snafu(display("Parse float error: {}", source))]
-    ParseFloatError { source: std::num::ParseFloatError },
+    #[snafu(display("Parse error: {}", source))]
+    Parse { source: ParseError },
 }
 
 impl From<redis::RedisError> for Error {
     fn from(source: redis::RedisError) -> Self {
-        Self::RedisError { source }
+        Self::Redis { source }
     }
 }
 
 impl From<std::num::ParseIntError> for Error {
     fn from(source: std::num::ParseIntError) -> Self {
-        Self::ParseIntError { source }
+        Self::Parse {
+            source: ParseError::Int { source },
+        }
     }
 }
 
 impl From<std::num::ParseFloatError> for Error {
     fn from(source: std::num::ParseFloatError) -> Self {
-        Self::ParseFloatError { source }
+        Self::Parse {
+            source: ParseError::Float { source },
+        }
     }
 }
 
@@ -287,8 +297,8 @@ impl SourceConfig for RedisSourceConfig {
 }
 
 struct RedisSource {
-    user: Option<String>,
-    password: Option<String>,
+    // user: Option<String>,
+    // password: Option<String>,
     url: String,
     namespace: Option<String>,
     interval: std::time::Duration,
@@ -300,8 +310,6 @@ struct RedisSource {
 impl RedisSource {
     fn from(conf: &RedisSourceConfig) -> Self {
         Self {
-            user: None,
-            password: None,
             url: conf.url.clone(),
             namespace: conf.namespace.clone(),
             interval: conf.interval,
@@ -365,8 +373,6 @@ impl RedisSource {
         let cli = redis::Client::open(self.url.as_str())?;
         let mut conn = cli.get_async_connection().await?;
 
-        // Ping on connect?;
-
         if let Some(ref client_name) = self.client_name {
             redis::cmd("CLIENT")
                 .arg("SETNAME")
@@ -386,8 +392,23 @@ impl RedisSource {
         let infos = query_infos(&mut conn).await?;
 
         if infos.contains("cluster_enabled:1") {
-            let cluster_info = cluster_info(&mut conn).await?;
-            db_count = 1;
+            match cluster_info(&mut conn).await {
+                Ok(info) => {
+                    if let Ok(ms) = extract_cluster_info_metrics(info) {
+                        metrics.extend(ms);
+                    }
+
+                    // in cluster mode Redis only supports one database so no extra DB number padding needed
+                    db_count = 1;
+                }
+                Err(err) => {
+                    error!(
+                        message = "Redis CLUSTER INFO failed",
+                        ?err,
+                        internal_log_rate_secs = 30
+                    );
+                }
+            }
         } else if db_count == 0 {
             // in non-cluster mode, if db_count is zero then "CONFIG" failed to retrieve a
             // valid number of databases and we use the Redis config default which is 16
@@ -510,13 +531,25 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
     Ok(metrics)
 }
 
-async fn scrap(url: &str) -> Result<String, Error> {
-    let cli = redis::Client::open(url)?;
-    let mut conn = cli.get_async_connection().await?;
+fn extract_cluster_info_metrics(info: String) -> Result<Vec<Metric>, Error> {
+    let mut metrics = vec![];
+    info.split("\r\n").for_each(|line| {
+        let part = line.split(':').collect::<Vec<_>>();
 
-    let resp = redis::cmd("INFO").arg("ALL").query_async(&mut conn).await?;
+        if part.len() != 2 {
+            return;
+        }
 
-    Ok(resp)
+        if !include_metric(part[0]) {
+            return;
+        }
+
+        if let Ok(m) = parse_and_generate(part[0], part[1]) {
+            metrics.push(m);
+        }
+    });
+
+    Ok(metrics)
 }
 
 fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::io::Error> {
@@ -991,17 +1024,6 @@ fn include_metric(s: &str) -> bool {
     COUNTER_METRICS.contains_key(s)
 }
 
-/// fetch fetch necessary data from redis, which is `info`, `databases`
-async fn fetch(url: &str) -> Result<(String, i64), Error> {
-    let cli = redis::Client::open(url)?;
-    let mut conn = cli.get_async_connection().await?;
-
-    let databases = query_databases(&mut conn).await?;
-    let infos = query_infos(&mut conn).await?;
-
-    Ok((infos, databases))
-}
-
 async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<i64, Error> {
     let resp: Vec<String> = redis::cmd("CONFIG")
         .arg("GET")
@@ -1039,16 +1061,6 @@ async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<Stri
     let resp = redis::cmd("INFO").arg("ALL").query_async(conn).await?;
 
     Ok(resp)
-}
-
-// https://redis.io/commands/ping
-async fn ping_server<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<f64, Error> {
-    let start = std::time::Instant::now();
-    let _s: String = redis::cmd("PING").query_async(conn).await?;
-
-    let elapsed = start.elapsed().as_secs_f64();
-
-    Ok(elapsed)
 }
 
 #[cfg(test)]
@@ -1096,18 +1108,6 @@ mod integration_tests {
                 .await
                 .unwrap();
         }
-    }
-
-    #[tokio::test]
-    async fn test_ping_server() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
-        let url = format!("redis://localhost:{}", host_port);
-        let cli = redis::Client::open(url).unwrap();
-        let mut cm = cli.get_multiplexed_tokio_connection().await.unwrap();
-
-        let _latency = ping_server(&mut cm).await.unwrap();
     }
 
     #[tokio::test]

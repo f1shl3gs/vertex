@@ -35,7 +35,7 @@ where
     F: FnMut() -> Fut,
     Fut: Future<Output = bool> + Send + 'static,
 {
-    wait_for_duration(f, Duration::from_secs(5)).await
+    wait_for_duration(f, Duration::from_secs(WAIT_FOR_SECS)).await
 }
 
 // Wait (for 5s) for a TCP socket to be reachable

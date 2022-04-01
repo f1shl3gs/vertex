@@ -1,0 +1,70 @@
+params:
+  requests: 500
+  delay: 0.1
+  concurrency_limit_params:
+    limit: 5
+    action: drop
+
+# Since our internal framework doesn't track the dropped requests, the
+# values won't be representative of the actual number of requests in
+# flight.
+stats:
+  in_flight:
+    max:
+      - 4
+      - 5
+    mean:
+      - 3
+      - 4
+    mode:
+      - 3
+      - 5
+  rate:
+    max:
+      - 55
+      - 90
+    mean:
+      - 31
+      - 54
+
+controller:
+  in_flight:
+    max:
+      - 13
+      - 85
+    mean:
+      - 7
+      - 40
+    mode:
+      - 1
+      - 11
+  concurrency_limit:
+    max:
+      - 10
+      - 86
+    mean:
+      - 7
+      - 52
+    mode:
+      - 4
+      - 77
+  observed_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 11.2
+    mean:
+      - 0.1
+      - 2.4
+  averaged_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 7
+    mean:
+      - 0.1
+      - 2

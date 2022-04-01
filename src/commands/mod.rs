@@ -196,7 +196,7 @@ impl RootCommand {
                             SignalTo::ReloadFromConfigBuilder(builder) => {
                                 match builder.build().map_err(handle_config_errors) {
                                     Ok(mut new_config) => {
-                                        new_config.health_checks.set_require_healthy(true);
+                                        new_config.healthchecks.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
                                             Ok(true) => {
                                                 info!("Vertex reloaded");
@@ -227,7 +227,7 @@ impl RootCommand {
                                     .ok();
 
                                 if let Some(mut new_config) = new_config {
-                                    new_config.health_checks.set_require_healthy(true);
+                                    new_config.healthchecks.set_require_healthy(true);
                                     match topology.reload_config_and_respawn(new_config).await {
                                         Ok(true) => {
                                             info!("Reload config successes");

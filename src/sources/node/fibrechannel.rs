@@ -102,8 +102,10 @@ pub async fn fibre_channel_class(sys_path: &str) -> Result<Vec<FibreChannelHost>
 }
 
 async fn parse_fibre_channel_host(root: PathBuf) -> Result<FibreChannelHost, Error> {
-    let mut host = FibreChannelHost::default();
-    host.name = root.file_name().unwrap().to_str().unwrap().to_string();
+    let mut host = FibreChannelHost {
+        name: root.file_name().unwrap().to_str().unwrap().to_string(),
+        ..Default::default()
+    };
 
     for sub in [
         "speed",

@@ -107,15 +107,16 @@ async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
 }
 
 async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
-    let mut stat = Stat::default();
-
-    // this looks terrible
-    stat.name = root
-        .file_name()
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .replace("cpu", "");
+    let mut stat = Stat {
+        // this looks terrible
+        name: root
+            .file_name()
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .replace("cpu", ""),
+        ..Default::default()
+    };
 
     let path = root.join("cpufreq/cpuinfo_cur_freq");
     stat.current_frequency = read_into(path).await.ok();

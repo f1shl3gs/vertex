@@ -13,7 +13,6 @@ use framework::{
 };
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use tokio_stream::wrappers::IntervalStream;
 use tracing::Instrument;
 
@@ -66,14 +65,12 @@ inventory::submit! {
 
 struct SelfStat {
     interval: std::time::Duration,
-    cpu_total: RwLock<f64>,
 }
 
 impl From<&SelfStatConfig> for SelfStat {
     fn from(conf: &SelfStatConfig) -> Self {
         Self {
             interval: conf.interval,
-            cpu_total: RwLock::new(0.0),
         }
     }
 }

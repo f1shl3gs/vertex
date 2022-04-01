@@ -15,6 +15,22 @@ fn metrics_enabled() -> bool {
 }
 
 pub fn init_global() -> Result<(), Error> {
+    init(InternalRecorder::new())
+}
+
+pub fn reset_global() -> Result<(), Error> {
+    let recorder = get_global().unwrap();
+    recorder.clear();
+    Ok(())
+}
+
+pub fn get_global() -> Result<&'static InternalRecorder, Error> {
+    GLOBAL_RECORDER
+        .get()
+        .ok_or_else(|| Error::from(ErrorKind::NotFound))
+}
+
+fn init(recorder: InternalRecorder) -> Result<(), Error> {
     // An escape hatch to allow disabling internal metrics core. May be used for performance
     // reasons. This is a hidden and undocumented functionality
     if !metrics_enabled() {
@@ -24,18 +40,9 @@ pub fn init_global() -> Result<(), Error> {
         return Ok(());
     }
 
-    // initialize the recorder
-    let recorder = InternalRecorder::new();
-
     GLOBAL_RECORDER
         .set(recorder)
         .map_err(|_| Error::from(ErrorKind::AlreadyExists))?;
 
     metrics::set_recorder(get_global().unwrap()).map_err(|_| Error::from(ErrorKind::NotFound))
-}
-
-pub fn get_global() -> Result<&'static InternalRecorder, Error> {
-    GLOBAL_RECORDER
-        .get()
-        .ok_or_else(|| Error::from(ErrorKind::NotFound))
 }

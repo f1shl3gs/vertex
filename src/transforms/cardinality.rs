@@ -90,10 +90,6 @@ impl TagValueSet {
 
         inserted
     }
-
-    fn exceed(self) -> bool {
-        todo!()
-    }
 }
 
 struct Cardinality {

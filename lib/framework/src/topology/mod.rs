@@ -4,7 +4,7 @@ mod running;
 mod task;
 
 #[cfg(test)]
-mod test;
+pub mod test;
 
 // re-exprot
 pub use builder::{build_pieces, Pieces};
@@ -44,7 +44,7 @@ pub async fn start_validate(
     let mut running_topology = RunningTopology::new(config, abort_tx);
 
     if !running_topology
-        .run_healthchecks(&diff, &mut pieces, running_topology.config.health_checks)
+        .run_healthchecks(&diff, &mut pieces, running_topology.config.healthchecks)
         .await
     {
         return None;
@@ -85,7 +85,7 @@ async fn handle_errors(
         .map_err(|_| ())
         .and_then(|res| res)
         .map_err(|_| {
-            error!("An error occurred that vector couldn't handle.");
+            error!("An error occurred that couldn't be handled.");
             let _ = abort_tx.send(());
         })
 }

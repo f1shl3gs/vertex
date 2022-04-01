@@ -517,7 +517,7 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
 
     let path = path.as_ref();
     let ap = path.join("device");
-    if let Ok(_) = tokio::fs::read_link(&ap).await {
+    if tokio::fs::read_link(&ap).await.is_ok() {
         let dev_path = tokio::fs::canonicalize(ap)
             .await
             .context("canonicalize failed")?;

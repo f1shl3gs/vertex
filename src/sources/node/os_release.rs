@@ -7,17 +7,13 @@ use nom::character::complete::none_of;
 use nom::sequence::{delimited, tuple};
 use nom::IResult;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 const ETC_OS_RELEASE: &str = "/etc/os-release";
 const USR_LIB_OS_RELEASE: &str = "/usr/lib/os-release";
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let path = ETC_OS_RELEASE;
-    let infos = parse_os_release(path)
-        .await
-        .context("parse os release failed")?;
-
+    let infos = release_infos().await?;
     let dv = &"".to_string();
 
     let mut metrics = vec![
@@ -69,8 +65,19 @@ fn parse_quoted(input: &str) -> IResult<&str, &str> {
 
 fn parse_none_quoted(input: &str) -> IResult<&str, &str> {
     // dummy but works
-    let n = take_while(|c| true)(input)?;
+    let n = take_while(|_c| true)(input)?;
     Ok(n)
+}
+
+async fn release_infos() -> Result<BTreeMap<String, String>, Error> {
+    for path in [ETC_OS_RELEASE, USR_LIB_OS_RELEASE] {
+        match parse_os_release(path).await {
+            Ok(infos) => return Ok(infos),
+            Err(_err) => continue,
+        }
+    }
+
+    Err(Error::new_invalid("No invalid os release file"))
 }
 
 async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {

@@ -278,13 +278,13 @@ impl From<Trigger> for DisableTrigger {
 /// remains alive for the entire lifetime of the Source.
 #[derive(Clone, Debug)]
 pub struct ShutdownSignalToken {
-    complete: Arc<Trigger>,
+    _complete: Arc<Trigger>,
 }
 
 impl ShutdownSignalToken {
     fn new(trigger: Trigger) -> Self {
         Self {
-            complete: Arc::new(trigger),
+            _complete: Arc::new(trigger),
         }
     }
 }

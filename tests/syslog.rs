@@ -1,17 +1,22 @@
+mod util;
+
+use std::collections::HashMap;
+use std::fmt;
+use std::str::FromStr;
+
 use framework::sink::util::tcp::TcpSinkConfig;
 use framework::sink::util::{encoding::EncodingConfig, Encoding};
 use framework::testing::CountReceiver;
 use rand::{thread_rng, Rng};
 use serde::Deserialize;
-use std::collections::HashMap;
-use std::fmt;
-use std::str::FromStr;
 use testify::next_addr;
 use testify::random::{random_maps, random_string};
 use vertex::sinks::socket;
 use vertex::sinks::socket::SocketSinkConfig;
 use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
-use vertex::testing::{send_lines, start_topology, wait_for_tcp};
+use vertex::testing::{send_lines, wait_for_tcp};
+
+use util::start_topology;
 
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
 #[derive(Copy, Clone, Deserialize, PartialEq, Debug)]

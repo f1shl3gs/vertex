@@ -1,0 +1,60 @@
+params:
+  requests: 1000
+  delay: 0.1
+  rate:
+    limit: 100
+    action: defer
+
+# With a constant time link that gives deferrals over a certain rate,
+# the limiter will ramp up to a little over that request rate and then
+# drop down repeatedly.
+stats:
+  in_flight:
+    max:
+      - 16
+      - 24
+    mean:
+      - 6
+      - 9
+  rate:
+    max:
+      - 90
+      - 123
+    mean:
+      - 31
+      - 75
+controller:
+  in_flight:
+    max:
+      - 16
+      - 24
+    mean:
+      - 8
+      - 19
+  concurrency_limit:
+    max:
+      - 16
+      - 24
+    mean:
+      - 8
+      - 18.5
+  observed_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 1.203
+    mean:
+      - 0.1
+      - 0.85
+  averaged_rtt:
+    min:
+      - 0.1
+      - 0.102
+    max:
+      - 0.1
+      - 1.203
+    mean:
+      - 0.1
+      - 0.3

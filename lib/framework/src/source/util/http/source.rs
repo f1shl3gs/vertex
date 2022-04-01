@@ -38,12 +38,12 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
     ) -> crate::Result<Source> {
         let tls = MaybeTlsSettings::from_config(tls, true)?;
         let path = path.to_owned();
-        let shutdown = ctx.shutdown;
-        let output = ctx.output;
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
         let listener = tls.bind(&address).await?;
+        let acknowledgements = ctx.acknowledgements() || acknowledgements;
+        let shutdown = ctx.shutdown;
+        let output = ctx.output;
         let inner = Arc::new(Inner {
-            acknowledgements: ctx.globals.acknowledgements || acknowledgements,
             method,
             path: path.to_string(),
             auth,
@@ -122,7 +122,6 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
 }
 
 struct Inner {
-    acknowledgements: bool,
     method: Method,
     path: String,
     auth: HttpSourceAuth,

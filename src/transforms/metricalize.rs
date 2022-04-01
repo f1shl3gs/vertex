@@ -527,6 +527,7 @@ mod tests {
             .build_series_and_value(&fields!( "value" => "a"))
             .unwrap();
 
+        assert_eq!(series.name, "name");
         assert_eq!(value, 1.0);
 
         let config = MetricConfig::Counter(CounterConfig {
@@ -539,6 +540,7 @@ mod tests {
         let (series, value) = config
             .build_series_and_value(&fields!( "a" => fields!( "b" => 1)))
             .unwrap();
+        assert_eq!(series.name, "name");
         assert_eq!(value, 1.0);
     }
 }

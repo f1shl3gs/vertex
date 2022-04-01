@@ -383,7 +383,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.7.0",
+ "tokio-util 0.7.1",
  "tracing",
  "tracing-fluent-assertions",
  "tracing-subscriber",
@@ -506,9 +506,9 @@ dependencies = [
 
 [[package]]
 name = "cidr-utils"
-version = "0.5.5"
+version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e2c74943a630a8e7e830bca4974b47263ef86646d52b573b4b77d957c806e51"
+checksum = "aee37eff22e119e0acb33e6e81f85d87a9abf612b82efbcb5fba31b6a74554fb"
 dependencies = [
  "debug-helper",
  "num-bigint 0.4.2",
@@ -1220,7 +1220,7 @@ dependencies = [
  "tokio-openssl",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.1",
  "tower",
  "tower-test",
  "tracing",
@@ -2105,7 +2105,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-native-tls",
- "tokio-util 0.7.0",
+ "tokio-util 0.7.1",
  "tower",
  "tower-http",
  "tracing",
@@ -2148,7 +2148,7 @@ dependencies = [
  "smallvec",
  "thiserror",
  "tokio",
- "tokio-util 0.7.0",
+ "tokio-util 0.7.1",
  "tracing",
 ]
 
@@ -2419,7 +2419,7 @@ dependencies = [
  "indexmap",
  "metrics",
  "num_cpus",
- "ordered-float 2.8.0",
+ "ordered-float 2.10.0",
  "parking_lot 0.11.2",
  "quanta",
  "radix_trie",
@@ -2542,7 +2542,7 @@ dependencies = [
  "serde_regex",
  "serde_yaml",
  "tokio",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.1",
 ]
 
 [[package]]
@@ -2934,9 +2934,9 @@ dependencies = [
 
 [[package]]
 name = "ordered-float"
-version = "2.8.0"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97c9d06878b3a851e8026ef94bf7fef9ba93062cd412601da4d9cf369b1cc62d"
+checksum = "7940cf2ca942593318d07fcf2596cdca60a85c9e7fab408a5e21a4f9dcd40d87"
 dependencies = [
  "num-traits",
 ]
@@ -4033,7 +4033,7 @@ version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f3a1a3341211875ef120e117ea7fd5228530ae7e7036a779fdc9117be6b3282c"
 dependencies = [
- "ordered-float 2.8.0",
+ "ordered-float 2.10.0",
  "serde",
 ]
 
@@ -4794,23 +4794,22 @@ dependencies = [
  "futures-sink",
  "log 0.4.14",
  "pin-project-lite",
- "slab",
  "tokio",
 ]
 
 [[package]]
 name = "tokio-util"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64910e1b9c1901aaf5375561e35b9c057d95ff41a44ede043a03e09279eabaf1"
+checksum = "0edfdeb067411dba2044da6d1cb2df793dd35add7888d73c16e3381ded401764"
 dependencies = [
  "bytes",
  "futures-core",
  "futures-sink",
- "log 0.4.14",
  "pin-project-lite",
  "slab",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -4879,7 +4878,7 @@ dependencies = [
  "rand 0.8.5",
  "slab",
  "tokio",
- "tokio-util 0.7.0",
+ "tokio-util 0.7.1",
  "tower-layer",
  "tower-service",
  "tracing",
@@ -5352,7 +5351,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.6.9",
+ "tokio-util 0.7.1",
  "tonic",
  "tower",
  "tower-test",

@@ -8,8 +8,9 @@ use chrono::Utc;
 use encoding_transcode::{Decoder, Encoder};
 use event::{fields, tags, BatchNotifier, Event, LogRecord};
 use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
-    SourceContext, SourceDescription,
+    deserialize_duration, deserialize_duration_option, serialize_duration,
+    serialize_duration_option, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use framework::source::util::OrderedFinalizer;
 use framework::{hostname, Pipeline, ShutdownSignal, Source};
@@ -36,17 +37,24 @@ impl From<ReadFromConfig> for ReadFrom {
     }
 }
 
+fn default_file_key() -> String {
+    "file".into()
+}
+
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct TailConfig {
     #[serde(default = "default_ignore_older_than")]
     #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
+        deserialize_with = "deserialize_duration_option",
+        serialize_with = "serialize_duration_option"
     )]
-    ignore_older_than: Duration,
+    ignore_older_than: Option<Duration>,
 
     host_key: Option<String>,
+
+    #[serde(default = "default_file_key")]
+    file_key: String,
 
     include: Vec<PathBuf>,
     #[serde(default)]
@@ -79,8 +87,8 @@ struct TailConfig {
     multiline: Option<MultilineConfig>,
 }
 
-const fn default_ignore_older_than() -> Duration {
-    Duration::from_secs(12 * 60 * 60)
+const fn default_ignore_older_than() -> Option<Duration> {
+    Some(Duration::from_secs(12 * 60 * 60))
 }
 
 const fn default_glob_interval() -> Duration {
@@ -216,6 +224,7 @@ fn tail_source(
     mut output: Pipeline,
     acknowledgements: bool,
 ) -> crate::Result<Source> {
+    let file_key = config.file_key.to_owned();
     let provider = tail::provider::Glob::new(&config.include, &config.exclude)
         .ok_or("glob provider create failed")?;
 
@@ -227,6 +236,9 @@ fn tail_source(
         None => ReadFrom::default(),
     };
 
+    let ignore_before = config
+        .ignore_older_than
+        .map(|d| Utc::now() - chrono::Duration::from_std(d).unwrap());
     let include = config.include.clone();
     let exclude = config.exclude.clone();
     let shutdown = shutdown.shared();
@@ -258,7 +270,7 @@ fn tail_source(
         read_from,
         max_read_bytes: config.max_read_bytes,
         handle: tokio::runtime::Handle::current(),
-        ignore_before: None,
+        ignore_before,
         max_line_bytes: config.max_line_bytes,
         line_delimiter,
     };
@@ -290,7 +302,7 @@ fn tail_source(
         let messages: Box<dyn Stream<Item = Line> + Send + std::marker::Unpin> =
             if let Some(ref conf) = multiline {
                 // This match looks ugly, but it does not need `dyn`
-                match conf.parser {
+                match &conf.parser {
                     Parser::Cri => {
                         let logic = Logic::new(multiline::preset::Cri, conf.timeout);
                         Box::new(
@@ -329,6 +341,37 @@ fn tail_source(
                             ),
                         )
                     }
+                    Parser::Custom {
+                        condition_pattern,
+                        start_pattern,
+                        mode,
+                    } => {
+                        let logic = Logic::new(
+                            multiline::RegexRule {
+                                start_pattern: start_pattern.clone(),
+                                condition_pattern: condition_pattern.clone(),
+                                mode: mode.to_owned(),
+                            },
+                            conf.timeout,
+                        );
+
+                        Box::new(
+                            LineAgg::new(
+                                rx.map(|line| {
+                                    (line.filename, line.text, (line.fingerprint, line.offset))
+                                }),
+                                logic,
+                            )
+                            .map(
+                                |(filename, text, (fingerprint, offset))| Line {
+                                    text,
+                                    filename,
+                                    fingerprint,
+                                    offset,
+                                },
+                            ),
+                        )
+                    }
                     _ => unreachable!(),
                 }
             } else {
@@ -340,7 +383,7 @@ fn tail_source(
         let mut messages = messages.map(move |line| {
             let mut event: Event = LogRecord::new(
                 tags!(
-                    "filename" => line.filename,
+                    &file_key => line.filename,
                     &host_key => &hostname,
                     source_type_key => "tail"
                 ),
@@ -392,9 +435,12 @@ fn tail_source(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use encoding_rs::UTF_16LE;
     use event::attributes::Key;
+    use event::log::Value;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
+    use multiline::Mode;
     use std::fs;
     use std::fs::File;
     use std::future::Future;
@@ -404,11 +450,12 @@ mod tests {
 
     fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
         TailConfig {
-            ignore_older_than: default_ignore_older_than(),
+            ignore_older_than: None,
             host_key: None,
             include: vec![dir.path().join("*")],
             exclude: vec![],
             read_from: None,
+            file_key: default_file_key(),
             max_line_bytes: default_max_line_bytes(),
             max_read_bytes: default_max_read_bytes(),
             line_delimiter: default_line_delimiter(),
@@ -418,7 +465,7 @@ mod tests {
         }
     }
 
-    #[derive(Debug, Eq, PartialEq)]
+    #[derive(Clone, Debug, Eq, PartialEq)]
     enum AckingMode {
         No,
         Unfinalized,
@@ -525,14 +572,14 @@ mod tests {
             if line.starts_with("foo") {
                 assert_eq!(line, format!("foo {}", foo));
                 assert_eq!(
-                    log.tags.get(&Key::from("filename")).unwrap().to_string(),
+                    log.tags.get(&Key::from("file")).unwrap().to_string(),
                     path1.to_str().unwrap()
                 );
                 foo += 1;
             } else {
                 assert_eq!(line, format!("bar {}", bar));
                 assert_eq!(
-                    log.tags.get(&Key::from("filename")).unwrap().to_string(),
+                    log.tags.get(&Key::from("file")).unwrap().to_string(),
                     path2.to_str().unwrap()
                 );
                 bar += 1;
@@ -579,8 +626,6 @@ mod tests {
 
         assert_eq!(received.len(), n + 1);
     }
-
-    // TODO: support truncate ?
 
     #[tokio::test]
     #[ignore = "This test ignored for now, it need to be test and pass"]
@@ -720,5 +765,541 @@ mod tests {
         }
 
         assert_eq!(is, [n as usize; 3]);
+    }
+
+    #[tokio::test]
+    async fn file_file_key_acknowledged() {
+        file_file_key(AckingMode::Acks).await
+    }
+
+    #[tokio::test]
+    async fn file_file_key_nonacknowledged() {
+        file_file_key(AckingMode::No).await
+    }
+
+    async fn file_file_key(acks: AckingMode) {
+        // Default
+        {
+            let dir = tempdir().unwrap();
+            let config = TailConfig {
+                include: vec![dir.path().join("*")],
+                ..test_default_tail_config(&dir)
+            };
+
+            let path = dir.path().join("file");
+            let received = run_tail(&config, path.clone(), true, acks.clone(), async {
+                let mut file = File::create(&path).unwrap();
+                sleep_500_millis().await;
+                writeln!(&mut file, "hello there").unwrap();
+                sleep_500_millis().await;
+            })
+            .await;
+
+            assert_eq!(received.len(), 1);
+            assert_eq!(
+                received[0]
+                    .as_log()
+                    .tags
+                    .get(&Key::from("file"))
+                    .unwrap()
+                    .to_string(),
+                path.to_str().unwrap()
+            );
+        }
+
+        // Custom
+        {
+            let dir = tempdir().unwrap();
+            let config = TailConfig {
+                include: vec![dir.path().join("*")],
+                file_key: "source".to_string(),
+                ..test_default_tail_config(&dir)
+            };
+
+            let path = dir.path().join("file");
+            let received = run_tail(&config, path.clone(), true, acks.clone(), async {
+                let mut file = File::create(&path).unwrap();
+                sleep_500_millis().await;
+                writeln!(&mut file, "hello there").unwrap();
+                sleep_500_millis().await;
+            })
+            .await;
+
+            assert_eq!(received.len(), 1);
+            assert_eq!(
+                received[0]
+                    .as_log()
+                    .tags
+                    .get(&Key::from("source"))
+                    .unwrap()
+                    .to_string(),
+                path.to_str().unwrap()
+            );
+        }
+    }
+
+    fn extract_messages_string(received: Vec<Event>) -> Vec<String> {
+        received
+            .into_iter()
+            .map(Event::into_log)
+            .map(|log| {
+                log.get_field(log_schema().message_key())
+                    .unwrap()
+                    .to_string_lossy()
+            })
+            .collect()
+    }
+
+    #[tokio::test]
+    async fn file_start_position_server_restart_unfinalized() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let mut file = File::create(&path).unwrap();
+        writeln!(&mut file, "the line").unwrap();
+        sleep_500_millis().await;
+
+        // First time server runs it picks up existing lines.
+        let received = run_tail(
+            &config,
+            path.clone(),
+            false,
+            AckingMode::Unfinalized,
+            sleep_500_millis(),
+        )
+        .await;
+        let lines = extract_messages_string(received);
+        assert_eq!(lines, vec!["the line"]);
+
+        // Restart server, it re-reads file since the events were not acknowledged before shutdown
+        let received = run_tail(
+            &config,
+            path,
+            false,
+            AckingMode::Unfinalized,
+            sleep_500_millis(),
+        )
+        .await;
+        let lines = extract_messages_string(received);
+        assert_eq!(lines, vec!["the line"]);
+    }
+
+    #[tokio::test]
+    async fn file_start_position_server_restart_with_file_rotation_acknowledged() {
+        file_start_position_server_restart_with_file_rotation(AckingMode::Acks).await
+    }
+
+    #[tokio::test]
+    async fn file_start_position_server_restart_with_file_rotation_nonacknowledged() {
+        file_start_position_server_restart_with_file_rotation(AckingMode::No).await
+    }
+
+    async fn file_start_position_server_restart_with_file_rotation(acking: AckingMode) {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            ..test_default_tail_config(&dir)
+        };
+
+        let data_dir = dir.path().to_path_buf();
+        let path = dir.path().join("file");
+        let path_for_old_file = dir.path().join("file.old");
+        // Run server first time, collect some lines.
+        {
+            let received = run_tail(&config, data_dir.clone(), true, acking.clone(), async {
+                let mut file = File::create(&path).unwrap();
+                sleep_500_millis().await;
+                writeln!(&mut file, "first line").unwrap();
+                sleep_500_millis().await;
+            })
+            .await;
+
+            let lines = extract_messages_string(received);
+            assert_eq!(lines, vec!["first line"]);
+        }
+        // Perform 'file rotation' to archive old lines.
+        fs::rename(&path, &path_for_old_file).expect("could not rename");
+        // Restart the server and make sure it does not re-read the old file
+        // even though it has a new name.
+        {
+            let received = run_tail(&config, data_dir, false, acking, async {
+                let mut file = File::create(&path).unwrap();
+                sleep_500_millis().await;
+                writeln!(&mut file, "second line").unwrap();
+                sleep_500_millis().await;
+            })
+            .await;
+
+            let lines = extract_messages_string(received);
+            assert_eq!(lines, vec!["second line"]);
+        }
+    }
+
+    #[cfg(unix)] // this test uses unix-specific function `futimes` during test time
+    #[tokio::test]
+    async fn file_start_position_ignore_old_files() {
+        use std::{
+            os::unix::io::AsRawFd,
+            time::{Duration, SystemTime},
+        };
+
+        let dir = tempdir().unwrap();
+        let path = dir.path().to_path_buf();
+        let config = TailConfig {
+            include: vec![path.join("*")],
+            ignore_older_than: Some(Duration::from_secs(5)),
+            ..test_default_tail_config(&dir)
+        };
+
+        let received = run_tail(&config, path, false, AckingMode::No, async {
+            let before_path = dir.path().join("before");
+            let mut before_file = File::create(&before_path).unwrap();
+            let after_path = dir.path().join("after");
+            let mut after_file = File::create(&after_path).unwrap();
+
+            writeln!(&mut before_file, "first line").unwrap(); // first few bytes make up unique file fingerprint
+            writeln!(&mut after_file, "_first line").unwrap(); //   and therefore need to be non-identical
+
+            {
+                // Set the modified times
+                let before = SystemTime::now() - Duration::from_secs(8);
+                let after = SystemTime::now() - Duration::from_secs(2);
+
+                let before_time = libc::timeval {
+                    tv_sec: before
+                        .duration_since(SystemTime::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs() as _,
+                    tv_usec: 0,
+                };
+                let before_times = [before_time, before_time];
+
+                let after_time = libc::timeval {
+                    tv_sec: after
+                        .duration_since(SystemTime::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs() as _,
+                    tv_usec: 0,
+                };
+                let after_times = [after_time, after_time];
+
+                unsafe {
+                    libc::futimes(before_file.as_raw_fd(), before_times.as_ptr());
+                    libc::futimes(after_file.as_raw_fd(), after_times.as_ptr());
+                }
+            }
+
+            sleep_500_millis().await;
+            writeln!(&mut before_file, "second line").unwrap();
+            writeln!(&mut after_file, "_second line").unwrap();
+
+            sleep_500_millis().await;
+        })
+        .await;
+
+        let file_key = Key::from("file");
+        let before_lines = received
+            .iter()
+            .filter(|event| {
+                event
+                    .as_log()
+                    .get_tag(&file_key)
+                    .unwrap()
+                    .to_string()
+                    .ends_with("before")
+            })
+            .map(|event| {
+                event
+                    .as_log()
+                    .get_field(log_schema().message_key())
+                    .unwrap()
+                    .to_string_lossy()
+            })
+            .collect::<Vec<_>>();
+        let after_lines = received
+            .iter()
+            .filter(|event| {
+                event
+                    .as_log()
+                    .get_tag(&file_key)
+                    .unwrap()
+                    .to_string()
+                    .ends_with("after")
+            })
+            .map(|event| {
+                event
+                    .as_log()
+                    .get_field(log_schema().message_key())
+                    .unwrap()
+                    .to_string_lossy()
+            })
+            .collect::<Vec<_>>();
+        assert_eq!(before_lines, vec!["second line"]);
+        assert_eq!(after_lines, vec!["_first line", "_second line"]);
+    }
+
+    #[tokio::test]
+    async fn file_max_line_bytes() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            max_line_bytes: 10,
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
+            let mut file = File::create(&path).unwrap();
+
+            sleep_500_millis().await; // The files must be observed at their original lengths before writing to them
+
+            writeln!(&mut file, "short").unwrap();
+            writeln!(&mut file, "this is too long").unwrap();
+            writeln!(&mut file, "11 eleven11").unwrap();
+            let super_long = "This line is super long and will take up more space than BufReader's internal buffer, just to make sure that everything works properly when multiple read calls are involved".repeat(10000);
+            writeln!(&mut file, "{}", super_long).unwrap();
+            writeln!(&mut file, "exactly 10").unwrap();
+            writeln!(&mut file, "it can end on a line that's too long").unwrap();
+
+            sleep_500_millis().await;
+            sleep_500_millis().await;
+
+            writeln!(&mut file, "and then continue").unwrap();
+            writeln!(&mut file, "last short").unwrap();
+
+            sleep_500_millis().await;
+            sleep_500_millis().await;
+        }).await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec!["short".into(), "exactly 10".into(), "last short".into()]
+        );
+    }
+
+    #[tokio::test]
+    async fn test_multi_line_aggregation() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            multiline: Some(MultilineConfig {
+                timeout: Duration::from_millis(25),
+                parser: Parser::Custom {
+                    condition_pattern: regex::bytes::Regex::new("INFO").unwrap(),
+                    start_pattern: regex::bytes::Regex::new("INFO").unwrap(),
+                    mode: Mode::HaltBefore,
+                },
+            }),
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
+            let mut file = File::create(&path).unwrap();
+
+            sleep_500_millis().await; // The files must be observed at their original lengths before writing to them
+
+            writeln!(&mut file, "leftover foo").unwrap();
+            writeln!(&mut file, "INFO hello").unwrap();
+            writeln!(&mut file, "INFO goodbye").unwrap();
+            writeln!(&mut file, "part of goodbye").unwrap();
+
+            sleep_500_millis().await;
+
+            writeln!(&mut file, "INFO hi again").unwrap();
+            writeln!(&mut file, "and some more").unwrap();
+            writeln!(&mut file, "INFO hello").unwrap();
+
+            sleep_500_millis().await;
+
+            writeln!(&mut file, "too slow").unwrap();
+            writeln!(&mut file, "INFO doesn't have").unwrap();
+            writeln!(&mut file, "to be INFO in").unwrap();
+            writeln!(&mut file, "the middle").unwrap();
+
+            sleep_500_millis().await;
+        })
+        .await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec![
+                "leftover foo".into(),
+                "INFO hello".into(),
+                "INFO goodbye\npart of goodbye".into(),
+                "INFO hi again\nand some more".into(),
+                "INFO hello".into(),
+                "too slow".into(),
+                "INFO doesn't have".into(),
+                "to be INFO in\nthe middle".into(),
+            ]
+        );
+    }
+
+    // Ignoring on mac: https://github.com/vectordotdev/vector/issues/8373
+    #[cfg(not(target_os = "macos"))]
+    #[tokio::test]
+    async fn test_split_reads() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            max_read_bytes: 1,
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let mut file = File::create(&path).unwrap();
+
+        writeln!(&mut file, "hello i am a normal line").unwrap();
+
+        sleep_500_millis().await;
+
+        let received = run_tail(&config, dir.into_path(), false, AckingMode::No, async {
+            sleep_500_millis().await;
+
+            write!(&mut file, "i am not a full line").unwrap();
+
+            // Longer than the EOF timeout
+            sleep_500_millis().await;
+
+            writeln!(&mut file, " until now").unwrap();
+
+            sleep_500_millis().await;
+        })
+        .await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec![
+                "hello i am a normal line".into(),
+                "i am not a full line until now".into(),
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn test_gzipped_file() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            ignore_older_than: None,
+            include: vec![PathBuf::from("tests/fixtures/gzipped.log")],
+            // TODO: remove this once files are fingerprinted after decompression
+            //
+            // Currently, this needs to be smaller than the total size of the compressed file
+            // because the fingerprinter tries to read until a newline, which it's not going to see
+            // in the compressed data, or this number of bytes. If it hits EOF before that, it
+            // can't return a fingerprint because the value would change once more data is written.
+            max_line_bytes: 100,
+            ..test_default_tail_config(&dir)
+        };
+
+        let received = run_tail(
+            &config,
+            dir.into_path(),
+            false,
+            AckingMode::No,
+            sleep_500_millis(),
+        )
+        .await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec![
+                "this is a simple file".into(),
+                "i have been compressed".into(),
+                "in order to make me smaller".into(),
+                "but you can still read me".into(),
+                "hooray".into(),
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn test_non_utf8_encoded_file() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![PathBuf::from("tests/fixtures/utf-16le.log")],
+            charset: Some(UTF_16LE),
+            ..test_default_tail_config(&dir)
+        };
+
+        let received = run_tail(
+            &config,
+            dir.into_path(),
+            false,
+            AckingMode::No,
+            sleep_500_millis(),
+        )
+        .await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec![
+                "hello i am a file".into(),
+                "i can unicode".into(),
+                "but i do so in 16 bits".into(),
+                "and when i byte".into(),
+                "i become little-endian".into(),
+            ]
+        );
+    }
+
+    #[tokio::test]
+    async fn test_non_default_line_delimiter() {
+        let dir = tempdir().unwrap();
+        let config = TailConfig {
+            include: vec![dir.path().join("*")],
+            line_delimiter: "\r\n".to_string(),
+            ..test_default_tail_config(&dir)
+        };
+
+        let path = dir.path().join("file");
+        let received = run_tail(&config, path.clone(), false, AckingMode::No, async {
+            let mut file = File::create(&path).unwrap();
+
+            sleep_500_millis().await; // The files must be observed at their original lengths before writing to them
+
+            write!(&mut file, "hello i am a line\r\n").unwrap();
+            write!(&mut file, "and i am too\r\n").unwrap();
+            write!(&mut file, "CRLF is how we end\r\n").unwrap();
+            write!(&mut file, "please treat us well\r\n").unwrap();
+
+            sleep_500_millis().await;
+        })
+        .await;
+
+        let received = extract_messages_value(received);
+
+        assert_eq!(
+            received,
+            vec![
+                "hello i am a line".into(),
+                "and i am too".into(),
+                "CRLF is how we end".into(),
+                "please treat us well".into()
+            ]
+        );
+    }
+
+    fn extract_messages_value(received: Vec<Event>) -> Vec<Value> {
+        received
+            .into_iter()
+            .map(Event::into_log)
+            .map(|log| log.get_field(log_schema().message_key()).unwrap().clone())
+            .collect()
     }
 }

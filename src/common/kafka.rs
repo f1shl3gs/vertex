@@ -16,14 +16,6 @@ enum KafkaError {
     InvalidPath { path: PathBuf },
 }
 
-/// Used to determine the options to set in configs, since both Kafka consumers and producers have
-/// unique options, they use the same struct, and the error if given the wrong options.
-#[derive(Debug, PartialOrd, PartialEq)]
-pub enum KafkaRole {
-    Consumer,
-    Producer,
-}
-
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum KafkaCompression {

@@ -24,6 +24,9 @@ pub use framing::octet_counting::OctetCountingDecoder;
 use framing::BoxedFramingError;
 
 use super::StreamDecodingError;
+use crate::codecs::decoding::framing::octet_counting::{
+    OctetCountingDecoderConfig, OctetCountingDecoderOptions,
+};
 use crate::config::{skip_serializing_if_default, GenerateConfig};
 
 /// An error that occurred while decoding structured events from a byte stream
@@ -92,7 +95,12 @@ pub enum FramingConfig {
     /// Configures the `NewlineDelimitedDecoder`
     NewlineDelimited {
         #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-        delimit: NewlineDelimitedDecoderOptions,
+        newline_delimited: NewlineDelimitedDecoderOptions,
+    },
+    /// Configures the `OctetCountingDecoder`
+    OctetCounting {
+        #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
+        octet_counting: OctetCountingDecoderOptions,
     },
 }
 
@@ -105,7 +113,7 @@ impl From<BytesDecoderConfig> for FramingConfig {
 impl From<NewlineDelimitedDecoderConfig> for FramingConfig {
     fn from(config: NewlineDelimitedDecoderConfig) -> Self {
         Self::NewlineDelimited {
-            delimit: config.newline_delimited,
+            newline_delimited: config.newline_delimited,
         }
     }
 }
@@ -122,12 +130,12 @@ impl FramingConfig {
                 }
                 .build(),
             ),
-            FramingConfig::NewlineDelimited { delimit } => Framer::NewlineDelimited(
-                NewlineDelimitedDecoderConfig {
-                    newline_delimited: delimit,
-                }
-                .build(),
+            FramingConfig::NewlineDelimited { newline_delimited } => Framer::NewlineDelimited(
+                NewlineDelimitedDecoderConfig { newline_delimited }.build(),
             ),
+            FramingConfig::OctetCounting { octet_counting } => {
+                Framer::OctetCounting(OctetCountingDecoderConfig { octet_counting }.build())
+            }
         }
     }
 }

@@ -2,11 +2,10 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 use tokio::time::Duration;
-
+use framework::config::Config;
 use framework::config::SinkOuter;
 
 use super::utils::start_topology;
-use framework::config::Config;
 use crate::topology::builder::DEFAULT_BUFFER_SIZE;
 
 use buffers::{BufferConfig, BufferType, WhenFull};

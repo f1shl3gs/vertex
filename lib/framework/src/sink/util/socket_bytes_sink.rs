@@ -10,11 +10,14 @@ use bytes::Bytes;
 use futures::{ready, Sink};
 use pin_project::{pin_project, pinned_drop};
 use tokio::io::AsyncWrite;
-use tokio_util::codec::{BytesCodec, FramedWrite};
+use tokio_util::codec::FramedWrite;
+
+// TODO: remove this mod
+use codec::BytesCodec;
 
 use super::SocketMode;
 
-const MAX_PENDING_ITEMS: usize = 1_000;
+const MAX_PENDING_ITEMS: usize = 1024;
 
 pub enum ShutdownCheck {
     Error(IoError),
@@ -36,6 +39,7 @@ where
 {
     #[pin]
     inner: FramedWrite<T, BytesCodec>,
+
     shutdown_check: Box<dyn Fn(&mut T) -> ShutdownCheck + Send>,
     acker: Acker,
     socket_mode: SocketMode,
@@ -131,5 +135,59 @@ where
         let result = ready!(self.as_mut().project().inner.poll_close(cx));
         self.as_mut().get_mut().ack();
         Poll::Ready(result)
+    }
+}
+
+mod codec {
+    use bytes::{BufMut, Bytes, BytesMut};
+    /// I can't figure out how to fix the compile error. So i just copy the `BytesCodec` to this file
+    ///
+    ///```text
+    /// error[E0283]: type annotations needed
+    ///    --> lib/framework/src/sink/util/socket_bytes_sink.rs:104:15
+    ///     |
+    /// 104 |         inner.poll_ready(cx)
+    ///     |               ^^^^^^^^^^ cannot infer type for type parameter `I`
+    ///     |
+    ///     = note: multiple `impl`s satisfying `BytesCodec: tokio_util::codec::Encoder<_>` found in the `tokio_util` crate:
+    ///             - impl tokio_util::codec::Encoder<BytesMut> for BytesCodec;
+    ///             - impl tokio_util::codec::Encoder<bytes::Bytes> for BytesCodec;
+    ///     = note: required because of the requirements on the impl of `futures::Sink<_>` for `FramedWrite<T, BytesCodec>`
+    ///```
+    use std::io;
+    use tokio_util::codec::{Decoder, Encoder};
+
+    #[derive(Copy, Clone, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
+    pub struct BytesCodec(());
+
+    impl BytesCodec {
+        /// Creates a new `BytesCodec` for shipping around raw bytes.
+        pub fn new() -> BytesCodec {
+            BytesCodec(())
+        }
+    }
+
+    impl Decoder for BytesCodec {
+        type Item = BytesMut;
+        type Error = io::Error;
+
+        fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<BytesMut>, io::Error> {
+            if !buf.is_empty() {
+                let len = buf.len();
+                Ok(Some(buf.split_to(len)))
+            } else {
+                Ok(None)
+            }
+        }
+    }
+
+    impl Encoder<Bytes> for BytesCodec {
+        type Error = io::Error;
+
+        fn encode(&mut self, data: Bytes, buf: &mut BytesMut) -> Result<(), io::Error> {
+            buf.reserve(data.len());
+            buf.put(data);
+            Ok(())
+        }
     }
 }

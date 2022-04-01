@@ -80,6 +80,8 @@ impl Builder {
             errors.extend(merge_errs)
         }
 
+        self.health_checks.merge(with.health_checks);
+
         with.sources.keys().for_each(|k| {
             if self.sources.contains_key(k) {
                 errors.push(format!("duplicate source name found: {}", k));
@@ -244,7 +246,7 @@ pub fn compile(mut builder: Builder) -> Result<(Config, Vec<String>), Vec<String
     if errors.is_empty() {
         let config = Config {
             global,
-            health_checks,
+            healthchecks: health_checks,
             sources,
             sinks,
             transforms,

@@ -29,7 +29,7 @@ shared = { path = "../shared" }
 snafu = { version = "0.7.0", default-features = false, features = ["std"] }
 tokio = { version = "1.17.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-stream = { version = "0.1", default-features = false, features = ["sync"] }
-tokio-util = { version = "0.7.0", default-features = false }
+tokio-util = { version = "0.7.1", default-features = false }
 tracing = { version = "0.1.32", default-features = false, features = ["attributes"] }
 
 [dev-dependencies]

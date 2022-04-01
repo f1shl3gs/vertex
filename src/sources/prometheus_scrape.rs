@@ -22,14 +22,6 @@ use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use tokio_stream::wrappers::IntervalStream;
 
-// pulled up, and split over multiple lines, because the long lines trip up rustfmt such that it
-// gave up trying to format, but reported no error
-static PARSE_ERROR_NO_PATH: &str = "No path is set on the endpoint and we got a parse error,\
-                                    did you mean to use /metrics? This behavior changed in version 0.11.";
-static NOT_FOUND_NO_PATH: &str = "No path is set on the endpoint and we got a 404,\
-                                  did you mean to use /metrics?\
-                                  This behavior changed in version 0.11.";
-
 #[derive(Debug, Deserialize, Serialize)]
 struct PrometheusScrapeConfig {
     endpoints: Vec<String>,
