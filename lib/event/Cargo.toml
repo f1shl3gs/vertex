@@ -21,8 +21,8 @@ enumflags2 = { version = "0.7.4", default-features = false }
 futures = { version = "0.3.21", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 pin-project = { version = "1.0.10", default-features = false }
-prost = { version = "0.9.0", default-features = false, features = ["std"] }
-prost-types = { version = "0.9.0", default-features = false }
+prost = { version = "0.10.0", default-features = false, features = ["std"] }
+prost-types = { version = "0.10.0", default-features = false }
 rand = { version = "0.8.5" }
 serde = { version = "1.0.136", features = ["derive"] }
 serde_json = { version = "1.0.79" }
