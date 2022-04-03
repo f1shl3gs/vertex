@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1648966002592,
+  "lastUpdate": 1648967172295,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -27511,6 +27511,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1948,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "17d7754bb4784387e0d5fb180ebfcc202a8dea18",
+          "message": "Merge pull request #264 from f1shl3gs/bump_up_prost\n\nbump up tonic, prost and prost-build",
+          "timestamp": "2022-04-03T13:55:05+08:00",
+          "tree_id": "d38424a5d0951326b7ab4e62197461c05ac9a08a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/17d7754bb4784387e0d5fb180ebfcc202a8dea18"
+        },
+        "date": 1648967170748,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1701,
             "unit": "s"
           }
         ]
