@@ -9,7 +9,7 @@ snafu = { version = "0.7.0", default-features = false }
 nom = { version = "7.1.1" }
 prost = { version = "0.10.0" }
 num_enum = { version = "0.5.7" }
-indexmap = { version = "1.8.0" }
+indexmap = { version = "1.8.1" }
 
 [build-dependencies]
 prost-build = { version = "0.10.0" }
