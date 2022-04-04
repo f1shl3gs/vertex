@@ -362,7 +362,7 @@ metrics = { version = "0.18.1", default-features = false }
 # Tracing
 tracing = { version = "0.1.32", default-features = false }
 tracing-log = { version = "0.1.2", default-features = false }
-tracing-subscriber = { version = "0.3.9", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-subscriber = { version = "0.3.10", optional = true, default-features = false, features = ["std", "registry"] }
 tracing-core = { version = "0.1.23" }
 
 # HTTP
