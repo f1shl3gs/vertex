@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649045024944,
+  "lastUpdate": 1649045062129,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20445,6 +20445,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 318100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b53527d3a9f9ad1d2da0df8c1c3c84fe4df15ba1",
+          "message": "Merge pull request #266 from f1shl3gs/dependabot/cargo/tracing-core-0.1.24\n\nchore(deps): bump tracing-core from 0.1.23 to 0.1.24",
+          "timestamp": "2022-04-04T11:55:19+08:00",
+          "tree_id": "4c741ac2a6114ad8cf60c52f3a5dbddd48e4c695",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b53527d3a9f9ad1d2da0df8c1c3c84fe4df15ba1"
+        },
+        "date": 1649045060039,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 805.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 76515,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 405230,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 804310,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 380.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 35504,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 184420,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 361930,
             "unit": "ns/op"
           }
         ]
