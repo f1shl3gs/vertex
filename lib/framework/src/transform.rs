@@ -98,6 +98,16 @@ impl Transform {
         Transform::Function(Box::new(v))
     }
 
+    /// Mutably borrow the inner transform as a function transform.
+    pub fn as_function(&mut self) -> &mut Box<dyn FunctionTransform> {
+        match self {
+            Transform::Function(t) => t,
+            _ => panic!(
+                "Called `Transform::as_function` on something that was not a function variant"
+            ),
+        }
+    }
+
     /// Create a new task transform.
     ///
     /// These tasks are coordinated, and map a stream of some `U` to some other

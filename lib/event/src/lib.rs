@@ -280,6 +280,24 @@ pub enum EventRef<'a> {
     Trace(&'a Trace),
 }
 
+impl<'a> EventRef<'a> {
+    /// Extract the `LogRecord` reference in this.
+    pub fn as_log(self) -> &'a LogRecord {
+        match self {
+            Self::Log(log) => log,
+            _ => panic!("Failed type coercion, {:?} is not a log reference", self),
+        }
+    }
+
+    /// Convert this reference into a new `LogRecord` by cloning
+    pub fn into_log(self) -> LogRecord {
+        match self {
+            Self::Log(log) => log.clone(),
+            _ => panic!("Failed type coercion, {:?} is not a log reference", self),
+        }
+    }
+}
+
 impl<'a> From<&'a Event> for EventRef<'a> {
     fn from(event: &'a Event) -> Self {
         match event {

@@ -32,6 +32,23 @@ impl Value {
         }
     }
 
+    pub fn coerce_to_bytes(&self) -> Bytes {
+        match self {
+            Value::Bytes(b) => b.clone(),
+            Value::Float(f) => f.to_string().into(),
+            Value::Int64(i) => i.to_string().into(),
+            Value::Boolean(b) => b.to_string().into(),
+            Value::Timestamp(ts) => timestamp_to_string(ts).into(),
+            Value::Array(arr) => serde_json::to_vec(arr)
+                .expect("Cannot serialize array")
+                .into(),
+            Value::Map(map) => serde_json::to_vec(map)
+                .expect("Cannot serialize array")
+                .into(),
+            Value::Null => Bytes::from("<null>"),
+        }
+    }
+
     pub fn as_bytes(&self) -> Bytes {
         match self {
             Value::Bytes(b) => b.clone(),
