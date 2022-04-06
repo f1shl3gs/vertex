@@ -5,6 +5,7 @@ use std::pin::Pin;
 use std::task::{Context, Poll};
 
 use errors::{ClosedError, StreamSendError};
+#[cfg(any(test, feature = "test-util"))]
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
 use futures::Stream;

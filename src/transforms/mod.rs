@@ -3,18 +3,18 @@ mod add_fields;
 #[cfg(feature = "transforms-add_tags")]
 mod add_tags;
 mod ansii_striper;
-#[cfg(feature = "transforms-metricalize")]
-mod metricalize;
-
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
-
+#[cfg(feature = "transforms-coercer")]
+mod coercer;
 mod filter;
 mod geoip;
 mod grok_parser;
 mod jsmn_parser;
 mod json_parser;
 mod logfmt_parser;
+#[cfg(feature = "transforms-metricalize")]
+mod metricalize;
 mod rename_fields;
 mod rename_tags;
 mod route;
