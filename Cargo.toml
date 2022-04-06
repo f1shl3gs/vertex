@@ -312,7 +312,7 @@ criterion = { version = "0.3.5", default-features = false, features = ["async_to
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
 indoc = { version = "1.0.4", default-features = false }
-pretty_assertions = { version = "1.2.0" }
+pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
 tempfile = { version = "3.2.0" }
@@ -362,8 +362,8 @@ metrics = { version = "0.18.1", default-features = false }
 # Tracing
 tracing = { version = "0.1.32", default-features = false }
 tracing-log = { version = "0.1.2", default-features = false }
-tracing-subscriber = { version = "0.3.10", optional = true, default-features = false, features = ["std", "registry"] }
-tracing-core = { version = "0.1.23" }
+tracing-subscriber = { version = "0.3.10", optional = true, default-features = false, features = ["std", "registry"] 
+tracing-core = { version = "0.1.24" }
 
 # HTTP
 hyper = { version = "0.14.18", features = ["client", "runtime", "http1", "http2", "server", "stream"] }

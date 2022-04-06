@@ -16,7 +16,7 @@ tokio-console = ["console-subscriber", "tokio/tracing"]
 [dev-dependencies]
 env-test-util = { version = "1.0.1" }
 indoc = { version = "1.0.4", default-features = false }
-pretty_assertions = { version = "1.2.0" }
+pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
 rand_distr = { version = "0.4.3", default-features = false }
@@ -84,7 +84,7 @@ tokio-stream = { version = "0.1.8", features = ["time", "net"] }
 tokio-util = { version = "0.7.1", default-features = false, features = ["codec", "time", "net"] }
 tower = { version = "0.4.12", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 tracing = { version = "0.1.32", default-features = false }
-tracing-core = { version = "0.1.23", default-features = false }
+tracing-core = { version = "0.1.24", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-limit = { path = "../tracing-limit" }
