@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649046925591,
+  "lastUpdate": 1649215453482,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10386,6 +10386,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 69.131,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd9e061258efc2d33734210c77dd15a93e47024a",
+          "message": "Merge pull request #269 from f1shl3gs/dependabot/cargo/indexmap-1.8.1\n\nchore(deps): bump indexmap from 1.8.0 to 1.8.1",
+          "timestamp": "2022-04-06T11:16:38+08:00",
+          "tree_id": "2e6a379d48639381f6a64896fd660e0fed6e2b88",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd9e061258efc2d33734210c77dd15a93e47024a"
+        },
+        "date": 1649215451251,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.036,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.679,
             "unit": "ns/op"
           }
         ]
