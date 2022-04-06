@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649217104697,
+  "lastUpdate": 1649217257387,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -28586,6 +28586,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1897,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2c965d566ccb68b810d0d417c2524f517f45529b",
+          "message": "Merge pull request #271 from f1shl3gs/dependabot/cargo/tonic-0.7.1\n\nchore(deps): bump tonic from 0.7.0 to 0.7.1",
+          "timestamp": "2022-04-06T11:18:00+08:00",
+          "tree_id": "a50886b8c3c1c38a008fd1a4fd9ea74e3b1fafda",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2c965d566ccb68b810d0d417c2524f517f45529b"
+        },
+        "date": 1649217255593,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1974,
             "unit": "s"
           }
         ]
