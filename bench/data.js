@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649253891703,
+  "lastUpdate": 1649335901306,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10701,6 +10701,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 74.741,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "12d51820e1ad3d96311be9608742eb8b55303099",
+          "message": "Merge pull request #276 from f1shl3gs/add_drop_action_for_cardinality\n\nintroduce action for cardinality(drop and drop_tag)",
+          "timestamp": "2022-04-07T20:45:47+08:00",
+          "tree_id": "06edc2bdd825cb9d08cb38360deb423322d17806",
+          "url": "https://github.com/f1shl3gs/vertex/commit/12d51820e1ad3d96311be9608742eb8b55303099"
+        },
+        "date": 1649335899602,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.174,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 64.242,
             "unit": "ns/op"
           }
         ]
