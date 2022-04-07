@@ -1,18 +1,49 @@
-use async_trait::async_trait;
-use bloom::{BloomFilter, ASMS};
-use event::attributes::{Key, Value};
-use event::Events;
-use framework::config::{DataType, Output, TransformConfig, TransformContext};
-use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fmt::{Debug, Formatter};
 
-#[derive(Copy, Clone, Debug, Deserialize, Serialize, PartialEq)]
-#[serde(tag = "limit_exceeded_action", rename_all = "snake_case")]
+use async_trait::async_trait;
+use bloom::{BloomFilter, ASMS};
+use event::attributes::{Key, Value};
+use event::{EventContainer, Events};
+use framework::config::{DataType, GenerateConfig, Output, TransformConfig, TransformContext};
+use framework::{FunctionTransform, OutputBuffer, Transform};
+use serde::de::{Error, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
+
+#[derive(Copy, Clone, Debug, Serialize, PartialEq)]
 pub enum LimitExceededAction {
     DropEvent,
     DropTag,
+}
+
+impl<'de> Deserialize<'de> for LimitExceededAction {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct Action;
+
+        impl<'de> Visitor<'de> for Action {
+            type Value = LimitExceededAction;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str(r##""drop" or "drop_tag""##)
+            }
+
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                match v {
+                    "drop" => Ok(LimitExceededAction::DropEvent),
+                    "drop_tag" => Ok(LimitExceededAction::DropTag),
+                    _ => Err(serde::de::Error::unknown_variant(v, &["drop", "drop_tag"])),
+                }
+            }
+        }
+
+        deserializer.deserialize_any(Action)
+    }
 }
 
 impl Default for LimitExceededAction {
@@ -24,16 +55,38 @@ impl Default for LimitExceededAction {
 #[derive(Copy, Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 struct CardinalityConfig {
-    //
     pub limit: usize,
+
+    #[serde(default)]
     pub action: LimitExceededAction,
+}
+
+impl GenerateConfig for CardinalityConfig {
+    fn generate_config() -> String {
+        r##"
+# How many distict values for any given key.
+#
+limit: 1024
+
+# The behavior of limit exceeded action.
+# Available values:
+#   "drop": drop the metric
+#   "drop_tag": drop tags only, the metric will be keeped
+#
+action: drop
+"##
+        .to_string()
+    }
 }
 
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
 impl TransformConfig for CardinalityConfig {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
-        Ok(Transform::function(Cardinality::new(self.limit)))
+        Ok(Transform::function(Cardinality::new(
+            self.limit,
+            self.action,
+        )))
     }
 
     fn input_type(&self) -> DataType {
@@ -109,10 +162,10 @@ impl Clone for Cardinality {
 }
 
 impl Cardinality {
-    pub fn new(limit: usize) -> Self {
+    pub fn new(limit: usize, action: LimitExceededAction) -> Self {
         Self {
             limit,
-            action: LimitExceededAction::DropEvent,
+            action,
             accepted_tags: HashMap::new(),
         }
     }
@@ -124,7 +177,7 @@ impl Cardinality {
     /// for that key yet and if not adds the value to the set of accepted values
     /// for the key and returns true, otherwise returns false. A false return
     /// value indicates to the caller that the value is not accepted for this
-    /// key, and the configured limit_execeed_action should be taken.
+    /// key, and the configured limit_exceed_action should be taken.
     fn try_accept_tag(&mut self, key: &Key, value: &Value) -> bool {
         if !self.accepted_tags.contains_key(key) {
             self.accepted_tags
@@ -154,23 +207,47 @@ impl Cardinality {
 }
 
 impl FunctionTransform for Cardinality {
-    fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
-        events.for_each_event(|metric| {
-            for (k, v) in metric.attributes().iter() {
-                if !self.try_accept_tag(k, v) {
-                    // rejected
-                    return;
-                }
-            }
-        });
+    fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
+        let mut new_metrics = Vec::with_capacity(events.len());
 
-        output.push(events)
+        if let Events::Metrics(metrics) = events {
+            'outer: for mut metric in metrics {
+                let mut to_delete = vec![];
+
+                for (k, v) in metric.attributes() {
+                    if !self.try_accept_tag(k, v) {
+                        // reject
+                        match self.action {
+                            LimitExceededAction::DropEvent => continue 'outer,
+                            LimitExceededAction::DropTag => to_delete.push(k.clone()),
+                        }
+                    }
+                }
+
+                for k in &to_delete {
+                    metric.remote_tag(k);
+                }
+
+                new_metrics.push(metric);
+            }
+        }
+
+        if !new_metrics.is_empty() {
+            output.push(new_metrics);
+        }
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use event::{tags, Metric, MetricValue};
+    use framework::config::TransformContext;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<CardinalityConfig>()
+    }
 
     #[test]
     fn test_tag_value_set() {
@@ -202,5 +279,59 @@ mod tests {
             let val = format!("{}", i);
             assert!(!set.insert(&val))
         }
+    }
+
+    async fn run(config: CardinalityConfig, input: Vec<Metric>) -> OutputBuffer {
+        let mut cardinality = config.build(&TransformContext::default()).await.unwrap();
+        let cardinality = cardinality.as_function();
+
+        let mut buf = OutputBuffer::with_capacity(1);
+        cardinality.transform(&mut buf, input.into());
+        buf
+    }
+
+    #[tokio::test]
+    async fn transform_drop() {
+        let config = CardinalityConfig {
+            limit: 0,
+            action: LimitExceededAction::DropEvent,
+        };
+
+        let metric = Metric::gauge_with_tags(
+            "foo",
+            "",
+            1,
+            tags!(
+                "key" => "value"
+            ),
+        );
+
+        let output = run(config, vec![metric]).await;
+
+        assert!(output.is_empty())
+    }
+
+    #[tokio::test]
+    async fn drop_tag() {
+        let config = CardinalityConfig {
+            limit: 0,
+            action: LimitExceededAction::DropTag,
+        };
+
+        let metric = Metric::gauge_with_tags(
+            "foo",
+            "",
+            1,
+            tags!(
+                "key" => "value"
+            ),
+        );
+
+        let output = run(config, vec![metric]).await;
+        assert_eq!(output.len(), 1);
+        let metric = output.first().unwrap().into_metric();
+        assert_eq!(metric.name(), "foo");
+        assert_eq!(metric.value, MetricValue::Gauge(1.0));
+        assert!(metric.series.tags.is_empty())
     }
 }
