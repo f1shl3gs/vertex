@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649353113811,
+  "lastUpdate": 1649354063291,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -29876,6 +29876,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1701,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f6291914815c4571947c6bed9cbf9d0ae85a2e3b",
+          "message": "Merge pull request #278 from f1shl3gs/fix_avoid_unused_event_clone\n\nfix last_sender_idx, avoid useless cloning",
+          "timestamp": "2022-04-08T01:23:00+08:00",
+          "tree_id": "96678ec5828927c003279605a04aa8e1784e0372",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f6291914815c4571947c6bed9cbf9d0ae85a2e3b"
+        },
+        "date": 1649354061690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1731,
             "unit": "s"
           }
         ]
