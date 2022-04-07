@@ -414,7 +414,7 @@ inventory = { version = "0.1.11" }
 k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.70.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.121", optional = true }
+libc = { version = "0.2.122", optional = true }
 memchr = { version = "2.4.1", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
