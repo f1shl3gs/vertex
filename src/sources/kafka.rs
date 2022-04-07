@@ -16,7 +16,6 @@ use framework::shutdown::ShutdownSignal;
 use framework::source::util::OrderedFinalizer;
 use framework::{codecs, Error, Source};
 use futures::{FutureExt, StreamExt};
-use futures_batch::ChunksTimeoutStreamExt;
 use log_schema::log_schema;
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
@@ -338,10 +337,7 @@ async fn kafka_source(
     let shutdown = shutdown.shared();
     let finalizer = acknowledgements
         .then(|| OrderedFinalizer::new(shutdown.clone(), mark_done(Arc::clone(&consumer))));
-    let mut stream = consumer
-        .stream()
-        .chunks_timeout(batch_size, Duration::from_millis(500))
-        .take_until(shutdown);
+    let mut stream = consumer.stream().chunks(batch_size).take_until(shutdown);
     let schema = log_schema();
 
     while let Some(messages) = stream.next().await {
