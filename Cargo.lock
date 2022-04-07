@@ -1358,17 +1358,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "futures-batch"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0f5c372b0c5d1023cce2a0ff7667b589ba88dae751b5f65c400b5d0803b30cbf"
-dependencies = [
- "futures",
- "futures-timer 2.0.2",
- "pin-utils",
-]
-
-[[package]]
 name = "futures-channel"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1434,12 +1423,6 @@ name = "futures-task"
 version = "0.3.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "57c66a976bf5909d801bbef33416c41372779507e7a6b3a5e25e4749c58f776a"
-
-[[package]]
-name = "futures-timer"
-version = "2.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1de7508b218029b0f01662ed8f61b1c964b3ae99d6f25462d0f55a595109df6"
 
 [[package]]
 name = "futures-timer"
@@ -1517,7 +1500,7 @@ checksum = "19775995ee20209163239355bc3ad2f33f83da35d9ef72dea26e5af753552c87"
 dependencies = [
  "dashmap",
  "futures",
- "futures-timer 3.0.2",
+ "futures-timer",
  "no-std-compat",
  "nonzero_ext",
  "parking_lot 0.12.0",
@@ -5457,7 +5440,6 @@ dependencies = [
  "exitcode",
  "framework",
  "futures",
- "futures-batch",
  "futures-util",
  "glob",
  "governor",
