@@ -105,7 +105,7 @@ impl FunctionTransform for Sample {
             }
         }
 
-        output.push(logs.into());
+        output.push(logs);
     }
 }
 

@@ -306,6 +306,10 @@ impl Metric {
         }
     }
 
+    pub fn attributes(&self) -> &Attributes {
+        &self.series.tags
+    }
+
     #[inline]
     pub fn value(&self) -> &MetricValue {
         &self.value

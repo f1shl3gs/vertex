@@ -296,6 +296,14 @@ impl<'a> EventRef<'a> {
             _ => panic!("Failed type coercion, {:?} is not a log reference", self),
         }
     }
+
+    /// Convert this reference into a new `Metric` by cloning
+    pub fn into_metric(self) -> Metric {
+        match self {
+            Self::Metric(metric) => metric.clone(),
+            _ => panic!("Failed type coercion, {:?} is not a metric reference", self),
+        }
+    }
 }
 
 impl<'a> From<&'a Event> for EventRef<'a> {

@@ -36,6 +36,12 @@ impl From<LogRecord> for Events {
     }
 }
 
+impl From<Metric> for Events {
+    fn from(metric: Metric) -> Self {
+        Self::Metrics(vec![metric])
+    }
+}
+
 impl From<Trace> for Events {
     fn from(trace: Trace) -> Self {
         Self::Traces(vec![trace])

@@ -333,8 +333,8 @@ impl OutputBuffer {
     }
 
     #[inline]
-    pub fn push(&mut self, events: Events) {
-        self.0.push(events)
+    pub fn push(&mut self, events: impl Into<Events>) {
+        self.0.push(events.into())
     }
 
     #[inline]
