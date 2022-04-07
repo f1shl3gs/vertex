@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649348053721,
+  "lastUpdate": 1649349063804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -29661,6 +29661,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1984,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94802bbd5493dfdea4014a1e1fd47554dd9b6245",
+          "message": "Merge pull request #277 from f1shl3gs/remove_futures_batch\n\nchore(deps): remove futures batch",
+          "timestamp": "2022-04-08T00:00:13+08:00",
+          "tree_id": "4f94096669c1464ef8d525f2c90d050951013dba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94802bbd5493dfdea4014a1e1fd47554dd9b6245"
+        },
+        "date": 1649349062125,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1701,
             "unit": "s"
           }
         ]
