@@ -230,7 +230,7 @@ impl<'a> SendGroup<'a> {
         // initiating the send.
         debug_assert!(senders.values().all(Option::is_some));
 
-        let last_sender_idx = senders.len().saturating_add(1);
+        let last_sender_idx = senders.len().saturating_sub(1);
         let mut events = Some(events);
 
         // We generate a send future for each sender we have, which arms them with the events
