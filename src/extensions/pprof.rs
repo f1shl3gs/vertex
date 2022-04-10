@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
+use bytes::{BufMut, BytesMut};
 use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
@@ -15,21 +16,13 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub struct PProfConfig {
+pub struct PprofConfig {
     pub listen: SocketAddr,
-}
-
-impl Default for PProfConfig {
-    fn default() -> Self {
-        Self {
-            listen: "0.0.0.0:10910".parse().unwrap(),
-        }
-    }
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "pprof")]
-impl ExtensionConfig for PProfConfig {
+impl ExtensionConfig for PprofConfig {
     async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension> {
         Ok(Box::pin(run(self.listen, ctx.shutdown)))
     }
@@ -74,10 +67,10 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     match guard.report().build() {
         Ok(report) => {
-            let file = std::fs::File::create("flamegraph.svg").unwrap();
-            report.flamegraph(file).unwrap();
+            let mut buf = BytesMut::new().writer();
+            report.flamegraph(&mut buf).unwrap();
 
-            Ok(Response::new(Body::empty()))
+            Ok(Response::new(Body::from(buf.into_inner().freeze())))
         }
 
         Err(err) => {
@@ -93,7 +86,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 }
 
-impl GenerateConfig for PProfConfig {
+impl GenerateConfig for PprofConfig {
     fn generate_config() -> String {
         r#"
 # Which address the pprof server will listen
@@ -104,5 +97,5 @@ listen: 0.0.0.0:10910
 }
 
 inventory::submit! {
-    ExtensionDescription::new::<PProfConfig>("pprof")
+    ExtensionDescription::new::<PprofConfig>("pprof")
 }
