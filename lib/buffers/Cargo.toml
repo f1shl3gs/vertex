@@ -43,4 +43,4 @@ quickcheck = { version = "1.0.3" }
 tempdir = "0.3"
 tokio-test = { version  = "0.4.2" }
 tracing-fluent-assertions = { git = "https://github.com/vectordotdev/tracing-fluent-assertions", branch = "bump-tracing-subscriber" }
-tracing-subscriber = { version = "0.3.10" }
+tracing-subscriber = { version = "0.3.11" }
