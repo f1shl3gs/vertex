@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649651493764,
+  "lastUpdate": 1649652565434,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -26533,6 +26533,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 30.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd28eb5bd65c0fc9624ac40007bf0622e851568f",
+          "message": "Merge pull request #281 from f1shl3gs/download_flamegraph_directly\n\ndownload the flamegraph directly",
+          "timestamp": "2022-04-11T12:16:57+08:00",
+          "tree_id": "00d599d2cd8cf46c31daf2959431ce46cd6095af",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd28eb5bd65c0fc9624ac40007bf0622e851568f"
+        },
+        "date": 1649652563568,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 60.936,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 171.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 391.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1135.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 39973000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1087000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.888,
             "unit": "ns/op"
           }
         ]
