@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649650991093,
+  "lastUpdate": 1649650995143,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10924,6 +10924,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 68.996,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f11f24016e7a72c831b49bb55493d79667fabc18",
+          "message": "Merge pull request #280 from f1shl3gs/demo_logs_replace_interval_with_rate\n\nuse rate rather than interval, it's easy to understand",
+          "timestamp": "2022-04-11T12:16:41+08:00",
+          "tree_id": "e904e661c09a9f74b5ebf8af4378c8ff6b8614a8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f11f24016e7a72c831b49bb55493d79667fabc18"
+        },
+        "date": 1649650993530,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.831,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 63.847,
             "unit": "ns/op"
           }
         ]
