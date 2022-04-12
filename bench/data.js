@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649747455318,
+  "lastUpdate": 1649747828125,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5153,6 +5153,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1327200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0e4f425eb3d2a4c212292d6be7e76a1d10c30cd8",
+          "message": "Merge pull request #286 from f1shl3gs/refine_kafka_feature\n\nmove \"rdkafka-cmake to sources-kafka and sinks-kafka",
+          "timestamp": "2022-04-12T15:03:14+08:00",
+          "tree_id": "ef3d9df62a71cb66786a9ac336424cbae8444c5d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0e4f425eb3d2a4c212292d6be7e76a1d10c30cd8"
+        },
+        "date": 1649747825855,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1388400,
             "unit": "ns/op"
           }
         ]
