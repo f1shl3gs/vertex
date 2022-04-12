@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649738094798,
+  "lastUpdate": 1649739374029,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30951,6 +30951,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 2047,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f927e4374c8431e2a062203b986abdb7a4f95859",
+          "message": "Merge pull request #285 from f1shl3gs/dependabot/cargo/enumflags2-0.7.5\n\nchore(deps): bump enumflags2 from 0.7.4 to 0.7.5",
+          "timestamp": "2022-04-12T12:20:22+08:00",
+          "tree_id": "73145ba6cae7dab558c280978fb00434e22e6f4b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f927e4374c8431e2a062203b986abdb7a4f95859"
+        },
+        "date": 1649739372073,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1972,
             "unit": "s"
           }
         ]
