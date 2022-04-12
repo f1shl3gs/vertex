@@ -74,7 +74,6 @@ target-x86_64-unknown-linux-musl = [
     "sinks",
     "sources",
     "transforms",
-    "rdkafka-cmake",
     "unix",
 ]
 
@@ -84,7 +83,6 @@ target-x86_64-unknown-linux-gnu = [
     "sinks",
     "sources",
     "transforms",
-    "rdkafka-cmake",
     "unix",
 
     "extensions-pprof"
@@ -142,7 +140,6 @@ sources = [
     "sources-jaeger",
     "sources-journald",
     "sources-kafka",
-    "sources-kafka_metrics",
     "sources-kmsg",
     "sources-kubernetes_logs",
     "sources-libvirt",
@@ -173,8 +170,7 @@ sources-internal_metrics = []
 sources-internal_traces = ["tracing-subscriber"]
 sources-jaeger = ["jaeger", "tonic"]
 sources-journald = []
-sources-kafka = ["rdkafka", "async-stream"]
-sources-kafka_metrics = ["rdkafka"]
+sources-kafka = ["rdkafka-cmake", "async-stream"]
 sources-kmsg = []
 sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
 sources-libvirt = ["virt"]
@@ -234,7 +230,7 @@ sinks-prometheus_exporter = []
 sinks-prometheus_remote_write = ["snap"]
 sinks-stdout = []
 sinks-blackhole = []
-sinks-kafka = ["rdkafka"]
+sinks-kafka = ["rdkafka-cmake"]
 sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
