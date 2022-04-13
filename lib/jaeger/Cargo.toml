@@ -11,7 +11,7 @@ tonic-build = { version = "0.7.0" }
 [dependencies]
 base64 = { version = "0.13.0" }
 event = { path = "../event" }
-prost = { version = "0.10.0" }
-prost-types = { version = "0.10.0" }
+prost = { version = "0.10.1" }
+prost-types = { version = "0.10.1" }
 thrift = { version = "0.15.0" }
 tonic = { version = "0.7.1" }
