@@ -292,7 +292,7 @@ dependencies = [
  "cc",
  "cfg-if 1.0.0",
  "libc",
- "miniz_oxide",
+ "miniz_oxide 0.4.4",
  "object",
  "rustc-demangle",
 ]
@@ -1075,7 +1075,7 @@ dependencies = [
  "log_schema",
  "pin-project",
  "prost 0.10.0",
- "prost-build 0.10.0",
+ "prost-build 0.10.1",
  "prost-types 0.10.0",
  "rand 0.8.5",
  "serde",
@@ -1154,14 +1154,14 @@ checksum = "398ea4fabe40b9b0d885340a2a991a44c8a645624075ad966d21f88688e2b69e"
 
 [[package]]
 name = "flate2"
-version = "1.0.22"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e6988e897c1c9c485f43b47a529cef42fde0547f9d8d41a7062518f1d8fc53f"
+checksum = "b39522e96686d38f4bc984b9198e3a0613264abaebaff2c5c918bfa6b6da09af"
 dependencies = [
  "cfg-if 1.0.0",
  "crc32fast",
  "libc",
- "miniz_oxide",
+ "miniz_oxide 0.5.1",
 ]
 
 [[package]]
@@ -2496,6 +2496,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "miniz_oxide"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2b29bd4bc3f33391105ebee3589c19197c4271e3e5a9ec9bfe8127eeff8f082"
+dependencies = [
+ "adler",
+]
+
+[[package]]
 name = "mio"
 version = "0.6.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3362,7 +3371,7 @@ dependencies = [
  "nom 7.1.1",
  "num_enum",
  "prost 0.10.0",
- "prost-build 0.10.0",
+ "prost-build 0.10.1",
  "snafu",
 ]
 
@@ -3428,9 +3437,9 @@ dependencies = [
 
 [[package]]
 name = "prost-build"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "328f9f29b82409216decb172d81e936415d21245befa79cd34c3f29d87d1c50b"
+checksum = "120fbe7988713f39d780a58cf1a7ef0d7ef66c6d87e5aa3438940c05357929f4"
 dependencies = [
  "bytes",
  "cfg-if 1.0.0",
@@ -5013,7 +5022,7 @@ checksum = "4d17087af5c80e5d5fc8ba9878e60258065a0a757e35efe7a05b7904bece1943"
 dependencies = [
  "prettyplease",
  "proc-macro2 1.0.36",
- "prost-build 0.10.0",
+ "prost-build 0.10.1",
  "quote 1.0.14",
  "syn 1.0.90",
 ]
@@ -5478,7 +5487,7 @@ dependencies = [
  "prometheus",
  "proptest",
  "prost 0.10.0",
- "prost-build 0.10.0",
+ "prost-build 0.10.1",
  "prost-types 0.10.0",
  "rand 0.8.5",
  "rdkafka",
