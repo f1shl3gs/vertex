@@ -9,4 +9,4 @@ event = { path = "../event" }
 lazy_static = { version = "1.4.0" }
 tracing = { version = "0.1.33" }
 tracing-subscriber = { version = "0.3.11" }
-tracing-core = { version = "0.1.24" }
+tracing-core = { version = "0.1.25" }
