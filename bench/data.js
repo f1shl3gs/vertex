@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1649866716105,
+  "lastUpdate": 1649922155856,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11394,6 +11394,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 64.335,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b33527ec56767090bbe71737138b33f78389f4e3",
+          "message": "Merge pull request #291 from f1shl3gs/bump_prost\n\nbump up prost",
+          "timestamp": "2022-04-14T15:36:23+08:00",
+          "tree_id": "dbb6360b8e2a1778893748d27b715dc180f0869a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b33527ec56767090bbe71737138b33f78389f4e3"
+        },
+        "date": 1649922153891,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.668,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 64.958,
             "unit": "ns/op"
           }
         ]
