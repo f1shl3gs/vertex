@@ -360,7 +360,7 @@ metrics = { version = "0.18.1", default-features = false }
 tracing = { version = "0.1.33", default-features = false }
 tracing-log = { version = "0.1.2", default-features = false }
 tracing-subscriber = { version = "0.3.11", optional = true, default-features = false, features = ["std", "registry"] }
-tracing-core = { version = "0.1.24" }
+tracing-core = { version = "0.1.25" }
 
 # HTTP
 hyper = { version = "0.14.18", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
