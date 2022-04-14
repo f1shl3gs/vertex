@@ -302,7 +302,7 @@ atty = "0.2.14"
 nix = ">=0.22.2"
 
 [build-dependencies]
-prost-build = { version = "0.10" }
+prost-build = { version = "0.10.1" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
@@ -381,8 +381,8 @@ netlink-sys = { version = "0.8.2", features = ["tokio_socket"], optional = true 
 netlink-packet-sock-diag = { version = "0.4.0", optional = true }
 
 # Protobuf
-prost = { version = "0.10.0", default-features = false, features = ["std"] }
-prost-types = { version = "0.10.0", default-features = false }
+prost = { version = "0.10.1", default-features = false, features = ["std"] }
+prost-types = { version = "0.10.1", default-features = false }
 
 # TLS
 openssl-probe = { version = "0.1.5", default-features = false }
@@ -407,7 +407,7 @@ governor = { version = "0.4.2", default-features = false, optional = true, featu
 indexmap = { version = "1.8.1", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_18"] }
-kube = { version = "0.70.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
+kube = { version = "0.71.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 lazy_static = { version = "1.4.0" }
 libc = { version = "0.2.122", optional = true }
 memchr = { version = "2.4.1", optional = true, default-features = false }
