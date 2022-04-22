@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1650655476632,
+  "lastUpdate": 1650655608948,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5472,6 +5472,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1347200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d7f2082079e2eed59726850c55c388995d1888c",
+          "message": "Merge pull request #299 from f1shl3gs/dependabot/cargo/pprof-0.8.0\n\nchore(deps): bump pprof from 0.7.0 to 0.8.0",
+          "timestamp": "2022-04-23T03:10:10+08:00",
+          "tree_id": "c499d48524e7c7e55162a81a0b673c677e79b529",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d7f2082079e2eed59726850c55c388995d1888c"
+        },
+        "date": 1650655606268,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1379900,
             "unit": "ns/op"
           }
         ]
