@@ -93,9 +93,9 @@ tracing-subscriber = { version = "0.3.11", default-features = false, features = 
 twox-hash = { version = "1.6.2", default-features = false }
 typetag = { version = "0.1.8" }
 url = { version = "2.2.2", features = ["serde"] }
-uuid = { version = "0.8", default-features = false, features = ["v4"] }
+uuid = { version = "1.0", default-features = false, features = ["v4"] }
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
 notify = { version = "4.0.17" }
-nix = { version = "0.23.1" }
+nix = { version = "0.24.0" }
