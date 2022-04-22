@@ -88,7 +88,7 @@ tracing-core = { version = "0.1.26", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
 tracing-limit = { path = "../tracing-limit" }
-tracing-log = { version = "0.1.2", default-features = false, features = ["std", "log-tracer"] }
+tracing-log = { version = "0.1.3", default-features = false, features = ["std", "log-tracer"] }
 tracing-subscriber = { version = "0.3.11", default-features = false, features = ["env-filter", "json", "ansi"] }
 twox-hash = { version = "1.6.2", default-features = false }
 typetag = { version = "0.1.8" }
@@ -98,4 +98,4 @@ uuid = { version = "0.8", default-features = false, features = ["v4"] }
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
 notify = { version = "4.0.17" }
-nix = { version = "0.23.1" }
+nix = { version = "0.24.0" }
