@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651375905187,
+  "lastUpdate": 1651375970344,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5646,6 +5646,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1156200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "70d3f9663c730c09c1261a6b58b829f81cc821a4",
+          "message": "Merge pull request #304 from f1shl3gs/dependabot/cargo/http-0.2.7\n\nchore(deps): bump http from 0.2.6 to 0.2.7",
+          "timestamp": "2022-05-01T11:18:05+08:00",
+          "tree_id": "8b5527c64acdeb1e28fa2ce092ff5177a4504471",
+          "url": "https://github.com/f1shl3gs/vertex/commit/70d3f9663c730c09c1261a6b58b829f81cc821a4"
+        },
+        "date": 1651375968440,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1143000,
             "unit": "ns/op"
           }
         ]
