@@ -56,7 +56,7 @@ inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
 listenfd = { version = "0.5.0", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
-memchr = { version = "2.4.1", default-features = false}
+memchr = { version = "2.5.0", default-features = false}
 metrics = { version = "0.18.1", default-features = false }
 metrics-tracing-context = { version = "0.10.0", default-features = false }
 no-proxy = { version = "0.3.1" }
