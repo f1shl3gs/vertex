@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651593968716,
+  "lastUpdate": 1651598586590,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12465,6 +12465,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 80.618,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dfeb248eb5d0068de9057c45f1f7893ac1c489aa",
+          "message": "Merge pull request #310 from f1shl3gs/dependabot/cargo/rsntp-3.0.1\n\nchore(deps): bump rsntp from 3.0.0 to 3.0.1",
+          "timestamp": "2022-05-04T01:16:53+08:00",
+          "tree_id": "8b743fd2eb2c64bc9e91bc6d17442ff5d8d8bf2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dfeb248eb5d0068de9057c45f1f7893ac1c489aa"
+        },
+        "date": 1651598585053,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.774,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 58.08,
             "unit": "ns/op"
           }
         ]
