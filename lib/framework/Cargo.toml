@@ -61,13 +61,13 @@ metrics = { version = "0.18.1", default-features = false }
 metrics-tracing-context = { version = "0.10.0", default-features = false }
 no-proxy = { version = "0.3.1" }
 once_cell = { version = "1.10", default-features = false }
-openssl = { version = "0.10.36", default-features = false }
+openssl = { version = "0.10.39", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 pin-project = { version = "1.0.10" }
 regex = { version = "1.5.5" }
 smallvec = { version = "1.8.0", features = ["union"] }
 serde = { version = "1.0.136", default-features = false, features = ["derive", "std"] }
-serde_json = { version = "1.0.79", default-features = false }
+serde_json = { version = "1.0.80", default-features = false }
 serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.8.23" }
 # remove shared after "shared" merged into this crate
