@@ -34,7 +34,7 @@ version = "0.6.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "81ce3d38065e618af2d7b77e10c5ad9a069859b4be3c2250f674af3840d9c8a5"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
 ]
 
 [[package]]
@@ -43,7 +43,7 @@ version = "0.7.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e37cfd5e7657ada45f742d6e99ca5788580b5c529dc78faf11ece6dc702656f"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
 ]
 
 [[package]]
@@ -244,7 +244,7 @@ dependencies = [
  "hyper",
  "itoa 1.0.1",
  "matchit",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "mime",
  "percent-encoding",
  "pin-project-lite",
@@ -388,7 +388,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba3569f383e8f1598449f1a423e72e99569137b47740b1da11ef19af3d5c3223"
 dependencies = [
  "lazy_static 1.4.0",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "regex-automata",
  "serde",
 ]
@@ -603,7 +603,7 @@ checksum = "a909e4d93292cd8e9c42e189f61681eff9d67b6541f96b8a1a737f23737bd001"
 dependencies = [
  "bytes",
  "futures-core",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "pin-project-lite",
  "tokio",
  "tokio-util 0.6.9",
@@ -623,9 +623,9 @@ dependencies = [
 
 [[package]]
 name = "console-subscriber"
-version = "0.1.4"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8bd6b23feb4180ccf20cefca9357262818443aafb7159b5e503d170d442a872"
+checksum = "8f21a16ee925aa9d2bad2e296beffd6c5b1bfaad50af509d305b8e7f23af20fb"
 dependencies = [
  "console-api",
  "crossbeam-channel",
@@ -826,7 +826,7 @@ version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2b2466559f260f48ad25fe6317b3c8dac77b5bdb5763ac7d9d6103530663bc90"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
 ]
 
 [[package]]
@@ -1229,7 +1229,7 @@ dependencies = [
  "lazy_static 1.4.0",
  "listenfd",
  "log_schema",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "metrics",
  "metrics-tracing-context",
  "nix 0.24.1",
@@ -1441,7 +1441,7 @@ dependencies = [
  "futures-macro",
  "futures-sink",
  "futures-task",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "pin-project-lite",
  "pin-utils",
  "slab",
@@ -2373,9 +2373,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.4.1"
+version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "308cc39be01b73d0d18f82a0e7b2a3df85245f84af96fdddc5d202d27e47b86a"
+checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "memmap"
@@ -2753,7 +2753,7 @@ dependencies = [
  "bitvec",
  "funty",
  "lexical-core",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "version_check",
 ]
 
@@ -2763,7 +2763,7 @@ version = "7.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8903e5a29a317527874d0402f867152a3d21c908bb0b933e416c65e301d4c36"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "minimal-lexical",
 ]
 
@@ -2918,7 +2918,7 @@ version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c55827317fb4c08822499848a14237d2874d6f139828893017237e7ab93eb386"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
 ]
 
 [[package]]
@@ -3522,7 +3522,7 @@ version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8533f14c8382aaad0d592c812ac3b826162128b65662331e1127b45c3d18536b"
 dependencies = [
- "memchr 2.4.1",
+ "memchr 2.5.0",
 ]
 
 [[package]]
@@ -3774,7 +3774,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9329abc99e39129fcceabd24cf5d85b4671ef7c29c50e972bc5afe32438ec384"
 dependencies = [
  "aho-corasick 0.6.10",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "regex-syntax 0.5.6",
  "thread_local 0.3.6",
  "utf8-ranges",
@@ -3787,7 +3787,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1a11647b6b25ff05a515cb92c365cec08801e83423a235b51e231e1808747286"
 dependencies = [
  "aho-corasick 0.7.18",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "regex-syntax 0.6.25",
 ]
 
@@ -3904,9 +3904,9 @@ dependencies = [
 
 [[package]]
 name = "rsntp"
-version = "3.0.0"
+version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1cbbfde63e2ae24e4a6005ac51ede66d3ae0f90a1e25270af433a8a718f671c"
+checksum = "5f30db9ec28a0ae9e8db8310c7474b034216ebe4298646e6b00da2c6e7a37670"
 dependencies = [
  "tokio",
 ]
@@ -4360,7 +4360,7 @@ dependencies = [
  "itoa 1.0.1",
  "libc",
  "log 0.4.14",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "num-bigint 0.3.3",
  "once_cell",
  "parking_lot 0.11.2",
@@ -4758,7 +4758,7 @@ checksum = "0f48b6d60512a392e34dbf7fd456249fd2de3c83669ab642e021903f4015185b"
 dependencies = [
  "bytes",
  "libc",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "mio 0.8.2",
  "num_cpus",
  "once_cell",
@@ -5391,7 +5391,7 @@ dependencies = [
  "lazy_static 1.4.0",
  "libc",
  "log_schema",
- "memchr 2.4.1",
+ "memchr 2.5.0",
  "metrics",
  "mimalloc",
  "multiline",
