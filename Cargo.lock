@@ -3904,9 +3904,9 @@ dependencies = [
 
 [[package]]
 name = "rsntp"
-version = "3.0.0"
+version = "3.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1cbbfde63e2ae24e4a6005ac51ede66d3ae0f90a1e25270af433a8a718f671c"
+checksum = "5f30db9ec28a0ae9e8db8310c7474b034216ebe4298646e6b00da2c6e7a37670"
 dependencies = [
  "tokio",
 ]
@@ -4143,9 +4143,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.79"
+version = "1.0.80"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e8d9fa5c3b304765ce1fd9c4c8a3de2c8db365a5b91be52f186efc675681d95"
+checksum = "f972498cf015f7c0746cac89ebe1d6ef10c293b94175a243a2d9442c163d9944"
 dependencies = [
  "indexmap",
  "itoa 1.0.1",
