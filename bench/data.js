@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651592265293,
+  "lastUpdate": 1651592272589,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12373,6 +12373,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 68.327,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b32bf63fc586df0ee8fbf9402888e97bef968cbc",
+          "message": "Merge pull request #306 from f1shl3gs/dependabot/cargo/memchr-2.5.0\n\nchore(deps): bump memchr from 2.4.1 to 2.5.0",
+          "timestamp": "2022-05-03T23:30:50+08:00",
+          "tree_id": "6777f9fdfba5ee4b3a0f452f6266bd14ba01f5a3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b32bf63fc586df0ee8fbf9402888e97bef968cbc"
+        },
+        "date": 1651592270836,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.099,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 80.618,
             "unit": "ns/op"
           }
         ]
