@@ -33,7 +33,7 @@ buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
-console-subscriber = { version = "0.1.4", optional = true }
+console-subscriber = { version = "0.1.5", optional = true }
 dyn-clone = { version = "1.0.5" }
 encoding_rs = { version = "0.8.31", features = ["serde"]}
 event = { path = "../event" }
