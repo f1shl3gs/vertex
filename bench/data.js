@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651663117907,
+  "lastUpdate": 1651663394877,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35955,6 +35955,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1874,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "991f93cff3c40c9bd6794cc73f25adc54f92ea3f",
+          "message": "Merge pull request #312 from f1shl3gs/dependabot/cargo/rkyv-0.7.38\n\nchore(deps): bump rkyv from 0.7.37 to 0.7.38",
+          "timestamp": "2022-05-04T18:45:13+08:00",
+          "tree_id": "35714c381b7c1e64a93317dc8727d1b02ffa4f6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/991f93cff3c40c9bd6794cc73f25adc54f92ea3f"
+        },
+        "date": 1651663392548,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 2063,
             "unit": "s"
           }
         ]
