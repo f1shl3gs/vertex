@@ -61,7 +61,7 @@ metrics = { version = "0.18.1", default-features = false }
 metrics-tracing-context = { version = "0.10.0", default-features = false }
 no-proxy = { version = "0.3.1" }
 once_cell = { version = "1.10", default-features = false }
-openssl = { version = "0.10.36", default-features = false }
+openssl = { version = "0.10.40", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 pin-project = { version = "1.0.10" }
 regex = { version = "1.5.5" }
