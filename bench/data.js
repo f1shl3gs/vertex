@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651860081395,
+  "lastUpdate": 1651860730827,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13284,6 +13284,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 68.653,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ca7243caca9fc1217fa0c52e9f3d15aa226bb29",
+          "message": "Merge pull request #324 from f1shl3gs/dependabot/cargo/tonic-0.7.2\n\nchore(deps): bump tonic from 0.7.1 to 0.7.2",
+          "timestamp": "2022-05-07T02:04:44+08:00",
+          "tree_id": "a6a3d5a2255fdb752d7dbf21e0d723e6c2f740cf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ca7243caca9fc1217fa0c52e9f3d15aa226bb29"
+        },
+        "date": 1651860728244,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 71.673,
             "unit": "ns/op"
           }
         ]
