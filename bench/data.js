@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651855643729,
+  "lastUpdate": 1651855943079,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6023,6 +6023,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1352200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0c83c85b1659c5692af9a6bd1a712e4d42b62dee",
+          "message": "Merge pull request #321 from f1shl3gs/dependabot/cargo/snafu-0.7.1\n\nchore(deps): bump snafu from 0.7.0 to 0.7.1",
+          "timestamp": "2022-05-07T00:39:59+08:00",
+          "tree_id": "421698a23e65d7131afabc8e84e16f247cf4ce3b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0c83c85b1659c5692af9a6bd1a712e4d42b62dee"
+        },
+        "date": 1651855941331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1140900,
             "unit": "ns/op"
           }
         ]
