@@ -337,7 +337,7 @@ tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
-mimalloc = { version = "0.1.28", default-features = false, optional = true }
+mimalloc = { version = "0.1.29", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
@@ -423,7 +423,7 @@ regex = { version = "1.5.5" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.8.0", optional = true, features = ["union"] }
-snafu = { version = "0.7.0", default-features = false }
+snafu = { version = "0.7.1", default-features = false }
 snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
