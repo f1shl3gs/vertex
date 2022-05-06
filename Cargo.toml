@@ -337,7 +337,7 @@ tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
 
 # Allocation
-mimalloc = { version = "0.1.28", default-features = false, optional = true }
+mimalloc = { version = "0.1.29", default-features = false, optional = true }
 jemallocator = { version = "0.3.2", default-features = false, optional = true }
 jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 jemalloc-ctl = { version = "0.3.3", optional = true }
