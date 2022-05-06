@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 snafu = { version = "0.7.0", default-features = false }
 nom = { version = "7.1.1" }
-prost = { version = "0.10.1" }
+prost = { version = "0.10.3" }
 num_enum = { version = "0.5.7" }
 indexmap = { version = "1.8.1" }
 
