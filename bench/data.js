@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651850103667,
+  "lastUpdate": 1651850369856,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5965,6 +5965,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1360500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ac377a356efe86e40e3c043bef7afaf860bc2bd8",
+          "message": "Merge pull request #319 from f1shl3gs/dependabot/cargo/num-traits-0.2.15\n\nchore(deps): bump num-traits from 0.2.14 to 0.2.15",
+          "timestamp": "2022-05-06T23:07:45+08:00",
+          "tree_id": "076cc12440989caedb1f39c5a591a21cdad281d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ac377a356efe86e40e3c043bef7afaf860bc2bd8"
+        },
+        "date": 1651850367516,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1188900,
             "unit": "ns/op"
           }
         ]
