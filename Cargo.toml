@@ -409,7 +409,7 @@ inventory = { version = "0.1.11" }
 k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.71.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 lazy_static = { version = "1.4.0" }
-libc = { version = "0.2.124", optional = true }
+libc = { version = "0.2.125", optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
 num_cpus = { version = "1.13.1" }
@@ -423,7 +423,7 @@ regex = { version = "1.5.5" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.8.0", optional = true, features = ["union"] }
-snafu = { version = "0.7.0", default-features = false }
+snafu = { version = "0.7.1", default-features = false }
 snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.5.10", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
