@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651889041332,
+  "lastUpdate": 1651889080642,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34032,6 +34032,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.851,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49123ad62ee0460fd9df7d054f2257705e625d18",
+          "message": "Merge pull request #326 from f1shl3gs/dependabot/cargo/prost-build-0.10.3\n\nchore(deps): bump prost-build from 0.10.1 to 0.10.3",
+          "timestamp": "2022-05-07T09:30:22+08:00",
+          "tree_id": "e2a215970985c4aced3bfd390606e2421eec6fab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49123ad62ee0460fd9df7d054f2257705e625d18"
+        },
+        "date": 1651889078461,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 62.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 171.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 391.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1142.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 41187000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1036300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.92,
             "unit": "ns/op"
           }
         ]
