@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651863469723,
+  "lastUpdate": 1651887324736,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13410,6 +13410,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 57.889,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aea305aca19504b12314dcf19ae59c0730d98639",
+          "message": "Merge pull request #323 from f1shl3gs/dependabot/cargo/twox-hash-1.6.3\n\nchore(deps): bump twox-hash from 1.6.2 to 1.6.3",
+          "timestamp": "2022-05-07T09:29:59+08:00",
+          "tree_id": "fc5a25abe09321fbeb574aff0b5b7a2d53fd5d2a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aea305aca19504b12314dcf19ae59c0730d98639"
+        },
+        "date": 1651887323053,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.772,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 58.324,
             "unit": "ns/op"
           }
         ]
