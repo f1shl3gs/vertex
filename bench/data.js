@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1651928807970,
+  "lastUpdate": 1651928948265,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6255,6 +6255,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1173600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4844a60eeb90aff3d58e15b0102df2ce9aa4579b",
+          "message": "Merge pull request #327 from f1shl3gs/dependabot/cargo/indoc-1.0.5\n\nchore(deps): bump indoc from 1.0.4 to 1.0.5",
+          "timestamp": "2022-05-07T20:54:14+08:00",
+          "tree_id": "29e66a26773d4b1a0f67571eb85c3e1729df95d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4844a60eeb90aff3d58e15b0102df2ce9aa4579b"
+        },
+        "date": 1651928945420,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1391200,
             "unit": "ns/op"
           }
         ]
