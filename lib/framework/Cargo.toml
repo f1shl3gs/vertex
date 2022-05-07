@@ -15,7 +15,7 @@ tokio-console = ["console-subscriber", "tokio/tracing"]
 
 [dev-dependencies]
 env-test-util = { version = "1.0.1" }
-indoc = { version = "1.0.4", default-features = false }
+indoc = { version = "1.0.5", default-features = false }
 pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0" }
 rand = { version = "0.8.5" }
