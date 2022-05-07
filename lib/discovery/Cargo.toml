@@ -11,5 +11,5 @@ kubernetes = ["kube", "zeroize", "k8s-openapi"]
 futures = { version = "0.3.21" }
 k8s-openapi = { version = "0.14.0", default-features = false, optional = true, features = ["api", "v1_16"] }
 kube = { version = "0.71.0", default-features = false, optional = true, features = ["client", "rustls-tls", "runtime"] }
-tokio = { version = "1.18.0", default-features = false, features = ["macros"] }
+tokio = { version = "1.18.1", default-features = false, features = ["macros"] }
 zeroize = { version = "1.4.3", optional = true }
