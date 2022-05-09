@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652094600837,
+  "lastUpdate": 1652094631299,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34962,6 +34962,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.812,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "168eb2cc1bc02a026f3e57071293b5a43da3ff83",
+          "message": "Merge pull request #331 from f1shl3gs/dependabot/cargo/tokio-1.18.2\n\nchore(deps): bump tokio from 1.18.1 to 1.18.2",
+          "timestamp": "2022-05-09T18:30:55+08:00",
+          "tree_id": "50154785722c891b1b91ac903c767d033b64a602",
+          "url": "https://github.com/f1shl3gs/vertex/commit/168eb2cc1bc02a026f3e57071293b5a43da3ff83"
+        },
+        "date": 1652094629094,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 72.458,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 200.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 432.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1263,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 51884000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1257500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 31.95,
             "unit": "ns/op"
           }
         ]
