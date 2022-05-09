@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652075108151,
+  "lastUpdate": 1652075226112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6313,6 +6313,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1337500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "92c32814dae7bb20e6e91648de4a295964731de3",
+          "message": "Merge pull request #330 from f1shl3gs/dependabot/cargo/socket2-0.4.5\n\nchore(deps): bump socket2 from 0.4.4 to 0.4.5",
+          "timestamp": "2022-05-09T13:31:22+08:00",
+          "tree_id": "96a105fc99e6ef57fd0e5e643afc3c4cadcc5d83",
+          "url": "https://github.com/f1shl3gs/vertex/commit/92c32814dae7bb20e6e91648de4a295964731de3"
+        },
+        "date": 1652075222926,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1277900,
             "unit": "ns/op"
           }
         ]
