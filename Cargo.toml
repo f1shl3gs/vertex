@@ -388,7 +388,7 @@ prost-types = { version = "0.10.1", default-features = false }
 openssl-probe = { version = "0.1.5", default-features = false }
 
 # Profile
-pprof = { version = "0.8.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
+pprof = { version = "0.9.0", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # External libs
 ahash = { version = "0.7.6", default-features = false, optional = true }

@@ -1232,7 +1232,7 @@ dependencies = [
  "memchr 2.5.0",
  "metrics",
  "metrics-tracing-context",
- "nix 0.24.1",
+ "nix",
  "no-proxy",
  "notify",
  "once_cell",
@@ -2687,19 +2687,6 @@ dependencies = [
 
 [[package]]
 name = "nix"
-version = "0.23.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9f866317acbd3a240710c63f065ffb1e4fd466259045ccb504130b7f668f35c6"
-dependencies = [
- "bitflags 1.3.2",
- "cc",
- "cfg-if 1.0.0",
- "libc",
- "memoffset",
-]
-
-[[package]]
-name = "nix"
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f17df307904acd05aa8e32e97bb20f2a0df1728bbc2d771ae8f9a90463441e9"
@@ -3265,17 +3252,16 @@ dependencies = [
 
 [[package]]
 name = "pprof"
-version = "0.8.0"
+version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f2324292407eab69d4ace0eed1524fe612ac37c98aa22b0d868355b17fada530"
+checksum = "6f9307de92566887d485ac6f20df17b0fe1704fffdbad0bdbc05a3864d3082f6"
 dependencies = [
- "backtrace",
  "cfg-if 1.0.0",
  "findshlibs",
  "inferno",
  "libc",
  "log 0.4.14",
- "nix 0.23.1",
+ "nix",
  "once_cell",
  "parking_lot 0.12.0",
  "protobuf",
@@ -5400,7 +5386,7 @@ dependencies = [
  "multiline",
  "netlink-packet-sock-diag",
  "netlink-sys",
- "nix 0.24.1",
+ "nix",
  "nom 7.1.1",
  "num_cpus",
  "openssl-probe",
