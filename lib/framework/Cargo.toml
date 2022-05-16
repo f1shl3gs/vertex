@@ -81,7 +81,7 @@ syslog_loose = { version = "0.16.0", default-features = false }
 tokio = { version = "1.18.2", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-openssl = { version = "0.6.3", default-features = false }
 tokio-stream = { version = "0.1.8", features = ["time", "net"] }
-tokio-util = { version = "0.7.1", default-features = false, features = ["codec", "time", "net"] }
+tokio-util = { version = "0.7.2", default-features = false, features = ["codec", "time", "net"] }
 tower = { version = "0.4.12", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 tracing = { version = "0.1.34", default-features = false }
 tracing-core = { version = "0.1.26", default-features = false }
