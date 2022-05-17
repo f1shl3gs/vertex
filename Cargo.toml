@@ -64,8 +64,7 @@ default = [
     "sinks",
     # extensions
     "extensions-pprof",
-    "extensions-healthcheck"
-    # "extensions-jemalloc",
+    "extensions-healthcheck",
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -124,8 +123,9 @@ disk-buffer = []
 tokio-console = ["framework/tokio-console", "tokio/tracing"]
 
 # Allocator
-allocator-mimalloc = ["mimalloc"]
-allocator-jemalloc = ["jemallocator"]
+# mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
+# need to declare it again.
+jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
 
 # Sources
 sources = [
@@ -248,7 +248,7 @@ extensions = [
 ]
 
 extensions-pprof = ["pprof/flamegraph"]
-extensions-jemalloc = ["jemallocator", "jemalloc-ctl", "jemalloc-sys"]
+extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
 extensions-healthcheck = []
 
 # Codecs
@@ -338,9 +338,9 @@ virt = { path = "lib/virt", optional = true }
 
 # Allocation
 mimalloc = { version = "0.1.29", default-features = false, optional = true }
-jemallocator = { version = "0.3.2", default-features = false, optional = true }
-jemalloc-sys = { version = "0.3.2", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
-jemalloc-ctl = { version = "0.3.3", optional = true }
+tikv-jemallocator = { version = "0.4.3", optional = true, features = ["stats", "unprefixed_malloc_on_supported_platforms"]}
+tikv-jemalloc-ctl = { version = "0.4.2", optional = true }
+tikv-jemalloc-sys = { version = "0.4.3+5.2.1-patched.2", optional = true, features = ["stats"]}
 
 # Futrures & Tokio
 tokio = { version = "1.18.2", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }

@@ -2,13 +2,13 @@ mod commands;
 
 extern crate vertex;
 
-#[cfg(feature = "allocator-mimalloc")]
+#[cfg(feature = "mimalloc")]
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[cfg(any(feature = "allocator-jemalloc", feature = "extensions-jemalloc"))]
+#[cfg(any(feature = "jemalloc", feature = "extensions-jemalloc"))]
 #[global_allocator]
-static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
+static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 
 extern crate chrono;
 extern crate chrono_tz;
