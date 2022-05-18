@@ -1,19 +1,18 @@
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
+use std::time::Duration;
 
-use futures::FutureExt;
-use http::Request;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Response, Server, StatusCode};
-use jemalloc_ctl::{stats, Access, AsName};
-use serde::{Deserialize, Serialize};
-
-use crate::duration::{duration_to_string, parse_duration};
-use crate::impl_generate_config_from_default;
-use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription};
+use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
+use futures::FutureExt;
+use http::Request;
+use humanize::{duration, parse_duration};
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Method, Response, Server, StatusCode};
+use serde::{Deserialize, Serialize};
+use tikv_jemalloc_ctl::{stats, Access, AsName};
 
 const OUTPUT: &str = "profile.out";
 const PROF_ACTIVE: &'static [u8] = b"prof.active\0";
@@ -23,8 +22,6 @@ const PROFILE_OUTPUT: &'static [u8] = b"profile.out\0";
 inventory::submit! {
     ExtensionDescription::new::<JemallocConfig>("jemalloc")
 }
-
-impl_generate_config_from_default!(JemallocConfig);
 
 fn default_listen() -> SocketAddr {
     "0.0.0.0:10911".parse().unwrap()
@@ -42,6 +39,12 @@ impl Default for JemallocConfig {
         Self {
             listen: default_listen(),
         }
+    }
+}
+
+impl GenerateConfig for JemallocConfig {
+    fn generate_config() -> String {
+        format!("listen: {}", default_listen().to_string())
     }
 }
 
@@ -130,7 +133,7 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         })
         .unwrap_or_else(HashMap::new);
 
-    let default = chrono::Duration::seconds(30);
+    let default = Duration::from_secs(30);
     let wait = match params.get("seconds") {
         Some(value) => parse_duration(value).unwrap_or(default),
         _ => default,
@@ -138,10 +141,10 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     info!(
         message = "Starting jemalloc profile",
-        wait = duration_to_string(&wait).as_str()
+        wait = duration(&wait).as_str()
     );
     set_prof_active(true);
-    tokio::time::sleep(wait.to_std().unwrap()).await;
+    tokio::time::sleep(wait).await;
     set_prof_active(false);
     dump_profile();
     let data = std::fs::read_to_string(OUTPUT).expect("Read dumped profile failed");
