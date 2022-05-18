@@ -3,16 +3,16 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::time::Duration;
 
-use futures::FutureExt;
-use http::Request;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Response, Server, StatusCode};
-use tikv_jemalloc_ctl::{stats, Access, AsName};
-use serde::{Deserialize, Serialize};
-use humanize::{parse_duration, duration};
 use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
+use futures::FutureExt;
+use http::Request;
+use humanize::{duration, parse_duration};
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Method, Response, Server, StatusCode};
+use serde::{Deserialize, Serialize};
+use tikv_jemalloc_ctl::{stats, Access, AsName};
 
 const OUTPUT: &str = "profile.out";
 const PROF_ACTIVE: &'static [u8] = b"prof.active\0";
