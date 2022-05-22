@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1652872119589,
+  "lastUpdate": 1653240122940,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -41144,6 +41144,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1881,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0eb522b3281f5b3eb0c7f759a0df28ee77872129",
+          "message": "Merge pull request #337 from f1shl3gs/update_cross_base_image\n\nupdate cross's base image",
+          "timestamp": "2022-05-23T00:50:27+08:00",
+          "tree_id": "6a4e01bd6638b09b10b8339320ecdcd4faa07d40",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0eb522b3281f5b3eb0c7f759a0df28ee77872129"
+        },
+        "date": 1653240120318,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1678,
             "unit": "s"
           }
         ]
