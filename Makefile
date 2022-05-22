@@ -20,7 +20,6 @@ fmt:
 	cargo fmt
 
 build_x86_64-unknown-linux-musl:
-	@docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
 	@cross build \
 		--release \
 		--target x86_64-unknown-linux-musl \
@@ -28,13 +27,21 @@ build_x86_64-unknown-linux-musl:
 		--features target-x86_64-unknown-linux-musl
 
 build_x86_64-unknown-linux-gnu: artifacts-dir
-	docker build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
 	cross build \
 		--release \
 		--no-default-features \
 		--target x86_64-unknown-linux-gnu \
 		--features target-x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex target/artifacts/vertex-x86_64-unknown-linux-gnu
+
+# Images
+builder_x86_64-unknown-linux-gnu:
+	docker build -f ci/cross/x86_64-unknown-linux-gnu.dockerfile -t vertex-cross:x86_64-unknown-linux-gnu ci/cross
+
+builder_x86_64-unknown-linux-musl:
+	docker build -f ci/cross/x86_64-unknown-linux-musl.dockerfile -t vertex-cross:x86_64-unknown-linux-musl ci/cross
+
+builders: builder_x86_64-unknown-linux-gnu builder_x86_64-unknown-linux-musl
 
 # Integration tests
 .PHONY: integration-test-nginx_stub
