@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653568030382,
+  "lastUpdate": 1653568307335,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6516,6 +6516,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1012100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b63cfdd5f6f94a580cd4aece33fb775732e9e94a",
+          "message": "Merge pull request #339 from f1shl3gs/bump_up_jemalloc_and_prost\n\nbump up tikv-jemalloc and prost",
+          "timestamp": "2022-05-26T20:18:29+08:00",
+          "tree_id": "73359cac5383eec2c64c478b15ce9999a6e0f242",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b63cfdd5f6f94a580cd4aece33fb775732e9e94a"
+        },
+        "date": 1653568304238,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1179100,
             "unit": "ns/op"
           }
         ]
