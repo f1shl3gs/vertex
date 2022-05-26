@@ -45,9 +45,9 @@ async fn get_mem_info(root: PathBuf) -> Result<HashMap<String, f64>, std::io::Er
             .map_err(|err| std::io::Error::new(std::io::ErrorKind::InvalidInput, err))?;
 
         let mut key = parts[0]
-            .replace(":", "")
-            .replace("(", "_")
-            .replace(")", "_");
+            .replace(':', "")
+            .replace('(', "_")
+            .replace(')', "_");
 
         match parts.len() {
             2 => { /* no unit */ }

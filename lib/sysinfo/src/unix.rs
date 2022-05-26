@@ -31,11 +31,11 @@ pub fn os_version() -> Option<String> {
 
     for line in content.lines() {
         if let Some(stripped) = line.strip_prefix("NAME=") {
-            name = stripped.replace("\"", "");
+            name = stripped.replace('"', "");
         }
 
         if let Some(stripped) = line.strip_prefix("VERSION=") {
-            version = stripped.replace("\"", "");
+            version = stripped.replace('"', "");
         }
     }
 

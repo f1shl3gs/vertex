@@ -53,7 +53,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
             continue;
         }
 
-        let (split_key, name) = match key.split_once("_") {
+        let (split_key, name) = match key.split_once('_') {
             Some((key, name)) => (key, Cow::from(name.to_string())),
             None => {
                 // TODO: handle those metrics

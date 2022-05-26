@@ -71,7 +71,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
     let num = &s[..last_digit];
     let mut tn = num.to_string();
     if has_comma {
-        tn = num.replace(",", "");
+        tn = num.replace(',', "");
     }
 
     let f = tn.parse::<f64>().context(ParseFloatFailedSnafu)?;

@@ -1052,7 +1052,7 @@ mod integration_tests {
             writer.write_all(cmd.as_bytes()).await.unwrap();
 
             let mut buf = [0u8; 128];
-            reader.read(&mut buf).await.unwrap();
+            let _n = reader.read(&mut buf).await.unwrap();
         }
     }
 

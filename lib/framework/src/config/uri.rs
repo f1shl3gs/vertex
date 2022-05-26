@@ -232,7 +232,7 @@ mod tests {
 
         for (input, want_uri, want_auth) in tests {
             let UriSerde { uri, auth } = input.parse().unwrap();
-            assert_eq!(uri, Uri::from_maybe_shared(want_uri.to_owned()).unwrap());
+            assert_eq!(uri, Uri::from_maybe_shared(want_uri).unwrap());
             assert_eq!(
                 auth,
                 want_auth.map(|(user, password)| {

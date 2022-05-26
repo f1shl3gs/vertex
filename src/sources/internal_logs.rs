@@ -10,7 +10,6 @@ use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use tokio_stream::wrappers::errors::BroadcastStreamRecvError;
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -76,26 +75,22 @@ async fn run(
     // logs that don't break the loop, as that could cause an infinite loop
     // since it receives all such logs
     while let Some(res) = rx.next().await {
-        match res {
-            Ok(mut log) => {
-                if let Ok(hostname) = &hostname {
-                    log.insert_field(host_key.clone(), hostname.to_owned());
-                }
-
-                log.insert_field(pid_key.clone(), pid);
-                log.insert_field(log_schema().source_type_key(), "internal_log");
-                log.insert_field(log_schema().timestamp_key(), Utc::now());
-                if let Err(err) = output.send(Event::from(log)).await {
-                    error!(
-                        message = "Error sending log",
-                        %err
-                    );
-
-                    return Err(());
-                }
+        if let Ok(mut log) = res {
+            if let Ok(hostname) = &hostname {
+                log.insert_field(host_key.clone(), hostname.to_owned());
             }
 
-            Err(BroadcastStreamRecvError::Lagged(_)) => (),
+            log.insert_field(pid_key.clone(), pid);
+            log.insert_field(log_schema().source_type_key(), "internal_log");
+            log.insert_field(log_schema().timestamp_key(), Utc::now());
+            if let Err(err) = output.send(Event::from(log)).await {
+                error!(
+                    message = "Error sending log",
+                    %err
+                );
+
+                return Err(());
+            }
         }
     }
 

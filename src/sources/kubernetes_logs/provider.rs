@@ -33,8 +33,7 @@ impl Provider for KubernetesPathsProvider {
         self.store
             .state()
             .iter()
-            .map(|pod| exclude_paths(list_pod_log_paths(real_glob, pod), &self.exclude_paths))
-            .flatten()
+            .flat_map(|pod| exclude_paths(list_pod_log_paths(real_glob, pod), &self.exclude_paths))
             .collect::<Vec<_>>()
     }
 }

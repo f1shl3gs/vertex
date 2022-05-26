@@ -158,7 +158,7 @@ async fn http_request(
     let client =
         HttpClient::<Body>::new(tls_settings, proxy).map_err(|_| "Invalid TLS settings")?;
 
-    let url = Url::parse_with_params(&url.to_string(), attrs.iter().map(|(k, v)| (k, v)))
+    let url = Url::parse_with_params(url.as_ref(), attrs.iter().map(|(k, v)| (k, v)))
         .map_err(|_| "Invalid URL Params")?;
 
     // Build HTTP request

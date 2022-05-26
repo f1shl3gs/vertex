@@ -22,8 +22,7 @@ impl Glob {
             .collect::<Option<_>>()?;
         let excludes = excludes
             .iter()
-            .map(|path| path.to_str().map(|path| Pattern::new(path).ok()))
-            .flatten()
+            .filter_map(|path| path.to_str().map(|path| Pattern::new(path).ok()))
             .collect::<Option<_>>()?;
 
         Some(Self { includes, excludes })
