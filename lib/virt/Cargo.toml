@@ -8,5 +8,5 @@ xdrgen = { version = "0.4.4" }
 
 [dependencies]
 tokio = { version = "1.18.2", features = ["net", "rt", "macros", "io-util"] }
-uuid = { version = "1.0.0" }
+uuid = { version = "1.1.0" }
 xdr-codec = { version = "0.4.4", features = ["bytecodec"] }
