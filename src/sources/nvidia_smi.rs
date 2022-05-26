@@ -307,7 +307,7 @@ impl<'de> Deserialize<'de> for Value {
     {
         let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
 
-        if let Some((value, unit)) = s.split_once(" ") {
+        if let Some((value, unit)) = s.split_once(' ') {
             let unit = match unit {
                 "C" => Unit::Celsius,
                 "MiB" => Unit::MiB,

@@ -191,7 +191,7 @@ mod tests {
 
     // test UTF_16LE data
     const fn test_data_utf16le_123() -> &'static [u8] {
-        b"1\02\03\0"
+        b"1\x02\x03\0"
     }
 
     const fn test_data_utf16le_crlf() -> &'static [u8] {
@@ -204,7 +204,7 @@ mod tests {
 
     // test UTF_16BE data
     const fn test_data_utf16be_123() -> &'static [u8] {
-        b"\01\02\03"
+        b"\x01\x02\x03"
     }
 
     const fn test_data_utf16be_crlf() -> &'static [u8] {

@@ -345,7 +345,7 @@ async fn handle_stream<T>(
                     Some(Ok((frames, byte_size))) => {
                         let acker = source.build_acker(&frames);
                         let (batch, receiver) = BatchNotifier::maybe_new_with_receiver(acknowledgements);
-                        let mut events = frames.into_iter().map(Into::into).flatten().collect::<Vec<Event>>();
+                        let mut events = frames.into_iter().flat_map(Into::into).collect::<Vec<Event>>();
                         if let Some(batch) = batch {
                             for event in &mut events {
                                 event.add_batch_notifier(Arc::clone(&batch));

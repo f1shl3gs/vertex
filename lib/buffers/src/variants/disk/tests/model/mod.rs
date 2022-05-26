@@ -312,7 +312,7 @@ impl ReaderModel {
 
         // We do a dummy call to `is_ready` to simulate what happens when a real buffer is created,
         // as the real initialization process always ensures the current reader data file exists/is opened.
-        reader.is_ready();
+        reader.get_ready();
 
         reader
     }
@@ -398,7 +398,7 @@ impl ReaderModel {
             && reader_file_id == writer_file_id
     }
 
-    fn is_ready(&mut self) -> bool {
+    fn get_ready(&mut self) -> bool {
         // If we have a data file open already, then we're good:
         if self.current_file.is_some() {
             return true;
@@ -423,7 +423,7 @@ impl ReaderModel {
             self.handle_acks();
 
             // If we can't open our desired current data file, we wait.
-            if !self.is_ready() {
+            if !self.get_ready() {
                 return Progress::Blocked;
             }
 
@@ -551,7 +551,7 @@ impl WriterModel {
 
         // We do a dummy call to `is_ready` to simulate what happens when a real buffer is created,
         // as the real initialization process always ensures the current writer data file is created/exists.
-        writer.is_ready();
+        writer.get_ready();
 
         writer
     }
@@ -594,7 +594,7 @@ impl WriterModel {
         self.ledger.increment_buffer_size(flushed_bytes);
     }
 
-    fn is_ready(&mut self) -> bool {
+    fn get_ready(&mut self) -> bool {
         // If our buffer size is over the maximum buffer size, we have to wait for reader progress:
         if self.ledger.get_buffer_size() >= self.ledger.config().max_buffer_size {
             return false;
@@ -641,7 +641,7 @@ impl WriterModel {
 
         loop {
             // If we can't open our desired current data file, or the buffer is full, we wait.
-            if !self.is_ready() {
+            if !self.get_ready() {
                 return Progress::Blocked;
             }
 

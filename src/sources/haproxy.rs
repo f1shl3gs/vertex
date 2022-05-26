@@ -99,8 +99,7 @@ impl SourceConfig for HaproxyConfig {
         let endpoints = self
             .endpoints
             .iter()
-            .map(|f| f.parse::<Uri>())
-            .flatten()
+            .flat_map(|f| f.parse::<Uri>())
             .collect::<Vec<_>>();
 
         let auth = self.auth.clone();

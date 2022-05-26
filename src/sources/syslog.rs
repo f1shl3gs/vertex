@@ -489,10 +489,7 @@ mod tests {
         ));
 
         let want = Event::from(log);
-        assert_event_data_eq!(
-            event_from_bytes(&"host".to_string(), None, raw.into()).unwrap(),
-            want
-        );
+        assert_event_data_eq!(event_from_bytes("host", None, raw.into()).unwrap(), want);
     }
 
     #[test]
@@ -525,7 +522,7 @@ mod tests {
             r#"[incorrect x=]"#, msg
         );
 
-        let event = event_from_bytes(&"host".to_string(), None, raw.into()).unwrap();
+        let event = event_from_bytes("host", None, raw.into()).unwrap();
         assert_event_data_eq!(event, want);
     }
 
