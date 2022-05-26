@@ -33,7 +33,7 @@ buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
-console-subscriber = { version = "0.1.5", optional = true }
+console-subscriber = { version = "0.1.6", optional = true }
 dyn-clone = { version = "1.0.5" }
 encoding_rs = { version = "0.8.31", features = ["serde"]}
 event = { path = "../event" }
@@ -60,7 +60,7 @@ memchr = { version = "2.5.0", default-features = false}
 metrics = { version = "0.18.1", default-features = false }
 metrics-tracing-context = { version = "0.10.0", default-features = false }
 no-proxy = { version = "0.3.1" }
-once_cell = { version = "1.10", default-features = false }
+once_cell = { version = "1.12", default-features = false }
 openssl = { version = "0.10.40", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 pin-project = { version = "1.0.10" }
@@ -93,7 +93,7 @@ tracing-subscriber = { version = "0.3.11", default-features = false, features = 
 twox-hash = { version = "1.6.3", default-features = false }
 typetag = { version = "0.1.8" }
 url = { version = "2.2.2", features = ["serde"] }
-uuid = { version = "1.0", default-features = false, features = ["v4"] }
+uuid = { version = "1.1", default-features = false, features = ["v4"] }
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"

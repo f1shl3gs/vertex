@@ -7,7 +7,7 @@ edition = "2021"
 event = { path = "../event" }
 metrics = { version = "0.18.1" }
 metrics-util = { version = "0.11.1", default-features = false, features = ["recency"] }
-once_cell = { version = "1.10.0" }
+once_cell = { version = "1.12.0" }
 parking_lot = { version = "0.12.0" }
 quanta = { version = "0.9.3" }
 tracing = { version = "0.1.34", default-features = false }
