@@ -410,7 +410,7 @@ dependencies = [
  "memmap2",
  "metrics",
  "metrics-tracing-context",
- "metrics-util",
+ "metrics-util 0.12.1",
  "num-traits",
  "once_cell",
  "parking_lot 0.12.0",
@@ -1896,7 +1896,7 @@ version = "0.1.0"
 dependencies = [
  "event",
  "metrics",
- "metrics-util",
+ "metrics-util 0.12.1",
  "once_cell",
  "parking_lot 0.12.0",
  "quanta",
@@ -2400,7 +2400,7 @@ dependencies = [
  "itoa 1.0.1",
  "lockfree-object-pool",
  "metrics",
- "metrics-util",
+ "metrics-util 0.11.1",
  "once_cell",
  "tracing",
  "tracing-core",
@@ -2426,6 +2426,22 @@ dependencies = [
  "quanta",
  "radix_trie",
  "sketches-ddsketch",
+]
+
+[[package]]
+name = "metrics-util"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "65a9e83b833e1d2e07010a386b197c13aa199bbd0fca5cf69bfa147972db890a"
+dependencies = [
+ "atomic-shim",
+ "crossbeam-epoch",
+ "crossbeam-utils",
+ "hashbrown 0.11.2",
+ "metrics",
+ "num_cpus",
+ "parking_lot 0.11.2",
+ "quanta",
 ]
 
 [[package]]
