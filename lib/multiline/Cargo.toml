@@ -14,7 +14,7 @@ bytes = { version = "1.1.0", default-features = false }
 futures = { version = "0.3.21", default-features = false }
 humanize = { path = "../humanize" }
 pin-project = { version = "1.0.10" }
-regex = { version = "1.5.4" }
+regex = { version = "1.5.6" }
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 serde_regex = { path = "../serde_regex" }
 tokio-util = { version = "0.7.2", default-features = false, features = ["codec", "time"] }

@@ -557,7 +557,7 @@ dependencies = [
  "num-bigint 0.4.2",
  "num-traits",
  "once_cell",
- "regex 1.5.5",
+ "regex 1.5.6",
 ]
 
 [[package]]
@@ -703,7 +703,7 @@ dependencies = [
  "oorandom",
  "plotters",
  "rayon",
- "regex 1.5.5",
+ "regex 1.5.6",
  "serde",
  "serde_cbor",
  "serde_derive",
@@ -1038,7 +1038,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a19187fea3ac7e84da7dacf48de0c45d63c6a76f9490dae389aead16c243fce3"
 dependencies = [
  "log 0.4.14",
- "regex 1.5.5",
+ "regex 1.5.6",
 ]
 
 [[package]]
@@ -1243,7 +1243,7 @@ dependencies = [
  "proptest",
  "rand 0.8.5",
  "rand_distr",
- "regex 1.5.5",
+ "regex 1.5.6",
  "serde",
  "serde_json",
  "serde_regex",
@@ -2548,7 +2548,7 @@ dependencies = [
  "futures",
  "humanize",
  "pin-project",
- "regex 1.5.5",
+ "regex 1.5.6",
  "serde",
  "serde_json",
  "serde_regex",
@@ -3027,7 +3027,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c705f256449c60da65e11ff6626e0c16a0a0b96aaa348de61376b249bc340f41"
 dependencies = [
- "regex 1.5.5",
+ "regex 1.5.6",
 ]
 
 [[package]]
@@ -3341,7 +3341,7 @@ dependencies = [
  "rand 0.8.5",
  "rand_chacha",
  "rand_xorshift",
- "regex-syntax 0.6.25",
+ "regex-syntax 0.6.26",
  "rusty-fork",
  "tempfile",
 ]
@@ -3373,7 +3373,7 @@ dependencies = [
  "petgraph",
  "prost",
  "prost-types",
- "regex 1.5.5",
+ "regex 1.5.6",
  "tempfile",
  "which",
 ]
@@ -3721,13 +3721,13 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.5.5"
+version = "1.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1a11647b6b25ff05a515cb92c365cec08801e83423a235b51e231e1808747286"
+checksum = "d83f127d94bdbcda4c8cc2e50f6f84f4b611f69c902699ca385a39c3a75f9ff1"
 dependencies = [
  "aho-corasick 0.7.18",
  "memchr 2.5.0",
- "regex-syntax 0.6.25",
+ "regex-syntax 0.6.26",
 ]
 
 [[package]]
@@ -3736,7 +3736,7 @@ version = "0.1.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c230d73fb8d8c1b9c0b3135c5142a8acee3a0558fb8db5cf1cb65f8d7862132"
 dependencies = [
- "regex-syntax 0.6.25",
+ "regex-syntax 0.6.26",
 ]
 
 [[package]]
@@ -3750,9 +3750,9 @@ dependencies = [
 
 [[package]]
 name = "regex-syntax"
-version = "0.6.25"
+version = "0.6.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f497285884f3fcff424ffc933e56d7cbca511def0c9831a7f9b5f6153e3cc89b"
+checksum = "49b3de9ec5dc0a3417da371aab17d729997c15010e7fd24ff707773a33bddb64"
 
 [[package]]
 name = "remove_dir_all"
@@ -4096,7 +4096,7 @@ dependencies = [
 name = "serde_regex"
 version = "0.1.0"
 dependencies = [
- "regex 1.5.5",
+ "regex 1.5.6",
  "serde",
 ]
 
@@ -5109,7 +5109,7 @@ dependencies = [
  "ansi_term 0.12.1",
  "lazy_static 1.4.0",
  "matchers",
- "regex 1.5.5",
+ "regex 1.5.6",
  "serde",
  "serde_json",
  "sharded-slab",
@@ -5394,7 +5394,7 @@ dependencies = [
  "rand 0.8.5",
  "rdkafka",
  "redis",
- "regex 1.5.5",
+ "regex 1.5.6",
  "rsntp",
  "seahash",
  "serde",
