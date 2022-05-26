@@ -2875,9 +2875,9 @@ dependencies = [
 
 [[package]]
 name = "once_cell"
-version = "1.10.0"
+version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87f3e037eac156d1775da914196f0f37741a274155e34a0b7e427c35d2a2ecb9"
+checksum = "7709cef83f0c1f58f666e746a08b21e0085f7440fa6a29cc194d68aac97a4225"
 
 [[package]]
 name = "oorandom"
@@ -3201,9 +3201,9 @@ dependencies = [
 
 [[package]]
 name = "pprof"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6f9307de92566887d485ac6f20df17b0fe1704fffdbad0bdbc05a3864d3082f6"
+checksum = "a97149c0eacaa6b8f8cedea99f68bb3a0517fa20f8de8d8c24c1a810f38d235d"
 dependencies = [
  "backtrace",
  "cfg-if 1.0.0",
