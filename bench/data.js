@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653575802215,
+  "lastUpdate": 1653576131511,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14355,6 +14355,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74a5b4ade5b1929a085e6e4e566abe2ba616a0b0",
+          "message": "Merge pull request #340 from f1shl3gs/update_toolchain_to_1.61.0\n\nUpdate toolchain to 1.61.0",
+          "timestamp": "2022-05-26T22:35:15+08:00",
+          "tree_id": "59ca257db7f537aab0a991f812027d71ddbc6fbf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/74a5b4ade5b1929a085e6e4e566abe2ba616a0b0"
+        },
+        "date": 1653576129383,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.085,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 53.745,
             "unit": "ns/op"
           }
         ]
