@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653630954809,
+  "lastUpdate": 1653632976893,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6748,6 +6748,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1308000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef08feb21ef696f9b731437d9b82f3b502f82879",
+          "message": "Merge pull request #348 from f1shl3gs/dependabot/cargo/prost-build-0.10.4\n\nchore(deps): bump prost-build from 0.10.3 to 0.10.4",
+          "timestamp": "2022-05-27T14:19:25+08:00",
+          "tree_id": "1f7d1434b3895bae221aea5f6f9dd6f3ce48d3bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef08feb21ef696f9b731437d9b82f3b502f82879"
+        },
+        "date": 1653632973676,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1115100,
             "unit": "ns/op"
           }
         ]
