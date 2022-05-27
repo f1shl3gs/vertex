@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653626700764,
+  "lastUpdate": 1653627455083,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6690,6 +6690,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1153700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "64575da4e405fdda5391040f5cc86e827a6b917e",
+          "message": "Merge pull request #283 from f1shl3gs/dependabot/cargo/atomig-0.4.0\n\nchore(deps): bump atomig from 0.3.3 to 0.4.0",
+          "timestamp": "2022-05-27T11:48:38+08:00",
+          "tree_id": "d5ed096afa550a12b0f59367dfc269cb08d37472",
+          "url": "https://github.com/f1shl3gs/vertex/commit/64575da4e405fdda5391040f5cc86e827a6b917e"
+        },
+        "date": 1653627452828,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1117900,
             "unit": "ns/op"
           }
         ]
