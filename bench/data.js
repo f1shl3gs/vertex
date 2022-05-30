@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1653905932372,
+  "lastUpdate": 1653905969669,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6806,6 +6806,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1289000,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62652e98371e062a72ea1b113242fc94397ddb4f",
+          "message": "Merge pull request #350 from f1shl3gs/dependabot/cargo/flate2-1.0.24\n\nchore(deps): bump flate2 from 1.0.23 to 1.0.24",
+          "timestamp": "2022-05-30T18:07:59+08:00",
+          "tree_id": "81f9b1994dc3389554bee7c81817f7893960591f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/62652e98371e062a72ea1b113242fc94397ddb4f"
+        },
+        "date": 1653905966223,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 976040,
             "unit": "ns/op"
           }
         ]
