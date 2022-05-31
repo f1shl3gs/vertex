@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654020530130,
+  "lastUpdate": 1654020600015,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6864,6 +6864,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1403700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9cbe2e5ca26fdce6b55ca91444b05c0d01f64b74",
+          "message": "Merge pull request #354 from f1shl3gs/dependabot/cargo/parking_lot-0.12.1\n\nchore(deps): bump parking_lot from 0.12.0 to 0.12.1",
+          "timestamp": "2022-06-01T02:00:19+08:00",
+          "tree_id": "b586d985607c08c7b2df51c14ad31a1a00903c3f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9cbe2e5ca26fdce6b55ca91444b05c0d01f64b74"
+        },
+        "date": 1654020597183,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1117600,
             "unit": "ns/op"
           }
         ]
