@@ -413,7 +413,7 @@ dependencies = [
  "metrics-util",
  "num-traits",
  "once_cell",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "pin-project",
  "proptest",
  "quickcheck",
@@ -847,7 +847,7 @@ checksum = "4c8858831f7781322e539ea39e72449c46b059638250c14344fec8d0aa6e539c"
 dependencies = [
  "cfg-if 1.0.0",
  "num_cpus",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
 ]
 
 [[package]]
@@ -1500,7 +1500,7 @@ dependencies = [
  "futures-timer",
  "no-std-compat",
  "nonzero_ext",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "quanta",
  "rand 0.8.5",
  "smallvec",
@@ -1744,7 +1744,7 @@ dependencies = [
  "once_cell",
  "openssl",
  "openssl-sys",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "tokio",
  "tokio-openssl",
  "tower-layer",
@@ -1896,7 +1896,7 @@ dependencies = [
  "metrics",
  "metrics-util",
  "once_cell",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "quanta",
  "tracing",
 ]
@@ -2135,7 +2135,7 @@ dependencies = [
  "json-patch",
  "k8s-openapi",
  "kube-client",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "pin-project",
  "serde",
  "serde_json",
@@ -2230,12 +2230,12 @@ dependencies = [
 
 [[package]]
 name = "listenfd"
-version = "0.5.0"
+version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c02b14f35d9f5f082fd0b1b34aa0ef32e3354c859c721d7f3325b3f79a42ba54"
+checksum = "14e4fcc00ff6731d94b70e16e71f43bda62883461f31230742e3bc6dddf12988"
 dependencies = [
  "libc",
- "uuid 0.8.2",
+ "uuid 1.1.0",
  "winapi 0.3.9",
 ]
 
@@ -2984,9 +2984,9 @@ dependencies = [
 
 [[package]]
 name = "parking_lot"
-version = "0.12.0"
+version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "87f5ec2493a61ac0506c0f4199f99070cbe83857b0337006a30f3e6719b8ef58"
+checksum = "3742b2c103b9f06bc9fff0a37ff4912935851bee6d36f3c02bcc755bcfec228f"
 dependencies = [
  "lock_api",
  "parking_lot_core 0.9.0",
@@ -3211,7 +3211,7 @@ dependencies = [
  "log 0.4.14",
  "nix",
  "once_cell",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "protobuf",
  "smallvec",
  "symbolic-demangle",
@@ -5350,7 +5350,7 @@ dependencies = [
  "nom 7.1.1",
  "num_cpus",
  "openssl-probe",
- "parking_lot 0.12.0",
+ "parking_lot 0.12.1",
  "percent-encoding",
  "pin-project",
  "pprof",
