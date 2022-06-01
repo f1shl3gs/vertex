@@ -54,7 +54,7 @@ indexmap = { version = "1.8.2", default-features = false, features = ["serde"] }
 internal = { path = "../internal" }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
-listenfd = { version = "0.5.0", default-features = false, optional = true }
+listenfd = { version = "1.0.0", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { version = "0.18.1", default-features = false }
