@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654068782311,
+  "lastUpdate": 1654068839769,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6893,6 +6893,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1117600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef3db94fbd595837a0a214cb7ea98eb0e604e0a5",
+          "message": "Merge pull request #355 from f1shl3gs/dependabot/cargo/listenfd-1.0.0\n\nchore(deps): bump listenfd from 0.5.0 to 1.0.0",
+          "timestamp": "2022-06-01T15:24:08+08:00",
+          "tree_id": "8b923ab46a8889bb0fb6f1041146ac48065b72a1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef3db94fbd595837a0a214cb7ea98eb0e604e0a5"
+        },
+        "date": 1654068837557,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1111900,
             "unit": "ns/op"
           }
         ]
