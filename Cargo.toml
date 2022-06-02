@@ -141,6 +141,7 @@ sources = [
     "sources-journald",
     "sources-kafka",
     "sources-kmsg",
+    "sources-kubernetes_events",
     "sources-kubernetes_logs",
     "sources-libvirt",
     "sources-memcached",
@@ -173,6 +174,7 @@ sources-journald = []
 sources-kafka = ["rdkafka-cmake", "async-stream"]
 sources-kmsg = []
 sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
+sources-kubernetes_events = ["kubernetes"]
 sources-libvirt = ["virt"]
 sources-memcached = []
 sources-mongodb = []
