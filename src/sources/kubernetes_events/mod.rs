@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use event::{fields, tags, LogRecord};
 use framework::config::{
     DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
@@ -32,13 +33,16 @@ inventory::submit! {
 #[typetag::serde(name = "kubernetes_events")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let shutdown = cx.shutdown;
         let client = Client::try_default().await?;
+        let shutdown = cx.shutdown;
+        let mut output = cx.output;
 
         // By default, all namespace is watched
         let apis: Vec<Api<Event>> = if self.namespaces.is_empty() {
             vec![Api::all(client)]
         } else {
+            // TODO: bookmark!?
+
             // dedup namespaces
             BTreeSet::from_iter(self.namespaces.clone()) // dedup
                 .iter()
@@ -61,7 +65,27 @@ impl SourceConfig for Config {
                 .take_until(shutdown);
 
             while let Some(evs) = combined.next().await {
-                info!(message = "receive", size = evs.len())
+                let message_key = log_schema::log_schema().message_key();
+
+                let records = evs.into_iter().flatten().map(|ev| {
+                    // TODO: add more tags and files
+                    LogRecord::new(
+                        tags!(
+                            "reason" => ev.reason.unwrap_or_default(),
+                            "action" => ev.action.unwrap_or_default(),
+                            "type" => ev.type_.unwrap_or_default(),
+                        ),
+                        fields!(
+                            message_key => ev.message.unwrap_or_default()
+                        ),
+                    )
+                });
+
+                if let Err(err) = output.send_batch(records).await {
+                    error!(message = "Error sending kubernetes events", %err);
+
+                    return Ok(());
+                }
             }
 
             Ok(())
