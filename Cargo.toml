@@ -216,6 +216,7 @@ transforms-throttle = ["governor"]
 sinks = [
     "sinks-blackhole",
     "sinks-clickhouse",
+    "sinks-console",
     "sinks-elasticsearch",
     "sinks-jaeger",
     "sinks-kafka",
@@ -224,13 +225,12 @@ sinks = [
     "sinks-prometheus_remote_write",
     "sinks-pulsar",
     "sinks-socket",
-    "sinks-stdout",
     "sinks-vertex",
 ]
 
+sinks-console = []
 sinks-prometheus_exporter = []
 sinks-prometheus_remote_write = ["snap"]
-sinks-stdout = []
 sinks-blackhole = []
 sinks-kafka = ["rdkafka-cmake"]
 sinks-jaeger = ["jaeger"]

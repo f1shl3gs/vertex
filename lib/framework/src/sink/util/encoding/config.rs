@@ -20,7 +20,7 @@ fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
 #[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct EncodingConfig<E> {
-    pub(crate) codec: E,
+    pub codec: E,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub schema: Option<String>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
