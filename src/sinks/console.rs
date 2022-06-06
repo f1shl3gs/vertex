@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::io::Write;
 
 use async_trait::async_trait;
 use buffers::Acker;
@@ -11,45 +10,20 @@ use framework::{
 };
 use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
+use tokio::io::AsyncWriteExt;
 use tokio_stream::StreamExt;
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
-pub struct StdoutConfig {}
-
-impl GenerateConfig for StdoutConfig {
-    fn generate_config() -> String {
-        r#"# Nothing need to be config
-{}"#
-        .into()
-    }
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+enum Stream {
+    Stdout,
+    Stderr,
 }
 
-inventory::submit! {
-    SinkDescription::new::<StdoutConfig>("stdout")
-}
-
-#[async_trait]
-#[typetag::serde(name = "stdout")]
-impl SinkConfig for StdoutConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        Ok((
-            Sink::Stream(Box::new(StdoutSink { acker: ctx.acker })),
-            futures::future::ok(()).boxed(),
-        ))
+impl Default for Stream {
+    fn default() -> Self {
+        Self::Stdout
     }
-
-    fn input_type(&self) -> DataType {
-        DataType::Any
-    }
-
-    fn sink_type(&self) -> &'static str {
-        "stdout"
-    }
-}
-
-struct StdoutSink {
-    acker: Acker,
 }
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone)]
@@ -57,6 +31,58 @@ struct StdoutSink {
 pub enum Encoding {
     Json,
     Text,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ConsoleSinkConfig {
+    #[serde(default)]
+    stream: Stream,
+
+    encoding: EncodingConfig<Encoding>,
+}
+
+impl GenerateConfig for ConsoleSinkConfig {
+    fn generate_config() -> String {
+        r#"
+stream: stdout
+encoding: text
+"#
+        .into()
+    }
+}
+
+inventory::submit! {
+    SinkDescription::new::<ConsoleSinkConfig>("console")
+}
+
+#[async_trait]
+#[typetag::serde(name = "console")]
+impl SinkConfig for ConsoleSinkConfig {
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = match self.stream {
+            Stream::Stdout => Sink::Stream(Box::new(WriteSink {
+                acker: cx.acker,
+                writer: tokio::io::stdout(),
+                encoding: self.encoding.clone(),
+            })),
+            Stream::Stderr => Sink::Stream(Box::new(WriteSink {
+                acker: cx.acker,
+                writer: tokio::io::stderr(),
+                encoding: self.encoding.clone(),
+            })),
+        };
+
+        Ok((sink, futures::future::ok(()).boxed()))
+    }
+
+    fn input_type(&self) -> DataType {
+        DataType::Any
+    }
+
+    fn sink_type(&self) -> &'static str {
+        "console"
+    }
 }
 
 fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option<String> {
@@ -107,11 +133,19 @@ fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option
     }
 }
 
+struct WriteSink<T> {
+    acker: Acker,
+    writer: T,
+    encoding: EncodingConfig<Encoding>,
+}
+
 #[async_trait]
-impl StreamSink for StdoutSink {
-    async fn run(self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let mut stdout = std::io::stdout();
-        let encoding = EncodingConfig::from(Encoding::Json);
+impl<T> StreamSink for WriteSink<T>
+where
+    T: tokio::io::AsyncWrite + Send + Sync + Unpin,
+{
+    async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
+        let encoding = self.encoding;
 
         while let Some(events) = input.next().await {
             self.acker.ack(events.len());
@@ -121,12 +155,16 @@ impl StreamSink for StdoutSink {
                     // Without the new line char, the latest line will be buffered
                     // rather than flush to terminal immediately.
                     text.push('\n');
-                    stdout.write_all(text.as_bytes()).map_err(|err| {
-                        error!(
-                            message = "Write event to stdout failed",
-                            %err
-                        );
-                    })?;
+
+                    self.writer
+                        .write_all(text.as_bytes())
+                        .await
+                        .map_err(|err| {
+                            error!(
+                                message = "Write event to output failed",
+                                %err
+                            );
+                        })?;
                 }
             }
         }
@@ -141,6 +179,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<StdoutConfig>();
+        crate::testing::test_generate_config::<ConsoleSinkConfig>();
     }
 }

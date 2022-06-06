@@ -2,6 +2,8 @@
 pub mod blackhole;
 #[cfg(feature = "sinks-clickhouse")]
 mod clickhouse;
+#[cfg(feature = "sinks-console")]
+mod console;
 #[cfg(feature = "sinks-elasticsearch")]
 mod elasticsearch;
 #[cfg(feature = "sinks-jaeger")]
@@ -18,8 +20,6 @@ mod prometheus_remote_write;
 mod pulsar;
 #[cfg(feature = "sinks-socket")]
 pub mod socket;
-#[cfg(feature = "sinks-stdout")]
-mod stdout;
 #[cfg(feature = "sinks-vertex")]
 mod vertex;
 
