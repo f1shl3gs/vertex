@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654517828850,
+  "lastUpdate": 1654517847716,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6922,6 +6922,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1111900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce4b13d81dd3c02df4e7099f9f6347fc5fd090be",
+          "message": "Merge pull request #358 from f1shl3gs/kubernetes_events\n\nKubernetes events",
+          "timestamp": "2022-06-06T20:09:49+08:00",
+          "tree_id": "5df26467b3be01897ebe906f36189a779c1de212",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce4b13d81dd3c02df4e7099f9f6347fc5fd090be"
+        },
+        "date": 1654517845489,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1117200,
             "unit": "ns/op"
           }
         ]
