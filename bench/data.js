@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654526814466,
+  "lastUpdate": 1654526943989,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6951,6 +6951,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1117200,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "20f61c271c62affe6e2eb27214d0e264c6e56531",
+          "message": "Merge pull request #359 from f1shl3gs/sinks/console\n\nrename sinks/stdout to sinks/console",
+          "timestamp": "2022-06-06T22:41:45+08:00",
+          "tree_id": "7fb608edacbd5ffe0b7ace186b3d406c8de00008",
+          "url": "https://github.com/f1shl3gs/vertex/commit/20f61c271c62affe6e2eb27214d0e264c6e56531"
+        },
+        "date": 1654526941021,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1151700,
             "unit": "ns/op"
           }
         ]
