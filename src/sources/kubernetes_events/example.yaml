@@ -5,8 +5,8 @@ metadata:
     app: vertex
   name: vertex
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: vertex
   labels:
@@ -69,7 +69,7 @@ rules:
       - list
       - watch
 ---
-apiVersion: rbac.authorization.k8s.io/v1beta1
+apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: vertex
@@ -84,3 +84,58 @@ subjects:
     name: vertex
     namespace: default
 ---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: vertex
+data:
+  config.yaml: |
+    sources:
+      ke:
+        type: kubernetes_events
+        namespaces: []
+    
+      demo:
+        type: demo_logs
+        interval: 2s
+        log: 'Feb 09 17:03:22 localhost.localdomain dockerd[664418]: time="2022-02-09T17:03:22.274513798+08:00" level=info msg="ignoring event" container=160c487bcb25df2b525d0cf999f70ae283616a9b94a309576dd89f2d0b2b0ca8 module=libcontainerd namespace=moby topic=/tasks/delete type="*events.TaskDelete"'
+    
+    sinks:
+      stdout:
+        type: stdout
+        inputs:
+          - ke
+          - demo
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: vertex
+  labels:
+    app: vertex
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vertex
+  template:
+    metadata:
+      labels:
+        app: vertex
+    spec:
+      serviceAccountName: vertex
+      containers:
+        - name: vertex
+          image: f1shl3gs/vertex:nightly-distroless
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /etc/vertex
+              name: config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: vertex
+            items:
+              - key: config.yaml
+                path: vertex.yaml

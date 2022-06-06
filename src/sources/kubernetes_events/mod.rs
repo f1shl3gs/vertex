@@ -1,4 +1,7 @@
+use std::collections::BTreeSet;
+
 use async_trait::async_trait;
+use chrono::Utc;
 use event::{fields, tags, LogRecord};
 use framework::config::{
     DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
@@ -11,7 +14,6 @@ use kube::api::ListParams;
 use kube::runtime::{watcher, WatchStreamExt};
 use kube::{Api, Client};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeSet;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Config {
@@ -36,13 +38,12 @@ impl SourceConfig for Config {
         let client = Client::try_default().await?;
         let shutdown = cx.shutdown;
         let mut output = cx.output;
+        let start_time = Utc::now();
 
         // By default, all namespace is watched
         let apis: Vec<Api<Event>> = if self.namespaces.is_empty() {
             vec![Api::all(client)]
         } else {
-            // TODO: bookmark!?
-
             // dedup namespaces
             BTreeSet::from_iter(self.namespaces.clone()) // dedup
                 .iter()
@@ -66,20 +67,52 @@ impl SourceConfig for Config {
 
             while let Some(evs) = combined.next().await {
                 let message_key = log_schema::log_schema().message_key();
+                let timestamp_key = log_schema::log_schema().timestamp_key();
+                let source_type_key = log_schema::log_schema().source_type_key();
 
-                let records = evs.into_iter().flatten().map(|ev| {
-                    // TODO: add more tags and files
-                    LogRecord::new(
-                        tags!(
-                            "reason" => ev.reason.unwrap_or_default(),
-                            "action" => ev.action.unwrap_or_default(),
-                            "type" => ev.type_.unwrap_or_default(),
-                        ),
-                        fields!(
-                            message_key => ev.message.unwrap_or_default()
-                        ),
-                    )
-                });
+                let records = evs
+                    .into_iter()
+                    .filter_map(|result| {
+                        // Allow events with event_time(event_time/last_timestamp/first_timestamp)
+                        // not older than the receiver start time so that event flood can be avoided
+                        // upon startup.
+                        let ev = match result {
+                            Ok(ev) => ev,
+                            Err(_) => return None,
+                        };
+
+                        if let Some(ref event_time) = ev.event_time {
+                            return if event_time.0 >= start_time {
+                                Some(ev)
+                            } else {
+                                None
+                            };
+                        }
+
+                        Some(ev)
+                    })
+                    .map(|ev| {
+                        let timestamp = match ev.event_time {
+                            Some(ts) => ts.0,
+                            None => Utc::now(),
+                        };
+
+                        LogRecord::new(
+                            tags!(
+                                "reason" => ev.reason.unwrap_or_default(),
+                                "action" => ev.action.unwrap_or_default(),
+                                "type" => ev.type_.unwrap_or_default(),
+                                "name" => ev.metadata.name.unwrap_or_default(),
+                                "namespace" => ev.metadata.namespace.unwrap_or_default(),
+                                "uid" => ev.metadata.uid.unwrap_or_default(),
+                                source_type_key => "kubernetes_events",
+                            ),
+                            fields!(
+                                message_key => ev.message.unwrap_or_default(),
+                                timestamp_key => timestamp,
+                            ),
+                        )
+                    });
 
                 if let Err(err) = output.send_batch(records).await {
                     error!(message = "Error sending kubernetes events", %err);
