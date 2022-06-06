@@ -1,7 +1,6 @@
-FROM gcr.io/distroless/cc-debian10
+FROM ubuntu:22.10
 
 COPY vertex /usr/bin/vertex
-COPY vertex.yml /etc/vertex/vertex.yml
 
 VOLUME /var/lib/vertex
 

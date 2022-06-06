@@ -1,8 +1,8 @@
 use super::Error;
 use event::{tags, Metric};
-/// Exposes the current system time
 use std::ffi::CStr;
 
+/// Exposes the current system time
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
     let offset = local_now.offset().local_minus_utc() as f64;
@@ -32,8 +32,9 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
 
 fn libc_timezone() -> String {
     unsafe {
-        let sec = 0i64;
-        let sec = sec as libc::time_t;
+        // https://github.com/rust-lang/libc/issues/1848
+        #[cfg_attr(target_env = "musl", allow(deprecated))]
+        let sec = 0 as libc::time_t;
         let mut out = std::mem::zeroed();
 
         if libc::localtime_r(&sec, &mut out).is_null() {

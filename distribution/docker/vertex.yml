@@ -1,9 +1,0 @@
-sources:
-  internal_logs:
-    type: internal_logs
-
-sinks:
-  stdout:
-    type: stdout
-    inputs:
-      - internal_logs

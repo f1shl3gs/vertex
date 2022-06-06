@@ -120,13 +120,14 @@ bench-tracing-limit:
 bench-humanize:
 	cargo bench --manifest-path lib/humanize/Cargo.toml
 
-.PHONY: deploy_minikube_image
-deploy_minikube_image: build_x86_64-unknown-linux-musl
-	# remove the exist image before deploy
-	minikube image rm docker.io/library/vertex:test
-	cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker/alpine
-	cd distribution/docker/alpine && docker build -t vertex:test .
-	minikube image load vertex:test
+.PHONY: images
+images: build_x86_64-unknown-linux-gnu
+	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless-libc
+	cd distribution/docker/distroless-libc && docker build -t f1shl3gs/vertex:nightly-distroless .
+
+.PHONY: kind_load
+kind_load: images
+	kind load docker-image f1shl3gs/vertex:nightly-distroless
 
 # profile when bench
 # cargo bench --bench hwmon_gather -- --profile-time=30

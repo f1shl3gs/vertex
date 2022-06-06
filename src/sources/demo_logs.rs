@@ -84,7 +84,7 @@ impl SourceConfig for DemoLogsConfig {
             .take(count)
             .take_until(cx.shutdown)
             .ratelimit_stream(&limiter)
-            .chunks(1024);
+            .ready_chunks(1024);
 
             while let Some(logs) = stream.next().await {
                 if let Err(err) = output.send(logs).await {
