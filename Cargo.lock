@@ -408,7 +408,7 @@ dependencies = [
  "fslock",
  "futures",
  "memmap2",
- "metrics 0.18.1",
+ "metrics 0.19.0",
  "metrics-tracing-context",
  "metrics-util",
  "num-traits",
@@ -1228,7 +1228,7 @@ dependencies = [
  "listenfd",
  "log_schema",
  "memchr 2.5.0",
- "metrics 0.18.1",
+ "metrics 0.19.0",
  "metrics-tracing-context",
  "nix",
  "no-proxy",
@@ -1893,7 +1893,7 @@ name = "internal"
 version = "0.1.0"
 dependencies = [
  "event",
- "metrics 0.18.1",
+ "metrics 0.19.0",
  "metrics-util",
  "once_cell",
  "parking_lot 0.12.1",
@@ -2380,6 +2380,16 @@ name = "metrics"
 version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2e52eb6380b6d2a10eb3434aec0885374490f5b82c8aaf5cd487a183c98be834"
+dependencies = [
+ "ahash",
+ "metrics-macros",
+]
+
+[[package]]
+name = "metrics"
+version = "0.19.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "142c53885123b68d94108295a09d4afe1a1388ed95b54d5dacd9a454753030f2"
 dependencies = [
  "ahash",
  "metrics-macros",
@@ -5348,7 +5358,7 @@ dependencies = [
  "libc",
  "log_schema",
  "memchr 2.5.0",
- "metrics 0.18.1",
+ "metrics 0.19.0",
  "mimalloc",
  "multiline",
  "netlink-packet-sock-diag",
