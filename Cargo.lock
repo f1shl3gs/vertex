@@ -408,7 +408,7 @@ dependencies = [
  "fslock",
  "futures",
  "memmap2",
- "metrics",
+ "metrics 0.18.1",
  "metrics-tracing-context",
  "metrics-util",
  "num-traits",
@@ -1228,7 +1228,7 @@ dependencies = [
  "listenfd",
  "log_schema",
  "memchr 2.5.0",
- "metrics",
+ "metrics 0.18.1",
  "metrics-tracing-context",
  "nix",
  "no-proxy",
@@ -1893,7 +1893,7 @@ name = "internal"
 version = "0.1.0"
 dependencies = [
  "event",
- "metrics",
+ "metrics 0.18.1",
  "metrics-util",
  "once_cell",
  "parking_lot 0.12.1",
@@ -2370,6 +2370,13 @@ dependencies = [
 
 [[package]]
 name = "metrics"
+version = "0.1.0"
+dependencies = [
+ "parking_lot 0.12.1",
+]
+
+[[package]]
+name = "metrics"
 version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2e52eb6380b6d2a10eb3434aec0885374490f5b82c8aaf5cd487a183c98be834"
@@ -2397,7 +2404,7 @@ checksum = "487300885ada4d795d6517eaa13fbf15422241bd78ecb6a38760138b639941c1"
 dependencies = [
  "itoa 1.0.1",
  "lockfree-object-pool",
- "metrics",
+ "metrics 0.18.1",
  "metrics-util",
  "once_cell",
  "tracing",
@@ -2417,7 +2424,7 @@ dependencies = [
  "crossbeam-utils",
  "hashbrown 0.11.2",
  "indexmap",
- "metrics",
+ "metrics 0.18.1",
  "num_cpus",
  "ordered-float 2.10.0",
  "parking_lot 0.11.2",
@@ -5341,7 +5348,7 @@ dependencies = [
  "libc",
  "log_schema",
  "memchr 2.5.0",
- "metrics",
+ "metrics 0.18.1",
  "mimalloc",
  "multiline",
  "netlink-packet-sock-diag",

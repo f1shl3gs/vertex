@@ -3,6 +3,7 @@ name = "vertex"
 version = "0.1.0"
 authors = ["f1shl3gs"]
 edition = "2021"
+repository = "https://github.com/f1shl3gs/vertex"
 
 exclude = [
     "tests/fixtures"
@@ -33,6 +34,7 @@ members = [
     "lib/procfs",
     "lib/serde_regex",
     "lib/internal",
+    "lib/metrics",
     "lib/prometheus",
     "lib/testify",
     "lib/tail",
@@ -83,7 +85,6 @@ target-x86_64-unknown-linux-gnu = [
     "sources",
     "transforms",
     "unix",
-
     "extensions-pprof"
 ]
 
@@ -340,9 +341,9 @@ virt = { path = "lib/virt", optional = true }
 
 # Allocation
 mimalloc = { version = "0.1.29", default-features = false, optional = true }
-tikv-jemallocator = { version = "0.5.0", optional = true, features = ["stats", "unprefixed_malloc_on_supported_platforms"]}
+tikv-jemallocator = { version = "0.5.0", optional = true, features = ["stats", "unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.5.0", optional = true }
-tikv-jemalloc-sys = { version = "0.5.0", optional = true, features = ["stats"]}
+tikv-jemalloc-sys = { version = "0.5.0", optional = true, features = ["stats"] }
 
 # Futrures & Tokio
 tokio = { version = "1.18.2", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
