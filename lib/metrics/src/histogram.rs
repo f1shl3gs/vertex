@@ -32,7 +32,11 @@ impl Histogram {
             .collect::<Vec<_>>();
 
         Self {
-            state: Arc::new(Mutex::new(HistogramObservation { buckets, sum: 0.0, count: 0 })),
+            state: Arc::new(Mutex::new(HistogramObservation {
+                buckets,
+                sum: 0.0,
+                count: 0,
+            })),
         }
     }
 

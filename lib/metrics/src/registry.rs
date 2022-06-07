@@ -114,8 +114,8 @@ pub trait Reporter {
 
 #[cfg(test)]
 mod tests {
-    use crate::histogram::exponential_buckets;
     use super::*;
+    use crate::histogram::exponential_buckets;
 
     #[test]
     fn register_counter() {
@@ -133,21 +133,20 @@ mod tests {
             return String::new();
         }
 
-        let s = attrs.iter()
-            .fold("".to_string(), |acc, (k, v)| {
-                if acc.len() == 0 {
-                    format!("{}=\"{}\"", k, v)
-                } else {
-                    format!("{},{}=\"{}\"", acc, k, v)
-                }
-            });
+        let s = attrs.iter().fold("".to_string(), |acc, (k, v)| {
+            if acc.len() == 0 {
+                format!("{}=\"{}\"", k, v)
+            } else {
+                format!("{},{}=\"{}\"", acc, k, v)
+            }
+        });
 
         format!("{{{}}}", s)
     }
 
     #[test]
     fn reporter() {
-        struct  StdoutReporter {
+        struct StdoutReporter {
             reporting: Option<(&'static str, &'static str)>,
         }
 
@@ -164,20 +163,19 @@ mod tests {
                 match observation {
                     Observation::Counter(v) | Observation::Gauge(v) => {
                         println!("{} {} {}", name, attrs_to_string(attrs), v)
-                    },
+                    }
                     Observation::Histogram(h) => {
-                        h.buckets.iter()
-                            .for_each(|b| {
-                                let mut sa = attrs.clone();
-                                let le = if b.le == f64::MAX {
-                                    "+inf".to_string()
-                                } else {
-                                    b.le.to_string()
-                                };
+                        h.buckets.iter().for_each(|b| {
+                            let mut sa = attrs.clone();
+                            let le = if b.le == f64::MAX {
+                                "+inf".to_string()
+                            } else {
+                                b.le.to_string()
+                            };
 
-                                sa.insert("le", le);
-                                println!("{} {} {}", name, attrs_to_string(&sa), b.count)
-                            });
+                            sa.insert("le", le);
+                            println!("{} {} {}", name, attrs_to_string(&sa), b.count)
+                        });
 
                         println!("{}_sum {} {}", name, attrs_to_string(attrs), h.sum);
                         println!("{}_total {} {}", name, attrs_to_string(attrs), h.count);
@@ -204,7 +202,11 @@ mod tests {
         let c = cs.recorder(&[("foo", "bar")]);
         c.inc(2);
 
-        let hs = reg.register_histogram("histogram", "histogram description", exponential_buckets(1.0, 2.0, 10));
+        let hs = reg.register_histogram(
+            "histogram",
+            "histogram description",
+            exponential_buckets(1.0, 2.0, 10),
+        );
         let h = hs.recorder(&[]);
         h.record(12.0);
         h.record(3.0);
@@ -212,9 +214,7 @@ mod tests {
         h.record(12.0);
         h.record(4.0);
 
-        let mut stdout_reporter = StdoutReporter{
-            reporting: None
-        };
+        let mut stdout_reporter = StdoutReporter { reporting: None };
 
         reg.report(&mut stdout_reporter)
     }
