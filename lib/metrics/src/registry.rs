@@ -328,7 +328,11 @@ mod tests {
         g.inc(1);
         assert_eq!(g.fetch(), 1);
 
-        let hs = reg.register_histogram("histogram", "histogram desc", exponential_buckets(1.0, 2.0, 10));
+        let hs = reg.register_histogram(
+            "histogram",
+            "histogram desc",
+            exponential_buckets(1.0, 2.0, 10),
+        );
         let h = hs.recorder(&[]);
         let ho = h.get();
         assert_eq!(ho.sum, 0.0);
