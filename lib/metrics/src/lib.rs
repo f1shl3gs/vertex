@@ -5,6 +5,7 @@
 mod attributes;
 mod counter;
 mod gauge;
+mod global;
 mod histogram;
 mod metric;
 mod registry;

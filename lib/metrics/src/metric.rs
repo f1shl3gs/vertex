@@ -53,7 +53,7 @@ impl<T: Default> MakeMetricObserver for T {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Metric<T: MetricObserver> {
     pub(crate) name: &'static str,
     pub(crate) description: &'static str,

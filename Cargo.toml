@@ -338,6 +338,7 @@ shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
 tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
+metrics = { path = "lib/metrics" }
 
 # Allocation
 mimalloc = { version = "0.1.29", default-features = false, optional = true }
@@ -355,9 +356,6 @@ futures-util = { version = "0.3.18", default-features = false }
 async-trait = { version = "0.1.53" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
-
-# Metrics
-metrics = { version = "0.18.1", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.34", default-features = false }

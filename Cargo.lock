@@ -2372,6 +2372,7 @@ dependencies = [
 name = "metrics"
 version = "0.1.0"
 dependencies = [
+ "once_cell",
  "parking_lot 0.12.1",
 ]
 
@@ -5348,7 +5349,7 @@ dependencies = [
  "libc",
  "log_schema",
  "memchr 2.5.0",
- "metrics 0.18.1",
+ "metrics 0.1.0",
  "mimalloc",
  "multiline",
  "netlink-packet-sock-diag",

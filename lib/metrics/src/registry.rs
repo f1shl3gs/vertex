@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+use once_cell::sync::OnceCell;
 use parking_lot::Mutex;
 
 use crate::attributes::{assert_legal_key, Attributes};
@@ -9,6 +10,9 @@ use crate::Counter;
 use crate::Gauge;
 use crate::Histogram;
 
+static GLOBAL_REGISTRY: OnceCell<Registry> = OnceCell::new();
+
+#[derive(Clone, Default)]
 pub struct Registry {
     counters: Arc<Mutex<BTreeMap<&'static str, Metric<Counter>>>>,
     gauges: Arc<Mutex<BTreeMap<&'static str, Metric<Gauge>>>>,
@@ -111,6 +115,70 @@ pub trait Reporter {
 
     /// Finish recording a given metric
     fn finish_metric(&mut self);
+}
+
+pub fn global_registry() -> Registry {
+    GLOBAL_REGISTRY.get_or_init(|| Registry::new()).clone()
+}
+
+// RwLock is not used, case most time we don't read SUB_REGISTRIES
+static SUB_REGISTRIES: OnceCell<Mutex<BTreeMap<&'static str, SubRegistry>>> = OnceCell::new();
+
+#[derive(Default)]
+pub struct SubRegistry {
+    key: &'static str,
+    registry: Registry,
+}
+
+impl Drop for SubRegistry {
+    fn drop(&mut self) {
+        SUB_REGISTRIES
+            .get()
+            .expect("SUB_REGISTRY should be init already")
+            .lock()
+            .remove(self.key);
+
+        println!("abc");
+    }
+}
+
+impl SubRegistry {
+    pub fn key(&self) -> &'static str {
+        self.key
+    }
+
+    pub fn register_counter(
+        &self,
+        name: &'static str,
+        description: &'static str,
+    ) -> Metric<Counter> {
+        self.registry.register_counter(name, description)
+    }
+
+    pub fn register_gauge(&self, name: &'static str, description: &'static str) -> Metric<Gauge> {
+        self.registry.register_gauge(name, description)
+    }
+
+    pub fn register_histogram(
+        &self,
+        name: &'static str,
+        description: &'static str,
+        buckets: impl Iterator<Item = f64>,
+    ) -> Metric<Histogram> {
+        self.registry.register_histogram(name, description, buckets)
+    }
+}
+
+pub fn sub_registry(key: &'static str) -> SubRegistry {
+    let registry = SUB_REGISTRIES
+        .get_or_init(|| Mutex::new(BTreeMap::new()))
+        .lock()
+        .entry(key)
+        .or_insert_with(SubRegistry::default)
+        .registry
+        .clone();
+
+    SubRegistry { key, registry }
 }
 
 #[cfg(test)]
@@ -230,5 +298,42 @@ mod tests {
         let mut stdout_reporter = StdoutReporter { reporting: None };
 
         reg.report(&mut stdout_reporter)
+    }
+
+    #[test]
+    fn test_global() {
+        let reg = global_registry();
+        let cs = reg.register_counter("c", "d");
+        let c1 = cs.recorder(&[]);
+        assert_eq!(c1.fetch(), 0);
+        c1.inc(1);
+        assert_eq!(c1.fetch(), 1);
+    }
+
+    #[test]
+    fn test_sub_registry() {
+        let reg = sub_registry("foo");
+
+        assert_eq!(reg.key(), "foo");
+
+        let cs = reg.register_counter("counter", "counter desc");
+        let c = cs.recorder(&[]);
+        assert_eq!(c.fetch(), 0);
+        c.inc(1);
+        assert_eq!(c.fetch(), 1);
+
+        let gs = reg.register_gauge("gauge", "gauge desc");
+        let g = gs.recorder(&[]);
+        assert_eq!(g.fetch(), 0);
+        g.inc(1);
+        assert_eq!(g.fetch(), 1);
+
+        let hs = reg.register_histogram("histogram", "histogram desc", exponential_buckets(1.0, 2.0, 10));
+        let h = hs.recorder(&[]);
+        let ho = h.get();
+        assert_eq!(ho.sum, 0.0);
+        h.record(2.0);
+        let ho = h.get();
+        assert_eq!(ho.sum, 2.0);
     }
 }

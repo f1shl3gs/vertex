@@ -17,6 +17,10 @@ impl Gauge {
         self.state.fetch_min(value, Ordering::Relaxed);
     }
 
+    pub fn set(&self, value: u64) {
+        self.state.store(value, Ordering::Relaxed)
+    }
+
     pub fn fetch(&self) -> u64 {
         self.state.load(Ordering::Relaxed)
     }
