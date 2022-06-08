@@ -5,4 +5,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
-parking_lot = "0.12"
+parking_lot = { version = "0.12.1", default-feature = false }

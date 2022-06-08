@@ -1,12 +1,13 @@
-use parking_lot::Mutex;
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+use parking_lot::Mutex;
+
 use crate::attributes::{assert_legal_key, Attributes};
-use crate::counter::Counter;
-use crate::gauge::Gauge;
-use crate::histogram::Histogram;
 use crate::metric::{Metric, MetricObserver, Observation};
+use crate::Counter;
+use crate::Gauge;
+use crate::Histogram;
 
 pub struct Registry {
     counters: Arc<Mutex<BTreeMap<&'static str, Metric<Counter>>>>,
@@ -115,10 +116,12 @@ pub trait Reporter {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::attributes::Attributes;
     use crate::histogram::exponential_buckets;
+    use crate::metric::Observation;
 
     #[test]
-    fn register_counter() {
+    fn register_multiple_times() {
         let reg = Registry::new();
 
         let cs = reg.register_counter("name", "desc");
@@ -126,6 +129,12 @@ mod tests {
         assert_eq!(c1.fetch(), 0);
         c1.inc(1);
         assert_eq!(c1.fetch(), 1);
+
+        let cs = reg.register_counter("name", "desc");
+        let c2 = cs.recorder(&[("foo", "bar")]);
+        assert_eq!(c2.fetch(), 1);
+        c2.inc(1);
+        assert_eq!(c1.fetch(), 2);
     }
 
     fn attrs_to_string(attrs: &Attributes) -> String {
@@ -150,6 +159,7 @@ mod tests {
             reporting: Option<(&'static str, &'static str)>,
         }
 
+        #[allow(clippy::print_stdout)]
         impl Reporter for StdoutReporter {
             fn start_metric(&mut self, name: &'static str, description: &'static str) {
                 println!("# {}", name);
@@ -162,23 +172,26 @@ mod tests {
 
                 match observation {
                     Observation::Counter(v) | Observation::Gauge(v) => {
-                        println!("{} {} {}", name, attrs_to_string(attrs), v)
+                        println!("{}{} {}", name, attrs_to_string(attrs), v)
                     }
                     Observation::Histogram(h) => {
+                        let mut count = 0;
                         h.buckets.iter().for_each(|b| {
+                            count += b.count;
+
                             let mut sa = attrs.clone();
                             let le = if b.le == f64::MAX {
-                                "+inf".to_string()
+                                "+Inf".to_string()
                             } else {
                                 b.le.to_string()
                             };
 
                             sa.insert("le", le);
-                            println!("{} {} {}", name, attrs_to_string(&sa), b.count)
+                            println!("{}{} {}", name, attrs_to_string(&sa), count)
                         });
 
-                        println!("{}_sum {} {}", name, attrs_to_string(attrs), h.sum);
-                        println!("{}_total {} {}", name, attrs_to_string(attrs), h.count);
+                        println!("{}_sum{} {}", name, attrs_to_string(attrs), h.sum);
+                        println!("{}_count{} {}", name, attrs_to_string(attrs), count);
                     }
                 };
             }

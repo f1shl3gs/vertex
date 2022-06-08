@@ -2,8 +2,9 @@ use std::iter;
 use std::iter::once;
 use std::sync::Arc;
 
-use crate::metric::{MakeMetricObserver, MetricObserver, Observation};
 use parking_lot::Mutex;
+
+use crate::metric::{MakeMetricObserver, MetricObserver, Observation};
 
 /// A bucketed observation
 #[derive(Clone, Debug)]
@@ -16,7 +17,6 @@ pub struct ObservationBucket {
 pub struct HistogramObservation {
     pub buckets: Vec<ObservationBucket>,
     pub sum: f64,
-    pub count: u64,
 }
 
 #[derive(Clone, Debug)]
@@ -32,24 +32,17 @@ impl Histogram {
             .collect::<Vec<_>>();
 
         Self {
-            state: Arc::new(Mutex::new(HistogramObservation {
-                buckets,
-                sum: 0.0,
-                count: 0,
-            })),
+            state: Arc::new(Mutex::new(HistogramObservation { buckets, sum: 0.0 })),
         }
     }
 
     pub fn record(&self, value: f64) {
         let mut state = self.state.lock();
 
-        state.sum += value;
-        state.count += 1;
-        state.buckets.iter_mut().for_each(|b| {
-            if value <= b.le {
-                b.count += 1;
-            }
-        });
+        if let Some(bucket) = state.buckets.iter_mut().find(|b| value <= b.le) {
+            bucket.count = bucket.count.wrapping_add(1);
+            state.sum += value;
+        }
     }
 
     pub fn get(&self) -> HistogramObservation {
@@ -73,7 +66,11 @@ impl MakeMetricObserver for Histogram {
     type Options = Vec<f64>;
 
     fn create(options: &Self::Options) -> Self {
-        Histogram::new(options.iter().cloned())
+        let mut buckets = options.clone();
+        buckets.dedup();
+        buckets.sort_by(|a, b| a.partial_cmp(b).unwrap());
+
+        Histogram::new(buckets.into_iter())
     }
 }
 
