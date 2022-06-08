@@ -122,7 +122,7 @@ pub fn global_registry() -> Registry {
 }
 
 // RwLock is not used, case most time we don't read SUB_REGISTRIES
-static SUB_REGISTRIES: OnceCell<Mutex<BTreeMap<&'static str, SubRegistry>>> = OnceCell::new();
+static SUB_REGISTRIES: OnceCell<Mutex<BTreeMap<&'static str, Registry>>> = OnceCell::new();
 
 #[derive(Default)]
 pub struct SubRegistry {
@@ -137,8 +137,6 @@ impl Drop for SubRegistry {
             .expect("SUB_REGISTRY should be init already")
             .lock()
             .remove(self.key);
-
-        println!("abc");
     }
 }
 
@@ -174,8 +172,7 @@ pub fn sub_registry(key: &'static str) -> SubRegistry {
         .get_or_init(|| Mutex::new(BTreeMap::new()))
         .lock()
         .entry(key)
-        .or_insert_with(SubRegistry::default)
-        .registry
+        .or_insert_with(Registry::default)
         .clone();
 
     SubRegistry { key, registry }
