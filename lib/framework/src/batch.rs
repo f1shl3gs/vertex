@@ -4,7 +4,6 @@ use std::time::Duration;
 
 use event::EventFinalizers;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
-use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 

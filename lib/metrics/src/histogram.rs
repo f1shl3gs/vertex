@@ -66,6 +66,10 @@ impl MakeMetricObserver for Histogram {
     type Options = Vec<f64>;
 
     fn create(options: &Self::Options) -> Self {
+        if options.is_empty() {
+            return Histogram::new(exponential_buckets(1.0, 2.0, 10));
+        };
+
         let mut buckets = options.clone();
         buckets.dedup();
         buckets.sort_by(|a, b| a.partial_cmp(b).unwrap());

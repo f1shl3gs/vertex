@@ -40,13 +40,13 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "healthcheck")]
 impl ExtensionConfig for HealthcheckConfig {
-    async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension> {
+    async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         info!(
             message = "start healthcheck server",
             endpoint = ?self.endpoint
         );
 
-        let shutdown = ctx.shutdown;
+        let shutdown = cx.shutdown;
         let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
         let server = Server::bind(&self.endpoint)
             .serve(service)

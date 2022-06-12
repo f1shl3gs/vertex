@@ -10,6 +10,7 @@ use buffers::{BufferType, WhenFull};
 use event::{EventContainer, Events};
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
+use metrics::Counter;
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
@@ -103,20 +104,35 @@ fn build_task_transform(
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx);
 
+    let send_events = metrics::register_counter(
+        "component_sent_events_total",
+        "The total number of events emitted by this component.",
+    )
+    .recorder(&[]);
+    let send_bytes = metrics::register_counter(
+        "component_sent_event_bytes_total",
+        "The total number of event bytes emitted by this component.",
+    )
+    .recorder(&[]);
+    let received_events = metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+        .recorder(&[]);
+    let received_bytes = metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+        .recorder(&[]);
+
     let filtered = input_rx
-        .filter(move |event| ready(filter_events_type(event, input_type)))
-        .inspect(|event| {
-            let count = 1;
-            let byte_size = event.size_of();
+        .filter(move |events| ready(filter_events_type(events, input_type)))
+        .inspect(|events| {
+            let count = events.len();
+            let byte_size = events.size_of();
 
             trace!(message = "Events received", count, byte_size);
 
-            counter!("component_received_events_total", 1);
-            counter!("component_received_event_bytes_total", byte_size as u64);
+            received_events.inc(count as u64);
+            received_bytes.inc(byte_size as u64);
         });
     let stream = t.transform(Box::pin(filtered)).inspect(|events: &Events| {
-        counter!("component_sent_events_total", events.len() as u64);
-        counter!("component_sent_event_bytes_total", events.size_of() as u64);
+        send_events.inc(events.len() as u64);
+        send_bytes.inc(events.size_of() as u64);
     });
     let transform = async move {
         fanout.send_stream(stream).await;
@@ -139,6 +155,12 @@ struct Runner {
     outputs: TransformOutputs,
     timer: crate::utilization::Timer,
     last_report: Instant,
+
+    // metrics
+    send_events: Counter,
+    send_bytes: Counter,
+    received_events: Counter,
+    received_bytes: Counter,
 }
 
 impl Runner {
@@ -148,6 +170,25 @@ impl Runner {
         input_type: DataType,
         outputs: TransformOutputs,
     ) -> Self {
+        let send_events = metrics::register_counter(
+            "component_sent_events_total",
+            "The total number of events emitted by this component.",
+        )
+        .recorder(&[]);
+        let send_bytes = metrics::register_counter(
+            "component_sent_event_bytes_total",
+            "The total number of event bytes emitted by this component.",
+        )
+        .recorder(&[]);
+        let received_events = metrics::register_counter(
+            "component_received_events_total",
+            "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.",
+        ).recorder(&[]);
+        let received_bytes = metrics::register_counter(
+            "component_received_event_bytes_total",
+            "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins."
+        ).recorder(&[]);
+
         Self {
             transform,
             input_rx: Some(input_rx),
@@ -155,6 +196,11 @@ impl Runner {
             outputs,
             timer: crate::utilization::Timer::new(),
             last_report: Instant::now(),
+            // metrics
+            send_events,
+            send_bytes,
+            received_events,
+            received_bytes,
         }
     }
 
@@ -170,8 +216,8 @@ impl Runner {
 
         trace!(message = "Events received", count, byte_size);
 
-        counter!("component_received_events_total", count as u64);
-        counter!("component_received_event_bytes_total", byte_size as u64);
+        self.received_events.inc(count as u64);
+        self.received_bytes.inc(byte_size as u64);
     }
 
     async fn send_outputs(&mut self, outputs_buf: &mut TransformOutputsBuf) {
@@ -189,8 +235,8 @@ impl Runner {
             byte_size = %byte_size
         );
 
-        counter!("component_sent_events_total", count as u64);
-        counter!("component_sent_event_bytes_total", byte_size as u64);
+        self.send_events.inc(count as u64);
+        self.send_bytes.inc(byte_size as u64);
     }
 
     async fn run_inline(mut self) -> Result<TaskOutput, ()> {
@@ -291,6 +337,11 @@ pub async fn build_pieces(
     let mut health_checks = HashMap::new();
     let mut errors = vec![];
 
+    let received_events = metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+        .recorder(&[]);
+    let received_bytes = metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+        .recorder(&[]);
+
     // Build extensions
     for (key, extension) in config
         .extensions
@@ -300,13 +351,13 @@ pub async fn build_pieces(
         let typetag = extension.extension_type();
         let (shutdown_signal, force_shutdown_tripwire) =
             shutdown_coordinator.register_extension(key);
-        let ctx = ExtensionContext {
+        let cx = ExtensionContext {
             name: key.to_string(),
             global: config.global.clone(),
             shutdown: shutdown_signal,
         };
 
-        let ext = match extension.build(ctx).await {
+        let ext = match extension.build(cx).await {
             Ok(ext) => ext,
             Err(err) => {
                 errors.push(format!("Extension {}: {}", key, err));
@@ -567,15 +618,15 @@ pub async fn build_pieces(
 
             sink.run(
                 rx.by_ref()
-                    .filter(|event| ready(filter_events_type(event, input_type)))
-                    .inspect(|event| {
-                        let count = 1;
-                        let byte_size = event.size_of();
+                    .filter(|events| ready(filter_events_type(events, input_type)))
+                    .inspect(|events| {
+                        let count = events.len();
+                        let byte_size = events.size_of();
 
                         trace!(message = "Events received", count, byte_size);
 
-                        counter!("component_received_events_total", count);
-                        counter!("component_received_event_bytes_total", byte_size as u64);
+                        received_events.inc(count as u64);
+                        received_bytes.inc(byte_size as u64);
                     })
                     .take_until_if(tripwire),
             )

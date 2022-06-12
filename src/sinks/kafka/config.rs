@@ -292,8 +292,8 @@ encoding:
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = super::sink::KafkaSink::new(self.clone(), ctx.acker())?;
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = super::sink::KafkaSink::new(self.clone(), cx.acker())?;
         let hc = health_check(self.clone()).boxed();
         Ok((Sink::Stream(Box::new(sink)), hc))
     }

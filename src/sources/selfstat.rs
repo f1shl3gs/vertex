@@ -31,10 +31,10 @@ struct SelfStatConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "selfstat")]
 impl SourceConfig for SelfStatConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ss = SelfStat::from(self);
 
-        Ok(Box::pin(ss.run(ctx.shutdown, ctx.output)))
+        Ok(Box::pin(ss.run(cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {

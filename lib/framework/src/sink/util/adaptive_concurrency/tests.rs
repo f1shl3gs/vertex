@@ -394,25 +394,9 @@ struct TestResults {
 }
 
 async fn run_test(params: TestParams) -> TestResults {
-    let _ = internal::metric::init_global();
+    todo!("implement")
 
-    // TODO: This is not working now, but clear/reset global registry is needed
-    //
-    // let mut registry = get_global().unwrap();
-    // registry.clear();
-    //
-    // let controller = internal::metric::get_global().expect("Get global metrics");
-    // let metrics = controller
-    //     .capture_metrics()
-    //     .into_iter()
-    //     .map(|metric| (metric.name().to_string(), metric))
-    //     .collect::<HashMap<_, _>>();
-    //
-    // for (_, metric) in metrics {
-    //     println!("{:?}", metric)
-    // }
-
-    let (send_done, is_done) = oneshot::channel();
+    /*let (send_done, is_done) = oneshot::channel();
 
     let test_config = TestConfig {
         request: RequestConfig {
@@ -440,7 +424,6 @@ async fn run_test(params: TestParams) -> TestResults {
 
     let (topology, _crash) =
         crate::topology::test::start_topology(config.build().unwrap(), false).await;
-    let controller = internal::metric::get_global().expect("Get global metrics");
 
     is_done.await.expect("Test failed to complete");
     topology.stop().await;
@@ -495,7 +478,7 @@ async fn run_test(params: TestParams) -> TestResults {
         &MetricValue::Histogram { .. }
     ));
 
-    TestResults { stats, cstats }
+    TestResults { stats, cstats }*/
 }
 
 mod mock {

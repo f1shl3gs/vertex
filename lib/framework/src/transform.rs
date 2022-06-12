@@ -5,6 +5,7 @@ use async_trait::async_trait;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
+use metrics::{Counter, Metric};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
@@ -228,6 +229,10 @@ pub struct TransformOutputs {
     outputs_spec: Vec<Output>,
     primary_output: Option<Fanout>,
     named_outputs: HashMap<String, Fanout>,
+
+    // metrics
+    send_events: Metric<Counter>,
+    send_bytes: Metric<Counter>,
 }
 
 impl TransformOutputs {
@@ -251,11 +256,22 @@ impl TransformOutputs {
             }
         }
 
+        let send_events = metrics::register_counter(
+            "component_sent_events_total",
+            "The total number of events emitted by this component.",
+        );
+        let send_bytes = metrics::register_counter(
+            "component_sent_event_bytes_total",
+            "The total number of event bytes emitted by this component.",
+        );
+
         (
             Self {
                 outputs_spec,
                 primary_output,
                 named_outputs,
+                send_events,
+                send_bytes,
             },
             controls,
         )
@@ -277,8 +293,8 @@ impl TransformOutputs {
                 .await;
 
             // metrics
-            counter!("component_sent_events_total", count as u64);
-            counter!("component_sent_event_bytes_total", byte_size as u64);
+            self.send_events.recorder(&[]).inc(count as u64);
+            self.send_bytes.recorder(&[]).inc(byte_size as u64);
         }
 
         for (key, buf) in &mut buf.named_buffers {
@@ -289,8 +305,12 @@ impl TransformOutputs {
                 .await;
 
             // metrics
-            counter!("component_sent_events_total", count as u64, "output" => key.to_owned());
-            counter!("component_sent_event_bytes_total", byte_size as u64, "output" => key.to_owned());
+            self.send_events
+                .recorder(&[("output", key)])
+                .inc(count as u64);
+            self.send_bytes
+                .recorder(&[("output", key)])
+                .inc(byte_size as u64);
         }
     }
 }

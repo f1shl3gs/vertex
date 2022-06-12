@@ -49,6 +49,7 @@ pub type HttpClientFuture = <HttpClient as Service<http::Request<Body>>>::Future
 pub struct HttpClient<B = Body> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
+    // metrics
 }
 
 impl<B> HttpClient<B>
@@ -118,14 +119,14 @@ where
             let before = std::time::Instant::now();
 
             // Send request and wait for the result.
-            let response_result = response.await;
+            let resp_result = response.await;
 
             // Compute the roundtrip time it took to send the request and get
             // the response or error.
             let roundtrip = before.elapsed();
 
             // Handle the errors and extract the response.
-            let response = response_result
+            let resp = resp_result
                 .map_err(|error| {
                     // Emit the error into the internal events system.
                     emit!(&GotHttpError {
@@ -136,12 +137,28 @@ where
                 })
                 .context(CallRequestSnafu)?;
 
-            // Emit the response into the internal events system.
-            emit!(&GotHttpResponse {
-                response: &response,
-                roundtrip
-            });
-            Ok(response)
+            debug!(
+                message = "HTTP response received",
+                status = %resp.status(),
+                version = ?resp.version(),
+                headers = ?remove_sensitive(resp.headers()),
+                body = %FormatBody(resp.body()),
+            );
+
+            metrics::register_counter(
+                "http_client_requests_total",
+                "The total number of HTTP requests.",
+            )
+            .recorder(&[("status", resp.status().as_str())])
+            .inc(1);
+            metrics::register_histogram(
+                "http_client_request_latency_seconds",
+                "The round-trip time (RTT) of HTTP requests.",
+            )
+            .recorder(&[("status", resp.status().as_str())])
+            .record(roundtrip.as_secs_f64());
+
+            Ok(resp)
         }
         .instrument(span.clone());
 
@@ -163,6 +180,41 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
             .headers_mut()
             .insert("Accept-Encoding", HeaderValue::from_static("identity"));
     }
+}
+
+/// Newtype placeholder to provide a formatter for the request and response body.
+struct FormatBody<'a, B>(&'a B);
+
+impl<'a, B: HttpBody> std::fmt::Display for FormatBody<'a, B> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        let size = self.0.size_hint();
+        match (size.lower(), size.upper()) {
+            (0, None) => write!(fmt, "[unknown]"),
+            (lower, None) => write!(fmt, "[>={} bytes]", lower),
+
+            (0, Some(0)) => write!(fmt, "[empty]"),
+            (0, Some(upper)) => write!(fmt, "[<={} bytes]", upper),
+
+            (lower, Some(upper)) if lower == upper => write!(fmt, "[{} bytes]", lower),
+            (lower, Some(upper)) => write!(fmt, "[{}..={} bytes]", lower, upper),
+        }
+    }
+}
+
+fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> {
+    let mut headers = headers.clone();
+    for name in &[
+        header::AUTHORIZATION,
+        header::PROXY_AUTHORIZATION,
+        header::COOKIE,
+        header::SET_COOKIE,
+    ] {
+        if let Some(value) = headers.get_mut(name) {
+            value.set_sensitive(true);
+        }
+    }
+
+    headers
 }
 
 impl<B> Service<Request<B>> for HttpClient<B>

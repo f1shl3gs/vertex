@@ -67,7 +67,7 @@ register_source_config!("ntp", NtpConfig);
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]
 impl SourceConfig for NtpConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ntp = Ntp {
             interval: self.interval,
             timeout: self.timeout,
@@ -75,7 +75,7 @@ impl SourceConfig for NtpConfig {
             pick_state: 0,
         };
 
-        Ok(Box::pin(ntp.run(ctx.shutdown, ctx.output)))
+        Ok(Box::pin(ntp.run(cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {

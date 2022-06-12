@@ -71,9 +71,9 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "nginx_stub")]
 impl SourceConfig for NginxStubConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let http_client = HttpClient::new(tls, &ctx.proxy)?;
+        let http_client = HttpClient::new(tls, &cx.proxy)?;
 
         let mut sources = Vec::with_capacity(self.endpoints.len());
         for endpoint in self.endpoints.iter() {
@@ -84,9 +84,9 @@ impl SourceConfig for NginxStubConfig {
             )?);
         }
 
-        let mut output = ctx.output;
+        let mut output = cx.output;
         let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {

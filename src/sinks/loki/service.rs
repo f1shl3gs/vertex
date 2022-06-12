@@ -8,7 +8,6 @@ use framework::http::{Auth, HttpClient};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
-use internal::EventsSent;
 use snafu::Snafu;
 use tower::Service;
 use tracing::Instrument;

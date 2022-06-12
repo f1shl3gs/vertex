@@ -14,6 +14,8 @@ use framework::config::{
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
+use libc::sprintf;
+use metrics::{sub_registry, Counter, SubRegistry};
 use serde::{Deserialize, Serialize};
 
 const fn default_increase_by_value() -> bool {
@@ -203,8 +205,9 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "metricalize")]
 impl TransformConfig for MetricalizeConfig {
-    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let agg = Metricalize::new(self.interval, self.metrics.clone());
+    async fn build(&self, cx: &TransformContext) -> framework::Result<Transform> {
+        let reg = sub_registry(format!("metricalize/{}", cx.key.unwrap().id()));
+        let agg = Metricalize::new(self.interval, self.metrics.clone(), reg);
         Ok(Transform::event_task(agg))
     }
 
@@ -264,14 +267,26 @@ struct Metricalize {
     interval: Duration,
     configs: Vec<MetricConfig>,
     states: HashMap<MetricSeries, MetricEntry>,
+
+    // metrics
+    registry: SubRegistry,
+    failures: Counter,
 }
 
 impl Metricalize {
-    fn new(interval: Duration, configs: Vec<MetricConfig>) -> Self {
+    fn new(interval: Duration, configs: Vec<MetricConfig>, reg: SubRegistry) -> Self {
+        let ms = reg.register_counter(
+            "metricalize_failed_total",
+            "The amount of failures of metricalizing",
+        );
+        let metricalize_failed = ms.recorder(&[]);
+
         Self {
             interval,
             configs,
+            registry,
             states: Default::default(),
+            failures: metricalize_failed,
         }
     }
 
@@ -301,7 +316,7 @@ impl Metricalize {
                                         _ => {
                                             *existing =
                                                 (config.new_metric_value(value), metadata.clone());
-                                            counter!("metricalize_failed_total", 1);
+                                            self.failures.inc(1);
                                         }
                                     }
                                 }
@@ -312,7 +327,7 @@ impl Metricalize {
                                 }
                             }
                         }
-                        None => counter!("metricalize_failed_total", 1),
+                        None => self.failures.inc(1),
                     }
                 }
             })

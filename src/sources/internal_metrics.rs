@@ -6,8 +6,9 @@ use framework::{
     Source,
 };
 use futures::StreamExt;
-use internal::metric::{get_global, init_global, InternalRecorder};
+use metrics::{Attributes, Observation};
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -41,16 +42,8 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_metrics")]
 impl SourceConfig for InternalMetricsConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        init_global()?;
-        let recorder = get_global()?;
-
-        Ok(Box::pin(run(
-            recorder,
-            self.interval,
-            ctx.shutdown,
-            ctx.output,
-        )))
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -62,21 +55,21 @@ impl SourceConfig for InternalMetricsConfig {
     }
 }
 
-async fn run(
-    recorder: &InternalRecorder,
-    interval: std::time::Duration,
-    shutdown: ShutdownSignal,
-    mut output: Pipeline,
-) -> Result<(), ()> {
+async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {
     let interval = tokio::time::interval(interval);
     let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
     while ticker.next().await.is_some() {
         let timestamp = Some(chrono::Utc::now());
+        let mut reporter = Reporter::default();
+        let reg = metrics::global_registry();
+        reg.report(&mut reporter);
+
+        /*
         let mut metrics = recorder.capture_metrics().collect::<Vec<_>>();
         metrics
             .iter_mut()
-            .for_each(|metric| metric.timestamp = timestamp);
+            .for_each(|metric| metric.timestamp = timestamp);*/
 
         if let Err(err) = output.send(metrics).await {
             error!(
@@ -89,4 +82,36 @@ async fn run(
     }
 
     Ok(())
+}
+
+#[derive(Default)]
+struct Reporter {
+    inflight: Option<(&'static str, &'static str)>,
+    metrics: Vec<event::Metric>,
+}
+
+impl metrics::Reporter for Reporter {
+    fn start_metric(&mut self, name: &'static str, description: &'static str) {
+        self.inflight = Some((name, description));
+    }
+
+    fn report(&mut self, attrs: &Attributes, observation: metrics::Observation) {
+        let (name, description) = self
+            .inflight
+            .expect("name and description should be set already");
+
+        let tags = attrs.iter().collect::<event::attributes::Attributes>();
+
+        let metric = match observation {
+            Observation::Counter(c) => event::Metric::sum_with_tags(name, description, c, tags),
+            Observation::Gauge(g) => event::Metric::gauge_with_tags(name, description, g, tags),
+            Observation::Histogram(h) => todo!(),
+        };
+
+        self.metrics.push(metric)
+    }
+
+    fn finish_metric(&mut self) {
+        self.inflight = None;
+    }
 }

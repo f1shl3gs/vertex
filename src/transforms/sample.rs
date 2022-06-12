@@ -3,7 +3,6 @@ use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -38,7 +37,7 @@ rate: 10
 #[async_trait::async_trait]
 #[typetag::serde(name = "sample")]
 impl TransformConfig for SampleConfig {
-    async fn build(&self, _ctx: &TransformContext) -> crate::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Sample::new(
             self.rate,
             self.key_field.clone(),

@@ -56,9 +56,9 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
-        let mut output = ctx.output;
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut output = cx.output;
 
         let endpoints = self.endpoints.clone();
         Ok(Box::pin(async move {

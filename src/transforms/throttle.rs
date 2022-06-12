@@ -13,7 +13,6 @@ use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use governor::{clock, Quota, RateLimiter};
-use internal::{emit, InternalEvent};
 use serde::{Deserialize, Serialize};
 use snafu::{OptionExt, Snafu};
 
@@ -68,7 +67,7 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "throttle")]
 impl TransformConfig for ThrottleConfig {
-    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
+    async fn build(&self, cx: &TransformContext) -> framework::Result<Transform> {
         let throttle = Throttle::new(
             self.threshold,
             self.window,
@@ -176,6 +175,8 @@ where
                                     match limiter.check_key(&key) {
                                         Ok(()) => output.push_one(event),
                                         _ => {
+                                            debug!(message = "Rate limit exceeded", key);
+
                                             if let Some(key) = key {
                                                 emit!(&ThrottleEventDiscarded{ key });
                                             } else {

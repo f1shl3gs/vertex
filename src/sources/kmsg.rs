@@ -32,9 +32,9 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "kmsg")]
 impl SourceConfig for KmsgConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut shutdown = ctx.shutdown;
-        let mut output = ctx.output;
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let mut shutdown = cx.shutdown;
+        let mut output = cx.output;
         let boot = boot_time("/proc/uptime")?;
 
         Ok(Box::pin(async move {

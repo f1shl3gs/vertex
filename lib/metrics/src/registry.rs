@@ -118,7 +118,29 @@ pub trait Reporter {
 }
 
 pub fn global_registry() -> Registry {
-    GLOBAL_REGISTRY.get_or_init(|| Registry::new()).clone()
+    GLOBAL_REGISTRY.get_or_init(Registry::new).clone()
+}
+
+pub fn register_counter(name: &'static str, description: &'static str) -> Metric<Counter> {
+    GLOBAL_REGISTRY
+        .get_or_init(Registry::new)
+        .register_counter(name, description)
+}
+
+pub fn register_gauge(name: &'static str, description: &'static str) -> Metric<Gauge> {
+    GLOBAL_REGISTRY
+        .get_or_init(Registry::new)
+        .register_gauge(name, description)
+}
+
+pub fn register_histogram(
+    name: &'static str,
+    description: &'static str,
+    buckets: impl Iterator<Item = f64>,
+) -> Metric<Histogram> {
+    GLOBAL_REGISTRY
+        .get_or_init(Registry::new)
+        .register_histogram(name, description, buckets)
 }
 
 // RwLock is not used, case most time we don't read SUB_REGISTRIES
@@ -167,7 +189,9 @@ impl SubRegistry {
     }
 }
 
-pub fn sub_registry(key: &'static str) -> SubRegistry {
+pub fn sub_registry(key: impl Into<&'static str>) -> Arc<SubRegistry> {
+    let key = key.into();
+
     let registry = SUB_REGISTRIES
         .get_or_init(|| Mutex::new(BTreeMap::new()))
         .lock()
@@ -175,7 +199,7 @@ pub fn sub_registry(key: &'static str) -> SubRegistry {
         .or_insert_with(Registry::default)
         .clone();
 
-    SubRegistry { key, registry }
+    Arc::new(SubRegistry { key, registry })
 }
 
 #[cfg(test)]
@@ -203,12 +227,12 @@ mod tests {
     }
 
     fn attrs_to_string(attrs: &Attributes) -> String {
-        if attrs.len() == 0 {
+        if attrs.is_empty() {
             return String::new();
         }
 
         let s = attrs.iter().fold("".to_string(), |acc, (k, v)| {
-            if acc.len() == 0 {
+            if acc.is_empty() {
                 format!("{}=\"{}\"", k, v)
             } else {
                 format!("{},{}=\"{}\"", acc, k, v)

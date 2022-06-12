@@ -45,7 +45,8 @@ pub fn decode(encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMe
 
 #[inline]
 fn handle_decode_error(encoding: &str, err: impl std::error::Error) -> ErrorMessage {
-    counter!("http_decompress_error_total", 1, "encoding" => encoding.to_string());
+    // TODO: metrics
+    // counter!("http_decompress_error_total", 1, "encoding" => encoding.to_string());
 
     ErrorMessage::new(
         StatusCode::UNPROCESSABLE_ENTITY,

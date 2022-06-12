@@ -245,6 +245,21 @@ impl UdpSink {
 impl StreamSink for UdpSink {
     async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let mut input = input.peekable();
+        let send_events = metrics::register_counter(
+            "socket_sent_events_total",
+            "The total number of events emitted by this component.",
+        )
+        .recorder(&[("mode", "udp")]);
+        let processed_bytes = metrics::register_counter(
+            "processed_bytes_total",
+            "The number of bytes processed by the component.",
+        )
+        .recorder(&[]);
+        let sent_errors = metrics::register_counter(
+            "send_errors_total",
+            "The total number of errors sending messages.",
+        )
+        .recorder(&[("mode", "udp")]);
 
         while Pin::new(&mut input).peek().await.is_some() {
             let mut socket = self.connector.connect_backoff().await;
@@ -259,11 +274,11 @@ impl StreamSink for UdpSink {
 
                     match udp_send(&mut socket, &input).await {
                         Ok(()) => {
-                            counter!("socket_event_send_total", 1, "mode" => "udp");
-                            counter!("processed_bytes_total", input.len() as u64);
+                            send_events.inc(1);
+                            processed_bytes.inc(input.len() as u64);
                         }
                         Err(err) => {
-                            counter!("socket_event_send_errors_total", 1, "mode" => "udp");
+                            sent_errors.inc(1);
                             debug!(
                                 message = "UDP socket error",
                                 %err,
@@ -294,7 +309,8 @@ async fn udp_send(socket: &mut UdpSocket, buf: &[u8]) -> tokio::io::Result<()> {
             internal_log_rate_secs = 30
         );
 
-        counter!("connection_send_errors_total", 1, "mode" => "udp");
+        // TODO: metrics
+        // counter!("connection_send_errors_total", 1, "mode" => "udp");
     }
     Ok(())
 }

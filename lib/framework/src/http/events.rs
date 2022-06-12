@@ -1,9 +1,8 @@
+use std::time::Duration;
+
 use http::{header, HeaderMap, HeaderValue, Request, Response};
 use hyper::body::HttpBody;
 use hyper::Error;
-use internal::InternalEvent;
-use metrics::{counter, histogram};
-use std::time::Duration;
 
 fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> {
     let mut headers = headers.clone();

@@ -8,7 +8,6 @@ use buffers::{Ackable, Acker};
 use event::{EventStatus, Finalizable};
 use futures::{poll, FutureExt, Stream, StreamExt, TryFutureExt};
 use futures_util::future::poll_fn;
-use internal::EventsSent;
 use tokio::{pin, select};
 use tower::Service;
 use tracing::Instrument;

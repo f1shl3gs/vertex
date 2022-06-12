@@ -196,10 +196,10 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let options = self.connect_options();
-        let mut output = ctx.output;
+        let mut output = cx.output;
         let instance = format!("{}:{}", self.host, self.port);
 
         Ok(Box::pin(async move {

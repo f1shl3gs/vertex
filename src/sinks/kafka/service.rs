@@ -5,7 +5,6 @@ use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
-use internal::{BytesSent, EventsSent};
 use rdkafka::error::KafkaError;
 use rdkafka::message::OwnedHeaders;
 use rdkafka::producer::{FutureProducer, FutureRecord};

@@ -1222,13 +1222,12 @@ dependencies = [
  "hyper-proxy",
  "indexmap",
  "indoc",
- "internal",
  "inventory 0.1.11",
  "lazy_static 1.4.0",
  "listenfd",
  "log_schema",
  "memchr 2.5.0",
- "metrics 0.18.1",
+ "metrics 0.1.0",
  "metrics-tracing-context",
  "nix",
  "no-proxy",
@@ -1887,19 +1886,6 @@ name = "integer-encoding"
 version = "3.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "90c11140ffea82edce8dcd74137ce9324ec24b3cf0175fc9d7e29164da9915b8"
-
-[[package]]
-name = "internal"
-version = "0.1.0"
-dependencies = [
- "event",
- "metrics 0.18.1",
- "metrics-util",
- "once_cell",
- "parking_lot 0.12.1",
- "quanta",
- "tracing",
-]
 
 [[package]]
 name = "inventory"
@@ -5340,7 +5326,6 @@ dependencies = [
  "hyper",
  "indexmap",
  "indoc",
- "internal",
  "inventory 0.1.11",
  "jaeger",
  "k8s-openapi",

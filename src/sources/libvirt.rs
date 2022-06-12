@@ -52,10 +52,10 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "libvirt")]
 impl SourceConfig for LibvirtSourceConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let sock = self.sock.clone();
-        let mut output = ctx.output;
+        let mut output = cx.output;
 
         Ok(Box::pin(async move {
             while let Some(_ts) = ticker.next().await {

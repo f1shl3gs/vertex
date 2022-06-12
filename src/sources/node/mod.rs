@@ -829,7 +829,7 @@ impl NodeMetrics {
 #[async_trait::async_trait]
 #[typetag::serde(name = "node_metrics")]
 impl SourceConfig for NodeMetricsConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
             interval: self.interval,
             proc_path: default_proc_path(),
@@ -837,7 +837,7 @@ impl SourceConfig for NodeMetricsConfig {
             collectors: self.collectors.clone(),
         };
 
-        Ok(Box::pin(nm.run(ctx.shutdown, ctx.output)))
+        Ok(Box::pin(nm.run(cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {

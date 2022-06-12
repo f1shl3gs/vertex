@@ -3,8 +3,6 @@ use std::path::{Path, PathBuf};
 use framework::config::GenerateConfig;
 use framework::tls::TlsOptions;
 use framework::Error;
-use internal::{update_counter, InternalEvent};
-use metrics::{counter, gauge};
 use rdkafka::consumer::ConsumerContext;
 use rdkafka::{ClientConfig, ClientContext, Statistics};
 use serde::{Deserialize, Serialize};

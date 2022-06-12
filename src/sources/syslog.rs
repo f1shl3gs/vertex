@@ -135,7 +135,7 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "syslog")]
 impl SourceConfig for SyslogConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let host_key = self
             .host_key
             .clone()
@@ -162,7 +162,7 @@ impl SourceConfig for SyslogConfig {
                     shutdown_timeout,
                     tls,
                     receive_buffer_bytes,
-                    ctx,
+                    cx,
                     false,
                     connection_limit,
                 )
@@ -176,8 +176,8 @@ impl SourceConfig for SyslogConfig {
                 self.max_length,
                 host_key,
                 receive_buffer_bytes,
-                ctx.shutdown,
-                ctx.output,
+                cx.shutdown,
+                cx.output,
             )),
 
             #[cfg(unix)]
@@ -193,8 +193,8 @@ impl SourceConfig for SyslogConfig {
                     move |events, host, byte_size| {
                         handle_events(events, &host_key, host, byte_size)
                     },
-                    ctx.shutdown,
-                    ctx.output,
+                    cx.shutdown,
+                    cx.output,
                 ))
             }
         }

@@ -12,7 +12,6 @@ use event::EventStatus;
 use futures::{ready, FutureExt, Sink, Stream, TryFutureExt};
 use futures_util::future::BoxFuture;
 use futures_util::stream::FuturesUnordered;
-use internal::EventsSent;
 use pin_project::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{sleep, Sleep};

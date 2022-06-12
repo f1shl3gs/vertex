@@ -33,16 +33,16 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
         path: &str,
         tls: &Option<TlsConfig>,
         auth: &Option<HttpSourceAuthConfig>,
-        ctx: SourceContext,
+        cx: SourceContext,
         acknowledgements: bool,
     ) -> crate::Result<Source> {
         let tls = MaybeTlsSettings::from_config(tls, true)?;
         let path = path.to_owned();
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
         let listener = tls.bind(&address).await?;
-        let acknowledgements = ctx.acknowledgements() || acknowledgements;
-        let shutdown = ctx.shutdown;
-        let output = ctx.output;
+        let acknowledgements = cx.acknowledgements() || acknowledgements;
+        let shutdown = cx.shutdown;
+        let output = cx.output;
         let inner = Arc::new(Inner {
             method,
             path: path.to_string(),
@@ -50,15 +50,15 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
             output,
         });
 
+        // TODO: metrics
+
         // TODO: nested closure is pretty tricky, re-work is needed
         let service = make_service_fn(move |_conn| {
-            counter!("http_source_connection_total", 1);
             let inner = Arc::clone(&inner);
             let builder = self.clone();
 
             async move {
                 Ok::<_, crate::Error>(service_fn(move |req: Request<Body>| {
-                    counter!("http_source_request_total", 1);
                     let inner = Arc::clone(&inner);
                     let mut output = inner.output.clone();
                     let builder = builder.clone();

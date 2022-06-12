@@ -1,5 +1,4 @@
 use framework::template::TemplateRenderingError;
-use internal::InternalEvent;
 
 pub struct TemplateRenderingFailed<'a> {
     pub field: Option<&'a str>,

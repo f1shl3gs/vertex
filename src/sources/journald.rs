@@ -61,8 +61,8 @@ pub struct JournaldConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "journald")]
 impl SourceConfig for JournaldConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let data_dir = ctx.globals.make_subdir(ctx.key.id()).map_err(|err| {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let data_dir = cx.globals.make_subdir(cx.key.id()).map_err(|err| {
             warn!("create sub dir failed {:?}", err);
             err
         })?;
@@ -90,7 +90,7 @@ impl SourceConfig for JournaldConfig {
             includes,
             excludes,
             batch_size: self.batch_size.unwrap_or(DEFAULT_BATCH_SIZE),
-            output: ctx.output,
+            output: cx.output,
         };
 
         let start: StartJournalctlFn = Box::new(move |cursor| {
@@ -104,11 +104,7 @@ impl SourceConfig for JournaldConfig {
             start_journalctl(&mut command)
         });
 
-        Ok(Box::pin(src.run_shutdown(
-            checkpointer,
-            ctx.shutdown,
-            start,
-        )))
+        Ok(Box::pin(src.run_shutdown(checkpointer, cx.shutdown, start)))
     }
 
     fn outputs(&self) -> Vec<Output> {

@@ -1,5 +1,3 @@
-use internal::InternalEvent;
-
 #[derive(Debug)]
 pub struct LokiEventUnlabeled;
 

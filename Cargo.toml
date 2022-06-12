@@ -33,7 +33,6 @@ members = [
     "lib/multiline",
     "lib/procfs",
     "lib/serde_regex",
-    "lib/internal",
     "lib/metrics",
     "lib/prometheus",
     "lib/testify",
@@ -329,7 +328,6 @@ buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
-internal = { path = "lib/internal" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 multiline = { path = "lib/multiline", optional = true }
