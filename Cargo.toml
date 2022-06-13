@@ -351,7 +351,7 @@ tokio-util = { version = "0.7.2", default-features = false, features = ["codec",
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
-async-trait = { version = "0.1.53" }
+async-trait = { version = "0.1.56" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
 
