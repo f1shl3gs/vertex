@@ -8,7 +8,7 @@ publish = false
 prost-build = { version = "0.10.4" }
 
 [dev-dependencies]
-async-trait = { version = "0.1.53" }
+async-trait = { version = "0.1.56" }
 indoc = { version = "1" }
 serde_yaml = { version = "0.8.24" }
 

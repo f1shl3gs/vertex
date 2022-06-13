@@ -33,7 +33,6 @@ members = [
     "lib/multiline",
     "lib/procfs",
     "lib/serde_regex",
-    "lib/internal",
     "lib/metrics",
     "lib/prometheus",
     "lib/testify",
@@ -329,7 +328,6 @@ buffers = { path = "lib/buffers" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
-internal = { path = "lib/internal" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 multiline = { path = "lib/multiline", optional = true }
@@ -338,6 +336,7 @@ shared = { path = "lib/shared" }
 sysinfo = { path = "lib/sysinfo" }
 tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
+metrics = { path = "lib/metrics" }
 
 # Allocation
 mimalloc = { version = "0.1.29", default-features = false, optional = true }
@@ -352,12 +351,9 @@ tokio-util = { version = "0.7.2", default-features = false, features = ["codec",
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
-async-trait = { version = "0.1.53" }
+async-trait = { version = "0.1.56" }
 pin-project = { version = "1.0.10" }
 stream-cancel = { version = "0.8.1" }
-
-# Metrics
-metrics = { version = "0.18.1", default-features = false }
 
 # Tracing
 tracing = { version = "0.1.34", default-features = false }
