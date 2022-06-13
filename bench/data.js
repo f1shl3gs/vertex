@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1654606244604,
+  "lastUpdate": 1655135750415,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15203,6 +15203,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 72.928,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "829eb7e60fa5451d5db2e4a4badaf804b8401d88",
+          "message": "Merge pull request #360 from f1shl3gs/fix_metric_register\n\nreplace metrics with our implementation",
+          "timestamp": "2022-06-13T23:48:38+08:00",
+          "tree_id": "0021eb6b49c4e508207dba8ee14c874fd921fb68",
+          "url": "https://github.com/f1shl3gs/vertex/commit/829eb7e60fa5451d5db2e4a4badaf804b8401d88"
+        },
+        "date": 1655135747381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.996,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 65.402,
             "unit": "ns/op"
           }
         ]
