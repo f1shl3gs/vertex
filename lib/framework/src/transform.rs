@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::HashMap;
 use std::pin::Pin;
 
@@ -5,7 +6,7 @@ use async_trait::async_trait;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
-use metrics::{Counter, Metric};
+use metrics::{Attributes, Counter, Metric};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
@@ -305,12 +306,9 @@ impl TransformOutputs {
                 .await;
 
             // metrics
-            self.send_events
-                .recorder(&[("output", key)])
-                .inc(count as u64);
-            self.send_bytes
-                .recorder(&[("output", key)])
-                .inc(byte_size as u64);
+            let attrs = Attributes::from([("output", Cow::from(key.to_string()))]);
+            self.send_events.recorder(attrs.clone()).inc(count as u64);
+            self.send_bytes.recorder(attrs).inc(byte_size as u64);
         }
     }
 }

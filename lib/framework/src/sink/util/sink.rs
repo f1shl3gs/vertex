@@ -338,11 +338,21 @@ where
                 let status = result_status(result);
                 finalizers.update_status(status);
                 if status == EventStatus::Delivered {
-                    emit!(&EventsSent {
-                        count,
-                        byte_size,
-                        output: None
-                    });
+                    // TODO: better metric instruments
+
+                    let sent_events = metrics::register_counter(
+                        "component_sent_events_total",
+                        "The total number of events emitted by this component.",
+                    )
+                    .recorder(&[]);
+                    let sent_bytes = metrics::register_counter(
+                        "component_sent_event_bytes_total",
+                        "The total number of event bytes emitted by this component.",
+                    )
+                    .recorder(&[]);
+
+                    sent_events.inc(count as u64);
+                    sent_bytes.inc(byte_size as u64);
                 }
 
                 // If the rx end is dropped we still completed the request

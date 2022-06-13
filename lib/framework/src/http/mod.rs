@@ -1,8 +1,4 @@
-mod events;
-
-// re-export
-pub use events::*;
-
+use std::borrow::Cow;
 use std::{
     fmt,
     task::{Context, Poll},
@@ -10,7 +6,7 @@ use std::{
 
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
-use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
+use http::{header, header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
 use hyper::{
     body::{Body, HttpBody},
     client,
@@ -18,6 +14,7 @@ use hyper::{
 };
 use hyper_openssl::HttpsConnector;
 use hyper_proxy::ProxyConnector;
+use metrics::{exponential_buckets, Attributes};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use tower::Service;
@@ -49,7 +46,6 @@ pub type HttpClientFuture = <HttpClient as Service<http::Request<Body>>>::Future
 pub struct HttpClient<B = Body> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
-    // metrics
 }
 
 impl<B> HttpClient<B>
@@ -109,8 +105,6 @@ where
 
         default_request_headers(&mut request, &self.user_agent);
 
-        emit!(&AboutToSendHttpRequest { request: &request });
-
         let response = self.client.request(request);
 
         let fut = async move {
@@ -128,11 +122,25 @@ where
             // Handle the errors and extract the response.
             let resp = resp_result
                 .map_err(|error| {
-                    // Emit the error into the internal events system.
-                    emit!(&GotHttpError {
-                        error: &error,
-                        roundtrip
-                    });
+                    debug!(
+                        message = "HTTP error",
+                        err = %error,
+                    );
+
+                    metrics::register_counter(
+                        "http_client_request_errors_total",
+                        "The total number of HTTP request errors for this component.",
+                    )
+                    .recorder([("error", Cow::from(error.to_string()))])
+                    .inc(1);
+                    metrics::register_histogram(
+                        "http_client_request_rtt_seconds",
+                        "The round-trip time (RTT) of HTTP requests",
+                        exponential_buckets(0.01, 2.0, 10),
+                    )
+                    .recorder(&[("status", "none")])
+                    .record(roundtrip.as_secs_f64());
+
                     error
                 })
                 .context(CallRequestSnafu)?;
@@ -145,17 +153,19 @@ where
                 body = %FormatBody(resp.body()),
             );
 
+            let attrs = Attributes::from([("status", resp.status().to_string().into())]);
             metrics::register_counter(
                 "http_client_requests_total",
                 "The total number of HTTP requests.",
             )
-            .recorder(&[("status", resp.status().as_str())])
+            .recorder(attrs.clone())
             .inc(1);
             metrics::register_histogram(
                 "http_client_request_latency_seconds",
                 "The round-trip time (RTT) of HTTP requests.",
+                exponential_buckets(0.01, 2.0, 10),
             )
-            .recorder(&[("status", resp.status().as_str())])
+            .recorder(attrs)
             .record(roundtrip.as_secs_f64());
 
             Ok(resp)

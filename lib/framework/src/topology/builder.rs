@@ -104,16 +104,6 @@ fn build_task_transform(
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx);
 
-    let send_events = metrics::register_counter(
-        "component_sent_events_total",
-        "The total number of events emitted by this component.",
-    )
-    .recorder(&[]);
-    let send_bytes = metrics::register_counter(
-        "component_sent_event_bytes_total",
-        "The total number of event bytes emitted by this component.",
-    )
-    .recorder(&[]);
     let received_events = metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
         .recorder(&[]);
     let received_bytes = metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
@@ -127,12 +117,32 @@ fn build_task_transform(
 
             trace!(message = "Events received", count, byte_size);
 
-            received_events.inc(count as u64);
-            received_bytes.inc(byte_size as u64);
+            metrics::register_counter(
+                "component_sent_events_total",
+                "The total number of events emitted by this component.",
+            )
+            .recorder(&[])
+            .inc(count as u64);
+            metrics::register_counter(
+                "component_sent_event_bytes_total",
+                "The total number of event bytes emitted by this component.",
+            )
+            .recorder(&[])
+            .inc(byte_size as u64);
         });
     let stream = t.transform(Box::pin(filtered)).inspect(|events: &Events| {
-        send_events.inc(events.len() as u64);
-        send_bytes.inc(events.size_of() as u64);
+        metrics::register_counter(
+            "component_sent_events_total",
+            "The total number of events emitted by this component.",
+        )
+        .recorder(&[])
+        .inc(events.len() as u64);
+        metrics::register_counter(
+            "component_sent_event_bytes_total",
+            "The total number of event bytes emitted by this component.",
+        )
+        .recorder(&[])
+        .inc(events.size_of() as u64);
     });
     let transform = async move {
         fanout.send_stream(stream).await;
@@ -336,11 +346,6 @@ pub async fn build_pieces(
     let mut shutdown_coordinator = ShutdownCoordinator::default();
     let mut health_checks = HashMap::new();
     let mut errors = vec![];
-
-    let received_events = metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-        .recorder(&[]);
-    let received_bytes = metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-        .recorder(&[]);
 
     // Build extensions
     for (key, extension) in config
@@ -625,8 +630,12 @@ pub async fn build_pieces(
 
                         trace!(message = "Events received", count, byte_size);
 
-                        received_events.inc(count as u64);
-                        received_bytes.inc(byte_size as u64);
+                        metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+                            .recorder(&[])
+                            .inc(count as u64);
+                        metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
+                            .recorder(&[])
+                            .inc(byte_size as u64);
                     })
                     .take_until_if(tripwire),
             )

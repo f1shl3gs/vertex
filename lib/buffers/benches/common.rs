@@ -10,11 +10,8 @@ use buffers::{
 };
 use bytes::{Buf, BufMut};
 use futures::{Sink, SinkExt, Stream, StreamExt};
-use metrics_tracing_context::{MetricsLayer, TracingContextLayer};
-use metrics_util::{layers::Layer, DebuggingRecorder};
 use shared::ByteSizeOf;
 use tracing::Span;
-use tracing_subscriber::prelude::__tracing_subscriber_SubscriberExt;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Message<const N: usize> {
@@ -126,13 +123,13 @@ pub async fn setup<const N: usize>(
 }
 
 pub fn init_instrumentation() {
-    if metrics::try_recorder().is_none() {
+    /*    if metrics::try_recorder().is_none() {
         let subscriber = tracing_subscriber::Registry::default().with(MetricsLayer::new());
         tracing::subscriber::set_global_default(subscriber).unwrap();
 
         let recorder = TracingContextLayer::all().layer(DebuggingRecorder::new());
         metrics::set_boxed_recorder(Box::new(recorder)).unwrap();
-    }
+    }*/
 }
 
 //

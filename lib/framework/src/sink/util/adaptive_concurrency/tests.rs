@@ -1,6 +1,6 @@
 #![allow(clippy::print_stderr)] //tests
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Formatter;
 use std::fs::{read_dir, File};
@@ -17,7 +17,7 @@ use futures_util::{stream, SinkExt};
 use rand::{thread_rng, Rng};
 use rand_distr::Exp1;
 
-use event::{Event, MetricValue};
+use event::Event;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 use testify::stats::{HistogramStats, LevelTimeHistogram, TimeHistogram, WeightedSumStats};
@@ -32,7 +32,7 @@ use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
 use crate::sink::util::retries::RetryLogic;
 use crate::sink::util::service::{Concurrency, RequestConfig};
 use crate::sink::util::vec::{EncodedLength, VecBuffer};
-use crate::{config, Healthcheck, Sink};
+use crate::{Healthcheck, Sink};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]

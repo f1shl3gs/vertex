@@ -133,7 +133,7 @@ impl AcknowledgementTracker {
 
 pub trait DriverResponse {
     fn event_status(&self) -> EventStatus;
-    fn events_send(&self) -> EventsSent;
+    fn events_send(&self) -> (usize, usize, Option<&'static str>);
 }
 
 /// Drives the interaction between a stream of items and a service which processes
@@ -311,7 +311,21 @@ where
                                         );
 
                                         finalizers.update_status(resp.event_status());
-                                        internal::emit(&resp.events_send());
+
+                                        // TODO: metrics
+                                        let (count, bytes, _) = resp.events_send();
+                                        metrics::register_counter(
+                                            "component_sent_events_total",
+                                            "The total number of events emitted by this component.",
+                                        )
+                                        .recorder(&[])
+                                        .inc(count as u64);
+                                        metrics::register_counter(
+                                            "component_sent_event_bytes_total",
+                                            "The total number of event bytes emitted by this component.",
+                                        )
+                                        .recorder(&[])
+                                        .inc(bytes as u64);
                                     }
                                 };
 
@@ -380,12 +394,8 @@ mod tests {
             EventStatus::Delivered
         }
 
-        fn events_send(&self) -> EventsSent {
-            EventsSent {
-                count: 1,
-                byte_size: 1,
-                output: None,
-            }
+        fn events_send(&self) -> (usize, usize, Option<&'static str>) {
+            (1, 1, None)
         }
     }
 

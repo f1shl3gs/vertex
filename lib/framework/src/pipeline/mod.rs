@@ -10,6 +10,7 @@ use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
+use metrics::{Attributes, Counter};
 use pin_project::pin_project;
 use shared::ByteSizeOf;
 use tokio::sync::mpsc;
@@ -207,13 +208,38 @@ impl Pipeline {
 struct Inner {
     inner: mpsc::Sender<Events>,
     output: String,
+
+    // metrics
+    sent_events: Counter,
+    sent_bytes: Counter,
 }
 
 impl Inner {
     fn new_with_buffer(n: usize, output: String) -> (Self, ReceiverStream<Events>) {
         let (tx, rx) = mpsc::channel(n);
         let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
-        (Self { inner: tx, output }, ReceiverStream::new(rx))
+
+        let attrs = Attributes::from([("output", output.clone().into())]);
+        let sent_events = metrics::register_counter(
+            "component_sent_events_total",
+            "The total number of events emitted by this component.",
+        )
+        .recorder(attrs.clone());
+        let sent_bytes = metrics::register_counter(
+            "component_sent_event_bytes_total",
+            "The total number of event bytes emitted by this component.",
+        )
+        .recorder(attrs);
+
+        (
+            Self {
+                inner: tx,
+                output,
+                sent_events,
+                sent_bytes,
+            },
+            ReceiverStream::new(rx),
+        )
     }
 
     async fn send(&mut self, events: Events) -> Result<(), ClosedError> {
@@ -255,11 +281,8 @@ impl Inner {
                 }
 
                 Err(err) => {
-                    emit!(&EventsSent {
-                        count,
-                        byte_size,
-                        output: Some(&self.output)
-                    });
+                    self.sent_events.inc(count as u64);
+                    self.sent_bytes.inc(byte_size as u64);
 
                     trace!(
                         message = "Events send failed",
@@ -272,11 +295,14 @@ impl Inner {
             }
         }
 
-        emit!(&EventsSent {
-            count,
-            byte_size,
-            output: Some(&self.output)
-        });
+        self.sent_events.inc(count as u64);
+        self.sent_bytes.inc(byte_size as u64);
+
+        trace!(
+            message = "Events send failed",
+            %count,
+            %byte_size
+        );
 
         Ok(())
     }

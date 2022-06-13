@@ -51,12 +51,8 @@ impl DriverResponse for LokiResponse {
         EventStatus::Delivered
     }
 
-    fn events_send(&self) -> EventsSent {
-        EventsSent {
-            count: self.batch_size,
-            byte_size: self.events_byte_size,
-            output: None,
-        }
+    fn events_send(&self) -> (usize, usize, Option<String>) {
+        (self.batch_size, self.events_byte_size, None)
     }
 }
 

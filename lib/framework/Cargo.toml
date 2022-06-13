@@ -57,7 +57,6 @@ listenfd = { version = "1.0.0", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { path = "../metrics" }
-metrics-tracing-context = { version = "0.10.0", default-features = false }
 no-proxy = { version = "0.3.1" }
 once_cell = { version = "1.12", default-features = false }
 openssl = { version = "0.10.40", default-features = false }

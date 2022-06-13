@@ -617,7 +617,9 @@ where
                 //
                 // We don't update it unless there's a received/sent event emitted, which these
                 // events naturally will not be part of as they don't flow out of the buffer.
-                counter!("buffer_corrupted_events_total", events_skipped);
+
+                // TODO: metrics
+                // counter!("buffer_corrupted_events_total", events_skipped);
             }
         }
 
