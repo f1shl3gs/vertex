@@ -14,6 +14,7 @@ use framework::config::{
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
+use metrics::Counter;
 use serde::{Deserialize, Serialize};
 
 const fn default_increase_by_value() -> bool {
@@ -264,14 +265,24 @@ struct Metricalize {
     interval: Duration,
     configs: Vec<MetricConfig>,
     states: HashMap<MetricSeries, MetricEntry>,
+
+    // metrics
+    failures: Counter,
 }
 
 impl Metricalize {
     fn new(interval: Duration, configs: Vec<MetricConfig>) -> Self {
+        let failures = metrics::register_counter(
+            "metricalize_failed_total",
+            "The amount of failures of metricalizing",
+        )
+        .recorder(&[]);
+
         Self {
             interval,
             configs,
             states: Default::default(),
+            failures,
         }
     }
 
@@ -301,7 +312,7 @@ impl Metricalize {
                                         _ => {
                                             *existing =
                                                 (config.new_metric_value(value), metadata.clone());
-                                            counter!("metricalize_failed_total", 1);
+                                            self.failures.inc(1);
                                         }
                                     }
                                 }
@@ -312,7 +323,7 @@ impl Metricalize {
                                 }
                             }
                         }
-                        None => counter!("metricalize_failed_total", 1),
+                        None => self.failures.inc(1),
                     }
                 }
             })

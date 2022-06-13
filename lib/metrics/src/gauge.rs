@@ -1,6 +1,7 @@
-use crate::metric::{MetricObserver, Observation};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
+
+use crate::metric::{MetricObserver, Observation};
 
 #[derive(Clone, Debug, Default)]
 pub struct Gauge {
@@ -16,6 +17,10 @@ impl Gauge {
         self.state.fetch_min(value, Ordering::Relaxed);
     }
 
+    pub fn set(&self, value: u64) {
+        self.state.store(value, Ordering::Relaxed)
+    }
+
     pub fn fetch(&self) -> u64 {
         self.state.load(Ordering::Relaxed)
     }
@@ -25,7 +30,7 @@ impl MetricObserver for Gauge {
     type Recorder = Self;
 
     fn recorder(&self) -> Self::Recorder {
-        Gauge::default()
+        self.clone()
     }
 
     fn observe(&self) -> Observation {

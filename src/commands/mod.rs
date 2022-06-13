@@ -177,7 +177,7 @@ impl RootCommand {
             let result = topology::start_validate(config, diff, pieces).await;
 
             #[cfg(feature = "extensions-healthcheck")]
-                healthcheck::set_readiness(true);
+            healthcheck::set_readiness(true);
 
             let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 

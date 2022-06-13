@@ -324,8 +324,9 @@ impl LogSource {
 
         let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
         let mut events = rx.map(futures::stream::iter).flatten().map(move |line| {
-            let bytes = line.text.len();
-            counter!("component_received_bytes_total", bytes as u64, "source" => source.clone());
+            metrics::register_counter("component_received_bytes_total", "")
+                .recorder([("source", source.clone().into())])
+                .inc(line.text.len() as u64);
 
             let mut log = create_log(
                 line.text,
@@ -335,14 +336,22 @@ impl LogSource {
 
             match pod_annotator.annotate(&mut log, &line.filename) {
                 Some(file_info) => {
-                    counter!("component_received_events_total", 1, "pod" => file_info.pod_name.to_owned());
-                    counter!("component_received_bytes_total", log.size_of() as u64, "pod" => file_info.pod_name.to_owned());
+                    let attrs =
+                        metrics::Attributes::from([("pod", file_info.pod_name.to_string().into())]);
+
+                    metrics::register_counter("component_received_events_total", "")
+                        .recorder(attrs.clone())
+                        .inc(1);
+                    metrics::register_counter("component_received_bytes_total", "")
+                        .recorder(attrs)
+                        .inc(log.size_of() as u64);
                 }
                 None => {
-                    counter!("component_received_events_total", 1);
-                    counter!("component_received_bytes_total", log.size_of() as u64);
+                    // TODO: metrics
+                    // counter!("component_received_events_total", 1);
+                    // counter!("component_received_bytes_total", log.size_of() as u64);
 
-                    counter!("kubernetes_event_annotation_failures_total", 1);
+                    // counter!("kubernetes_event_annotation_failures_total", 1);
                     error!(
                         message = "Failed to annotate log with pod metadata",
                         file = line.filename.as_str(),

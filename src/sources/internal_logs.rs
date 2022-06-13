@@ -33,7 +33,7 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_logs")]
 impl SourceConfig for InternalLogsConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let host_key = self
             .host_key
             .as_deref()
@@ -41,7 +41,7 @@ impl SourceConfig for InternalLogsConfig {
             .to_owned();
         let pid_key = self.pid_key.as_deref().unwrap_or("pid").to_owned();
 
-        Ok(Box::pin(run(host_key, pid_key, ctx.output, ctx.shutdown)))
+        Ok(Box::pin(run(host_key, pid_key, cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<Output> {

@@ -83,8 +83,8 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for PrometheusExporterConfig {
-    async fn build(&self, ctx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = PrometheusExporter::new(self.clone(), ctx.acker);
+    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = PrometheusExporter::new(self.clone(), cx.acker);
         let health_check = futures::future::ok(()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), health_check))

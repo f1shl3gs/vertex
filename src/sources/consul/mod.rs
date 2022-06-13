@@ -71,11 +71,11 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "consul")]
 impl SourceConfig for ConsulSourceConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
-        let proxy = ctx.proxy.clone();
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(ctx.shutdown);
+        let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;
         let opts = self.query_options.clone();
@@ -85,7 +85,7 @@ impl SourceConfig for ConsulSourceConfig {
             .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
-        let mut output = ctx.output;
+        let mut output = cx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {

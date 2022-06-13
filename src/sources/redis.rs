@@ -281,10 +281,10 @@ fn default_namespace() -> Option<String> {
 #[async_trait::async_trait]
 #[typetag::serde(name = "redis")]
 impl SourceConfig for RedisSourceConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let src = RedisSource::from(self);
 
-        Ok(Box::pin(src.run(ctx.output, ctx.shutdown)))
+        Ok(Box::pin(src.run(cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<Output> {

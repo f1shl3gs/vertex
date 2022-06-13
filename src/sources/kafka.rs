@@ -247,7 +247,7 @@ impl KafkaSourceConfig {
         }
 
         let consumer = client_config
-            .create_with_context::<_, StreamConsumer<_>>(KafkaStatisticsContext)
+            .create_with_context::<_, StreamConsumer<_>>(KafkaStatisticsContext::new())
             .context(KafkaCreateSnafu)?;
 
         let topics: Vec<&str> = self.topics.iter().map(|s| s.as_str()).collect();
@@ -408,7 +408,8 @@ async fn kafka_source(
                         if let Err(err) =
                             consumer.store_offset(msg.topic(), msg.partition(), msg.offset())
                         {
-                            counter!("kafka_consumer_offset_updates_failed_total", 1);
+                            // TODO: metrics
+                            // counter!("kafka_consumer_offset_updates_failed_total", 1);
                             warn!(
                                 message = "Failed to read message",
                                 ?err,

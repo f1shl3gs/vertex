@@ -95,7 +95,7 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "haproxy")]
 impl SourceConfig for HaproxyConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let endpoints = self
             .endpoints
             .iter()
@@ -103,10 +103,10 @@ impl SourceConfig for HaproxyConfig {
             .collect::<Vec<_>>();
 
         let auth = self.auth.clone();
-        let proxy = ctx.proxy.clone();
+        let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
-        let mut output = ctx.output;
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut output = cx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {

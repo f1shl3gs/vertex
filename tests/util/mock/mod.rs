@@ -137,7 +137,7 @@ impl MockTransformConfig {
 #[async_trait]
 #[typetag::serde(name = "mock")]
 impl TransformConfig for MockTransformConfig {
-    async fn build(&self, _ctx: &TransformContext) -> framework::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         Ok(Transform::function(MockTransform {
             suffix: self.suffix.clone(),
             increase: self.increase,

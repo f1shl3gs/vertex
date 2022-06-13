@@ -3,7 +3,4 @@
 pub fn init_test() {
     framework::trace::init(false, false, "error");
     testify::event::clear_recorded_events();
-
-    // Handle multiple initialization
-    let _ = internal::metric::init_global();
 }

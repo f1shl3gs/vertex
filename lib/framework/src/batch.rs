@@ -4,7 +4,6 @@ use std::time::Duration;
 
 use event::EventFinalizers;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
-use internal::InternalEvent;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 
@@ -99,28 +98,21 @@ pub enum PushResult<T> {
     Overflow(T),
 }
 
-struct LargeEventDropped {
-    pub length: usize,
-    pub max_length: usize,
-}
-
-impl InternalEvent for LargeEventDropped {
-    fn emit_logs(&self) {
-        error!(
-            message = "Event larger than batch max_bytes; dropping event.",
-            batch_max_bytes = %self.max_length,
-            length = %self.length,
-            internal_log_rate_secs = 1
-        );
-    }
-
-    fn emit_metrics(&self) {
-        counter!("events_discarded_total", 1, "reason" => "oversized");
-    }
-}
-
 pub fn err_event_too_large<T>(length: usize, max_length: usize) -> PushResult<T> {
-    emit!(&LargeEventDropped { length, max_length });
+    error!(
+        message = "Event larger than batch max_bytes; dropping event.",
+        batch_max_bytes = %max_length,
+        length = %length,
+        internal_log_rate_secs = 1
+    );
+
+    metrics::register_counter(
+        "events_discarded_total",
+        "The total number of events discarded by this component.",
+    )
+    .recorder(&[("reason", "oversized")])
+    .inc(1);
+
     PushResult::Ok(false)
 }
 

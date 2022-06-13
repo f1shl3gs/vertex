@@ -1,8 +1,4 @@
-mod events;
-
-// re-export
-pub use events::*;
-
+use std::borrow::Cow;
 use std::{
     fmt,
     task::{Context, Poll},
@@ -10,7 +6,7 @@ use std::{
 
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
-use http::{header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
+use http::{header, header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
 use hyper::{
     body::{Body, HttpBody},
     client,
@@ -18,6 +14,7 @@ use hyper::{
 };
 use hyper_openssl::HttpsConnector;
 use hyper_proxy::ProxyConnector;
+use metrics::{exponential_buckets, Attributes};
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 use tower::Service;
@@ -108,8 +105,6 @@ where
 
         default_request_headers(&mut request, &self.user_agent);
 
-        emit!(&AboutToSendHttpRequest { request: &request });
-
         let response = self.client.request(request);
 
         let fut = async move {
@@ -118,30 +113,62 @@ where
             let before = std::time::Instant::now();
 
             // Send request and wait for the result.
-            let response_result = response.await;
+            let resp_result = response.await;
 
             // Compute the roundtrip time it took to send the request and get
             // the response or error.
             let roundtrip = before.elapsed();
 
             // Handle the errors and extract the response.
-            let response = response_result
+            let resp = resp_result
                 .map_err(|error| {
-                    // Emit the error into the internal events system.
-                    emit!(&GotHttpError {
-                        error: &error,
-                        roundtrip
-                    });
+                    debug!(
+                        message = "HTTP error",
+                        err = %error,
+                    );
+
+                    metrics::register_counter(
+                        "http_client_request_errors_total",
+                        "The total number of HTTP request errors for this component.",
+                    )
+                    .recorder([("error", Cow::from(error.to_string()))])
+                    .inc(1);
+                    metrics::register_histogram(
+                        "http_client_request_rtt_seconds",
+                        "The round-trip time (RTT) of HTTP requests",
+                        exponential_buckets(0.01, 2.0, 10),
+                    )
+                    .recorder(&[("status", "none")])
+                    .record(roundtrip.as_secs_f64());
+
                     error
                 })
                 .context(CallRequestSnafu)?;
 
-            // Emit the response into the internal events system.
-            emit!(&GotHttpResponse {
-                response: &response,
-                roundtrip
-            });
-            Ok(response)
+            debug!(
+                message = "HTTP response received",
+                status = %resp.status(),
+                version = ?resp.version(),
+                headers = ?remove_sensitive(resp.headers()),
+                body = %FormatBody(resp.body()),
+            );
+
+            let attrs = Attributes::from([("status", resp.status().to_string().into())]);
+            metrics::register_counter(
+                "http_client_requests_total",
+                "The total number of HTTP requests.",
+            )
+            .recorder(attrs.clone())
+            .inc(1);
+            metrics::register_histogram(
+                "http_client_request_latency_seconds",
+                "The round-trip time (RTT) of HTTP requests.",
+                exponential_buckets(0.01, 2.0, 10),
+            )
+            .recorder(attrs)
+            .record(roundtrip.as_secs_f64());
+
+            Ok(resp)
         }
         .instrument(span.clone());
 
@@ -163,6 +190,41 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
             .headers_mut()
             .insert("Accept-Encoding", HeaderValue::from_static("identity"));
     }
+}
+
+/// Newtype placeholder to provide a formatter for the request and response body.
+struct FormatBody<'a, B>(&'a B);
+
+impl<'a, B: HttpBody> std::fmt::Display for FormatBody<'a, B> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        let size = self.0.size_hint();
+        match (size.lower(), size.upper()) {
+            (0, None) => write!(fmt, "[unknown]"),
+            (lower, None) => write!(fmt, "[>={} bytes]", lower),
+
+            (0, Some(0)) => write!(fmt, "[empty]"),
+            (0, Some(upper)) => write!(fmt, "[<={} bytes]", upper),
+
+            (lower, Some(upper)) if lower == upper => write!(fmt, "[{} bytes]", lower),
+            (lower, Some(upper)) => write!(fmt, "[{}..={} bytes]", lower, upper),
+        }
+    }
+}
+
+fn remove_sensitive(headers: &HeaderMap<HeaderValue>) -> HeaderMap<HeaderValue> {
+    let mut headers = headers.clone();
+    for name in &[
+        header::AUTHORIZATION,
+        header::PROXY_AUTHORIZATION,
+        header::COOKIE,
+        header::SET_COOKIE,
+    ] {
+        if let Some(value) = headers.get_mut(name) {
+            value.set_sensitive(true);
+        }
+    }
+
+    headers
 }
 
 impl<B> Service<Request<B>> for HttpClient<B>

@@ -23,8 +23,8 @@ pub struct PprofConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "pprof")]
 impl ExtensionConfig for PprofConfig {
-    async fn build(&self, ctx: ExtensionContext) -> crate::Result<Extension> {
-        Ok(Box::pin(run(self.listen, ctx.shutdown)))
+    async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
+        Ok(Box::pin(run(self.listen, cx.shutdown)))
     }
 
     fn extension_type(&self) -> &'static str {

@@ -17,13 +17,9 @@ pub mod transforms;
 pub use framework::hostname;
 
 #[macro_use]
-extern crate metrics;
-#[macro_use]
 extern crate lazy_static;
 #[macro_use]
 extern crate tracing;
-#[macro_use]
-extern crate internal;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;

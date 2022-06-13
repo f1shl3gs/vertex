@@ -38,6 +38,8 @@ pub(super) async fn serve(
     info!(message = "Listening", %address);
 
     let mut buf = BytesMut::with_capacity(max_length);
+    let recv_bytes = metrics::register_counter("socket_recv_bytes_total", "")
+        .recorder([("source", source.into())]);
     loop {
         buf.resize(max_length, 0);
 
@@ -46,7 +48,7 @@ pub(super) async fn serve(
                 match recv {
                     Ok((size, _orgin_address)) => {
                         let payload = buf.split_to(size);
-                        counter!("socket_recv_bytes", size as u64, "source" => source.clone());
+                        recv_bytes.inc(size as u64);
 
                         match decode(payload.to_vec()) {
                             Ok(batch) => {

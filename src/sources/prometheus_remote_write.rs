@@ -64,7 +64,7 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SourceConfig for PrometheusRemoteWriteConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = RemoteWriteSource;
 
         source
@@ -74,7 +74,7 @@ impl SourceConfig for PrometheusRemoteWriteConfig {
                 "/write",
                 &self.tls,
                 &self.auth,
-                ctx,
+                cx,
                 self.acknowledgements,
             )
             .await

@@ -1,6 +1,7 @@
-use crate::metric::{MetricObserver, Observation};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Arc;
+
+use crate::metric::{MetricObserver, Observation};
 
 #[derive(Clone, Debug, Default)]
 pub struct Counter {
@@ -12,6 +13,10 @@ impl Counter {
         self.state.fetch_add(i, Ordering::Relaxed);
     }
 
+    pub fn set(&self, value: u64) {
+        self.state.store(value, Ordering::Relaxed);
+    }
+
     pub fn fetch(&self) -> u64 {
         self.state.load(Ordering::Relaxed)
     }
@@ -21,7 +26,7 @@ impl MetricObserver for Counter {
     type Recorder = Self;
 
     fn recorder(&self) -> Self::Recorder {
-        Counter::default()
+        self.clone()
     }
 
     fn observe(&self) -> Observation {
@@ -43,7 +48,8 @@ mod tests {
         counter.inc(2);
         assert_eq!(counter.fetch(), 3);
 
+        // Expect counter to wrap around
         counter.inc(u64::MAX);
-        println!("{}", counter.fetch())
+        assert_eq!(counter.fetch(), 2);
     }
 }

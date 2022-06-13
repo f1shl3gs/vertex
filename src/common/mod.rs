@@ -1,4 +1,3 @@
-pub mod events;
 #[cfg(feature = "rdkafka")]
 pub mod kafka;
 #[cfg(any(

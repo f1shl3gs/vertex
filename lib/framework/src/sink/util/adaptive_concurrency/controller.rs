@@ -10,10 +10,6 @@ use tokio::time::error::Elapsed;
 use crate::http::HttpError;
 use crate::stats::{EwmaVar, Mean, MeanVariance};
 
-use super::events::{
-    AdaptiveConcurrencyAverageRtt, AdaptiveConcurrencyInflight, AdaptiveConcurrencyLimitChanged,
-    AdaptiveConcurrencyObservedRtt,
-};
 use super::semaphore::ShrinkableSemaphore;
 use super::AdaptiveConcurrencySettings;
 use super::MAX_CONCURRENCY;
@@ -31,6 +27,15 @@ pub struct Controller<L> {
 
     #[cfg(test)]
     pub stats: Arc<Mutex<ControllerStatistics>>,
+
+    // metrics
+    limit: metrics::Histogram,
+    reached_limit: metrics::Histogram,
+    back_pressure: metrics::Histogram,
+    past_rtt_mean: metrics::Histogram,
+    averaged_rtt: metrics::Histogram,
+    observed_rtt: metrics::Histogram,
+    inflight: metrics::Histogram,
 }
 
 #[derive(Debug)]
@@ -64,6 +69,49 @@ impl<L> Controller<L> {
         // and the maximum to MAX_CONCURRENCY.
         let current_limit = concurrency.unwrap_or(1);
 
+        let limit = metrics::register_histogram(
+            "adaptive_concurrency_limit",
+            "The concurrency limit that the adaptive concurrency feature has decided on for this current window.",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let reached_limit = metrics::register_histogram(
+            "adaptive_concurrency_reached_limit",
+            "",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let back_pressure = metrics::register_histogram(
+            "adaptive_concurrency_back_pressure",
+            "",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let past_rtt_mean = metrics::register_histogram(
+            "adaptive_concurrency_past_rtt_mean",
+            "",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let averaged_rtt = metrics::register_histogram(
+            "adaptive_concurrency_averaged_rtt",
+            "The average round-trip time (RTT) for the current window.",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let observed_rtt = metrics::register_histogram(
+            "adaptive_concurrency_observed_rtt_seconds",
+            "The observed round-trip time (RTT) for requests.",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+        let inflight = metrics::register_histogram(
+            "adaptive_concurrency_inflight",
+            "The number of outbound requests currently awaiting a response.",
+            metrics::exponential_buckets(1.0, 2.0, 10),
+        )
+        .recorder(&[]);
+
         Self {
             semaphore: Arc::new(ShrinkableSemaphore::new(current_limit)),
             concurrency,
@@ -80,6 +128,15 @@ impl<L> Controller<L> {
             })),
             #[cfg(test)]
             stats: Arc::new(Mutex::new(Default::default())),
+
+            // metrics
+            limit,
+            reached_limit,
+            back_pressure,
+            past_rtt_mean,
+            averaged_rtt,
+            observed_rtt,
+            inflight,
         }
     }
 
@@ -101,9 +158,7 @@ impl<L> Controller<L> {
             inner.reached_limit = true;
         }
 
-        emit!(&AdaptiveConcurrencyInflight {
-            inflight: inner.inflight as u64
-        });
+        self.inflight.record(inner.inflight as f64);
     }
 
     /// Adjust the controller to a response, based on type of response given (backpresuree or not)
@@ -114,7 +169,7 @@ impl<L> Controller<L> {
 
         let rtt = now.saturating_duration_since(start);
         if use_rtt {
-            emit!(&AdaptiveConcurrencyObservedRtt { rtt });
+            self.observed_rtt.record(rtt.as_secs_f64());
         }
 
         let rtt = rtt.as_secs_f64();
@@ -135,9 +190,7 @@ impl<L> Controller<L> {
         }
 
         inner.inflight -= 1;
-        emit!(&AdaptiveConcurrencyInflight {
-            inflight: inner.inflight as u64
-        });
+        self.inflight.record(inner.inflight as f64);
 
         if use_rtt {
             inner.current_rtt.update(rtt);
@@ -177,9 +230,7 @@ impl<L> Controller<L> {
                 }
 
                 if let Some(current_rtt) = current_rtt {
-                    emit!(&AdaptiveConcurrencyAverageRtt {
-                        rtt: Duration::from_secs_f64(current_rtt)
-                    });
+                    self.averaged_rtt.record(current_rtt);
                 }
 
                 // Only manage the concurrency if `concurrency` was set to "adaptive"
@@ -233,14 +284,22 @@ impl<L> Controller<L> {
             inner.current_limit -= to_forget;
         }
 
-        emit!(&AdaptiveConcurrencyLimitChanged {
-            concurrency: inner.current_limit as u64,
-            reached_limit: inner.reached_limit,
-            had_back_pressure: inner.had_back_pressure,
-            current_rtt: current_rtt.map(Duration::from_secs_f64),
-            past_rtt: Duration::from_secs_f64(past_rtt.mean),
-            past_rtt_deviation: Duration::from_secs_f64(past_rtt_deviation),
-        });
+        self.limit.record(inner.current_limit as f64);
+        let reached_limit = inner.reached_limit.then(|| 1.0).unwrap_or_default();
+        self.reached_limit.record(reached_limit);
+        let back_pressure = inner.had_back_pressure.then(|| 1.0).unwrap_or_default();
+        self.back_pressure.record(back_pressure);
+        self.past_rtt_mean.record(past_rtt.mean);
+
+        trace!(
+            message = "Changed concurrency",
+            concurrency = %inner.current_limit as u64,
+            reached_limit = %reached_limit,
+            had_back_pressure = %back_pressure,
+            current_rtt = ?current_rtt.map(Duration::from_secs_f64),
+            past_rtt = ?Duration::from_secs_f64(past_rtt.mean),
+            past_rtt_deviation = ?Duration::from_secs_f64(past_rtt_deviation)
+        )
     }
 }
 

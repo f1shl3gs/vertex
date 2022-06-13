@@ -1,6 +1,6 @@
 #![allow(clippy::print_stderr)] //tests
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::Formatter;
 use std::fs::{read_dir, File};
@@ -17,7 +17,7 @@ use futures_util::{stream, SinkExt};
 use rand::{thread_rng, Rng};
 use rand_distr::Exp1;
 
-use event::{Event, MetricValue};
+use event::Event;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 use testify::stats::{HistogramStats, LevelTimeHistogram, TimeHistogram, WeightedSumStats};
@@ -32,7 +32,7 @@ use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
 use crate::sink::util::retries::RetryLogic;
 use crate::sink::util::service::{Concurrency, RequestConfig};
 use crate::sink::util::vec::{EncodedLength, VecBuffer};
-use crate::{config, Healthcheck, Sink};
+use crate::{Healthcheck, Sink};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
@@ -314,13 +314,13 @@ struct TestController {
 }
 
 impl TestController {
-    fn new(todo: usize, send_done: oneshot::Sender<()>) -> Self {
+    /*    fn new(todo: usize, send_done: oneshot::Sender<()>) -> Self {
         Self {
             todo,
             send_done: Some(send_done),
             stats: Default::default(),
         }
-    }
+    }*/
 
     fn end_request(&mut self, now: Instant, completed: bool) {
         self.stats.end_request(now, completed);
@@ -393,26 +393,10 @@ struct TestResults {
     cstats: ControllerStatistics,
 }
 
-async fn run_test(params: TestParams) -> TestResults {
-    let _ = internal::metric::init_global();
+async fn run_test(_params: TestParams) -> TestResults {
+    todo!("implement")
 
-    // TODO: This is not working now, but clear/reset global registry is needed
-    //
-    // let mut registry = get_global().unwrap();
-    // registry.clear();
-    //
-    // let controller = internal::metric::get_global().expect("Get global metrics");
-    // let metrics = controller
-    //     .capture_metrics()
-    //     .into_iter()
-    //     .map(|metric| (metric.name().to_string(), metric))
-    //     .collect::<HashMap<_, _>>();
-    //
-    // for (_, metric) in metrics {
-    //     println!("{:?}", metric)
-    // }
-
-    let (send_done, is_done) = oneshot::channel();
+    /*let (send_done, is_done) = oneshot::channel();
 
     let test_config = TestConfig {
         request: RequestConfig {
@@ -440,7 +424,6 @@ async fn run_test(params: TestParams) -> TestResults {
 
     let (topology, _crash) =
         crate::topology::test::start_topology(config.build().unwrap(), false).await;
-    let controller = internal::metric::get_global().expect("Get global metrics");
 
     is_done.await.expect("Test failed to complete");
     topology.stop().await;
@@ -495,7 +478,7 @@ async fn run_test(params: TestParams) -> TestResults {
         &MetricValue::Histogram { .. }
     ));
 
-    TestResults { stats, cstats }
+    TestResults { stats, cstats }*/
 }
 
 mod mock {

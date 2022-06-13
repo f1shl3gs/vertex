@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
 use std::sync::Arc;
 
+use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
+
 use crate::attributes::Attributes;
 use crate::histogram::HistogramObservation;
-use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
 
 /// A `Metric` records an `Observation` for each unique set of `Attributes`
 #[derive(Debug, Clone)]
@@ -52,7 +53,7 @@ impl<T: Default> MakeMetricObserver for T {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Metric<T: MetricObserver> {
     pub(crate) name: &'static str,
     pub(crate) description: &'static str,

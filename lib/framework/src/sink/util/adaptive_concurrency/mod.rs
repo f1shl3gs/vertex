@@ -1,5 +1,4 @@
 mod controller;
-mod events;
 mod future;
 mod layer;
 mod semaphore;

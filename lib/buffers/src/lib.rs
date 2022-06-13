@@ -25,8 +25,6 @@ use quickcheck::{Arbitrary, Gen};
 
 #[macro_use]
 extern crate tracing;
-#[macro_use]
-extern crate metrics;
 
 #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq)]
 #[serde(rename_all = "snake_case")]

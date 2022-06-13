@@ -1,5 +1,4 @@
 mod config;
-mod event;
 mod healthcheck;
 mod request_builder;
 mod service;

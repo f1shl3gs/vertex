@@ -59,10 +59,10 @@ inventory::submit! {
 #[async_trait::async_trait]
 #[typetag::serde(name = "nvidia_smi")]
 impl SourceConfig for NvidiaSmiConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(self.interval).take_until(ctx.shutdown);
-        let mut output = ctx.output;
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut output = cx.output;
 
         Ok(Box::pin(async move {
             while ticker.next().await.is_some() {

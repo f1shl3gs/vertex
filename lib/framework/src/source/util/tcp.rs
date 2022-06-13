@@ -166,7 +166,7 @@ where
         shutdown_timeout: Duration,
         tls: MaybeTlsSettings,
         receive_buffer_bytes: Option<usize>,
-        ctx: SourceContext,
+        cx: SourceContext,
         acknowledgements: bool,
         max_connections: Option<u32>,
     ) -> crate::Result<crate::Source> {
@@ -183,23 +183,23 @@ where
                 addr = %listener.local_addr().map(SocketListenAddr::SocketAddr).unwrap_or(addr)
             );
 
-            let tripwire = ctx.shutdown.clone();
+            let tripwire = cx.shutdown.clone();
             let tripwire = async move {
                 let _ = tripwire.await;
                 sleep(shutdown_timeout).await
             }
             .shared();
 
-            let shutdown_clone = ctx.shutdown.clone();
+            let shutdown_clone = cx.shutdown.clone();
 
             listener
                 .accept_stream_limited(max_connections)
                 .take_until(shutdown_clone)
                 .for_each(move |(conn, permit)| {
-                    let shutdown_signal = ctx.shutdown.clone();
+                    let shutdown_signal = cx.shutdown.clone();
                     let tripwire = tripwire.clone();
                     let source = self.clone();
-                    let output = ctx.output.clone();
+                    let output = cx.output.clone();
 
                     async move {
                         let socket = match conn {
@@ -267,7 +267,9 @@ async fn handle_stream<T>(
     tokio::select! {
         result = socket.handshake() => {
             if let Err(err) = result {
-                counter!("connection_errors_total", 1, "mode" => "tcp");
+                metrics::register_counter("connection_errors_total", "The total number of connection errors for this instance.")
+                    .recorder(&[("mode", "tcp")])
+                    .inc(1);
 
                 match err {
                     // Specific error that occurs when the other side is only doing

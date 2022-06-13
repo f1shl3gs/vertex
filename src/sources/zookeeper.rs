@@ -163,13 +163,9 @@ impl ZookeeperSource {
 #[async_trait::async_trait]
 #[typetag::serde(name = "zookeeper")]
 impl SourceConfig for ZookeeperConfig {
-    async fn build(&self, ctx: SourceContext) -> crate::Result<Source> {
+    async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = ZookeeperSource::from(self);
-        Ok(Box::pin(source.run(
-            self.interval,
-            ctx.output,
-            ctx.shutdown,
-        )))
+        Ok(Box::pin(source.run(self.interval, cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<Output> {

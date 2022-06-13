@@ -84,6 +84,9 @@ pub struct Timer {
     waiting: bool,
     total_wait: Duration,
     ewma: stats::Ewma,
+
+    // metrics
+    utilization: metrics::Gauge,
 }
 
 impl Default for Timer {
@@ -94,6 +97,7 @@ impl Default for Timer {
             waiting: false,
             total_wait: Duration::new(0, 0),
             ewma: stats::Ewma::new(0.9),
+            utilization: metrics::register_gauge("utilization", "A ratio from 0 to 1 of the load on a component. A value of 0 would indicate a completely idle component that is simply waiting for input. A value of 1 would indicate a that is never idle. This value is updated every 5 seconds.").recorder(&[]),
         }
     }
 }
@@ -146,7 +150,8 @@ impl Timer {
         self.ewma.update(utilization);
         let avg = self.ewma.average().unwrap_or(f64::NAN);
         debug!(utilization = %avg);
-        gauge!("utilization", avg);
+        // TODO: support f64
+        self.utilization.set(avg as u64);
 
         // Reset overall statistics for the next reporting period.
         self.overall_start = self.span_start;

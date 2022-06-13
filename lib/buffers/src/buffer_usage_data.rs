@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::{
     sync::{
         atomic::{AtomicU64, AtomicUsize, Ordering},
@@ -180,37 +181,63 @@ impl BufferUsage {
         tokio::spawn(
             async move {
                 let mut interval = interval(Duration::from_secs(2));
+                let max_event_size = metrics::register_gauge("buffer_max_event_size", "");
+                let max_byte_size = metrics::register_gauge("buffer_max_byte_size", "");
+                let received_events = metrics::register_counter(
+                    "buffer_received_events_total",
+                    "The number of events received by this buffer.",
+                );
+                let received_bytes = metrics::register_counter(
+                    "buffer_received_event_bytes_total",
+                    "The number of bytes received by this buffer.",
+                );
+                let sent_events = metrics::register_counter(
+                    "buffer_sent_events_total",
+                    "The number of events sent by this buffer.",
+                );
+                let sent_bytes = metrics::register_counter(
+                    "buffer_sent_event_bytes_total",
+                    "The number of bytes sent by this buffer.",
+                );
+                let dropped_events = metrics::register_counter(
+                    "buffer_discarded_events_total",
+                    "The number of events dropped by this non-blocking buffer.",
+                );
+
                 loop {
                     interval.tick().await;
 
                     for stage in &stages {
-                        let max_size_bytes = match stage.max_size_bytes.load(Ordering::Relaxed) {
-                            0 => None,
-                            n => Some(n),
+                        let index = Cow::from(stage.idx.to_string());
+                        let attrs = metrics::Attributes::from([("stage", index)]);
+
+                        match stage.max_size_bytes.load(Ordering::Relaxed) {
+                            0 => {}
+                            value => max_byte_size.recorder(attrs.clone()).set(value as u64),
                         };
-
-                        let max_size_events = match stage.max_size_events.load(Ordering::Relaxed) {
-                            0 => None,
-                            n => Some(n),
+                        match stage.max_size_events.load(Ordering::Relaxed) {
+                            0 => {}
+                            value => max_event_size.recorder(attrs.clone()).set(value as u64),
                         };
-
-                        // Metrics
-                        if let Some(value) = max_size_events {
-                            gauge!("buffer_max_event_size", value as f64, "stage" => stage.idx.to_string());
-                        }
-                        if let Some(value) = max_size_bytes {
-                            gauge!("buffer_max_byte_size", value as f64, "stage" => stage.idx.to_string())
-                        }
-
-                        counter!("buffer_received_events_total", stage.received_event_count.swap(0, Ordering::Relaxed), "stage" => stage.idx.to_string());
-                        counter!("buffer_received_bytes_total", stage.received_event_count.swap(0, Ordering::Relaxed), "stage" => stage.idx.to_string());
-
-                        counter!("buffer_sent_events_total", stage.sent_event_count.swap(0, Ordering::Relaxed), "stage" => stage.idx.to_string());
-                        counter!("buffer_sent_bytes_total", stage.sent_byte_size.swap(0, Ordering::Relaxed), "stage" => stage.idx.to_string());
 
                         if let Some(dropped_event_count) = &stage.dropped_event_count {
-                            counter!("buffer_discarded_events_total", dropped_event_count.swap(0, Ordering::Relaxed), "stage" => stage.idx.to_string());
+                            dropped_events
+                                .recorder(attrs.clone())
+                                .inc(dropped_event_count.swap(0, Ordering::Relaxed));
                         }
+
+                        received_events
+                            .recorder(attrs.clone())
+                            .inc(stage.received_event_count.swap(0, Ordering::Relaxed));
+                        received_bytes
+                            .recorder(attrs.clone())
+                            .inc(stage.received_event_count.swap(0, Ordering::Relaxed));
+                        sent_events
+                            .recorder(attrs.clone())
+                            .inc(stage.sent_event_count.swap(0, Ordering::Relaxed));
+                        sent_bytes
+                            .recorder(attrs)
+                            .inc(stage.sent_byte_size.swap(0, Ordering::Relaxed));
                     }
                 }
             }

@@ -8,7 +8,6 @@ use framework::http::{Auth, HttpClient};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
-use internal::EventsSent;
 use snafu::Snafu;
 use tower::Service;
 use tracing::Instrument;
@@ -52,12 +51,8 @@ impl DriverResponse for LokiResponse {
         EventStatus::Delivered
     }
 
-    fn events_send(&self) -> EventsSent {
-        EventsSent {
-            count: self.batch_size,
-            byte_size: self.events_byte_size,
-            output: None,
-        }
+    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
+        (self.batch_size, self.events_byte_size, None)
     }
 }
 

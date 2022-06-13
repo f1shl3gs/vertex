@@ -4,7 +4,6 @@ use std::sync::{Mutex, MutexGuard};
 use event::trace::generator::IdGenerator;
 use event::trace::{RngGenerator, Span, SpanId, TraceId};
 use event::LogRecord;
-use metrics_tracing_context::MetricsLayer;
 use once_cell::sync::OnceCell;
 use tokio::sync::broadcast::{self, Receiver, Sender};
 use tracing::level_filters::LevelFilter;
@@ -170,13 +169,6 @@ impl PreSampledTracer for InternalTracer {
 pub fn init(color: bool, json: bool, levels: &str) {
     let _ = BUFFER.set(Mutex::new(Some(vec![])));
 
-    // An escape hatch to disable injecting a metrics layer into tracing.
-    // May be used for performance reasons. This is a hidden and undocumented functionality.
-    let metrics_layer_enabled = !matches!(
-        std::env::var("DISABLE_INTERNAL_METRICS_TRACING_INTEGRATION"),
-        Ok(x) if x == "true"
-    );
-
     #[cfg(feature = "tokio-console")]
     let subscriber = {
         let (tasks_layer, tasks_server) = console_subscriber::ConsoleLayer::new();
@@ -211,13 +203,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
         let tl = tracing_internal::TracingLayer::new(tracer);
 
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter)).with(tl);
-
-        if metrics_layer_enabled {
-            let subscriber = subscriber.with(MetricsLayer::new());
-            Dispatch::new(BroadcastSubscriber { subscriber })
-        } else {
-            Dispatch::new(BroadcastSubscriber { subscriber })
-        }
+        Dispatch::new(BroadcastSubscriber { subscriber })
     } else {
         #[cfg(not(test))]
         let formatter = tracing_subscriber::fmt::Layer::default()
@@ -233,13 +219,7 @@ pub fn init(color: bool, json: bool, levels: &str) {
         let tl = tracing_internal::TracingLayer::new(tracer);
 
         let subscriber = subscriber.with(RateLimitedLayer::new(formatter)).with(tl);
-
-        if metrics_layer_enabled {
-            let subscriber = subscriber.with(MetricsLayer::new());
-            Dispatch::new(BroadcastSubscriber { subscriber })
-        } else {
-            Dispatch::new(BroadcastSubscriber { subscriber })
-        }
+        Dispatch::new(BroadcastSubscriber { subscriber })
     };
 
     let _ = LogTracer::init();

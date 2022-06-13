@@ -5,6 +5,7 @@ use framework::config::{
 };
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
+use metrics::Counter;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -90,6 +91,10 @@ pub struct JsonParser {
     drop_field: bool,
     target_field: Option<String>,
     overwrite_target: bool,
+
+    // metrics
+    discarded_events: Counter,
+    invalid_events: Counter,
 }
 
 impl From<JsonParserConfig> for JsonParser {
@@ -104,6 +109,9 @@ impl From<JsonParserConfig> for JsonParser {
             drop_field: config.drop_field,
             target_field: config.target_field,
             overwrite_target: config.overwrite_target.unwrap_or(false),
+            discarded_events: metrics::register_counter("component_errors_total", "").recorder(&[]),
+            invalid_events: metrics::register_counter("component_errors_total", "")
+                .recorder(&[("error", "invalid json")]),
         }
     }
 }
@@ -127,12 +135,10 @@ impl FunctionTransform for JsonParser {
                                     internal_log_rate_secs = 30
                                 );
 
-                                counter!("component_errors_total", 1, "error" => "invalid_json");
+                                self.invalid_events.inc(1);
                                 if self.drop_field {
-                                    counter!("component_discarded_events_total", 1);
+                                    self.discarded_events.inc(1);
                                 }
-
-                                // TODO: metrics
                             })
                             .ok()
                     })
