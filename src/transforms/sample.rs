@@ -3,6 +3,7 @@ use framework::config::{
     DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use framework::{FunctionTransform, OutputBuffer, Transform};
+use metrics::Counter;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -66,14 +67,22 @@ struct Sample {
     rate: u64,
     count: u64,
     key_field: Option<String>,
+
+    // metrics
+    discards_events: Counter,
 }
 
 impl Sample {
-    pub const fn new(rate: u64, key_field: Option<String>) -> Self {
+    pub fn new(rate: u64, key_field: Option<String>) -> Self {
         Self {
             rate,
             count: 0,
             key_field,
+            discards_events: metrics::register_counter(
+                "events_discarded_total",
+                "The total number of events discarded by this component.",
+            )
+            .recorder(&[]),
         }
     }
 }
@@ -99,21 +108,12 @@ impl FunctionTransform for Sample {
                 if num % self.rate == 0 {
                     logs.push(log);
                 } else {
-                    emit!(&SampleEventDiscarded);
+                    self.discards_events.inc(1);
                 }
             }
         }
 
         output.push(logs);
-    }
-}
-
-#[derive(Debug)]
-struct SampleEventDiscarded;
-
-impl InternalEvent for SampleEventDiscarded {
-    fn emit_metrics(&self) {
-        counter!("events_discarded_total", 1);
     }
 }
 

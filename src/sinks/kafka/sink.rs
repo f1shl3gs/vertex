@@ -43,7 +43,7 @@ pub fn create_producer(
     config: ClientConfig,
 ) -> crate::Result<FutureProducer<KafkaStatisticsContext>> {
     let producer = config
-        .create_with_context(KafkaStatisticsContext)
+        .create_with_context(KafkaStatisticsContext::new())
         .context(KafkaCreateFailedSnafu)?;
     Ok(producer)
 }

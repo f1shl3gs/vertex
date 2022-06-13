@@ -207,7 +207,6 @@ impl Pipeline {
 #[derive(Clone, Debug)]
 struct Inner {
     inner: mpsc::Sender<Events>,
-    output: String,
 
     // metrics
     sent_events: Counter,
@@ -219,7 +218,7 @@ impl Inner {
         let (tx, rx) = mpsc::channel(n);
         let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
 
-        let attrs = Attributes::from([("output", output.clone().into())]);
+        let attrs = Attributes::from([("output", output.into())]);
         let sent_events = metrics::register_counter(
             "component_sent_events_total",
             "The total number of events emitted by this component.",
@@ -234,7 +233,6 @@ impl Inner {
         (
             Self {
                 inner: tx,
-                output,
                 sent_events,
                 sent_bytes,
             },

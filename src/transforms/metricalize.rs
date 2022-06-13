@@ -14,8 +14,7 @@ use framework::config::{
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
-use libc::sprintf;
-use metrics::{sub_registry, Counter, SubRegistry};
+use metrics::Counter;
 use serde::{Deserialize, Serialize};
 
 const fn default_increase_by_value() -> bool {
@@ -205,9 +204,8 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "metricalize")]
 impl TransformConfig for MetricalizeConfig {
-    async fn build(&self, cx: &TransformContext) -> framework::Result<Transform> {
-        let reg = sub_registry(format!("metricalize/{}", cx.key.unwrap().id()));
-        let agg = Metricalize::new(self.interval, self.metrics.clone(), reg);
+    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
+        let agg = Metricalize::new(self.interval, self.metrics.clone());
         Ok(Transform::event_task(agg))
     }
 
@@ -269,24 +267,22 @@ struct Metricalize {
     states: HashMap<MetricSeries, MetricEntry>,
 
     // metrics
-    registry: SubRegistry,
     failures: Counter,
 }
 
 impl Metricalize {
-    fn new(interval: Duration, configs: Vec<MetricConfig>, reg: SubRegistry) -> Self {
-        let ms = reg.register_counter(
+    fn new(interval: Duration, configs: Vec<MetricConfig>) -> Self {
+        let failures = metrics::register_counter(
             "metricalize_failed_total",
             "The amount of failures of metricalizing",
-        );
-        let metricalize_failed = ms.recorder(&[]);
+        )
+        .recorder(&[]);
 
         Self {
             interval,
             configs,
-            registry,
             states: Default::default(),
-            failures: metricalize_failed,
+            failures,
         }
     }
 

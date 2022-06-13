@@ -104,11 +104,6 @@ fn build_task_transform(
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx);
 
-    let received_events = metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-        .recorder(&[]);
-    let received_bytes = metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-        .recorder(&[]);
-
     let filtered = input_rx
         .filter(move |events| ready(filter_events_type(events, input_type)))
         .inspect(|events| {

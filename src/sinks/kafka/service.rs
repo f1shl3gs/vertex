@@ -36,12 +36,8 @@ impl DriverResponse for KafkaResponse {
         EventStatus::Delivered
     }
 
-    fn events_send(&self) -> EventsSent {
-        EventsSent {
-            count: 1,
-            byte_size: self.event_byte_size,
-            output: None,
-        }
+    fn events_send(&self) -> (usize, usize, Option<&'static str>) {
+        (1, self.event_byte_size, None)
     }
 }
 
@@ -96,10 +92,11 @@ impl Service<KafkaRequest> for KafkaService {
             // rdkafka will internally retry forever if the queue is full
             match producer.send(record, Timeout::Never).await {
                 Ok((_partition, _offset)) => {
-                    emit!(&BytesSent {
-                        byte_size: req.body.len() + req.metadata.key.map(|x| x.len()).unwrap_or(0),
-                        protocol: "kafka"
-                    });
+                    // TODO: metrics?
+                    // emit!(&BytesSent {
+                    //     byte_size: req.body.len() + req.metadata.key.map(|x| x.len()).unwrap_or(0),
+                    //     protocol: "kafka"
+                    // });
 
                     Ok(KafkaResponse {
                         event_byte_size: req.event_byte_size,

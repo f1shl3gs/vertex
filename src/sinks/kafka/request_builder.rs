@@ -7,7 +7,6 @@ use rdkafka::message::OwnedHeaders;
 
 use super::service::KafkaRequest;
 use super::service::KafkaRequestMetadata;
-use crate::common::kafka::KafkaHeaderExtractionFailed;
 
 pub struct KafkaRequestBuilder {
     pub key_field: Option<String>,
@@ -72,7 +71,11 @@ fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<OwnedHeader
                             if let Value::Bytes(b) = value {
                                 owned_headers = owned_headers.add(key, b.as_ref());
                             } else {
-                                emit!(&KafkaHeaderExtractionFailed { headers_field });
+                                // TODO: metrics
+                                warn!(
+                                    message = "Failed to extract header. Value should be a map of String -> Bytes",
+                                    %headers_field
+                                );
                             }
                         }
 
@@ -80,7 +83,10 @@ fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<OwnedHeader
                     }
 
                     _ => {
-                        emit!(&KafkaHeaderExtractionFailed { headers_field });
+                        warn!(
+                            message = "Failed to extract header. Value should be a map of String -> Bytes",
+                            %headers_field
+                        )
                     }
                 }
             }

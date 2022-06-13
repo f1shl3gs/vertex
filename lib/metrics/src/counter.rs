@@ -13,6 +13,10 @@ impl Counter {
         self.state.fetch_add(i, Ordering::Relaxed);
     }
 
+    pub fn set(&self, value: u64) {
+        self.state.store(value, Ordering::Relaxed);
+    }
+
     pub fn fetch(&self) -> u64 {
         self.state.load(Ordering::Relaxed)
     }
@@ -44,7 +48,8 @@ mod tests {
         counter.inc(2);
         assert_eq!(counter.fetch(), 3);
 
+        // Expect counter to wrap around
         counter.inc(u64::MAX);
-        assert_eq!(counter.fetch(), 3);
+        assert_eq!(counter.fetch(), 2);
     }
 }

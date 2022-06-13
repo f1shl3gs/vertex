@@ -63,10 +63,7 @@ impl BlackholeSink {
 impl StreamSink for BlackholeSink {
     async fn run(self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         while let Some(events) = input.next().await {
-            let n = events.len();
-
-            counter!("blackhole_recv_events_total", n as u64);
-            self.acker.ack(n);
+            self.acker.ack(events.len());
         }
 
         Ok(())

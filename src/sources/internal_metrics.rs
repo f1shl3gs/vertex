@@ -1,3 +1,7 @@
+use std::collections::BTreeMap;
+use std::time::Duration;
+
+use event::Bucket;
 use framework::config::{default_interval, GenerateConfig, Output, SourceDescription};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -8,8 +12,6 @@ use framework::{
 use futures::StreamExt;
 use metrics::{Attributes, Observation};
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
-use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -60,18 +62,11 @@ async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline)
     let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
     while ticker.next().await.is_some() {
-        let timestamp = Some(chrono::Utc::now());
         let mut reporter = Reporter::default();
         let reg = metrics::global_registry();
         reg.report(&mut reporter);
 
-        /*
-        let mut metrics = recorder.capture_metrics().collect::<Vec<_>>();
-        metrics
-            .iter_mut()
-            .for_each(|metric| metric.timestamp = timestamp);*/
-
-        if let Err(err) = output.send(metrics).await {
+        if let Err(err) = output.send(reporter.metrics).await {
             error!(
                 message = "Error sending internal metrics",
                 %err
@@ -100,12 +95,31 @@ impl metrics::Reporter for Reporter {
             .inflight
             .expect("name and description should be set already");
 
-        let tags = attrs.iter().collect::<event::attributes::Attributes>();
+        let tags = attrs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect::<BTreeMap<_, _>>();
 
         let metric = match observation {
             Observation::Counter(c) => event::Metric::sum_with_tags(name, description, c, tags),
             Observation::Gauge(g) => event::Metric::gauge_with_tags(name, description, g, tags),
-            Observation::Histogram(h) => todo!(),
+            Observation::Histogram(h) => {
+                let mut count = 0;
+                let buckets = h
+                    .buckets
+                    .iter()
+                    .map(|mb| {
+                        count += mb.count;
+
+                        Bucket {
+                            upper: mb.le,
+                            count,
+                        }
+                    })
+                    .collect::<Vec<_>>();
+
+                event::Metric::histogram_with_tags(name, description, tags, count, h.sum, buckets)
+            }
         };
 
         self.metrics.push(metric)

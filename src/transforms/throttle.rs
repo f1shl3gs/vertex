@@ -16,8 +16,6 @@ use governor::{clock, Quota, RateLimiter};
 use serde::{Deserialize, Serialize};
 use snafu::{OptionExt, Snafu};
 
-use crate::common::events::TemplateRenderingFailed;
-
 const fn default_window() -> Duration {
     Duration::from_secs(1)
 }
@@ -67,7 +65,7 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "throttle")]
 impl TransformConfig for ThrottleConfig {
-    async fn build(&self, cx: &TransformContext) -> framework::Result<Transform> {
+    async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let throttle = Throttle::new(
             self.threshold,
             self.window,
@@ -164,24 +162,35 @@ where
                                     .and_then(|tmpl| {
                                         tmpl.render_string(&event)
                                             .map_err(|err| {
-                                                emit!(&TemplateRenderingFailed {
-                                                    err,
-                                                    field: Some("key_field"),
-                                                    drop_event: false,
-                                                });
+                                                error!(
+                                                    message = "Failed to render template",
+                                                    ?err,
+                                                    field = "key_field",
+                                                    drop_event = false
+                                                );
+                                                // TODO: metrics
+                                                // emit!(&TemplateRenderingFailed {
+                                                //     err,
+                                                //     field: Some("key_field"),
+                                                //     drop_event: false,
+                                                // });
                                             }).ok()
                                     });
 
                                     match limiter.check_key(&key) {
                                         Ok(()) => output.push_one(event),
                                         _ => {
-                                            debug!(message = "Rate limit exceeded", key);
+                                            debug!(message = "Rate limit exceeded", ?key);
 
-                                            if let Some(key) = key {
-                                                emit!(&ThrottleEventDiscarded{ key });
-                                            } else {
-                                                emit!(&ThrottleEventDiscarded { key: "None".to_string() })
-                                            }
+                                            // TODO: metrics
+                                            //
+                                            // counter!("events_discarded_total", 1, "key" => self.key.to_owned())
+                                            //
+                                            // if let Some(key) = key {
+                                            //     emit!(&ThrottleEventDiscarded{ key });
+                                            // } else {
+                                            //     emit!(&ThrottleEventDiscarded { key: "None".to_string() })
+                                            // }
                                         }
                                     }
                                 }
@@ -210,21 +219,6 @@ where
                 }
             }
         })
-    }
-}
-
-#[derive(Debug)]
-pub struct ThrottleEventDiscarded {
-    key: String,
-}
-
-impl InternalEvent for ThrottleEventDiscarded {
-    fn emit_logs(&self) {
-        debug!(message = "Rate limit exceeded", ?self.key);
-    }
-
-    fn emit_metrics(&self) {
-        counter!("events_discarded_total", 1, "key" => self.key.to_owned())
     }
 }
 

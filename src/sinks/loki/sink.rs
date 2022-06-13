@@ -20,10 +20,8 @@ use shared::ByteSizeOf;
 use snafu::Snafu;
 
 use super::config::{Encoding, LokiConfig, OutOfOrderAction};
-use super::event::{LokiEventDropped, LokiEventUnlabeled, LokiOutOfOrderEventRewrite};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use super::service::{LokiRequest, LokiService};
-use crate::common::events::TemplateRenderingFailed;
 
 #[derive(Clone)]
 pub struct KeyPartitioner(Option<Template>);
@@ -42,11 +40,19 @@ impl Partitioner for KeyPartitioner {
         self.0.as_ref().and_then(|tmpl| {
             tmpl.render_string(item)
                 .map_err(|err| {
-                    emit!(&TemplateRenderingFailed {
-                        err,
-                        field: Some("tenant_id"),
-                        drop_event: false,
-                    })
+                    error!(
+                        message = "Failed to render template",
+                        ?err,
+                        field = "tenant_id",
+                        drop_event = false
+                    );
+                    // TODO: metrics
+                    //
+                    // emit!(&TemplateRenderingFailed {
+                    //     err,
+                    //     field: Some("tenant_id"),
+                    //     drop_event: false,
+                    // })
                 })
                 .ok()
         })
@@ -131,10 +137,6 @@ impl RequestBuilder<(PartitionKey, Vec<LokiRecord>)> for LokiRequestBuilder {
 
     fn build_request(&self, metadata: Self::Metadata, payload: Self::Payload) -> Self::Request {
         let (tenant, batch_size, finalizers, events_byte_size) = metadata;
-        emit!(&internal::EventProcessed {
-            component: "loki",
-            byte_size: payload.len()
-        });
 
         LokiRequest {
             batch_size,
@@ -225,7 +227,9 @@ impl EventEncoder {
         // If no labels are provided we set our own default `{agent="vertex"}` label. This can
         // happen if the only label is a templatable one but the vent doesn't match.
         if labels.is_empty() {
-            emit!(&LokiEventUnlabeled);
+            // TODO: metrics
+            // counter!("processing_errors_total", 1, "err" => "unlabeled_event");
+            // emit!(&LokiEventUnlabeled);
             labels = vec![("agent".to_string(), "vertex".to_string())]
         }
 
@@ -258,11 +262,21 @@ impl RecordFilter {
             if record.event.timestamp < *latest {
                 match self.out_of_order_action {
                     OutOfOrderAction::Drop => {
-                        emit!(&LokiEventDropped);
+                        // TODO: metrics?
+                        // emit!(&LokiEventDropped);
+                        //
+                        //         counter!("events_discarded_total", 1, "reason" => "out_of_order");
+                        //         counter!("processing_error_total", 1, "err" => "out_of_order");
                         None
                     }
                     OutOfOrderAction::RewriteTimestamp => {
-                        emit!(&LokiOutOfOrderEventRewrite);
+                        warn!(
+                            message = "Received out-of-order event, rewriting timestamp",
+                            internal_log_rate_secs = 30
+                        );
+                        // TODO: metrics
+                        // emit!(&LokiOutOfOrderEventRewrite);
+
                         record.event.timestamp = *latest;
                         Some(record)
                     }

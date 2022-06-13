@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 use framework::config::GenerateConfig;
 use framework::tls::TlsOptions;
 use framework::Error;
+use metrics::{Counter, Gauge};
 use rdkafka::consumer::ConsumerContext;
 use rdkafka::{ClientConfig, ClientContext, Statistics};
 use serde::{Deserialize, Serialize};
@@ -125,97 +126,79 @@ pub fn pathbuf_to_string(path: &Path) -> Result<&str, Error> {
         .ok_or_else(|| KafkaError::InvalidPath { path: path.into() }.into())
 }
 
-pub struct KafkaStatisticsContext;
+pub struct KafkaStatisticsContext {
+    queue_messages: Gauge,
+    queue_message_bytes: Gauge,
+    requests: Counter,
+    requests_bytes: Counter,
+    responses: Counter,
+    responses_bytes: Counter,
+    produced: Counter,
+    produced_bytes: Counter,
+    consumed: Counter,
+    consumed_bytes: Counter,
+}
+
+impl KafkaStatisticsContext {
+    pub fn new() -> Self {
+        Self {
+            queue_messages: metrics::register_gauge(
+                "kafka_queue_messages",
+                "Current number of messages in producer queues.",
+            ).recorder(&[]),
+            queue_message_bytes: metrics::register_gauge(
+                "kafka_queue_messages_bytes",
+                "Current total size of messages in producer queues.",
+            ).recorder(&[]),
+            requests: metrics::register_counter(
+                "kafka_requests_total",
+                "	Total number of requests sent to Kafka brokers.",
+            ).recorder(&[]),
+            requests_bytes: metrics::register_counter(
+                "kafka_requests_bytes_total",
+                "Total number of bytes transmitted to Kafka brokers.",
+            ).recorder(&[]),
+            responses: metrics::register_counter(
+                "kafka_responses_total",
+                "Total number of responses received from Kafka brokers.",
+            ).recorder(&[]),
+            responses_bytes: metrics::register_counter(
+                "kafka_responses_bytes_total",
+                "Total number of bytes received from Kafka brokers.",
+            ).recorder(&[]),
+            produced: metrics::register_counter(
+                "kafka_produced_messages_total",
+                "Total number of messages transmitted (produced) to Kafka brokers.",
+            ).recorder(&[]),
+            produced_bytes: metrics::register_counter(
+                "kafka_produced_messages_bytes_total",
+                "Total number of message bytes (including framing, such as per-Message framing and MessageSet/batch framing) transmitted to Kafka brokers.",
+            ).recorder(&[]),
+            consumed: metrics::register_counter(
+                "kafka_consumed_messages_total",
+                "Total number of messages consumed, not including ignored messages (due to offset, etc), from Kafka brokers.",
+            ).recorder(&[]),
+            consumed_bytes: metrics::register_counter(
+                "kafka_consumed_messages_bytes_total",
+                "Total number of message bytes (including framing) received from Kafka brokers.",
+            ).recorder(&[]),
+        }
+    }
+}
 
 impl ClientContext for KafkaStatisticsContext {
     fn stats(&self, statistics: Statistics) {
-        emit!(&KafkaStatisticsReceived {
-            statistics: &statistics
-        })
+        self.queue_messages.set(statistics.msg_cnt);
+        self.queue_message_bytes.set(statistics.msg_size);
+        self.requests.set(statistics.tx as u64);
+        self.requests_bytes.set(statistics.tx_bytes as u64);
+        self.responses.set(statistics.rx as u64);
+        self.responses_bytes.set(statistics.rx_bytes as u64);
+        self.produced.set(statistics.txmsgs as u64);
+        self.produced_bytes.set(statistics.txmsg_bytes as u64);
+        self.consumed.set(statistics.rxmsgs as u64);
+        self.consumed_bytes.set(statistics.rxmsg_bytes as u64);
     }
 }
 
 impl ConsumerContext for KafkaStatisticsContext {}
-
-pub struct KafkaStatisticsReceived<'a> {
-    statistics: &'a rdkafka::Statistics,
-}
-
-impl InternalEvent for KafkaStatisticsReceived<'_> {
-    fn emit_metrics(&self) {
-        gauge!("kafka_queue_messages", self.statistics.msg_cnt as f64);
-        gauge!(
-            "kafka_queue_messages_bytes",
-            self.statistics.msg_size as f64
-        );
-        update_counter!("kafka_requests_total", self.statistics.tx as u64);
-        update_counter!(
-            "kafka_requests_bytes_total",
-            self.statistics.tx_bytes as u64
-        );
-        update_counter!("kafka_responses_total", self.statistics.rx as u64);
-        update_counter!(
-            "kafka_responses_bytes_total",
-            self.statistics.rx_bytes as u64
-        );
-        update_counter!(
-            "kafka_produced_messages_total",
-            self.statistics.txmsgs as u64
-        );
-        update_counter!(
-            "kafka_produced_messages_bytes_total",
-            self.statistics.txmsg_bytes as u64
-        );
-        update_counter!(
-            "kafka_consumed_messages_total",
-            self.statistics.rxmsgs as u64
-        );
-        update_counter!(
-            "kafka_consumed_messages_bytes_total",
-            self.statistics.rxmsg_bytes as u64
-        );
-    }
-}
-
-pub struct KafkaHeaderExtractionFailed<'a> {
-    pub headers_field: &'a str,
-}
-
-impl<'a> InternalEvent for KafkaHeaderExtractionFailed<'a> {
-    fn emit_logs(&self) {
-        warn!(
-            message = "Failed to extract header. Value should be a map of String -> Bytes",
-            header_field = self.headers_field
-        )
-    }
-
-    fn emit_metrics(&self) {
-        counter!("kafka_header_extraction_failures_total", 1);
-    }
-}
-
-#[derive(Debug)]
-pub struct KafkaEventReceived {
-    pub byte_size: usize,
-}
-
-impl InternalEvent for KafkaEventReceived {
-    fn emit_metrics(&self) {
-        counter!("events_in_total", 1);
-        counter!("processed_bytes_total", self.byte_size as u64);
-    }
-}
-
-pub struct KafkaOffsetUpdateFailed {
-    pub error: rdkafka::error::KafkaError,
-}
-
-impl InternalEvent for KafkaOffsetUpdateFailed {
-    fn emit_logs(&self) {
-        warn!(message = "Failed to read message", ?self.error, internal_log_rate_secs = 30 );
-    }
-
-    fn emit_metrics(&self) {
-        counter!("kafka_consumer_offset_updates_failed_total", 1);
-    }
-}

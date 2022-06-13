@@ -22,8 +22,6 @@ use serde::{Deserialize, Serialize};
 use snafu::ResultExt;
 use tower::{Service, ServiceBuilder};
 
-use crate::common::events::TemplateRenderingFailed;
-
 #[derive(Copy, Clone, Debug, Default)]
 pub struct PrometheusRemoteWriteDefaultBatchSettings;
 
@@ -133,11 +131,14 @@ impl SinkConfig for RemoteWriteConfig {
                             template
                                 .render_string(&event)
                                 .map_err(|err| {
-                                    emit!(&TemplateRenderingFailed {
-                                        err,
-                                        field: Some("tenant_id"),
-                                        drop_event: false,
-                                    })
+                                    error!(message = "Failed to render template", ?err);
+
+                                    // TODO: metrics
+                                    // emit!(&TemplateRenderingFailed {
+                                    //     err,
+                                    //     field: Some("tenant_id"),
+                                    //     drop_event: false,
+                                    // })
                                 })
                                 .ok()
                         });

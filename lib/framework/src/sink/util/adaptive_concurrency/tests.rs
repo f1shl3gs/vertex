@@ -314,13 +314,13 @@ struct TestController {
 }
 
 impl TestController {
-    fn new(todo: usize, send_done: oneshot::Sender<()>) -> Self {
+    /*    fn new(todo: usize, send_done: oneshot::Sender<()>) -> Self {
         Self {
             todo,
             send_done: Some(send_done),
             stats: Default::default(),
         }
-    }
+    }*/
 
     fn end_request(&mut self, now: Instant, completed: bool) {
         self.stats.end_request(now, completed);
@@ -393,7 +393,7 @@ struct TestResults {
     cstats: ControllerStatistics,
 }
 
-async fn run_test(params: TestParams) -> TestResults {
+async fn run_test(_params: TestParams) -> TestResults {
     todo!("implement")
 
     /*let (send_done, is_done) = oneshot::channel();
