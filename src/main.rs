@@ -1,4 +1,5 @@
-mod commands;
+mod launch;
+mod validate;
 
 extern crate vertex;
 
@@ -13,7 +14,7 @@ static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 extern crate chrono;
 extern crate chrono_tz;
 
-use crate::commands::RootCommand;
+use launch::RootCommand;
 
 fn main() {
     let cmd: RootCommand = argh::from_env();
