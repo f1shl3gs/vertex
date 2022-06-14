@@ -1,5 +1,3 @@
-mod validate;
-
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::time::Duration;
@@ -15,6 +13,7 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 
+use crate::validate;
 #[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
 
@@ -258,7 +257,7 @@ impl RootCommand {
             };
 
             #[cfg(feature = "extensions-healthcheck")]
-                healthcheck::set_readiness(false);
+            healthcheck::set_readiness(false);
 
             match signal {
                 SignalTo::Shutdown => {

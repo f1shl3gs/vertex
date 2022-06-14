@@ -61,7 +61,8 @@ async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline)
     let interval = tokio::time::interval(interval);
     let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
-    while ticker.next().await.is_some() {
+    loop {
+        // Report metrics as soon as possible
         let mut reporter = Reporter::default();
         let reg = metrics::global_registry();
         reg.report(&mut reporter);
@@ -73,6 +74,10 @@ async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline)
             );
 
             return Err(());
+        }
+
+        if ticker.next().await.is_none() {
+            break;
         }
     }
 

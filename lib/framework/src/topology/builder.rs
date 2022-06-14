@@ -10,7 +10,7 @@ use buffers::{BufferType, WhenFull};
 use event::{EventContainer, Events};
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
-use metrics::Counter;
+use metrics::{Attributes, Counter};
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
@@ -24,6 +24,7 @@ use crate::config::{
     ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
     SinkContext, SourceContext, TransformContext,
 };
+use crate::metrics::MetricStreamExt;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
@@ -75,7 +76,7 @@ fn build_sync_transform(
 ) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
     let (outputs, controls) = TransformOutputs::new(node.outputs);
 
-    let runner = Runner::new(t, input_rx, node.input_type, outputs);
+    let runner = Runner::new(node.key.id(), t, input_rx, node.input_type, outputs);
     let transform = if node.concurrency {
         runner.run_concurrently().boxed()
     } else {
@@ -104,41 +105,8 @@ fn build_task_transform(
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx);
 
-    let filtered = input_rx
-        .filter(move |events| ready(filter_events_type(events, input_type)))
-        .inspect(|events| {
-            let count = events.len();
-            let byte_size = events.size_of();
-
-            trace!(message = "Events received", count, byte_size);
-
-            metrics::register_counter(
-                "component_sent_events_total",
-                "The total number of events emitted by this component.",
-            )
-            .recorder(&[])
-            .inc(count as u64);
-            metrics::register_counter(
-                "component_sent_event_bytes_total",
-                "The total number of event bytes emitted by this component.",
-            )
-            .recorder(&[])
-            .inc(byte_size as u64);
-        });
-    let stream = t.transform(Box::pin(filtered)).inspect(|events: &Events| {
-        metrics::register_counter(
-            "component_sent_events_total",
-            "The total number of events emitted by this component.",
-        )
-        .recorder(&[])
-        .inc(events.len() as u64);
-        metrics::register_counter(
-            "component_sent_event_bytes_total",
-            "The total number of event bytes emitted by this component.",
-        )
-        .recorder(&[])
-        .inc(events.size_of() as u64);
-    });
+    let filtered = input_rx.filter(move |events| ready(filter_events_type(events, input_type)));
+    let stream = t.transform(Box::pin(filtered));
     let transform = async move {
         fanout.send_stream(stream).await;
         debug!("Finished");
@@ -170,29 +138,34 @@ struct Runner {
 
 impl Runner {
     fn new(
+        key: &str,
         transform: Box<dyn SyncTransform>,
         input_rx: BufferReceiver<Events>,
         input_type: DataType,
         outputs: TransformOutputs,
     ) -> Self {
+        let attrs = Attributes::from([
+            ("component", key.to_string().into()),
+            ("component_type", "transform".into()),
+        ]);
         let send_events = metrics::register_counter(
             "component_sent_events_total",
             "The total number of events emitted by this component.",
         )
-        .recorder(&[]);
+        .recorder(attrs.clone());
         let send_bytes = metrics::register_counter(
             "component_sent_event_bytes_total",
             "The total number of event bytes emitted by this component.",
         )
-        .recorder(&[]);
+        .recorder(attrs.clone());
         let received_events = metrics::register_counter(
             "component_received_events_total",
             "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.",
-        ).recorder(&[]);
+        ).recorder(attrs.clone());
         let received_bytes = metrics::register_counter(
             "component_received_event_bytes_total",
             "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins."
-        ).recorder(&[]);
+        ).recorder(attrs);
 
         Self {
             transform,
@@ -418,7 +391,7 @@ pub async fn build_pieces(
         let mut controls = HashMap::new();
 
         for output in source_outputs {
-            let mut rx = builder.add_output(output.clone());
+            let mut rx = builder.add_output(key.id(), output.clone());
             let (mut fanout, control) = Fanout::new();
             let pump = async move {
                 debug!(message = "Source pump starting");
@@ -586,14 +559,14 @@ pub async fn build_pieces(
             }
         };
 
-        let ctx = SinkContext {
+        let cx = SinkContext {
             acker: acker.clone(),
             health_check,
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
         };
 
-        let (sink, healthcheck) = match sink.inner.build(ctx).await {
+        let (sink, healthcheck) = match sink.inner.build(cx).await {
             Ok(built) => built,
             Err(err) => {
                 errors.push(format!("Sink \"{}\": {}", name, err));
@@ -602,6 +575,11 @@ pub async fn build_pieces(
         };
 
         let (trigger, tripwire) = Tripwire::new();
+        let component = name.id().to_string();
+        let attrs = Attributes::from([
+            ("component", component.into()),
+            ("component_type", "sink".into()),
+        ]);
         let sink = async move {
             // Why is this Arc<Mutex<Option<_>>> needed you may ask.
             // In case when this function build_pieces errors this
@@ -619,20 +597,8 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|events| ready(filter_events_type(events, input_type)))
-                    .inspect(|events| {
-                        let count = events.len();
-                        let byte_size = events.size_of();
-
-                        trace!(message = "Events received", count, byte_size);
-
-                        metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-                            .recorder(&[])
-                            .inc(count as u64);
-                        metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-                            .recorder(&[])
-                            .inc(byte_size as u64);
-                    })
-                    .take_until_if(tripwire),
+                    .take_until_if(tripwire)
+                    .metric_record(attrs),
             )
             .await
             .map(|_| {

@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::HashMap;
 use std::pin::Pin;
 
@@ -6,7 +5,6 @@ use async_trait::async_trait;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
-use metrics::{Attributes, Counter, Metric};
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
@@ -230,10 +228,6 @@ pub struct TransformOutputs {
     outputs_spec: Vec<Output>,
     primary_output: Option<Fanout>,
     named_outputs: HashMap<String, Fanout>,
-
-    // metrics
-    send_events: Metric<Counter>,
-    send_bytes: Metric<Counter>,
 }
 
 impl TransformOutputs {
@@ -257,22 +251,11 @@ impl TransformOutputs {
             }
         }
 
-        let send_events = metrics::register_counter(
-            "component_sent_events_total",
-            "The total number of events emitted by this component.",
-        );
-        let send_bytes = metrics::register_counter(
-            "component_sent_event_bytes_total",
-            "The total number of event bytes emitted by this component.",
-        );
-
         (
             Self {
                 outputs_spec,
                 primary_output,
                 named_outputs,
-                send_events,
-                send_bytes,
             },
             controls,
         )
@@ -284,31 +267,16 @@ impl TransformOutputs {
 
     pub async fn send(&mut self, buf: &mut TransformOutputsBuf) {
         if let Some(primary) = self.primary_output.as_mut() {
-            let count = buf.primary_buffer.as_ref().map_or(0, OutputBuffer::len);
-            let byte_size = buf.primary_buffer.as_ref().map_or(0, ByteSizeOf::size_of);
-
             buf.primary_buffer
                 .as_mut()
                 .expect("mismatched outputs")
                 .send(primary)
                 .await;
-
-            // metrics
-            self.send_events.recorder(&[]).inc(count as u64);
-            self.send_bytes.recorder(&[]).inc(byte_size as u64);
         }
 
         for (key, buf) in &mut buf.named_buffers {
-            let count = buf.len();
-            let byte_size = buf.size_of();
-
             buf.send(self.named_outputs.get_mut(key).expect("unknown output"))
                 .await;
-
-            // metrics
-            let attrs = Attributes::from([("output", Cow::from(key.to_string()))]);
-            self.send_events.recorder(attrs.clone()).inc(count as u64);
-            self.send_bytes.recorder(attrs).inc(byte_size as u64);
         }
     }
 }
