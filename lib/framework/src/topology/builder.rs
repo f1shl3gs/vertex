@@ -104,41 +104,8 @@ fn build_task_transform(
     let (mut fanout, control) = Fanout::new();
     let input_rx = crate::utilization::wrap(input_rx);
 
-    let filtered = input_rx
-        .filter(move |events| ready(filter_events_type(events, input_type)))
-        .inspect(|events| {
-            let count = events.len();
-            let byte_size = events.size_of();
-
-            trace!(message = "Events received", count, byte_size);
-
-            metrics::register_counter(
-                "component_sent_events_total",
-                "The total number of events emitted by this component.",
-            )
-            .recorder(&[])
-            .inc(count as u64);
-            metrics::register_counter(
-                "component_sent_event_bytes_total",
-                "The total number of event bytes emitted by this component.",
-            )
-            .recorder(&[])
-            .inc(byte_size as u64);
-        });
-    let stream = t.transform(Box::pin(filtered)).inspect(|events: &Events| {
-        metrics::register_counter(
-            "component_sent_events_total",
-            "The total number of events emitted by this component.",
-        )
-        .recorder(&[])
-        .inc(events.len() as u64);
-        metrics::register_counter(
-            "component_sent_event_bytes_total",
-            "The total number of event bytes emitted by this component.",
-        )
-        .recorder(&[])
-        .inc(events.size_of() as u64);
-    });
+    let filtered = input_rx.filter(move |events| ready(filter_events_type(events, input_type)));
+    let stream = t.transform(Box::pin(filtered));
     let transform = async move {
         fanout.send_stream(stream).await;
         debug!("Finished");
@@ -591,14 +558,14 @@ pub async fn build_pieces(
             }
         };
 
-        let ctx = SinkContext {
+        let cx = SinkContext {
             acker: acker.clone(),
             health_check,
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
         };
 
-        let (sink, healthcheck) = match sink.inner.build(ctx).await {
+        let (sink, healthcheck) = match sink.inner.build(cx).await {
             Ok(built) => built,
             Err(err) => {
                 errors.push(format!("Sink \"{}\": {}", name, err));
@@ -624,19 +591,6 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|events| ready(filter_events_type(events, input_type)))
-                    .inspect(|events| {
-                        let count = events.len();
-                        let byte_size = events.size_of();
-
-                        trace!(message = "Events received", count, byte_size);
-
-                        metrics::register_counter("component_received_events_total", "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-                            .recorder(&[])
-                            .inc(count as u64);
-                        metrics::register_counter("component_received_event_bytes_total", "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.")
-                            .recorder(&[])
-                            .inc(byte_size as u64);
-                    })
                     .take_until_if(tripwire),
             )
             .await
