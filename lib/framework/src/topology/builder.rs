@@ -10,7 +10,7 @@ use buffers::{BufferType, WhenFull};
 use event::{EventContainer, Events};
 use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
-use metrics::Counter;
+use metrics::{Attributes, Counter};
 use shared::ByteSizeOf;
 use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
@@ -75,7 +75,7 @@ fn build_sync_transform(
 ) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
     let (outputs, controls) = TransformOutputs::new(node.outputs);
 
-    let runner = Runner::new(t, input_rx, node.input_type, outputs);
+    let runner = Runner::new(node.key.id(), t, input_rx, node.input_type, outputs);
     let transform = if node.concurrency {
         runner.run_concurrently().boxed()
     } else {
@@ -170,29 +170,34 @@ struct Runner {
 
 impl Runner {
     fn new(
+        key: &str,
         transform: Box<dyn SyncTransform>,
         input_rx: BufferReceiver<Events>,
         input_type: DataType,
         outputs: TransformOutputs,
     ) -> Self {
+        let attrs = Attributes::from([
+            ("component", key.to_string().into()),
+            ("component_type", "transform"),
+        ]);
         let send_events = metrics::register_counter(
             "component_sent_events_total",
             "The total number of events emitted by this component.",
         )
-        .recorder(&[]);
+        .recorder(attrs.clone());
         let send_bytes = metrics::register_counter(
             "component_sent_event_bytes_total",
             "The total number of event bytes emitted by this component.",
         )
-        .recorder(&[]);
+        .recorder(attrs.clone());
         let received_events = metrics::register_counter(
             "component_received_events_total",
             "The number of events accepted by this component either from tagged origins like file and uri, or cumulatively from other origins.",
-        ).recorder(&[]);
+        ).recorder(attrs.clone());
         let received_bytes = metrics::register_counter(
             "component_received_event_bytes_total",
             "The number of event bytes accepted by this component either from tagged origins like file and uri, or cumulatively from other origins."
-        ).recorder(&[]);
+        ).recorder(attrs);
 
         Self {
             transform,
