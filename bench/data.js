@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655214031252,
+  "lastUpdate": 1655214032019,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15678,6 +15678,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 63.612,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bdfd158c2a0575b08bb27b39631da517fa129f19",
+          "message": "Merge pull request #369 from f1shl3gs/dependabot/cargo/memmap2-0.5.4\n\nchore(deps): bump memmap2 from 0.5.3 to 0.5.4",
+          "timestamp": "2022-06-14T21:34:10+08:00",
+          "tree_id": "616247d3fd26574e678347f4b52a434d441cc40c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bdfd158c2a0575b08bb27b39631da517fa129f19"
+        },
+        "date": 1655214029842,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.519,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 55.045,
             "unit": "ns/op"
           }
         ]
