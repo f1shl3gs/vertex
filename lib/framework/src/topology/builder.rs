@@ -24,6 +24,7 @@ use crate::config::{
     ComponentKey, Config, ConfigDiff, DataType, ExtensionContext, Output, OutputId, ProxyConfig,
     SinkContext, SourceContext, TransformContext,
 };
+use crate::metrics::MetricStreamExt;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
@@ -574,6 +575,8 @@ pub async fn build_pieces(
         };
 
         let (trigger, tripwire) = Tripwire::new();
+        let component = name.id().to_string();
+        let attrs = Attributes::from([("component", component.into()), ("component_type", "sink".into())]);
         let sink = async move {
             // Why is this Arc<Mutex<Option<_>>> needed you may ask.
             // In case when this function build_pieces errors this
@@ -591,7 +594,8 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|events| ready(filter_events_type(events, input_type)))
-                    .take_until_if(tripwire),
+                    .take_until_if(tripwire)
+                    .metric_record(attrs),
             )
             .await
             .map(|_| {
