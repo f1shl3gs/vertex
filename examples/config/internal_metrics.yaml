@@ -1,0 +1,17 @@
+sources:
+  metrics:
+    type: internal_metrics
+
+transforms:
+  add_tags:
+    type: add_tags
+    inputs:
+      - metrics
+    tags:
+      host: localhost
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - add_tags
