@@ -576,7 +576,10 @@ pub async fn build_pieces(
 
         let (trigger, tripwire) = Tripwire::new();
         let component = name.id().to_string();
-        let attrs = Attributes::from([("component", component.into()), ("component_type", "sink".into())]);
+        let attrs = Attributes::from([
+            ("component", component.into()),
+            ("component_type", "sink".into()),
+        ]);
         let sink = async move {
             // Why is this Arc<Mutex<Option<_>>> needed you may ask.
             // In case when this function build_pieces errors this
