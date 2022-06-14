@@ -178,7 +178,7 @@ impl Runner {
     ) -> Self {
         let attrs = Attributes::from([
             ("component", key.to_string().into()),
-            ("component_type", "transform"),
+            ("component_type", "transform".into()),
         ]);
         let send_events = metrics::register_counter(
             "component_sent_events_total",
