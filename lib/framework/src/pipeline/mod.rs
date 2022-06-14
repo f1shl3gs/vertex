@@ -38,16 +38,25 @@ impl Builder {
         }
     }
 
-    pub fn add_output(&mut self, output: Output) -> ReceiverStream<Events> {
+    pub fn add_output(
+        &mut self,
+        component: impl Into<String>,
+        output: Output,
+    ) -> ReceiverStream<Events> {
         match output.port {
             None => {
-                let (inner, rx) = Inner::new_with_buffer(self.buf_size, DEFAULT_OUTPUT.to_owned());
+                let (inner, rx) = Inner::new_with_buffer(
+                    self.buf_size,
+                    component.into(),
+                    DEFAULT_OUTPUT.to_owned(),
+                );
                 self.inner = Some(inner);
 
                 rx
             }
             Some(name) => {
-                let (inner, rx) = Inner::new_with_buffer(self.buf_size, name.to_owned());
+                let (inner, rx) =
+                    Inner::new_with_buffer(self.buf_size, component.into(), name.to_owned());
                 self.named_inners.insert(name, inner);
 
                 rx
@@ -81,7 +90,7 @@ impl Pipeline {
     }
 
     pub fn new_with_buffer(n: usize) -> (Self, ReceiverStream<Events>) {
-        let (inner, rx) = Inner::new_with_buffer(n, DEFAULT_OUTPUT.to_owned());
+        let (inner, rx) = Inner::new_with_buffer(n, "".into(), DEFAULT_OUTPUT.to_owned());
 
         (
             Self {
@@ -126,7 +135,7 @@ impl Pipeline {
         status: event::EventStatus,
         name: String,
     ) -> impl Stream<Item = Events> + Unpin {
-        let (inner, recv) = Inner::new_with_buffer(100, name.clone());
+        let (inner, recv) = Inner::new_with_buffer(100, "".into(), name.clone());
         let recv = recv.map(move |mut events| {
             events.for_each_event(|mut event| {
                 let metadata = event.metadata_mut();
@@ -214,11 +223,15 @@ struct Inner {
 }
 
 impl Inner {
-    fn new_with_buffer(n: usize, output: String) -> (Self, ReceiverStream<Events>) {
+    fn new_with_buffer(
+        n: usize,
+        component: String,
+        output: String,
+    ) -> (Self, ReceiverStream<Events>) {
         let (tx, rx) = mpsc::channel(n);
         let rx = tokio_stream::wrappers::ReceiverStream::new(rx);
 
-        let attrs = Attributes::from([("output", output.into())]);
+        let attrs = Attributes::from([("output", output.into()), ("component", component.into())]);
         let sent_events = metrics::register_counter(
             "component_sent_events_total",
             "The total number of events emitted by this component.",
@@ -241,9 +254,14 @@ impl Inner {
     }
 
     async fn send(&mut self, events: Events) -> Result<(), ClosedError> {
-        // TODO: add metric
-        // let byte_size = event.size_of();
+        let count = events.len();
+        let byte_size = events.size_of();
+
         self.inner.send(events).await?;
+
+        self.sent_events.inc(count as u64);
+        self.sent_bytes.inc(byte_size as u64);
+
         Ok(())
     }
 

@@ -423,7 +423,7 @@ pub async fn build_pieces(
         let mut controls = HashMap::new();
 
         for output in source_outputs {
-            let mut rx = builder.add_output(output.clone());
+            let mut rx = builder.add_output(key.id(), output.clone());
             let (mut fanout, control) = Fanout::new();
             let pump = async move {
                 debug!(message = "Source pump starting");
