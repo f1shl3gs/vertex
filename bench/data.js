@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655210318993,
+  "lastUpdate": 1655210320820,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -31172,6 +31172,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 262260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ffba6e8a26adfc30c6f778b2c3cea06e8bdfc14",
+          "message": "Merge pull request #368 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.9\n\nchore(deps): bump tokio-stream from 0.1.8 to 0.1.9",
+          "timestamp": "2022-06-14T20:30:16+08:00",
+          "tree_id": "82ad6fc7f8e33d0ada63d19243a8b5286007a272",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ffba6e8a26adfc30c6f778b2c3cea06e8bdfc14"
+        },
+        "date": 1655210318501,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 734.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 71558,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 357440,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 714120,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 269.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 26694,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 131590,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 259710,
             "unit": "ns/op"
           }
         ]
