@@ -1,12 +1,15 @@
 sources:
   metrics:
     type: internal_metrics
+  selfstat:
+    type: selfstat
 
 transforms:
   add_tags:
     type: add_tags
     inputs:
       - metrics
+      - selfstat
     tags:
       host: ${HOSTNAME}
 
