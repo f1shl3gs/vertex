@@ -313,7 +313,7 @@ env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
 indoc = { version = "1.0.6", default-features = false }
 pretty_assertions = { version = "1.2.1" }
-proptest = { version = "1.0" }
+proptest = { version = "1.0.0" }
 rand = { version = "0.8.5" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.12.0" }
