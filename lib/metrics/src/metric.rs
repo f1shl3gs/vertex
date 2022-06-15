@@ -10,7 +10,7 @@ use crate::histogram::HistogramObservation;
 #[derive(Debug, Clone)]
 pub enum Observation {
     Counter(u64),
-    Gauge(u64),
+    Gauge(f64),
     Histogram(HistogramObservation),
 }
 

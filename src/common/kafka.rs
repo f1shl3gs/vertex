@@ -188,8 +188,8 @@ impl KafkaStatisticsContext {
 
 impl ClientContext for KafkaStatisticsContext {
     fn stats(&self, statistics: Statistics) {
-        self.queue_messages.set(statistics.msg_cnt);
-        self.queue_message_bytes.set(statistics.msg_size);
+        self.queue_messages.set(statistics.msg_cnt as f64);
+        self.queue_message_bytes.set(statistics.msg_size as f64);
         self.requests.set(statistics.tx as u64);
         self.requests_bytes.set(statistics.tx_bytes as u64);
         self.responses.set(statistics.rx as u64);

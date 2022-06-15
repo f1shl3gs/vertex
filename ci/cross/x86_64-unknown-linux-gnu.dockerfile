@@ -1,4 +1,4 @@
-FROM ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main
+FROM ghcr.io/cross-rs/x86_64-unknown-linux-gnu:main-centos
 
 COPY bootstrap-rhel.sh .
 RUN ./bootstrap-rhel.sh

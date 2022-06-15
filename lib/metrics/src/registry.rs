@@ -260,7 +260,10 @@ mod tests {
                 let (name, _description) = self.reporting.unwrap();
 
                 match observation {
-                    Observation::Counter(v) | Observation::Gauge(v) => {
+                    Observation::Counter(v) => {
+                        println!("{}{} {}", name, attrs_to_string(attrs), v)
+                    }
+                    Observation::Gauge(v) => {
                         println!("{}{} {}", name, attrs_to_string(attrs), v)
                     }
                     Observation::Histogram(h) => {
@@ -345,9 +348,9 @@ mod tests {
 
         let gs = reg.register_gauge("gauge", "gauge desc");
         let g = gs.recorder(&[]);
-        assert_eq!(g.fetch(), 0);
+        assert_eq!(g.fetch(), 0.0);
         g.inc(1);
-        assert_eq!(g.fetch(), 1);
+        assert_eq!(g.fetch(), 1.0);
 
         let hs = reg.register_histogram(
             "histogram",

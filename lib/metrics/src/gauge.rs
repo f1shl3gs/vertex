@@ -9,20 +9,54 @@ pub struct Gauge {
 }
 
 impl Gauge {
-    pub fn inc(&self, value: u64) {
-        self.state.fetch_add(value, Ordering::Relaxed);
+    pub fn inc(&self, value: impl Into<f64>) {
+        let value = value.into();
+        let mut old_u64 = self.state.load(Ordering::Relaxed);
+        let mut old_f64;
+
+        loop {
+            old_f64 = f64::from_bits(old_u64);
+            let new = f64::to_bits(old_f64 + value);
+
+            match self.state.compare_exchange_weak(
+                old_u64,
+                new,
+                Ordering::Relaxed,
+                Ordering::Relaxed,
+            ) {
+                Ok(_) => break,
+                Err(x) => old_u64 = x,
+            }
+        }
     }
 
-    pub fn dec(&self, value: u64) {
-        self.state.fetch_min(value, Ordering::Relaxed);
+    pub fn dec(&self, value: impl Into<f64>) {
+        let value = value.into();
+        let mut old_u64 = self.state.load(Ordering::Relaxed);
+        let mut old_f64;
+
+        loop {
+            old_f64 = f64::from_bits(old_u64);
+            let new = f64::to_bits(old_f64 - value);
+
+            match self.state.compare_exchange_weak(
+                old_u64,
+                new,
+                Ordering::Relaxed,
+                Ordering::Relaxed,
+            ) {
+                Ok(_) => break,
+                Err(x) => old_u64 = x,
+            }
+        }
     }
 
-    pub fn set(&self, value: u64) {
-        self.state.store(value, Ordering::Relaxed)
+    pub fn set(&self, value: f64) {
+        self.state.swap(f64::to_bits(value), Ordering::Relaxed);
     }
 
-    pub fn fetch(&self) -> u64 {
-        self.state.load(Ordering::Relaxed)
+    pub fn fetch(&self) -> f64 {
+        f64::from_bits(self.state.load(Ordering::Relaxed))
     }
 }
 
@@ -46,10 +80,12 @@ mod tests {
     fn test_gauge() {
         let gauge = Gauge::default();
 
-        assert_eq!(gauge.fetch(), 0);
-        gauge.inc(2);
-        assert_eq!(gauge.fetch(), 2);
-        gauge.dec(1);
-        assert_eq!(gauge.fetch(), 1);
+        assert_eq!(gauge.fetch(), 0.0);
+        gauge.inc(2.0);
+        assert_eq!(gauge.fetch(), 2.0);
+        gauge.dec(1.0);
+        assert_eq!(gauge.fetch(), 1.0);
+        gauge.set(10.0);
+        assert_eq!(gauge.fetch(), 10.0);
     }
 }
