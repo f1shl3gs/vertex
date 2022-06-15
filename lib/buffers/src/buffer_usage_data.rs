@@ -213,11 +213,11 @@ impl BufferUsage {
 
                         match stage.max_size_bytes.load(Ordering::Relaxed) {
                             0 => {}
-                            value => max_byte_size.recorder(attrs.clone()).set(value as u64),
+                            value => max_byte_size.recorder(attrs.clone()).set(value as f64),
                         };
                         match stage.max_size_events.load(Ordering::Relaxed) {
                             0 => {}
-                            value => max_event_size.recorder(attrs.clone()).set(value as u64),
+                            value => max_event_size.recorder(attrs.clone()).set(value as f64),
                         };
 
                         if let Some(dropped_event_count) = &stage.dropped_event_count {
