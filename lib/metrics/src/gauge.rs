@@ -51,5 +51,7 @@ mod tests {
         assert_eq!(gauge.fetch(), 2);
         gauge.dec(1);
         assert_eq!(gauge.fetch(), 1);
+        gauge.set(10);
+        assert_eq!(gauge.fetch(), 10);
     }
 }
