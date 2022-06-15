@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655221893915,
+  "lastUpdate": 1655303588382,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15959,6 +15959,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 67.337,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d6b4687e663f271e10c92ae78484406e3f252a4",
+          "message": "Merge pull request #372 from f1shl3gs/f64_gauge\n\nf64 gauge",
+          "timestamp": "2022-06-15T22:25:37+08:00",
+          "tree_id": "d5294fe0722c9df1084cfbe7ead787722f2f64a0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d6b4687e663f271e10c92ae78484406e3f252a4"
+        },
+        "date": 1655303584264,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.985,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.008,
             "unit": "ns/op"
           }
         ]
