@@ -1,6 +1,9 @@
 use std::collections::HashSet;
-use std::io::Write;
+use std::env;
+use std::ffi::OsString;
+use std::io::{Error, ErrorKind, Write, Result};
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 struct TrackedEnv {
     envs: HashSet<String>,
@@ -149,6 +152,31 @@ fn main() {
         build_desc,
     );
 
+    let (rustc_version, rustc_channel) = rustc_info();
+    constants.add_required_constants(
+        "RUSTC_VERSION",
+        "The rustc version info",
+        rustc_version,
+    );
+    constants.add_required_constants(
+        "RUSTC_CHANNEL",
+        "The rustc channel",
+        rustc_channel,
+    );
+
+    let (branch, hash) = git_info()
+        .expect("Run git command to fetch infos failed");
+    constants.add_required_constants(
+        "GIT_BRANCH",
+        "Git branch this instance built from",
+        branch
+    );
+    constants.add_required_constants(
+        "GIT_HASH",
+        "Git commit hash this instance built from",
+        hash
+    );
+
     constants
         .write_to_file("built.rs")
         .expect("Failed to write build-time constants file!");
@@ -168,4 +196,75 @@ fn main() {
             .compile_protos(&[src.join("loki.proto")], include)
             .unwrap();
     }
+}
+
+fn rustc_info() -> (String, String) {
+    let rustc = env::var_os("RUSTC")
+        .unwrap_or_else(|| OsString::from("rustc"));
+
+    let out = Command::new(rustc)
+        .arg("-vV")
+        .output()
+        .expect("Get rustc version failed");
+
+    if !out.status.success() {}
+
+    let output = std::str::from_utf8(&out.stdout)
+        .expect("Parse command output failed");
+    let mut version= "";
+    let mut channel= "";
+
+    for line in output.lines() {
+        if line.starts_with("rustc ") {
+            version = line.strip_prefix("rustc ").unwrap();
+            continue;
+        }
+
+        if line.starts_with("release") {
+            channel = if line.contains("dev") {
+                "dev"
+            } else if line.contains("beta") {
+                "beta"
+            } else if line.contains("nightly") {
+                "nightly"
+            } else {
+                "stable"
+            }
+        }
+    }
+
+    (version.to_string(), channel.to_string())
+}
+
+fn git_info() -> Result<(String, String)> {
+    let output = Command::new("git")
+        .arg("branch")
+        .arg("--show-current")
+        .output()?;
+
+    if !output.status.success() {
+        return Err(Error::new(ErrorKind::Other, "Unexpected exit code when get branch"));
+    }
+
+    let branch = std::str::from_utf8(&output.stdout)
+        .expect("Convert output to utf8 success")
+        .trim()
+        .to_string();
+
+    let output = Command::new("git")
+        .arg("rev-parse")
+        .arg("--short")
+        .arg("HEAD")
+        .output()?;
+
+    if !output.status.success() {
+        return Err(Error::new(ErrorKind::Other, "Unexpected exit code when get hash"));
+    }
+
+    let hash = String::from_utf8(output.stdout)
+        .expect("Convert output to utf8 success")
+        .trim()
+        .to_string();
+
+    return Ok((branch, hash))
 }
