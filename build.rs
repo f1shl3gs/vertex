@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 use std::env;
 use std::ffi::OsString;
-use std::io::{Error, ErrorKind, Write, Result};
+use std::io::{Error, ErrorKind, Result, Write};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -153,29 +153,12 @@ fn main() {
     );
 
     let (rustc_version, rustc_channel) = rustc_info();
-    constants.add_required_constants(
-        "RUSTC_VERSION",
-        "The rustc version info",
-        rustc_version,
-    );
-    constants.add_required_constants(
-        "RUSTC_CHANNEL",
-        "The rustc channel",
-        rustc_channel,
-    );
+    constants.add_required_constants("RUSTC_VERSION", "The rustc version info", rustc_version);
+    constants.add_required_constants("RUSTC_CHANNEL", "The rustc channel", rustc_channel);
 
-    let (branch, hash) = git_info()
-        .expect("Run git command to fetch infos failed");
-    constants.add_required_constants(
-        "GIT_BRANCH",
-        "Git branch this instance built from",
-        branch
-    );
-    constants.add_required_constants(
-        "GIT_HASH",
-        "Git commit hash this instance built from",
-        hash
-    );
+    let (branch, hash) = git_info().expect("Run git command to fetch infos failed");
+    constants.add_required_constants("GIT_BRANCH", "Git branch this instance built from", branch);
+    constants.add_required_constants("GIT_HASH", "Git commit hash this instance built from", hash);
 
     constants
         .write_to_file("built.rs")
@@ -199,8 +182,7 @@ fn main() {
 }
 
 fn rustc_info() -> (String, String) {
-    let rustc = env::var_os("RUSTC")
-        .unwrap_or_else(|| OsString::from("rustc"));
+    let rustc = env::var_os("RUSTC").unwrap_or_else(|| OsString::from("rustc"));
 
     let out = Command::new(rustc)
         .arg("-vV")
@@ -209,10 +191,9 @@ fn rustc_info() -> (String, String) {
 
     if !out.status.success() {}
 
-    let output = std::str::from_utf8(&out.stdout)
-        .expect("Parse command output failed");
-    let mut version= "";
-    let mut channel= "";
+    let output = std::str::from_utf8(&out.stdout).expect("Parse command output failed");
+    let mut version = "";
+    let mut channel = "";
 
     for line in output.lines() {
         if line.starts_with("rustc ") {
@@ -243,7 +224,10 @@ fn git_info() -> Result<(String, String)> {
         .output()?;
 
     if !output.status.success() {
-        return Err(Error::new(ErrorKind::Other, "Unexpected exit code when get branch"));
+        return Err(Error::new(
+            ErrorKind::Other,
+            "Unexpected exit code when get branch",
+        ));
     }
 
     let branch = std::str::from_utf8(&output.stdout)
@@ -258,7 +242,10 @@ fn git_info() -> Result<(String, String)> {
         .output()?;
 
     if !output.status.success() {
-        return Err(Error::new(ErrorKind::Other, "Unexpected exit code when get hash"));
+        return Err(Error::new(
+            ErrorKind::Other,
+            "Unexpected exit code when get hash",
+        ));
     }
 
     let hash = String::from_utf8(output.stdout)
@@ -266,5 +253,5 @@ fn git_info() -> Result<(String, String)> {
         .trim()
         .to_string();
 
-    return Ok((branch, hash))
+    return Ok((branch, hash));
 }
