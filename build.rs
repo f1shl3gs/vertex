@@ -253,5 +253,5 @@ fn git_info() -> Result<(String, String)> {
         .trim()
         .to_string();
 
-    return Ok((branch, hash));
+    Ok((branch, hash))
 }
