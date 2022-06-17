@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655480328477,
+  "lastUpdate": 1655480480356,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -48494,6 +48494,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1415,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a638b76294637003ae8d6fe5b0cdc3f7f10d338",
+          "message": "Merge pull request #377 from f1shl3gs/dependabot/cargo/no-proxy-0.3.2\n\nchore(deps): bump no-proxy from 0.3.1 to 0.3.2",
+          "timestamp": "2022-06-17T23:10:43+08:00",
+          "tree_id": "a7d7212e649ff4433d61185ef35ccb76309fabe3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a638b76294637003ae8d6fe5b0cdc3f7f10d338"
+        },
+        "date": 1655480475978,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1560,
             "unit": "s"
           }
         ]
