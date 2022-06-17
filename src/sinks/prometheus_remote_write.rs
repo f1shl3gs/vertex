@@ -421,22 +421,21 @@ mod integration_tests {
     use hyper::Body;
     use serde::{Deserialize, Serialize};
     use std::time::Duration;
-    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-    use testcontainers::Docker;
+    use testcontainers::core::WaitFor;
+    use testcontainers::images::generic::GenericImage;
 
     #[tokio::test]
     async fn cortex_write_and_query() {
         // 1. Setup Cortex
-        let image = GenericImage::new("ubuntu/cortex:latest")
+        let image = GenericImage::new("ubuntu/cortex", "latest")
             .with_env_var("TZ", "UTC")
-            .with_wait_for(WaitFor::LogMessage {
+            .with_wait_for(WaitFor::StdErrMessage {
                 message: "Cortex started".to_string(),
-                stream: Stream::StdErr,
             });
 
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(image);
-        let host_port = service.get_host_port(9009).unwrap();
+        let host_port = service.get_host_port_ipv4(9009);
 
         // 2. Setup sink
         let config = format!("endpoint: http://localhost:{}/api/v1/push", host_port);

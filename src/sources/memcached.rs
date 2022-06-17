@@ -970,77 +970,78 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-memcached"))]
 mod integration_tests {
     use super::*;
-    use memcached::Memcached;
-    use testcontainers::Docker;
+    use testcontainers::images::generic::GenericImage;
+    use testcontainers::RunnableImage;
+    /*
+        mod memcached {
+            use std::collections::HashMap;
+            use testcontainers::{Container, Image};
 
-    mod memcached {
-        use std::collections::HashMap;
-        use testcontainers::{Container, Docker, Image, WaitForMessage};
+            const CONTAINER_IDENTIFIER: &str = "memcached";
+            const DEFAULT_TAG: &str = "1.6.12-alpine3.14";
 
-        const CONTAINER_IDENTIFIER: &str = "memcached";
-        const DEFAULT_TAG: &str = "1.6.12-alpine3.14";
+            #[derive(Debug, Clone, Default)]
+            pub struct MemcachedArgs(Vec<String>);
 
-        #[derive(Debug, Clone, Default)]
-        pub struct MemcachedArgs(Vec<String>);
+            impl IntoIterator for MemcachedArgs {
+                type Item = String;
+                type IntoIter = std::vec::IntoIter<String>;
 
-        impl IntoIterator for MemcachedArgs {
-            type Item = String;
-            type IntoIter = std::vec::IntoIter<String>;
-
-            fn into_iter(self) -> Self::IntoIter {
-                self.0.into_iter()
+                fn into_iter(self) -> Self::IntoIter {
+                    self.0.into_iter()
+                }
             }
-        }
 
-        pub struct Memcached {
-            arguments: MemcachedArgs,
-            tag: String,
-        }
+            pub struct Memcached {
+                arguments: MemcachedArgs,
+                tag: String,
+            }
 
-        impl Default for Memcached {
-            fn default() -> Self {
-                Self {
-                    arguments: MemcachedArgs(vec!["-vv".to_string()]),
-                    tag: DEFAULT_TAG.into(),
+            impl Default for Memcached {
+                fn default() -> Self {
+                    Self {
+                        arguments: MemcachedArgs(vec!["-vv".to_string()]),
+                        tag: DEFAULT_TAG.into(),
+                    }
+                }
+            }
+
+            impl Image for Memcached {
+                type Args = MemcachedArgs;
+                type EnvVars = HashMap<String, String>;
+                type Volumes = HashMap<String, String>;
+                type EntryPoint = std::convert::Infallible;
+
+                fn descriptor(&self) -> String {
+                    format!("{}:{}", CONTAINER_IDENTIFIER, self.tag)
+                }
+
+                fn wait_until_ready<D: Docker>(&self, container: &Container<'_, D, Self>) {
+                    container
+                        .logs()
+                        .stderr
+                        .wait_for_message("server listening")
+                        .unwrap();
+                }
+
+                fn args(&self) -> Self::Args {
+                    self.arguments.clone()
+                }
+
+                fn env_vars(&self) -> Self::EnvVars {
+                    Default::default()
+                }
+
+                fn volumes(&self) -> Self::Volumes {
+                    Default::default()
+                }
+
+                fn with_args(self, arguments: Self::Args) -> Self {
+                    Memcached { arguments, ..self }
                 }
             }
         }
-
-        impl Image for Memcached {
-            type Args = MemcachedArgs;
-            type EnvVars = HashMap<String, String>;
-            type Volumes = HashMap<String, String>;
-            type EntryPoint = std::convert::Infallible;
-
-            fn descriptor(&self) -> String {
-                format!("{}:{}", CONTAINER_IDENTIFIER, self.tag)
-            }
-
-            fn wait_until_ready<D: Docker>(&self, container: &Container<'_, D, Self>) {
-                container
-                    .logs()
-                    .stderr
-                    .wait_for_message("server listening")
-                    .unwrap();
-            }
-
-            fn args(&self) -> Self::Args {
-                self.arguments.clone()
-            }
-
-            fn env_vars(&self) -> Self::EnvVars {
-                Default::default()
-            }
-
-            fn volumes(&self) -> Self::Volumes {
-                Default::default()
-            }
-
-            fn with_args(self, arguments: Self::Args) -> Self {
-                Memcached { arguments, ..self }
-            }
-        }
-    }
+    */
 
     async fn write_data(addr: &str, n: i32) {
         let mut socket = TcpStream::connect(addr).await.unwrap();
@@ -1058,10 +1059,10 @@ mod integration_tests {
 
     #[tokio::test]
     async fn query_stats() {
-        let docker = testcontainers::clients::Cli::default();
-        let image = Memcached::default();
-        let service = docker.run(image);
-        let host_port = service.get_host_port(11211).unwrap();
+        let cli = testcontainers::clients::Cli::default();
+        let image = RunnableImage::from(GenericImage::new("memcached", "1.6.12-alpine3.14"));
+        let service = cli.run(image);
+        let host_port = service.get_host_port_ipv4(11211);
         let addr = format!("127.0.0.1:{}", host_port);
 
         write_data(&addr, 1000).await;

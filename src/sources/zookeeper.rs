@@ -247,100 +247,22 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
     use super::fetch_stats;
-    use testcontainers::Docker;
-    use zk::Zookeeper;
-
-    mod zk {
-        use std::collections::HashMap;
-        use testcontainers::{Container, Docker, Image, WaitForMessage};
-
-        const CONTAINER_IDENTIFIER: &str = "bitnami/zookeeper";
-        const DEFAULT_TAG: &str = "3.7.0";
-
-        #[derive(Debug, Default, Clone)]
-        pub struct ZookeeperArgs;
-
-        impl IntoIterator for ZookeeperArgs {
-            type Item = String;
-            type IntoIter = ::std::vec::IntoIter<String>;
-
-            fn into_iter(self) -> <Self as IntoIterator>::IntoIter {
-                vec![].into_iter()
-            }
-        }
-
-        #[derive(Debug)]
-        pub struct Zookeeper {
-            tag: String,
-            arguments: ZookeeperArgs,
-            envs: HashMap<String, String>,
-        }
-
-        impl Default for Zookeeper {
-            fn default() -> Self {
-                Zookeeper {
-                    tag: DEFAULT_TAG.to_string(),
-                    arguments: ZookeeperArgs {},
-                    envs: Default::default(),
-                }
-            }
-        }
-
-        impl Image for Zookeeper {
-            type Args = ZookeeperArgs;
-            type EnvVars = HashMap<String, String>;
-            type Volumes = HashMap<String, String>;
-            type EntryPoint = std::convert::Infallible;
-            fn descriptor(&self) -> String {
-                format!("{}:{}", CONTAINER_IDENTIFIER, &self.tag)
-            }
-
-            fn wait_until_ready<D: Docker>(&self, container: &Container<'_, D, Self>) {
-                container
-                    .logs()
-                    .stdout
-                    .wait_for_message("ZooKeeper audit is disabled")
-                    .unwrap();
-            }
-
-            fn args(&self) -> <Self as Image>::Args {
-                self.arguments.clone()
-            }
-
-            fn env_vars(&self) -> Self::EnvVars {
-                self.envs.clone()
-            }
-
-            fn volumes(&self) -> Self::Volumes {
-                HashMap::new()
-            }
-
-            fn with_args(self, arguments: <Self as Image>::Args) -> Self {
-                Zookeeper { arguments, ..self }
-            }
-        }
-
-        impl Zookeeper {
-            pub fn with_env(self, key: &str, value: &str) -> Self {
-                let mut envs = self.envs.clone();
-                envs.insert(key.to_string(), value.to_string());
-
-                Zookeeper { envs, ..self }
-            }
-        }
-    }
+    use testcontainers::images::zookeeper::Zookeeper;
+    use testcontainers::RunnableImage;
 
     #[tokio::test]
     async fn test_fetch_stats() {
-        let docker = testcontainers::clients::Cli::default();
-        let image = Zookeeper::default().with_env("ALLOW_ANONYMOUS_LOGIN", "yes");
+        let client = testcontainers::clients::Cli::default();
+        let image = RunnableImage::from(Zookeeper::default())
+            // .with_env_var(("ALLOW_ANONYMOUS_LOGIN", "yes"))
+            .with_env_var(("ZOO_4LW_COMMANDS_WHITELIST", "*"));
 
-        let service = docker.run(image);
-        let host_port = service.get_host_port(2181).unwrap();
+        let service = client.run(image);
+        let host_port = service.get_host_port_ipv4(2181);
         let addr = format!("127.0.0.1:{}", host_port);
 
         let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
-        assert_eq!(version, "3.7.0-e3704b390a6697bfdf4b0bef79e3da7a4f6bac4b");
+        assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
         assert_eq!(state, "standalone");
         assert!(*stats.get("zk_uptime").unwrap() > 0.0);
     }

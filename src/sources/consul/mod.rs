@@ -369,18 +369,18 @@ mod integration_tests {
     use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
     use hyper::Body;
-    use testcontainers::images::generic::{GenericImage, WaitFor};
-    use testcontainers::{Docker, Image};
+    use testcontainers::core::WaitFor;
+    use testcontainers::images::generic::GenericImage;
+    use testcontainers::RunnableImage;
 
     #[tokio::test]
     async fn test_client() {
         let docker = testcontainers::clients::Cli::default();
-        let image = GenericImage::new("consul:1.11.1").with_wait_for(WaitFor::LogMessage {
+        let image = GenericImage::new("consul", "1.11.1").with_wait_for(WaitFor::StdOutMessage {
             message: "Synced node info".to_string(),
-            stream: testcontainers::images::generic::Stream::StdOut,
         });
         let service = docker.run(image);
-        let host_port = service.get_host_port(8500).unwrap();
+        let host_port = service.get_host_port_ipv4(8500);
 
         let tls = MaybeTlsSettings::client_config(&None).unwrap();
         let client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
@@ -655,12 +655,11 @@ mod integration_tests {
 
         for (test, services, wants) in tests {
             let docker = testcontainers::clients::Cli::default();
-            let image = GenericImage::new("consul:1.11.1")
-                .with_wait_for(WaitFor::LogMessage {
+            let image = RunnableImage::from((
+                GenericImage::new("consul", "1.11.1").with_wait_for(WaitFor::StdOutMessage {
                     message: "Synced node info".to_string(),
-                    stream: testcontainers::images::generic::Stream::StdOut,
-                })
-                .with_args(vec![
+                }),
+                vec![
                     "agent".to_string(),
                     "-data-dir=/consul/data".to_string(),
                     "-config-dir=/consul/config".to_string(),
@@ -671,10 +670,11 @@ mod integration_tests {
                     node_name.to_string(),
                     "-client".to_string(),
                     "0.0.0.0".to_string(),
-                ]);
+                ],
+            ));
 
             let service = docker.run(image);
-            let host_port = service.get_host_port(8500).unwrap();
+            let host_port = service.get_host_port_ipv4(8500);
 
             let tls = MaybeTlsSettings::client_config(&None).unwrap();
             let http_client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();

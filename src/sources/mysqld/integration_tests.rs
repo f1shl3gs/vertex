@@ -6,22 +6,21 @@ use super::{
 use crate::sources::mysqld::get_mysql_version;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
-use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-use testcontainers::Docker;
+use testcontainers::core::WaitFor;
+use testcontainers::images::generic::GenericImage;
 
 #[tokio::test]
 async fn gather() {
-    let docker = testcontainers::clients::Cli::default();
+    let client = testcontainers::clients::Cli::default();
     // The official MySQL image does not contains response_time plugin,
     // while percona provide it
-    let image = GenericImage::new("percona:5.7.35")
+    let image = GenericImage::new("percona", "5.7.35")
         .with_env_var("MYSQL_ROOT_PASSWORD", "password")
-        .with_wait_for(WaitFor::LogMessage {
+        .with_wait_for(WaitFor::StdErrMessage {
             message: "ready for connections".to_string(),
-            stream: Stream::StdErr,
         });
-    let service = docker.run(image);
-    let host_port = service.get_host_port(3306).unwrap();
+    let service = client.run(image);
+    let host_port = service.get_host_port_ipv4(3306);
 
     std::thread::sleep(std::time::Duration::from_secs(15));
 

@@ -5,8 +5,9 @@ use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
 use hyper::Body;
 use serde::{Deserialize, Serialize};
-use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-use testcontainers::{Docker, RunArgs};
+use testcontainers::core::WaitFor;
+use testcontainers::images::generic::GenericImage;
+use testcontainers::RunnableImage;
 use testify::random::random_string;
 
 use super::config::LokiConfig;
@@ -16,15 +17,16 @@ const LOKI_PORT: u16 = 3100;
 #[tokio::test]
 async fn write_and_query() {
     // 1. setup Loki all-in-one container
-    let image = GenericImage::new("grafana/loki:1.4.1").with_wait_for(WaitFor::LogMessage {
-        message: "Starting Loki".to_string(),
-        stream: Stream::StdErr,
-    });
+    let image = RunnableImage::from(GenericImage::new("grafana/loki", "1.4.1").with_wait_for(
+        WaitFor::StdErrMessage {
+            message: "Starting Loki".to_string(),
+        },
+    ))
+    .with_mapped_port((LOKI_PORT, LOKI_PORT));
 
-    let docker = testcontainers::clients::Cli::default();
-    let args = RunArgs::default().with_mapped_port((LOKI_PORT, LOKI_PORT));
-    let service = docker.run_with_args(image, args);
-    let port = service.get_host_port(LOKI_PORT).unwrap();
+    let client = testcontainers::clients::Cli::default();
+    let service = client.run(image);
+    let port = service.get_host_port_ipv4(LOKI_PORT);
 
     // 2. setup loki service
     let label_value = random_string(8);

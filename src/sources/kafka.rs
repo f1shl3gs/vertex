@@ -499,85 +499,29 @@ mod integration_tests {
     use rdkafka::producer::{FutureProducer, FutureRecord};
     use rdkafka::{ClientConfig, Offset, TopicPartitionList};
     use std::time::Duration;
-    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-    use testcontainers::{clients, Docker, RunArgs};
+    use testcontainers::images::zookeeper::Zookeeper;
+    use testcontainers::{clients, RunnableImage};
     use testify::collect_n;
     use testify::random::random_string;
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
     async fn consume_with_ack() {
-        let network = format!("test-source-kafka-{}", random_string(10));
         let cli = clients::Cli::default();
+        let image = RunnableImage::from(Zookeeper::default());
+        let container = cli.run(image);
+        let port = container.get_host_port_ipv4(9092);
 
-        let image = GenericImage::new("bitnami/zookeeper:3.7")
-            .with_env_var("ALLOW_ANONYMOUS_LOGIN", "yes")
-            .with_wait_for(WaitFor::LogMessage {
-                message: "Started AdminServer on address".to_string(),
-                stream: Stream::StdOut,
-            });
-        let zk_container_name = format!("zookeeper-{}", random_string(10));
-        let args = RunArgs::default()
-            .with_network(network.clone())
-            .with_name(&zk_container_name);
-        let _zk = cli.run_with_args(image, args);
-
-        let image = GenericImage::new("wurstmeister/kafka:2.13-2.7.0")
-            .with_env_var(
-                "KAFKA_ZOOKEEPER_CONNECT",
-                format!("{}:2181", &zk_container_name),
-            )
-            .with_env_var("KAFKA_ADVERTISED_HOST_NAME", "127.0.0.1")
-            .with_wait_for(WaitFor::LogMessage {
-                message: "started (kafka.server.KafkaServer)".to_string(),
-                stream: Stream::StdOut,
-            });
-
-        let random_port = testify::pick_unused_local_port();
-        let args = RunArgs::default()
-            .with_network(network)
-            .with_mapped_port((random_port, 9092));
-        let _kafka = cli.run_with_args(image, args);
-
-        consume_event(format!("localhost:{}", random_port), true).await;
+        consume_event(format!("localhost:{}", port), true).await;
     }
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
     async fn consume_without_ack() {
-        // NOTE: The code bellow is duplicated, but we just can't be moved into an
-        // individual function(e.g. setup).
-        let network = format!("test-source-kafka-{}", random_string(10));
         let cli = clients::Cli::default();
+        let image = RunnableImage::from(Zookeeper::default());
+        let container = cli.run(image);
+        let port = container.get_host_port_ipv4(9092);
 
-        let image = GenericImage::new("bitnami/zookeeper:3.7")
-            .with_env_var("ALLOW_ANONYMOUS_LOGIN", "yes")
-            .with_wait_for(WaitFor::LogMessage {
-                message: "Started AdminServer on address".to_string(),
-                stream: Stream::StdOut,
-            });
-        let zk_container_name = format!("zookeeper-{}", random_string(10));
-        let args = RunArgs::default()
-            .with_network(network.clone())
-            .with_name(&zk_container_name);
-        let _zk = cli.run_with_args(image, args);
-
-        let image = GenericImage::new("wurstmeister/kafka:2.13-2.7.0")
-            .with_env_var(
-                "KAFKA_ZOOKEEPER_CONNECT",
-                format!("{}:2181", &zk_container_name),
-            )
-            .with_env_var("KAFKA_ADVERTISED_HOST_NAME", "127.0.0.1")
-            .with_wait_for(WaitFor::LogMessage {
-                message: "started (kafka.server.KafkaServer)".to_string(),
-                stream: Stream::StdOut,
-            });
-
-        let random_port = testify::pick_unused_local_port();
-        let args = RunArgs::default()
-            .with_network(network)
-            .with_mapped_port((random_port, 9092));
-        let _kafka = cli.run_with_args(image, args);
-
-        consume_event(format!("localhost:{}", random_port), false).await;
+        consume_event(format!("localhost:{}", port), false).await;
     }
 
     async fn consume_event(servers: String, ack: bool) {
