@@ -1092,7 +1092,7 @@ mod tests {
 mod integration_tests {
     use super::*;
     use redis::ToRedisArgs;
-    use testcontainers::{images::redis::Redis, Docker};
+    use testcontainers::images::redis::Redis;
 
     const REDIS_PORT: u16 = 6379;
 
@@ -1112,9 +1112,9 @@ mod integration_tests {
 
     #[tokio::test]
     async fn dump_config() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let client = testcontainers::clients::Cli::default();
+        let service = client.run(Redis::default());
+        let host_port = service.get_host_port_ipv4(REDIS_PORT);
         let url = format!("redis://localhost:{}", host_port);
 
         let cli = redis::Client::open(url).unwrap();
@@ -1134,7 +1134,7 @@ mod integration_tests {
     async fn test_slowlog() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let host_port = service.get_host_port_ipv4(REDIS_PORT);
         let url = format!("redis://localhost:{}", host_port);
         let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
@@ -1149,7 +1149,7 @@ mod integration_tests {
     async fn test_query_databases() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let host_port = service.get_host_port_ipv4(REDIS_PORT);
         let url = format!("redis://localhost:{}", host_port);
         let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
@@ -1161,7 +1161,7 @@ mod integration_tests {
     async fn test_latency_latest() {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
-        let host_port = service.get_host_port(REDIS_PORT).unwrap();
+        let host_port = service.get_host_port_ipv4(REDIS_PORT);
         let url = format!("redis://localhost:{}", host_port);
         let cli = redis::Client::open(url).unwrap();
         let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();

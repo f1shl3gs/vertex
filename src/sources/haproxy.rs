@@ -1186,29 +1186,31 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-haproxy"))]
 mod integration_tests {
     use super::*;
-    use testcontainers::images::generic::{GenericImage, Stream, WaitFor};
-    use testcontainers::{Docker, RunArgs};
+    use testcontainers::core::WaitFor;
+    use testcontainers::images::generic::GenericImage;
+    use testcontainers::RunnableImage;
 
     #[tokio::test]
     async fn test_gather() {
         let pwd = std::env::current_dir().unwrap();
         let port = testify::pick_unused_local_port();
-        let run_args = RunArgs::default().with_mapped_port((port, 8404));
-        let docker = testcontainers::clients::Cli::default();
-        let image = GenericImage::new("haproxy:2.4.7")
-            .with_wait_for(WaitFor::LogMessage {
-                message: "remaining in queue".to_string(),
-                stream: Stream::StdOut,
-            })
-            .with_volume(
-                format!(
-                    "{}/tests/fixtures/haproxy/haproxy.cfg",
-                    pwd.to_string_lossy()
+        let client = testcontainers::clients::Cli::default();
+        let image = RunnableImage::from(
+            GenericImage::new("haproxy", "2.4.7")
+                .with_wait_for(WaitFor::StdOutMessage {
+                    message: "remaining in queue".to_string(),
+                })
+                .with_volume(
+                    format!(
+                        "{}/tests/fixtures/haproxy/haproxy.cfg",
+                        pwd.to_string_lossy()
+                    ),
+                    "/usr/local/etc/haproxy/haproxy.cfg",
                 ),
-                "/usr/local/etc/haproxy/haproxy.cfg",
-            );
-        let service = docker.run_with_args(image, run_args);
-        let host_port = service.get_host_port(8404).unwrap();
+        )
+        .with_mapped_port((port, 8404));
+        let service = client.run(image);
+        let host_port = service.get_host_port_ipv4(8404);
 
         // test unhealth gather
         let uncorrect_port = host_port - 1; // dummy, but ok

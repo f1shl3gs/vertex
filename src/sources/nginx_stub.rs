@@ -358,105 +358,38 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-nginx_stub"))]
 mod integration_tests {
-    mod nginx {
-        use std::collections::HashMap;
-        use testcontainers::{Container, Docker, Image, WaitForMessage};
-
-        const CONTAINER_IDENTIFIER: &str = "nginx";
-        const DEFAULT_TAG: &str = "1.21.3";
-
-        #[derive(Debug, Default, Clone)]
-        pub struct NginxArgs;
-
-        impl IntoIterator for NginxArgs {
-            type Item = String;
-            type IntoIter = ::std::vec::IntoIter<String>;
-
-            fn into_iter(self) -> Self::IntoIter {
-                vec![].into_iter()
-            }
-        }
-
-        #[derive(Debug)]
-        pub struct Nginx {
-            tag: String,
-            arguments: NginxArgs,
-            envs: HashMap<String, String>,
-            pub volumes: HashMap<String, String>,
-        }
-
-        impl Default for Nginx {
-            fn default() -> Self {
-                Self {
-                    tag: DEFAULT_TAG.to_string(),
-                    arguments: NginxArgs,
-                    envs: HashMap::new(),
-                    volumes: HashMap::new(),
-                }
-            }
-        }
-
-        impl Image for Nginx {
-            type Args = NginxArgs;
-            type EnvVars = HashMap<String, String>;
-            type Volumes = HashMap<String, String>;
-            type EntryPoint = std::convert::Infallible;
-
-            fn descriptor(&self) -> String {
-                format!("{}:{}", CONTAINER_IDENTIFIER, &self.tag)
-            }
-
-            fn wait_until_ready<D: Docker>(&self, container: &Container<'_, D, Self>) {
-                container
-                    .logs()
-                    .stdout
-                    .wait_for_message("worker process")
-                    .unwrap();
-            }
-
-            fn args(&self) -> Self::Args {
-                self.arguments.clone()
-            }
-
-            fn env_vars(&self) -> Self::EnvVars {
-                self.envs.clone()
-            }
-
-            fn volumes(&self) -> Self::Volumes {
-                self.volumes.clone()
-            }
-
-            fn with_args(self, arguments: Self::Args) -> Self {
-                Nginx { arguments, ..self }
-            }
-        }
-    }
 
     use super::NginxStubStatus;
     use framework::config::ProxyConfig;
     use framework::http::{Auth, HttpClient};
     use hyper::{Body, StatusCode, Uri};
-    use nginx::Nginx;
     use std::convert::TryInto;
-    use testcontainers::Docker;
+    use testcontainers::core::WaitFor;
+    use testcontainers::images::generic::GenericImage;
+    use testcontainers::RunnableImage;
 
     async fn test_nginx(path: &'static str, auth: Option<Auth>, proxy: ProxyConfig) {
-        let docker = testcontainers::clients::Cli::default();
-        let mut image = Nginx::default();
         let pwd = std::env::current_dir().unwrap();
-        image.volumes.insert(
+        let client = testcontainers::clients::Cli::default();
+        let image = RunnableImage::from(GenericImage::new("nginx", "1.21.3").with_wait_for(
+            WaitFor::StdOutMessage {
+                message: "worker process".to_string(),
+            },
+        ))
+        .with_volume((
             format!("{}/tests/fixtures/nginx/nginx.conf", pwd.to_string_lossy()),
             "/etc/nginx/nginx.conf".to_string(),
-        );
-        image.volumes.insert(
+        ))
+        .with_volume((
             format!(
                 "{}/tests/fixtures/nginx/nginx_auth_basic.conf",
                 pwd.to_string_lossy()
             ),
             "/etc/nginx/nginx_auth_basic.conf".to_string(),
-        );
-        let service = docker.run(image);
-        let host_port = service.get_host_port(80).unwrap();
+        ));
+
+        let service = client.run(image);
+        let host_port = service.get_host_port_ipv4(80);
         let uri = format!("http://127.0.0.1:{}{}", host_port, path)
             .parse::<Uri>()
             .unwrap();
