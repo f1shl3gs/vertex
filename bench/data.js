@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655478735644,
+  "lastUpdate": 1655478882277,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7444,6 +7444,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1412800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0a903aa5d28ee37e609975850e5af7625bb90559",
+          "message": "Merge pull request #375 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.9\n\nchore(deps): bump crossbeam-utils from 0.8.8 to 0.8.9",
+          "timestamp": "2022-06-17T23:04:20+08:00",
+          "tree_id": "5bd231b819ff3de74efbbd2e6f1dcff6848364a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0a903aa5d28ee37e609975850e5af7625bb90559"
+        },
+        "date": 1655478879587,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1106800,
             "unit": "ns/op"
           }
         ]
