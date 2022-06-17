@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655479037971,
+  "lastUpdate": 1655479053475,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16245,6 +16245,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 59.205,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e6ff419b0fbdbda7b7ff2c131e1b33d0981ead2",
+          "message": "Merge pull request #357 from f1shl3gs/dependabot/cargo/testcontainers-0.14.0\n\nchore(deps): bump testcontainers from 0.12.0 to 0.14.0",
+          "timestamp": "2022-06-17T23:11:18+08:00",
+          "tree_id": "bc8b7e24147080a444c41b33184193a8cf9c60b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e6ff419b0fbdbda7b7ff2c131e1b33d0981ead2"
+        },
+        "date": 1655479050997,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.023,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 59.825,
             "unit": "ns/op"
           }
         ]
