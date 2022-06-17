@@ -50,7 +50,7 @@ http = { version = "0.2.8", default-features = false }
 hyper = { version = "0.14.19", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-openssl = { version = "0.9.2", default-features = false }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
-indexmap = { version = "1.8.2", default-features = false, features = ["serde"] }
+indexmap = { version = "1.9.0", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 lazy_static = { version = "1.4.0" }
 listenfd = { version = "1.0.0", default-features = false, optional = true }
