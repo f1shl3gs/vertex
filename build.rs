@@ -1,6 +1,9 @@
 use std::collections::HashSet;
-use std::io::Write;
+use std::env;
+use std::ffi::OsString;
+use std::io::{Error, ErrorKind, Result, Write};
 use std::path::{Path, PathBuf};
+use std::process::Command;
 
 struct TrackedEnv {
     envs: HashSet<String>,
@@ -15,7 +18,7 @@ impl TrackedEnv {
 
     pub fn get_env_var(&mut self, name: impl Into<String>) -> Option<String> {
         let name = name.into();
-        let result = std::env::var(&name).ok();
+        let result = env::var(&name).ok();
         self.envs.insert(name);
         result
     }
@@ -149,6 +152,14 @@ fn main() {
         build_desc,
     );
 
+    let (rustc_version, rustc_channel) = rustc_info();
+    constants.add_required_constants("RUSTC_VERSION", "The rustc version info", rustc_version);
+    constants.add_required_constants("RUSTC_CHANNEL", "The rustc channel", rustc_channel);
+
+    let (branch, hash) = git_info().expect("Run git command to fetch infos failed");
+    constants.add_required_constants("GIT_BRANCH", "Git branch this instance built from", branch);
+    constants.add_required_constants("GIT_HASH", "Git commit hash this instance built from", hash);
+
     constants
         .write_to_file("built.rs")
         .expect("Failed to write build-time constants file!");
@@ -168,4 +179,121 @@ fn main() {
             .compile_protos(&[src.join("loki.proto")], include)
             .unwrap();
     }
+}
+
+fn rustc_info() -> (String, String) {
+    let rustc = env::var_os("RUSTC").unwrap_or_else(|| OsString::from("rustc"));
+
+    let out = Command::new(rustc)
+        .arg("-vV")
+        .output()
+        .expect("Get rustc version failed");
+
+    if !out.status.success() {}
+
+    let output = std::str::from_utf8(&out.stdout).expect("Parse command output failed");
+    let mut version = "";
+    let mut channel = "";
+
+    for line in output.lines() {
+        if line.starts_with("rustc ") {
+            version = line.strip_prefix("rustc ").unwrap();
+            continue;
+        }
+
+        if line.starts_with("release") {
+            channel = if line.contains("dev") {
+                "dev"
+            } else if line.contains("beta") {
+                "beta"
+            } else if line.contains("nightly") {
+                "nightly"
+            } else {
+                "stable"
+            }
+        }
+    }
+
+    (version.to_string(), channel.to_string())
+}
+
+// Github Actions provides a lot environments for us
+// https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+fn git_info() -> Result<(String, String)> {
+    let branch = match env::var("GITHUB_HEAD_REF") {
+        Ok(branch) => branch,
+        _ => {
+            // `git branch --show-current` is easier, but it will fail when git less 2.22
+            // https://github.com/actions/checkout/issues/121
+            let output = Command::new("git")
+                .arg("rev-parse")
+                .arg("--symbolic-full-name")
+                .arg("--verify")
+                .arg("HEAD")
+                .arg("--quit")
+                .output()?;
+
+            if !output.status.success() {
+                return Err(Error::new(
+                    ErrorKind::Other,
+                    format!(
+                        "Unexpected exit code when get branch, stdout: {}, stderr: {}",
+                        std::str::from_utf8(&output.stdout).unwrap(),
+                        std::str::from_utf8(&output.stderr).unwrap(),
+                    ),
+                ));
+            }
+
+            let text = std::str::from_utf8(&output.stdout)
+                .map_err(|err| {
+                    Error::new(
+                        ErrorKind::Other,
+                        format!("Unexpected output when get branch, err: {}", err),
+                    )
+                })?
+                .trim();
+
+            match text.strip_prefix("refs/heads/") {
+                Some(v) => v,
+                None => match text.strip_prefix("refs/remotes/") {
+                    Some(v) => v,
+                    None => {
+                        println!("strip branch prefix failed, branch: {}", text);
+                        text
+                    }
+                },
+            }
+            .to_string()
+        }
+    };
+
+    let hash = match env::var("GITHUB_SHA") {
+        Ok(hash) => hash,
+        _ => {
+            let output = Command::new("git")
+                .arg("rev-parse")
+                .arg("--short")
+                .arg("HEAD")
+                .output()?;
+
+            if !output.status.success() {
+                return Err(Error::new(
+                    ErrorKind::Other,
+                    "Unexpected exit code when get hash",
+                ));
+            }
+
+            std::str::from_utf8(&output.stdout)
+                .map_err(|err| {
+                    Error::new(
+                        ErrorKind::Other,
+                        format!("Unexpected output when get hash, err: {}", err),
+                    )
+                })?
+                .trim()
+                .to_string()
+        }
+    };
+
+    Ok((branch, hash))
 }
