@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655480565222,
+  "lastUpdate": 1655529021436,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16337,6 +16337,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 59.825,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5b40dc2bd0ecdd9c472ef9022013fc5c1071654d",
+          "message": "Merge pull request #378 from f1shl3gs/dependabot/cargo/openssl-src-111.20.01.1.1o\n\nchore(deps): bump openssl-src from 111.18.0+1.1.1n to 111.20.0+1.1.1o",
+          "timestamp": "2022-06-18T13:04:20+08:00",
+          "tree_id": "1f7711d92fc78b9c3e0ac0714a97f24b9b30c3c2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5b40dc2bd0ecdd9c472ef9022013fc5c1071654d"
+        },
+        "date": 1655529018856,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.875,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 62.627,
             "unit": "ns/op"
           }
         ]
