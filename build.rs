@@ -227,8 +227,9 @@ fn git_info() -> Result<(String, String)> {
         return Err(Error::new(
             ErrorKind::Other,
             format!(
-                "Unexpected exit code when get branch, stdout: {}",
-                std::str::from_utf8(&output.stdout).unwrap()
+                "Unexpected exit code when get branch, stdout: {}, stderr: {}",
+                std::str::from_utf8(&output.stdout).unwrap(),
+                std::str::from_utf8(&output.stderr).unwrap(),
             ),
         ));
     }
