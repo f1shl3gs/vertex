@@ -36,7 +36,8 @@ apt install --yes \
     ruby-bundler \
     shellcheck \
     sudo \
-    wget
+    wget \
+    git
 
 
 # Locales
