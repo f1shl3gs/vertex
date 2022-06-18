@@ -29,8 +29,7 @@ apt install --yes \
   llvm \
   locales \
   pkg-config \
-  wget \
-  git
+  wget
 
 # Locales
 locale-gen en_US.UTF-8
