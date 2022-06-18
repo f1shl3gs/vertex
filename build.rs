@@ -253,7 +253,7 @@ fn git_info() -> Result<(String, String)> {
                 })?
                 .trim()
                 .strip_prefix("refs/heads/")
-                .unwrap()
+                .unwrap_or("unknown")
                 .to_string()
         }
     };
