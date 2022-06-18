@@ -1,3 +1,4 @@
+use once_cell::sync::Lazy;
 use std::any::{Any, TypeId};
 use std::borrow::Cow;
 use std::cell::RefCell;
@@ -13,12 +14,10 @@ use tracing_core::Dispatch;
 
 use crate::tracer::{PreSampledTracer, TraceData};
 
-lazy_static::lazy_static! {
-    static ref NOOP_SPAN: SynchronizedSpan = SynchronizedSpan {
-        span_context: SpanContext::empty_context(),
-        inner: None,
-    };
-}
+static NOOP_SPAN: Lazy<SynchronizedSpan> = Lazy::new(|| SynchronizedSpan {
+    span_context: SpanContext::empty_context(),
+    inner: None,
+});
 
 /// This function "remembers" the type of the subscriber so that we
 /// can downcast to something aware of them without knowing those

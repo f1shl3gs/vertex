@@ -7,14 +7,13 @@ use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
 use event::{log::Value, EventRef, Metric};
 use log_schema::log_schema;
+use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use snafu::Snafu;
 
-lazy_static! {
-    static ref RE: Regex = Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap();
-}
+static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap());
 
 #[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
 pub struct Template {

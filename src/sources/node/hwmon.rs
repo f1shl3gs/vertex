@@ -1,3 +1,4 @@
+use once_cell::sync::Lazy;
 use std::collections::BTreeMap;
 use std::path::Path;
 
@@ -573,9 +574,7 @@ fn is_hwmon_sensor(s: &str) -> bool {
     .contains(&s)
 }
 
-lazy_static! {
-    static ref HWMON_INVALID_METRIC_CHARS: Regex = Regex::new("[^a-z0-9:_]").unwrap();
-}
+static HWMON_INVALID_METRIC_CHARS: Lazy<Regex> = Lazy::new(|| Regex::new("[^a-z0-9:_]").unwrap());
 
 fn sanitized(s: &str) -> String {
     let s = s.trim();

@@ -1,4 +1,4 @@
-use once_cell::sync::OnceCell;
+use once_cell::sync::{Lazy, OnceCell};
 use serde::{Deserialize, Serialize};
 
 static LOG_SCHEMA: OnceCell<LogSchema> = OnceCell::new();
@@ -26,9 +26,7 @@ where
     Ok(())
 }
 
-lazy_static::lazy_static! {
-    static ref LOG_SCHEMA_DEFAULT: LogSchema = LogSchema::default();
-}
+static LOG_SCHEMA_DEFAULT: Lazy<LogSchema> = Lazy::new(LogSchema::default);
 
 /// Components should use global `LogSchema` returned by this function. The
 /// returned value can differ from `LogSchema::default()` which is unchanging.
