@@ -226,7 +226,10 @@ fn git_info() -> Result<(String, String)> {
     if !output.status.success() {
         return Err(Error::new(
             ErrorKind::Other,
-            "Unexpected exit code when get branch",
+            format!(
+                "Unexpected exit code when get branch, stdout: {}",
+                output.stdout.to_str_lossy()
+            ),
         ));
     }
 
