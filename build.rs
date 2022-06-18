@@ -253,11 +253,15 @@ fn git_info() -> Result<(String, String)> {
                 })?
                 .trim();
 
-            println!("######### {}", text);
-
             match text.strip_prefix("refs/heads/") {
                 Some(v) => v,
-                None => text,
+                None => match text.strip_prefix("refs/remotes/") {
+                    Some(v) => v,
+                    None => {
+                        println!("strip branch prefix failed, branch: {}", text);
+                        text
+                    }
+                },
             }
             .to_string()
         }
