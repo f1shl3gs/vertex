@@ -244,17 +244,22 @@ fn git_info() -> Result<(String, String)> {
                 ));
             }
 
-            std::str::from_utf8(&output.stdout)
+            let text = std::str::from_utf8(&output.stdout)
                 .map_err(|err| {
                     Error::new(
                         ErrorKind::Other,
                         format!("Unexpected output when get branch, err: {}", err),
                     )
                 })?
-                .trim()
-                .strip_prefix("refs/heads/")
-                .unwrap_or("unknown")
-                .to_string()
+                .trim();
+
+            println!("######### {}", text);
+
+            match text.strip_prefix("refs/heads/") {
+                Some(v) => v,
+                None => text,
+            }
+            .to_string()
         }
     };
 
