@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655553261133,
+  "lastUpdate": 1655553427406,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7589,6 +7589,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1439500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f95450cc9ca70643a5d3529f61ad65eaa3af9c5",
+          "message": "Merge pull request #373 from f1shl3gs/built_info\n\nAdd built info to selfstat",
+          "timestamp": "2022-06-18T19:46:45+08:00",
+          "tree_id": "ee2e2b6375c41869b4dac63c1ae6ff63e3d62b75",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f95450cc9ca70643a5d3529f61ad65eaa3af9c5"
+        },
+        "date": 1655553422303,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1453700,
             "unit": "ns/op"
           }
         ]
