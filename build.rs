@@ -223,11 +223,14 @@ fn git_info() -> Result<(String, String)> {
     let branch = match env::var("GITHUB_HEAD_REF") {
         Ok(branch) => branch,
         _ => {
-            // git branch --show-current will fail when git less 2.22
+            // `git branch --show-current` is easier, but it will fail when git less 2.22
             // https://github.com/actions/checkout/issues/121
             let output = Command::new("git")
-                .arg("branch")
-                .arg("--show-current")
+                .arg("rev-parse")
+                .arg("--symbolic-full-name")
+                .arg("--verify")
+                .arg("HEAD")
+                .arg("--quit")
                 .output()?;
 
             if !output.status.success() {
@@ -242,8 +245,15 @@ fn git_info() -> Result<(String, String)> {
             }
 
             std::str::from_utf8(&output.stdout)
-                .map_err(|err| Error::new(ErrorKind::Other, "Unexpected output when get hash"))?
+                .map_err(|err| {
+                    Error::new(
+                        ErrorKind::Other,
+                        format!("Unexpected output when get branch, err: {}", err),
+                    )
+                })?
                 .trim()
+                .strip_prefix("refs/heads/")
+                .unwrap()
                 .to_string()
         }
     };
@@ -265,7 +275,12 @@ fn git_info() -> Result<(String, String)> {
             }
 
             std::str::from_utf8(&output.stdout)
-                .map_err(|err| Error::new(ErrorKind::Other, "Unexpected output when get hash"))?
+                .map_err(|err| {
+                    Error::new(
+                        ErrorKind::Other,
+                        format!("Unexpected output when get hash, err: {}", err),
+                    )
+                })?
                 .trim()
                 .to_string()
         }
