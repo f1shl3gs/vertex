@@ -18,7 +18,7 @@ impl TrackedEnv {
 
     pub fn get_env_var(&mut self, name: impl Into<String>) -> Option<String> {
         let name = name.into();
-        let result = std::env::var(&name).ok();
+        let result = env::var(&name).ok();
         self.envs.insert(name);
         result
     }
@@ -217,45 +217,59 @@ fn rustc_info() -> (String, String) {
     (version.to_string(), channel.to_string())
 }
 
+// Github Actions provides a lot environments for us
+// https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
 fn git_info() -> Result<(String, String)> {
-    let output = Command::new("git")
-        .arg("branch")
-        .arg("--show-current")
-        .output()?;
+    let branch = match env::var("GITHUB_HEAD_REF") {
+        Ok(branch) => branch,
+        _ => {
+            // git branch --show-current will fail when git less 2.22
+            // https://github.com/actions/checkout/issues/121
+            let output = Command::new("git")
+                .arg("branch")
+                .arg("--show-current")
+                .output()?;
 
-    if !output.status.success() {
-        return Err(Error::new(
-            ErrorKind::Other,
-            format!(
-                "Unexpected exit code when get branch, stdout: {}, stderr: {}",
-                std::str::from_utf8(&output.stdout).unwrap(),
-                std::str::from_utf8(&output.stderr).unwrap(),
-            ),
-        ));
-    }
+            if !output.status.success() {
+                return Err(Error::new(
+                    ErrorKind::Other,
+                    format!(
+                        "Unexpected exit code when get branch, stdout: {}, stderr: {}",
+                        std::str::from_utf8(&output.stdout).unwrap(),
+                        std::str::from_utf8(&output.stderr).unwrap(),
+                    ),
+                ));
+            }
 
-    let branch = std::str::from_utf8(&output.stdout)
-        .expect("Convert output to utf8 success")
-        .trim()
-        .to_string();
+            std::str::from_utf8(&output.stdout)
+                .map_err(|err| Error::new(ErrorKind::Other, "Unexpected output when get hash"))?
+                .trim()
+                .to_string()
+        }
+    };
 
-    let output = Command::new("git")
-        .arg("rev-parse")
-        .arg("--short")
-        .arg("HEAD")
-        .output()?;
+    let hash = match env::var("GITHUB_SHA") {
+        Ok(hash) => hash,
+        _ => {
+            let output = Command::new("git")
+                .arg("rev-parse")
+                .arg("--short")
+                .arg("HEAD")
+                .output()?;
 
-    if !output.status.success() {
-        return Err(Error::new(
-            ErrorKind::Other,
-            "Unexpected exit code when get hash",
-        ));
-    }
+            if !output.status.success() {
+                return Err(Error::new(
+                    ErrorKind::Other,
+                    "Unexpected exit code when get hash",
+                ));
+            }
 
-    let hash = String::from_utf8(output.stdout)
-        .expect("Convert output to utf8 success")
-        .trim()
-        .to_string();
+            std::str::from_utf8(&output.stdout)
+                .map_err(|err| Error::new(ErrorKind::Other, "Unexpected output when get hash"))?
+                .trim()
+                .to_string()
+        }
+    };
 
     Ok((branch, hash))
 }

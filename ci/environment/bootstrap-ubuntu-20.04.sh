@@ -36,9 +36,7 @@ apt install --yes \
     ruby-bundler \
     shellcheck \
     sudo \
-    wget \
-    git
-
+    wget
 
 # Locales
 locale-gen en_US.UTF-8
