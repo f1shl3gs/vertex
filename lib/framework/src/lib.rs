@@ -42,8 +42,6 @@ pub use transform::{FunctionTransform, OutputBuffer, SyncTransform, TaskTransfor
 pub(crate) use transform::{TransformOutputs, TransformOutputsBuf};
 
 #[macro_use]
-extern crate lazy_static;
-#[macro_use]
 extern crate tracing;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads

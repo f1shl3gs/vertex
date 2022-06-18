@@ -1244,7 +1244,6 @@ dependencies = [
  "indexmap",
  "indoc",
  "inventory 0.1.11",
- "lazy_static 1.4.0",
  "listenfd",
  "log_schema",
  "memchr 2.5.0",
@@ -2289,7 +2288,6 @@ dependencies = [
 name = "log_schema"
 version = "0.1.0"
 dependencies = [
- "lazy_static 1.4.0",
  "once_cell",
  "serde",
 ]
@@ -5001,7 +4999,7 @@ name = "tracing-internal"
 version = "0.1.0"
 dependencies = [
  "event",
- "lazy_static 1.4.0",
+ "once_cell",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
@@ -5308,7 +5306,6 @@ dependencies = [
  "jaeger",
  "k8s-openapi",
  "kube",
- "lazy_static 1.4.0",
  "libc",
  "log_schema",
  "memchr 2.5.0",
@@ -5320,6 +5317,7 @@ dependencies = [
  "nix",
  "nom 7.1.1",
  "num_cpus",
+ "once_cell",
  "openssl-probe",
  "parking_lot 0.12.1",
  "percent-encoding",

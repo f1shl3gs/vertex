@@ -11,172 +11,196 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use futures::StreamExt;
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use snafu::Snafu;
 use tokio_stream::wrappers::IntervalStream;
+use typetag::once_cell;
 
-lazy_static!(
-    static ref GAUGE_METRICS: BTreeMap<String, &'static str> = {
-        let mut m = BTreeMap::new();
-        // # Server
-        m.insert("uptime_in_seconds".to_string(), "uptime_in_seconds");
-        m.insert("process_id".to_string(),        "process_id");
+static GAUGE_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = BTreeMap::new();
+    // # Server
+    m.insert("uptime_in_seconds", "uptime_in_seconds");
+    m.insert("process_id", "process_id");
 
-        // # Clients
-        m.insert("connected_clients".to_string(), "connected_clients");
-        m.insert("blocked_clients".to_string(),   "blocked_clients");
-        m.insert("tracking_clients".to_string(),  "tracking_clients");
+    // # Clients
+    m.insert("connected_clients", "connected_clients");
+    m.insert("blocked_clients", "blocked_clients");
+    m.insert("tracking_clients", "tracking_clients");
 
-        // redis 2,3,4.x
-        m.insert("client_longest_output_list".to_string(), "client_longest_output_list");
-        m.insert("client_biggest_input_buf".to_string(),   "client_biggest_input_buf");
+    // redis 2,3,4.x
+    m.insert("client_longest_output_list", "client_longest_output_list");
+    m.insert("client_biggest_input_buf", "client_biggest_input_buf");
 
-        // the above two metrics were renamed in redis 5.x
-        m.insert("client_recent_max_output_buffer".to_string(), "client_recent_max_output_buffer_bytes");
-        m.insert("client_recent_max_input_buffer".to_string(),  "client_recent_max_input_buffer_bytes");
+    // the above two metrics were renamed in redis 5.x
+    m.insert(
+        "client_recent_max_output_buffer",
+        "client_recent_max_output_buffer_bytes",
+    );
+    m.insert(
+        "client_recent_max_input_buffer",
+        "client_recent_max_input_buffer_bytes",
+    );
 
-        // # Memory
-        m.insert("allocator_active".to_string(),     "allocator_active_bytes");
-        m.insert("allocator_allocated".to_string(),  "allocator_allocated_bytes");
-        m.insert("allocator_resident".to_string(),   "allocator_resident_bytes");
-        m.insert("allocator_frag_ratio".to_string(), "allocator_frag_ratio");
-        m.insert("allocator_frag_bytes".to_string(), "allocator_frag_bytes");
-        m.insert("allocator_rss_ratio".to_string(),  "allocator_rss_ratio");
-        m.insert("allocator_rss_bytes".to_string(),  "allocator_rss_bytes");
+    // # Memory
+    m.insert("allocator_active", "allocator_active_bytes");
+    m.insert("allocator_allocated", "allocator_allocated_bytes");
+    m.insert("allocator_resident", "allocator_resident_bytes");
+    m.insert("allocator_frag_ratio", "allocator_frag_ratio");
+    m.insert("allocator_frag_bytes", "allocator_frag_bytes");
+    m.insert("allocator_rss_ratio", "allocator_rss_ratio");
+    m.insert("allocator_rss_bytes", "allocator_rss_bytes");
 
-        m.insert("used_memory".to_string(),          "memory_used_bytes");
-        m.insert("used_memory_rss".to_string(),      "memory_used_rss_bytes");
-        m.insert("used_memory_peak".to_string(),     "memory_used_peak_bytes");
-        m.insert("used_memory_lua".to_string(),      "memory_used_lua_bytes");
-        m.insert("used_memory_overhead".to_string(), "memory_used_overhead_bytes");
-        m.insert("used_memory_startup".to_string(),  "memory_used_startup_bytes");
-        m.insert("used_memory_dataset".to_string(),  "memory_used_dataset_bytes");
-        m.insert("used_memory_scripts".to_string(),  "memory_used_scripts_bytes");
-        m.insert("maxmemory".to_string(),            "memory_max_bytes");
+    m.insert("used_memory", "memory_used_bytes");
+    m.insert("used_memory_rss", "memory_used_rss_bytes");
+    m.insert("used_memory_peak", "memory_used_peak_bytes");
+    m.insert("used_memory_lua", "memory_used_lua_bytes");
+    m.insert("used_memory_overhead", "memory_used_overhead_bytes");
+    m.insert("used_memory_startup", "memory_used_startup_bytes");
+    m.insert("used_memory_dataset", "memory_used_dataset_bytes");
+    m.insert("used_memory_scripts", "memory_used_scripts_bytes");
+    m.insert("maxmemory", "memory_max_bytes");
 
-        m.insert("mem_fragmentation_ratio".to_string(), "mem_fragmentation_ratio");
-        m.insert("mem_fragmentation_bytes".to_string(), "mem_fragmentation_bytes");
-        m.insert("mem_clients_slaves".to_string(),      "mem_clients_slaves");
-        m.insert("mem_clients_normal".to_string(),      "mem_clients_normal");
+    m.insert("mem_fragmentation_ratio", "mem_fragmentation_ratio");
+    m.insert("mem_fragmentation_bytes", "mem_fragmentation_bytes");
+    m.insert("mem_clients_slaves", "mem_clients_slaves");
+    m.insert("mem_clients_normal", "mem_clients_normal");
 
-        // https://github.com/antirez/redis/blob/17bf0b25c1171486e3a1b089f3181fff2bc0d4f0/src/evict.c#L349-L352
-        // ... the sum of AOF and slaves buffer ....
-        m.insert("mem_not_counted_for_evict".to_string(), "mem_not_counted_for_eviction_bytes");
+    // https://github.com/antirez/redis/blob/17bf0b25c1171486e3a1b089f3181fff2bc0d4f0/src/evict.c#L349-L352
+    // ... the sum of AOF and slaves buffer ....
+    m.insert(
+        "mem_not_counted_for_evict",
+        "mem_not_counted_for_eviction_bytes",
+    );
 
-        m.insert("lazyfree_pending_objects".to_string(), "lazyfree_pending_objects");
-        m.insert("active_defrag_running".to_string(),    "active_defrag_running");
+    m.insert("lazyfree_pending_objects", "lazyfree_pending_objects");
+    m.insert("active_defrag_running", "active_defrag_running");
 
-        m.insert("migrate_cached_sockets".to_string(), "migrate_cached_sockets_total");
+    m.insert("migrate_cached_sockets", "migrate_cached_sockets_total");
 
-        m.insert("active_defrag_hits".to_string(),       "defrag_hits");
-        m.insert("active_defrag_misses".to_string(),     "defrag_misses");
-        m.insert("active_defrag_key_hits".to_string(),   "defrag_key_hits");
-        m.insert("active_defrag_key_misses".to_string(), "defrag_key_misses");
+    m.insert("active_defrag_hits", "defrag_hits");
+    m.insert("active_defrag_misses", "defrag_misses");
+    m.insert("active_defrag_key_hits", "defrag_key_hits");
+    m.insert("active_defrag_key_misses", "defrag_key_misses");
 
-        // https://github.com/antirez/redis/blob/0af467d18f9d12b137af3b709c0af579c29d8414/src/expire.c#L297-L299
-        m.insert("expired_time_cap_reached_count".to_string(), "expired_time_cap_reached_total");
+    // https://github.com/antirez/redis/blob/0af467d18f9d12b137af3b709c0af579c29d8414/src/expire.c#L297-L299
+    m.insert(
+        "expired_time_cap_reached_count",
+        "expired_time_cap_reached_total",
+    );
 
-        // # Persistence
-        m.insert("loading".to_string(),                      "loading_dump_file");
-        m.insert("rdb_changes_since_last_save".to_string(),  "rdb_changes_since_last_save");
-        m.insert("rdb_bgsave_in_progress".to_string(),       "rdb_bgsave_in_progress");
-        m.insert("rdb_last_save_time".to_string(),           "rdb_last_save_timestamp_seconds");
-        m.insert("rdb_last_bgsave_status".to_string(),       "rdb_last_bgsave_status");
-        m.insert("rdb_last_bgsave_time_sec".to_string(),     "rdb_last_bgsave_duration_sec");
-        m.insert("rdb_current_bgsave_time_sec".to_string(),  "rdb_current_bgsave_duration_sec");
-        m.insert("rdb_last_cow_size".to_string(),            "rdb_last_cow_size_bytes");
-        m.insert("aof_enabled".to_string(),                  "aof_enabled");
-        m.insert("aof_rewrite_in_progress".to_string(),      "aof_rewrite_in_progress");
-        m.insert("aof_rewrite_scheduled".to_string(),        "aof_rewrite_scheduled");
-        m.insert("aof_last_rewrite_time_sec".to_string(),    "aof_last_rewrite_duration_sec");
-        m.insert("aof_current_rewrite_time_sec".to_string(), "aof_current_rewrite_duration_sec");
-        m.insert("aof_last_cow_size".to_string(),            "aof_last_cow_size_bytes");
-        m.insert("aof_current_size".to_string(),             "aof_current_size_bytes");
-        m.insert("aof_base_size".to_string(),                "aof_base_size_bytes");
-        m.insert("aof_pending_rewrite".to_string(),          "aof_pending_rewrite");
-        m.insert("aof_buffer_length".to_string(),            "aof_buffer_length");
-        m.insert("aof_rewrite_buffer_length".to_string(),    "aof_rewrite_buffer_length");
-        m.insert("aof_pending_bio_fsync".to_string(),        "aof_pending_bio_fsync");
-        m.insert("aof_delayed_fsync".to_string(),            "aof_delayed_fsync");
-        m.insert("aof_last_bgrewrite_status".to_string(),    "aof_last_bgrewrite_status");
-        m.insert("aof_last_write_status".to_string(),        "aof_last_write_status");
-        m.insert("module_fork_in_progress".to_string(),      "module_fork_in_progress");
-        m.insert("module_fork_last_cow_size".to_string(),    "module_fork_last_cow_size");
+    // # Persistence
+    m.insert("loading", "loading_dump_file");
+    m.insert("rdb_changes_since_last_save", "rdb_changes_since_last_save");
+    m.insert("rdb_bgsave_in_progress", "rdb_bgsave_in_progress");
+    m.insert("rdb_last_save_time", "rdb_last_save_timestamp_seconds");
+    m.insert("rdb_last_bgsave_status", "rdb_last_bgsave_status");
+    m.insert("rdb_last_bgsave_time_sec", "rdb_last_bgsave_duration_sec");
+    m.insert(
+        "rdb_current_bgsave_time_sec",
+        "rdb_current_bgsave_duration_sec",
+    );
+    m.insert("rdb_last_cow_size", "rdb_last_cow_size_bytes");
+    m.insert("aof_enabled", "aof_enabled");
+    m.insert("aof_rewrite_in_progress", "aof_rewrite_in_progress");
+    m.insert("aof_rewrite_scheduled", "aof_rewrite_scheduled");
+    m.insert("aof_last_rewrite_time_sec", "aof_last_rewrite_duration_sec");
+    m.insert(
+        "aof_current_rewrite_time_sec",
+        "aof_current_rewrite_duration_sec",
+    );
+    m.insert("aof_last_cow_size", "aof_last_cow_size_bytes");
+    m.insert("aof_current_size", "aof_current_size_bytes");
+    m.insert("aof_base_size", "aof_base_size_bytes");
+    m.insert("aof_pending_rewrite", "aof_pending_rewrite");
+    m.insert("aof_buffer_length", "aof_buffer_length");
+    m.insert("aof_rewrite_buffer_length", "aof_rewrite_buffer_length");
+    m.insert("aof_pending_bio_fsync", "aof_pending_bio_fsync");
+    m.insert("aof_delayed_fsync", "aof_delayed_fsync");
+    m.insert("aof_last_bgrewrite_status", "aof_last_bgrewrite_status");
+    m.insert("aof_last_write_status", "aof_last_write_status");
+    m.insert("module_fork_in_progress", "module_fork_in_progress");
+    m.insert("module_fork_last_cow_size", "module_fork_last_cow_size");
 
-        // # Stats
-        m.insert("pubsub_channels".to_string(),           "pubsub_channels");
-        m.insert("pubsub_patterns".to_string(),           "pubsub_patterns");
-        m.insert("latest_fork_usec".to_string(),          "latest_fork_usec");
-        m.insert("instantaneous_ops_per_sec".to_string(), "instantaneous_ops");
+    // # Stats
+    m.insert("pubsub_channels", "pubsub_channels");
+    m.insert("pubsub_patterns", "pubsub_patterns");
+    m.insert("latest_fork_usec", "latest_fork_usec");
+    m.insert("instantaneous_ops_per_sec", "instantaneous_ops");
 
-        // # Replication
-        m.insert("connected_slaves".to_string(),               "connected_slaves");
-        m.insert("repl_backlog_size".to_string(),              "replication_backlog_bytes");
-        m.insert("repl_backlog_active".to_string(),            "repl_backlog_is_active");
-        m.insert("repl_backlog_first_byte_offset".to_string(), "repl_backlog_first_byte_offset");
-        m.insert("repl_backlog_histlen".to_string(),           "repl_backlog_history_bytes");
-        m.insert("master_repl_offset".to_string(),             "master_repl_offset");
-        m.insert("second_repl_offset".to_string(),             "second_repl_offset");
-        m.insert("slave_expires_tracked_keys".to_string(),     "slave_expires_tracked_keys");
-        m.insert("slave_priority".to_string(),                 "slave_priority");
-        m.insert("sync_full".to_string(),                      "replica_resyncs_full");
-        m.insert("sync_partial_ok".to_string(),                "replica_partial_resync_accepted");
-        m.insert("sync_partial_err".to_string(),               "replica_partial_resync_denied");
+    // # Replication
+    m.insert("connected_slaves", "connected_slaves");
+    m.insert("repl_backlog_size", "replication_backlog_bytes");
+    m.insert("repl_backlog_active", "repl_backlog_is_active");
+    m.insert(
+        "repl_backlog_first_byte_offset",
+        "repl_backlog_first_byte_offset",
+    );
+    m.insert("repl_backlog_histlen", "repl_backlog_history_bytes");
+    m.insert("master_repl_offset", "master_repl_offset");
+    m.insert("second_repl_offset", "second_repl_offset");
+    m.insert("slave_expires_tracked_keys", "slave_expires_tracked_keys");
+    m.insert("slave_priority", "slave_priority");
+    m.insert("sync_full", "replica_resyncs_full");
+    m.insert("sync_partial_ok", "replica_partial_resync_accepted");
+    m.insert("sync_partial_err", "replica_partial_resync_denied");
 
-        // # Cluster
-        m.insert("cluster_stats_messages_sent".to_string(),     "cluster_messages_sent_total");
-        m.insert("cluster_stats_messages_received".to_string(), "cluster_messages_received_total");
+    // # Cluster
+    m.insert("cluster_stats_messages_sent", "cluster_messages_sent_total");
+    m.insert(
+        "cluster_stats_messages_received",
+        "cluster_messages_received_total",
+    );
 
-        // # Tile38
-        // based on https://tile38.com/commands/server/
-        m.insert("tile38_aof_size".to_string(),        "tile38_aof_size_bytes");
-        m.insert("tile38_avg_item_size".to_string(),   "tile38_avg_item_size_bytes");
-        m.insert("tile38_cpus".to_string(),            "tile38_cpus_total");
-        m.insert("tile38_heap_released".to_string(),   "tile38_heap_released_bytes");
-        m.insert("tile38_heap_size".to_string(),       "tile38_heap_size_bytes");
-        m.insert("tile38_http_transport".to_string(),  "tile38_http_transport");
-        m.insert("tile38_in_memory_size".to_string(),  "tile38_in_memory_size_bytes");
-        m.insert("tile38_max_heap_size".to_string(),   "tile38_max_heap_size_bytes");
-        m.insert("tile38_mem_alloc".to_string(),       "tile38_mem_alloc_bytes");
-        m.insert("tile38_num_collections".to_string(), "tile38_num_collections_total");
-        m.insert("tile38_num_hooks".to_string(),       "tile38_num_hooks_total");
-        m.insert("tile38_num_objects".to_string(),     "tile38_num_objects_total");
-        m.insert("tile38_num_points".to_string(),      "tile38_num_points_total");
-        m.insert("tile38_pointer_size".to_string(),    "tile38_pointer_size_bytes");
-        m.insert("tile38_read_only".to_string(),       "tile38_read_only");
-        m.insert("tile38_threads".to_string(),         "tile38_threads_total");
+    // # Tile38
+    // based on https://tile38.com/commands/server/
+    m.insert("tile38_aof_size", "tile38_aof_size_bytes");
+    m.insert("tile38_avg_item_size", "tile38_avg_item_size_bytes");
+    m.insert("tile38_cpus", "tile38_cpus_total");
+    m.insert("tile38_heap_released", "tile38_heap_released_bytes");
+    m.insert("tile38_heap_size", "tile38_heap_size_bytes");
+    m.insert("tile38_http_transport", "tile38_http_transport");
+    m.insert("tile38_in_memory_size", "tile38_in_memory_size_bytes");
+    m.insert("tile38_max_heap_size", "tile38_max_heap_size_bytes");
+    m.insert("tile38_mem_alloc", "tile38_mem_alloc_bytes");
+    m.insert("tile38_num_collections", "tile38_num_collections_total");
+    m.insert("tile38_num_hooks", "tile38_num_hooks_total");
+    m.insert("tile38_num_objects", "tile38_num_objects_total");
+    m.insert("tile38_num_points", "tile38_num_points_total");
+    m.insert("tile38_pointer_size", "tile38_pointer_size_bytes");
+    m.insert("tile38_read_only", "tile38_read_only");
+    m.insert("tile38_threads", "tile38_threads_total");
 
-        // addtl. KeyDB metrics
-        m.insert("server_threads".to_string(),        "server_threads_total");
-        m.insert("long_lock_waits".to_string(),       "long_lock_waits_total");
-        m.insert("current_client_thread".to_string(), "current_client_thread");
+    // addtl. KeyDB metrics
+    m.insert("server_threads", "server_threads_total");
+    m.insert("long_lock_waits", "long_lock_waits_total");
+    m.insert("current_client_thread", "current_client_thread");
 
-        m
-    };
+    m
+});
 
-    static ref COUNTER_METRICS: BTreeMap<String, &'static str> = {
-        let mut m = BTreeMap::new();
+static COUNTER_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut m = BTreeMap::new();
 
-        m.insert("total_connections_received".to_string(), "connections_received_total");
-        m.insert("total_commands_processed".to_string(),   "commands_processed_total");
+    m.insert("total_connections_received", "connections_received_total");
+    m.insert("total_commands_processed", "commands_processed_total");
 
-        m.insert("rejected_connections".to_string(),   "rejected_connections_total");
-        m.insert("total_net_input_bytes".to_string(),  "net_input_bytes_total");
-        m.insert("total_net_output_bytes".to_string(), "net_output_bytes_total");
+    m.insert("rejected_connections", "rejected_connections_total");
+    m.insert("total_net_input_bytes", "net_input_bytes_total");
+    m.insert("total_net_output_bytes", "net_output_bytes_total");
 
-        m.insert("expired_keys".to_string(),    "expired_keys_total");
-        m.insert("evicted_keys".to_string(),    "evicted_keys_total");
-        m.insert("keyspace_hits".to_string(),   "keyspace_hits_total");
-        m.insert("keyspace_misses".to_string(), "keyspace_misses_total");
+    m.insert("expired_keys", "expired_keys_total");
+    m.insert("evicted_keys", "evicted_keys_total");
+    m.insert("keyspace_hits", "keyspace_hits_total");
+    m.insert("keyspace_misses", "keyspace_misses_total");
 
-        m.insert("used_cpu_sys".to_string(),           "cpu_sys_seconds_total");
-        m.insert("used_cpu_user".to_string(),          "cpu_user_seconds_total");
-        m.insert("used_cpu_sys_children".to_string(), "cpu_sys_children_seconds_total");
-        m.insert("used_cpu_user_children".to_string(), "cpu_user_children_seconds_total");
+    m.insert("used_cpu_sys", "cpu_sys_seconds_total");
+    m.insert("used_cpu_user", "cpu_user_seconds_total");
+    m.insert("used_cpu_sys_children", "cpu_sys_children_seconds_total");
+    m.insert("used_cpu_user_children", "cpu_user_children_seconds_total");
 
-        m
-    };
-);
+    m
+});
 
 #[derive(Debug, Snafu)]
 enum ParseError {

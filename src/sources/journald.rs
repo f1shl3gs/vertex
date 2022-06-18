@@ -38,10 +38,7 @@ const SOURCE_TIMESTAMP: &str = "_SOURCE_REALTIME_TIMESTAMP";
 const RECEIVED_TIMESTAMP: &str = "__REALTIME_TIMESTAMP";
 
 const BACKOFF_DURATION: Duration = Duration::from_secs(1);
-
-lazy_static! {
-    static ref JOURNALCTL: PathBuf = "journalctl".into();
-}
+const JOURNALCTL: &str = "journalctl";
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
@@ -82,7 +79,7 @@ impl SourceConfig for JournaldConfig {
         let journalctl_path = self
             .journalctl_path
             .clone()
-            .unwrap_or_else(|| JOURNALCTL.clone());
+            .unwrap_or_else(|| JOURNALCTL.into());
         let journal_dir = self.journal_directory.clone();
         let current_boot_only = self.current_boot_only.unwrap_or(true);
 

@@ -3,6 +3,7 @@ use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 
+use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 use tracing::error;
 
@@ -10,9 +11,7 @@ use super::validation;
 use crate::config::{format, Builder, Config, ConfigPath, Format, FormatHint};
 use crate::signal;
 
-lazy_static! {
-    pub static ref CONFIG_PATHS: Mutex<Vec<ConfigPath>> = Mutex::default();
-}
+pub static CONFIG_PATHS: Lazy<Mutex<Vec<ConfigPath>>> = Lazy::new(Mutex::default);
 
 /// Loads a configuration from path. If a provider is present in the builder, the
 /// config is used as bootstrapping for a remote source. Otherwise, provider

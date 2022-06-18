@@ -9,6 +9,7 @@ use nom::character::complete::{digit1, multispace0};
 use nom::combinator::{map_res, recognize};
 use nom::number::complete::double;
 use nom::IResult;
+use once_cell::sync::Lazy;
 use regex::Regex;
 
 /// MDStat holds info parsed from /proc/mdstat
@@ -191,10 +192,8 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
         .collect::<Vec<_>>()
 }
 
-lazy_static! {
-    static ref STATUS_LINE_RE: Regex =
-        Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap();
-}
+static STATUS_LINE_RE: Lazy<Regex> =
+    Lazy::new(|| Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap());
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
     let size_str = status_line.split_ascii_whitespace().next().unwrap();

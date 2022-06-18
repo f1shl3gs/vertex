@@ -17,8 +17,6 @@ pub mod transforms;
 pub use framework::hostname;
 
 #[macro_use]
-extern crate lazy_static;
-#[macro_use]
 extern crate tracing;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
