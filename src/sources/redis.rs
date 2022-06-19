@@ -1,11 +1,9 @@
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
-use std::time::Duration;
 
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -260,13 +258,6 @@ pub struct RedisSourceConfig {
     // something looks like this, e.g. redis://host:port/db
     url: String,
 
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
 
@@ -306,7 +297,12 @@ fn default_namespace() -> Option<String> {
 #[typetag::serde(name = "redis")]
 impl SourceConfig for RedisSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let src = RedisSource::from(self);
+        let src = RedisSource {
+            url: self.url.clone(),
+            namespace: self.namespace.clone(),
+            interval: cx.interval,
+            client_name: None,
+        };
 
         Ok(Box::pin(src.run(cx.output, cx.shutdown)))
     }
@@ -332,15 +328,6 @@ struct RedisSource {
 }
 
 impl RedisSource {
-    fn from(conf: &RedisSourceConfig) -> Self {
-        Self {
-            url: conf.url.clone(),
-            namespace: conf.namespace.clone(),
-            interval: conf.interval,
-            client_name: None,
-        }
-    }
-
     async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> Result<(), ()> {
         let mut ticker =
             IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);

@@ -1,11 +1,11 @@
 use std::borrow::Cow;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use event::attributes::Key;
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use framework::Source;
 use futures_util::StreamExt;
@@ -22,12 +22,6 @@ fn default_sock() -> String {
 struct LibvirtSourceConfig {
     #[serde(default = "default_sock")]
     sock: String,
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
 }
 
 impl GenerateConfig for LibvirtSourceConfig {
@@ -53,7 +47,7 @@ inventory::submit! {
 #[typetag::serde(name = "libvirt")]
 impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
         let sock = self.sock.clone();
         let mut output = cx.output;
 

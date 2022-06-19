@@ -2,11 +2,11 @@ use std::collections::BTreeMap;
 use std::time::Duration;
 
 use event::Bucket;
-use framework::config::{default_interval, GenerateConfig, Output, SourceDescription};
+use framework::config::{GenerateConfig, Output, SourceDescription};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{deserialize_duration, serialize_duration, DataType, SourceConfig, SourceContext},
+    config::{DataType, SourceConfig, SourceContext},
     Source,
 };
 use futures::StreamExt;
@@ -16,14 +16,7 @@ use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-struct InternalMetricsConfig {
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-}
+struct InternalMetricsConfig {}
 
 impl GenerateConfig for InternalMetricsConfig {
     fn generate_config() -> String {
@@ -45,7 +38,7 @@ inventory::submit! {
 #[typetag::serde(name = "internal_metrics")]
 impl SourceConfig for InternalMetricsConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
+        Ok(Box::pin(run(cx.interval, cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {

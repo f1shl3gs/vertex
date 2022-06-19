@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use event::{tags, Metric};
 use futures::StreamExt;
@@ -10,8 +10,8 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use framework::config::Output;
 use framework::{
     config::{
-        default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-        GenerateConfig, SourceConfig, SourceContext, SourceDescription,
+        ticker_from_duration, DataType, GenerateConfig, SourceConfig, SourceContext,
+        SourceDescription,
     },
     Error, Source,
 };
@@ -19,13 +19,6 @@ use framework::{
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct NvidiaSmiConfig {
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-
     #[serde(default = "default_smi_path")]
     path: PathBuf,
 }
@@ -61,7 +54,7 @@ inventory::submit! {
 impl SourceConfig for NvidiaSmiConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         Ok(Box::pin(async move {

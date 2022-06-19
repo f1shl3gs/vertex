@@ -1,14 +1,13 @@
 use std::borrow::Cow;
 use std::io::BufRead;
-use std::time::Duration;
 
 use bytes::Buf;
 use chrono::Utc;
 use event::attributes::Key;
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+    ticker_from_duration, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig,
+    SourceContext, SourceDescription,
 };
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -46,13 +45,6 @@ const SERVER_KEY: Key = Key::from_static_str("server");
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct HaproxyConfig {
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-
     endpoints: Vec<String>,
 
     #[serde(default)]
@@ -105,7 +97,7 @@ impl SourceConfig for HaproxyConfig {
         let auth = self.auth.clone();
         let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         Ok(Box::pin(async move {

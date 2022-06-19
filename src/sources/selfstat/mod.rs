@@ -3,15 +3,14 @@ mod built_info;
 mod linux;
 
 use std::fmt::Debug;
-use std::time::Duration;
 
 use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
     config::{
-        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        Output, SourceConfig, SourceContext, SourceDescription,
+        default_interval, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+        SourceDescription,
     },
     Source,
 };
@@ -21,20 +20,15 @@ use tokio_stream::wrappers::IntervalStream;
 use tracing::Instrument;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
-struct SelfStatConfig {
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-}
+struct SelfStatConfig {}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "selfstat")]
 impl SourceConfig for SelfStatConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let ss = SelfStat::from(self);
+        let ss = SelfStat {
+            interval: cx.interval,
+        };
 
         Ok(Box::pin(ss.run(cx.shutdown, cx.output)))
     }
@@ -67,14 +61,6 @@ inventory::submit! {
 
 struct SelfStat {
     interval: std::time::Duration,
-}
-
-impl From<&SelfStatConfig> for SelfStat {
-    fn from(conf: &SelfStatConfig) -> Self {
-        Self {
-            interval: conf.interval,
-        }
-    }
 }
 
 impl SelfStat {

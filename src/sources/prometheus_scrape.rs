@@ -7,8 +7,8 @@ use std::time::Duration;
 use chrono::{DateTime, TimeZone, Utc};
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_interval, deserialize_duration, serialize_duration, DataType,
-    GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext, SourceDescription,
+    default_false, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use framework::http::{Auth, HttpClient};
 use framework::pipeline::Pipeline;
@@ -25,12 +25,6 @@ use tokio_stream::wrappers::IntervalStream;
 #[derive(Debug, Deserialize, Serialize)]
 struct PrometheusScrapeConfig {
     endpoints: Vec<String>,
-    #[serde(default = "default_interval")]
-    #[serde(
-        serialize_with = "serialize_duration",
-        deserialize_with = "deserialize_duration"
-    )]
-    interval: std::time::Duration,
     #[serde(default = "default_false")]
     honor_labels: bool,
     tls: Option<TlsConfig>,
@@ -102,7 +96,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             self.auth.clone(),
             cx.proxy,
             self.honor_labels,
-            self.interval,
+            cx.interval,
             self.jitter_seed.unwrap_or_default(),
             cx.shutdown,
             cx.output,

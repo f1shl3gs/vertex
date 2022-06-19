@@ -1,14 +1,12 @@
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
 use std::ops::Sub;
-use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
 use event::Metric;
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -28,12 +26,6 @@ use tokio_stream::wrappers::IntervalStream;
 #[derive(Debug, Deserialize, Serialize)]
 struct NginxStubConfig {
     endpoints: Vec<String>,
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
     tls: Option<TlsConfig>,
     auth: Option<Auth>,
 }
@@ -85,7 +77,7 @@ impl SourceConfig for NginxStubConfig {
         }
 
         let mut output = cx.output;
-        let interval = tokio::time::interval(self.interval);
+        let interval = tokio::time::interval(cx.interval);
         let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
 
         Ok(Box::pin(async move {

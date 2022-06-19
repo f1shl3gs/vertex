@@ -2,12 +2,10 @@
 
 use std::borrow::Cow;
 use std::collections::BTreeMap;
-use std::time::Duration;
 
 use event::{tags, Metric, INSTANCE_KEY};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -22,13 +20,6 @@ use tokio_stream::wrappers::IntervalStream;
 #[serde(deny_unknown_fields)]
 struct ZookeeperConfig {
     endpoint: String,
-
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    #[serde(default = "default_interval")]
-    interval: Duration,
 }
 
 impl GenerateConfig for ZookeeperConfig {
@@ -165,7 +156,7 @@ impl ZookeeperSource {
 impl SourceConfig for ZookeeperConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = ZookeeperSource::from(self);
-        Ok(Box::pin(source.run(self.interval, cx.output, cx.shutdown)))
+        Ok(Box::pin(source.run(cx.interval, cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<Output> {
