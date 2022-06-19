@@ -28,9 +28,6 @@ mod kafka;
 mod kafka_metrics;
 #[cfg(feature = "sources-kmsg")]
 mod kmsg;
-mod kube_events;
-mod kube_state_metrics;
-mod kubelet;
 #[cfg(feature = "sources-kubernetes_events")]
 mod kubernetes_events;
 #[cfg(feature = "sources-kubernetes_logs")]
