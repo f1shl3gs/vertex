@@ -56,7 +56,7 @@ pub struct GlobalOptions {
     //
     // NB: not all source need this, they might report events
     // as soon as possible once they receive any.
-    #[serde(default)]
+    #[serde(default = "default_interval")]
     #[serde(
         serialize_with = "serialize_duration",
         deserialize_with = "deserialize_duration"
@@ -143,11 +143,14 @@ data_dir: foo
 "#;
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
         assert_eq!(global.data_dir.unwrap(), PathBuf::from("foo"));
+        assert_eq!(global.interval, default_interval());
 
         let input = "
 timezone: CET
+interval: 10s
 ";
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
-        assert_eq!(global.data_dir, default_data_dir())
+        assert_eq!(global.data_dir, default_data_dir());
+        assert_eq!(global.interval, Duration::from_secs(10));
     }
 }
