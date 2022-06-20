@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655554949642,
+  "lastUpdate": 1655705451634,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16526,6 +16526,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 67.708,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d8524fecb8491303720fb713db105b4cd93dd11b",
+          "message": "Merge pull request #382 from f1shl3gs/dependabot/cargo/syslog_loose-0.17.0\n\nchore(deps): bump syslog_loose from 0.16.0 to 0.17.0",
+          "timestamp": "2022-06-20T14:04:27+08:00",
+          "tree_id": "1b2bd5b8aa2c650016500084ab942a085fb9c12f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d8524fecb8491303720fb713db105b4cd93dd11b"
+        },
+        "date": 1655705448577,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.677,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 59.543,
             "unit": "ns/op"
           }
         ]
