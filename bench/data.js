@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655705461625,
+  "lastUpdate": 1655705518653,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16594,6 +16594,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 63.297,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "56dbc2a87baa4fa8ab6649628956968f7cc880bb",
+          "message": "Merge pull request #384 from f1shl3gs/dependabot/cargo/tower-0.4.13\n\nchore(deps): bump tower from 0.4.12 to 0.4.13",
+          "timestamp": "2022-06-20T14:04:16+08:00",
+          "tree_id": "afa960df0a482beb374e646615593650b869cafc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/56dbc2a87baa4fa8ab6649628956968f7cc880bb"
+        },
+        "date": 1655705515786,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.889,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 71.738,
             "unit": "ns/op"
           }
         ]
