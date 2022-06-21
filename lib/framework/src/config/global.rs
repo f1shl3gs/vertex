@@ -1,11 +1,15 @@
 use std::fs::DirBuilder;
 use std::path::PathBuf;
+use std::time::Duration;
 
 use log_schema::LogSchema;
 use serde::{Deserialize, Serialize};
 use snafu::{ResultExt, Snafu};
 
-use crate::config::{skip_serializing_if_default, ProxyConfig};
+use crate::config::{
+    default_interval, deserialize_duration, serialize_duration, skip_serializing_if_default,
+    ProxyConfig,
+};
 use crate::timezone;
 
 #[derive(Debug, Snafu)]
@@ -47,6 +51,17 @@ pub struct GlobalOptions {
         skip_serializing_if = "crate::config::skip_serializing_if_default"
     )]
     pub acknowledgements: bool,
+
+    // How often the sources should report metrics.
+    //
+    // NB: not all source need this, they might report events
+    // as soon as possible once they receive any.
+    #[serde(default = "default_interval")]
+    #[serde(
+        serialize_with = "serialize_duration",
+        deserialize_with = "deserialize_duration"
+    )]
+    pub interval: Duration,
 }
 
 impl Default for GlobalOptions {
@@ -57,6 +72,7 @@ impl Default for GlobalOptions {
             proxy: Default::default(),
             log_schema: Default::default(),
             acknowledgements: false,
+            interval: default_interval(),
         }
     }
 }
@@ -127,11 +143,14 @@ data_dir: foo
 "#;
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
         assert_eq!(global.data_dir.unwrap(), PathBuf::from("foo"));
+        assert_eq!(global.interval, default_interval());
 
         let input = "
 timezone: CET
+interval: 10s
 ";
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
-        assert_eq!(global.data_dir, default_data_dir())
+        assert_eq!(global.data_dir, default_data_dir());
+        assert_eq!(global.interval, Duration::from_secs(10));
     }
 }

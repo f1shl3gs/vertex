@@ -9,13 +9,12 @@ mod slave_status;
 mod integration_tests;
 
 use std::borrow::Cow;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use event::{Metric, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
+    default_false, default_true, ticker_from_duration, DataType, GenerateConfig, Output,
+    SourceConfig, SourceContext, SourceDescription,
 };
 use framework::{tls::TlsConfig, Source};
 use futures::StreamExt;
@@ -101,13 +100,6 @@ struct MysqldConfig {
     #[serde(default)]
     password: Option<String>,
     ssl: Option<TlsConfig>,
-
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
 }
 
 fn default_host() -> String {
@@ -197,7 +189,7 @@ inventory::submit! {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
         let options = self.connect_options();
         let mut output = cx.output;
         let instance = format!("{}:{}", self.host, self.port);

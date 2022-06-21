@@ -24,13 +24,6 @@ pub struct NtpConfig {
     )]
     pub timeout: Duration,
 
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    pub interval: Duration,
-
     pub pools: Vec<String>,
 }
 
@@ -69,7 +62,7 @@ register_source_config!("ntp", NtpConfig);
 impl SourceConfig for NtpConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ntp = Ntp {
-            interval: self.interval,
+            interval: cx.interval,
             timeout: self.timeout,
             pools: self.pools.clone(),
             pick_state: 0,
@@ -88,8 +81,8 @@ impl SourceConfig for NtpConfig {
 }
 
 struct Ntp {
-    interval: std::time::Duration,
-    timeout: std::time::Duration,
+    interval: Duration,
+    timeout: Duration,
     pools: Vec<String>,
 
     pick_state: usize,

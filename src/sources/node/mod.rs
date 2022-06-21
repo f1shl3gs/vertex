@@ -54,13 +54,11 @@ mod zfs;
 
 use std::io::Read;
 use std::str::FromStr;
-use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use event::{tags, Metric};
 use framework::config::{
-    default_false, default_interval, default_true, deserialize_duration, serialize_duration,
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    default_false, default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -301,13 +299,6 @@ impl Default for Collectors {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct NodeMetricsConfig {
-    #[serde(
-        default = "default_interval",
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
-
     #[serde(default = "default_proc_path")]
     proc_path: String,
 
@@ -333,7 +324,6 @@ fn default_collectors() -> Collectors {
 impl Default for NodeMetricsConfig {
     fn default() -> Self {
         Self {
-            interval: default_interval(),
             proc_path: default_proc_path(),
             sys_path: default_sys_path(),
             collectors: default_collectors(),
@@ -831,7 +821,7 @@ impl NodeMetrics {
 impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
-            interval: self.interval,
+            interval: cx.interval,
             proc_path: default_proc_path(),
             sys_path: default_sys_path(),
             collectors: self.collectors.clone(),

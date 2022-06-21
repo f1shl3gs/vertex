@@ -1,13 +1,13 @@
 use chrono::Utc;
 use std::borrow::Cow;
 use std::collections::HashMap;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use event::attributes::Key;
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, ticker_from_duration, DataType,
-    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
 };
 use framework::Source;
 use futures::StreamExt;
@@ -25,12 +25,6 @@ const INSTANCE_KEY: Key = Key::from_static_str("instance");
 #[derive(Debug, Deserialize, Serialize)]
 struct MemcachedConfig {
     endpoints: Vec<String>,
-    #[serde(default = "default_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: Duration,
 }
 
 impl GenerateConfig for MemcachedConfig {
@@ -57,7 +51,7 @@ inventory::submit! {
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         let endpoints = self.endpoints.clone();

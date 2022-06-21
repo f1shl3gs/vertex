@@ -30,6 +30,7 @@ pub use validation::warnings;
 use async_trait::async_trait;
 use std::collections::HashSet;
 use std::path::PathBuf;
+use std::time::Duration;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
 use ::serde::{Deserialize, Serialize};
 use indexmap::IndexMap;
@@ -151,6 +152,13 @@ pub struct SourceOuter {
 
     #[serde(default, skip)]
     pub(super) acknowledgements: bool,
+
+    #[serde(default)]
+    #[serde(
+        serialize_with = "serialize_duration_option",
+        deserialize_with = "deserialize_duration_option"
+    )]
+    pub(super) interval: Option<Duration>,
 }
 
 impl SourceOuter {
@@ -159,6 +167,7 @@ impl SourceOuter {
             inner: Box::new(source),
             proxy: Default::default(),
             acknowledgements: false,
+            interval: None,
         }
     }
 
@@ -390,6 +399,7 @@ pub struct SourceContext {
     pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
     pub acknowledgements: bool,
+    pub interval: Duration,
 }
 
 impl SourceContext {
@@ -407,6 +417,7 @@ impl SourceContext {
             globals: Default::default(),
             proxy: Default::default(),
             acknowledgements: false,
+            interval: default_interval(),
         }
     }
 
@@ -426,6 +437,7 @@ impl SourceContext {
                 output,
                 proxy: Default::default(),
                 acknowledgements: false,
+                interval: default_interval(),
             },
             shutdown,
         )

@@ -6,8 +6,7 @@ use std::time::Instant;
 use chrono::Utc;
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, default_true, deserialize_duration, serialize_duration, DataType,
-    GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
+    default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::http::HttpClient;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -22,13 +21,6 @@ use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
 #[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
     endpoints: Vec<String>,
-
-    #[serde(
-        default = "default_interval",
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
-    interval: std::time::Duration,
 
     #[serde(default)]
     tls: Option<TlsConfig>,
@@ -74,7 +66,7 @@ impl SourceConfig for ConsulSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let interval = tokio::time::interval(self.interval);
+        let interval = tokio::time::interval(cx.interval);
         let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;
@@ -365,6 +357,7 @@ mod integration_tests {
     use super::*;
     use event::MetricValue;
     use framework::config::ProxyConfig;
+    use framework::config::{deserialize_duration, serialize_duration};
     use framework::http::HttpClient;
     use framework::tls::MaybeTlsSettings;
     use http::StatusCode;

@@ -1,3 +1,6 @@
+global:
+  interval: 10s
+
 sources:
   metrics:
     type: internal_metrics
