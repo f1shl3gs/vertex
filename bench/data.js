@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655791402879,
+  "lastUpdate": 1655791569462,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -50243,6 +50243,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1647,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d31ee7702168bb97b2453168f2667d94cc04a11c",
+          "message": "Merge pull request #380 from f1shl3gs/global_interval_for_sources\n\nGlobal interval for sources",
+          "timestamp": "2022-06-21T13:35:54+08:00",
+          "tree_id": "4970906661933f2f553c5a356faa505b74f5b0da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d31ee7702168bb97b2453168f2667d94cc04a11c"
+        },
+        "date": 1655791565961,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1561,
             "unit": "s"
           }
         ]
