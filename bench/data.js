@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655790289320,
+  "lastUpdate": 1655791402879,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43802,6 +43802,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 27.404,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f5ff0e4ca6159d59f80215beb8dcbda82ef3e79",
+          "message": "Merge pull request #381 from f1shl3gs/cleanup\n\nCleanup",
+          "timestamp": "2022-06-21T13:36:18+08:00",
+          "tree_id": "71c23aeccaa8abcc190aa2269a7e072e1f023c4e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f5ff0e4ca6159d59f80215beb8dcbda82ef3e79"
+        },
+        "date": 1655791399892,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 49.032,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 181.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 389.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1113.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28896000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1073200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.323,
             "unit": "ns/op"
           }
         ]
