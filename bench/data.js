@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655891376820,
+  "lastUpdate": 1655897096213,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16967,6 +16967,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 73.232,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "79ea58ea0d7aeb13770d400ce6425347bd1ee7f4",
+          "message": "Merge pull request #387 from f1shl3gs/sqlx_0.6.0\n\nSqlx 0.6.0",
+          "timestamp": "2022-06-22T19:17:16+08:00",
+          "tree_id": "07274a11eebd97f885c4f2b2f3030e5dbd0ce49e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/79ea58ea0d7aeb13770d400ce6425347bd1ee7f4"
+        },
+        "date": 1655897091763,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 27.975,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.782,
             "unit": "ns/op"
           }
         ]
