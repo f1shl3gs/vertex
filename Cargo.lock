@@ -5298,7 +5298,7 @@ version = "0.1.0"
 dependencies = [
  "tokio",
  "uuid 1.1.2",
- "xdr-codec 0.4.4 (git+https://github.com/f1shl3gs/rust-xdr?rev=68c0106)",
+ "xdr-codec",
  "xdrgen",
 ]
 
@@ -5617,14 +5617,6 @@ checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
 [[package]]
 name = "xdr-codec"
 version = "0.4.4"
-source = "git+https://github.com/f1shl3gs/rust-xdr?branch=update_dependcies#459d49c8ee9844a3cb8b9a0d38784c931fb9b49e"
-dependencies = [
- "byteorder",
-]
-
-[[package]]
-name = "xdr-codec"
-version = "0.4.4"
 source = "git+https://github.com/f1shl3gs/rust-xdr?rev=68c0106#68c010692874c5bab472bd8c64d712223abcc425"
 dependencies = [
  "byteorder",
@@ -5633,7 +5625,7 @@ dependencies = [
 [[package]]
 name = "xdrgen"
 version = "0.4.4"
-source = "git+https://github.com/f1shl3gs/rust-xdr?branch=update_dependcies#459d49c8ee9844a3cb8b9a0d38784c931fb9b49e"
+source = "git+https://github.com/f1shl3gs/rust-xdr?rev=68c0106#68c010692874c5bab472bd8c64d712223abcc425"
 dependencies = [
  "bitflags",
  "clap 3.2.6",
@@ -5641,7 +5633,7 @@ dependencies = [
  "nom 3.2.1",
  "once_cell",
  "quote",
- "xdr-codec 0.4.4 (git+https://github.com/f1shl3gs/rust-xdr?branch=update_dependcies)",
+ "xdr-codec",
 ]
 
 [[package]]
