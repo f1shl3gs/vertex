@@ -2,3 +2,5 @@
 /.idea/
 tmp.*
 tmp_.*
+
+.vscode

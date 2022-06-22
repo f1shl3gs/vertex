@@ -366,9 +366,6 @@ pub mod generated {
     include!(concat!(env!("OUT_DIR"), "/virnetprotocol_xdr.rs"));
     include!(concat!(env!("OUT_DIR"), "/remote_protocol_xdr.rs"));
 
-    // include!("generated/remote_protocol_xdr.rs");
-    // include!("generated/virnetprotocol_xdr.rs");
-
     impl virNetMessageError {
         pub fn code(&self) -> ErrorCode {
             ErrorCode::from(self.code)
