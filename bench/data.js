@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655887412033,
+  "lastUpdate": 1655889990732,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16904,6 +16904,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 50.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff1d900ee2dad2fb88968f7fb6104083b22e3cf5",
+          "message": "Merge pull request #385 from f1shl3gs/replace_xdrgen_with_fork\n\nupdate xdrgen",
+          "timestamp": "2022-06-22T17:18:50+08:00",
+          "tree_id": "7cf4911ddf54a293814f2275e30bee29e6dfc03c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff1d900ee2dad2fb88968f7fb6104083b22e3cf5"
+        },
+        "date": 1655889987851,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.875,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 73.232,
             "unit": "ns/op"
           }
         ]
