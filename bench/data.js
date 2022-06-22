@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1655887410090,
+  "lastUpdate": 1655887412033,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -44047,6 +44047,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 27.768,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "725869448f3287a74e9937ea6eddc0dbbd506da7",
+          "message": "Merge pull request #386 from f1shl3gs/dependabot/cargo/indexmap-1.9.1\n\nchore(deps): bump indexmap from 1.9.0 to 1.9.1",
+          "timestamp": "2022-06-22T16:16:05+08:00",
+          "tree_id": "2d13ae9dd4e1e7ec1d0a17780ef5e60abf058d59",
+          "url": "https://github.com/f1shl3gs/vertex/commit/725869448f3287a74e9937ea6eddc0dbbd506da7"
+        },
+        "date": 1655887406761,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 58.262,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 182.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 395.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1087.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 38816000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 916080,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.9,
             "unit": "ns/op"
           }
         ]
