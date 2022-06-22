@@ -9,4 +9,4 @@ xdrgen = { git="https://github.com/f1shl3gs/rust-xdr", branch = "update_dependci
 [dependencies]
 tokio = { version = "1.19.2", features = ["net", "rt", "macros", "io-util"] }
 uuid = { version = "1.1.2" }
-xdr-codec = { git="https://github.com/f1shl3gs/rust-xdr", branch = "update_dependcies", features = ["bytecodec"] }
+xdr-codec = { git="https://github.com/f1shl3gs/rust-xdr", features = ["bytecodec"], rev = "68c0106" }
