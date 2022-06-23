@@ -4,6 +4,8 @@
 mod arp;
 mod bcache;
 mod bonding;
+#[cfg(target_os = "macos")]
+mod boot_time;
 mod btrfs;
 mod conntrack;
 mod cpu;
@@ -208,6 +210,11 @@ struct Collectors {
 
     #[serde(default = "default_true")]
     pub zfs: bool,
+
+    // MacOS
+    #[cfg(target_os = "macos")]
+    #[serde(default = "default_true")]
+    pub boot_time: bool,
 }
 
 fn default_cpu_config() -> Option<CPUConfig> {
@@ -292,6 +299,10 @@ impl Default for Collectors {
             vmstat: default_vmstat_config(),
             xfs: default_true(),
             zfs: default_true(),
+
+            // MacOS
+            #[cfg(target_os = "macos")]
+            boot_time: default_true(),
         }
     }
 }
@@ -789,6 +800,14 @@ impl NodeMetrics {
                 tasks.push(tokio::spawn(async move {
                     record_gather!("zfs", zfs::gather(proc_path.as_ref()))
                 }))
+            }
+
+            // MacOS
+            #[cfg(target_os = "macos")]
+            if self.boot_time {
+                tasks.push(tokio::spawn(async {
+                    record_gather!("boot_time", boot_time::gather())
+                }));
             }
 
             let mut metrics = futures::future::join_all(tasks)
