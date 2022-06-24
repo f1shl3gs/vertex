@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656087916841,
+  "lastUpdate": 1656088846825,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -51386,6 +51386,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1384,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a1fa4bc3679604fe9f4c78ca41771e416db4530",
+          "message": "Merge pull request #388 from f1shl3gs/dependabot/cargo/tracing-core-0.1.28\n\nchore(deps): bump tracing-core from 0.1.27 to 0.1.28",
+          "timestamp": "2022-06-25T00:14:45+08:00",
+          "tree_id": "c184b7b50280e6344df49cd45c0fc5558b692283",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a1fa4bc3679604fe9f4c78ca41771e416db4530"
+        },
+        "date": 1656088843904,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1364,
             "unit": "s"
           }
         ]
