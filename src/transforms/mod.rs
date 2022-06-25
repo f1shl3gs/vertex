@@ -8,6 +8,7 @@ mod cardinality;
 #[cfg(feature = "transforms-coercer")]
 mod coercer;
 mod filter;
+#[cfg(feature = "transforms-geoip")]
 mod geoip;
 mod grok_parser;
 mod jsmn_parser;
