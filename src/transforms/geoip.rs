@@ -27,7 +27,7 @@ fn default_target() -> String {
     "geoip".to_string()
 }
 
-// valid locales are: "en", "fr", "es" and "zh-CN"
+// valid locales are: “de”, "en", “es”, “fr”, “ja”, “pt-BR”, “ru”, and “zh-CN” .
 //
 // https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en
 fn default_locale() -> String {
