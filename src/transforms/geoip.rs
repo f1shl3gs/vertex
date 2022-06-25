@@ -119,6 +119,9 @@ struct Isp<'a> {
     organization: &'a str,
 }
 
+// Some fields's description can be found at
+//
+// https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en#locations-files
 #[derive(Default, Serialize)]
 struct City<'a> {
     city_name: &'a str,
@@ -126,10 +129,8 @@ struct City<'a> {
     country_code: &'a str,
     country_name: &'a str,
     timezone: &'a str,
-    latitude: String,
-    // converted from f64 as per original design
-    longitude: String,
-    // converted from f64 as per original design
+    latitude: f64,
+    longitude: f64,
     postal_code: &'a str,
     region_code: &'a str,
     region_name: &'a str,
@@ -144,6 +145,7 @@ impl FunctionTransform for Geoip {
             let ipaddress = log
                 .get_field(self.source.as_str())
                 .map(|s| s.to_string_lossy());
+
             if let Some(value) = &ipaddress {
                 match FromStr::from_str(value) {
                     Ok(ip) => {
@@ -196,10 +198,10 @@ impl FunctionTransform for Geoip {
                                     city.timezone = time_zone;
                                 }
                                 if let Some(latitude) = location.latitude {
-                                    city.latitude = latitude.to_string();
+                                    city.latitude = latitude
                                 }
                                 if let Some(longitude) = location.longitude {
-                                    city.longitude = longitude.to_string();
+                                    city.longitude = longitude
                                 }
                                 if let Some(metro_code) = location.metro_code {
                                     city.metro_code = metro_code.to_string();
@@ -290,8 +292,8 @@ mod tests {
                     "region_code" => "WBK",
                     "region_name" => "West Berkshire",
                     "timezone" => "Europe/London",
-                    "latitude" => "51.75",
-                    "longitude" => "-1.25",
+                    "latitude" => 51.75,
+                    "longitude" => -1.25,
                     "postal_code" => "OX1",
                     "metro_code" => ""
                 ),
@@ -311,8 +313,8 @@ mod tests {
                     "region_code" => "",
                     "region_name" => "",
                     "timezone" => "Asia/Thimphu",
-                    "latitude" => "27.5",
-                    "longitude" => "90.5",
+                    "latitude" => 27.5,
+                    "longitude" => 90.5,
                     "postal_code" => "",
                     "metro_code" => ""
                 ),
