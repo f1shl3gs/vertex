@@ -42,21 +42,21 @@ impl GenerateConfig for Config {
     fn generate_config() -> String {
         format!(
             r##"
-// Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
-// databases, such as the country database, are not supported.
-//
-// GeoIP2: https://dev.maxmind.com/geoip/geoip2/downloadable
-// GeoLite2: https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access
-database: /path/to/your/geoip/database
+# Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
+# databases, such as the country database, are not supported.
+#
+# GeoIP2: https://dev.maxmind.com/geoip/geoip2/downloadable
+# GeoLite2: https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access
+database: '/path/to/your/geoip/database'
 
-// The field name that contains the IP address. This field should contain a
-// valid IPv4 or IPv6 address.
+# The field name that contains the IP address. This field should contain a
+# valid IPv4 or IPv6 address.
 source: ip
 
-// The field to insert the resulting GeoIP data into
-//
-// optional, default is {}
-// target: geo
+# The field to insert the resulting GeoIP data into
+#
+# optional, default is {}
+# target: geo
 "##,
             default_target()
         )
@@ -68,14 +68,13 @@ source: ip
 impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let database = maxminddb::Reader::open_readfile(self.database.clone())?;
-        let transform = Geoip {
+
+        Ok(Transform::function(Geoip {
             database: Arc::new(database),
             source: self.source.clone(),
             target: self.target.clone(),
             locale: self.locale.clone(),
-        };
-
-        Ok(Transform::function(transform))
+        }))
     }
 
     fn input_type(&self) -> DataType {
@@ -276,48 +275,48 @@ mod tests {
     #[test]
     fn geoip() {
         let tests = vec![
-            // (
-            //     "lookup success",
-            //     fields!(
-            //         "remote_addr" => "2.125.160.216",
-            //         "request_path" => "/foo/bar"
-            //     ),
-            //     "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
-            //     fields!(
-            //         "city_name" => "Boxford",
-            //         "country_code" => "GB",
-            //         "continent_code" => "EU",
-            //         "country_name" => "United Kingdom",
-            //         "region_code" => "WBK",
-            //         "region_name" => "West Berkshire",
-            //         "timezone" => "Europe/London",
-            //         "latitude" => "51.75",
-            //         "longitude" => "-1.25",
-            //         "postal_code" => "OX1",
-            //         "metro_code" => ""
-            //     ),
-            // ),
-            // (
-            //     "partial result",
-            //     fields!(
-            //         "remote_addr" => "67.43.156.9",
-            //         "request_path" => "/foo/bar",
-            //     ),
-            //     "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
-            //     fields!(
-            //         "city_name" => "",
-            //         "country_code" => "BT",
-            //         "country_name" => "Bhutan",
-            //         "continent_code" => "AS",
-            //         "region_code" => "",
-            //         "region_name" => "",
-            //         "timezone" => "Asia/Thimphu",
-            //         "latitude" => "27.5",
-            //         "longitude" => "90.5",
-            //         "postal_code" => "",
-            //         "metro_code" => ""
-            //     ),
-            // ),
+            (
+                "lookup success",
+                fields!(
+                    "remote_addr" => "2.125.160.216",
+                    "request_path" => "/foo/bar"
+                ),
+                "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
+                fields!(
+                    "city_name" => "Boxford",
+                    "country_code" => "GB",
+                    "continent_code" => "EU",
+                    "country_name" => "United Kingdom",
+                    "region_code" => "WBK",
+                    "region_name" => "West Berkshire",
+                    "timezone" => "Europe/London",
+                    "latitude" => "51.75",
+                    "longitude" => "-1.25",
+                    "postal_code" => "OX1",
+                    "metro_code" => ""
+                ),
+            ),
+            (
+                "partial result",
+                fields!(
+                    "remote_addr" => "67.43.156.9",
+                    "request_path" => "/foo/bar",
+                ),
+                "tests/fixtures/geoip/GeoIP2-City-Test.mmdb",
+                fields!(
+                    "city_name" => "",
+                    "country_code" => "BT",
+                    "country_name" => "Bhutan",
+                    "continent_code" => "AS",
+                    "region_code" => "",
+                    "region_name" => "",
+                    "timezone" => "Asia/Thimphu",
+                    "latitude" => "27.5",
+                    "longitude" => "90.5",
+                    "postal_code" => "",
+                    "metro_code" => ""
+                ),
+            ),
             (
                 "no results",
                 fields!(
