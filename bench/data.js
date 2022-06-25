@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656165474222,
+  "lastUpdate": 1656166482061,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -51777,6 +51777,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1359,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2380cef1530ee118a0d2995f40b0065a20816d34",
+          "message": "Merge pull request #391 from f1shl3gs/transform/geoip\n\nadd transform/geoip",
+          "timestamp": "2022-06-25T21:49:27+08:00",
+          "tree_id": "2338438a92b8e758092aa17936dd28c5d391460e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2380cef1530ee118a0d2995f40b0065a20816d34"
+        },
+        "date": 1656166478752,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1332,
             "unit": "s"
           }
         ]
