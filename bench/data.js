@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656235398767,
+  "lastUpdate": 1656235413918,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -52051,6 +52051,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1332,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aedc2e9626e82def0b10b083c719eef1f810f82b",
+          "message": "Merge pull request #392 from f1shl3gs/boot_time\n\nBoot time",
+          "timestamp": "2022-06-26T16:57:30+08:00",
+          "tree_id": "94e901ecd8cbf3f6ebc10315ff5fa79eb35d3a3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aedc2e9626e82def0b10b083c719eef1f810f82b"
+        },
+        "date": 1656235411106,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1369,
             "unit": "s"
           }
         ]
