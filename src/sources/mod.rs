@@ -26,13 +26,13 @@ mod journald;
 mod kafka;
 #[cfg(feature = "sources-kafka_metrics")]
 mod kafka_metrics;
-#[cfg(feature = "sources-kmsg")]
+#[cfg(all(target_os = "linux", feature = "sources-kmsg"))]
 mod kmsg;
 #[cfg(feature = "sources-kubernetes_events")]
 mod kubernetes_events;
 #[cfg(feature = "sources-kubernetes_logs")]
 mod kubernetes_logs;
-#[cfg(feature = "sources-libvirt")]
+#[cfg(all(target_os = "linux", feature = "sources-libvirt"))]
 mod libvirt;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
@@ -42,7 +42,7 @@ mod mongodb;
 mod mysqld;
 #[cfg(feature = "sources-nginx_stub")]
 mod nginx_stub;
-#[cfg(all(unix, feature = "sources-node_metrics"))]
+#[cfg(all(target_os = "linux", feature = "sources-node_metrics"))]
 pub mod node;
 #[cfg(feature = "sources-ntp")]
 mod ntp;

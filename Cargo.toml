@@ -391,14 +391,16 @@ openssl-probe = { version = "0.1.5", default-features = false }
 # Profile
 pprof = { version = "0.9.1", default-features = false, optional = true, features = ["flamegraph", "protobuf", "backtrace-rs"] }
 
+# Cli
+argh = { version = "0.1.7" }
+colored = { version = "2.0.0", default-features = false }
+
 # External libs
 ahash = { version = "0.7.6", default-features = false, optional = true }
-argh = { version = "0.1.7" }
 async-stream = { version = "0.3.3", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
-colored = { version = "2.0.0", default-features = false }
 dyn-clone = { version = "1.0.6" }
 encoding_rs = { version = "0.8.31", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
