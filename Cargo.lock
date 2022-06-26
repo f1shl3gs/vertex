@@ -2216,6 +2216,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "lru"
+version = "0.7.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c84e6fe5655adc6ce00787cf7dcaf8dc4f998a0565d23eafc207a8b08ca3349a"
+
+[[package]]
 name = "mach"
 version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5084,6 +5090,7 @@ dependencies = [
  "kube",
  "libc",
  "log_schema",
+ "lru",
  "maxminddb",
  "memchr 2.5.0",
  "metrics",
