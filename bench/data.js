@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656235413918,
+  "lastUpdate": 1656250915972,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -17345,6 +17345,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 73.247,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "19aab3dbea3f8747dcdc07b290003b53df9f0c43",
+          "message": "Merge pull request #393 from f1shl3gs/transform/dedup\n\ntransforms/dedup",
+          "timestamp": "2022-06-26T21:34:53+08:00",
+          "tree_id": "cd50bb12849fc0e62cd3a597672986aa569a9571",
+          "url": "https://github.com/f1shl3gs/vertex/commit/19aab3dbea3f8747dcdc07b290003b53df9f0c43"
+        },
+        "date": 1656250911438,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.407,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.373,
             "unit": "ns/op"
           }
         ]
