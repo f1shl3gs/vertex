@@ -7,6 +7,8 @@ mod ansii_striper;
 mod cardinality;
 #[cfg(feature = "transforms-coercer")]
 mod coercer;
+#[cfg(feature = "transforms-dedup")]
+mod dedup;
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;
