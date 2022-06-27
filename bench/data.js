@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656331995166,
+  "lastUpdate": 1656333192845,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -53067,6 +53067,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1816,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ac792e1f758af4a110b506c75c9278ab72b325c",
+          "message": "Merge pull request #394 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.15.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.0+5.3.0 to 0.5.1+5.3.0-patched",
+          "timestamp": "2022-06-27T20:02:16+08:00",
+          "tree_id": "5219021f831343d5ae431a20eed780ff4d3f988b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ac792e1f758af4a110b506c75c9278ab72b325c"
+        },
+        "date": 1656333187491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1616,
             "unit": "s"
           }
         ]
