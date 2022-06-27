@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656331839875,
+  "lastUpdate": 1656331945802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -53009,6 +53009,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1657,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d166d50b37f579b9d67f5231511f5cade110244",
+          "message": "Merge pull request #395 from f1shl3gs/dependabot/cargo/smallvec-1.8.1\n\nchore(deps): bump smallvec from 1.8.0 to 1.8.1",
+          "timestamp": "2022-06-27T19:38:02+08:00",
+          "tree_id": "57ae29d40594e53550472ec564c0629afd6e8356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d166d50b37f579b9d67f5231511f5cade110244"
+        },
+        "date": 1656331940684,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1816,
             "unit": "s"
           }
         ]
