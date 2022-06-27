@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656330380775,
+  "lastUpdate": 1656330403007,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35138,6 +35138,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 258750,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f62d6e16848ebc8df87f2f7a4bc05e224b397acb",
+          "message": "Merge pull request #396 from f1shl3gs/dependabot/cargo/rkyv-0.7.39\n\nchore(deps): bump rkyv from 0.7.38 to 0.7.39",
+          "timestamp": "2022-06-27T19:38:41+08:00",
+          "tree_id": "ae6a99e5b38facd5e8cf626bfe1430f3b9ec5403",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f62d6e16848ebc8df87f2f7a4bc05e224b397acb"
+        },
+        "date": 1656330398927,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 808.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 72511,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 366310,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 713140,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 248.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 25651,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 129680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 260540,
             "unit": "ns/op"
           }
         ]
