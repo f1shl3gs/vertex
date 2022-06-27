@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656333192845,
+  "lastUpdate": 1656333487256,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -46279,6 +46279,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.214,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5ac792e1f758af4a110b506c75c9278ab72b325c",
+          "message": "Merge pull request #394 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.15.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.0+5.3.0 to 0.5.1+5.3.0-patched",
+          "timestamp": "2022-06-27T20:02:16+08:00",
+          "tree_id": "5219021f831343d5ae431a20eed780ff4d3f988b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5ac792e1f758af4a110b506c75c9278ab72b325c"
+        },
+        "date": 1656333483076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 71.624,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 226.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 535.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1498.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 46233000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1441100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 28.312,
             "unit": "ns/op"
           }
         ]
