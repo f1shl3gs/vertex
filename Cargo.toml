@@ -429,7 +429,7 @@ redis = { version = "0.21.4", default-features = false, optional = true, feature
 regex = { version = "1.5.6" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
-smallvec = { version = "1.8.0", optional = true, features = ["union"] }
+smallvec = { version = "1.8.1", optional = true, features = ["union"] }
 snafu = { version = "0.7.1", default-features = false }
 snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
