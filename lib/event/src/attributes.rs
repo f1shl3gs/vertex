@@ -63,6 +63,7 @@ impl fmt::Display for Key {
 
 /// Array of homogeneous values
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
+#[serde(untagged)]
 pub enum Array {
     /// Array of bools
     Bool(Vec<bool>),
@@ -174,6 +175,7 @@ impl From<Vec<String>> for Array {
 
 /// Value types for use in `KeyValue` pairs.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
+#[serde(untagged)]
 pub enum Value {
     /// bool values
     Bool(bool),
@@ -335,64 +337,50 @@ impl fmt::Display for Value {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, Hash, PartialEq, PartialOrd, Eq)]
-pub struct Attributes {
-    map: BTreeMap<Key, Value>,
-    dropped_count: u32,
-}
+pub struct Attributes(BTreeMap<Key, Value>);
 
 impl Attributes {
     pub fn new() -> Self {
-        Self {
-            map: BTreeMap::new(),
-            dropped_count: 0,
-        }
+        Self(BTreeMap::new())
     }
 
     /// Returns a front-to-back iterator.
     pub fn iter(&self) -> Iter<'_> {
-        Iter(self.map.iter())
+        Iter(self.0.iter())
     }
 
     pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        match self.map.entry(key.into()) {
-            Entry::Occupied(mut entry) => {
-                self.dropped_count += 1;
-                entry.insert(value.into());
-            }
-            Entry::Vacant(entry) => {
-                entry.insert(value.into());
-            }
-        };
+        self.0.entry(key.into()).or_insert_with(|| value.into());
     }
 
     #[inline]
     pub fn is_empty(&self) -> bool {
-        self.map.is_empty()
+        self.0.is_empty()
     }
 
     #[inline]
     pub fn remove(&mut self, key: &Key) -> Option<Value> {
-        self.map.remove(key)
+        self.0.remove(key)
     }
 
     #[inline]
     pub fn len(&self) -> usize {
-        self.map.len()
+        self.0.len()
     }
 
     #[inline]
     pub fn get(&self, key: &Key) -> Option<&Value> {
-        self.map.get(key)
+        self.0.get(key)
     }
 
     #[inline]
     pub fn entry(&mut self, key: impl Into<Key>) -> Entry<Key, Value> {
-        self.map.entry(key.into())
+        self.0.entry(key.into())
     }
 
     #[inline]
     pub fn contains_key(&self, key: impl Into<Key>) -> bool {
-        self.map.contains_key(&(key.into()))
+        self.0.contains_key(&(key.into()))
     }
 }
 
@@ -412,16 +400,13 @@ impl From<BTreeMap<String, String>> for Attributes {
             .map(|(k, v)| (Key::from(k), Value::from(v)))
             .collect();
 
-        Self {
-            map,
-            dropped_count: 0,
-        }
+        Self(map)
     }
 }
 
 impl ByteSizeOf for Attributes {
     fn allocated_bytes(&self) -> usize {
-        self.map
+        self.0
             .iter()
             .map(|(k, v)| {
                 let vl = match v {
@@ -443,7 +428,7 @@ where
 
     fn index(&self, index: T) -> &Self::Output {
         let key = Key::new(index.as_ref().to_owned());
-        self.map.get(&key).unwrap()
+        self.0.get(&key).unwrap()
     }
 }
 
@@ -464,7 +449,7 @@ impl IntoIterator for Attributes {
     type IntoIter = IntoIter;
 
     fn into_iter(self) -> Self::IntoIter {
-        IntoIter(self.map.into_iter())
+        IntoIter(self.0.into_iter())
     }
 }
 
@@ -473,7 +458,7 @@ impl<'a> IntoIterator for &'a Attributes {
     type IntoIter = Iter<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
-        Iter(self.map.iter())
+        Iter(self.0.iter())
     }
 }
 
@@ -519,4 +504,54 @@ macro_rules! btreemap {
     ( $($x:expr => $y:expr,)* ) => (
         btreemap!{$($x => $y),*}
     );
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn serialize_value() {
+        let mut map = BTreeMap::new();
+        map.insert("bool", Value::Bool(true));
+        map.insert("int64", Value::I64(1));
+        map.insert("float64", Value::F64(2.0));
+        map.insert("string", Value::String("str".into()));
+        map.insert("bool_array", Value::Array(Array::Bool(vec![true, false])));
+        map.insert("int_array", Value::Array(Array::I64(vec![1, 2])));
+        map.insert("float_array", Value::Array(Array::F64(vec![1.0, 2.0])));
+        map.insert(
+            "string_array",
+            Value::Array(Array::String(vec!["foo".into(), "bar".into()])),
+        );
+
+        let _ = serde_json::to_string(&map).unwrap();
+    }
+
+    #[test]
+    fn deserialize_value() {
+        let raw = r##"{"bool":true,"bool_array":[true,false],"float64":2.0,"float_array":[1.0,2.0],"int64":1,"int_array":[1,2],"string":"str","string_array":["foo","bar"]}"##;
+        let map: BTreeMap<String, Value> = serde_json::from_str(raw).unwrap();
+
+        assert_eq!(map.get("bool").unwrap(), &Value::Bool(true));
+        assert_eq!(map.get("int64").unwrap(), &Value::I64(1));
+        assert_eq!(map.get("float64").unwrap(), &Value::F64(2.0));
+        assert_eq!(map.get("string").unwrap(), &Value::String("str".into()));
+        assert_eq!(
+            map.get("bool_array").unwrap(),
+            &Value::Array(Array::Bool(vec![true, false]))
+        );
+        assert_eq!(
+            map.get("int_array").unwrap(),
+            &Value::Array(Array::I64(vec![1, 2]))
+        );
+        assert_eq!(
+            map.get("float_array").unwrap(),
+            &Value::Array(Array::F64(vec![1.0, 2.0]))
+        );
+        assert_eq!(
+            map.get("string_array").unwrap(),
+            &Value::Array(Array::String(vec!["foo".into(), "bar".into()]))
+        );
+    }
 }
