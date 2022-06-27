@@ -4422,9 +4422,9 @@ dependencies = [
 
 [[package]]
 name = "tikv-jemalloc-sys"
-version = "0.5.0+5.3.0"
+version = "0.5.1+5.3.0-patched"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aeab4310214fe0226df8bfeb893a291a58b19682e8a07e1e1d4483ad4200d315"
+checksum = "931e876f91fed0827f863a2d153897790da0b24d882c721a79cb3beb0b903261"
 dependencies = [
  "cc",
  "fs_extra",
