@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656323177418,
+  "lastUpdate": 1656324146195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -52422,6 +52422,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1369,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80ccf85f963036c9e79199b6d738c75e63e36f6c",
+          "message": "Merge pull request #397 from f1shl3gs/remove_dropped_count\n\nRemove dropped count",
+          "timestamp": "2022-06-27T17:36:24+08:00",
+          "tree_id": "bc846ec6144da06618f0b5ffc1dce42523eab984",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80ccf85f963036c9e79199b6d738c75e63e36f6c"
+        },
+        "date": 1656324143173,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1336,
             "unit": "s"
           }
         ]
