@@ -21,3 +21,9 @@ sinks:
     type: prometheus_exporter
     inputs:
       - add_tags
+  stdout:
+    type: console
+    inputs:
+      - add_tags
+    stream: stdout
+    encoding: json
