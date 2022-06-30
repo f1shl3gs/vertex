@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656596608074,
+  "lastUpdate": 1656596617972,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18009,6 +18009,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 56.251,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebbde6e8580b6e10df997639d97dac220520a9e6",
+          "message": "Merge pull request #404 from f1shl3gs/transforms/enum\n\nTransforms/enum",
+          "timestamp": "2022-06-30T21:37:57+08:00",
+          "tree_id": "2320b06c2bce67317313da8f6993c901f1fdde4b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebbde6e8580b6e10df997639d97dac220520a9e6"
+        },
+        "date": 1656596613445,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 27.376,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 74.722,
             "unit": "ns/op"
           }
         ]
