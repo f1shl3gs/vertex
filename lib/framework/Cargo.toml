@@ -64,7 +64,7 @@ pin-project = { version = "1.0.10" }
 regex = { version = "1.5.6" }
 smallvec = { version = "1.8.1", features = ["union"] }
 serde = { version = "1.0.137", default-features = false, features = ["derive", "std"] }
-serde_json = { version = "1.0.81", default-features = false }
+serde_json = { version = "1.0.82", default-features = false }
 serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.8.24" }
 # remove shared after "shared" merged into this crate
