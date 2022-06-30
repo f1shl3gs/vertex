@@ -9,6 +9,8 @@ mod cardinality;
 mod coercer;
 #[cfg(feature = "transforms-dedup")]
 mod dedup;
+#[cfg(feature = "transforms-enum")]
+mod r#enum;
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;

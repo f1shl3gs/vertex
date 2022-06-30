@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize, Serializer};
 use shared::ByteSizeOf;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
+#[serde(untagged)]
 pub enum Value {
     Bytes(Bytes),
     Float(f64),
@@ -315,45 +316,7 @@ impl From<serde_yaml::Value> for Value {
         }
     }
 }
-/*
-impl TryFrom<serde_yaml::Value> for Value {
-    type Error = std::io::Error;
 
-    fn try_from(value: serde_yaml::Value) -> Result<Self, Self::Error> {
-        Ok(match value {
-            serde_yaml::Value::String(s) => Self::from(s),
-            serde_yaml::Value::Number(n) => {
-                if n.is_f64() {
-                    Self::from(n.as_f64().unwrap())
-                } else if n.is_i64() {
-                    Self::from(n.as_i64().unwrap())
-                } else {
-                    Self::from(n.as_f64().unwrap())
-                }
-            }
-            serde_yaml::Value::Null => Self::Null,
-            serde_yaml::Value::Bool(b) => Self::from(b),
-            serde_yaml::Value::Sequence(seq) => {
-                let arr = seq.into_iter()
-                    .map(Value::try_from)
-                    .collect::<Result<Vec<_>, std::io::Error>>()?;
-
-                Self::from(arr)
-            }
-            serde_yaml::Value::Mapping(map) => {
-                let mut fmap = BTreeMap::new();
-                map.iter()
-                    .map(|(k, v)| fmap.insert(
-                        k.as_str().unwrap().to_owned(),
-                        Self::try_from(v.clone()).unwrap(),
-                    ));
-
-                Self::from(fmap)
-            }
-        })
-    }
-}
-*/
 #[cfg(test)]
 mod tests {
     use super::*;
