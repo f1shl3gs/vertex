@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656571963944,
+  "lastUpdate": 1656571986112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8198,6 +8198,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1180500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4889c39ed222664a54ebe49cf7660209d21ffa7d",
+          "message": "Merge pull request #400 from f1shl3gs/dependabot/cargo/zeroize-1.5.6\n\nchore(deps): bump zeroize from 1.5.5 to 1.5.6",
+          "timestamp": "2022-06-30T14:44:20+08:00",
+          "tree_id": "e88b391b83091facf346114163aeab4232aa5109",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4889c39ed222664a54ebe49cf7660209d21ffa7d"
+        },
+        "date": 1656571982937,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1180000,
             "unit": "ns/op"
           }
         ]
