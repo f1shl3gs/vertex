@@ -200,6 +200,7 @@ transforms = [
     "transforms-coercer",
     "transforms-dedup",
     "transforms-geoip",
+    "transforms-enum",
     "transforms-metricalize",
     "transforms-sample",
     "transforms-substr",
@@ -210,6 +211,7 @@ transforms-add_fields = []
 transforms-cardinality = ["bloom"]
 transforms-coercer = []
 transforms-dedup = ["lru"]
+transforms-enum = []
 transforms-geoip = [ "maxminddb" ]
 transforms-metricalize = ["async-stream"]
 transforms-sample = ["seahash"]
