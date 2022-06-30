@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656571908675,
+  "lastUpdate": 1656571963944,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8169,6 +8169,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1184700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b35b3c620b4ea40a42273bc5c8e6f7849722a17",
+          "message": "Merge pull request #402 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.12\n\nchore(deps): bump tracing-subscriber from 0.3.11 to 0.3.12",
+          "timestamp": "2022-06-30T14:43:56+08:00",
+          "tree_id": "4a3bb249abd0a1542f7828f9eee0b208fc49efa4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b35b3c620b4ea40a42273bc5c8e6f7849722a17"
+        },
+        "date": 1656571960912,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1180500,
             "unit": "ns/op"
           }
         ]
