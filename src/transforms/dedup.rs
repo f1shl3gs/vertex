@@ -4,7 +4,9 @@ use async_trait::async_trait;
 use bytes::Bytes;
 use event::log::Value;
 use event::{Events, LogRecord};
-use framework::config::{DataType, GenerateConfig, Output, TransformConfig, TransformContext};
+use framework::config::{
+    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
+};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
 use lru::LruCache;
@@ -24,6 +26,10 @@ struct Config {
     cache: CacheConfig,
     #[serde(default)]
     fields: Option<FieldMatchConfig>,
+}
+
+inventory::submit! {
+    TransformDescription::new::<Config>("dedup")
 }
 
 const fn default_cache_config() -> CacheConfig {
