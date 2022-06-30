@@ -12,4 +12,4 @@ futures = { version = "0.3.21" }
 k8s-openapi = { version = "0.15.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.73.1", default-features = false, optional = true, features = ["client", "rustls-tls", "runtime"] }
 tokio = { version = "1.19.2", default-features = false, features = ["macros"] }
-zeroize = { version = "1.4.3", optional = true }
+zeroize = { version = "1.5.6", optional = true }
