@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656586458816,
+  "lastUpdate": 1656596608074,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -17975,6 +17975,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 75.864,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aee70ec826a9662096d70fb70455f86dfc9ae5d8",
+          "message": "Merge pull request #403 from f1shl3gs/register_transform_dedup\n\nregister transform",
+          "timestamp": "2022-06-30T21:38:08+08:00",
+          "tree_id": "ec3208367076a01472d32d2deaa59e6d1d98390c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aee70ec826a9662096d70fb70455f86dfc9ae5d8"
+        },
+        "date": 1656596604939,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 23.127,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 56.251,
             "unit": "ns/op"
           }
         ]
