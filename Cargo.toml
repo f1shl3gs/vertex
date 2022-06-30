@@ -362,7 +362,7 @@ stream-cancel = { version = "0.8.1" }
 # Tracing
 tracing = { version = "0.1.35", default-features = false }
 tracing-log = { version = "0.1.3", default-features = false }
-tracing-subscriber = { version = "0.3.11", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-subscriber = { version = "0.3.12", optional = true, default-features = false, features = ["std", "registry"] }
 tracing-core = { version = "0.1.28" }
 
 # HTTP
