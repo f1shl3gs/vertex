@@ -7,7 +7,7 @@ use std::time::Duration;
 use bytes::{Bytes, BytesMut};
 use futures::Stream;
 use futures::StreamExt;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use serde_regex::{deserialize_bytes_regex, serialize_bytes_regex};
@@ -57,27 +57,29 @@ pub struct Config {
     pub timeout: Duration,
 }
 
-/// Line aggregator.
-///
-/// Provides a `Stream` implementation that reads lines from the `inner` stream
-/// and yields aggregated lines.
-#[pin_project(project = LineAggProj)]
-pub struct LineAgg<T, R, K, C> {
-    /// The stream from which we read the lines.
-    #[pin]
-    inner: T,
+pin_project! {
+    /// Line aggregator.
+    ///
+    /// Provides a `Stream` implementation that reads lines from the `inner` stream
+    /// and yields aggregated lines.
+    #[project = LineAggProj]
+    pub struct LineAgg<T, R, K, C> {
+        // The stream from which we read the lines.
+        #[pin]
+        inner: T,
 
-    /// The core line aggregation logic.
-    logic: Logic<R, K, C>,
+        // The core line aggregation logic.
+        logic: Logic<R, K, C>,
 
-    /// Stashed lines. When line aggregation results in more than one line being emitted,
-    /// we have to stash lines and return them into the stream after that before doing any
-    /// other work
-    stashed: Option<(K, Bytes, C)>,
+        // Stashed lines. When line aggregation results in more than one line being emitted,
+        // we have to stash lines and return them into the stream after that before doing any
+        // other work
+        stashed: Option<(K, Bytes, C)>,
 
-    /// Duration queue. We switch to draining mode when we get `None` from the inner stream.
-    /// In this mode we stop polling `inner` for new lines and just flush all the buffered data.
-    draining: Option<Vec<(K, Bytes, C)>>,
+        // Duration queue. We switch to draining mode when we get `None` from the inner stream.
+        // In this mode we stop polling `inner` for new lines and just flush all the buffered data.
+        draining: Option<Vec<(K, Bytes, C)>>,
+    }
 }
 
 /// Rule is extract from core logic, so we can implement preset easily and, implement it
