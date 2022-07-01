@@ -3160,15 +3160,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "procfs"
-version = "0.1.0"
-dependencies = [
- "glob",
- "snafu",
- "tokio",
-]
-
-[[package]]
 name = "prometheus"
 version = "0.1.0"
 dependencies = [
