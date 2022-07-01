@@ -4,10 +4,10 @@ artifacts-dir:
 	mkdir -p target/artifacts
 
 build-timing:
-	cargo +nightly build -p vertex --bin vertex -Z timings --release
+	cargo build -p vertex --bin vertex --timings --release
 
 bloat:
-	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 100
+	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200
 
 lines:
 	@./scripts/lines.sh
