@@ -20,7 +20,7 @@ use rkyv::{
     },
     AlignedVec, Infallible,
 };
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::io::{AsyncWrite, AsyncWriteExt};
 
 use super::{
@@ -36,7 +36,7 @@ use crate::{
 };
 
 /// Error that occurred during calls to [`Writer`].
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum WriterError<T>
 where
     T: Bufferable,
@@ -46,8 +46,8 @@ where
     /// Different methods will capture specific I/O errors depending on the situation, as some
     /// errors may be expected and considered normal by design.  For all I/O errors that are
     /// considered atypical, they will be returned as this variant.
-    #[snafu(display("write I/O error: {}", source))]
-    Io { source: io::Error },
+    #[error("write I/O error: {err}")]
+    Io { err: io::Error },
 
     /// The record attempting to be written was too large.
     ///
@@ -55,7 +55,7 @@ where
     /// necessary bytes during encoding, and so this error will typically only be emitted when the
     /// encoder throws no error during the encoding step itself, but manages to fill up the encoding
     /// buffer to the limit.
-    #[snafu(display("record too large: limit is {}", limit))]
+    #[error("record too large: limit is {limit}")]
     RecordTooLarge { limit: usize },
 
     /// The data file did not have enough remaining space to write the record.
@@ -66,7 +66,7 @@ where
     /// The record that was given to write is returned.
     ///
     /// See lemma 5.
-    #[snafu(display("data file full or record would exceed max data file size"))]
+    #[error("data file full or record would exceed max data file size")]
     DataFileFull { record: T, serialized_size: usize },
 
     /// A record reported that it contained more events than the number of bytes when encoded.
@@ -76,11 +76,9 @@ where
     /// transitively depends on not being able to represent more than one event per encoded byte.
     ///
     /// See lemma 4 for more information.
-    #[snafu(display(
-        "record reported event count ({}) higher than encoded length ({})",
-        encoded_len,
-        event_count
-    ))]
+    #[error(
+        "record reported event count ({encoded_len}) higher than encoded length ({event_count})"
+    )]
     NonsensicalEventCount {
         encoded_len: usize,
         event_count: usize,
@@ -90,8 +88,9 @@ where
     ///
     /// For common encoders, failure to write all of the bytes of the input will be the most common
     /// error, and in fact, some some encoders, it's the only possible error that can occur.
-    #[snafu(display("failed to encode record: {:?}", source))]
+    #[error("failed to encode record: {source}")]
     FailedToEncode {
+        #[from]
         source: <T as Encodable>::EncodeError,
     },
 
@@ -104,7 +103,7 @@ where
     /// In practice, this should generally only occur if the system is unable to allocate enough
     /// memory during the serialization step aka the system itself is literally out of memory to
     /// give to processes.  Rare, indeed.
-    #[snafu(display("failed to serialize encoded record to buffer: {}", reason))]
+    #[error("failed to serialize encoded record to buffer: {reason}")]
     FailedToSerialize { reason: String },
 
     /// The writer failed to validate the last written record.
@@ -113,7 +112,7 @@ where
     /// validation of the last written record.  While it's technically possible that it may be
     /// something else, this error is most likely to occur when the records in a buffer were written
     /// in a different version of Vector that cannot be decoded in this version of Vector.
-    #[snafu(display("failed to validate the last written record: {}", reason))]
+    #[error("failed to validate the last written record: {reason}")]
     FailedToValidate { reason: String },
 
     /// The writer entered an inconsistent state that represents an unrecoverable error.
@@ -124,19 +123,20 @@ where
     /// reasonable thing to do would be to give up.
     ///
     /// This error is the writer, and thus the buffer, giving up.
-    #[snafu(display("writer entered inconsistent state: {}", reason))]
+    #[error("writer entered inconsistent state: {reason}")]
     InconsistentState { reason: String },
 
     /// The record reported an event count of zero.
     ///
     /// Empty records are not supported.
+    #[error("empty record")]
     EmptyRecord,
 }
 
 impl<T: Bufferable + PartialEq> PartialEq for WriterError<T> {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
-            (Self::Io { source: l_source }, Self::Io { source: r_source }) => {
+            (Self::Io { err: l_source }, Self::Io { err: r_source }) => {
                 l_source.kind() == r_source.kind()
             }
             (Self::RecordTooLarge { limit: l_limit }, Self::RecordTooLarge { limit: r_limit }) => {
@@ -192,15 +192,6 @@ where
             // Only our scratch space strategy is fallible, so we should never get here.
             _ => unreachable!(),
         }
-    }
-}
-
-impl<T> From<io::Error> for WriterError<T>
-where
-    T: Bufferable,
-{
-    fn from(source: io::Error) -> Self {
-        WriterError::Io { source }
     }
 }
 
@@ -432,9 +423,7 @@ where
             let mut encode_buf = (&mut self.encode_buf).limit(self.max_record_size);
             record.encode(&mut encode_buf)
         };
-        let encoded_len = encode_result
-            .map(|_| self.encode_buf.len())
-            .context(FailedToEncodeSnafu)?;
+        let encoded_len = encode_result.map(|_| self.encode_buf.len())?;
         if encoded_len > self.max_record_size {
             return Err(WriterError::RecordTooLarge {
                 limit: self.max_record_size,
@@ -551,8 +540,7 @@ where
         let flush_result = self
             .writer
             .write(event_count, self.ser_buf.as_slice())
-            .await
-            .context(IoSnafu)?;
+            .await?;
 
         // Update our current data file size.
         self.current_data_file_size += serialized_len as u64;
@@ -710,7 +698,7 @@ where
             current_writer_data_file = ?self.ledger.get_current_writer_data_file_path(),
             "Validating last written record in current data file."
         );
-        self.ensure_ready_for_write().await.context(IoSnafu)?;
+        self.ensure_ready_for_write().await?;
 
         // If our current file is empty, there's no sense doing this check.
         if self.data_file_size == 0 {
@@ -726,8 +714,7 @@ where
             .ledger
             .filesystem()
             .open_mmap_readable(&data_file_path)
-            .await
-            .context(IoSnafu)?;
+            .await?;
 
         // We have bytes, so we should have an archived record... hopefully!  Go through the motions
         // of verifying it.  If we hit any invalid states, then we should bump to the next data file
@@ -1028,7 +1015,7 @@ where
             // Make sure we have an open data file to write to, which might also be us opening the
             // next data file because our first attempt at writing had to finalize a data file that
             // was already full.
-            self.ensure_ready_for_write().await.context(IoSnafu)?;
+            self.ensure_ready_for_write().await?;
 
             let writer = self
                 .writer

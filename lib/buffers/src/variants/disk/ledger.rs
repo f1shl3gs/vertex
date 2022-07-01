@@ -10,7 +10,7 @@ use bytes::BytesMut;
 use crossbeam_utils::atomic::AtomicCell;
 use fslock::LockFile;
 use rkyv::{with::Atomic, Archive, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
@@ -23,7 +23,7 @@ use super::{
 use crate::buffer_usage_data::BufferUsageHandle;
 
 /// Error that occurred during calls to [`Ledger`].
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum LedgerLoadCreateError {
     /// A general I/O error occurred.
     ///
@@ -31,17 +31,20 @@ pub enum LedgerLoadCreateError {
     /// ledger file has been corrupted or altered in some way outside of this process.  As the
     /// ledger is fixed in size, and does not grow during the life of the process, common errors
     /// such as running out of disk space will not typically be relevant (or possible) here.
-    #[snafu(display("ledger I/O error: {}", source))]
-    Io { source: io::Error },
+    #[error("ledger I/O error: {source}")]
+    Io {
+        #[from]
+        source: io::Error,
+    },
 
     /// The ledger is already opened by another Vector process.
     ///
     /// Advisory locking is used to prevent other Vector processes from concurrently opening the
     /// same buffer, but bear in mind that this does not prevent other processes or users from
     /// modifying the ledger file in a way that could cause undefined behavior during buffer operation.
-    #[snafu(display(
+    #[error(
         "failed to lock buffer.lock; is another Vector process running and using this buffer?"
-    ))]
+    )]
     LedgerLockAlreadyHeld,
 
     /// The ledger state was unable to be deserialized.
@@ -52,7 +55,7 @@ pub enum LedgerLoadCreateError {
     ///
     /// We have many strongly-worded warnings to not do this unless a developer absolutely knows
     /// what they're doing, but it is still technically a possibility. :)
-    #[snafu(display("failed to deserialize ledger from buffer: {}", reason))]
+    #[error("failed to deserialize ledger from buffer: {reason}")]
     FailedToDeserialize { reason: String },
 
     /// The ledger state was unable to be serialized.
@@ -63,7 +66,7 @@ pub enum LedgerLoadCreateError {
     ///
     /// This error is likely only to occur if the process is unable to allocate memory for the
     /// buffers required for the serialization step.
-    #[snafu(display("failed to serialize ledger to buffer: {}", reason))]
+    #[error("failed to serialize ledger to buffer: {reason}")]
     FailedToSerialize { reason: String },
 }
 
@@ -545,9 +548,7 @@ where
         usage_handle: BufferUsageHandle,
     ) -> Result<Ledger<FS>, LedgerLoadCreateError> {
         // Create our containing directory if it doesn't already exist.
-        fs::create_dir_all(&config.data_dir)
-            .await
-            .context(IoSnafu)?;
+        fs::create_dir_all(&config.data_dir).await?;
 
         // Acquire an exclusive lock on our lock file, which prevents another Vector process from
         // loading this buffer and clashing with us.  Specifically, though: this does _not_ prevent
@@ -557,22 +558,18 @@ where
         // file I/O, but the code is so specific, including the drop guard for the lock file, that I
         // don't know if it's worth it.
         let ledger_lock_path = config.data_dir.join("buffer.lock");
-        let mut ledger_lock = LockFile::open(&ledger_lock_path).context(IoSnafu)?;
-        if !ledger_lock.try_lock().context(IoSnafu)? {
+        let mut ledger_lock = LockFile::open(&ledger_lock_path)?;
+        if !ledger_lock.try_lock()? {
             return Err(LedgerLoadCreateError::LedgerLockAlreadyHeld);
         }
 
         // Open the ledger file, which may involve creating it if it doesn't yet exist.
         let ledger_path = config.data_dir.join("buffer.db");
-        let mut ledger_handle = config
-            .filesystem
-            .open_file_writable(&ledger_path)
-            .await
-            .context(IoSnafu)?;
+        let mut ledger_handle = config.filesystem.open_file_writable(&ledger_path).await?;
 
         // If we just created the ledger file, then we need to create the default ledger state, and
         // then serialize and write to the file, before trying to load it as a memory-mapped file.
-        let ledger_metadata = ledger_handle.metadata().await.context(IoSnafu)?;
+        let ledger_metadata = ledger_handle.metadata().await?;
         let ledger_len = ledger_metadata.len();
         if ledger_len == 0 {
             debug!("Ledger file empty.  Initializing with default ledger state.");
@@ -580,10 +577,7 @@ where
             loop {
                 match BackedArchive::from_value(&mut buf, LedgerState::default()) {
                     Ok(archive) => {
-                        ledger_handle
-                            .write_all(archive.get_backing_ref())
-                            .await
-                            .context(IoSnafu)?;
+                        ledger_handle.write_all(archive.get_backing_ref()).await?;
                         break;
                     }
                     Err(SerializeError::FailedToSerialize(reason)) => {
@@ -595,16 +589,12 @@ where
             }
 
             // Now sync the file to ensure everything is on disk before proceeding.
-            ledger_handle.sync_all().await.context(IoSnafu)?;
+            ledger_handle.sync_all().await?;
         }
 
         // Load the ledger state by memory-mapping the ledger file, and zero-copy deserializing our
         // ledger state back out of it.
-        let ledger_mmap = config
-            .filesystem
-            .open_mmap_writable(&ledger_path)
-            .await
-            .context(IoSnafu)?;
+        let ledger_mmap = config.filesystem.open_mmap_writable(&ledger_path).await?;
         let ledger_state = match BackedArchive::from_backing(ledger_mmap) {
             // Deserialized the ledger state without issue from an existing file.
             Ok(backed) => backed,
@@ -655,10 +645,10 @@ where
         // When the reader does any necessary seeking to get to the record it left off on, it will
         // adjust the "total buffer size" downwards for each record it runs through, leaving "total
         // buffer size" at the correct value.
-        let mut dat_reader = fs::read_dir(&self.config.data_dir).await.context(IoSnafu)?;
+        let mut dat_reader = fs::read_dir(&self.config.data_dir).await?;
 
         let mut total_buffer_size = 0;
-        while let Some(dir_entry) = dat_reader.next_entry().await.context(IoSnafu)? {
+        while let Some(dir_entry) = dat_reader.next_entry().await? {
             if let Some(file_name) = dir_entry.file_name().to_str() {
                 // I really _do_ want to only find files with a .dat extension, as that's what the
                 // code generates, and having them be .dAt or .Dat or whatever would indicate that
@@ -666,7 +656,7 @@ where
                 // of filenames from another program/OS, then it would be a different story.
                 #[allow(clippy::case_sensitive_file_extension_comparisons)]
                 if file_name.ends_with(".dat") {
-                    let metadata = dir_entry.metadata().await.context(IoSnafu)?;
+                    let metadata = dir_entry.metadata().await?;
                     total_buffer_size += metadata.len();
 
                     debug!(
