@@ -1645,7 +1645,6 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "serde",
- "snafu",
 ]
 
 [[package]]

@@ -1,8 +1,8 @@
 use std::borrow::Cow;
+use std::fmt::{Display, Formatter};
 use std::num::ParseFloatError;
 
 use serde::{Deserialize, Deserializer, Serializer};
-use snafu::{ResultExt, Snafu};
 
 // ICE Sizes, kibis of bits
 const BYTE: usize = 1;
@@ -22,14 +22,29 @@ const TBYTE: usize = GBYTE * 1000;
 const PBYTE: usize = TBYTE * 1000;
 const EBYTE: usize = PBYTE * 1000;
 
-#[derive(Debug, Snafu)]
-pub enum ParseBytesError {
-    #[snafu(display("Parse float part failed, {}", source))]
-    ParseFloatFailed { source: ParseFloatError },
-    #[snafu(display("Unknown unit \"{}\" found", unit))]
+#[derive(Debug)]
+pub enum ParseError {
+    ParseFloat { source: ParseFloatError },
     UnknownUnit { unit: String },
-    #[snafu(display("Too large: {}", input))]
     TooLarge { input: String },
+}
+
+impl Display for ParseError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ParseError::ParseFloat { source: err } => {
+                write!(f, "parse float part failed, {}", err)
+            }
+            ParseError::UnknownUnit { unit: u } => write!(f, "unknown unit \"{}\"", u),
+            ParseError::TooLarge { input: i } => write!(f, "too large \"{}\"", i),
+        }
+    }
+}
+
+impl From<ParseFloatError> for ParseError {
+    fn from(err: ParseFloatError) -> Self {
+        Self::ParseFloat { source: err }
+    }
 }
 
 /// bytes produces a human readable representation of an SI size
@@ -52,7 +67,7 @@ pub fn ibytes(s: usize) -> String {
 ///
 /// parse_bytes("42 MB") -> Ok(42000000)
 /// parse_bytes("42 mib") -> Ok(44040192)
-pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
+pub fn parse_bytes(s: &str) -> Result<usize, ParseError> {
     let mut last_digit = 0;
     let mut has_comma = false;
 
@@ -74,7 +89,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         tn = num.replace(',', "");
     }
 
-    let f = tn.parse::<f64>().context(ParseFloatFailedSnafu)?;
+    let f = tn.parse::<f64>()?;
     let extra = &s[last_digit..];
     let extra = extra.trim().to_lowercase();
 
@@ -93,7 +108,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
         "eib" | "ei" => EIBYTE,
         "eb" | "e" => EBYTE,
         _ => {
-            return Err(ParseBytesError::UnknownUnit {
+            return Err(ParseError::UnknownUnit {
                 unit: extra.clone(),
             });
         }
