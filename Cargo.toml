@@ -31,7 +31,6 @@ members = [
     "lib/event",
     "lib/framework",
     "lib/multiline",
-    "lib/procfs",
     "lib/serde_regex",
     "lib/metrics",
     "lib/prometheus",
