@@ -241,7 +241,7 @@ fn recovery_line(input: &str) -> IResult<&str, (f64, i64, f64, f64)> {
     let (input, pct) = double(input)?;
     let (input, _) = take_while(|c: char| c == ' ' || c == '%' || c == '(')(input)?;
     let (input, synced_blocks) = map_res(recognize(digit1), str::parse)(input)?;
-    let (input, _) = take_while(|c: char| c.is_digit(10) || c == '/')(input)?;
+    let (input, _) = take_while(|c: char| c.is_ascii_digit() || c == '/')(input)?;
     let (input, _) = tag(") finish=")(input)?;
     let (input, finish) = double(input)?;
     let (input, _) = tag("min speed=")(input)?;

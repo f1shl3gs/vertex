@@ -1,4 +1,5 @@
 use std::collections::{btree_map, BTreeMap};
+use std::fmt::Write;
 use std::iter;
 
 use serde::{Serialize, Serializer};
@@ -86,7 +87,7 @@ impl<'a> FieldsIter<'a> {
                         res.push_str(key);
                     }
                 }
-                Some(PathComponent::Index(index)) => res.push_str(&format!("[{}]", index)),
+                Some(PathComponent::Index(index)) => write!(&mut res, "[{}]", index).unwrap(),
             }
 
             if let Some(PathComponent::Key(_)) = path_iter.peek() {

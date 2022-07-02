@@ -596,9 +596,7 @@ fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::i
             continue;
         }
 
-        let mut fields = line.splitn(2, ':');
-        let key = fields.next().unwrap();
-        let value = fields.next().unwrap();
+        let (key, value) = line.split_once(':').unwrap();
 
         kvs.insert(key.to_string(), value.to_string());
         if key == "master_host" {
@@ -1112,10 +1110,10 @@ mod integration_tests {
             let key = format!("key_{}", i).to_redis_args();
             let value = format!("value_{}", i).to_redis_args();
 
-            let _resp: () = redis::cmd("SET")
+            redis::cmd("SET")
                 .arg(key)
                 .arg(value)
-                .query_async(conn)
+                .query_async::<C, ()>(conn)
                 .await
                 .unwrap();
         }

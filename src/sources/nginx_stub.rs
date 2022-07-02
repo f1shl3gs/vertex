@@ -272,7 +272,7 @@ struct NginxStubStatus {
 
 fn get_u64(input: &str) -> nom::IResult<&str, u64, nom::error::Error<&str>> {
     map_res(
-        take_while_m_n(1, 20, |c: char| c.is_digit(10)),
+        take_while_m_n(1, 20, |c: char| c.is_ascii_digit()),
         |s: &str| s.parse::<u64>(),
     )(input)
 }
