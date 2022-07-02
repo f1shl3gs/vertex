@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656745230959,
+  "lastUpdate": 1656745293292,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8343,6 +8343,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1228300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "38d143a0a9db83cff1afb0517776d5d297bd1321",
+          "message": "Merge pull request #406 from f1shl3gs/rust_1.62.0\n\nbump to rust 1.62.0",
+          "timestamp": "2022-07-02T14:54:20+08:00",
+          "tree_id": "75cb3fc717f939be2ae0c4fe0184efbf1f53a082",
+          "url": "https://github.com/f1shl3gs/vertex/commit/38d143a0a9db83cff1afb0517776d5d297bd1321"
+        },
+        "date": 1656745290256,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1121500,
             "unit": "ns/op"
           }
         ]
