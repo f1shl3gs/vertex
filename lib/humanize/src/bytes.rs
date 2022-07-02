@@ -57,7 +57,7 @@ pub fn parse_bytes(s: &str) -> Result<usize, ParseBytesError> {
     let mut has_comma = false;
 
     for c in s.chars() {
-        if !(c.is_digit(10) || c == '.' || c == ',') {
+        if !(c.is_ascii_digit() || c == '.' || c == ',') {
             break;
         }
 

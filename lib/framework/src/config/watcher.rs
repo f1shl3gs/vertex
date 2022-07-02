@@ -129,7 +129,7 @@ mod tests {
         let filepath = temp_file();
         let mut file = File::create(&filepath).unwrap();
 
-        let _ = spawn_thread(&[filepath.parent().unwrap().to_path_buf()], delay).unwrap();
+        spawn_thread(&[filepath.parent().unwrap().to_path_buf()], delay).unwrap();
 
         assert!(test(&mut file, delay * 5).await)
     }
@@ -140,7 +140,7 @@ mod tests {
         let filepath = temp_file();
         let mut file = File::create(&filepath).unwrap();
 
-        let _ = spawn_thread(&[filepath], delay).unwrap();
+        spawn_thread(&[filepath], delay).unwrap();
 
         assert!(test(&mut file, delay * 5).await)
     }
@@ -153,7 +153,7 @@ mod tests {
         let mut file = File::create(&filepath).unwrap();
         std::os::unix::fs::symlink(&filepath, &sym_file).unwrap();
 
-        let _ = spawn_thread(&[sym_file], delay).unwrap();
+        spawn_thread(&[sym_file], delay).unwrap();
 
         assert!(test(&mut file, delay * 5).await);
     }

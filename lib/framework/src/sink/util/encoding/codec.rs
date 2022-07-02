@@ -161,7 +161,7 @@ where
     }
 
     let mut tracked = Tracked { count: 0, inner };
-    let _ = f(&mut tracked, input).map_err(|err| err.into())?;
+    f(&mut tracked, input).map_err(|err| err.into())?;
     Ok(tracked.count)
 }
 

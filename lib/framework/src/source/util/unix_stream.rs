@@ -105,6 +105,7 @@ pub fn build_unix_stream_source(
         }
 
         // Cleanup
+        #[allow(clippy::drop_non_drop)]
         drop(stream);
 
         // TODO:
