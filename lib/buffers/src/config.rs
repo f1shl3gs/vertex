@@ -316,6 +316,6 @@ impl BufferConfig {
             stage.add_to_builder(&mut builder, data_dir.clone(), buffer_id.clone())?;
         }
 
-        builder.build(span).await
+        builder.build(span).await.map_err(Into::into)
     }
 }

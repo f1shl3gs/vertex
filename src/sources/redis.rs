@@ -11,7 +11,7 @@ use framework::Source;
 use futures::StreamExt;
 use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 use tokio_stream::wrappers::IntervalStream;
 use typetag::once_cell;
 
@@ -200,55 +200,45 @@ static COUNTER_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|
     m
 });
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum ParseError {
-    #[snafu(display("Parse integer failed, {}", source))]
-    Int { source: std::num::ParseIntError },
+    #[error("Parse integer failed, {0}")]
+    Integer(#[from] std::num::ParseIntError),
 
-    #[snafu(display("Parse float failed, {}", source))]
-    Float { source: std::num::ParseFloatError },
+    #[error("Parse float failed, {0}")]
+    Float(#[from] std::num::ParseFloatError),
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum Error {
-    #[snafu(display("Invalid data: {}", desc))]
-    InvalidData { desc: String },
+    #[error("Invalid data: {0}")]
+    InvalidData(String),
 
-    #[snafu(display("Invalid slave line"))]
+    #[error("Invalid slave line")]
     InvalidSlaveLine,
 
-    #[snafu(display("Invalid command stats"))]
+    #[error("Invalid command stats")]
     InvalidCommandStats,
 
-    #[snafu(display("Invalid keyspace line"))]
+    #[error("Invalid keyspace line")]
     InvalidKeyspaceLine,
 
-    #[snafu(display("Redis error: {}", source))]
-    Redis { source: redis::RedisError },
+    #[error("Redis error: {0}")]
+    Redis(#[from] redis::RedisError),
 
-    #[snafu(display("Parse error: {}", source))]
-    Parse { source: ParseError },
-}
-
-impl From<redis::RedisError> for Error {
-    fn from(source: redis::RedisError) -> Self {
-        Self::Redis { source }
-    }
+    #[error("Parse error: {0}")]
+    Parse(ParseError),
 }
 
 impl From<std::num::ParseIntError> for Error {
-    fn from(source: std::num::ParseIntError) -> Self {
-        Self::Parse {
-            source: ParseError::Int { source },
-        }
+    fn from(err: std::num::ParseIntError) -> Self {
+        Self::Parse(ParseError::Integer(err))
     }
 }
 
 impl From<std::num::ParseFloatError> for Error {
-    fn from(source: std::num::ParseFloatError) -> Self {
-        Self::Parse {
-            source: ParseError::Float { source },
-        }
+    fn from(err: std::num::ParseFloatError) -> Self {
+        Self::Parse(ParseError::Float(err))
     }
 }
 
@@ -1043,9 +1033,7 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         .await?;
 
     if resp.len() % 2 != 0 {
-        return Err(Error::InvalidData {
-            desc: "config response".to_string(),
-        });
+        return Err(Error::InvalidData("config response".to_string()));
     }
 
     for pos in 0..resp.len() / 2 {
@@ -1053,9 +1041,9 @@ async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<
         let value = resp[2 * pos + 1].as_str();
 
         if key == "databases" {
-            return value.parse().map_err(|_err| Error::InvalidData {
-                desc: value.to_string(),
-            });
+            return value
+                .parse()
+                .map_err(|_err| Error::InvalidData(value.to_string()));
         }
     }
 

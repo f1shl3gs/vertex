@@ -11,7 +11,7 @@ use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use snafu::Snafu;
+use thiserror::Error;
 
 static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap());
 
@@ -22,16 +22,16 @@ pub struct Template {
     has_fields: bool,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Snafu)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Error)]
 pub enum TemplateParseError {
-    #[snafu(display("Invalid strftime item"))]
+    #[error("Invalid strftime item")]
     StrftimeError,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Snafu)]
+#[derive(Clone, Debug, Eq, PartialEq, Error)]
 pub enum TemplateRenderingError {
-    #[snafu(display("Missing fields on event: {:?}", missing_keys))]
-    MissingKeys { missing_keys: Vec<String> },
+    #[error("Missing fields on event: {0:?}")]
+    MissingKeys(Vec<String>),
 }
 
 impl TryFrom<&str> for Template {
@@ -166,7 +166,7 @@ fn render_fields<'a>(src: &str, event: EventRef<'a>) -> Result<String, TemplateR
     if missing_keys.is_empty() {
         Ok(out)
     } else {
-        Err(TemplateRenderingError::MissingKeys { missing_keys })
+        Err(TemplateRenderingError::MissingKeys(missing_keys))
     }
 }
 
@@ -316,9 +316,10 @@ mod tests {
         let template = Template::try_from("{{log_stream}}-{{foo}}").unwrap();
 
         assert_eq!(
-            Err(TemplateRenderingError::MissingKeys {
-                missing_keys: vec!["log_stream".to_string(), "foo".to_string()]
-            }),
+            Err(TemplateRenderingError::MissingKeys(vec![
+                "log_stream".to_string(),
+                "foo".to_string()
+            ])),
             template.render(&event)
         )
     }
@@ -450,9 +451,9 @@ mod tests {
         let template = Template::try_from("name={{name}} component={{tags.component}}").unwrap();
 
         assert_eq!(
-            Err(TemplateRenderingError::MissingKeys {
-                missing_keys: vec!["tags.component".to_string()]
-            }),
+            Err(TemplateRenderingError::MissingKeys(vec![
+                "tags.component".to_string()
+            ])),
             template.render(&sample_metric())
         );
     }

@@ -47,9 +47,7 @@ where
         inventory::iter::<ProviderDescription>
             .into_iter()
             .find(|t| t.type_str == type_str)
-            .ok_or_else(|| ExampleError::DoesNotExist {
-                type_str: type_str.to_owned(),
-            })
+            .ok_or_else(|| ExampleError::DoesNotExist(type_str.to_owned()))
             .map(|t| t.example.clone())
     }
 }

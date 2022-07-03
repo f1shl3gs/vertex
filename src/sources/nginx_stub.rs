@@ -20,7 +20,7 @@ use nom::{
     sequence::{preceded, terminated, tuple},
 };
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -116,16 +116,16 @@ impl SourceConfig for NginxStubConfig {
     }
 }
 
-#[derive(Debug, Snafu)]
-enum NginxBuildError {
-    #[snafu(display("Failed to parse endpoint: {}", source))]
-    HostInvalidUri { source: http::uri::InvalidUri },
+#[derive(Debug, Error)]
+enum BuildError {
+    #[error("Failed to parse endpoint: {0}")]
+    HostInvalidUri(http::uri::InvalidUri),
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum NginxError {
-    #[snafu(display("Invalid response status: {}", status))]
-    InvalidResponseStatus { status: StatusCode },
+    #[error("Invalid response status: {0}")]
+    InvalidResponseStatus(StatusCode),
 }
 
 #[derive(Debug)]
@@ -151,7 +151,7 @@ impl NginxStub {
     }
 
     fn get_endpoint_host(endpoint: &str) -> crate::Result<String> {
-        let uri: Uri = endpoint.parse().context(HostInvalidUriSnafu)?;
+        let uri: Uri = endpoint.parse().map_err(BuildError::HostInvalidUri)?;
 
         let host = match (uri.host().unwrap_or(""), uri.port()) {
             (host, None) => host.to_owned(),
@@ -248,15 +248,15 @@ impl NginxStub {
         let (parts, body) = resp.into_parts();
         match parts.status {
             StatusCode::OK => hyper::body::to_bytes(body).err_into().await,
-            status => Err(Box::new(NginxError::InvalidResponseStatus { status })),
+            status => Err(Box::new(NginxError::InvalidResponseStatus(status))),
         }
     }
 }
 
-#[derive(Debug, Snafu, PartialEq)]
+#[derive(Debug, Error, PartialEq)]
 enum ParseError {
-    #[snafu(display("failed to parse nginx stub status, kind: {:?}", kind))]
-    NginxStubStatusParseError { kind: ErrorKind },
+    #[error("failed to parse nginx stub status, kind: {0:?}")]
+    NginxStubStatusParseError(ErrorKind),
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -307,9 +307,7 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
             }
 
             Err(err) => match err {
-                nom::Err::Error(err) => {
-                    Err(ParseError::NginxStubStatusParseError { kind: err.code })
-                }
+                nom::Err::Error(err) => Err(ParseError::NginxStubStatusParseError(err.code)),
 
                 nom::Err::Incomplete(_) | nom::Err::Failure(_) => unreachable!(),
             },

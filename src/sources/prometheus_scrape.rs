@@ -19,7 +19,6 @@ use futures::{FutureExt, StreamExt};
 use http::{StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
 use serde::{Deserialize, Serialize};
-use snafu::ResultExt;
 use tokio_stream::wrappers::IntervalStream;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -85,7 +84,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             .iter()
             .map(|s| {
                 s.parse::<http::Uri>()
-                    .context(crate::sources::UriParseSnafu)
+                    .map_err(crate::sources::BuildError::UriParseError)
             })
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
         let tls = MaybeTlsSettings::from_config(&self.tls, true)?;

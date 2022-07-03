@@ -47,7 +47,10 @@ where
     /// errors may be expected and considered normal by design.  For all I/O errors that are
     /// considered atypical, they will be returned as this variant.
     #[error("write I/O error: {err}")]
-    Io { err: io::Error },
+    Io {
+        #[from]
+        err: io::Error,
+    },
 
     /// The record attempting to be written was too large.
     ///
@@ -69,30 +72,12 @@ where
     #[error("data file full or record would exceed max data file size")]
     DataFileFull { record: T, serialized_size: usize },
 
-    /// A record reported that it contained more events than the number of bytes when encoded.
-    ///
-    /// This is nonsensicial because we don't intend to ever support encoding zero-sized types
-    /// through the buffer, and the logic we use to count the number of actual events in the buffer
-    /// transitively depends on not being able to represent more than one event per encoded byte.
-    ///
-    /// See lemma 4 for more information.
-    #[error(
-        "record reported event count ({encoded_len}) higher than encoded length ({event_count})"
-    )]
-    NonsensicalEventCount {
-        encoded_len: usize,
-        event_count: usize,
-    },
-
     /// The encoder encountered an issue during encoding.
     ///
     /// For common encoders, failure to write all of the bytes of the input will be the most common
     /// error, and in fact, some some encoders, it's the only possible error that can occur.
-    #[error("failed to encode record: {source}")]
-    FailedToEncode {
-        #[from]
-        source: <T as Encodable>::EncodeError,
-    },
+    #[error("failed to encode record: {err}")]
+    FailedToEncode { err: <T as Encodable>::EncodeError },
 
     /// The writer failed to serialize the record.
     ///
@@ -152,16 +137,6 @@ impl<T: Bufferable + PartialEq> PartialEq for WriterError<T> {
                     serialized_size: r_serialized_size,
                 },
             ) => l_record == r_record && l_serialized_size == r_serialized_size,
-            (
-                Self::NonsensicalEventCount {
-                    encoded_len: l_encoded_len,
-                    event_count: l_event_count,
-                },
-                Self::NonsensicalEventCount {
-                    encoded_len: r_encoded_len,
-                    event_count: r_event_count,
-                },
-            ) => l_encoded_len == r_encoded_len && l_event_count == r_event_count,
             (
                 Self::FailedToSerialize { reason: l_reason },
                 Self::FailedToSerialize { reason: r_reason },
@@ -423,7 +398,9 @@ where
             let mut encode_buf = (&mut self.encode_buf).limit(self.max_record_size);
             record.encode(&mut encode_buf)
         };
-        let encoded_len = encode_result.map(|_| self.encode_buf.len())?;
+        let encoded_len = encode_result
+            .map(|_| self.encode_buf.len())
+            .map_err(|err| WriterError::FailedToEncode { err })?;
         if encoded_len > self.max_record_size {
             return Err(WriterError::RecordTooLarge {
                 limit: self.max_record_size,

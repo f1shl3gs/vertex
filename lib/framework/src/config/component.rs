@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use snafu::Snafu;
+use thiserror::Error;
 
 fn with_prefix(prefix: &str, content: &str) -> String {
     content
@@ -47,12 +47,12 @@ macro_rules! register_source_config {
     };
 }
 
-#[derive(Debug, Snafu, Clone, PartialEq)]
+#[derive(Debug, Error, Clone, PartialEq)]
 pub enum ExampleError {
-    #[snafu(display("unable to create an example for this component"))]
+    #[error("unable to create an example for this component")]
     MissingExample,
-    #[snafu(display("type '{}' does not exist", type_str))]
-    DoesNotExist { type_str: String },
+    #[error("type '{0}' does not exist")]
+    DoesNotExist(String),
 }
 
 /// Describes a component plugin storing its type name, an example config,
@@ -84,9 +84,7 @@ where
         inventory::iter::<ComponentDescription<T>>
             .into_iter()
             .find(|t| t.type_str == type_str)
-            .ok_or_else(|| ExampleError::DoesNotExist {
-                type_str: type_str.to_string(),
-            })
+            .ok_or_else(|| ExampleError::DoesNotExist(type_str.to_string()))
             .and_then(|t| (t.example)().ok_or(ExampleError::MissingExample))
     }
 

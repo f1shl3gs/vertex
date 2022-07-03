@@ -11,15 +11,13 @@ use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 use std::time::{Duration, Instant};
 
+use event::Event;
 use futures::FutureExt;
 use futures_util::future::BoxFuture;
 use futures_util::{stream, SinkExt};
 use rand::{thread_rng, Rng};
 use rand_distr::Exp1;
-
-use event::Event;
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
 use testify::stats::{HistogramStats, LevelTimeHistogram, TimeHistogram, WeightedSumStats};
 use tokio::sync::oneshot;
 use tokio::time;
@@ -289,8 +287,9 @@ fn respond_after(
     })
 }
 
-#[derive(Clone, Copy, Debug, Snafu)]
+#[derive(Clone, Copy, Debug, thiserror::Error)]
 enum Error {
+    #[error("deferred")]
     Deferred,
 }
 

@@ -17,7 +17,7 @@ use futures_util::stream;
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 use tracing::{error, info};
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -254,9 +254,9 @@ impl MockSinkConfig {
     }
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum HealthcheckError {
-    #[snafu(display("unhealthy"))]
+    #[error("unhealthy")]
     Unhealthy,
 }
 

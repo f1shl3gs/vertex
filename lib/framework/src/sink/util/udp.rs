@@ -11,27 +11,27 @@ use bytes::{Bytes, BytesMut};
 use event::{Event, EventContainer, Events};
 use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::{net::UdpSocket, sync::oneshot, time::sleep};
 
 use super::retries::ExponentialBackoff;
 use super::SinkBuildError;
 use crate::{config::SinkContext, dns, udp, Healthcheck, Sink, StreamSink};
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum UdpError {
-    #[snafu(display("Failed to create UDP listener socket, error = {:?}.", source))]
-    BindError { source: std::io::Error },
-    #[snafu(display("Send error: {}", source))]
-    SendError { source: std::io::Error },
-    #[snafu(display("Connect error: {}", source))]
-    ConnectError { source: std::io::Error },
-    #[snafu(display("No addresses returned."))]
+    #[error("Failed to create UDP listener socket, error = {0:?}.")]
+    Bind(std::io::Error),
+    #[error("Send error: {0}")]
+    Send(std::io::Error),
+    #[error("Connect error: {0}")]
+    Connect(std::io::Error),
+    #[error("No addresses returned.")]
     NoAddresses,
-    #[snafu(display("Unable to resolve DNS: {}", source))]
-    DnsError { source: crate::dns::DnsError },
-    #[snafu(display("Failed to get UdpSocket back: {}", source))]
-    ServiceChannelRecvError { source: oneshot::error::RecvError },
+    #[error("Unable to resolve DNS: {0}")]
+    Dns(#[from] dns::DnsError),
+    #[error("Failed to get UdpSocket back: {0}")]
+    ServiceChannelRecv(#[from] oneshot::error::RecvError),
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -104,15 +104,16 @@ impl UdpConnector {
     async fn connect(&self) -> Result<UdpSocket, UdpError> {
         let ip = dns::Resolver
             .lookup_ip(self.host.clone())
-            .await
-            .context(DnsSnafu)?
+            .await?
             .next()
             .ok_or(UdpError::NoAddresses)?;
 
         let addr = SocketAddr::new(ip, self.port);
         let bind_address = find_bind_address(&addr);
 
-        let socket = UdpSocket::bind(bind_address).await.context(BindSnafu)?;
+        let socket = UdpSocket::bind(bind_address)
+            .await
+            .map_err(UdpError::Bind)?;
 
         if let Some(send_buffer_bytes) = self.send_buffer_bytes {
             if let Err(err) = udp::set_send_buffer_size(&socket, send_buffer_bytes) {
@@ -120,7 +121,7 @@ impl UdpConnector {
             }
         }
 
-        socket.connect(addr).await.context(ConnectSnafu)?;
+        socket.connect(addr).await.map_err(UdpError::Connect)?;
 
         Ok(socket)
     }
@@ -192,9 +193,9 @@ impl tower::Service<BytesMut> for UdpService {
                 }
                 UdpServiceState::Connected(_) => break,
                 UdpServiceState::Sending(fut) => {
-                    let socket = match ready!(fut.poll_unpin(cx)).context(ServiceChannelRecvSnafu) {
+                    let socket = match ready!(fut.poll_unpin(cx)) {
                         Ok(socket) => socket,
-                        Err(err) => return Poll::Ready(Err(err)),
+                        Err(err) => return Poll::Ready(Err(err.into())),
                     };
                     UdpServiceState::Connected(socket)
                 }
@@ -214,7 +215,7 @@ impl tower::Service<BytesMut> for UdpService {
 
         Box::pin(async move {
             // TODO: Add reconnect support as TCP/Unix?
-            let result = udp_send(&mut socket, &msg).await.context(SendSnafu);
+            let result = udp_send(&mut socket, &msg).await.map_err(UdpError::Send);
             let _ = sender.send(socket);
             result
         })

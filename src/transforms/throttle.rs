@@ -14,7 +14,7 @@ use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use governor::{clock, Quota, RateLimiter};
 use serde::{Deserialize, Serialize};
-use snafu::{OptionExt, Snafu};
+use thiserror::Error;
 
 const fn default_window() -> Duration {
     Duration::from_secs(1)
@@ -89,9 +89,9 @@ impl TransformConfig for ThrottleConfig {
     }
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum BuildError {
-    #[snafu(display("`rate` must e non-zero"))]
+    #[error("`rate` must e non-zero")]
     NonZero,
 }
 
@@ -115,12 +115,12 @@ where
         key_field: Option<Template>,
     ) -> crate::Result<Self> {
         let flush_keys_interval = window;
-        let threshold = NonZeroU32::new(threshold).context(NonZeroSnafu)?;
+        let threshold = NonZeroU32::new(threshold).ok_or(BuildError::NonZero)?;
 
         let quota = Quota::with_period(Duration::from_secs_f64(
             window.as_secs_f64() / threshold.get() as f64,
         ))
-        .context(NonZeroSnafu)?
+        .ok_or(BuildError::NonZero)?
         .allow_burst(threshold);
 
         let throttle = Throttle {

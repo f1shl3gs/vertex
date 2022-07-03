@@ -667,9 +667,7 @@ impl WriterModel {
             // front end is more about providing an informative error, but the writer can't really
             // do anything different if they get "failed to encode" vs "record too large".
             if record.len() > self.ledger.config().max_record_size {
-                return Progress::WriteError(WriterError::FailedToEncode {
-                    source: EncodeError,
-                });
+                return Progress::WriteError(WriterError::FailedToEncode { err: EncodeError });
             }
 
             // Write the record in the same way that the buffer would, which is the only way we can

@@ -16,7 +16,7 @@ use hyper_openssl::HttpsConnector;
 use hyper_proxy::ProxyConnector;
 use metrics::{exponential_buckets, Attributes};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tower::Service;
 use tracing_futures::Instrument;
 
@@ -26,19 +26,18 @@ use crate::{
     tls::{tls_connector_builder, MaybeTlsSettings, TlsError},
 };
 
-#[derive(Debug, Snafu)]
-#[snafu(visibility(pub(crate)))]
+#[derive(Debug, Error)]
 pub enum HttpError {
-    #[snafu(display("Failed to build TLS connector: {}", source))]
-    BuildTlsConnector { source: TlsError },
-    #[snafu(display("Failed to build HTTPS connector: {}", source))]
-    MakeHttpsConnector { source: openssl::error::ErrorStack },
-    #[snafu(display("Failed to build Proxy connector: {}", source))]
-    MakeProxyConnector { source: InvalidUri },
-    #[snafu(display("Failed to make HTTP(S) request: {}", source))]
-    CallRequest { source: hyper::Error },
-    #[snafu(display("Failed to build HTTP request: {}", source))]
-    BuildRequest { source: http::Error },
+    #[error("Failed to build TLS connector: {0}")]
+    BuildTlsConnector(#[from] TlsError),
+    #[error("Failed to build HTTPS connector: {0}")]
+    MakeHttpsConnector(#[from] openssl::error::ErrorStack),
+    #[error("Failed to build Proxy connector: {0}")]
+    MakeProxyConnector(#[from] InvalidUri),
+    #[error("Failed to make HTTP(S) request: {0}")]
+    CallRequest(#[from] hyper::Error),
+    #[error("Failed to build HTTP request: {0}")]
+    BuildRequest(http::Error),
 }
 
 pub type HttpClientFuture = <HttpClient as Service<http::Request<Body>>>::Future;
@@ -70,9 +69,8 @@ where
         http.enforce_http(false);
 
         let settings = tls_settings.into();
-        let tls = tls_connector_builder(&settings).context(BuildTlsConnectorSnafu)?;
-        let mut https =
-            HttpsConnector::with_connector(http, tls).context(MakeHttpsConnectorSnafu)?;
+        let tls = tls_connector_builder(&settings)?;
+        let mut https = HttpsConnector::with_connector(http, tls)?;
 
         let settings = settings.tls().cloned();
         https.set_callback(move |c, _uri| {
@@ -84,9 +82,7 @@ where
         });
 
         let mut proxy = ProxyConnector::new(https).unwrap();
-        proxy_config
-            .configure(&mut proxy)
-            .context(MakeProxyConnectorSnafu)?;
+        proxy_config.configure(&mut proxy)?;
         let client = client_builder.build(proxy);
 
         let version = crate::get_version();
@@ -120,30 +116,28 @@ where
             let roundtrip = before.elapsed();
 
             // Handle the errors and extract the response.
-            let resp = resp_result
-                .map_err(|error| {
-                    debug!(
-                        message = "HTTP error",
-                        err = %error,
-                    );
+            let resp = resp_result.map_err(|err| {
+                debug!(
+                    message = "HTTP error",
+                    %err,
+                );
 
-                    metrics::register_counter(
-                        "http_client_request_errors_total",
-                        "The total number of HTTP request errors for this component.",
-                    )
-                    .recorder([("error", Cow::from(error.to_string()))])
-                    .inc(1);
-                    metrics::register_histogram(
-                        "http_client_request_rtt_seconds",
-                        "The round-trip time (RTT) of HTTP requests",
-                        exponential_buckets(0.01, 2.0, 10),
-                    )
-                    .recorder(&[("status", "none")])
-                    .record(roundtrip.as_secs_f64());
+                metrics::register_counter(
+                    "http_client_request_errors_total",
+                    "The total number of HTTP request errors for this component.",
+                )
+                .recorder([("error", Cow::from(err.to_string()))])
+                .inc(1);
+                metrics::register_histogram(
+                    "http_client_request_rtt_seconds",
+                    "The round-trip time (RTT) of HTTP requests",
+                    exponential_buckets(0.01, 2.0, 10),
+                )
+                .recorder(&[("status", "none")])
+                .record(roundtrip.as_secs_f64());
 
-                    error
-                })
-                .context(CallRequestSnafu)?;
+                err
+            })?;
 
             debug!(
                 message = "HTTP response received",

@@ -6,7 +6,6 @@ use std::task::{Context, Poll};
 
 use futures::{future::BoxFuture, stream, FutureExt, Stream};
 use openssl::ssl::{Ssl, SslAcceptor, SslMethod};
-use snafu::ResultExt;
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use tokio::{
     io::{self, AsyncRead, AsyncWrite, ReadBuf},
@@ -14,10 +13,7 @@ use tokio::{
 };
 use tokio_openssl::SslStream;
 
-use super::{
-    CreateAcceptorSnafu, HandshakeSnafu, IncomingListenerSnafu, MaybeTlsSettings, MaybeTlsStream,
-    SslBuildSnafu, TcpBindSnafu, TlsError, TlsSettings,
-};
+use super::{MaybeTlsSettings, MaybeTlsStream, TlsError, TlsSettings};
 #[cfg(feature = "sources-utils-tcp-socket")]
 use crate::tcp;
 #[cfg(feature = "sources-utils-tcp-keepalive")]
@@ -29,7 +25,7 @@ impl TlsSettings {
             None => Err(TlsError::MissingRequiredIdentity),
             Some(_) => {
                 let mut acceptor = SslAcceptor::mozilla_intermediate(SslMethod::tls())
-                    .context(CreateAcceptorSnafu)?;
+                    .map_err(TlsError::CreateAcceptor)?;
                 self.apply_context(&mut acceptor)?;
                 Ok(acceptor.build())
             }
@@ -39,7 +35,7 @@ impl TlsSettings {
 
 impl MaybeTlsSettings {
     pub async fn bind(&self, addr: &SocketAddr) -> crate::tls::Result<MaybeTlsListener> {
-        let listener = TcpListener::bind(addr).await.context(TcpBindSnafu)?;
+        let listener = TcpListener::bind(addr).await.map_err(TlsError::TcpBind)?;
 
         let acceptor = match self {
             Self::Tls(tls) => Some(tls.acceptor()?),
@@ -63,7 +59,7 @@ impl MaybeTlsListener {
             .map(|(stream, peer_addr)| {
                 MaybeTlsIncomingStream::new(stream, peer_addr, self.acceptor.clone())
             })
-            .context(IncomingListenerSnafu)
+            .map_err(TlsError::IncomingListener)
     }
 
     async fn into_accept(
@@ -223,12 +219,12 @@ impl MaybeTlsIncomingStream<TcpStream> {
         let state = match acceptor {
             Some(acceptor) => StreamState::Accepting(
                 async move {
-                    let ssl = Ssl::new(acceptor.context()).context(SslBuildSnafu)?;
-                    let mut stream = SslStream::new(ssl, stream).context(SslBuildSnafu)?;
+                    let ssl = Ssl::new(acceptor.context()).map_err(TlsError::SslBuild)?;
+                    let mut stream = SslStream::new(ssl, stream).map_err(TlsError::SslBuild)?;
                     Pin::new(&mut stream)
                         .accept()
                         .await
-                        .context(HandshakeSnafu)?;
+                        .map_err(TlsError::Handshake)?;
                     Ok(stream)
                 }
                 .boxed(),

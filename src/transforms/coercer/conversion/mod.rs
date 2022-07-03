@@ -7,7 +7,7 @@ use std::num::{ParseFloatError, ParseIntError};
 use bytes::Bytes;
 use chrono::{DateTime, TimeZone as _, Utc};
 use framework::timezone::{datetime_to_utc, TimeZone};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 
 /// `Conversion` is a place-holder for a type conversion operation, to convert
 /// from a plain `Bytes` into another type. The inner type of every `Value`
@@ -23,24 +23,21 @@ pub enum Conversion {
     TimestampTzFmt(String),
 }
 
-#[derive(Debug, Eq, PartialEq, Snafu)]
+#[derive(Debug, Eq, PartialEq, Error)]
 pub enum Error {
-    #[snafu(display("Unknown conversion name {:?}", name))]
-    UnknownConversion { name: String },
+    #[error("Unknown conversion name {0:?}")]
+    UnknownConversion(String),
 
-    #[snafu(display("Invalid boolean value {:?}", s))]
-    BooleanParse { s: String },
-    #[snafu(display("Invalid integer {:?}: {}", s, source))]
-    IntegerParse { s: String, source: ParseIntError },
-    #[snafu(display("Invalid float {:?}: {}", s, source))]
-    FloatParse { s: String, source: ParseFloatError },
-    #[snafu(display("Invalid timestamp {:?}: {}", s, source))]
-    TimestampParse {
-        s: String,
-        source: chrono::ParseError,
-    },
-    #[snafu(display("No matching timestamp format found for {:?}", s))]
-    AutoTimestampParse { s: String },
+    #[error("Invalid boolean value {0:?}")]
+    BooleanParse(String),
+    #[error("Invalid integer {s}: {err}")]
+    IntegerParse { s: String, err: ParseIntError },
+    #[error("Invalid float {s}: {err}")]
+    FloatParse { s: String, err: ParseFloatError },
+    #[error("Invalid timestamp {s:?}: {err}")]
+    TimestampParse { s: String, err: chrono::ParseError },
+    #[error("No matching timestamp format found for {0:?}")]
+    AutoTimestampParse(String),
 }
 
 /// Helper function to parse a mapping of conversion descriptions into actual
@@ -83,7 +80,7 @@ impl Conversion {
                     Ok(Self::TimestampFmt(fmt.into(), tz))
                 }
             }
-            _ => Err(Error::UnknownConversion { name: s.into() }),
+            _ => Err(Error::UnknownConversion(s.into())),
         }
     }
 
@@ -97,13 +94,19 @@ impl Conversion {
             Self::Integer => {
                 let s = String::from_utf8_lossy(&bytes);
                 s.parse::<i64>()
-                    .with_context(|_| IntegerParseSnafu { s })?
+                    .map_err(|err| Error::IntegerParse {
+                        s: s.to_string(),
+                        err,
+                    })?
                     .into()
             }
             Self::Float => {
                 let s = String::from_utf8_lossy(&bytes);
                 s.parse::<f64>()
-                    .with_context(|_| FloatParseSnafu { s: s.clone() })?
+                    .map_err(|err| Error::FloatParse {
+                        s: s.to_string(),
+                        err,
+                    })?
                     .into()
             }
             Self::Boolean => parse_bool(&String::from_utf8_lossy(&bytes))?.into(),
@@ -112,14 +115,20 @@ impl Conversion {
                 let s = String::from_utf8_lossy(&bytes);
                 let dt = tz
                     .datetime_from_str(&s, format)
-                    .context(TimestampParseSnafu { s })?;
+                    .map_err(|err| Error::TimestampParse {
+                        s: s.to_string(),
+                        err,
+                    })?;
 
                 datetime_to_utc(&dt).into()
             }
             Self::TimestampTzFmt(format) => {
                 let s = String::from_utf8_lossy(&bytes);
-                let dt = DateTime::parse_from_str(&s, format)
-                    .with_context(|_| TimestampParseSnafu { s })?;
+                let dt =
+                    DateTime::parse_from_str(&s, format).map_err(|err| Error::TimestampParse {
+                        s: s.to_string(),
+                        err,
+                    })?;
 
                 datetime_to_utc(&dt).into()
             }
@@ -150,7 +159,7 @@ fn parse_bool(s: &str) -> Result<bool, Error> {
                 match s.to_lowercase().as_str() {
                     "true" | "t" | "yes" | "y" | "on" => Ok(true),
                     "false" | "f" | "no" | "n" | "off" => Ok(false),
-                    _ => Err(Error::BooleanParse { s: s.into() }),
+                    _ => Err(Error::BooleanParse(s.into())),
                 }
             }
         }
@@ -221,5 +230,5 @@ fn parse_timestamp(tz: TimeZone, s: &str) -> Result<DateTime<Utc>, Error> {
         }
     }
 
-    Err(Error::AutoTimestampParse { s: s.into() })
+    Err(Error::AutoTimestampParse(s.into()))
 }

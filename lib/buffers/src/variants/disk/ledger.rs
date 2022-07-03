@@ -31,10 +31,10 @@ pub enum LedgerLoadCreateError {
     /// ledger file has been corrupted or altered in some way outside of this process.  As the
     /// ledger is fixed in size, and does not grow during the life of the process, common errors
     /// such as running out of disk space will not typically be relevant (or possible) here.
-    #[error("ledger I/O error: {source}")]
+    #[error("ledger I/O error: {err}")]
     Io {
         #[from]
-        source: io::Error,
+        err: io::Error,
     },
 
     /// The ledger is already opened by another Vector process.

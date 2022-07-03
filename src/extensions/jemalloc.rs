@@ -12,6 +12,7 @@ use humanize::{duration, parse_duration};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Response, Server, StatusCode};
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use tikv_jemalloc_ctl::{stats, Access, AsName};
 
 const OUTPUT: &str = "profile.out";
@@ -48,9 +49,7 @@ impl GenerateConfig for JemallocConfig {
     }
 }
 
-use snafu::Snafu;
-
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BuildError {
     #[snafu(display("MALLOC_CONF is not set, {}", source))]
     EnvNotSet { source: std::env::VarError },

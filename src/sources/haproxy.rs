@@ -15,7 +15,7 @@ use framework::{Error, Source};
 use futures::StreamExt;
 use http::{StatusCode, Uri};
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 
 // HAProxy 1.4
 // # pxname,svname,qcur,qmax,scur,smax,slim,stot,bin,bout,dreq,dresp,ereq,econ,eresp,wretr,wredis,status,weight,act,bck,chkfail,chkdown,lastchg,downtime,qlimit,pid,iid,sid,throttle,lbtot,tracked,type,rate,rate_lim,rate_max,check_status,check_code,check_duration,hrsp_1xx,hrsp_2xx,hrsp_3xx,hrsp_4xx,hrsp_5xx,hrsp_other,hanafail,req_rate,req_rate_max,req_tot,cli_abrt,srv_abrt,
@@ -223,13 +223,13 @@ async fn gather(
     metrics
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum ParseError {
-    #[snafu(display("row is too short"))]
+    #[error("row is too short")]
     RowTooShort,
 
-    #[snafu(display("unknown type of metrics, type: {}", typ))]
-    UnknownTypeOfMetrics { typ: String },
+    #[error("unknown type of metrics, type: {0}")]
+    UnknownTypeOfMetrics(String),
 }
 
 pub fn parse_csv(reader: impl BufRead) -> Result<Vec<Metric>, ParseError> {

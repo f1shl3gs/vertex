@@ -1,8 +1,7 @@
 use event::{tags, Metric};
-use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{Error, QuerySnafu};
+use super::MysqlError;
 
 const INNODB_CMP_QUERY: &str = r#"SELECT page_size, compress_ops, compress_ops_ok, compress_time, uncompress_ops, uncompress_time FROM information_schema.innodb_cmp"#;
 
@@ -16,11 +15,12 @@ struct Record {
     uncompress_time: i32,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     let records = sqlx::query_as::<_, Record>(INNODB_CMP_QUERY)
         .fetch_all(pool)
         .await
-        .context(QuerySnafu {
+        .map_err(|err| MysqlError::Query {
+            err,
             query: INNODB_CMP_QUERY,
         })?;
 

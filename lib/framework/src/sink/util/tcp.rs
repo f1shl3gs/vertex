@@ -13,7 +13,7 @@ use bytes::Bytes;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, task::noop_waker_ref, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::{
     io::{AsyncRead, ReadBuf},
     net::TcpStream,
@@ -24,29 +24,25 @@ use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
 use crate::config::SinkContext;
 use crate::dns;
+use crate::sink::util::{
+    retries::ExponentialBackoff,
+    socket_bytes_sink::{BytesSink, ShutdownCheck},
+};
+use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsSettings, MaybeTlsStream, TlsConfig, TlsError};
 use crate::OpenGauge;
 use crate::StreamSink;
-use crate::{
-    sink::util::{
-        retries::ExponentialBackoff,
-        socket_bytes_sink::{BytesSink, ShutdownCheck},
-    },
-    sink::VecSinkExt,
-};
 use crate::{Healthcheck, Sink};
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum TcpError {
-    #[snafu(display("Connect error: {}", source))]
-    ConnectError { source: TlsError },
-    #[snafu(display("Unable to resolve DNS: {}", source))]
-    DnsError { source: dns::DnsError },
-    #[snafu(display("No addresses returned."))]
+    #[error("Connect error: {0}")]
+    Connect(TlsError),
+    #[error("Unable to resolve DNS: {0}")]
+    ResolveDns(dns::DnsError),
+    #[error("No addresses returned.")]
     NoAddresses,
-    #[snafu(display("Send error: {}", source))]
-    SendError { source: tokio::io::Error },
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -143,7 +139,7 @@ impl TcpConnector {
         let ip = dns::Resolver
             .lookup_ip(self.host.clone())
             .await
-            .context(DnsSnafu)?
+            .map_err(TcpError::ResolveDns)?
             .next()
             .ok_or(TcpError::NoAddresses)?;
 
@@ -151,7 +147,7 @@ impl TcpConnector {
         self.tls
             .connect(&self.host, &addr)
             .await
-            .context(ConnectSnafu)
+            .map_err(TcpError::Connect)
             .map(|mut maybe_tls| {
                 if let Some(keepalive) = self.keepalive {
                     if let Err(err) = maybe_tls.set_keepalive(keepalive) {

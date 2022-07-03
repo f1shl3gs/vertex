@@ -7,12 +7,12 @@ use metrics::{Counter, Gauge};
 use rdkafka::consumer::ConsumerContext;
 use rdkafka::{ClientConfig, ClientContext, Statistics};
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum KafkaError {
-    #[snafu(display("invalid path: {:?}", path))]
-    InvalidPath { path: PathBuf },
+    #[error("invalid path: {0:?}")]
+    InvalidPath(PathBuf),
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
@@ -123,7 +123,7 @@ impl KafkaAuthConfig {
 
 pub fn pathbuf_to_string(path: &Path) -> Result<&str, Error> {
     path.to_str()
-        .ok_or_else(|| KafkaError::InvalidPath { path: path.into() }.into())
+        .ok_or_else(|| KafkaError::InvalidPath(path.into()).into())
 }
 
 pub struct KafkaStatisticsContext {

@@ -94,7 +94,6 @@ where
     /// from disk, as the checksum was also validated.
     #[error("failed to decoded record: {source:?}")]
     Decode {
-        #[from]
         source: <T as Encodable>::DecodeError,
     },
 
@@ -1097,5 +1096,5 @@ pub(crate) fn decode_record_payload<T: Bufferable>(
     }
 
     // Now we can finally try decoding.
-    T::decode(metadata, record.payload())
+    T::decode(metadata, record.payload()).map_err(|err| ReaderError::Decode { source: err })
 }

@@ -4,7 +4,7 @@ use std::time::Duration;
 
 use log_schema::LogSchema;
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 
 use crate::config::{
     default_interval, deserialize_duration, serialize_duration, skip_serializing_if_default,
@@ -12,26 +12,21 @@ use crate::config::{
 };
 use crate::timezone;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum DataDirError {
-    #[snafu(display("data_dir option required, but not given here or globally"))]
+    #[error("data_dir option required, but not given here or globally")]
     MissingDataDir,
-    #[snafu(display("data_dir {:?} does not exist", path))]
-    NotExist { path: PathBuf },
+    #[error("data_dir {0:?} does not exist")]
+    NotExist(PathBuf),
 
-    #[snafu(display("data_dir {:?} is not writable", path))]
-    NotWritable { path: PathBuf },
+    #[error("data_dir {0:?} is not writable")]
+    NotWritable(PathBuf),
 
-    #[snafu(display(
-        "could not create sub dir {:?} inside of data dir {:?}: {}",
-        subdir,
-        data_dir,
-        source
-    ))]
+    #[error("could not create sub dir {subdir:?} inside of data dir {data_dir:?}: {err}")]
     CouldNotCreate {
         subdir: PathBuf,
         data_dir: PathBuf,
-        source: std::io::Error,
+        err: std::io::Error,
     },
 }
 
@@ -97,14 +92,14 @@ impl GlobalOptions {
         let dir = data_dir.ok_or(DataDirError::MissingDataDir)?;
 
         if !dir.exists() {
-            return Err(DataDirError::NotExist { path: dir });
+            return Err(DataDirError::NotExist(dir));
         }
 
         let readonly = std::fs::metadata(&dir)
             .map(|meta| meta.permissions().readonly())
             .unwrap_or(true);
         if readonly {
-            return Err(DataDirError::NotWritable { path: dir });
+            return Err(DataDirError::NotWritable(dir));
         }
         Ok(dir)
     }
@@ -123,9 +118,10 @@ impl GlobalOptions {
         DirBuilder::new()
             .recursive(true)
             .create(&subdir)
-            .with_context(|_kind| CouldNotCreateSnafu {
+            .map_err(|err| DataDirError::CouldNotCreate {
                 subdir,
                 data_dir: root,
+                err,
             })?;
 
         Ok(rt)

@@ -1,6 +1,7 @@
 use std::task::{Context, Poll};
 use std::time::Duration;
 
+use crate::sinks::BuildError;
 use bytes::{Bytes, BytesMut};
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
@@ -19,7 +20,6 @@ use http::{StatusCode, Uri};
 use hyper::{body, Body};
 use prost::Message;
 use serde::{Deserialize, Serialize};
-use snafu::ResultExt;
 use tower::{Service, ServiceBuilder};
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -98,10 +98,7 @@ inventory::submit! {
 #[typetag::serde(name = "prometheus_remote_write")]
 impl SinkConfig for RemoteWriteConfig {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let endpoint = self
-            .endpoint
-            .parse::<Uri>()
-            .context(crate::sinks::UriParseSnafu)?;
+        let endpoint = self.endpoint.parse::<Uri>().map_err(BuildError::UriParse)?;
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
@@ -177,7 +174,7 @@ async fn healthcheck(endpoint: Uri, client: HttpClient) -> crate::Result<()> {
 
     match resp.status() {
         StatusCode::OK => Ok(()),
-        other => Err(HealthcheckError::UnexpectedStatus { status: other }.into()),
+        other => Err(HealthcheckError::UnexpectedStatus(other).into()),
     }
 }
 

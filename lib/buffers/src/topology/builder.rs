@@ -42,16 +42,13 @@ pub enum TopologyError {
     #[error(
         "stage {stage_idx} configured with block/drop newest behavior in front of subsequent stage"
     )]
-    NextStageNotUsed {
-        #[from]
-        stage_idx: usize,
-    },
+    NextStageNotUsed { stage_idx: usize },
     #[error("last stage in buffer topology cannot be set to overflow mode")]
     OverflowWhenLast,
-    #[error("failed to build individual stage {stage_idx}: {source}")]
+    #[error("failed to build individual stage {stage_idx}: {err}")]
     FailedToBuildStage {
         stage_idx: usize,
-        source: Box<dyn Error + Send + Sync>,
+        err: Box<dyn Error + Send + Sync>,
     },
     #[error(
         "multiple components with segmented acknowledgements cannot be used in the same buffer"
@@ -142,7 +139,8 @@ impl<T> TopologyBuilder<T> {
             let (sender, receiver, acker) = stage
                 .untransformed
                 .into_buffer_parts(usage_handle.clone())
-                .await?;
+                .await
+                .map_err(|err| TopologyError::FailedToBuildStage { stage_idx, err })?;
 
             // Multiple components with "segmented" acknowledgements cannot be supported at the
             // moment.  Segmented acknowledgements refers to stages which split the

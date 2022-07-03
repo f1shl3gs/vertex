@@ -5,7 +5,7 @@ use std::{
 
 use futures::{future::BoxFuture, FutureExt};
 use hyper::client::connect::dns::Name;
-use snafu::ResultExt;
+use thiserror::Error;
 use tokio::task::spawn_blocking;
 use tower::Service;
 
@@ -40,10 +40,9 @@ impl Resolver {
                 };
                 (name_ref, dummy_port).to_socket_addrs()
             })
-            .await
-            .context(JoinSnafu)?
+            .await?
             .map(LookupIp)
-            .context(UnableLookupSnafu)
+            .map_err(Into::into)
         }
     }
 }
@@ -70,12 +69,12 @@ impl Service<Name> for Resolver {
     }
 }
 
-#[derive(Debug, snafu::Snafu)]
+#[derive(Debug, Error)]
 pub enum DnsError {
-    #[snafu(display("Unable to resolve name: {}", source))]
-    UnableLookup { source: tokio::io::Error },
-    #[snafu(display("Failed to join with resolving future: {}", source))]
-    JoinError { source: tokio::task::JoinError },
+    #[error("Unable to resolve name: {0}")]
+    UnableLookup(#[from] tokio::io::Error),
+    #[error("Failed to join with resolving future: {0}")]
+    JoinError(#[from] tokio::task::JoinError),
 }
 
 #[cfg(test)]

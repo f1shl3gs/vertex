@@ -1,8 +1,7 @@
 use event::{tags, Metric};
-use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{Error, QuerySnafu};
+use super::MysqlError;
 
 const INNODB_CMP_MEMORY_QUERY: &str = r#"SELECT page_size, buffer_pool_instance, pages_used, pages_free, relocation_ops, relocation_time FROM information_schema.innodb_cmpmem"#;
 
@@ -16,12 +15,13 @@ struct Record {
     relocation_time: i32,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     let records = sqlx::query_as::<_, Record>(INNODB_CMP_MEMORY_QUERY)
         .fetch_all(pool)
         .await
-        .context(QuerySnafu {
+        .map_err(|err| MysqlError::Query {
             query: INNODB_CMP_MEMORY_QUERY,
+            err,
         })?;
 
     let mut metrics = Vec::with_capacity(records.len() * 4);

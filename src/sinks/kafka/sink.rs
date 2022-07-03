@@ -14,7 +14,7 @@ use rdkafka::consumer::{BaseConsumer, Consumer};
 use rdkafka::error::KafkaError;
 use rdkafka::producer::FutureProducer;
 use rdkafka::ClientConfig;
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tower::limit::ConcurrencyLimit;
 
 use super::config::{KafkaRole, KafkaSinkConfig, QUEUE_MIN_MESSAGES};
@@ -22,12 +22,12 @@ use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
 use crate::common::kafka::KafkaStatisticsContext;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BuildError {
-    #[snafu(display("creating kafka producer failed: {}", source))]
-    KafkaCreateFailed { source: KafkaError },
-    #[snafu(display("invalid topic template: {}", source))]
-    TopicTemplate { source: TemplateParseError },
+    #[error("creating kafka producer failed: {0}")]
+    KafkaCreateFailed(#[from] KafkaError),
+    #[error("invalid topic template: {0}")]
+    TopicTemplate(#[from] TemplateParseError),
 }
 
 pub struct KafkaSink {
@@ -41,10 +41,8 @@ pub struct KafkaSink {
 
 pub fn create_producer(
     config: ClientConfig,
-) -> crate::Result<FutureProducer<KafkaStatisticsContext>> {
-    let producer = config
-        .create_with_context(KafkaStatisticsContext::new())
-        .context(KafkaCreateFailedSnafu)?;
+) -> Result<FutureProducer<KafkaStatisticsContext>, BuildError> {
+    let producer = config.create_with_context(KafkaStatisticsContext::new())?;
     Ok(producer)
 }
 
@@ -57,7 +55,7 @@ impl KafkaSink {
             encoding: config.encoding,
             acker,
             service: KafkaService::new(producer),
-            topic: Template::try_from(config.topic).context(TopicTemplateSnafu)?,
+            topic: Template::try_from(config.topic)?,
             key_field: config.key_field,
         })
     }
@@ -86,10 +84,7 @@ pub async fn health_check(config: KafkaSinkConfig) -> crate::Result<()> {
     trace!(message = "Health check started",);
 
     let client = config.to_rdkafka(KafkaRole::Consumer).unwrap();
-    let topic = match Template::try_from(config.topic)
-        .context(TopicTemplateSnafu)?
-        .render_string(&Event::from(""))
-    {
+    let topic = match Template::try_from(config.topic)?.render_string(&Event::from("")) {
         Ok(topic) => Some(topic),
         Err(err) => {
             warn!(

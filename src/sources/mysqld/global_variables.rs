@@ -4,10 +4,9 @@ use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
 use event::{tags, Metric};
-use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{valid_name, Error, QuerySnafu};
+use super::{valid_name, MysqlError};
 
 static GLOBAL_VARIABLES_DESC: Lazy<BTreeMap<&str, &str>> = Lazy::new(|| {
     let mut map = BTreeMap::new();
@@ -233,12 +232,13 @@ struct GlobalVariable {
     value: String,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     let variables = sqlx::query_as::<_, GlobalVariable>(GLOBAL_VARIABLES_QUERY)
         .fetch_all(pool)
         .await
-        .context(QuerySnafu {
+        .map_err(|err| MysqlError::Query {
             query: GLOBAL_VARIABLES_QUERY,
+            err,
         })?;
 
     let mut metrics = vec![];
