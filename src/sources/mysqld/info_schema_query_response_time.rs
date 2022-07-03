@@ -1,10 +1,9 @@
 use event::{Bucket, Metric};
-use snafu::ResultExt;
 use sqlx;
 use sqlx::mysql::MySqlRow;
 use sqlx::{FromRow, MySqlPool, Row};
 
-use super::{Error, QuerySnafu};
+use super::MysqlError;
 
 const RESPONSE_TIME_CHECK_QUERY: &str = r#"SELECT @@query_response_time_stats"#;
 const RESPONSE_TIME_QUERY: &str =
@@ -15,7 +14,7 @@ const RESPONSE_TIME_WRITE_QUERY: &str =
     r#"SELECT TIME, COUNT, TOTAL FROM INFORMATION_SCHEMA.QUERY_RESPONSE_TIME_WRITE"#;
 
 // 5.5 is the version of MySQL from which scraper is available.
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     // This features is provided by a plugin called "QUERY_RESPONSE_TIME", and it is
     // disabled by default.
     //
@@ -36,7 +35,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
     Ok(metrics)
 }
 
-async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
+async fn check_stats(pool: &MySqlPool) -> Result<bool, MysqlError> {
     let status = sqlx::query_scalar::<_, i32>(RESPONSE_TIME_CHECK_QUERY)
         .fetch_one(pool)
         .await;
@@ -48,13 +47,13 @@ async fn check_stats(pool: &MySqlPool) -> Result<bool, Error> {
                 if db_err.code() == Some("HY000".into()) {
                     Ok(false)
                 } else {
-                    Err(Error::Query {
-                        source: err,
+                    Err(MysqlError::Query {
+                        err,
                         query: RESPONSE_TIME_CHECK_QUERY,
                     })
                 }
             }
-            _ => Err(Error::QuerySlaveStatus),
+            _ => Err(MysqlError::QuerySlaveStatus),
         },
     }
 }
@@ -83,11 +82,11 @@ impl<'r> FromRow<'r, MySqlRow> for Statistic {
     }
 }
 
-async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Metric, Error> {
+async fn query_response_time(pool: &MySqlPool, query: &'static str) -> Result<Metric, MysqlError> {
     let records = sqlx::query_as::<_, Statistic>(query)
         .fetch_all(pool)
         .await
-        .context(QuerySnafu { query })?;
+        .map_err(|err| MysqlError::Query { query, err })?;
 
     let mut sum = 0.0;
     let mut count = 0;

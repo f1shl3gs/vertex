@@ -27,15 +27,15 @@ use bytes::Bytes;
 use event::Event;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 
 use super::util::encoding::{EncodingConfig, EncodingConfiguration};
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum SinkBuildError {
-    #[snafu(display("Missing host in address field"))]
+    #[error("Missing host in address field")]
     MissingHost,
-    #[snafu(display("Missing port in address field"))]
+    #[error("Missing port in address field")]
     MissingPort,
 }
 

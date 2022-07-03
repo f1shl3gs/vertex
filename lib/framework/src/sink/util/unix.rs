@@ -6,7 +6,7 @@ use bytes::Bytes;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::{net::UnixStream, time::sleep};
 
 use crate::batch::EncodedEvent;
@@ -21,10 +21,10 @@ use crate::{
 };
 use crate::{Healthcheck, Sink, StreamSink};
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum UnixError {
-    #[snafu(display("Connect error: {}", source))]
-    ConnectError { source: tokio::io::Error },
+    #[error("Connect error: {0}")]
+    Connect(tokio::io::Error),
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -70,7 +70,9 @@ impl UnixConnector {
     }
 
     async fn connect(&self) -> Result<UnixStream, UnixError> {
-        UnixStream::connect(&self.path).await.context(ConnectSnafu)
+        UnixStream::connect(&self.path)
+            .await
+            .map_err(UnixError::Connect)
     }
 
     async fn connect_backoff(&self) -> UnixStream {

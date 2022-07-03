@@ -381,9 +381,9 @@ dependencies = [
  "rkyv",
  "serde",
  "shared",
- "snafu",
  "temp-dir",
  "tempdir",
+ "thiserror",
  "tokio",
  "tokio-stream",
  "tokio-test",
@@ -1031,7 +1031,6 @@ dependencies = [
  "serde_json",
  "serde_yaml",
  "shared",
- "snafu",
  "substring",
  "tokio",
  "tracing",
@@ -1201,7 +1200,6 @@ dependencies = [
  "serde_yaml",
  "shared",
  "smallvec",
- "snafu",
  "snap",
  "socket2",
  "stream-cancel",
@@ -1209,6 +1207,7 @@ dependencies = [
  "syslog_loose",
  "tempfile",
  "testify",
+ "thiserror",
  "tokio",
  "tokio-openssl",
  "tokio-stream",
@@ -1645,7 +1644,6 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "serde",
- "snafu",
 ]
 
 [[package]]
@@ -2440,7 +2438,7 @@ dependencies = [
  "bytes",
  "futures",
  "humanize",
- "pin-project",
+ "pin-project-lite",
  "regex",
  "serde",
  "serde_json",
@@ -2997,9 +2995,9 @@ dependencies = [
 
 [[package]]
 name = "pin-project-lite"
-version = "0.2.7"
+version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d31d11c69a6b52a174b42bdc0c30e5e11670f90788b2c471c31c1d17d449443"
+checksum = "e0a7ae3ac2f1173085d398531c705756c94a4c56843785df85a60c1a0afac116"
 
 [[package]]
 name = "pin-utils"
@@ -3160,15 +3158,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "procfs"
-version = "0.1.0"
-dependencies = [
- "glob",
- "snafu",
- "tokio",
-]
-
-[[package]]
 name = "prometheus"
 version = "0.1.0"
 dependencies = [
@@ -3178,7 +3167,6 @@ dependencies = [
  "num_enum",
  "prost",
  "prost-build",
- "snafu",
 ]
 
 [[package]]
@@ -3985,28 +3973,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2fd0db749597d91ff862fd1d55ea87f7855a744a8425a64695b6fca237d1dad1"
 
 [[package]]
-name = "snafu"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5177903bf45656592d9eb5c0e22f408fc023aae51dbe2088889b71633ba451f2"
-dependencies = [
- "doc-comment",
- "snafu-derive",
-]
-
-[[package]]
-name = "snafu-derive"
-version = "0.7.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "410b26ed97440d90ced3e2488c868d56a86e2064f5d7d6f417909b286afe25e5"
-dependencies = [
- "heck 0.4.0",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "snap"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4360,18 +4326,18 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "1.0.30"
+version = "1.0.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "854babe52e4df1653706b98fcfc05843010039b406875930a70e4d9644e5c417"
+checksum = "bd829fe32373d27f76265620b5309d0340cb8550f523c1dda251d6298069069a"
 dependencies = [
  "thiserror-impl",
 ]
 
 [[package]]
 name = "thiserror-impl"
-version = "1.0.30"
+version = "1.0.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aa32fd3f627f367fe16f893e2597ae3c05020f8bba2666a4e6ea73d377e5714b"
+checksum = "0396bc89e626244658bef819e22d0cc459e795a5ebe878e6ec336d1674a8d79a"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4780,8 +4746,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-fluent-assertions"
-version = "0.2.0"
-source = "git+https://github.com/vectordotdev/tracing-fluent-assertions?branch=bump-tracing-subscriber#0b32307299b832bfbcaf6026e2f53436b8b9abee"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "12de1a8c6bcfee614305e836308b596bbac831137a04c61f7e5b0b0bf2cfeaf6"
 dependencies = [
  "tracing",
  "tracing-core",
@@ -5125,7 +5092,6 @@ dependencies = [
  "serde_yaml",
  "shared",
  "smallvec",
- "snafu",
  "snap",
  "sqlx",
  "stream-cancel",
@@ -5135,6 +5101,7 @@ dependencies = [
  "tempfile",
  "testcontainers",
  "testify",
+ "thiserror",
  "tikv-jemalloc-ctl",
  "tikv-jemalloc-sys",
  "tikv-jemallocator",

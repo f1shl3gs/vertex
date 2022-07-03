@@ -8,16 +8,16 @@ use framework::http::{Auth, HttpClient};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
-use snafu::Snafu;
+use thiserror::Error;
 use tower::Service;
 use tracing::Instrument;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum LokiError {
-    #[snafu(display("Server responded with an error: {}", code))]
-    ServerError { code: StatusCode },
-    #[snafu(display("Failed to make HTTP(S) request: {}", source))]
-    HttpError { source: framework::http::HttpError },
+    #[error("Server responded with an error: {0}")]
+    ServerError(StatusCode),
+    #[error("Failed to make HTTP(S) request: {0}")]
+    HttpError(framework::http::HttpError),
 }
 
 pub struct LokiRequest {
@@ -114,11 +114,11 @@ impl Service<LokiRequest> for LokiService {
                             events_byte_size,
                         })
                     } else {
-                        Err(LokiError::ServerError { code: status })
+                        Err(LokiError::ServerError(status))
                     }
                 }
 
-                Err(err) => Err(LokiError::HttpError { source: err }),
+                Err(err) => Err(LokiError::HttpError(err)),
             }
         })
     }

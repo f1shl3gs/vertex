@@ -1,9 +1,9 @@
 mod line;
 
-use indexmap::IndexMap;
-use snafu::ResultExt;
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
+
+use indexmap::IndexMap;
 
 // Re-export
 use crate::line::{Line, Metric, MetricKind};
@@ -32,30 +32,14 @@ pub mod proto {
     }
 }
 
-#[derive(Debug, snafu::Snafu, PartialEq)]
-pub enum ParserError {
-    #[snafu(display("{}, line: {}", kind, line))]
-    WithLine {
-        line: String,
-        #[snafu(source)]
-        kind: ErrorKind,
-    },
-    #[snafu(display("expected \"le\" tag for histogram metric"))]
+#[derive(Debug, PartialEq)]
+pub enum ParseError {
+    WithLine { line: String, kind: ErrorKind },
     ExpectedLeTag,
-    #[snafu(display("expected \"quantile\" tag for summary metric"))]
     ExpectedQuantileTag,
-
-    #[snafu(display("error parsing label value: {}", err))]
-    ParseLabelValue {
-        #[snafu(source)]
-        err: ErrorKind,
-    },
-    #[snafu(display("expected value in range [0, {}], found: {}", u32::MAX, value))]
+    ParseLabelValue { kind: ErrorKind },
     ValueOutOfRange { value: f64 },
-
-    #[snafu(display("multiple metric kinds given for metric name `{}`", name))]
     MultipleMetricKinds { name: String },
-    #[snafu(display("request is missing metric name label"))]
     RequestNoNameLabel,
 }
 
@@ -141,7 +125,7 @@ impl GroupKind {
         &mut self,
         prefix_len: usize,
         metric: Metric,
-    ) -> Result<Option<Metric>, ParserError> {
+    ) -> Result<Option<Metric>, ParseError> {
         let suffix = &metric.name[prefix_len..];
         let mut key = GroupKey {
             timestamp: metric.timestamp,
@@ -167,10 +151,12 @@ impl GroupKind {
 
             Self::Histogram(ref mut metrics) => match suffix {
                 "_bucket" => {
-                    let bucket = key.labels.remove("le").ok_or(ParserError::ExpectedLeTag)?;
-                    let (_, bucket) = line::Metric::parse_value(&bucket)
-                        .map_err(Into::into)
-                        .context(ParseLabelValueSnafu)?;
+                    let bucket = key.labels.remove("le").ok_or(ParseError::ExpectedLeTag)?;
+                    let (_, bucket) = Metric::parse_value(&bucket).map_err(|err| {
+                        ParseError::ParseLabelValue {
+                            kind: ErrorKind::from(err),
+                        }
+                    })?;
                     let count = metric.value as u64;
                     matching_group(metrics, key)
                         .buckets
@@ -201,11 +187,10 @@ impl GroupKind {
                     let quantile = key
                         .labels
                         .remove("quantile")
-                        .ok_or(ParserError::ExpectedQuantileTag)?;
+                        .ok_or(ParseError::ExpectedQuantileTag)?;
                     let value = metric.value;
                     let (_, quantile) = line::Metric::parse_value(&quantile)
-                        .map_err(Into::into)
-                        .context(ParseLabelValueSnafu)?;
+                        .map_err(|err| ParseError::ParseLabelValue { kind: err.into() })?;
                     matching_group(metrics, key)
                         .quantiles
                         .push(SummaryQuantile { quantile, value })
@@ -237,11 +222,11 @@ fn matching_group<T: Default>(values: &mut MetricMap<T>, group: GroupKey) -> &mu
     values.entry(group).or_insert_with(T::default)
 }
 
-fn try_f64_to_u32(f: f64) -> Result<u32, ParserError> {
+fn try_f64_to_u32(f: f64) -> Result<u32, ParseError> {
     if 0.0 <= f && f <= u32::MAX as f64 {
         Ok(f as u32)
     } else {
-        Err(ParserError::ValueOutOfRange { value: f })
+        Err(ParseError::ValueOutOfRange { value: f })
     }
 }
 
@@ -276,7 +261,7 @@ impl MetricGroup {
     /// `Err(_)` if there are irrecoverable error.
     /// `Ok(Some(metric))` if this metric belongs to another group
     /// `Ok(None)` pushed successfully.
-    fn try_push(&mut self, metric: Metric) -> Result<Option<Metric>, ParserError> {
+    fn try_push(&mut self, metric: Metric) -> Result<Option<Metric>, ParseError> {
         if !metric.name.starts_with(&self.name) {
             return Ok(Some(metric));
         }
@@ -287,12 +272,13 @@ impl MetricGroup {
 
 /// Parse the given text input, and group the result into higher-level
 /// metric types based on the declared types in the text.
-pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, ParserError> {
+pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, ParseError> {
     let mut groups = Vec::new();
 
     for line in input.lines() {
-        let line = Line::parse(line).with_context(|_kind| WithLineSnafu {
+        let line = Line::parse(line).map_err(|kind| ParseError::WithLine {
             line: line.to_owned(),
+            kind,
         })?;
         if let Some(line) = line {
             match line {
@@ -340,10 +326,10 @@ impl MetricGroupSet {
         self.0.get_full_mut(name).unwrap()
     }
 
-    fn insert_metadata(&mut self, name: String, kind: MetricKind) -> Result<(), ParserError> {
+    fn insert_metadata(&mut self, name: String, kind: MetricKind) -> Result<(), ParseError> {
         match self.0.get(&name) {
             Some(group) if !group.matches_kind(kind) => {
-                Err(ParserError::MultipleMetricKinds { name })
+                Err(ParseError::MultipleMetricKinds { name })
             }
             Some(_) => Ok(()), // metadata already exists and is the right type
             None => {
@@ -358,7 +344,7 @@ impl MetricGroupSet {
         name: &str,
         labels: &BTreeMap<String, String>,
         sample: proto::Sample,
-    ) -> Result<(), ParserError> {
+    ) -> Result<(), ParseError> {
         let (_, basename, group) = self.get_group(name);
         if let Some(metric) = group.try_push(
             basename.len(),
@@ -404,7 +390,7 @@ impl From<proto::MetricType> for MetricKind {
     }
 }
 
-pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, ParserError> {
+pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, ParseError> {
     let mut groups = MetricGroupSet::default();
 
     for metadata in req.metadata {
@@ -424,7 +410,7 @@ pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Parse
             .collect();
         let name = match labels.remove(METRIC_NAME_LABEL) {
             Some(name) => name,
-            None => return Err(ParserError::RequestNoNameLabel),
+            None => return Err(ParseError::RequestNoNameLabel),
         };
 
         for sample in timeseries.samples {
@@ -596,23 +582,23 @@ mod tests {
     fn test_f64_to_u32() {
         let value = -1.0;
         let err = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(err, ParserError::ValueOutOfRange { value });
+        assert_eq!(err, ParseError::ValueOutOfRange { value });
 
         let value = u32::MAX as f64 + 1.0;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParserError::ValueOutOfRange { value });
+        assert_eq!(error, ParseError::ValueOutOfRange { value });
 
         let value = f64::NAN;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert!(matches!(error, ParserError::ValueOutOfRange { value } if value.is_nan()));
+        assert!(matches!(error, ParseError::ValueOutOfRange { value } if value.is_nan()));
 
         let value = f64::INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParserError::ValueOutOfRange { value });
+        assert_eq!(error, ParseError::ValueOutOfRange { value });
 
         let value = f64::NEG_INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParserError::ValueOutOfRange { value });
+        assert_eq!(error, ParseError::ValueOutOfRange { value });
 
         assert_eq!(try_f64_to_u32(0.0).unwrap(), 0);
         assert_eq!(try_f64_to_u32(u32::MAX as f64).unwrap(), u32::MAX);
@@ -624,7 +610,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::ExpectedChar { expected: ',', .. },
                 ..
             }
@@ -634,7 +620,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::InvalidMetricKind { .. },
                 ..
             }
@@ -644,7 +630,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::ExpectedSpace { .. },
                 ..
             }
@@ -654,7 +640,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::ExpectedChar { expected: '"', .. },
                 ..
             }
@@ -664,7 +650,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::ExpectedChar { expected: '"', .. },
                 ..
             }
@@ -674,7 +660,7 @@ mod tests {
         let err = parse_text(input).unwrap_err();
         assert!(matches!(
             err,
-            ParserError::WithLine {
+            ParseError::WithLine {
                 kind: ErrorKind::ParseFloatError { .. },
                 ..
             }

@@ -12,7 +12,7 @@ use framework::config::{
 use framework::Source;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
@@ -778,7 +778,7 @@ impl Stats {
                 return Ok(());
             }
 
-            let v = parts[2].parse().context(InvalidValueSnafu)?;
+            let v = parts[2].parse().map_err(ParseError::InvalidValue)?;
 
             let subs = parts[1].split(':').collect::<Vec<_>>();
             match subs.len() {
@@ -821,20 +821,14 @@ impl Stats {
     }
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum ParseError {
-    #[snafu(display("invalid line"))]
-    InvalidLine,
-    #[snafu(display("invalid value found: {}", source))]
-    InvalidValue { source: std::num::ParseFloatError },
-    #[snafu(display("read line failed: {}", source))]
-    ReadLine { source: std::io::Error },
-    #[snafu(display("command \"{}\" execute failed: {}", cmd.trim(), source))]
-    CommandExecFailed { cmd: String, source: std::io::Error },
-    #[snafu(display("client error"))]
+    #[error("invalid value found: {0}")]
+    InvalidValue(std::num::ParseFloatError),
+    #[error("command \"{cmd}\" execute failed: {err}")]
+    CommandExecFailed { cmd: String, err: std::io::Error },
+    #[error("client error")]
     ClientError,
-    #[snafu(display("parse slab failed {}", source))]
-    ParseSlabFailed { source: std::num::ParseIntError },
 }
 
 async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
@@ -842,8 +836,9 @@ async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
     for cmd in ["stats\r\n", "stats slabs\r\n", "stats items\r\n"] {
         let resp = query(addr, cmd)
             .await
-            .with_context(|_kind| CommandExecFailedSnafu {
+            .map_err(|err| ParseError::CommandExecFailed {
                 cmd: cmd.to_string(),
+                err,
             })?;
 
         stats.append(&resp)?;
@@ -853,11 +848,13 @@ async fn fetch_stats(addr: &str) -> Result<Stats, ParseError> {
 }
 
 async fn stats_settings(addr: &str) -> Result<HashMap<String, String>, ParseError> {
-    let resp: String = query(addr, "stats settings\r\n")
-        .await
-        .context(CommandExecFailedSnafu {
-            cmd: "stats settings".to_string(),
-        })?;
+    let resp: String =
+        query(addr, "stats settings\r\n")
+            .await
+            .map_err(|err| ParseError::CommandExecFailed {
+                cmd: "stats settings".to_string(),
+                err,
+            })?;
 
     Ok(parse_stats_settings(&resp))
 }

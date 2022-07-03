@@ -1,11 +1,11 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
+use crate::sources::mysqld::MysqlError;
 use event::{tags, Metric};
-use snafu::ResultExt;
 use sqlx::MySqlPool;
 
-use super::{valid_name, QuerySnafu};
+use super::valid_name;
 
 const GLOBAL_STATUS_QUERY: &str = r#"SHOW GLOBAL STATUS"#;
 
@@ -17,12 +17,13 @@ struct GlobalStatus {
     value: String,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::MysqlError> {
     let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await
-        .context(QuerySnafu {
+        .map_err(|err| MysqlError::Query {
             query: GLOBAL_STATUS_QUERY,
+            err,
         })?;
 
     let mut metrics = vec![];

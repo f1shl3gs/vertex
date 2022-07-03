@@ -23,11 +23,11 @@ pub mod socket;
 #[cfg(feature = "sinks-vertex")]
 mod vertex;
 
-use snafu::Snafu;
+use thiserror::Error;
 
 /// Common build errors
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BuildError {
-    #[snafu(display("URI parse error: {}", source))]
-    UriParse { source: http::uri::InvalidUri },
+    #[error("URI parse error: {0}")]
+    UriParse(http::uri::InvalidUri),
 }

@@ -5,7 +5,7 @@ use std::time::Duration;
 use event::EventFinalizers;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use serde::{Deserialize, Serialize};
-use snafu::Snafu;
+use thiserror::Error;
 
 use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
 use crate::stream::BatcherSettings;
@@ -13,20 +13,20 @@ use crate::stream::BatcherSettings;
 // Provide sensible sink default 10MB with 1s timeout.
 // Don't allow chaining builder methods on that.
 
-#[derive(Debug, Snafu, PartialEq)]
+#[derive(Debug, Error, PartialEq)]
 pub enum BatchError {
-    #[snafu(display("This sink does not allow setting `max_bytes`"))]
+    #[error("This sink does not allow setting `max_bytes`")]
     BytesNotAllowed,
-    #[snafu(display("`max_bytes` must be greater than zero"))]
+    #[error("`max_bytes` must be greater than zero")]
     InvalidMaxBytes,
-    #[snafu(display("`max_events` must be greater than zero"))]
+    #[error("`max_events` must be greater than zero")]
     InvalidMaxEvents,
-    #[snafu(display("`timeout` must be greater than zero"))]
+    #[error("`timeout` must be greater than zero")]
     InvalidTimeout,
-    #[snafu(display("provided `max_bytes` exceeds the maximum limit of {}", limit))]
-    MaxBytesExceeded { limit: usize },
-    #[snafu(display("provided `max_events` exceeds the maximum limit of {}", limit))]
-    MaxEventsExceeded { limit: usize },
+    #[error("provided `max_bytes` exceeds the maximum limit of {0}")]
+    MaxBytesExceeded(usize),
+    #[error("provided `max_events` exceeds the maximum limit of {0}")]
+    MaxEventsExceeded(usize),
 }
 
 #[derive(Debug)]
@@ -275,7 +275,7 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
 
     pub fn limit_max_bytes(self, limit: usize) -> Result<Self, BatchError> {
         match self.max_bytes {
-            Some(n) if n > limit => Err(BatchError::MaxBytesExceeded { limit }),
+            Some(n) if n > limit => Err(BatchError::MaxBytesExceeded(limit)),
             _ => Ok(self),
         }
     }

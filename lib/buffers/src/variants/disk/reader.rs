@@ -9,7 +9,7 @@ use std::{
 
 use crc32fast::Hasher;
 use rkyv::{archived_root, AlignedVec};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
 
 use super::{
@@ -52,7 +52,7 @@ impl ReadToken {
 }
 
 /// Error that occurred during calls to [`Reader`].
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum ReaderError<T>
 where
     T: Bufferable,
@@ -62,8 +62,11 @@ where
     /// Different methods will capture specific I/O errors depending on the situation, as some
     /// errors may be expected and considered normal by design.  For all I/O errors that are
     /// considered atypical, they will be returned as this variant.
-    #[snafu(display("read I/O error: {}", source))]
-    Io { source: io::Error },
+    #[error("read I/O error: {err}")]
+    Io {
+        #[from]
+        err: io::Error,
+    },
 
     /// The reader failed to deserialize the record.
     ///
@@ -72,7 +75,7 @@ where
     /// handled internally by moving to the next data file, as corruption may have affected other
     /// records in a way that is not easily detectable and could lead to records which
     /// deserialize/decode but contain invalid data.
-    #[snafu(display("failed to deserialize encoded record from buffer: {}", reason))]
+    #[error("failed to deserialize encoded record from buffer: {reason}")]
     Deserialization { reason: String },
 
     /// The record's checksum did not match.
@@ -82,18 +85,14 @@ where
     /// handled internally by moving to the next data file, as corruption may have affected other
     /// records in a way that is not easily detectable and could lead to records which
     /// deserialize/decode but contain invalid data.
-    #[snafu(display(
-        "calculated checksum did not match the actual checksum: ({} vs {})",
-        calculated,
-        actual
-    ))]
+    #[error("calculated checksum did not match the actual checksum: ({calculated} vs {actual})")]
     Checksum { calculated: u32, actual: u32 },
 
     /// The decoder encountered an issue during decoding.
     ///
     /// At this stage, the record can be assumed to have been written correctly, and read correctly
     /// from disk, as the checksum was also validated.
-    #[snafu(display("failed to decoded record: {:?}", source))]
+    #[error("failed to decoded record: {source:?}")]
     Decode {
         source: <T as Encodable>::DecodeError,
     },
@@ -103,7 +102,7 @@ where
     /// This can occur when records written to a buffer in previous versions of Vector are read by
     /// newer versions of Vector where the encoding scheme, or record schema, used in the previous
     /// version of Vector are no longer able to be decoded in this version of Vector.
-    #[snafu(display("record version not compatible: {}", reason))]
+    #[error("record version not compatible: {reason}")]
     Incompatible { reason: String },
 
     /// The reader detected that a data file contains a partially-written record.
@@ -113,6 +112,7 @@ where
     /// some issue with the write where it was acknowledged but the data/file was corrupted in same way.
     ///
     /// This is effectively the same class of error as an invalid checksum/failed deserialization.
+    #[error("partial write")]
     PartialWrite,
 
     /// The record reported an event count of zero.
@@ -120,6 +120,7 @@ where
     /// Empty records should not be allowed to be written, so this represents either a bug with the
     /// writing logic of the buffer, or a record that does not use a symmetrical encoding scheme,
     /// which is also not supported.
+    #[error("empty record")]
     EmptyRecord,
 }
 
@@ -140,7 +141,7 @@ where
 impl<T: Bufferable> PartialEq for ReaderError<T> {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
-            (Self::Io { source: l_source }, Self::Io { source: r_source }) => {
+            (Self::Io { err: l_source }, Self::Io { err: r_source }) => {
                 l_source.kind() == r_source.kind()
             }
             (
@@ -224,7 +225,7 @@ where
             }
 
             // We don't have enough bytes, so we need to fill our buffer again.
-            let buf = self.reader.fill_buf().await.context(IoSnafu)?;
+            let buf = self.reader.fill_buf().await?;
             if buf.is_empty() {
                 return Ok(None);
             }
@@ -295,7 +296,7 @@ where
         self.aligned_buf.clear();
         while self.aligned_buf.len() < record_len {
             let needed = record_len - self.aligned_buf.len();
-            let buf = self.reader.fill_buf().await.context(IoSnafu)?;
+            let buf = self.reader.fill_buf().await?;
             if buf.is_empty() && is_finalized {
                 // If we needed more data, but there was none available, and we're finalized: we've
                 // got ourselves a partial write situation.
@@ -819,13 +820,12 @@ where
         // Once the reader/writer file IDs are identical, we fall back to the slow path.
         while self.ledger.get_current_reader_file_id() != self.ledger.get_current_writer_file_id() {
             let data_file_path = self.ledger.get_current_reader_data_file_path();
-            self.ensure_ready_for_read().await.context(IoSnafu)?;
+            self.ensure_ready_for_read().await?;
             let data_file_mmap = self
                 .ledger
                 .filesystem()
                 .open_mmap_readable(&data_file_path)
-                .await
-                .context(IoSnafu)?;
+                .await?;
 
             match validate_record_archive(data_file_mmap.as_ref(), &Hasher::new()) {
                 RecordStatus::Valid {
@@ -861,8 +861,7 @@ where
                         // ensuring the buffer size is updated to reflect the data file being
                         // deleted in its entirety.
                         self.delete_completed_data_file(data_file_path, None)
-                            .await
-                            .context(IoSnafu)?;
+                            .await?;
                         self.reset();
                     } else {
                         // We've hit a point where the current data file we're on has records newer
@@ -918,8 +917,7 @@ where
         let token = loop {
             // Handle any pending acknowledgements first.
             self.handle_pending_acknowledgements(force_check_pending_data_files)
-                .await
-                .context(IoSnafu)?;
+                .await?;
             force_check_pending_data_files = false;
 
             // If the writer has marked themselves as done, and the buffer has been emptied, then
@@ -939,7 +937,7 @@ where
                 }
             }
 
-            self.ensure_ready_for_read().await.context(IoSnafu)?;
+            self.ensure_ready_for_read().await?;
 
             let reader = self
                 .reader
@@ -1098,5 +1096,5 @@ pub(crate) fn decode_record_payload<T: Bufferable>(
     }
 
     // Now we can finally try decoding.
-    T::decode(metadata, record.payload()).context(DecodeSnafu)
+    T::decode(metadata, record.payload()).map_err(|err| ReaderError::Decode { source: err })
 }

@@ -22,7 +22,7 @@ use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
-use snafu::Snafu;
+use thiserror::Error;
 use tokio::io::{AsyncRead, BufReader};
 use tokio::process::Command;
 use tokio::sync::mpsc::{channel, Sender};
@@ -89,11 +89,11 @@ fn default_decoding() -> DeserializerConfig {
     BytesDeserializerConfig::new().into()
 }
 
-#[derive(Debug, PartialEq, Snafu)]
+#[derive(Debug, PartialEq, Error)]
 pub enum ExecConfigError {
-    #[snafu(display("A non-empty list for command must be provided"))]
+    #[error("A non-empty list for command must be provided")]
     CommandEmpty,
-    #[snafu(display("The maximum buffer size must be greater than zero"))]
+    #[error("The maximum buffer size must be greater than zero")]
     ZeroBuffer,
 }
 

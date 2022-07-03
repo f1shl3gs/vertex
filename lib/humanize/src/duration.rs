@@ -13,20 +13,20 @@ const DAY: u64 = 24 * HOUR;
 const WEEK: u64 = 7 * DAY;
 
 #[derive(Eq, PartialEq, Debug, Copy, Clone)]
-pub enum ParseDurationError {
+pub enum ParseError {
     BadInteger,
     InvalidDuration,
     MissingUnit,
     UnknownUnit,
 }
 
-impl Display for ParseDurationError {
+impl Display for ParseError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         let msg = match self {
-            ParseDurationError::BadInteger => "bad integer",
-            ParseDurationError::InvalidDuration => "invalid duration",
-            ParseDurationError::MissingUnit => "missing unit",
-            ParseDurationError::UnknownUnit => "unknown unit",
+            ParseError::BadInteger => "bad integer",
+            ParseError::InvalidDuration => "invalid duration",
+            ParseError::MissingUnit => "missing unit",
+            ParseError::UnknownUnit => "unknown unit",
         };
 
         write!(f, "{}", msg)
@@ -34,7 +34,7 @@ impl Display for ParseDurationError {
 }
 
 /// leading_int consumes the leading [0-9]* from s
-fn leading_int(s: &[u8]) -> Result<(u64, &[u8]), ParseDurationError> {
+fn leading_int(s: &[u8]) -> Result<(u64, &[u8]), ParseError> {
     let mut consumed = 0;
     let o = s
         .iter()
@@ -51,7 +51,7 @@ fn leading_int(s: &[u8]) -> Result<(u64, &[u8]), ParseDurationError> {
 
     match o {
         Some(v) => Ok((v, &s[consumed..])),
-        None => Err(ParseDurationError::BadInteger),
+        None => Err(ParseError::BadInteger),
     }
 }
 
@@ -96,7 +96,7 @@ fn leading_fraction(s: &[u8]) -> (i64, f64, &[u8]) {
 /// A duration string is a possibly signed sequence of decimal numbers,
 /// each with optional fraction and a unit suffix, such as "300ms", "-1.5h" or "2h45m".
 /// Valid time units are "ns", "us" (or "µs"), "ms", "s", "m", "h".
-pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
+pub fn parse_duration(text: &str) -> Result<Duration, ParseError> {
     // [-+]?([0-9]*(\.[0-9]*)?[a-z]+)+
     let mut d = 0u64;
     let mut neg = false;
@@ -112,7 +112,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
     }
 
     if neg {
-        return Err(ParseDurationError::InvalidDuration);
+        return Err(ParseError::InvalidDuration);
     }
 
     // Special case: if all that is left is "0", this is zero
@@ -121,7 +121,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
     }
 
     if s.is_empty() {
-        return Err(ParseDurationError::InvalidDuration);
+        return Err(ParseError::InvalidDuration);
     }
 
     while !s.is_empty() {
@@ -131,7 +131,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
         // The next character must be [0-9.]
         let c = s[0];
         if !(c == b'.' || c.is_ascii_digit()) {
-            return Err(ParseDurationError::InvalidDuration);
+            return Err(ParseError::InvalidDuration);
         }
 
         // Consume [0-9]*
@@ -154,7 +154,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
         }
         if !pre && !post {
             // no digits (e.g. ".s" or "-.s")
-            return Err(ParseDurationError::InvalidDuration);
+            return Err(ParseError::InvalidDuration);
         }
 
         // Consume unit
@@ -169,7 +169,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
         }
 
         if i == 0 {
-            return Err(ParseDurationError::MissingUnit);
+            return Err(ParseError::MissingUnit);
         }
         let u = &s[..i];
         s = &s[i..];
@@ -189,11 +189,11 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
             _ => 0,
         };
         if unit == 0 {
-            return Err(ParseDurationError::UnknownUnit);
+            return Err(ParseError::UnknownUnit);
         }
 
         if v > u64::MAX / unit {
-            return Err(ParseDurationError::InvalidDuration);
+            return Err(ParseError::InvalidDuration);
         }
 
         v *= unit;
@@ -202,7 +202,7 @@ pub fn parse_duration(text: &str) -> Result<Duration, ParseDurationError> {
             // v >= 0 && (f * unit / scale) <= 3.6e+12 (ns/h, h is the largest unit)
             v = v
                 .checked_add((f as f64 * (unit as f64 / scale)) as u64)
-                .ok_or(ParseDurationError::InvalidDuration)?;
+                .ok_or(ParseError::InvalidDuration)?;
         }
 
         d += v;
@@ -348,7 +348,7 @@ mod tests {
     #[test]
     fn test_leading_int_overflow() {
         let err = leading_int("999999999999999999999".as_bytes()).unwrap_err();
-        assert_eq!(err, ParseDurationError::BadInteger)
+        assert_eq!(err, ParseError::BadInteger)
     }
 
     struct ParseDurationTest {

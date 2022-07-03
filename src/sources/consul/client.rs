@@ -5,28 +5,28 @@ use http::StatusCode;
 use hyper::Body;
 use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 
 use framework::config::{deserialize_duration, serialize_duration};
 use framework::http::HttpClient;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum ConsulError {
-    #[snafu(display("Parse url failed, {}", source))]
-    ParseUrl { source: url::ParseError },
-    #[snafu(display("Build request failed, {}", source))]
-    BuildRequest { source: http::Error },
-    #[snafu(display("Read response body failed, {}", source))]
-    ReadBody { source: hyper::Error },
-    #[snafu(display("Do http request failed, {}", source))]
-    HttpErr { source: framework::http::HttpError },
-    #[snafu(display("Decode response failed, {}", source))]
-    DecodeError { source: serde_json::Error },
-    #[snafu(display("Unexpected status {}", code))]
-    UnexpectedStatusCode { code: u16 },
-    #[snafu(display("Redirection to {}", to))]
-    NeedRedirection { to: String },
-    #[snafu(display("Redirection failed"))]
+    #[error("Parse url failed, err: {0}")]
+    ParseUrl(#[from] url::ParseError),
+    #[error("Build request failed, {0}")]
+    BuildRequest(#[from] http::Error),
+    #[error("Read response body failed, {0}")]
+    ReadBody(hyper::Error),
+    #[error("Do http request failed, {0}")]
+    HttpErr(framework::http::HttpError),
+    #[error("Decode response failed, {0}")]
+    Decode(#[from] serde_json::Error),
+    #[error("Unexpected status {0}")]
+    UnexpectedStatusCode(u16),
+    #[error("Redirection to {0}")]
+    NeedRedirection(String),
+    #[error("Redirection failed")]
     RedirectionFailed,
 }
 
@@ -251,7 +251,7 @@ impl QueryOptions {
             }
         }
 
-        let uri = url::Url::parse_with_params(path, params).context(ParseUrlSnafu)?;
+        let uri = url::Url::parse_with_params(path, params)?;
 
         Ok(builder.uri(uri.as_str()))
     }
@@ -302,7 +302,7 @@ impl Client {
         match self.fetch(uri.as_str(), opts).await {
             Ok(entries) => Ok(entries),
             Err(err) => match err {
-                ConsulError::NeedRedirection { to } => self.fetch(&to, opts).await,
+                ConsulError::NeedRedirection(to) => self.fetch(&to, opts).await,
                 _ => Err(err),
             },
         }
@@ -325,34 +325,33 @@ impl Client {
             None => http::Request::get(path),
         };
 
-        let req = builder.body(Body::empty()).context(BuildRequestSnafu)?;
+        let req = builder.body(Body::empty())?;
 
         return match self.client.send(req).await {
             Ok(resp) => {
                 let (parts, body) = resp.into_parts();
                 match parts.status {
                     StatusCode::OK => {
-                        let body = hyper::body::to_bytes(body).await.context(ReadBodySnafu)?;
+                        let body = hyper::body::to_bytes(body)
+                            .await
+                            .map_err(ConsulError::ReadBody)?;
 
-                        let body =
-                            serde_json::from_slice::<T>(body.chunk()).context(DecodeSnafu)?;
+                        let body = serde_json::from_slice::<T>(body.chunk())?;
 
                         Ok(body)
                     }
                     StatusCode::MOVED_PERMANENTLY => {
                         return match parts.headers.get("Location") {
-                            Some(redirect) => Err(ConsulError::NeedRedirection {
-                                to: redirect.to_str().unwrap().to_string(),
-                            }),
+                            Some(redirect) => Err(ConsulError::NeedRedirection(
+                                redirect.to_str().unwrap().to_string(),
+                            )),
                             None => Err(ConsulError::RedirectionFailed),
                         };
                     }
-                    status => Err(ConsulError::UnexpectedStatusCode {
-                        code: status.as_u16(),
-                    }),
+                    status => Err(ConsulError::UnexpectedStatusCode(status.as_u16())),
                 }
             }
-            Err(err) => Err(ConsulError::HttpErr { source: err }),
+            Err(err) => Err(ConsulError::HttpErr(err)),
         };
     }
 }

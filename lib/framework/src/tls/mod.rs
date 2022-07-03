@@ -4,7 +4,7 @@ use openssl::{
     error::ErrorStack,
     ssl::{ConnectConfiguration, SslConnector, SslConnectorBuilder, SslMethod},
 };
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::net::TcpStream;
 use tokio_openssl::SslStream;
 
@@ -27,99 +27,85 @@ pub type Result<T> = std::result::Result<T, TlsError>;
 
 pub type MaybeTlsStream<S> = MaybeTls<S, SslStream<S>>;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum TlsError {
-    #[snafu(display("Could not open {} file {:?}: {}", note, filename, source))]
+    #[error("Could not open {note} file {filename:?}: {err}")]
     FileOpenFailed {
         note: &'static str,
         filename: PathBuf,
-        source: std::io::Error,
+        err: std::io::Error,
     },
-    #[snafu(display("Could not read {} file {:?}: {}", note, filename, source))]
+    #[error("Could not read {note} file {filename:?}: {err}")]
     FileReadFailed {
         note: &'static str,
         filename: PathBuf,
-        source: std::io::Error,
+        err: std::io::Error,
     },
-    #[snafu(display("Could not build TLS connector: {}", source))]
-    TlsBuildConnector { source: ErrorStack },
-    #[snafu(display("Could not set TCP TLS identity: {}", source))]
-    TlsIdentityError { source: ErrorStack },
-    #[snafu(display("Could not export identity to DER: {}", source))]
-    DerExportError { source: ErrorStack },
-    #[snafu(display("Identity certificate is missing a key"))]
+    #[error("Could not build TLS connector: {0}")]
+    BuildConnector(ErrorStack),
+    #[error("Could not set TCP TLS identity: {0}")]
+    Identity(ErrorStack),
+    #[error("Could not export identity to DER: {0}")]
+    DerExport(ErrorStack),
+    #[error("Identity certificate is missing a key")]
     MissingKey,
-    #[snafu(display("Certificate file contains no certificates"))]
+    #[error("Certificate file contains no certificates")]
     MissingCertificate,
-    #[snafu(display("Could not parse certificate in {:?}: {}", filename, source))]
-    CertificateParseError {
-        filename: PathBuf,
-        source: ErrorStack,
-    },
-    #[snafu(display("Must specify both TLS key_file and crt_file"))]
+    #[error("Could not parse certificate in {filename:?}: {err}")]
+    CertificateParse { filename: PathBuf, err: ErrorStack },
+    #[error("Must specify both TLS key_file and crt_file")]
     MissingCrtKeyFile,
-    #[snafu(display("Could not parse X509 certificate in {:?}: {}", filename, source))]
-    X509ParseError {
-        filename: PathBuf,
-        source: ErrorStack,
-    },
-    #[snafu(display("Could not parse private key in {:?}: {}", filename, source))]
-    PrivateKeyParseError {
-        filename: PathBuf,
-        source: ErrorStack,
-    },
-    #[snafu(display("Could not build PKCS#12 archive for identity: {}", source))]
-    Pkcs12Error { source: ErrorStack },
-    #[snafu(display("Could not parse identity in {:?}: {}", filename, source))]
-    IdentityParseError {
-        filename: PathBuf,
-        source: ErrorStack,
-    },
-    #[snafu(display("TLS configuration requires a certificate when enabled"))]
+    #[error("Could not parse X509 certificate in {filename:?}: {err}")]
+    X509Parse { filename: PathBuf, err: ErrorStack },
+    #[error("Could not parse private key in {filename:?}: {err}")]
+    PrivateKeyParse { filename: PathBuf, err: ErrorStack },
+    #[error("Could not build PKCS#12 archive for identity: {0}")]
+    BuildPkcs12(ErrorStack),
+    #[error("Could not parse identity in {filename:?}: {err}")]
+    IdentityParse { filename: PathBuf, err: ErrorStack },
+    #[error("TLS configuration requires a certificate when enabled")]
     MissingRequiredIdentity,
-    #[snafu(display("TLS handshake failed: {}", source))]
-    Handshake { source: openssl::ssl::Error },
-    #[snafu(display("Incoming listener failed: {}", source))]
-    IncomingListener { source: tokio::io::Error },
-    #[snafu(display("Creating the TLS acceptor failed: {}", source))]
-    CreateAcceptor { source: ErrorStack },
-    #[snafu(display("Error building SSL context: {}", source))]
-    SslBuildError { source: openssl::error::ErrorStack },
-    #[snafu(display("Error setting up the TLS certificate: {}", source))]
-    SetCertificate { source: ErrorStack },
-    #[snafu(display("Error setting up the TLS private key: {}", source))]
-    SetPrivateKey { source: ErrorStack },
-    #[snafu(display("Error setting up the TLS chain certificates: {}", source))]
-    AddExtraChainCert { source: ErrorStack },
-    #[snafu(display("Error creating a certificate store: {}", source))]
-    NewStoreBuilder { source: ErrorStack },
-    #[snafu(display("Error adding a certificate to a store: {}", source))]
-    AddCertToStore { source: ErrorStack },
-    #[snafu(display("Error setting up the verification certificate: {}", source))]
-    SetVerifyCert { source: ErrorStack },
-    #[snafu(display("PKCS#12 parse failed: {}", source))]
-    ParsePkcs12 { source: ErrorStack },
-    #[snafu(display("TCP bind failed: {}", source))]
-    TcpBind { source: tokio::io::Error },
-    #[snafu(display("{}", source))]
-    Connect { source: tokio::io::Error },
-    #[snafu(display("Could not get peer address: {}", source))]
-    PeerAddress { source: std::io::Error },
-    #[snafu(display("Security Framework Error: {}", source))]
+    #[error("TLS handshake failed: {0}")]
+    Handshake(openssl::ssl::Error),
+    #[error("Incoming listener failed: {0}")]
+    IncomingListener(tokio::io::Error),
+    #[error("Creating the TLS acceptor failed: {0}")]
+    CreateAcceptor(ErrorStack),
+    #[error("Error building SSL context: {0}")]
+    SslBuild(ErrorStack),
+    #[error("Error setting up the TLS certificate: {0}")]
+    SetCertificate(ErrorStack),
+    #[error("Error setting up the TLS private key: {0}")]
+    SetPrivateKey(ErrorStack),
+    #[error("Error setting up the TLS chain certificates: {0}")]
+    AddExtraChainCert(ErrorStack),
+    #[error("Error creating a certificate store: {0}")]
+    NewStoreBuilder(ErrorStack),
+    #[error("Error adding a certificate to a store: {0}")]
+    AddCertToStore(ErrorStack),
+    #[error("Error setting up the verification certificate: {0}")]
+    SetVerifyCert(ErrorStack),
+    #[error("PKCS#12 parse failed: {0}")]
+    ParsePkcs12(ErrorStack),
+    #[error("TCP bind failed: {0}")]
+    TcpBind(tokio::io::Error),
+    #[error("{0}")]
+    Connect(tokio::io::Error),
+    #[error("Could not get peer address: {0}")]
+    PeerAddress(std::io::Error),
+    #[error("Security Framework Error: {0}")]
     #[cfg(target_os = "macos")]
-    SecurityFramework {
-        source: security_framework::base::Error,
-    },
-    #[snafu(display("Schannel Error: {}", source))]
+    SecurityFramework(security_framework::base::Error),
+    #[error("Schannel Error: {0}")]
     #[cfg(windows)]
-    Schannel { source: std::io::Error },
+    Schannel(std::io::Error),
     #[cfg(any(windows, target_os = "macos"))]
-    #[snafu(display("Unable to parse X509 from system cert: {}", source))]
-    X509SystemParseError { source: ErrorStack },
-    #[snafu(display("Creating an empty CA stack failed"))]
-    NewCaStack { source: ErrorStack },
-    #[snafu(display("Could not push intermediate certificate onto stack"))]
-    CaStackPush { source: ErrorStack },
+    #[error("Unable to parse X509 from system cert: {0}")]
+    X509SystemParseError(ErrorStack),
+    #[error("Creating an empty CA stack failed")]
+    NewCaStack(ErrorStack),
+    #[error("Could not push intermediate certificate onto stack")]
+    CaStackPush(ErrorStack),
 }
 
 impl MaybeTlsStream<TcpStream> {
@@ -165,7 +151,7 @@ impl MaybeTlsStream<TcpStream> {
 }
 
 pub(crate) fn tls_connector_builder(settings: &MaybeTlsSettings) -> Result<SslConnectorBuilder> {
-    let mut builder = SslConnector::builder(SslMethod::tls()).context(TlsBuildConnectorSnafu)?;
+    let mut builder = SslConnector::builder(SslMethod::tls()).map_err(TlsError::BuildConnector)?;
     if let Some(settings) = settings.tls() {
         settings.apply_context(&mut builder)?;
     }
@@ -180,7 +166,7 @@ fn tls_connector(settings: &MaybeTlsSettings) -> Result<ConnectConfiguration> {
     let configure = tls_connector_builder(settings)?
         .build()
         .configure()
-        .context(TlsBuildConnectorSnafu)?
+        .map_err(TlsError::BuildConnector)?
         .verify_hostname(verify_hostname);
     Ok(configure)
 }

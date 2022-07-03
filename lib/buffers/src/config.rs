@@ -2,7 +2,7 @@ use std::num::{NonZeroU64, NonZeroUsize};
 use std::{fmt, path::PathBuf};
 
 use serde::{de, ser, Deserialize, Deserializer, Serialize, Serializer};
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tracing::Span;
 
 use crate::{
@@ -14,12 +14,15 @@ use crate::{
     Acker, Bufferable, WhenFull,
 };
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BufferBuildError {
-    #[snafu(display("the configured buffer type requires `data_dir` be specified"))]
+    #[error("the configured buffer type requires `data_dir` be specified")]
     RequiresDataDir,
-    #[snafu(display("error occurred when building buffer: {}", source))]
-    FailedToBuildTopology { source: TopologyError },
+    #[error("error occurred when building buffer: {err:?}")]
+    FailedToBuildTopology {
+        #[from]
+        err: TopologyError,
+    },
 }
 
 #[derive(Deserialize, Serialize)]
@@ -313,9 +316,6 @@ impl BufferConfig {
             stage.add_to_builder(&mut builder, data_dir.clone(), buffer_id.clone())?;
         }
 
-        builder
-            .build(span)
-            .await
-            .context(FailedToBuildTopologySnafu)
+        builder.build(span).await.map_err(Into::into)
     }
 }

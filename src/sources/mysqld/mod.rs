@@ -19,27 +19,25 @@ use framework::config::{
 use framework::{tls::TlsConfig, Source};
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
+use thiserror::Error;
 
 const VERSION_QUERY: &str = "SELECT @@version";
 
-#[derive(Debug, Snafu)]
-pub enum Error {
-    #[snafu(display("query execute failed, query: {}, err: {}", query, source))]
+#[derive(Debug, Error)]
+pub enum MysqlError {
+    #[error("query execute failed, query: {query}, err: {err}")]
     Query {
-        source: sqlx::Error,
+        err: sqlx::Error,
         query: &'static str,
     },
-    #[snafu(display("get server version failed, err: {}", source))]
-    GetServerVersion { source: sqlx::Error },
-    #[snafu(display("parse mysql version failed, version: {}", version))]
-    ParseMysqlVersion { version: String },
-    #[snafu(display("query slave status failed"))]
+    #[error("parse mysql version failed, version: {0}")]
+    ParseMysqlVersion(String),
+    #[error("query slave status failed")]
     QuerySlaveStatus,
-    #[snafu(display("task join failed, err: {}", source))]
-    TaskJoin { source: tokio::task::JoinError },
+    #[error("task join failed, err: {0}")]
+    TaskJoin(#[from] tokio::task::JoinError),
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -239,7 +237,7 @@ impl SourceConfig for MysqldConfig {
     }
 }
 
-pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Error> {
+pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, MysqlError> {
     let version = match get_mysql_version(&pool).await {
         Ok(v) => v,
         Err(err) => {
@@ -295,9 +293,7 @@ pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, Er
 
     // When `try_join_all` works with `JoinHandle`, the behavior does not match
     // the docs. See: https://github.com/rust-lang/futures-rs/issues/2167
-    let results = futures::future::try_join_all(tasks)
-        .await
-        .context(TaskJoinSnafu)?;
+    let results = futures::future::try_join_all(tasks).await?;
 
     // NOTE:
     // `results.into_iter().collect()` would be awesome, BUT
@@ -321,19 +317,18 @@ pub fn valid_name(s: &str) -> String {
         .to_lowercase()
 }
 
-pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, Error> {
+pub async fn get_mysql_version(pool: &MySqlPool) -> Result<f64, MysqlError> {
     let version = sqlx::query_scalar::<_, String>(VERSION_QUERY)
         .fetch_one(pool)
         .await
-        .context(QuerySnafu {
+        .map_err(|err| MysqlError::Query {
             query: VERSION_QUERY,
+            err,
         })?;
 
     let nums = version.split('.').collect::<Vec<_>>();
     if nums.len() < 2 {
-        return Err(Error::ParseMysqlVersion {
-            version: version.clone(),
-        });
+        return Err(MysqlError::ParseMysqlVersion(version));
     }
 
     let version = match (nums[0].parse::<f64>(), nums[1].parse::<f64>()) {

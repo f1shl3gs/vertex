@@ -454,12 +454,10 @@ mod integration_tests {
                 let (parts, _body) = resp.into_parts();
                 match parts.status {
                     StatusCode::OK => Ok(()),
-                    status => Err(ConsulError::UnexpectedStatusCode {
-                        code: status.as_u16(),
-                    }),
+                    status => Err(ConsulError::UnexpectedStatusCode(status.as_u16())),
                 }
             }
-            Err(err) => Err(ConsulError::HttpErr { source: err }),
+            Err(err) => Err(ConsulError::HttpErr(err)),
         };
     }
 

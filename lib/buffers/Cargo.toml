@@ -26,7 +26,7 @@ pin-project = { version = "1.0.10", default-features = false }
 rkyv = { version = "0.7.39", default-features = false, features = ["size_32", "std", "strict", "validation"] }
 serde = { version = "1.0.137", default-features = false, features = ["derive"] }
 shared = { path = "../shared" }
-snafu = { version = "0.7.1", default-features = false, features = ["std"] }
+thiserror = { version = "1.0.31" }
 tokio = { version = "1.19.2", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-stream = { version = "0.1", default-features = false, features = ["sync"] }
 tokio-util = { version = "0.7.3", default-features = false }
@@ -40,5 +40,5 @@ temp-dir = "0.1.11"
 quickcheck = { version = "1.0.3" }
 tempdir = "0.3"
 tokio-test = { version  = "0.4.2" }
-tracing-fluent-assertions = { git = "https://github.com/vectordotdev/tracing-fluent-assertions", branch = "bump-tracing-subscriber" }
+tracing-fluent-assertions = { version = "0.3.0" }
 tracing-subscriber = { version = "0.3.12" }

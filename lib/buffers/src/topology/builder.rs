@@ -1,7 +1,7 @@
 use std::{error::Error, num::NonZeroUsize};
 
 use async_trait::async_trait;
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tracing::Span;
 
 use super::channel::{ReceiverAdapter, SenderAdapter};
@@ -35,25 +35,24 @@ pub trait IntoBuffer<T> {
     ) -> Result<(SenderAdapter<T>, ReceiverAdapter<T>, Option<Acker>), Box<dyn Error + Send + Sync>>;
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum TopologyError {
-    #[snafu(display("buffer topology cannot be empty"))]
+    #[error("buffer topology cannot be empty")]
     EmptyTopology,
-    #[snafu(display(
-        "stage {} configured with block/drop newest behavior in front of subsequent stage",
-        stage_idx
-    ))]
+    #[error(
+        "stage {stage_idx} configured with block/drop newest behavior in front of subsequent stage"
+    )]
     NextStageNotUsed { stage_idx: usize },
-    #[snafu(display("last stage in buffer topology cannot be set to overflow mode"))]
+    #[error("last stage in buffer topology cannot be set to overflow mode")]
     OverflowWhenLast,
-    #[snafu(display("failed to build individual stage {}: {}", stage_idx, source))]
+    #[error("failed to build individual stage {stage_idx}: {err}")]
     FailedToBuildStage {
         stage_idx: usize,
-        source: Box<dyn Error + Send + Sync>,
+        err: Box<dyn Error + Send + Sync>,
     },
-    #[snafu(display(
+    #[error(
         "multiple components with segmented acknowledgements cannot be used in the same buffer"
-    ))]
+    )]
     StackedAcks,
 }
 
@@ -141,7 +140,7 @@ impl<T> TopologyBuilder<T> {
                 .untransformed
                 .into_buffer_parts(usage_handle.clone())
                 .await
-                .context(FailedToBuildStageSnafu { stage_idx })?;
+                .map_err(|err| TopologyError::FailedToBuildStage { stage_idx, err })?;
 
             // Multiple components with "segmented" acknowledgements cannot be supported at the
             // moment.  Segmented acknowledgements refers to stages which split the

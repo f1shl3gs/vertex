@@ -117,7 +117,6 @@ mod tests {
     use super::*;
     use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
     use crate::sink::util::adaptive_concurrency::layer::AdaptiveConcurrencyLimitLayer;
-    use snafu::Snafu;
     use std::sync::{Mutex, MutexGuard};
     use std::time::Duration;
     use tokio::time::advance;
@@ -139,8 +138,9 @@ mod tests {
         }};
     }
 
-    #[derive(Clone, Copy, Debug, Snafu)]
+    #[derive(Clone, Copy, Debug, thiserror::Error)]
     enum TestError {
+        #[error("deferral")]
         Deferral,
     }
 

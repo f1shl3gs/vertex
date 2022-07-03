@@ -5,7 +5,7 @@ use std::{
 };
 
 use crc32fast::Hasher;
-use snafu::Snafu;
+use thiserror::Error;
 
 use super::io::{Filesystem, ProductionFilesystem};
 
@@ -31,9 +31,9 @@ pub(crate) fn create_crc32c_hasher() -> Hasher {
     crc32fast::Hasher::new()
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BuildError {
-    #[snafu(display("parameter '{}' was invalid: {}", param_name, reason))]
+    #[error("parameter '{param_name}' was invalid: {reason}")]
     InvalidParameter {
         param_name: &'static str,
         reason: &'static str,

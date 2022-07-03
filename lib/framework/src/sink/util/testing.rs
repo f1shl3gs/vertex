@@ -61,7 +61,7 @@ pub fn build_test_server_generic<B>(
 where
     B: HttpBody + Send + Sync + 'static,
     <B as HttpBody>::Data: Send + Sync,
-    <B as HttpBody>::Error: snafu::Error + Send + Sync,
+    <B as HttpBody>::Error: std::error::Error + Send + Sync,
 {
     let (tx, rx) = mpsc::channel(100);
     let service = make_service_fn(move |_| {

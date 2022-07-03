@@ -65,10 +65,10 @@ mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 
-use snafu::Snafu;
+use thiserror::Error;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 enum BuildError {
-    #[snafu(display("URI parse error: {}", source))]
-    UriParseError { source: ::http::uri::InvalidUri },
+    #[error("URI parse error: {0}")]
+    UriParseError(::http::uri::InvalidUri),
 }

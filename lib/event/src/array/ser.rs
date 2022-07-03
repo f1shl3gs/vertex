@@ -1,27 +1,53 @@
+use std::fmt::{Display, Formatter};
+
 use buffers::encoding::{AsMetadata, Encodable};
 use bytes::{Buf, BufMut};
 use enumflags2::{bitflags, BitFlags, FromBitsError};
 use prost::Message;
-use snafu::Snafu;
 
 use crate::proto;
 use crate::Events;
 
-#[derive(Debug, Snafu)]
+#[derive(Debug)]
 pub enum EncodeError {
-    #[snafu(display("the provided buffer was too small to fully encode this item"))]
     BufferTooSmall,
 }
 
-#[derive(Debug, Snafu)]
+impl Display for EncodeError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "the provided buffer was too small to fully encode this item"
+        )
+    }
+}
+
+impl std::error::Error for EncodeError {}
+
+#[derive(Debug)]
 pub enum DecodeError {
-    #[snafu(display(
-        "the provided buffer could not be decoded as a valid Protocol Buffers payload"
-    ))]
     InvalidProtobufPayload,
-    #[snafu(display("unsupported encoding metadata for this context"))]
     UnsupportedEncodingMetadata,
 }
+
+impl Display for DecodeError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            DecodeError::InvalidProtobufPayload => {
+                write!(
+                    f,
+                    "the provided buffer could not be decoded as a valid Protocol Buffers payload"
+                )
+            }
+            DecodeError::UnsupportedEncodingMetadata => {
+                write!(f, "unsupported encoding metadata for this context")
+            }
+        }
+    }
+}
+
+impl std::error::Error for DecodeError {}
+
 /// Flags for describing the encoding scheme used by our primary event types that flow through buffers.
 ///
 /// # Stability

@@ -7,7 +7,7 @@ use regex::Regex;
 use sqlx::mysql::MySqlRow;
 use sqlx::{Column, FromRow, MySqlPool, Row, ValueRef};
 
-use crate::sources::mysqld::Error;
+use crate::sources::mysqld::MysqlError;
 
 #[derive(Default, Debug)]
 struct Record {
@@ -75,7 +75,7 @@ impl<'r> FromRow<'r, MySqlRow> for Record {
     }
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, Error> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     let mut record = None;
 
     // Try the both syntax for MySQL/Percona and MariaDB

@@ -148,7 +148,7 @@ use std::{
 use async_trait::async_trait;
 use futures::{ready, SinkExt, Stream};
 use pin_project::pin_project;
-use snafu::{ResultExt, Snafu};
+use thiserror::Error;
 use tokio::sync::mpsc::{channel, Receiver};
 use tokio_util::sync::{PollSender, ReusableBoxFuture};
 
@@ -183,22 +183,31 @@ use crate::{
 };
 
 /// Error that occurred when creating/loading a disk buffer.
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum BufferError<T>
 where
     T: Bufferable,
 {
     /// Failed to create/load the ledger.
-    #[snafu(display("failed to load/create ledger: {}", source))]
-    LedgerError { source: LedgerLoadCreateError },
+    #[error("failed to load/create ledger: {err:?}")]
+    LedgerError {
+        #[from]
+        err: LedgerLoadCreateError,
+    },
 
     /// Failed to initialize/catch the reader up to where it left off.
-    #[snafu(display("failed to seek to position where reader left off: {}", source))]
-    ReaderSeekFailed { source: ReaderError<T> },
+    #[error("failed to seek to position where reader left off: {err:?}")]
+    ReaderSeekFailed {
+        #[from]
+        err: ReaderError<T>,
+    },
 
     /// Failed to initialize/catch the writer up to where it left off.
-    #[snafu(display("failed to seek to position where writer left off: {}", source))]
-    WriterSeekFailed { source: WriterError<T> },
+    #[error("failed to seek to position where writer left off: {err:?}")]
+    WriterSeekFailed {
+        #[from]
+        err: WriterError<T>,
+    },
 }
 
 /// Helper type for creating a disk buffer.
@@ -219,22 +228,14 @@ where
         FS: Filesystem + Clone + 'static,
         FS::File: Unpin,
     {
-        let ledger = Ledger::load_or_create(config, usage_handle)
-            .await
-            .context(LedgerSnafu)?;
+        let ledger = Ledger::load_or_create(config, usage_handle).await?;
         let ledger = Arc::new(ledger);
 
         let mut writer = Writer::new(Arc::clone(&ledger));
-        writer
-            .validate_last_write()
-            .await
-            .context(WriterSeekFailedSnafu)?;
+        writer.validate_last_write().await?;
 
         let mut reader = Reader::new(Arc::clone(&ledger));
-        reader
-            .seek_to_next_record()
-            .await
-            .context(ReaderSeekFailedSnafu)?;
+        reader.seek_to_next_record().await?;
 
         ledger.synchronize_buffer_usage();
 

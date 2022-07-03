@@ -21,7 +21,6 @@ use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
 use rdkafka::{ClientConfig, Message, TopicPartitionList};
 use serde::{Deserialize, Serialize};
-use snafu::{ResultExt, Snafu};
 
 use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
 
@@ -199,12 +198,12 @@ inventory::submit! {
     SourceDescription::new::<KafkaSourceConfig>("kafka")
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, thiserror::Error)]
 enum BuildError {
-    #[snafu(display("Could not create Kafka consumer: {}", source))]
-    KafkaCreateError { source: rdkafka::error::KafkaError },
-    #[snafu(display("Could not subscribe to Kafka topics: {}", source))]
-    KafkaSubscribeError { source: rdkafka::error::KafkaError },
+    #[error("Could not create Kafka consumer: {0}")]
+    KafkaCreateError(rdkafka::error::KafkaError),
+    #[error("Could not subscribe to Kafka topics: {0}")]
+    KafkaSubscribeError(rdkafka::error::KafkaError),
 }
 
 impl KafkaSourceConfig {
@@ -248,10 +247,12 @@ impl KafkaSourceConfig {
 
         let consumer = client_config
             .create_with_context::<_, StreamConsumer<_>>(KafkaStatisticsContext::new())
-            .context(KafkaCreateSnafu)?;
+            .map_err(BuildError::KafkaCreateError)?;
 
         let topics: Vec<&str> = self.topics.iter().map(|s| s.as_str()).collect();
-        consumer.subscribe(&topics).context(KafkaSubscribeSnafu)?;
+        consumer
+            .subscribe(&topics)
+            .map_err(BuildError::KafkaSubscribeError)?;
 
         Ok(consumer)
     }

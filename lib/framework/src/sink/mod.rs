@@ -13,15 +13,15 @@ use event::{Event, EventContainer, Events};
 use futures::future::BoxFuture;
 use futures::stream::BoxStream;
 use futures::{SinkExt, Stream, StreamExt};
-use snafu::Snafu;
+use thiserror::Error;
 
 pub type Healthcheck = BoxFuture<'static, crate::Result<()>>;
 
 /// Common healthcheck errors
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum HealthcheckError {
-    #[snafu(display("Unexpected status: {}", status))]
-    UnexpectedStatus { status: ::http::StatusCode },
+    #[error("Unexpected status: {0}")]
+    UnexpectedStatus(::http::StatusCode),
 }
 
 #[async_trait]

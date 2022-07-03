@@ -17,7 +17,7 @@ use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
 use shared::ByteSizeOf;
-use snafu::Snafu;
+use thiserror::Error;
 
 use super::config::{Encoding, LokiConfig, OutOfOrderAction};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
@@ -84,17 +84,15 @@ impl LokiRequestBuilder {
     }
 }
 
-#[derive(Debug, Snafu)]
+#[derive(Debug, Error)]
 pub enum RequestBuildError {
-    #[snafu(display("Encoded payload is greater than the max limit"))]
-    PayloadTooBig,
-    #[snafu(display("Failed to build payload, err: {}", source))]
-    IO { source: std::io::Error },
+    #[error("Failed to build payload, err: {0}")]
+    IO(std::io::Error),
 }
 
 impl From<std::io::Error> for RequestBuildError {
     fn from(err: Error) -> Self {
-        RequestBuildError::IO { source: err }
+        RequestBuildError::IO(err)
     }
 }
 
