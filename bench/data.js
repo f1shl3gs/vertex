@@ -38193,21 +38193,6 @@ window.BENCHMARK_DATA = {
         "tool": "customSmallerIsBetter",
         "benches": [
           {
-            "name": "deserialize/jsmn",
-            "value": 436.17,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 437.23,
-            "unit": "ns/op"
-          },
-          {
-            "name": "deserialize/serde",
-            "value": 511.34,
-            "unit": "ns/op"
-          },
-          {
             "name": "haproxy/parse_csv",
             "value": 71197000,
             "unit": "ns/op"
