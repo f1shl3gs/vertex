@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656846279206,
+  "lastUpdate": 1656846480004,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -55276,6 +55276,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1415,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf331c7ba476d238c19076b31532ebb8a78fb9a7",
+          "message": "Merge pull request #407 from f1shl3gs/cleanup_and_little_optimize\n\nCleanup and little optimize",
+          "timestamp": "2022-07-03T18:32:49+08:00",
+          "tree_id": "a95d502f3a5bda7e59be27b84476235230e1e72c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf331c7ba476d238c19076b31532ebb8a78fb9a7"
+        },
+        "date": 1656846474675,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1845,
             "unit": "s"
           }
         ]
