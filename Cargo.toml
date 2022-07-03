@@ -27,6 +27,7 @@ debug = true
 [workspace]
 members = [
     "lib/buffers",
+    "lib/codecs",
     "lib/discovery",
     "lib/event",
     "lib/framework",

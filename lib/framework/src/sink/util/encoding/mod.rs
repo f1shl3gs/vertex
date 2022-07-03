@@ -1,3 +1,4 @@
+mod adapter;
 mod codec;
 mod config;
 
@@ -400,3 +401,15 @@ mod tests {
         }
     }
 }
+
+/// Configuration for building a `Serializer`.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub enum SerializerConfig {
+    Json,
+    NativeJson,
+    Text,
+    Logfmt,
+    Raw,
+}
+
+pub struct Serializer<T>;

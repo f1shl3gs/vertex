@@ -25,12 +25,14 @@ use std::sync::Arc;
 
 use buffers::EventCount;
 use bytes::Bytes;
+use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
 use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),

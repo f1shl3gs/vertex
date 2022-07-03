@@ -72,6 +72,20 @@ impl Value {
         }
     }
 
+    pub fn as_object(&self) -> Option<&BTreeMap<String, Self>> {
+        match self {
+            Value::Map(m) => Some(m),
+            _ => None,
+        }
+    }
+
+    pub fn as_object_mut_unwrap(&mut self) -> &mut BTreeMap<String, Self> {
+        match self {
+            Value::Map(ref mut m) => m,
+            _ => panic!("Tried to call `Value::as_map` on a non-map value"),
+        }
+    }
+
     /// Merges `other` value into self.
     ///
     /// Will concatenate `Bytes` and overwrite the rest value kinds
