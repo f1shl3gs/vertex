@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656961176155,
+  "lastUpdate": 1656962148949,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -55671,6 +55671,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1845,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a40665be1c3868e5f68e67e5497d79a1db847a1",
+          "message": "Merge pull request #411 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.14\n\nchore(deps): bump tracing-subscriber from 0.3.12 to 0.3.14",
+          "timestamp": "2022-07-05T02:51:01+08:00",
+          "tree_id": "ddc597fe51e4591449ccf382a6f51f704f627bde",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a40665be1c3868e5f68e67e5497d79a1db847a1"
+        },
+        "date": 1656962146024,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1294,
             "unit": "s"
           }
         ]
