@@ -1,7 +1,7 @@
+use crate::Path;
 use std::borrow::Cow;
 use std::iter::Cloned;
 use std::slice::Iter;
-use crate::Path;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum BorrowedSegment<'a> {
@@ -9,7 +9,7 @@ pub enum BorrowedSegment<'a> {
     Index(isize),
     CoalesceField(Cow<'a, str>),
     CoalesceEnd(Cow<'a, str>),
-    Invalid
+    Invalid,
 }
 
 impl BorrowedSegment<'_> {
@@ -47,4 +47,3 @@ impl<'a, 'b> Path<'a> for &'b Vec<BorrowedSegment<'a>> {
         self.as_slice().iter().cloned()
     }
 }
-

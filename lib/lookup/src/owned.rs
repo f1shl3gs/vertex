@@ -176,6 +176,4 @@ impl OwnedSegment {
     }
 }
 
-impl<'a> Path<'a> for &'a OwnedPath {
-
-}
+impl<'a> Path<'a> for &'a OwnedPath {}

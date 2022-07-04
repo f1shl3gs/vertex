@@ -1,7 +1,7 @@
-mod owned;
-mod concat;
 mod borrowed;
+mod concat;
 mod jit;
+mod owned;
 
 use crate::borrowed::BorrowedSegment;
 use crate::concat::PathConcat;
@@ -10,14 +10,14 @@ use crate::owned::OwnedPath;
 /// A path is simply the data describing how to look up a value.
 /// This should only be implemented for types that are very cheap to clone, such as references.
 pub trait Path<'a>: Clone {
-    type Iter: Iterator<Item=BorrowedSegment<'a>>;
+    type Iter: Iterator<Item = BorrowedSegment<'a>>;
 
     fn segment_iter(&self) -> Self::Iter;
 
     fn concat<T: Path<'a>>(&self, path: T) -> PathConcat<Self, T> {
         PathConcat {
             a: self.clone(),
-            b: path
+            b: path,
         }
     }
 
@@ -67,4 +67,3 @@ pub fn parse_path(path: &str) -> OwnedPath {
 
     OwnedPath { segments }
 }
-

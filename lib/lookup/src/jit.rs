@@ -1,5 +1,5 @@
-use std::str::CharIndices;
 use crate::Path;
+use std::str::CharIndices;
 
 #[derive(Clone)]
 pub struct JitPath<'a> {
@@ -19,7 +19,7 @@ pub struct JitLookup<'a> {
     state: JitState,
     escape_buffer: String,
     // keep track of the number of options in a coalesce to prevent size 1 coalesces
-    coalesce_count: u32
+    coalesce_count: u32,
 }
 
 impl<'a> JitLookup<'a> {
@@ -55,13 +55,9 @@ enum JitState {
     EscapedQuote,
     CoalesceStart,
     CoalesceField(usize),
-    CoalesceFieldEnd {
-        start: usize,
-        end: usize
-    },
+    CoalesceFieldEnd { start: usize, end: usize },
     CoalesceEscapedFieldEnd,
-    CoalesceQuote (usize),
+    CoalesceQuote(usize),
     CoalesceEscapedQuote,
-    End
+    End,
 }
-
