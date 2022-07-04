@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1656962191380,
+  "lastUpdate": 1656962318894,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -55729,6 +55729,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1413,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "18d634442feba7cceebe52280eaa0c62d85b397b",
+          "message": "Merge pull request #409 from f1shl3gs/dependabot/cargo/pin-project-1.0.11\n\nchore(deps): bump pin-project from 1.0.10 to 1.0.11",
+          "timestamp": "2022-07-05T02:50:32+08:00",
+          "tree_id": "22e5041b97450bc44ef7ce16d1cfcbcddaaf92d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/18d634442feba7cceebe52280eaa0c62d85b397b"
+        },
+        "date": 1656962315898,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1457,
             "unit": "s"
           }
         ]
