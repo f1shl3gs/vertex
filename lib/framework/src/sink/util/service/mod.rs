@@ -3,6 +3,7 @@ mod map;
 
 use std::marker::PhantomData;
 use std::sync::Arc;
+
 // re-export
 pub use concurrency::*;
 pub use map::Map;

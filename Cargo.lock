@@ -2226,6 +2226,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "lookup"
+version = "0.1.0"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "lru"
 version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5044,6 +5051,7 @@ dependencies = [
  "bytes",
  "chrono",
  "chrono-tz",
+ "codecs",
  "colored",
  "criterion",
  "dyn-clone",
@@ -5069,6 +5077,7 @@ dependencies = [
  "kube",
  "libc",
  "log_schema",
+ "lookup",
  "lru",
  "maxminddb",
  "memchr 2.5.0",

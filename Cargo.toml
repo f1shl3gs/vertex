@@ -331,11 +331,13 @@ tower-test = { version = "0.4.0" }
 [dependencies]
 # workspaces
 buffers = { path = "lib/buffers" }
+codecs = { path = "lib/codecs" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
+lookup = { path = "lib/lookup" }
 multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }

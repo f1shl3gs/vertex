@@ -302,7 +302,7 @@ where
                                             ?err,
                                             request_id,
                                         );
-                                        finalizers.update_status(EventStatus::Failed);
+                                        finalizers.update_status(EventStatus::Rejected);
                                     },
                                     Ok(resp) => {
                                         trace!(

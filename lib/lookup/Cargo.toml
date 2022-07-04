@@ -1,0 +1,8 @@
+[package]
+name = "lookup"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+serde = { version = "1.0.137", default-features = false }

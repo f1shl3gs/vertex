@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::fmt::Write;
 
-use bytes::{BufMut, BytesMut};
+use bytes::BytesMut;
 use event::log::Value;
 use event::Event;
 use tokio_util::codec::Encoder;
@@ -43,7 +43,6 @@ fn flatten(input: &BTreeMap<String, Value>, separator: char) -> BTreeMap<String,
     for (k, v) in input {
         match v {
             // TODO: array
-
             Value::Map(m) => {
                 for (nk, nv) in flatten(m, separator) {
                     map.insert(format!("{}{}{}", k, separator, nk), nv);

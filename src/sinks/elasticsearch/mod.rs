@@ -2,6 +2,9 @@ mod common;
 mod config;
 mod encoder;
 mod request_builder;
+mod retry;
+mod service;
+mod sink;
 
 use config::DataStreamConfig;
 use event::{EventRef, LogRecord};

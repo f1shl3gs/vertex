@@ -138,7 +138,7 @@ impl Encoder<Vec<Event>> for StandardEncodings {
     }
 }
 
-fn as_tracked_write<F, I, E>(inner: &mut dyn io::Write, input: I, f: F) -> io::Result<usize>
+pub fn as_tracked_write<F, I, E>(inner: &mut dyn io::Write, input: I, f: F) -> io::Result<usize>
 where
     F: FnOnce(&mut dyn io::Write, I) -> Result<(), E>,
     E: Into<io::Error> + 'static,

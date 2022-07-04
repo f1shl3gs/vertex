@@ -11,6 +11,7 @@ use event::{log::Value, Event, LogRecord, MaybeAsLogMut};
 use serde::{Deserialize, Serialize};
 
 // re-export
+pub use adapter::Transformer;
 pub use codec::*;
 pub use config::*;
 
@@ -53,7 +54,7 @@ pub trait EncodingConfiguration {
 
     fn codec(&self) -> &Self::Codec;
     fn schema(&self) -> &Option<String>;
-    fn only_fields(&self) -> &Option<Vec<Vec<PathComponent>>>;
+    fn only_fields(&self) -> &Option<Vec<PathComponent>>;
     fn except_fields(&self) -> &Option<Vec<String>>;
     fn timestamp_format(&self) -> &Option<TimestampFormat>;
 
@@ -411,5 +412,3 @@ pub enum SerializerConfig {
     Logfmt,
     Raw,
 }
-
-pub struct Serializer<T>;

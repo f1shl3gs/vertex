@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use crate::sinks::elasticsearch::request_builder::ElasticsearchRequestBuilder;
 use framework::config::UriSerde;
 use framework::http::{Auth, MaybeAuth};
 use framework::sink::util::service::RequestConfig;

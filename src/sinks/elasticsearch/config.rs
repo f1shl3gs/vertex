@@ -1,17 +1,24 @@
 use std::collections::BTreeMap;
 
-use crate::sinks::elasticsearch::{ElasticsearchCommonMode, ParseError};
 use event::log::Value;
 use event::{EventRef, LogRecord};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
-use framework::sink::util::service::RequestConfig;
-use framework::sink::util::Compression;
+use framework::http::HttpClient;
+use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
+use framework::sink::util::{Compression, Transformer};
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
+use tower::ServiceBuilder;
+
+use crate::sinks::elasticsearch::common::ElasticsearchCommon;
+use crate::sinks::elasticsearch::retry::ElasticsearchRetryLogic;
+use crate::sinks::elasticsearch::service::{ElasticsearchService, HttpRequestBuilder};
+use crate::sinks::elasticsearch::sink::ElasticsearchSink;
+use crate::sinks::elasticsearch::{ElasticsearchCommonMode, ParseError};
 
 /// The field name for the timestamp required by data stream mode
 pub const DATA_STREAM_TIMESTAMP_KEY: &str = "@timestamp";
@@ -213,6 +220,11 @@ pub(super) struct ElasticsearchConfig {
     pub request: RequestConfig,
     pub auth: Option<ElasticsearchAuth>,
     pub tls: Option<TlsConfig>,
+    #[serde(
+        skip_serializing_if = "crate::serde::skip_serializing_if_default",
+        default
+    )]
+    pub encoding: Transformer,
 
     pub bulk: Option<BulkConfig>,
     pub data_stream: Option<DataStreamConfig>,
@@ -256,7 +268,39 @@ impl ElasticsearchConfig {
 #[async_trait]
 #[typetag::serde(name = "elasticsearch")]
 impl SinkConfig for ElasticsearchConfig {
-    async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {}
+    async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
+        let common = ElasticsearchCommon::parse_config(self).await?;
+        let http_client = HttpClient::new(common.tls_settings.clone(), cx.proxy())?;
+        let batch_settings = self.batch.into_batch_settings()?;
+        let request_limits = self.request.unwrap_with(&RequestConfig::default());
+        let http_request_builder = HttpRequestBuilder {
+            bulk_uri: common.bulk_uri.clone(),
+            request_config: self.request.clone(),
+            http_auth: common.http_auth.clone(),
+            query_params: common.query_params.clone(),
+            compression: self.compression,
+        };
+
+        let service = ServiceBuilder::new()
+            .settings(request_limits, ElasticsearchRetryLogic)
+            .service(ElasticsearchService::new(http_client, http_request_builder));
+
+        let sink = ElasticsearchSink {
+            batch_settings,
+            request_builder: common.request_builder.clone(),
+            transformer: self.encoding.clone(),
+            service,
+            acker: cx.acker,
+            mode: common.mode.clone(),
+            id_key_field: self.id_key.clone(),
+        };
+
+        let client = HttpClient::new(common.tls_settings.clone(), cx.proxy())?;
+        let healthcheck = common.healthcheck(client).boxed();
+        let stream = framework::Sink::from_event_sink(sink);
+
+        Ok((stream, healthcheck))
+    }
 
     fn input_type(&self) -> DataType {
         DataType::Log
