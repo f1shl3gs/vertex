@@ -1,5 +1,5 @@
-use event::log::path_iter::PathComponent;
 use event::Event;
+use lookup::OwnedPath;
 use serde::{Deserialize, Serialize};
 
 use crate::config::skip_serializing_if_default;
@@ -9,7 +9,7 @@ use crate::sink::util::TimestampFormat;
 #[derive(Clone, Debug, Default, PartialEq, Deserialize, Serialize)]
 struct TransformerInner {
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-    only_fields: Option<Vec<PathComponent<'static>>>,
+    only_fields: Option<Vec<OwnedPath>>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     expect_fields: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
@@ -35,7 +35,7 @@ impl EncodingConfiguration for Transformer {
         &None
     }
 
-    fn only_fields(&self) -> &Option<Vec<PathComponent>> {
+    fn only_fields(&self) -> &Option<Vec<OwnedPath>> {
         &self.0.only_fields
     }
 

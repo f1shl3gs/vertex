@@ -1,42 +1,23 @@
+//! A collection of support structures that are used in the process of encoding
+//! events into bytes.
+
 mod format;
 mod framing;
 
-use bytes::BytesMut;
-use event::Event;
 use serde::{Deserialize, Serialize};
-use tokio_util::codec::Encoder;
 
+/// Configuration for building a `Serializer`
 #[derive(Clone, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SerializerConfig {
+    /// Configures the `JsonSerializer`
     Json,
+    /// Configures the `LogfmtSerializer`
     Logfmt,
+    /// Configures the `NativeJsonSerializer`,
     NativeJson,
+    /// Configures the `TextSerializer`
     Text,
 }
 
 impl SerializerConfig {}
-
-pub struct Serializer<T> {
-    inner: T,
-}
-
-impl<T> Serializer<T> {
-    pub fn new(inner: T) -> Self {
-        Self { inner }
-    }
-}
-
-impl<T> Encoder<Event> for Serializer<T>
-where
-    T: Encoder<Event>,
-    T::Error: From<std::io::Error>,
-{
-    type Error = crate::Error;
-
-    fn encode(&mut self, item: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
-        // TODO: handle error
-        let _n = self.inner.encode(item, dst);
-        Ok(())
-    }
-}

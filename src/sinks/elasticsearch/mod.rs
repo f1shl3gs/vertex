@@ -6,6 +6,9 @@ mod retry;
 mod service;
 mod sink;
 
+#[cfg(test)]
+mod tests;
+
 use config::DataStreamConfig;
 use event::{EventRef, LogRecord};
 use framework::template::{Template, TemplateParseError};

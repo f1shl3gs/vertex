@@ -1,7 +1,7 @@
 use std::fmt::{Debug, Formatter};
 use std::marker::PhantomData;
 
-use event::log::path_iter::{PathComponent, PathIter};
+use lookup::OwnedPath;
 use serde::de::{DeserializeOwned, Error, IntoDeserializer, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 
@@ -24,7 +24,7 @@ pub struct EncodingConfig<E> {
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub schema: Option<String>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-    pub only_fields: Option<Vec<Vec<PathComponent<'static>>>>,
+    pub only_fields: Option<Vec<OwnedPath>>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub except_fields: Option<Vec<String>>,
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
@@ -42,7 +42,7 @@ impl<E> EncodingConfiguration for EncodingConfig<E> {
         &self.schema
     }
 
-    fn only_fields(&self) -> &Option<Vec<Vec<PathComponent>>> {
+    fn only_fields(&self) -> &Option<Vec<OwnedPath>> {
         &self.only_fields
     }
 
@@ -73,7 +73,7 @@ pub struct Inner<E> {
     #[serde(default)]
     schema: Option<String>,
     #[serde(default)]
-    only_fields: Option<Vec<String>>,
+    only_fields: Option<Vec<OwnedPath>>,
     #[serde(default)]
     except_fields: Option<Vec<String>>,
     #[serde(default)]
@@ -134,17 +134,7 @@ where
         let concrete = Self {
             codec: inner.codec,
             schema: inner.schema,
-
-            only_fields: inner.only_fields.map(|fields| {
-                fields
-                    .iter()
-                    .map(|only| {
-                        PathIter::new(only)
-                            .map(|component| component.into_static())
-                            .collect()
-                    })
-                    .collect()
-            }),
+            only_fields: inner.only_fields,
             except_fields: inner.except_fields,
             timestamp_format: inner.timestamp_format,
         };

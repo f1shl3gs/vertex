@@ -1,4 +1,4 @@
-use crate::Path;
+use crate::{OwnedSegment, Path};
 use std::borrow::Cow;
 use std::iter::Cloned;
 use std::slice::Iter;
@@ -36,7 +36,19 @@ impl BorrowedSegment<'_> {
 
 impl<'a> From<&'a str> for BorrowedSegment<'a> {
     fn from(s: &'a str) -> Self {
-        BorrowedSegment::field(s.as_str())
+        BorrowedSegment::field(s)
+    }
+}
+
+impl<'a, 'b: 'a> From<&'b OwnedSegment> for BorrowedSegment<'a> {
+    fn from(segment: &'b OwnedSegment) -> Self {
+        match segment {
+            OwnedSegment::Field(f) => BorrowedSegment::Field(f.as_str().into()),
+            OwnedSegment::Index(i) => BorrowedSegment::Index(*i),
+            OwnedSegment::Invalid => BorrowedSegment::Invalid,
+            OwnedSegment::CoalesceField(f) => BorrowedSegment::CoalesceField(f.as_str().into()),
+            OwnedSegment::CoalesceEnd(f) => BorrowedSegment::CoalesceEnd(f.as_str().into()),
+        }
     }
 }
 

@@ -1,3 +1,4 @@
+use crate::{parse_path, BorrowedSegment, Path};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
@@ -46,7 +47,7 @@ impl<'de> Deserialize<'de> for OwnedPath {
 }
 
 impl Serialize for OwnedPath {
-    fn serialize<S>(&self, serializer: S) -> Result<serde::ser::Ok, S::Error>
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
     {
@@ -103,7 +104,7 @@ fn serialize_field(field: &str, separator: Option<&str>) -> String {
     // These characters should match the ones from the parser, implemented in `JitLookup`
     let needs_quotes = field
         .chars()
-        .any(|c| !matches!(c, 'A'..'Z' | 'a'..'z' | '_' | '0'..='9' | '@'));
+        .any(|c| !matches!(c, 'A'..='Z' | 'a'..='z' | '_' | '0'..='9' | '@'));
 
     // Allocate enough to fit the field, a `.` and two `"` characters. This should
     // suffice for the majority of cases when no escape sequence is used.
@@ -146,6 +147,18 @@ pub enum OwnedSegment {
     Invalid,
 }
 
+impl<'a> From<&'a str> for OwnedSegment {
+    fn from(f: &'a str) -> Self {
+        OwnedSegment::field(f)
+    }
+}
+
+impl From<isize> for OwnedSegment {
+    fn from(i: isize) -> Self {
+        OwnedSegment::index(i)
+    }
+}
+
 impl OwnedSegment {
     pub fn field(value: &str) -> OwnedSegment {
         OwnedSegment::Field(value.to_string())
@@ -176,4 +189,102 @@ impl OwnedSegment {
     }
 }
 
-impl<'a> Path<'a> for &'a OwnedPath {}
+impl<'a> From<BorrowedSegment<'a>> for OwnedSegment {
+    fn from(segment: BorrowedSegment<'a>) -> Self {
+        match segment {
+            BorrowedSegment::Field(f) => OwnedSegment::Field(f.to_string()),
+            BorrowedSegment::Index(i) => OwnedSegment::Index(i),
+            BorrowedSegment::Invalid => OwnedSegment::Invalid,
+            BorrowedSegment::CoalesceField(f) => OwnedSegment::CoalesceField(f.to_string()),
+            BorrowedSegment::CoalesceEnd(f) => OwnedSegment::CoalesceEnd(f.to_string()),
+        }
+    }
+}
+
+impl<'a> Path<'a> for &'a OwnedPath {
+    type Iter = OwnedSegmentSliceIter<'a>;
+
+    fn segment_iter(&self) -> Self::Iter {
+        (&self.segments).segment_iter()
+    }
+}
+
+impl<'a> Path<'a> for &'a Vec<OwnedSegment> {
+    type Iter = OwnedSegmentSliceIter<'a>;
+
+    fn segment_iter(&self) -> Self::Iter {
+        OwnedSegmentSliceIter {
+            segments: self.as_slice(),
+            index: 0,
+        }
+    }
+}
+
+pub struct OwnedSegmentSliceIter<'a> {
+    segments: &'a [OwnedSegment],
+    index: usize,
+}
+
+impl<'a> Iterator for OwnedSegmentSliceIter<'a> {
+    type Item = BorrowedSegment<'a>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let output = self.segments.get(self.index).map(Into::into);
+        self.index += 1;
+        output
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::parse_path;
+
+    #[test]
+    fn owned_path_serialize() {
+        let test_cases = [
+            ("", "<invalid>"),
+            ("]", "<invalid>"),
+            ("]foo", "<invalid>"),
+            ("..", "<invalid>"),
+            ("...", "<invalid>"),
+            ("f", "f"),
+            ("foo", "foo"),
+            (
+                r#"ec2.metadata."availability-zone""#,
+                r#"ec2.metadata."availability-zone""#,
+            ),
+            ("@timestamp", "@timestamp"),
+            ("foo[", "foo.<invalid>"),
+            ("foo$", "<invalid>"),
+            (r#""$peci@l chars""#, r#""$peci@l chars""#),
+            ("foo.foo bar", "foo.<invalid>"),
+            (r#"foo."foo bar".bar"#, r#"foo."foo bar".bar"#),
+            ("[1]", "[1]"),
+            ("[42]", "[42]"),
+            ("foo.[42]", "foo.<invalid>"),
+            ("[42].foo", "[42].foo"),
+            ("[-1]", "[-1]"),
+            ("[-42]", "[-42]"),
+            ("[-42].foo", "[-42].foo"),
+            ("[-42]foo", "[-42].foo"),
+            (r#""[42]. {}-_""#, r#""[42]. {}-_""#),
+            (r#""a\"a""#, r#""a\"a""#),
+            (r#"foo."a\"a"."b\\b".bar"#, r#"foo."a\"a"."b\\b".bar"#),
+            ("<invalid>", "<invalid>"),
+            (r#""🤖""#, r#""🤖""#),
+            (".(a|b)", "(a|b)"),
+            (".(a|b|c)", "(a|b|c)"),
+            ("foo.(a|b|c)", "foo.(a|b|c)"),
+            ("[0].(a|b|c)", "[0].(a|b|c)"),
+            (".(a|b|c).foo", "(a|b|c).foo"),
+            (".( a | b | c ).foo", "(a|b|c).foo"),
+        ];
+
+        for (path, expected) in test_cases {
+            let path = parse_path(path);
+            let path = serde_json::to_string(&path).unwrap();
+            let path = serde_json::from_str::<serde_json::Value>(&path).unwrap();
+            assert_eq!(path, expected);
+        }
+    }
+}

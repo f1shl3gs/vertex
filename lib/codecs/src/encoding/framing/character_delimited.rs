@@ -28,7 +28,7 @@ pub struct CharacterDelimitedEncoder {
 impl Encoder<()> for CharacterDelimitedEncoder {
     type Error = FramingError;
 
-    fn encode(&mut self, item: (), dst: &mut BytesMut) -> Result<(), Self::Error> {
+    fn encode(&mut self, _item: (), dst: &mut BytesMut) -> Result<(), Self::Error> {
         dst.put_u8(self.delimiter);
         Ok(())
     }

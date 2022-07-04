@@ -25,8 +25,8 @@ pub const DATA_STREAM_TIMESTAMP_KEY: &str = "@timestamp";
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BulkConfig {
-    action: Option<String>,
-    index: Option<String>,
+    pub action: Option<String>,
+    pub index: Option<String>,
 }
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
@@ -271,7 +271,7 @@ impl SinkConfig for ElasticsearchConfig {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let common = ElasticsearchCommon::parse_config(self).await?;
         let http_client = HttpClient::new(common.tls_settings.clone(), cx.proxy())?;
-        let batch_settings = self.batch.into_batch_settings()?;
+        let batch_settings = self.batch.into_batcher_settings()?;
         let request_limits = self.request.unwrap_with(&RequestConfig::default());
         let http_request_builder = HttpRequestBuilder {
             bulk_uri: common.bulk_uri.clone(),
@@ -316,7 +316,27 @@ mod tests {
     use super::*;
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<ElasticsearchConfig>()
+    }
+
+    #[test]
     fn default_data_stream_config() {
         let _d = DataStreamConfig::default();
+    }
+
+    #[test]
+    fn parse_mode() {
+        let config = serde_yaml::from_str::<ElasticsearchConfig>(
+            r#"
+endpoint: ""
+mode: data_stream
+data_stream.type = synthetics
+"#,
+        )
+        .unwrap();
+
+        assert!(matches!(config.mode, ElasticsearchMode::DataStream));
+        assert!(config.data_stream.is_some())
     }
 }
