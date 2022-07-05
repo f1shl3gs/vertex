@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657005840692,
+  "lastUpdate": 1657006064100,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8517,6 +8517,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1142300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b273782265a8f02aa79277e31d296b743b4989d3",
+          "message": "Merge pull request #413 from f1shl3gs/dependabot/cargo/once_cell-1.13.0\n\nchore(deps): bump once_cell from 1.12.0 to 1.13.0",
+          "timestamp": "2022-07-05T15:16:16+08:00",
+          "tree_id": "442e509364a03fa8960ee69e0c4be525b493a179",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b273782265a8f02aa79277e31d296b743b4989d3"
+        },
+        "date": 1657006058516,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1456700,
             "unit": "ns/op"
           }
         ]
