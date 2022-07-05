@@ -1,5 +1,6 @@
 use std::time::Duration;
 
+use crate::sinks::elasticsearch::config::ElasticsearchMode;
 use bytes::Bytes;
 use chrono::TimeZone;
 use chrono::Utc;
@@ -13,8 +14,8 @@ use framework::HealthcheckError;
 use futures_util::future::ready;
 use futures_util::stream;
 use http::{Request, StatusCode};
-use serde_json::json;
 use log_schema::log_schema;
+use serde_json::json;
 use testcontainers::core::WaitFor;
 use testcontainers::images::generic::GenericImage;
 use testify::random::random_string;
@@ -201,7 +202,8 @@ async fn structures_events_correctly() {
     let hit = hits.iter().next().unwrap();
     assert_eq!("42", hit["_id"]);
 
-    let value = hit.get("_source")
+    let value = hit
+        .get("_source")
         .expect("Elasticsearch hit missing _source");
     assert_eq!(None, value["some_id"].as_str());
 
@@ -211,4 +213,53 @@ async fn structures_events_correctly() {
         "timestamp": timestamp
     });
     assert_eq!(&expected, value)
+}
+
+async fn run_insert_tests(
+    mut config: ElasticsearchConfig,
+    break_events: bool,
+    status: BatchStatus,
+) {
+    config.bulk = Some(BulkConfig {
+        index: Some(gen_index()),
+        action: None,
+    });
+    run_insert_tests_with_config(&config, break_events, status).await;
+}
+
+async fn run_insert_tests_with_config(
+    config: &ElasticsearchConfig,
+    break_events: bool,
+    batch_status: BatchStatus,
+) {
+    let common = ElasticsearchCommon::parse_config(config)
+        .await
+        .expect("Config error");
+    let index = match config.mode {
+        ElasticsearchMode::DataStream => format!(
+            "{}",
+            Utc::now().format(".ds-logs-generic-default-%Y.%m.%d-000001")
+        ),
+        ElasticsearchMode::Bulk => config
+            .bulk
+            .as_ref()
+            .map(|x| x.index.clone().unwrap())
+            .unwrap(),
+    };
+    let base_url = common.base_url.clone();
+
+    let cx = SinkContext::new_test();
+    let (sink, healthcheck) = config
+        .build(cx.clone())
+        .await
+        .expect("Building config failed");
+
+    healthcheck.await.expect("Healthcheck failed");
+
+    let (batch, mut receiver) = BatchNotifier::new_with_receiver();
+}
+
+#[tokio::test]
+async fn insert_events_over_http() {
+    run_in
 }
