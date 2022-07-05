@@ -4,7 +4,7 @@ use std::num::NonZeroUsize;
 use async_trait::async_trait;
 use buffers::Acker;
 use event::log::Value;
-use event::{Event, Events, LogRecord};
+use event::{Event, EventContainer, Events, LogRecord};
 use framework::sink::util::builder::SinkBuilderExt;
 use framework::sink::util::Transformer;
 use framework::stream::{BatcherSettings, DriverResponse};
@@ -53,12 +53,13 @@ where
     S::Response: DriverResponse + Send + 'static,
     S::Error: Debug + Into<crate::Error> + Send,
 {
-    pub async fn run(self: Box<Self>, input: BoxStream<'_, Event>) -> Result<(), ()> {
+    pub async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let request_builder_concurrency_limit = NonZeroUsize::new(50);
         let mode = self.mode;
         let id_key_field = self.id_key_field;
 
         let sink = input
+            .flat_map(|events| futures::stream::iter(events.into_events()))
             .map(|mut event| {
                 self.transformer.transform(&mut event);
                 event
@@ -67,7 +68,10 @@ where
                 Event::Log(log) => Some(log),
                 _ => None,
             })
-            .filter_map(move |log| futures::ready(process_log(log, &mode, &id_key_field)))
+            .filter_map(|x| async move { x })
+            .filter_map(move |log| {
+                futures_util::future::ready(process_log(log, &mode, &id_key_field))
+            })
             .batched(self.batch_settings.into_byte_size_config())
             .request_builder(request_builder_concurrency_limit, self.request_builder)
             .filter_map(|req| async move {
@@ -119,7 +123,7 @@ pub fn process_log(
 }
 
 #[async_trait]
-impl<S> StreamSink<Event> for ElasticsearchSink<S>
+impl<S> StreamSink for ElasticsearchSink<S>
 where
     S: Service<ElasticsearchRequest> + Send + 'static,
     S::Future: Send + 'static,

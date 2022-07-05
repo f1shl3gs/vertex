@@ -26,13 +26,6 @@ pub const TEST_PEM_CRT_PATH: &str = "tests/fixtures/tls/localhost.crt";
 #[cfg(any(test, feature = "test-util"))]
 pub const TEST_PEM_KEY_PATH: &str = "tests/fixtures/tls/localhost.key";
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
-pub struct TlsConfig {
-    pub enabled: Option<bool>,
-    #[serde(flatten)]
-    pub options: TlsOptions,
-}
-
 impl GenerateConfig for TlsConfig {
     fn generate_config() -> String {
         r#"
@@ -65,25 +58,15 @@ verify_hostname: true
 }
 
 impl TlsConfig {
-    pub fn enabled() -> Self {
-        Self {
-            enabled: Some(true),
-            ..Self::default()
-        }
-    }
-
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_config() -> Self {
-        Self {
-            enabled: Some(true),
-            options: TlsOptions::test_options(),
-        }
+        TlsConfig::test_options()
     }
 }
 
 /// Standard TLS options
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
-pub struct TlsOptions {
+pub struct TlsConfig {
     pub verify_certificate: Option<bool>,
     pub verify_hostname: Option<bool>,
     #[serde(alias = "ca_path")]
@@ -95,7 +78,7 @@ pub struct TlsOptions {
     pub key_pass: Option<String>,
 }
 
-impl TlsOptions {
+impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_options() -> Self {
         Self {
@@ -123,15 +106,12 @@ impl TlsSettings {
     /// Generate a filled out settings struct from the given optional
     /// option set, interpreted as client options. If `options` is
     /// `None`, the result is set to defaults (ie empty).
-    pub fn from_options(options: &Option<TlsOptions>) -> Result<Self> {
+    pub fn from_options(options: &Option<TlsConfig>) -> Result<Self> {
         Self::from_options_base(options, false)
     }
 
-    pub(super) fn from_options_base(
-        options: &Option<TlsOptions>,
-        for_server: bool,
-    ) -> Result<Self> {
-        let default = TlsOptions::default();
+    pub(super) fn from_options_base(options: &Option<TlsConfig>, for_server: bool) -> Result<Self> {
+        let default = TlsConfig::default();
         let options = options.as_ref().unwrap_or(&default);
 
         if !for_server {
@@ -215,7 +195,7 @@ impl TlsSettings {
     }
 }
 
-impl TlsOptions {
+impl TlsConfig {
     fn load_authorities(&self) -> Result<Vec<X509>> {
         match &self.ca_file {
             None => Ok(vec![]),
@@ -411,16 +391,11 @@ impl MaybeTlsSettings {
         match config {
             None => Ok(Self::Raw(())), // No config, no TLS settings
             Some(config) => {
-                if config.enabled.unwrap_or(false) {
-                    let tls =
-                        TlsSettings::from_options_base(&Some(config.options.clone()), for_server)?;
-                    match (for_server, &tls.identity) {
-                        // Servers require an identity certificate
-                        (true, None) => Err(TlsError::MissingRequiredIdentity),
-                        _ => Ok(Self::Tls(tls)),
-                    }
-                } else {
-                    Ok(Self::Raw(())) // Explicitly disabled, still no TLS settings
+                let tls = TlsSettings::from_options_base(&Some(config.clone()), for_server)?;
+                match (for_server, &tls.identity) {
+                    // Servers require an identity certificate
+                    (true, None) => Err(TlsError::MissingRequiredIdentity),
+                    _ => Ok(Self::Tls(tls)),
                 }
             }
         }
@@ -516,7 +491,7 @@ mod test {
 
     #[test]
     fn from_options_pkcs12() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             crt_file: Some(TEST_PKCS12_PATH.into()),
             key_pass: Some("NOPASS".into()),
             ..Default::default()
@@ -529,7 +504,7 @@ mod test {
 
     #[test]
     fn from_options_pem() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             crt_file: Some(TEST_PEM_CRT_PATH.into()),
             key_file: Some(TEST_PEM_KEY_PATH.into()),
             ..Default::default()
@@ -544,7 +519,7 @@ mod test {
     fn from_options_inline_pem() {
         let crt = String::from_utf8(TEST_PEM_CRT_BYTES.to_vec()).unwrap();
         let key = String::from_utf8(TEST_PEM_KEY_BYTES.to_vec()).unwrap();
-        let options = TlsOptions {
+        let options = TlsConfig {
             crt_file: Some(crt.into()),
             key_file: Some(key.into()),
             ..Default::default()
@@ -557,7 +532,7 @@ mod test {
 
     #[test]
     fn from_options_ca() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             ca_file: Some(TEST_PEM_CA_PATH.into()),
             ..Default::default()
         };
@@ -572,7 +547,7 @@ mod test {
         let ca =
             String::from_utf8(include_bytes!("../../tests/fixtures/tls/Vertex_CA.crt").to_vec())
                 .unwrap();
-        let options = TlsOptions {
+        let options = TlsConfig {
             ca_file: Some(ca.into()),
             ..Default::default()
         };
@@ -584,7 +559,7 @@ mod test {
 
     #[test]
     fn from_options_intermediate_ca() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             ca_file: Some("tests/fixtures/tls/Chain_with_intermediate.crt".into()),
             ..Default::default()
         };
@@ -596,7 +571,7 @@ mod test {
 
     #[test]
     fn from_options_multi_ca() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             ca_file: Some("tests/fixtures/tls/Multi_CA.crt".into()),
             ..Default::default()
         };
@@ -615,7 +590,7 @@ mod test {
 
     #[test]
     fn from_options_bad_certificate() {
-        let options = TlsOptions {
+        let options = TlsConfig {
             key_file: Some(TEST_PEM_KEY_PATH.into()),
             ..Default::default()
         };
@@ -623,7 +598,7 @@ mod test {
             .expect_err("from_options failed to check certificate");
         assert!(matches!(error, TlsError::MissingCrtKeyFile));
 
-        let options = TlsOptions {
+        let options = TlsConfig {
             crt_file: Some(TEST_PEM_CRT_PATH.into()),
             ..Default::default()
         };
@@ -642,15 +617,15 @@ mod test {
 
     #[test]
     fn from_config_not_enabled() {
-        assert!(settings_from_config(None, false, false, true).is_raw());
-        assert!(settings_from_config(None, false, false, false).is_raw());
-        assert!(settings_from_config(Some(false), false, false, true).is_raw());
-        assert!(settings_from_config(Some(false), false, false, false).is_raw());
+        assert!(settings_from_config(false, false, true).is_raw());
+        assert!(settings_from_config(false, false, false).is_raw());
+        assert!(settings_from_config(false, false, true).is_raw());
+        assert!(settings_from_config(false, false, false).is_raw());
     }
 
     #[test]
     fn from_config_fails_without_certificate() {
-        let config = make_config(Some(true), false, false);
+        let config = make_config(false, false);
         let error = MaybeTlsSettings::from_config(&Some(config), true)
             .expect_err("from_config failed to check for a certificate");
         assert!(matches!(error, TlsError::MissingRequiredIdentity));
@@ -658,29 +633,21 @@ mod test {
 
     #[test]
     fn from_config_with_certificate() {
-        let config = settings_from_config(Some(true), true, true, true);
+        let config = settings_from_config(true, true, true);
         assert!(config.is_tls());
     }
 
-    fn settings_from_config(
-        enabled: Option<bool>,
-        set_crt: bool,
-        set_key: bool,
-        for_server: bool,
-    ) -> MaybeTlsSettings {
-        let config = make_config(enabled, set_crt, set_key);
+    fn settings_from_config(set_crt: bool, set_key: bool, for_server: bool) -> MaybeTlsSettings {
+        let config = make_config(set_crt, set_key);
         MaybeTlsSettings::from_config(&Some(config), for_server)
             .expect("Failed to generate settings from config")
     }
 
-    fn make_config(enabled: Option<bool>, set_crt: bool, set_key: bool) -> TlsConfig {
+    fn make_config(set_crt: bool, set_key: bool) -> TlsConfig {
         TlsConfig {
-            enabled,
-            options: TlsOptions {
-                crt_file: set_crt.then(|| TEST_PEM_CRT_PATH.into()),
-                key_file: set_key.then(|| TEST_PEM_KEY_PATH.into()),
-                ..Default::default()
-            },
+            crt_file: set_crt.then(|| TEST_PEM_CRT_PATH.into()),
+            key_file: set_key.then(|| TEST_PEM_KEY_PATH.into()),
+            ..Default::default()
         }
     }
 }

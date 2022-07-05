@@ -31,7 +31,7 @@ mod tests {
         let event = Event::from(fields!(
             "foo" => "bar"
         ));
-        let mut serializer = JsonSerializer::new();
+        let mut serializer = JsonSerializer;
         let mut bytes = BytesMut::new();
 
         serializer.encode(event, &mut bytes).unwrap();

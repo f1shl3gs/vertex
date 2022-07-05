@@ -2,9 +2,11 @@
 //! byte messages, byte frames and structured events.
 
 #![deny(missing_docs)]
-#![deny(warnings)]
+// #![deny(warnings)]
+#![allow(warnings)]
 
 pub mod decoding;
 pub mod encoding;
 
+/// Basic error type, dynamically dispatched and safe to send across threads.
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;

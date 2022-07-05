@@ -2,7 +2,7 @@ use crate::sinks::elasticsearch::service::ElasticsearchResponse;
 use framework::http::HttpError;
 use framework::sink::util::retries::{RetryAction, RetryLogic};
 use http::StatusCode;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 struct ElasticsearchErrorDetails {
@@ -11,16 +11,19 @@ struct ElasticsearchErrorDetails {
     err_type: String,
 }
 
+#[derive(Debug, Deserialize)]
 struct ElasticsearchIndexResult {
     error: Option<ElasticsearchErrorDetails>,
 }
 
+#[derive(Debug, Deserialize)]
 enum ElasticsearchResultItem {
     Index(ElasticsearchIndexResult),
     Create(ElasticsearchIndexResult),
 }
 
 impl ElasticsearchResultItem {
+    #[allow(clippy::missing_const_for_fn)] // const cannot run destructor
     fn result(self) -> ElasticsearchIndexResult {
         match self {
             Self::Index(r) => r,
@@ -29,7 +32,7 @@ impl ElasticsearchResultItem {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 struct ElasticsearchResultResponse {
     items: Vec<ElasticsearchResultItem>,
 }
@@ -41,7 +44,7 @@ impl RetryLogic for ElasticsearchRetryLogic {
     type Error = HttpError;
     type Response = ElasticsearchResponse;
 
-    fn is_retriable_error(&self, error: &Self::Error) -> bool {
+    fn is_retriable_error(&self, _err: &Self::Error) -> bool {
         true
     }
 
@@ -109,7 +112,7 @@ mod tests {
 
         let logic = ElasticsearchRetryLogic;
         assert!(matches!(
-            logic.should_retry_response(&ElasticsearchResponse {
+            logic.should_retry_resp(&ElasticsearchResponse {
                 http_response: resp,
                 event_status: EventStatus::Rejected,
                 batch_size: 1,

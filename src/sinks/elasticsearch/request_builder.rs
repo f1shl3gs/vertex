@@ -1,10 +1,12 @@
 use bytes::Bytes;
-use event::EventFinalizers;
+use event::{EventFinalizers, Finalizable};
 use framework::sink::util::{Compression, RequestBuilder};
+use shared::ByteSizeOf;
 
-use crate::sinks::elasticsearch::encoder::{ElasticsearchEncoder, ProcessedEvent};
+use super::encoder::{ElasticsearchEncoder, ProcessedEvent};
+use super::service::ElasticsearchRequest;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct ElasticsearchRequestBuilder {
     pub compression: Compression,
     pub encoder: ElasticsearchEncoder,
@@ -25,18 +27,35 @@ impl RequestBuilder<Vec<ProcessedEvent>> for ElasticsearchRequestBuilder {
     type Error = std::io::Error;
 
     fn compression(&self) -> Compression {
-        todo!()
+        self.compression
     }
 
     fn encoder(&self) -> &Self::Encoder {
-        todo!()
+        &self.encoder
     }
 
-    fn split_input(&self, input: Vec<ProcessedEvent>) -> (Self::Metadata, Self::Events) {
-        todo!()
+    fn split_input(&self, mut events: Vec<ProcessedEvent>) -> (Self::Metadata, Self::Events) {
+        let events_byte_size = events
+            .iter()
+            .map(|x| x.log.size_of())
+            .reduce(|a, b| a + b)
+            .unwrap_or(0);
+
+        let metadata = Metadata {
+            finalizers: events.take_finalizers(),
+            batch_size: events.len(),
+            events_byte_size,
+        };
+
+        (metadata, events)
     }
 
     fn build_request(&self, metadata: Self::Metadata, payload: Self::Payload) -> Self::Request {
-        todo!()
+        ElasticsearchRequest {
+            payload,
+            finalizers: metadata.finalizers,
+            batch_size: metadata.batch_size,
+            events_byte_size: metadata.events_byte_size,
+        }
     }
 }

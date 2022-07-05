@@ -96,33 +96,7 @@ impl Sink {
     ) -> Self {
         Sink::Sink(Box::new(EventSink::new(sink)))
     }
-    /*
-    pub fn from_event_streamsink(sink: impl StreamSink + Send + 'static) -> Self {
-        let sink = Box::new(sink);
-        Self::Stream(Box::new(EventStream { sink }))
-    }*/
 }
-/*
-/// Wrapper for sinks implementing `Stream<Event>` to `Stream<Events>`.
-///
-/// This should be removed once the sinks are all refactored to be consume
-/// `Events` rather than `Event`.
-struct EventStream<T> {
-    sink: Box<T>,
-}
-
-#[async_trait]
-impl<T> StreamSink for EventStream<T>
-where
-    T: StreamSink + Send,
-{
-    async fn run(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let input = Box::pin(input.flat_map(into_event_stream));
-        self.sink.run(input).await
-    }
-}
-
-*/
 
 /// Wrapper for sinks implementing `Sink<Event>` to implement
 /// `Sink<Events>`. This stores an iterator over the incoming

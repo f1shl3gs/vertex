@@ -6,6 +6,8 @@ mod retry;
 mod service;
 mod sink;
 
+#[cfg(all(test, feature = "integration-tests-elasticsearch"))]
+mod integration_tests;
 #[cfg(test)]
 mod tests;
 
@@ -13,27 +15,22 @@ use config::DataStreamConfig;
 use event::{EventRef, LogRecord};
 use framework::template::{Template, TemplateParseError};
 use http::uri::InvalidUri;
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 #[derive(Clone, Copy, Deserialize, Serialize, PartialEq, Eq, Hash)]
-#[serde(deny_unknown_fields, reaname_all = "snake_case")]
+#[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub enum BulkAction {
     Index,
     Create,
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref)]
 impl BulkAction {
     pub const fn as_str(&self) -> &'static str {
         match self {
             Self::Index => "index",
             Self::Create => "create",
-        }
-    }
-
-    pub const fn as_json_pointer(&self) -> &'static str {
-        match self {
-            BulkAction::Index => "/index",
-            BulkAction::Create => "/create",
         }
     }
 }
@@ -51,7 +48,7 @@ impl TryFrom<&str> for BulkAction {
 }
 
 #[derive(Clone, Debug)]
-pub(super) enum ElasticsearchCommonMode {
+pub enum ElasticsearchCommonMode {
     Bulk {
         index: Template,
         action: Option<Template>,
@@ -110,7 +107,7 @@ pub(super) enum ParseError {
     #[error("Invalid host {host:?}: {err:?}")]
     InvalidHost { host: String, err: InvalidUri },
     #[error("Host {0:?} must include hostname")]
-    HostMustIncludeHostname(host),
+    HostMustIncludeHostname(String),
     #[error("Index template parse error: {0}")]
     IndexTemplate(TemplateParseError),
     #[error("Batch action template parse error: {0}")]

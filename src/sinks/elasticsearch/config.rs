@@ -1,15 +1,19 @@
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 
+use async_trait::async_trait;
 use event::log::Value;
 use event::{EventRef, LogRecord};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
-use framework::config::{DataType, SinkConfig, SinkContext};
+use framework::config::{
+    skip_serializing_if_default, DataType, GenerateConfig, SinkConfig, SinkContext,
+};
 use framework::http::HttpClient;
 use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
 use framework::sink::util::{Compression, Transformer};
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
+use futures::FutureExt;
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tower::ServiceBuilder;
@@ -27,6 +31,12 @@ pub const DATA_STREAM_TIMESTAMP_KEY: &str = "@timestamp";
 pub struct BulkConfig {
     pub action: Option<String>,
     pub index: Option<String>,
+}
+
+impl BulkConfig {
+    fn default_index() -> String {
+        "vertex-%Y.%m.%d".into()
+    }
 }
 
 #[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
@@ -48,7 +58,7 @@ pub enum ElasticsearchAuth {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
-pub(super) struct DataStreamConfig {
+pub struct DataStreamConfig {
     #[serde(rename = "type", default = "DataStreamConfig::default_type")]
     pub dtype: Template,
     #[serde(default = "DataStreamConfig::default_dataset")]
@@ -102,7 +112,7 @@ impl DataStreamConfig {
         }
 
         if let Some(value) = log.remove_field(timestamp_key) {
-            log.insert_field(DATA_STREAM_TIMESTAMP_KEY, value)
+            log.insert_field(DATA_STREAM_TIMESTAMP_KEY, value);
         }
     }
 
@@ -160,7 +170,7 @@ impl DataStreamConfig {
         let existing = log
             .fields
             .entry("data_stream".into())
-            .or_insert_with(|| Value::Object(BTreeMap::new()))
+            .or_insert_with(|| Value::Map(BTreeMap::new()))
             .as_object_mut_unwrap();
         if let Some(dtype) = dtype {
             existing
@@ -203,9 +213,9 @@ impl DataStreamConfig {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Default)]
 #[serde(deny_unknown_fields)]
-pub(super) struct ElasticsearchConfig {
+pub struct ElasticsearchConfig {
     pub endpoint: String,
 
     pub doc_type: Option<String>,
@@ -220,11 +230,9 @@ pub(super) struct ElasticsearchConfig {
     pub request: RequestConfig,
     pub auth: Option<ElasticsearchAuth>,
     pub tls: Option<TlsConfig>,
-    #[serde(
-        skip_serializing_if = "crate::serde::skip_serializing_if_default",
-        default
-    )]
+    #[serde(skip_serializing_if = "skip_serializing_if_default", default)]
     pub encoding: Transformer,
+    pub query: Option<HashMap<String, String>>,
 
     pub bulk: Option<BulkConfig>,
     pub data_stream: Option<DataStreamConfig>,
@@ -265,6 +273,12 @@ impl ElasticsearchConfig {
     }
 }
 
+impl GenerateConfig for ElasticsearchConfig {
+    fn generate_config() -> String {
+        "".into()
+    }
+}
+
 #[async_trait]
 #[typetag::serde(name = "elasticsearch")]
 impl SinkConfig for ElasticsearchConfig {
@@ -290,16 +304,15 @@ impl SinkConfig for ElasticsearchConfig {
             request_builder: common.request_builder.clone(),
             transformer: self.encoding.clone(),
             service,
-            acker: cx.acker,
+            acker: cx.acker(),
             mode: common.mode.clone(),
             id_key_field: self.id_key.clone(),
         };
 
         let client = HttpClient::new(common.tls_settings.clone(), cx.proxy())?;
         let healthcheck = common.healthcheck(client).boxed();
-        let stream = framework::Sink::from_event_sink(sink);
 
-        Ok((stream, healthcheck))
+        Ok((Sink::Stream(Box::new(sink)), healthcheck))
     }
 
     fn input_type(&self) -> DataType {

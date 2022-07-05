@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::config::skip_serializing_if_default;
 use crate::sink::util::encoding::EncodingConfiguration;
-use crate::sink::util::TimestampFormat;
+use crate::sink::util::{validate_fields, TimestampFormat};
 
 #[derive(Clone, Debug, Default, PartialEq, Deserialize, Serialize)]
 struct TransformerInner {
@@ -16,9 +16,26 @@ struct TransformerInner {
     timestamp_format: Option<TimestampFormat>,
 }
 
+#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
 pub struct Transformer(TransformerInner);
 
 impl Transformer {
+    pub fn new(
+        only_fields: Option<Vec<OwnedPath>>,
+        expect_fields: Option<Vec<String>>,
+        timestamp_format: Option<TimestampFormat>,
+    ) -> Result<Self, crate::Error> {
+        let inner = TransformerInner {
+            only_fields,
+            expect_fields,
+            timestamp_format,
+        };
+
+        validate_fields(inner.only_fields.as_deref(), inner.expect_fields.as_deref())?;
+
+        Ok(Self(inner))
+    }
+
     pub fn transform(&self, event: &mut Event) {
         self.apply_rules(event);
     }

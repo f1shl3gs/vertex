@@ -1,6 +1,7 @@
 mod concurrency;
 mod map;
 
+use std::collections::BTreeMap;
 use std::marker::PhantomData;
 use std::sync::Arc;
 
@@ -39,7 +40,7 @@ pub type Svc<S, L> = RateLimit<AdaptiveConcurrencyLimit<Retry<FixedRetryPolicy<L
 pub type BatchedSink<S, B, RL> = BatchSink<Svc<S, RL>, B>;
 pub type PartitionSink<S, B, RL, K> = PartitionBatchSink<Svc<S, RL>, B, K>;
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct RequestConfig {
     #[serde(default)]
@@ -69,6 +70,8 @@ pub struct RequestConfig {
     pub retry_initial_backoff: Option<Duration>,
     #[serde(default)]
     pub adaptive_concurrency: AdaptiveConcurrencySettings,
+    #[serde(default)]
+    pub headers: BTreeMap<String, String>,
 }
 
 impl GenerateConfig for RequestConfig {
@@ -122,7 +125,7 @@ impl Default for RequestConfig {
 }
 
 impl RequestConfig {
-    pub const fn new(concurrency: Concurrency) -> Self {
+    pub fn new(concurrency: Concurrency) -> Self {
         Self {
             concurrency,
             timeout: Some(TIMEOUT_DEFAULT),
@@ -132,6 +135,7 @@ impl RequestConfig {
             retry_max_duration: Some(RETRY_MAX_DURATION_DEFAULT),
             retry_initial_backoff: Some(RETRY_INITIAL_BACKOFF_DEFAULT),
             adaptive_concurrency: AdaptiveConcurrencySettings::const_default(),
+            headers: Default::default(),
         }
     }
 

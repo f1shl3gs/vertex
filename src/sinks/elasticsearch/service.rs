@@ -8,7 +8,6 @@ use framework::sink::util::Compression;
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::{Request, Response, Uri};
-use libc::stat;
 use shared::ByteSizeOf;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -16,11 +15,11 @@ use std::task::{Context, Poll};
 use tower::{Service, ServiceExt};
 
 #[derive(Clone)]
-pub(super) struct ElasticsearchRequest {
-    payload: Bytes,
-    finalizers: EventFinalizers,
-    batch_size: usize,
-    events_byte_size: usize,
+pub struct ElasticsearchRequest {
+    pub payload: Bytes,
+    pub finalizers: EventFinalizers,
+    pub batch_size: usize,
+    pub events_byte_size: usize,
 }
 
 impl ByteSizeOf for ElasticsearchRequest {
@@ -84,7 +83,7 @@ impl HttpRequestBuilder {
 
         builder = builder.header("Content-Type", "application/x-ndjson");
 
-        if let Some(c) = self.compression.content_encoding() {
+        if let Some(ce) = self.compression.content_encoding() {
             builder = builder.header("Content-Encoding", ce);
         }
 
@@ -126,7 +125,7 @@ impl Service<ElasticsearchRequest> for ElasticsearchService {
     type Error = crate::Error;
     type Future = BoxFuture<'static, Result<Self::Response, Self::Error>>;
 
-    fn poll_ready(&mut self, cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
         Poll::Ready(Ok(()))
     }
 

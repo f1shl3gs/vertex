@@ -26,7 +26,7 @@ pub trait RetryLogic: Clone + Send + Sync + 'static {
     type Error: std::error::Error + Send + Sync + 'static;
     type Response;
 
-    fn is_retriable_error(&self, error: &Self::Error) -> bool;
+    fn is_retriable_error(&self, err: &Self::Error) -> bool;
 
     fn should_retry_resp(&self, _response: &Self::Response) -> RetryAction {
         // Treat the default as the request is successful

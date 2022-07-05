@@ -16,7 +16,7 @@ use crate::config::{
 };
 use crate::http::HttpClient;
 use crate::signal;
-use crate::tls::{TlsConfig, TlsOptions, TlsSettings};
+use crate::tls::{TlsConfig, TlsSettings};
 use crate::SignalHandler;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -35,7 +35,7 @@ pub struct HttpConfig {
         serialize_with = "serialize_duration"
     )]
     interval: Duration,
-    tls: Option<TlsOptions>,
+    tls: Option<TlsConfig>,
     proxy: ProxyConfig,
     #[serde(default)]
     persist: Option<PathBuf>,
@@ -129,7 +129,7 @@ url: http://config.example.com/config
 /// Calls `http_request`, serializing the result to a `ConfigBuilder`.
 async fn http_request_to_config_builder(
     url: &Url,
-    tls_options: &Option<TlsOptions>,
+    tls_options: &Option<TlsConfig>,
     headers: &IndexMap<String, String>,
     proxy: &ProxyConfig,
     attrs: IndexMap<String, String>,
@@ -149,7 +149,7 @@ async fn http_request_to_config_builder(
 /// Makes an HTTP request to the provided endpoint, returning the String body.
 async fn http_request(
     url: &Url,
-    tls: &Option<TlsOptions>,
+    tls: &Option<TlsConfig>,
     headers: &IndexMap<String, String>,
     proxy: &ProxyConfig,
     attrs: IndexMap<String, String>,
@@ -245,7 +245,7 @@ fn build_attributes() -> IndexMap<String, String> {
 fn poll_http(
     interval: std::time::Duration,
     url: Url,
-    tls_options: Option<TlsOptions>,
+    tls_options: Option<TlsConfig>,
     headers: IndexMap<String, String>,
     proxy: ProxyConfig,
 ) -> impl Stream<Item = crate::signal::SignalTo> {

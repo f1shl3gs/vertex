@@ -3,13 +3,12 @@ use std::io::Write;
 
 use event::{Event, EventFinalizers, Finalizable, LogRecord};
 use framework::sink::util::{as_tracked_write, Encoder, Transformer};
-use framework::SyncTransform;
 use shared::ByteSizeOf;
 
 use crate::sinks::elasticsearch::BulkAction;
 
 #[derive(Debug, Clone, PartialEq)]
-pub(super) struct ElasticsearchEncoder {
+pub struct ElasticsearchEncoder {
     pub doc_type: String,
     pub suppress_type_name: bool,
     pub transformer: Transformer,
@@ -53,12 +52,13 @@ impl Encoder<Vec<ProcessedEvent>> for ElasticsearchEncoder {
                 self.suppress_type_name,
                 &event.id,
             )?;
-            written += as_tracked_write::<_, _, io::Error>(writer, &log, |mut writer, log| {
-                writer.write_all(&[b'\n'])?;
-                serde_json::to_writer(&mut writer, log)?;
-                writer.write_all(&[b'\n'])?;
-                Ok(())
-            })?;
+            written +=
+                as_tracked_write::<_, _, io::Error>(writer, &log.fields, |mut writer, log| {
+                    writer.write_all(&[b'\n'])?;
+                    serde_json::to_writer(&mut writer, log)?;
+                    writer.write_all(&[b'\n'])?;
+                    Ok(())
+                })?;
         }
 
         Ok(written)
@@ -131,6 +131,68 @@ mod tests {
 
         assert_eq!(nested.get("_index").unwrap().as_str(), Some("INDEX"));
         assert_eq!(nested.get("_id").unwrap().as_str(), Some("ID"));
-        assert!(nested.get("_type"));
+        assert!(!nested.contains_key("_type"));
+    }
+
+    #[test]
+    fn suppress_type_without_id() {
+        let mut writer = Vec::new();
+
+        let _ = write_bulk_action(&mut writer, "ACTION", "INDEX", "TYPE", true, &None);
+        let value: serde_json::Value = serde_json::from_slice(&writer).unwrap();
+        let value = value.as_object().unwrap();
+
+        assert!(value.contains_key("ACTION"));
+
+        let nested = value.get("ACTION").unwrap();
+        let nested = nested.as_object().unwrap();
+
+        assert!(nested.contains_key("_index"));
+        assert_eq!(nested.get("_index").unwrap().as_str(), Some("INDEX"));
+        assert!(!nested.contains_key("_id"));
+        assert!(!nested.contains_key("_type"));
+    }
+
+    #[test]
+    fn type_with_id() {
+        let mut writer = Vec::new();
+        let _ = write_bulk_action(
+            &mut writer,
+            "ACTION",
+            "INDEX",
+            "TYPE",
+            false,
+            &Some("ID".to_string()),
+        );
+
+        let value: serde_json::Value = serde_json::from_slice(&writer).unwrap();
+        let value = value.as_object().unwrap();
+
+        assert!(value.contains_key("ACTION"));
+
+        let nested = value.get("ACTION").unwrap();
+        let nested = nested.as_object().unwrap();
+
+        assert_eq!(nested.get("_index").unwrap().as_str(), Some("INDEX"));
+        assert_eq!(nested.get("_id").unwrap().as_str(), Some("ID"));
+        assert_eq!(nested.get("_type").unwrap().as_str(), Some("TYPE"));
+    }
+
+    #[test]
+    fn type_without_id() {
+        let mut writer = Vec::new();
+        let _ = write_bulk_action(&mut writer, "ACTION", "INDEX", "TYPE", false, &None);
+
+        let value: serde_json::Value = serde_json::from_slice(&writer).unwrap();
+        let value = value.as_object().unwrap();
+
+        assert!(value.contains_key("ACTION"));
+
+        let nested = value.get("ACTION").unwrap();
+        let nested = nested.as_object().unwrap();
+
+        assert_eq!(nested.get("_index").unwrap().as_str(), Some("INDEX"));
+        assert!(!nested.contains_key("_id"));
+        assert_eq!(nested.get("_type").unwrap().as_str(), Some("TYPE"));
     }
 }

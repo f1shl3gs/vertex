@@ -234,7 +234,7 @@ mod tests {
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;
-    use framework::tls::{MaybeTlsSettings, TlsOptions};
+    use framework::tls::{MaybeTlsSettings, TlsConfig};
     use hyper::Body;
     use testify::collect_ready;
 
@@ -337,13 +337,10 @@ mod tests {
     #[tokio::test]
     async fn receives_metrics_over_https() {
         let tls_config = TlsConfig {
-            enabled: Some(true),
-            options: TlsOptions {
-                ca_file: Some("lib/framework/tests/fixtures/tls/Vertex_CA.crt".into()),
-                crt_file: Some("lib/framework/tests/fixtures/tls/localhost.crt".into()),
-                key_file: Some("lib/framework/tests/fixtures/tls/localhost.key".into()),
-                ..TlsOptions::default()
-            },
+            ca_file: Some("lib/framework/tests/fixtures/tls/Vertex_CA.crt".into()),
+            crt_file: Some("lib/framework/tests/fixtures/tls/localhost.crt".into()),
+            key_file: Some("lib/framework/tests/fixtures/tls/localhost.key".into()),
+            ..TlsConfig::default()
         };
 
         receives_metrics(Some(tls_config)).await;
