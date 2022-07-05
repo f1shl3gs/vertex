@@ -57,7 +57,7 @@ log_schema = { path = "../log_schema" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { path = "../metrics" }
 no-proxy = { version = "0.3.2" }
-once_cell = { version = "1.12", default-features = false }
+once_cell = { version = "1.13", default-features = false }
 openssl = { version = "0.10.40", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }
 pin-project = { version = "1.0.11" }
