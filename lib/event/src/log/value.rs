@@ -79,6 +79,13 @@ impl Value {
         }
     }
 
+    pub fn as_array(&self) -> Option<&[Self]> {
+        match self {
+            Value::Array(a) => Some(a),
+            _ => None,
+        }
+    }
+
     pub fn as_object_mut_unwrap(&mut self) -> &mut BTreeMap<String, Self> {
         match self {
             Value::Map(ref mut m) => m,
