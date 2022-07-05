@@ -112,7 +112,7 @@ const fn type_id_for_value(value: &Value) -> TypeId {
         Value::Int64(_) => 3,
         Value::Boolean(_) => 4,
         Value::Array(_) => 5,
-        Value::Map(_) => 6,
+        Value::Object(_) => 6,
         Value::Timestamp(_) => 7,
         Value::Null => 8,
     }

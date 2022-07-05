@@ -43,7 +43,7 @@ fn flatten(input: &BTreeMap<String, Value>, separator: char) -> BTreeMap<String,
     for (k, v) in input {
         match v {
             // TODO: array
-            Value::Map(m) => {
+            Value::Object(m) => {
                 for (nk, nv) in flatten(m, separator) {
                     map.insert(format!("{}{}{}", k, separator, nk), nv);
                 }

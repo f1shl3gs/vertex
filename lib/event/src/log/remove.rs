@@ -68,7 +68,7 @@ fn remove_recursively(
     prune: bool,
 ) -> Option<(Value, bool)> {
     match value {
-        Value::Map(map) => remove_map(map, path, prune),
+        Value::Object(map) => remove_map(map, path, prune),
         Value::Array(array) => remove_array(array, path, prune),
         _ => None,
     }

@@ -14,7 +14,7 @@ pub enum Value {
     Int64(i64),
     Boolean(bool),
     Array(Vec<Value>),
-    Map(BTreeMap<String, Value>),
+    Object(BTreeMap<String, Value>),
     Timestamp(DateTime<Utc>),
     Null,
 }
@@ -28,7 +28,7 @@ impl Value {
             Value::Int64(i) => format!("{}", i),
             Value::Array(arr) => serde_json::to_string(arr).expect("Cannot serialize array"),
             Value::Boolean(b) => format!("{}", b),
-            Value::Map(m) => serde_json::to_string(m).expect("Cannot serialize map"),
+            Value::Object(m) => serde_json::to_string(m).expect("Cannot serialize map"),
             Value::Null => "<null>".to_string(),
         }
     }
@@ -43,7 +43,7 @@ impl Value {
             Value::Array(arr) => serde_json::to_vec(arr)
                 .expect("Cannot serialize array")
                 .into(),
-            Value::Map(map) => serde_json::to_vec(map)
+            Value::Object(map) => serde_json::to_vec(map)
                 .expect("Cannot serialize array")
                 .into(),
             Value::Null => Bytes::from("<null>"),
@@ -59,7 +59,7 @@ impl Value {
                 Bytes::from(serde_json::to_vec(arr).expect("Cannot serialize array"))
             }
             Value::Boolean(b) => Bytes::from(format!("{}", b)),
-            Value::Map(m) => Bytes::from(serde_json::to_vec(m).expect("Cannot serialize map")),
+            Value::Object(m) => Bytes::from(serde_json::to_vec(m).expect("Cannot serialize map")),
             Value::Timestamp(ts) => Bytes::from(timestamp_to_string(ts)),
             Value::Null => Bytes::from("<null>"),
         }
@@ -74,7 +74,7 @@ impl Value {
 
     pub fn as_object(&self) -> Option<&BTreeMap<String, Self>> {
         match self {
-            Value::Map(m) => Some(m),
+            Value::Object(m) => Some(m),
             _ => None,
         }
     }
@@ -88,7 +88,7 @@ impl Value {
 
     pub fn as_object_mut_unwrap(&mut self) -> &mut BTreeMap<String, Self> {
         match self {
-            Value::Map(ref mut m) => m,
+            Value::Object(ref mut m) => m,
             _ => panic!("Tried to call `Value::as_map` on a non-map value"),
         }
     }
@@ -118,7 +118,7 @@ impl Value {
             | Value::Float(_)
             | Value::Int64(_) => false,
             Value::Null => true,
-            Value::Map(m) => m.is_empty(),
+            Value::Object(m) => m.is_empty(),
             Value::Array(arr) => arr.is_empty(),
         }
     }
@@ -128,7 +128,7 @@ impl ByteSizeOf for Value {
     fn allocated_bytes(&self) -> usize {
         match self {
             Value::Bytes(bytes) => bytes.len(),
-            Value::Map(map) => map
+            Value::Object(map) => map
                 .iter()
                 .fold(0, |acc, (k, v)| acc + k.len() + v.size_of()),
             Value::Array(arr) => arr.iter().fold(0, |acc, v| acc + v.size_of()),
@@ -153,7 +153,7 @@ impl Serialize for Value {
             }
             Value::Boolean(b) => serializer.serialize_bool(*b),
             Value::Array(arr) => serializer.collect_seq(arr),
-            Value::Map(m) => serializer.collect_map(m),
+            Value::Object(m) => serializer.collect_map(m),
             Value::Null => serializer.serialize_none(),
             Value::Int64(v) => serializer.serialize_i64(*v),
         }
@@ -173,7 +173,7 @@ impl From<serde_json::Value> for Value {
                 n.as_i64().map_or_else(float_or_byte, Value::Int64)
             }
             serde_json::Value::String(s) => Value::Bytes(s.into()),
-            serde_json::Value::Object(obj) => Value::Map(
+            serde_json::Value::Object(obj) => Value::Object(
                 obj.into_iter()
                     .map(|(key, value)| (key, Value::from(value)))
                     .collect(),
@@ -200,7 +200,7 @@ impl TryInto<serde_json::Value> for Value {
             Value::Float(v) => Ok(serde_json::Value::from(v)),
             Value::Int64(v) => Ok(serde_json::Value::from(v)),
             Value::Array(v) => Ok(serde_json::to_value(v)?),
-            Value::Map(v) => Ok(serde_json::to_value(v)?),
+            Value::Object(v) => Ok(serde_json::to_value(v)?),
             Value::Timestamp(v) => Ok(serde_json::Value::from(timestamp_to_string(&v))),
             Value::Null => Ok(serde_json::Value::Null),
         }
@@ -269,7 +269,7 @@ impl From<Bytes> for Value {
 
 impl From<BTreeMap<String, Value>> for Value {
     fn from(map: BTreeMap<String, Value>) -> Self {
-        Self::Map(map)
+        Self::Object(map)
     }
 }
 
@@ -302,7 +302,7 @@ impl FromIterator<Value> for Value {
 
 impl FromIterator<(String, Value)> for Value {
     fn from_iter<T: IntoIterator<Item = (String, Value)>>(iter: T) -> Self {
-        Value::Map(iter.into_iter().collect::<BTreeMap<String, Value>>())
+        Value::Object(iter.into_iter().collect::<BTreeMap<String, Value>>())
     }
 }
 
@@ -386,7 +386,7 @@ mod tests {
                                 Value::Boolean(_) => expected_type.eq("boolean"),
                                 Value::Int64(_) => expected_type.eq("integer"),
                                 Value::Bytes(_) => expected_type.eq("bytes"),
-                                Value::Map(_) => expected_type.eq("map"),
+                                Value::Object(_) => expected_type.eq("map"),
                                 Value::Array(_) => expected_type.eq("array"),
                                 Value::Null => expected_type.eq("null"),
                                 _ => unreachable!("You need to add a new type handler here."),

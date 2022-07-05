@@ -65,7 +65,7 @@ fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<OwnedHeader
         if let Event::Log(log) = ev {
             if let Some(headers) = log.get_field(headers_field) {
                 match headers {
-                    Value::Map(map) => {
+                    Value::Object(map) => {
                         let mut owned_headers = OwnedHeaders::new_with_capacity(map.len());
                         for (key, value) in map {
                             if let Value::Bytes(b) = value {

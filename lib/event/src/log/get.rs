@@ -24,7 +24,7 @@ where
     loop {
         match (path_iter.next(), value) {
             (None, _) => return Some(value),
-            (Some(PathComponent::Key(key)), Value::Map(map)) => match map.get(key.as_ref()) {
+            (Some(PathComponent::Key(key)), Value::Object(map)) => match map.get(key.as_ref()) {
                 None => return None,
                 Some(nested) => value = nested,
             },

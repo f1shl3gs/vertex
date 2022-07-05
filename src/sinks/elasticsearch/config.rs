@@ -170,7 +170,7 @@ impl DataStreamConfig {
         let existing = log
             .fields
             .entry("data_stream".into())
-            .or_insert_with(|| Value::Map(BTreeMap::new()))
+            .or_insert_with(|| Value::Object(BTreeMap::new()))
             .as_object_mut_unwrap();
         if let Some(dtype) = dtype {
             existing
