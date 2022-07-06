@@ -80,7 +80,7 @@ fn write_bulk_action(
             (Some(id), true) => {
                 write!(
                     writer,
-                    r#"{{"{}":{{"_index":"{}","_id":"{}}}}}"#,
+                    r#"{{"{}":{{"_index":"{}","_id":"{}"}}}}"#,
                     bulk_action, index, id
                 )
             }

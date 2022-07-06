@@ -6,7 +6,8 @@ mod retry;
 mod service;
 mod sink;
 
-#[cfg(all(test, feature = "integration-tests-elasticsearch"))]
+#[cfg(test)]
+#[cfg(feature = "integration-tests-elasticsearch")]
 mod integration_tests;
 #[cfg(test)]
 mod tests;

@@ -17,6 +17,7 @@ struct ElasticsearchIndexResult {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
 enum ElasticsearchResultItem {
     Index(ElasticsearchIndexResult),
     Create(ElasticsearchIndexResult),

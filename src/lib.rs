@@ -11,8 +11,10 @@ mod common;
 pub mod extensions;
 pub mod sinks;
 pub mod sources;
-pub mod testing;
 pub mod transforms;
+
+#[cfg(test)]
+pub mod testing;
 
 pub use framework::hostname;
 

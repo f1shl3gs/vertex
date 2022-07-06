@@ -4334,7 +4334,10 @@ version = "0.1.0"
 dependencies = [
  "event",
  "futures",
+ "futures-util",
  "rand 0.8.5",
+ "tokio",
+ "tokio-util 0.7.3",
 ]
 
 [[package]]

@@ -39,16 +39,12 @@ impl BulkConfig {
     }
 }
 
-#[derive(Deserialize, Serialize, Debug, Eq, PartialEq)]
+#[derive(Deserialize, Serialize, Debug, Eq, PartialEq, Default)]
+#[serde(rename_all = "snake_case")]
 pub enum ElasticsearchMode {
+    #[default]
     Bulk,
     DataStream,
-}
-
-impl Default for ElasticsearchMode {
-    fn default() -> Self {
-        Self::Bulk
-    }
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -219,6 +215,7 @@ pub struct ElasticsearchConfig {
     pub endpoint: String,
 
     pub doc_type: Option<String>,
+    #[serde(default)]
     pub suppress_type_name: bool,
     pub id_key: Option<String>,
     pub pipeline: Option<String>,
@@ -226,7 +223,9 @@ pub struct ElasticsearchConfig {
     pub mode: ElasticsearchMode,
     #[serde(default)]
     pub compression: Compression,
+    #[serde(default)]
     pub batch: BatchConfig<RealtimeSizeBasedDefaultBatchSettings>,
+    #[serde(default)]
     pub request: RequestConfig,
     pub auth: Option<ElasticsearchAuth>,
     pub tls: Option<TlsConfig>,
@@ -275,7 +274,143 @@ impl ElasticsearchConfig {
 
 impl GenerateConfig for ElasticsearchConfig {
     fn generate_config() -> String {
-        "".into()
+        r#"
+# Options for the authentication strategy
+#
+# optional
+# auth:
+#   user: username
+#   password: password
+
+# Configures the sink batching behavior
+#
+# optional
+# batch:
+#   max_bytes: 1M
+#   max_events: 1000
+#   timeout: 10s
+
+# Options for the bulk mode
+#
+# optional
+# bulk:
+#   # Action to use when making requests to the `Elasticsearch Bulk API`. Currently
+#   # Vertex only supports `index` and `create`. `update` and `delete` actions are
+#   # not supported.
+#   #
+#   # Bulk API: https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
+#   action: index
+#
+#   # Index name to write events to. template is supported
+#   #
+#   index: some_index # {{ foo.bar }}
+
+# The compression strategy used to compress the encoded event data before transmission.
+#
+# optional, default: None
+# compression: gzip
+
+# Options for the data stream mode.
+#
+# Optional, default `None`
+# data_stream:
+#   # Automatically routes events by deriving the data stream name using specific event
+#   # field with the `data_stream.type-data_stream.dataset-data_stream.namespace` format.
+#   #
+#   # If enabled, the data_stream.* event fields will take precedence over the
+#   # data_stream.type, data_stream.dataset, and data_stream.namespace settings, but
+#   # will fall back to them if any of the fields are missing from the event.
+#   #
+#   # Optional, default true
+#   auto_routing: true
+#
+#   # The data stream dataset used to construct the data stream at index time.
+#   #
+#   # Optional, default "generic"
+#   dataset: some_dataset
+#
+#   # The data stream namespace used to construct the data stream at index time.
+#   #
+#   # Optional, default "default"
+#   namespace: some_namespace
+#
+#   # The data stream type used to construct the data stream at index time.
+#   #
+#   # Optional, default "logs", available: "logs", "metrics", "synthetics" and so on
+#   type: logs
+
+# The `doc_type` for your index data, This is only relevant for Elasticsearch <= 6.X.
+# If you are using >= 7.0 you do not need to set this optoin since Elasticsearch
+# has removed it.
+#
+# doc_type: "_doc"
+
+# Configures the encoding specific sink behavior.
+#
+# Note: When data in `encoding` is malformed, currently only a very generic error
+# "data did not match any variant of untagged enum EncodingConfig" is reported.
+# Follow the issue to track progress on improving these error message
+#
+# encoding:
+#   # Prevent the sink from encoding the specified fields
+#   #
+#   # Optional
+#   except_fields:
+#   - foo
+#   - bar.2
+#
+#   # Makes the sink encode only the specified fields.
+#   #
+#   # Optional
+#   only_fields:
+#   - foo
+#   - bar
+#
+#   # How to format event timestamps
+#   #
+#   # Optional, default: rfc3339, availables: rfc3339, unix
+#   timestamp_format: rfc3339
+
+# The Elasticsearch endpoint to send logs to. This should be full URL as shown in
+# example.
+#
+endpoint: http://example.com
+
+# The name of the event key that should map to Elasticsearch's "_id" field. By
+# default, Vertex does not set the "_id" field, which allows Elasticsearch to
+# set this automatically. You should think carefully about setting your own
+# Elasticsearch IDs, since this can "hinder performance".
+#
+# https://www.elastic.co/guide/en/elasticsearch/reference/master/tune-for-indexing-speed.html#_use_auto_generated_ids
+#
+# Optional
+#
+# id_key: "id"
+
+# The type of index mechanism. If `data_stream` mode is enabled, the `bulk.action` is
+# set to "create".
+#
+# Optional, defualt: "bulk", availables: "bulk" and "data_stream".
+#
+# mode: bulk
+
+# Name of the pipeline to apply
+#
+# Optional,
+#
+# pipeline: name
+
+# Stop Vertex from sending the `type` to Elasticsearch, which was deprecated in Elasticsearch
+# 7.x and removed in Elasticsearch 8.x.
+#
+# If enabled the `doc_type` option will be ignored.
+#
+# Optional, default: false
+#
+# suppress_type_name: true
+
+
+"#.into()
     }
 }
 
@@ -344,7 +479,8 @@ mod tests {
             r#"
 endpoint: ""
 mode: data_stream
-data_stream.type = synthetics
+data_stream:
+    type: synthetics
 "#,
         )
         .unwrap();

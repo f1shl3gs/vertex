@@ -619,8 +619,6 @@ mod test {
     fn from_config_not_enabled() {
         assert!(settings_from_config(false, false, true).is_raw());
         assert!(settings_from_config(false, false, false).is_raw());
-        assert!(settings_from_config(false, false, true).is_raw());
-        assert!(settings_from_config(false, false, false).is_raw());
     }
 
     #[test]
@@ -638,8 +636,13 @@ mod test {
     }
 
     fn settings_from_config(set_crt: bool, set_key: bool, for_server: bool) -> MaybeTlsSettings {
-        let config = make_config(set_crt, set_key);
-        MaybeTlsSettings::from_config(&Some(config), for_server)
+        let config = if !set_key && !set_crt {
+            None
+        } else {
+            Some(make_config(set_crt, set_key))
+        };
+
+        MaybeTlsSettings::from_config(&config, for_server)
             .expect("Failed to generate settings from config")
     }
 

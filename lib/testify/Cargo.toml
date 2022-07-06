@@ -8,3 +8,6 @@ publish = false
 event = { path = "../event" }
 rand = "0.8.5"
 futures = { version = "0.3.21" }
+futures-util = { version = "0.3.21" }
+tokio = { version = "1.19.2" }
+tokio-util = { version = "0.7.3" }

@@ -72,3 +72,20 @@ pub fn generate_events_with_stream<Gen: FnMut(usize) -> Event>(
     );
     (events, stream)
 }
+
+pub fn random_events_with_stream(
+    len: usize,
+    count: usize,
+    batch: Option<Arc<BatchNotifier>>,
+) -> (Vec<Event>, impl Stream<Item = Events>) {
+    let events = (0..count)
+        .map(|_| Event::from(random_string(len)))
+        .collect::<Vec<_>>();
+
+    let stream = map_batch_stream(
+        stream::iter(events.clone()).map(|event| event.into_log()),
+        batch,
+    );
+
+    (events, stream)
+}
