@@ -83,8 +83,6 @@ jobs:
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install nextest
-        uses: taiki-e/install-action@nextest
       - uses: actions/cache@v2.1.7
         name: Cache Cargo registry + index
         with:
@@ -96,6 +94,8 @@ jobs:
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
+      - name: Install nextest
+        uses: taiki-e/install-action@nextest
       - run: make test
       - run: make doc-test
 
