@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657127279923,
+  "lastUpdate": 1657128521833,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56277,6 +56277,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1446,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7665d7f73850d5564ea94a73276151dfb053060d",
+          "message": "Merge pull request #414 from f1shl3gs/dependabot/cargo/regex-1.6.0\n\nchore(deps): bump regex from 1.5.6 to 1.6.0",
+          "timestamp": "2022-07-07T00:58:09+08:00",
+          "tree_id": "bc723c48ef0fa9e75c381eef00a2b1d8f3da5f68",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7665d7f73850d5564ea94a73276151dfb053060d"
+        },
+        "date": 1657128517616,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1619,
             "unit": "s"
           }
         ]
