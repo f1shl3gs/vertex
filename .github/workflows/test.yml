@@ -7,7 +7,6 @@ on:
 env:
   CI: true
   PROFILE: debug
-  # RUSTFLAGS: "-D warnings"
   VERBOSE: true
   RUST_BACKTRACE: full
 
@@ -98,6 +97,7 @@ jobs:
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
       - run: make test
+      - run: make doc-test
 
   integration:
     name: Integration tests
