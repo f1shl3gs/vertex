@@ -78,16 +78,24 @@ integration-test-loki:
 integration-test-kafka:
 	cargo test -p vertex --lib sources::kafka::integration_tests --features all-integration-tests --no-fail-fast
 
+.PHONY: integration-test-elasticsearch
+integration-test-elasticsearch:
+	cargo test -p vertex --lib sinks::elasticsearch::integration_tests --features all-integration-tests --no-fail-fast
+
 .PHONY: integration-tests
-integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-test-prometheus_remote_write
+integration-tests: integration-test-consul integration-test-haproxy integration-test-memcached integration-test-mysql integration-test-nginx_stub integration-test-redis integration-test-zookeeper integration-test-prometheus_remote_write integration-test-elasticsearch
 
 .PHONY: udeps
 udeps:
 	cargo +nightly udeps
 
+.PHONY: doc-test
+doc-test:
+	cargo test --doc --workspace
+
 .PHONY: test
 test:
-	cargo test --workspace --no-fail-fast
+	cargo nextest run --workspace --no-fail-fast
 
 .PHONY: check_clippy
 check_clippy:

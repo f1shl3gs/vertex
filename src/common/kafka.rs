@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 
 use framework::config::GenerateConfig;
-use framework::tls::TlsOptions;
+use framework::tls::TlsConfig;
 use framework::Error;
 use metrics::{Counter, Gauge};
 use rdkafka::consumer::ConsumerContext;
@@ -66,7 +66,7 @@ impl GenerateConfig for KafkaSaslConfig {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct KafkaTLSConfig {
     pub enabled: Option<bool>,
-    pub options: TlsOptions,
+    pub options: TlsConfig,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]

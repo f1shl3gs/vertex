@@ -33,7 +33,7 @@ fn encode_value(value: crate::log::Value) -> Value {
             crate::log::Value::Int64(i) => Some(value::Kind::I64(i)),
             crate::log::Value::Boolean(b) => Some(value::Kind::Boolean(b)),
             crate::log::Value::Array(arr) => Some(value::Kind::Array(encode_array(arr))),
-            crate::log::Value::Map(m) => Some(value::Kind::Map(encode_map(m))),
+            crate::log::Value::Object(m) => Some(value::Kind::Map(encode_map(m))),
             crate::log::Value::Timestamp(ts) => {
                 Some(value::Kind::Timestamp(prost_types::Timestamp {
                     seconds: ts.timestamp(),
@@ -76,7 +76,7 @@ fn decode_map(fields: BTreeMap<String, Value>) -> Option<crate::log::Value> {
         }
     }
 
-    Some(crate::log::Value::Map(accum))
+    Some(crate::log::Value::Object(accum))
 }
 
 fn decode_array(items: Vec<Value>) -> Option<crate::log::Value> {

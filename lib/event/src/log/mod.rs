@@ -256,7 +256,7 @@ impl LogRecord {
 #[cfg(test)]
 pub fn fields_from_json(json_value: serde_json::Value) -> BTreeMap<String, Value> {
     match Value::from(json_value) {
-        Value::Map(map) => map,
+        Value::Object(map) => map,
         sth => panic!("Expected a map, got {:?}", sth),
     }
 }

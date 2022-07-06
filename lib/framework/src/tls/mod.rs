@@ -19,7 +19,7 @@ mod settings;
 #[cfg(all(feature = "tls-utils", feature = "listenfd"))]
 pub use incoming::{MaybeTlsIncomingStream, MaybeTlsListener};
 pub use maybe_tls::MaybeTls;
-pub use settings::{MaybeTlsSettings, TlsConfig, TlsOptions, TlsSettings};
+pub use settings::{MaybeTlsSettings, TlsConfig, TlsSettings};
 #[cfg(any(test, feature = "test-util"))]
 pub use settings::{TEST_PEM_CA_PATH, TEST_PEM_CRT_PATH, TEST_PEM_KEY_PATH};
 

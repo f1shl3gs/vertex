@@ -1,0 +1,19 @@
+[package]
+name = "lookup"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bench]]
+name = "lookup"
+path = "benches/lookup.rs"
+harness = false
+test = false
+required-features = []
+
+[dependencies]
+serde = { version = "1.0.137", default-features = false }
+
+[dev-dependencies]
+serde_json = { version = "1.0.81" }
+criterion = { version = "0.3.5", features = ["html_reports"] }

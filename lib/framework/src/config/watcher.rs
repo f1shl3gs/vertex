@@ -65,7 +65,7 @@ pub fn spawn_thread<'a>(
         if watcher.is_some() {
             // Config files could have changed while we weren't watching,
             // so for a good measure raise SIGHUP and let reload logic
-            // determin if anything changed.
+            // determine if anything changed.
             info!(message = "Speculating that configuration files have changed",);
 
             raise_sighup();
@@ -111,6 +111,7 @@ mod tests {
     use super::*;
     use std::fs::File;
     use std::io::Write;
+    use tempfile::tempdir;
     use testify::temp::temp_file;
     use tokio::signal::unix::{signal, SignalKind};
 
@@ -126,10 +127,11 @@ mod tests {
     #[tokio::test]
     async fn file_directory_update() {
         let delay = Duration::from_secs(3);
-        let filepath = temp_file();
+        let directory = tempdir().unwrap().into_path();
+        let filepath = directory.join("test.txt");
         let mut file = File::create(&filepath).unwrap();
 
-        spawn_thread(&[filepath.parent().unwrap().to_path_buf()], delay).unwrap();
+        spawn_thread(&[directory], delay).unwrap();
 
         assert!(test(&mut file, delay * 5).await)
     }

@@ -1,3 +1,4 @@
+mod adapter;
 mod codec;
 mod config;
 
@@ -5,11 +6,12 @@ use std::io;
 use std::io::Write;
 use std::sync::Arc;
 
-use event::log::path_iter::{PathComponent, PathIter};
 use event::{log::Value, Event, LogRecord, MaybeAsLogMut};
+use lookup::{parse_path, OwnedPath};
 use serde::{Deserialize, Serialize};
 
 // re-export
+pub use adapter::Transformer;
 pub use codec::*;
 pub use config::*;
 
@@ -52,7 +54,7 @@ pub trait EncodingConfiguration {
 
     fn codec(&self) -> &Self::Codec;
     fn schema(&self) -> &Option<String>;
-    fn only_fields(&self) -> &Option<Vec<Vec<PathComponent>>>;
+    fn only_fields(&self) -> &Option<Vec<OwnedPath>>;
     fn except_fields(&self) -> &Option<Vec<String>>;
     fn timestamp_format(&self) -> &Option<TimestampFormat>;
 
@@ -61,10 +63,10 @@ pub trait EncodingConfiguration {
             let mut to_remove = log
                 .keys()
                 .filter(|field| {
-                    let field_path = PathIter::new(field).collect::<Vec<_>>();
+                    let field_path = parse_path(field);
                     !only_fields
                         .iter()
-                        .any(|only| field_path.starts_with(&only[..]))
+                        .any(|only| field_path.segments.starts_with(&only.segments[..]))
                 })
                 .collect::<Vec<_>>();
 
@@ -113,24 +115,11 @@ pub trait EncodingConfiguration {
     /// If an error is returned, the entire encoding configuration should be considered inoperable.
     ///
     /// For example, this checks if `except_fields` and `only_fields` items are mutually exclusive.
-    fn validate(&self) -> Result<(), std::io::Error> {
-        if let (Some(only_fields), Some(expect_fields)) =
-            (&self.only_fields(), &self.except_fields())
-        {
-            if expect_fields.iter().any(|f| {
-                let path_iter = PathIter::new(f).collect::<Vec<_>>();
-                only_fields.iter().any(|v| v == &path_iter)
-            }) {
-                let err = std::io::Error::new(
-                    std::io::ErrorKind::InvalidData,
-                    "`expect_fields` and `only_fields` should be mutually exclusive",
-                );
-
-                return Err(err);
-            }
-        }
-
-        Ok(())
+    fn validate(&self) -> crate::Result<()> {
+        validate_fields(
+            self.only_fields().as_deref(),
+            self.except_fields().as_deref(),
+        )
     }
 
     /// Apply the EncodingConfig rules to the provided event.
@@ -148,6 +137,22 @@ pub trait EncodingConfiguration {
             self.apply_timestamp_format(log);
         }
     }
+}
+
+pub fn validate_fields(
+    only_fields: Option<&[OwnedPath]>,
+    except_fields: Option<&[String]>,
+) -> crate::Result<()> {
+    if let (Some(only_fields), Some(except_fields)) = (only_fields, except_fields) {
+        if except_fields.iter().any(|f| {
+            let path_iter = parse_path(f);
+            only_fields.iter().any(|v| v == &path_iter)
+        }) {
+            return Err("`except_fields` and `only_fields` should be mutually exclusive".into());
+        }
+    }
+
+    Ok(())
 }
 
 pub trait VisitLogMut {
@@ -222,11 +227,6 @@ mod tests {
         encoding: EncodingConfig<TestEncoding>,
     }
 
-    // TODO(2410): Using PathComponents here is a hack for #2407, #2410 should fix this fully.
-    fn as_path_components(a: &str) -> Vec<PathComponent> {
-        PathIter::new(a).collect()
-    }
-
     const YAML_SIMPLE_STRING: &str = r#"encoding: "Snoot""#;
 
     #[test]
@@ -249,10 +249,7 @@ mod tests {
         config.encoding.validate().unwrap();
         assert_eq!(config.encoding.codec, TestEncoding::Snoot);
         assert_eq!(config.encoding.except_fields, Some(vec!["Doop".into()]));
-        assert_eq!(
-            config.encoding.only_fields,
-            Some(vec![as_path_components("Boop")])
-        );
+        assert_eq!(config.encoding.only_fields, Some(vec![parse_path("Boop")]));
     }
 
     const YAML_EXCLUSIVITY_VIOLATION: &str = indoc! {r#"
@@ -399,4 +396,14 @@ mod tests {
             ),
         }
     }
+}
+
+/// Configuration for building a `Serializer`.
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub enum SerializerConfig {
+    Json,
+    NativeJson,
+    Text,
+    Logfmt,
+    Raw,
 }

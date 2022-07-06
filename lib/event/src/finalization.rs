@@ -27,7 +27,7 @@ pub enum EventStatus {
     Errored,
     /// At least one copy of this event encountered a permanent failure
     /// or rejection.
-    Failed,
+    Rejected,
     /// This status has been recorded and should not be updated
     Recorded,
 }
@@ -52,7 +52,7 @@ impl EventStatus {
                 self
             }
             // `Failed` overrides `Errored` or `Delivered`,
-            (Self::Failed, _) | (_, Self::Failed) => Self::Failed,
+            (Self::Rejected, _) | (_, Self::Rejected) => Self::Rejected,
             // `Errored` overrides `Delivered`
             (Self::Errored, _) | (_, Self::Errored) => Self::Errored,
             // No change for `Delivered`
@@ -199,7 +199,7 @@ impl BatchStatus {
             // `Dropped` and `Delivered` do not change the status.
             (_, EventStatus::Dropped) | (_, EventStatus::Delivered) => self,
             // `Failed` overrides `Errored` and `Delivered`
-            (Self::Failed, _) | (_, EventStatus::Failed) => Self::Failed,
+            (Self::Failed, _) | (_, EventStatus::Rejected) => Self::Failed,
             // `Errored` overrides `Delivered`
             (Self::Errored, _) | (_, EventStatus::Errored) => Self::Errored,
             // No change for `Delivered`
@@ -403,7 +403,7 @@ mod tests {
     #[test]
     fn early_update() {
         let (mut fin, mut receiver) = make_finalizer();
-        fin.update_status(EventStatus::Failed);
+        fin.update_status(EventStatus::Rejected);
         assert_eq!(receiver.try_recv(), Err(Empty));
         fin.update_sources();
         assert_eq!(fin.count_finalizers(), 0);
@@ -492,32 +492,32 @@ mod tests {
 
     #[test]
     fn event_status_updates() {
-        use EventStatus::{Delivered, Dropped, Errored, Failed, Recorded};
+        use EventStatus::{Delivered, Dropped, Errored, Recorded, Rejected};
 
         assert_eq!(Dropped.update(Dropped), Dropped);
         assert_eq!(Dropped.update(Delivered), Delivered);
         assert_eq!(Dropped.update(Errored), Errored);
-        assert_eq!(Dropped.update(Failed), Failed);
+        assert_eq!(Dropped.update(Rejected), Rejected);
         assert_eq!(Dropped.update(Recorded), Recorded);
 
         assert_eq!(Delivered.update(Delivered), Delivered);
         assert_eq!(Delivered.update(Errored), Errored);
-        assert_eq!(Delivered.update(Failed), Failed);
+        assert_eq!(Delivered.update(Rejected), Rejected);
         assert_eq!(Delivered.update(Recorded), Recorded);
 
         assert_eq!(Errored.update(Delivered), Errored);
         assert_eq!(Errored.update(Errored), Errored);
-        assert_eq!(Errored.update(Failed), Failed);
+        assert_eq!(Errored.update(Rejected), Rejected);
         assert_eq!(Errored.update(Recorded), Recorded);
 
-        assert_eq!(Failed.update(Delivered), Failed);
-        assert_eq!(Failed.update(Errored), Failed);
-        assert_eq!(Failed.update(Failed), Failed);
-        assert_eq!(Failed.update(Recorded), Recorded);
+        assert_eq!(Rejected.update(Delivered), Rejected);
+        assert_eq!(Rejected.update(Errored), Rejected);
+        assert_eq!(Rejected.update(Rejected), Rejected);
+        assert_eq!(Rejected.update(Recorded), Recorded);
 
         assert_eq!(Recorded.update(Delivered), Recorded);
         assert_eq!(Recorded.update(Errored), Recorded);
-        assert_eq!(Recorded.update(Failed), Recorded);
+        assert_eq!(Recorded.update(Rejected), Recorded);
         assert_eq!(Recorded.update(Recorded), Recorded);
     }
 
@@ -528,19 +528,19 @@ mod tests {
         assert_eq!(Delivered.update(EventStatus::Dropped), Delivered);
         assert_eq!(Delivered.update(EventStatus::Delivered), Delivered);
         assert_eq!(Delivered.update(EventStatus::Errored), Errored);
-        assert_eq!(Delivered.update(EventStatus::Failed), Failed);
+        assert_eq!(Delivered.update(EventStatus::Rejected), Failed);
         assert_eq!(Delivered.update(EventStatus::Recorded), Delivered);
 
         assert_eq!(Errored.update(EventStatus::Dropped), Errored);
         assert_eq!(Errored.update(EventStatus::Delivered), Errored);
         assert_eq!(Errored.update(EventStatus::Errored), Errored);
-        assert_eq!(Errored.update(EventStatus::Failed), Failed);
+        assert_eq!(Errored.update(EventStatus::Rejected), Failed);
         assert_eq!(Errored.update(EventStatus::Recorded), Errored);
 
         assert_eq!(Failed.update(EventStatus::Dropped), Failed);
         assert_eq!(Failed.update(EventStatus::Delivered), Failed);
         assert_eq!(Failed.update(EventStatus::Errored), Failed);
-        assert_eq!(Failed.update(EventStatus::Failed), Failed);
+        assert_eq!(Failed.update(EventStatus::Rejected), Failed);
         assert_eq!(Failed.update(EventStatus::Recorded), Failed);
     }
 }

@@ -27,6 +27,7 @@ debug = true
 [workspace]
 members = [
     "lib/buffers",
+    "lib/codecs",
     "lib/discovery",
     "lib/event",
     "lib/framework",
@@ -89,33 +90,35 @@ target-x86_64-unknown-linux-gnu = [
 # Integration tests
 all-integration-tests = [
     "integration-tests-consul",
-    "integration-tests-nginx_stub",
-    "integration-tests-redis",
-    "integration-tests-mysql",
-    "integration-tests-zookeeper",
+    "integration-tests-elasticsearch",
+    "integration-tests-haproxy",
     "integration-tests-kafka",
     "integration-tests-loki",
-    "integration-tests-haproxy",
     "integration-tests-memcached",
+    "integration-tests-mysql",
+    "integration-tests-nginx_stub",
     "integration-tests-ntp",
-    "integration-tests-prometheus_scrape",
     "integration-tests-prometheus_exporter",
-    "integration-tests-prometheus_remote_write"
+    "integration-tests-prometheus_remote_write",
+    "integration-tests-prometheus_scrape",
+    "integration-tests-redis",
+    "integration-tests-zookeeper"
 ]
 
 integration-tests-consul = []
-integration-tests-nginx_stub = []
-integration-tests-redis = []
-integration-tests-mysql = []
-integration-tests-zookeeper = []
+integration-tests-elasticsearch = []
+integration-tests-haproxy = []
 integration-tests-kafka = []
 integration-tests-loki = []
-integration-tests-haproxy = []
 integration-tests-memcached = []
+integration-tests-mysql = []
+integration-tests-nginx_stub = []
 integration-tests-ntp = []
-integration-tests-prometheus_scrape = []
 integration-tests-prometheus_exporter = []
 integration-tests-prometheus_remote_write = []
+integration-tests-prometheus_scrape = []
+integration-tests-redis = []
+integration-tests-zookeeper = []
 
 # Common
 disk-buffer = []
@@ -330,11 +333,13 @@ tower-test = { version = "0.4.0" }
 [dependencies]
 # workspaces
 buffers = { path = "lib/buffers" }
+codecs = { path = "lib/codecs" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
+lookup = { path = "lib/lookup" }
 multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }

@@ -25,12 +25,16 @@ use std::sync::Arc;
 
 use buffers::EventCount;
 use bytes::Bytes;
+use chrono::Utc;
+use log_schema::log_schema;
+use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
 use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),
@@ -252,6 +256,10 @@ impl From<String> for Event {
     fn from(s: String) -> Self {
         let mut fields: BTreeMap<String, log::Value> = BTreeMap::new();
         fields.insert("message".to_string(), log::Value::Bytes(s.into()));
+        fields.insert(
+            log_schema().timestamp_key().to_string(),
+            log::Value::Timestamp(Utc::now()),
+        );
 
         Self::Log(fields.into())
     }

@@ -665,7 +665,7 @@ mod test {
         let event = event.as_log();
 
         match event.get_field("message") {
-            Some(event::log::Value::Map(_)) => (),
+            Some(event::log::Value::Object(_)) => (),
             _ => panic!("\"message\" is not a map"),
         }
         assert_eq!(

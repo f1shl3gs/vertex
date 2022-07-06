@@ -54,6 +54,7 @@ indexmap = { version = "1.9.1", default-features = false, features = ["serde"] }
 inventory = { version = "0.1.11" }
 listenfd = { version = "1.0.0", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
+lookup = { path = "../lookup" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { path = "../metrics" }
 no-proxy = { version = "0.3.2" }

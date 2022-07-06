@@ -11,10 +11,11 @@ use rand::{thread_rng, Rng};
 use serde::Deserialize;
 use testify::next_addr;
 use testify::random::{random_maps, random_string};
+use testify::send_lines;
+use testify::wait::wait_for_tcp;
 use vertex::sinks::socket;
 use vertex::sinks::socket::SocketSinkConfig;
 use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
-use vertex::testing::{send_lines, wait_for_tcp};
 
 use util::start_topology;
 

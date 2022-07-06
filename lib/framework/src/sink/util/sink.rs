@@ -423,7 +423,7 @@ fn result_status<R: Response + Send>(result: crate::Result<R>) -> EventStatus {
                 EventStatus::Errored
             } else {
                 error!(message = "Response failed.", ?resp);
-                EventStatus::Failed
+                EventStatus::Rejected
             }
         }
         Err(error) => {

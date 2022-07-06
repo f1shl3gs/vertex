@@ -6,7 +6,7 @@ use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSe
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::encoding::EncodingConfig;
 use framework::sink::util::service::RequestConfig;
-use framework::tls::{TlsConfig, TlsOptions, TlsSettings};
+use framework::tls::{TlsConfig, TlsSettings};
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
@@ -69,7 +69,7 @@ pub struct LokiConfig {
     #[serde(default)]
     pub batch: BatchConfig<LokiDefaultBatchSettings>,
 
-    pub tls: Option<TlsOptions>,
+    pub tls: Option<TlsConfig>,
 }
 
 impl LokiConfig {

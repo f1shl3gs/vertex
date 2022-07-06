@@ -542,6 +542,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "codecs"
+version = "0.1.0"
+dependencies = [
+ "bytes",
+ "event",
+ "log_schema",
+ "serde",
+ "serde_json",
+ "tokio-util 0.7.3",
+]
+
+[[package]]
 name = "colored"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1180,6 +1192,7 @@ dependencies = [
  "inventory 0.1.11",
  "listenfd",
  "log_schema",
+ "lookup",
  "memchr 2.5.0",
  "metrics",
  "nix",
@@ -2211,6 +2224,15 @@ version = "0.1.0"
 dependencies = [
  "once_cell",
  "serde",
+]
+
+[[package]]
+name = "lookup"
+version = "0.1.0"
+dependencies = [
+ "criterion",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]
@@ -4312,7 +4334,10 @@ version = "0.1.0"
 dependencies = [
  "event",
  "futures",
+ "futures-util",
  "rand 0.8.5",
+ "tokio",
+ "tokio-util 0.7.3",
 ]
 
 [[package]]
@@ -5032,6 +5057,7 @@ dependencies = [
  "bytes",
  "chrono",
  "chrono-tz",
+ "codecs",
  "colored",
  "criterion",
  "dyn-clone",
@@ -5057,6 +5083,7 @@ dependencies = [
  "kube",
  "libc",
  "log_schema",
+ "lookup",
  "lru",
  "maxminddb",
  "memchr 2.5.0",

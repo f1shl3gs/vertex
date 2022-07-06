@@ -21,4 +21,4 @@ tracing-subscriber = { version = "0.3.14", default-features = false, features = 
 [[bench]]
 name = "limit"
 harness = false
-test = true
+test = false
