@@ -89,9 +89,13 @@ integration-tests: integration-test-consul integration-test-haproxy integration-
 udeps:
 	cargo +nightly udeps
 
+.PHONY: doc-test
+doc-test:
+	cargo test --doc --workspace
+
 .PHONY: test
 test:
-	cargo test --workspace --no-fail-fast
+	cargo nextest run --workspace --no-fail-fast
 
 .PHONY: check_clippy
 check_clippy:

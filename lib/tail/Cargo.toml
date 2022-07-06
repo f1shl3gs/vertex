@@ -6,7 +6,7 @@ edition = "2021"
 [[bench]]
 name = "buffer"
 harness = false
-test = true
+test = false
 
 [dev-dependencies]
 quickcheck = "1.0.3"
