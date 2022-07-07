@@ -1,8 +1,9 @@
-use crate::sinks::elasticsearch::service::ElasticsearchResponse;
 use framework::http::HttpError;
 use framework::sink::util::retries::{RetryAction, RetryLogic};
 use http::StatusCode;
 use serde::Deserialize;
+
+use super::service::ElasticsearchResponse;
 
 #[derive(Debug, Deserialize)]
 struct ElasticsearchErrorDetails {

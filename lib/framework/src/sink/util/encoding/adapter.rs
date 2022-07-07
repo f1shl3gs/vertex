@@ -1,4 +1,4 @@
-use event::Event;
+use event::{Event, LogRecord};
 use lookup::OwnedPath;
 use serde::{Deserialize, Serialize};
 
@@ -38,6 +38,10 @@ impl Transformer {
 
     pub fn transform(&self, event: &mut Event) {
         self.apply_rules(event);
+    }
+
+    pub fn transform_log(&self, log: &mut LogRecord) {
+        self.apply_rules(log);
     }
 }
 

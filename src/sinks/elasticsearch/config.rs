@@ -18,11 +18,11 @@ use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use tower::ServiceBuilder;
 
-use crate::sinks::elasticsearch::common::ElasticsearchCommon;
-use crate::sinks::elasticsearch::retry::ElasticsearchRetryLogic;
-use crate::sinks::elasticsearch::service::{ElasticsearchService, HttpRequestBuilder};
-use crate::sinks::elasticsearch::sink::ElasticsearchSink;
-use crate::sinks::elasticsearch::{ElasticsearchCommonMode, ParseError};
+use super::common::ElasticsearchCommon;
+use super::retry::ElasticsearchRetryLogic;
+use super::service::{ElasticsearchService, HttpRequestBuilder};
+use super::sink::ElasticsearchSink;
+use super::{ElasticsearchCommonMode, ParseError};
 
 /// The field name for the timestamp required by data stream mode
 pub const DATA_STREAM_TIMESTAMP_KEY: &str = "@timestamp";

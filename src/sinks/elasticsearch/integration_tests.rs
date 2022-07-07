@@ -23,9 +23,10 @@ use testify::random::{random_events_with_stream, random_string};
 use tokio::time::sleep;
 
 use super::common::ElasticsearchCommon;
-use super::config::{BulkConfig, ElasticsearchConfig};
-use super::config::{ElasticsearchMode, DATA_STREAM_TIMESTAMP_KEY};
-use crate::sinks::elasticsearch::config::ElasticsearchAuth;
+use super::config::{
+    BulkConfig, ElasticsearchAuth, ElasticsearchConfig, ElasticsearchMode,
+    DATA_STREAM_TIMESTAMP_KEY,
+};
 use crate::testing::trace_init;
 
 impl ElasticsearchCommon {
