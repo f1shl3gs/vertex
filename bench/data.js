@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657185795791,
+  "lastUpdate": 1657185918090,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8691,6 +8691,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1131900,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c2e30d18dce0db09e687cd076597b8eb0ed9bfd5",
+          "message": "Merge pull request #421 from f1shl3gs/remove_tools_to_speed_up_ci\n\nremove tools/* to speed up CI",
+          "timestamp": "2022-07-07T17:17:01+08:00",
+          "tree_id": "55c0ddf4d61079e2f3d3bc3f08c21268a0ac6a26",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c2e30d18dce0db09e687cd076597b8eb0ed9bfd5"
+        },
+        "date": 1657185913832,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 1155000,
             "unit": "ns/op"
           }
         ]
