@@ -14,10 +14,10 @@ use futures_util::StreamExt;
 use shared::ByteSizeOf;
 use tower::Service;
 
-use crate::sinks::elasticsearch::encoder::ProcessedEvent;
-use crate::sinks::elasticsearch::request_builder::ElasticsearchRequestBuilder;
-use crate::sinks::elasticsearch::service::ElasticsearchRequest;
-use crate::sinks::elasticsearch::{BulkAction, ElasticsearchCommonMode};
+use super::encoder::ProcessedEvent;
+use super::request_builder::ElasticsearchRequestBuilder;
+use super::service::ElasticsearchRequest;
+use super::{BulkAction, ElasticsearchCommonMode};
 
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub struct PartitionKey {

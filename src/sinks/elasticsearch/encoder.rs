@@ -5,7 +5,7 @@ use event::{Event, EventFinalizers, Finalizable, LogRecord};
 use framework::sink::util::{as_tracked_write, Encoder, Transformer};
 use shared::ByteSizeOf;
 
-use crate::sinks::elasticsearch::BulkAction;
+use super::BulkAction;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct ElasticsearchEncoder {
