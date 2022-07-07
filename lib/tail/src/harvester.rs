@@ -139,14 +139,14 @@ where
                             if watcher.path == path {
                                 trace!(
                                     message = "Continue watching file",
-                                    path = ?path
+                                    ?path
                                 );
                             } else {
                                 // matches a file with a different path
                                 if !was_found_this_cycle {
                                     info!(
                                         message = "Watched file has been renamed",
-                                        path = ?path,
+                                        ?path,
                                         old_path = ?watcher.path
                                     );
 
@@ -155,7 +155,7 @@ where
                                 } else {
                                     info!(
                                         message = "More than one file has the same fingerprint",
-                                        path = ?path,
+                                        ?path,
                                         old_path = ?watcher.path
                                     );
 
@@ -167,8 +167,8 @@ where
                                         if old_modified_time < new_modified_time {
                                             info!(
                                                 message = "Switching to watch most recently modified file",
-                                                new_modified_time = ?new_modified_time,
-                                                old_modified_time = ?old_modified_time
+                                                ?new_modified_time,
+                                                ?old_modified_time
                                             );
 
                                             // ok if this fails: it might be fix next cycle
