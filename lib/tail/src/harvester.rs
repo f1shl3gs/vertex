@@ -137,10 +137,7 @@ where
                             let was_found_this_cycle = watcher.file_findable();
                             watcher.set_findable(true);
                             if watcher.path == path {
-                                trace!(
-                                    message = "Continue watching file",
-                                    ?path
-                                );
+                                trace!(message = "Continue watching file", ?path);
                             } else {
                                 // matches a file with a different path
                                 if !was_found_this_cycle {
@@ -256,8 +253,6 @@ where
             futures::pin_mut!(sleep);
             match self.handle.block_on(select(shutdown, sleep)) {
                 Either::Left((_, _)) => {
-                    println!("left shutdown");
-
                     let checkpointer = self
                         .handle
                         .block_on(checkpoint_task_handle)
@@ -269,12 +264,7 @@ where
 
                     return Ok(Shutdown);
                 }
-                Either::Right((_, future)) => {
-
-                    println!("right shutdown");
-
-                    shutdown = future
-                },
+                Either::Right((_, future)) => shutdown = future,
             }
         }
     }

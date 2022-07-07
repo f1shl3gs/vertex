@@ -325,11 +325,7 @@ fn tail_source(
     };
 
     Ok(Box::pin(async move {
-        info!(
-            message = "Starting harvest files",
-            ?include,
-            ?exclude,
-        );
+        info!(message = "Starting harvest files", ?include, ?exclude,);
 
         let mut encoding_decoder = charset.map(Decoder::new);
 
@@ -382,7 +378,8 @@ fn tail_source(
                         )
                     }
                     Parser::NoIndent => {
-                        let logic = Logic::new(multiline::preset::NoIndent, multiline_config.timeout);
+                        let logic =
+                            Logic::new(multiline::preset::NoIndent, multiline_config.timeout);
                         Box::new(
                             LineAgg::new(
                                 rx.map(|line| {
@@ -494,6 +491,7 @@ fn tail_source(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::testing::trace_init;
     use encoding_rs::UTF_16LE;
     use event::attributes::Key;
     use event::log::Value;
@@ -571,8 +569,6 @@ mod tests {
         tokio::spawn(tail_source(config, data_dir, shutdown, tx, acks).unwrap());
 
         inner.await;
-
-        println!("shutdown");
 
         drop(trigger_shutdown);
 
@@ -919,6 +915,8 @@ mod tests {
 
     #[tokio::test]
     async fn file_start_position_server_restart_unfinalized() {
+        trace_init();
+
         let dir = tempdir().unwrap();
         let config = TailConfig {
             include: vec![dir.path().join("*")],
