@@ -9,7 +9,7 @@ parking_lot = { version = "0.12.1", default-features = false }
 once_cell = { version = "1.13.0" }
 
 [dev-dependencies]
-criterion = { version = "0.3.5" }
+criterion = { version = "0.3.6" }
 
 [[bench]]
 name = "register"

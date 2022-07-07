@@ -9,7 +9,7 @@ harness = false
 path = "benches/duration.rs"
 
 [dev-dependencies]
-criterion = { version = "0.3.5" }
+criterion = { version = "0.3.6" }
 
 [dependencies]
 serde = { version = "1.0.138", default-features = false, features = ["std"] }
