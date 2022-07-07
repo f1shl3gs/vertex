@@ -1,4 +1,3 @@
-use async_stream::stream;
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::io::Cursor;
 use std::sync::Arc;
@@ -6,7 +5,7 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
-use event::{fields, log::Value, tags, BatchNotifier, BatchStatus, Event, LogRecord};
+use event::{log::Value, BatchNotifier, BatchStatus, Event, LogRecord};
 use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
 use framework::codecs::{
     BytesDecoderConfig, BytesDeserializerConfig, Decoder, StreamDecodingError,
@@ -18,12 +17,12 @@ use framework::config::{
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::source::util::OrderedFinalizer;
-use framework::{codecs, Error, Source};
-use futures::{FutureExt, Stream, StreamExt};
+use framework::{Error, Source};
+use futures::{Stream, StreamExt};
 use log_schema::{log_schema, LogSchema};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
-use rdkafka::{ClientConfig, Message, TopicPartitionList};
+use rdkafka::{ClientConfig, Message};
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
 
@@ -280,20 +279,6 @@ impl<'a> From<BorrowedMessage<'a>> for FinalizerEntry {
     }
 }
 
-fn mark_done(consumer: Arc<StreamConsumer<KafkaStatisticsContext>>) -> impl Fn(FinalizerEntry) {
-    move |entry| {
-        // Would like to use `consumer.store_offset` here, but types don't allow it
-        let mut tpl = TopicPartitionList::new();
-        tpl.add_partition(&entry.topic, entry.partition)
-            .set_offset(rdkafka::Offset::from_raw(entry.offset + 1))
-            .expect("Setting offset failed");
-
-        if let Err(err) = consumer.store_offsets(&tpl) {
-            warn!(message = "Unable to update consumer offset", ?err);
-        }
-    }
-}
-
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SourceConfig for KafkaSourceConfig {
@@ -303,13 +288,9 @@ impl SourceConfig for KafkaSourceConfig {
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
         let consumer = self.create_consumer()?;
 
-        Ok(Box::pin(kafka_source(
+        Ok(Box::pin(run(
+            self.clone(),
             consumer,
-            self.key_field.clone(),
-            self.topic_key.clone(),
-            self.partition_key.clone(),
-            self.offset_key.clone(),
-            self.headers_key.clone(),
             decoder,
             cx.output,
             cx.shutdown,
@@ -328,16 +309,10 @@ impl SourceConfig for KafkaSourceConfig {
 
 async fn run(
     config: KafkaSourceConfig,
-
     consumer: StreamConsumer<KafkaStatisticsContext>,
-    key_field: String,
-    topic_key: String,
-    partition_key: String,
-    offset_key: String,
-    headers_key: String,
-    decoder: codecs::Decoder,
+    decoder: Decoder,
     mut output: Pipeline,
-    shutdown: ShutdownSignal,
+    mut shutdown: ShutdownSignal,
     acknowledgements: bool,
 ) -> Result<(), ()> {
     let consumer = Arc::new(consumer);
@@ -368,6 +343,8 @@ async fn run(
             }
         }
     }
+
+    Ok(())
 }
 
 struct Topics {
@@ -436,7 +413,6 @@ fn handle_ack(
 
 #[derive(Clone, Copy)]
 struct Keys<'a> {
-    source_type: &'a str,
     timestamp: &'a str,
     key_field: &'a str,
     topic: &'a str,
@@ -448,7 +424,6 @@ struct Keys<'a> {
 impl<'a> Keys<'a> {
     fn from(schema: &'a LogSchema, config: &'a KafkaSourceConfig) -> Self {
         Self {
-            source_type: schema.source_type_key(),
             timestamp: schema.timestamp_key(),
             key_field: config.key_field.as_str(),
             topic: config.topic_key.as_str(),
@@ -507,7 +482,7 @@ impl ReceivedMessage {
 
     fn apply(&self, keys: &Keys<'_>, event: &mut Event) {
         if let Event::Log(log) = event {
-            log.insert_tag(keys.source_type, "kafka");
+            log.insert_tag(log_schema().source_type_key(), "kafka");
 
             log.insert_field(keys.timestamp, self.timestamp);
             log.insert_field(keys.key_field, self.key.clone());
@@ -528,15 +503,18 @@ async fn parse_message(
     consumer: &Arc<StreamConsumer<KafkaStatisticsContext>>,
     topics: &Topics,
 ) {
-    if let Some((count, events)) = parse_stream(&msg, decoder, keys, topics) {
+    if let Some(logs) = parse_stream(&msg, decoder, keys, topics).await {
+        let count = logs.len();
+
         match finalizer {
             Some(finalizer) => {
                 let (batch, receiver) = BatchNotifier::new_with_receiver();
-                events.iter().for_each(|event| {
-                    event.with_batch_notifier(&batch);
-                });
+                let logs = logs
+                    .into_iter()
+                    .map(|log| log.with_batch_notifier(&batch))
+                    .collect::<Vec<_>>();
 
-                match output.send(events).await {
+                match output.send(logs).await {
                     Ok(_) => {
                         finalizer.add(msg.into(), receiver);
                     }
@@ -549,7 +527,7 @@ async fn parse_message(
                     }
                 }
             }
-            None => match output.send(events).await {
+            None => match output.send(logs).await {
                 Ok(_) => {
                     if let Err(err) =
                         consumer.store_offset(msg.topic(), msg.partition(), msg.offset())
@@ -574,12 +552,12 @@ async fn parse_message(
 }
 
 // Turn the received message into a stream of parsed events.
-fn parse_stream<'a>(
+async fn parse_stream<'a>(
     msg: &BorrowedMessage<'a>,
     decoder: &Decoder,
     keys: Keys<'a>,
     topics: &Topics,
-) -> Option<(usize, Vec<Event>)> {
+) -> Option<Vec<LogRecord>> {
     if topics.failed.contains(msg.topic()) {
         return None;
     }
@@ -591,13 +569,13 @@ fn parse_stream<'a>(
     let mut stream = FramedRead::new(payload, decoder.clone());
     let (count, _) = stream.size_hint();
 
-    let mut parsed = Vec::with_capacity(count);
+    let mut logs = Vec::with_capacity(count);
     while let Some(result) = stream.next().await {
         match result {
             Ok((events, _byte_size)) => {
                 for mut event in events {
                     rmsg.apply(&keys, &mut event);
-                    parsed.push(event);
+                    logs.push(event.into_log());
                 }
             }
             Err(err) => {
@@ -608,7 +586,7 @@ fn parse_stream<'a>(
         }
     }
 
-    Some((count, parsed))
+    Some(logs)
 }
 
 #[cfg(test)]
@@ -661,7 +639,6 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-kafka"))]
 mod integration_tests {
-    use crate::sources::kafka::kafka_source;
     use chrono::{SubsecRound, Utc};
     use event::{log::Value, EventStatus};
     use framework::{codecs, Pipeline, ShutdownSignal};
@@ -676,6 +653,8 @@ mod integration_tests {
     use testcontainers::{clients, RunnableImage};
     use testify::collect_n;
     use testify::random::random_string;
+
+    use super::run;
 
     #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
     async fn consume_with_ack() {
@@ -720,13 +699,9 @@ mod integration_tests {
         let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
         let consumer = config.create_consumer().unwrap();
-        tokio::spawn(kafka_source(
+        tokio::spawn(run(
+            config.clone(),
             consumer,
-            config.key_field,
-            config.topic_key,
-            config.partition_key,
-            config.offset_key,
-            config.headers_key,
             codecs::Decoder::default(),
             tx,
             shutdown,

@@ -1,12 +1,14 @@
 mod encoding_transcode;
 
+use std::collections::HashSet;
 use std::path::PathBuf;
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
 use encoding_transcode::{Decoder, Encoder};
-use event::{fields, tags, BatchNotifier, Event, LogRecord};
+use event::{fields, tags, BatchNotifier, BatchStatus, Event, LogRecord};
 use framework::config::{
     deserialize_duration, deserialize_duration_option, serialize_duration,
     serialize_duration_option, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
@@ -21,6 +23,9 @@ use log_schema::log_schema;
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Fingerprint, Harvester, Line, ReadFrom};
+use tokio::sync::oneshot;
+
+const POISONED_FAILED_LOCK: &str = "Poisoned lock on failed files set";
 
 #[derive(Debug, Deserialize, Serialize)]
 pub enum ReadFromConfig {
@@ -241,7 +246,6 @@ fn tail_source(
         .map(|d| Utc::now() - chrono::Duration::from_std(d).unwrap());
     let include = config.include.clone();
     let exclude = config.exclude.clone();
-    let shutdown = shutdown.shared();
     let multiline = config.multiline.clone();
     let checkpointer = Checkpointer::new(&data_dir);
     let checkpoints = checkpointer.view();
@@ -252,12 +256,57 @@ fn tail_source(
     let hostname = hostname().unwrap();
     let timestamp_key = log_schema().timestamp_key();
     let source_type_key = log_schema().source_type_key();
-    let finalizer = acknowledgements.then(|| {
+
+    // The `failed_files` set contains `Fingerprint`s, provided by
+    // the file server, of all files that have received a negative
+    // acknowledgements. This set is shared between the finalizer task,
+    // which both holds back checkpointer updates if an identifier is
+    // present and adds entries on negative acknowledgements, and the
+    // main file server handling task, which holds back further events
+    // from files in the set.
+    let failed_files: Arc<Mutex<HashSet<Fingerprint>>> = Default::default();
+    let (finalizer, shutdown_checkpointer) = if acknowledgements {
+        // The shutdown sent in to the finalizer is the global
+        // shutdown handle used to tell it to stop accepting new batch
+        // statuses and just wait for the remaining acks to come in.
+        let (finalizer, mut ack_stream) = OrderedFinalizer::<FinalizerEntry>::new(shutdown.clone());
+
+        // We set up a separate shutdown signal to tie together the
+        // finalizer and the checkpoint writer task in the harvester,
+        // to make it continue to write out updated checkpoints until
+        // all the acks have come in.
+        let (send_shutdown, shutdown2) = oneshot::channel::<()>();
         let checkpoints = checkpointer.view();
-        OrderedFinalizer::new(shutdown.clone(), move |entry: FinalizerEntry| {
-            checkpoints.update(entry.fingerprint, entry.offset)
-        })
-    });
+        let failed_files = Arc::clone(&failed_files);
+        tokio::spawn(async move {
+            while let Some((status, entry)) = ack_stream.next().await {
+                // Don't update the checkpointer on file streams after failed acks
+                let mut failed_files = failed_files.lock().expect(POISONED_FAILED_LOCK);
+
+                // Hold back updates for failed files
+                if !failed_files.contains(&entry.fingerprint) {
+                    if status == BatchStatus::Delivered {
+                        checkpoints.update(entry.fingerprint, entry.offset);
+                    } else {
+                        error!(
+                            message =
+                                "Event received a negative acknowledgment, file has been stopped."
+                        );
+
+                        failed_files.insert(entry.fingerprint);
+                    }
+                }
+            }
+
+            send_shutdown.send(())
+        });
+
+        (Some(finalizer), shutdown2.map(|_| ()).boxed())
+    } else {
+        // When not dealing with end-to-end acknowledgements, just
+        // clone the global shutdown to stop the checkpoint writer.
+        (None, shutdown.clone().map(|_| ()).boxed())
+    };
 
     let charset = config.charset;
     let line_delimiter = match charset {
@@ -278,33 +327,43 @@ fn tail_source(
     Ok(Box::pin(async move {
         info!(
             message = "Starting harvest files",
-            include = ?include,
-            exclude = ?exclude,
+            ?include,
+            ?exclude,
         );
 
         let mut encoding_decoder = charset.map(Decoder::new);
 
         // sizing here is just a guess
-        let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(16);
+        let (tx, rx) = futures::channel::mpsc::channel::<Vec<Line>>(2);
         let rx = rx
             .map(futures::stream::iter)
             .flatten()
             .map(move |mut line| {
-                // transcode each line from the file's encoding charset to utf8
-                line.text = match encoding_decoder.as_mut() {
-                    Some(decoder) => decoder.decode_to_utf8(line.text),
-                    None => line.text,
-                };
+                let failed = failed_files
+                    .lock()
+                    .expect(POISONED_FAILED_LOCK)
+                    .contains(&line.fingerprint);
 
-                line
-            });
+                // Drop the incoming data if the file received a negative acknowledgement.
+                (!failed).then(|| {
+                    // transcode each line from the file's encoding charset to utf8
+                    line.text = match encoding_decoder.as_mut() {
+                        Some(decoder) => decoder.decode_to_utf8(line.text),
+                        None => line.text,
+                    };
 
-        let messages: Box<dyn Stream<Item = Line> + Send + std::marker::Unpin> =
-            if let Some(ref conf) = multiline {
+                    line
+                })
+            })
+            .map(futures::stream::iter)
+            .flatten();
+
+        let messages: Box<dyn Stream<Item = Line> + Send + Unpin> =
+            if let Some(ref multiline_config) = multiline {
                 // This match looks ugly, but it does not need `dyn`
-                match &conf.parser {
+                match &multiline_config.parser {
                     Parser::Cri => {
-                        let logic = Logic::new(multiline::preset::Cri, conf.timeout);
+                        let logic = Logic::new(multiline::preset::Cri, multiline_config.timeout);
                         Box::new(
                             LineAgg::new(
                                 rx.map(|line| {
@@ -323,7 +382,7 @@ fn tail_source(
                         )
                     }
                     Parser::NoIndent => {
-                        let logic = Logic::new(multiline::preset::NoIndent, conf.timeout);
+                        let logic = Logic::new(multiline::preset::NoIndent, multiline_config.timeout);
                         Box::new(
                             LineAgg::new(
                                 rx.map(|line| {
@@ -352,7 +411,7 @@ fn tail_source(
                                 condition_pattern: condition_pattern.clone(),
                                 mode: mode.to_owned(),
                             },
-                            conf.timeout,
+                            multiline_config.timeout,
                         );
 
                         Box::new(
@@ -416,7 +475,7 @@ fn tail_source(
         tokio::spawn(async move { output.send_all_v2(&mut messages).await });
 
         tokio::task::spawn_blocking(move || {
-            let result = harvester.run(tx, shutdown, checkpointer);
+            let result = harvester.run(tx, shutdown, shutdown_checkpointer, checkpointer);
             // Panic if we encounter any error originating from the harvester.
             // We're at the `spawn_blocking` call, the panic will be caught and
             // passed to the `JoinHandle` error, similar to the usual threads.
@@ -446,7 +505,7 @@ mod tests {
     use std::future::Future;
     use std::io::Write;
     use tempfile::tempdir;
-    use tokio::time::timeout;
+    use tokio::time::{sleep, timeout};
 
     fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
         TailConfig {
@@ -472,18 +531,6 @@ mod tests {
         Acks,
     }
 
-    async fn wait_with_timeout<F, R>(fut: F) -> R
-    where
-        F: Future<Output = R> + Send,
-        R: Send,
-    {
-        timeout(Duration::from_secs(5), fut)
-            .await
-            .unwrap_or_else(|_| {
-                panic!("Unclosed channel: may indicate harvester could not shutdown gracefully")
-            })
-    }
-
     async fn run_tail(
         config: &TailConfig,
         data_dir: PathBuf,
@@ -491,29 +538,49 @@ mod tests {
         acking_mode: AckingMode,
         inner: impl Future<Output = ()>,
     ) -> Vec<Event> {
-        let (tx, rx) = if acking_mode == AckingMode::Acks {
-            let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
-            (tx, rx.boxed())
-        } else {
-            let (tx, rx) = Pipeline::new_test();
-            (tx, rx.boxed())
+        let (tx, rx) = match acking_mode {
+            AckingMode::Acks => {
+                let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
+                (tx, rx.boxed())
+            }
+            AckingMode::No | AckingMode::Unfinalized => {
+                let (tx, rx) = Pipeline::new_test();
+                (tx, rx.boxed())
+            }
         };
 
         let (trigger_shutdown, shutdown, shutdown_done) = ShutdownSignal::new_wired();
         let acks = !matches!(acking_mode, AckingMode::No);
 
+        // Run the collector concurrent to the file source, to execute finalizers.
+        let collector = if acking_mode == AckingMode::Unfinalized {
+            tokio::spawn(
+                rx.take_until(sleep(Duration::from_secs(5)))
+                    .collect::<Vec<_>>(),
+            )
+        } else {
+            tokio::spawn(async {
+                timeout(Duration::from_secs(5), rx.collect::<Vec<_>>())
+                    .await
+                    .expect(
+                        "Unclosed channel: may indicate harvester could not shutdown gracefully.",
+                    )
+            })
+        };
+
         tokio::spawn(tail_source(config, data_dir, shutdown, tx, acks).unwrap());
 
         inner.await;
 
+        println!("shutdown");
+
         drop(trigger_shutdown);
 
-        let result = wait_with_timeout(rx.collect::<Vec<_>>()).await;
         if wait_shutdown {
             shutdown_done.await;
         }
 
-        result
+        collector.await.expect("Collector task failed")
     }
 
     async fn sleep_500_millis() {

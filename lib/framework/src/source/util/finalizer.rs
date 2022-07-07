@@ -20,10 +20,10 @@ use crate::ShutdownSignal;
 /// *in the order they are received from the source*, using `FinalizerSet`.
 pub type OrderedFinalizer<T> = FinalizerSet<T, FuturesOrdered<FinalizerFuture<T>>>;
 
-/// The `UnorderedFinalizer` framework produces a stream of acknowledged event
-/// batch identifiers from a source in a single background task *in the order
-/// that finalization happens on the event batches*, using `FinalizerSet`.
-pub type UnorderedFinalizer<T> = FinalizerSet<T, FuturesUnordered<FinalizerFuture<T>>>;
+// /// The `UnorderedFinalizer` framework produces a stream of acknowledged event
+// /// batch identifiers from a source in a single background task *in the order
+// /// that finalization happens on the event batches*, using `FinalizerSet`.
+// pub type UnorderedFinalizer<T> = FinalizerSet<T, FuturesUnordered<FinalizerFuture<T>>>;
 
 /// The `FinalizerSet` framework here is a mechanism for creating a stream
 /// of acknowledged (finalized) event batch identifiers from a source as
