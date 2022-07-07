@@ -556,6 +556,7 @@ dependencies = [
  "log_schema",
  "serde",
  "serde_json",
+ "syslog_loose",
  "tokio-util 0.7.3",
 ]
 
