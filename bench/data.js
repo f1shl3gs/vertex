@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657177248804,
+  "lastUpdate": 1657178229423,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18857,6 +18857,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.327,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "62d4c8a2888c92e209629b05e90de7f6bd84f952",
+          "message": "Merge pull request #418 from f1shl3gs/dependabot/cargo/num-bigint-0.4.3\n\nchore(deps): bump num-bigint from 0.4.2 to 0.4.3",
+          "timestamp": "2022-07-07T15:11:07+08:00",
+          "tree_id": "ae8813c4b0e9cc3fceea0badf92a8b1d74ebb93c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/62d4c8a2888c92e209629b05e90de7f6bd84f952"
+        },
+        "date": 1657178226585,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 74.197,
             "unit": "ns/op"
           }
         ]
