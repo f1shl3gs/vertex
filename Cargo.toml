@@ -43,10 +43,7 @@ members = [
     "lib/sysinfo",
     "lib/virt",
     "lib/jaeger",
-    "lib/tracing-internal",
-    "tools/log_generator",
-    "tools/fake_node_exporter",
-    "tools/kafka_generator"
+    "lib/tracing-internal"
 ]
 
 [features]

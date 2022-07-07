@@ -1078,14 +1078,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de853764b47027c2e862a995c34978ffa63c1501f2e15f987ba11bd4f9bba193"
 
 [[package]]
-name = "fake_node_exporter"
-version = "0.1.0"
-dependencies = [
- "hyper",
- "tokio",
-]
-
-[[package]]
 name = "fastrand"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1472,7 +1464,6 @@ dependencies = [
  "no-std-compat",
  "nonzero_ext",
  "parking_lot 0.12.1",
- "quanta",
  "rand 0.8.5",
  "smallvec",
 ]
@@ -1999,17 +1990,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "kafka_generator"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "futures",
- "governor",
- "rdkafka",
- "tokio",
-]
-
-[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2217,14 +2197,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "log_generator"
-version = "0.1.0"
-dependencies = [
- "argh",
- "governor",
-]
-
-[[package]]
 name = "log_schema"
 version = "0.1.0"
 dependencies = [
@@ -2246,15 +2218,6 @@ name = "lru"
 version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c84e6fe5655adc6ce00787cf7dcaf8dc4f998a0565d23eafc207a8b08ca3349a"
-
-[[package]]
-name = "mach"
-version = "0.3.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b823e83b2affd8f40a9ee8c29dbc56404c1e34cd2710921f2801e2cf29527afa"
-dependencies = [
- "libc",
-]
 
 [[package]]
 name = "match_cfg"
@@ -3299,22 +3262,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "quanta"
-version = "0.9.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20afe714292d5e879d8b12740aa223c6a88f118af41870e8b6196e39a02238a8"
-dependencies = [
- "crossbeam-utils",
- "libc",
- "mach",
- "once_cell",
- "raw-cpuid",
- "wasi 0.10.0+wasi-snapshot-preview1",
- "web-sys",
- "winapi 0.3.9",
-]
-
-[[package]]
 name = "quick-error"
 version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3436,15 +3383,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d25bf25ec5ae4a3f1b92f929810509a2f53d7dca2f50b794ff57e3face536c8f"
 dependencies = [
  "rand_core 0.6.3",
-]
-
-[[package]]
-name = "raw-cpuid"
-version = "10.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "929f54e29691d4e6a9cc558479de70db7aa3d98cd6fe7ab86d7507aa2886b9d2"
-dependencies = [
- "bitflags",
 ]
 
 [[package]]
