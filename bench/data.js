@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657256556870,
+  "lastUpdate": 1657256599343,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19022,6 +19022,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 64.313,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a2e1bf1176ab3f3dd74271b8bbcd521aa373b7e0",
+          "message": "Merge pull request #423 from f1shl3gs/dependabot/cargo/hyper-0.14.20\n\nchore(deps): bump hyper from 0.14.19 to 0.14.20",
+          "timestamp": "2022-07-08T12:57:04+08:00",
+          "tree_id": "03f0e4091206f4e17c05b0d2f80ec4444c3bfed9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a2e1bf1176ab3f3dd74271b8bbcd521aa373b7e0"
+        },
+        "date": 1657256595448,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 27.158,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 72.985,
             "unit": "ns/op"
           }
         ]
