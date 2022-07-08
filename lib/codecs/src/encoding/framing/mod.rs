@@ -1,14 +1,19 @@
-use std::io::Error;
+mod bytes;
+mod character;
+mod newline;
 
-mod character_delimited;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug)]
-pub enum FramingError {
-    Io(Error),
-}
+/// Configuration for building a `Framer`.
+#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum FramingConfig {
+    /// Configure the `BytesEncoder`
+    Bytes,
 
-impl From<Error> for FramingError {
-    fn from(err: Error) -> Self {
-        Self::Io(err)
-    }
+    /// Configure the `CharacterDelimitedEncoder`
+    CharacterDelimited { delimiter: u8 },
+
+    /// Configures the `NewlineDelimitedEncoder`
+    NewlineDelimited,
 }

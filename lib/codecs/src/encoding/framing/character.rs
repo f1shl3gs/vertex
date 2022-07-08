@@ -1,10 +1,13 @@
-use crate::encoding::framing::FramingError;
 use bytes::{BufMut, BytesMut};
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Encoder;
 
+use crate::FramingError;
+
+/// Config used to build a `CharacterDelimitedEncoder`
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CharacterDelimitedFramerConfig {
+    /// Options for the character delimited encoder.
     pub delimiter: u8,
 }
 
@@ -23,6 +26,12 @@ impl CharacterDelimitedFramerConfig {
 #[derive(Clone, Debug)]
 pub struct CharacterDelimitedEncoder {
     delimiter: u8,
+}
+
+impl CharacterDelimitedEncoder {
+    pub const fn new(delimiter: u8) -> Self {
+        Self { delimiter }
+    }
 }
 
 impl Encoder<()> for CharacterDelimitedEncoder {

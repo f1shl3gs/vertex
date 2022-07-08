@@ -6,6 +6,7 @@ use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSe
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::encoding::EncodingConfig;
 use framework::sink::util::service::RequestConfig;
+use framework::sink::util::Compression;
 use framework::tls::{TlsConfig, TlsSettings};
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
@@ -62,14 +63,17 @@ pub struct LokiConfig {
     pub out_of_order_action: OutOfOrderAction,
 
     pub auth: Option<Auth>,
+    pub tls: Option<TlsConfig>,
+    #[serde(default = "Compression::gzip_default")]
+    pub compression: Compression,
 
     #[serde(default)]
     pub request: RequestConfig,
 
     #[serde(default)]
     pub batch: BatchConfig<LokiDefaultBatchSettings>,
-
-    pub tls: Option<TlsConfig>,
+    #[serde(default)]
+    acknowledgements: bool,
 }
 
 impl LokiConfig {

@@ -4,6 +4,9 @@
 mod format;
 mod framing;
 
+use std::fmt::Debug;
+
+use event::Event;
 use serde::{Deserialize, Serialize};
 
 /// Configuration for building a `Serializer`
