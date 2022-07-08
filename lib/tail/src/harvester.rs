@@ -1,12 +1,13 @@
 use bytes::Bytes;
 use chrono::{DateTime, Utc};
-use futures::future::{select, Either, FutureExt};
+use futures::future::{select, Either};
 use futures::{stream, Sink, SinkExt};
 use std::collections::BTreeMap;
 use std::future::Future;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+use tokio::time::sleep;
 use tracing::{debug, error, info, trace, warn};
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
@@ -62,17 +63,22 @@ impl<P> Harvester<P>
 where
     P: Provider,
 {
-    pub fn run<C, S>(
+    // The first `shutdown` signal here is to stop this harvester from outputting
+    // new data; the second `shutdown_checkpointer` is for finishing the background
+    // checkpoint writer task, which has to wait for all acknowledgements to be
+    // completed.
+    pub fn run<C, S1, S2>(
         self,
         mut chans: C,
-        shutdown: S,
+        mut shutdown: S1,
+        shutdown_checkpointer: S2,
         mut checkpointer: Checkpointer,
     ) -> Result<Shutdown, <C as Sink<Vec<Line>>>::Error>
     where
         C: Sink<Vec<Line>> + Unpin,
         <C as Sink<Vec<Line>>>::Error: std::error::Error,
-        S: Future + Unpin + Send + 'static,
-        <S as Future>::Output: Clone + Send + Sync,
+        S1: Future + Unpin + Send + 'static,
+        S2: Future + Unpin + Send + 'static,
     {
         checkpointer.read_checkpoints(self.ignore_before);
 
@@ -103,39 +109,13 @@ where
         //
         // We have to do a lot of cloning here to convince the compiler that we aren't
         // going to get away with anything, but none of it should have any perf impact.
-        let mut shutdown = shutdown.shared();
-        let mut shutdown2 = shutdown.clone();
-        let checkpointer = Arc::new(checkpointer);
-        let sleep_duration = std::time::Duration::from_secs(3);
-        let checkpoint_task_handle = self.handle.spawn(async move {
-            loop {
-                let sleep = tokio::time::sleep(sleep_duration);
-                tokio::select! {
-                    _ = &mut shutdown2 => return checkpointer,
-                    _ = sleep => {}
-                }
 
-                let checkpointer = Arc::clone(&checkpointer);
-                tokio::task::spawn_blocking(move || {
-                    let start = Instant::now();
-
-                    match checkpointer.write_checkpoints() {
-                        Ok(count) => debug!(
-                            message = "Files checkpointed",
-                            count = %count,
-                            duration_ms = start.elapsed().as_millis() as u64
-                        ),
-                        Err(err) => error!(
-                            message = "Failed writing checkpoints",
-                            %err,
-                            duration_ms = start.elapsed().as_millis() as u64
-                        ),
-                    }
-                })
-                .await
-                .ok();
-            }
-        });
+        let sleep_duration = Duration::from_secs(1);
+        let checkpoint_task_handle = self.handle.spawn(checkpoint_writer(
+            checkpointer,
+            sleep_duration,
+            shutdown_checkpointer,
+        ));
 
         let mut next_scan = Instant::now();
         loop {
@@ -157,16 +137,13 @@ where
                             let was_found_this_cycle = watcher.file_findable();
                             watcher.set_findable(true);
                             if watcher.path == path {
-                                trace!(
-                                    message = "Continue watching file",
-                                    path = ?path
-                                );
+                                trace!(message = "Continue watching file", ?path);
                             } else {
                                 // matches a file with a different path
                                 if !was_found_this_cycle {
                                     info!(
                                         message = "Watched file has been renamed",
-                                        path = ?path,
+                                        ?path,
                                         old_path = ?watcher.path
                                     );
 
@@ -175,7 +152,7 @@ where
                                 } else {
                                     info!(
                                         message = "More than one file has the same fingerprint",
-                                        path = ?path,
+                                        ?path,
                                         old_path = ?watcher.path
                                     );
 
@@ -187,8 +164,8 @@ where
                                         if old_modified_time < new_modified_time {
                                             info!(
                                                 message = "Switching to watch most recently modified file",
-                                                new_modified_time = ?new_modified_time,
-                                                old_modified_time = ?old_modified_time
+                                                ?new_modified_time,
+                                                ?old_modified_time
                                             );
 
                                             // ok if this fails: it might be fix next cycle
@@ -338,4 +315,34 @@ where
             }
         }
     }
+}
+
+async fn checkpoint_writer(
+    checkpointer: Checkpointer,
+    sleep_duration: Duration,
+    mut shutdown: impl Future + Unpin,
+) -> Arc<Checkpointer> {
+    let checkpointer = Arc::new(checkpointer);
+
+    loop {
+        let sleep = sleep(sleep_duration);
+        tokio::select! {
+            _ = &mut shutdown => break,
+            _ = sleep => {},
+        }
+
+        let checkpointer = Arc::clone(&checkpointer);
+        tokio::task::spawn_blocking(move || {
+            if let Err(err) = checkpointer.write_checkpoints() {
+                error!(
+                    message = "Failed writing checkpoints",
+                    %err
+                );
+            }
+        })
+        .await
+        .ok();
+    }
+
+    checkpointer
 }

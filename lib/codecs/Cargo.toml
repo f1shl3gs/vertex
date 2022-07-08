@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[features]
+syslog = []
+
 [dependencies]
 event = { path = "../event" }
 serde_json = { version = "1.0.81", default-features = false  }
@@ -11,3 +14,6 @@ tokio-util = { version = "0.7.3", default-features = false, features = ["codec"]
 bytes = { version = "1.1.0", default-features = false }
 log_schema = { path = "../log_schema" }
 serde = { version = "1.0.138", default-features = false }
+
+# Optional
+syslog_loose = { version = "0.17.0", default-features = false, optional = true }
