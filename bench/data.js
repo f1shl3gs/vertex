@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657256599343,
+  "lastUpdate": 1657257872657,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57417,6 +57417,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1536,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "39f1df13fb3a2d384b9c8b8a97f85a5dae972a04",
+          "message": "Merge pull request #422 from f1shl3gs/sources/kafka_encoding\n\nSources/kafka encoding",
+          "timestamp": "2022-07-08T12:56:30+08:00",
+          "tree_id": "e8b40c12b2addaeb10aa1ba5855aac96fed983f8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/39f1df13fb3a2d384b9c8b8a97f85a5dae972a04"
+        },
+        "date": 1657257867821,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1484,
             "unit": "s"
           }
         ]
