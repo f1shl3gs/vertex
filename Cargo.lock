@@ -933,17 +933,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "discovery"
-version = "0.1.0"
-dependencies = [
- "futures",
- "k8s-openapi",
- "kube",
- "tokio",
- "zeroize",
-]
-
-[[package]]
 name = "doc-comment"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1723,21 +1712,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hyper-rustls"
-version = "0.23.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d87c48c02e0dc5e3b849a2041db3029fd066650f8f717c07bf8ed78ccb895cac"
-dependencies = [
- "http",
- "hyper",
- "log",
- "rustls",
- "rustls-native-certs",
- "tokio",
- "tokio-rustls",
-]
-
-[[package]]
 name = "hyper-timeout"
 version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2005,7 +1979,6 @@ dependencies = [
  "http",
  "http-body",
  "hyper",
- "hyper-rustls",
  "hyper-timeout",
  "hyper-tls",
  "jsonpath_lib",
@@ -2014,8 +1987,6 @@ dependencies = [
  "openssl",
  "pem",
  "pin-project",
- "rustls",
- "rustls-pemfile 1.0.0",
  "secrecy",
  "serde",
  "serde_json",
@@ -3619,27 +3590,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "rustls-native-certs"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ca9ebdfa27d3fc180e42879037b5338ab1c040c06affd00d8338598e7800943"
-dependencies = [
- "openssl-probe",
- "rustls-pemfile 0.2.1",
- "schannel",
- "security-framework",
-]
-
-[[package]]
-name = "rustls-pemfile"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5eebeaeb360c87bfb72e84abdb3447159c0eaececf1bef2aecd65a8be949d1c9"
-dependencies = [
- "base64",
-]
-
-[[package]]
 name = "rustls-pemfile"
 version = "1.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4004,7 +3954,7 @@ dependencies = [
  "rand 0.8.5",
  "rsa",
  "rustls",
- "rustls-pemfile 1.0.0",
+ "rustls-pemfile",
  "sha-1",
  "sha2",
  "smallvec",
