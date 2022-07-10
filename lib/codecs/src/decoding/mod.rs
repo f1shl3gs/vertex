@@ -1,6 +1,9 @@
 //! A collection of support structures that are used in the process of decoding
 //! bytes into events.
 
+mod format;
+mod framing;
+
 use serde::{Deserialize, Serialize};
 
 /// Configuration for building a `Deserializer`.

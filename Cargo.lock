@@ -552,11 +552,15 @@ name = "codecs"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "chrono",
  "event",
+ "futures-util",
  "log_schema",
  "serde",
  "serde_json",
+ "smallvec",
  "syslog_loose",
+ "tokio",
  "tokio-util 0.7.3",
 ]
 
