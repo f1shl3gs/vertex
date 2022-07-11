@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657520475164,
+  "lastUpdate": 1657520519900,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19158,6 +19158,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 61.918,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e2d6a969e3c8c264dedae716e03f36c5e534ecaf",
+          "message": "Merge pull request #429 from f1shl3gs/dependabot/cargo/serde_yaml-0.8.25\n\nchore(deps): bump serde_yaml from 0.8.24 to 0.8.25",
+          "timestamp": "2022-07-11T14:16:06+08:00",
+          "tree_id": "f7aaf59d43018646da03fcdbcf75a2afbbdaf738",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e2d6a969e3c8c264dedae716e03f36c5e534ecaf"
+        },
+        "date": 1657520516267,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.847,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 64.256,
             "unit": "ns/op"
           }
         ]
