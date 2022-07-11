@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657542560862,
+  "lastUpdate": 1657543817697,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57979,6 +57979,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1422,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5341126cbd7939acb3cef9e4a7e166a7ab0193c2",
+          "message": "Merge pull request #430 from f1shl3gs/add_description_for_prometheus_exporter\n\nfeature: sink/prometheus-exporter",
+          "timestamp": "2022-07-11T20:22:27+08:00",
+          "tree_id": "45901de15f03231c021f96371cb874a2cec043e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5341126cbd7939acb3cef9e4a7e166a7ab0193c2"
+        },
+        "date": 1657543813295,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1446,
             "unit": "s"
           }
         ]
