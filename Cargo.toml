@@ -437,5 +437,5 @@ strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.6.0", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.31" }
 tonic = { version = "0.7.2", optional = true }
-typetag = { version = "0.2.0" }
+typetag = { version = "0.2.1" }
 url = { version = "2.2.2", features = ["serde"] }
