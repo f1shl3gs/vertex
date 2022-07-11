@@ -10,7 +10,7 @@ prost-build = { version = "0.10.4" }
 [dev-dependencies]
 async-trait = { version = "0.1.56" }
 indoc = { version = "1" }
-serde_yaml = { version = "0.8.24" }
+serde_yaml = { version = "0.8.25" }
 
 [dependencies]
 atomig = { version = "0.4.0", features = ["derive", "serde"] }
@@ -26,7 +26,7 @@ prost-types = { version = "0.10.1", default-features = false }
 rand = { version = "0.8.5" }
 serde = { version = "1.0.138", features = ["derive"] }
 serde_json = { version = "1.0.82" }
-serde_yaml = { version = "0.8.24" }
+serde_yaml = { version = "0.8.25" }
 shared = { path = "../shared" }
 substring = { version = "1.4.5" }
 tokio = { version = "1.19.2", default-features = false, features = ["sync"] }
