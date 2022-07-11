@@ -18,7 +18,7 @@ crossbeam-utils = { version = "0.8.10", default-features = false }
 dyn-clone = { version = "1.0.6", default-features = false }
 fslock = { version = "0.2.0", default-features = false, features = ["std"] }
 futures = { version = "0.3.21", default-features = false, features = ["std"] }
-memmap2 = { version = "0.5.4", default-features = false }
+memmap2 = { version = "0.5.5", default-features = false }
 metrics = { path = "../metrics" }
 num-traits = { version = "0.2.15", default-features = false }
 parking_lot = { version = "0.12.1", default-features = false }
