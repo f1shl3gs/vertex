@@ -1,18 +1,18 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-use super::{Client, Error, TaskManager, Gauge, Counter};
+use super::{Client, Counter, Error, Gauge, TaskManager};
 
 #[derive(Deserialize)]
 struct QueriesIn {
     #[serde(default, rename = "rdtype")]
-    counters: Vec<Counter>
+    counters: Vec<Counter>,
 }
 
 #[derive(Deserialize)]
 struct Requests {
     #[serde(default, rename = "opcode")]
-    counters: Vec<Counter>
+    counters: Vec<Counter>,
 }
 
 #[derive(Deserialize)]
@@ -38,13 +38,13 @@ struct Zone {
 #[derive(Deserialize)]
 struct Zones {
     #[serde(default, rename = "zone")]
-    zones: Vec<Zone>
+    zones: Vec<Zone>,
 }
 
 #[derive(Deserialize)]
 struct Cache {
     #[serde(default, rename = "rrset")]
-    counters: Vec<Gauge>
+    counters: Vec<Gauge>,
 }
 
 #[derive(Deserialize)]
@@ -61,7 +61,7 @@ struct View {
 #[derive(Deserialize)]
 struct Views {
     #[serde(default, rename = "view")]
-    views: Vec<View>
+    views: Vec<View>,
 }
 
 #[derive(Deserialize)]

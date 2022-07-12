@@ -4,8 +4,11 @@ use std::time::Instant;
 use async_trait::async_trait;
 use chrono::Utc;
 use event::attributes::{Key, Value};
-use event::{Bucket, Metric, tags};
-use framework::config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext, ticker_from_duration, SourceDescription};
+use event::{tags, Bucket, Metric};
+use framework::config::{
+    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    SourceDescription,
+};
 use framework::http::HttpClient;
 use framework::Source;
 use futures_util::StreamExt;
@@ -38,7 +41,8 @@ impl GenerateConfig for Config {
 #
 # required
 endpoint: http://127.0.0.1:8053
-        "#.to_string()
+        "#
+        .to_string()
     }
 }
 
@@ -183,7 +187,9 @@ fn server_metrics(s: client::Server) -> Vec<Metric> {
     for c in s.name_server_stats {
         match c.name.as_str() {
             "QryDropped" | "QryFailure" => {
-                let name = c.name.strip_prefix("Qry")
+                let name = c
+                    .name
+                    .strip_prefix("Qry")
                     .map(|s| s.to_string())
                     .unwrap_or_else(|| c.name.clone());
 
@@ -198,7 +204,9 @@ fn server_metrics(s: client::Server) -> Vec<Metric> {
             }
             "QrySuccess" | "QryReferral" | "QryNxrrset" | "QrySERVFAIL" | "QryFORMERR"
             | "QryNXDOMAIN" => {
-                let name = c.name.strip_prefix("Qry")
+                let name = c
+                    .name
+                    .strip_prefix("Qry")
                     .map(|s| s.to_string())
                     .unwrap_or_else(|| c.name.clone());
 
@@ -255,7 +263,10 @@ fn histogram(stats: &Vec<client::Counter>) -> Result<(Vec<Bucket>, u64), ParseFl
             }
 
             count += c.counter;
-            buckets.push(Bucket {upper: b / 1000.0, count});
+            buckets.push(Bucket {
+                upper: b / 1000.0,
+                count,
+            });
         }
     }
 
@@ -276,7 +287,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                 tags!(
                     "view" => view.name.clone(),
                     "type" => g.name
-                )
+                ),
             ));
         }
 
@@ -293,18 +304,16 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
         }
 
         match histogram(&view.resolver_stats) {
-            Ok((buckets, count)) => {
-                metrics.push(Metric::histogram_with_tags(
-                    "bind_resolver_queries_total",
-                    "Resolver query round-trip time in seconds",
-                    tags!(
-                        "view" => view.name.clone()
-                    ),
-                    count,
-                    0,
-                    buckets
-                ))
-            },
+            Ok((buckets, count)) => metrics.push(Metric::histogram_with_tags(
+                "bind_resolver_queries_total",
+                "Resolver query round-trip time in seconds",
+                tags!(
+                    "view" => view.name.clone()
+                ),
+                count,
+                0,
+                buckets,
+            )),
             Err(err) => {
                 warn!(
                     message = "Error parsing RTT",
@@ -322,7 +331,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     c.counter,
                     tags!(
                         "view" => view.name.clone(),
-                    )
+                    ),
                 )),
                 "EDNS0Fail" => metrics.push(Metric::sum_with_tags(
                     "bind_resolver_query_edns0_errors_total",
@@ -330,7 +339,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     c.counter,
                     tags!(
                         "view" => view.name.clone(),
-                    )
+                    ),
                 )),
                 "Mismatch" => metrics.push(Metric::sum_with_tags(
                     "bind_resolver_response_mismatch_total",
@@ -338,15 +347,15 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     c.counter,
                     tags!(
                         "view" => view.name.clone()
-                    )
-                )) ,
+                    ),
+                )),
                 "Retry" => metrics.push(Metric::sum_with_tags(
                     "bind_resolver_query_retries_total",
                     "Number of resolver query retries",
                     c.counter,
                     tags!(
                         "view" => view.name.clone(),
-                    )
+                    ),
                 )),
                 "Truncated" => metrics.push(Metric::sum_with_tags(
                     "bind_resolver_response_truncated_total",
@@ -354,7 +363,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     c.counter,
                     tags!(
                         "view" => view.name.clone(),
-                    )
+                    ),
                 )),
                 "ValFail" => metrics.push(Metric::sum_with_tags(
                     "bind_resolver_dnssec_validation_errors_total",
@@ -362,7 +371,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     c.counter,
                     tags!(
                         "view" => view.name.clone()
-                    )
+                    ),
                 )),
                 _ => {}
             }
@@ -376,9 +385,9 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                         tags!(
                             "view" => view.name.clone(),
                             "error" => c.name,
-                        )
+                        ),
                     ))
-                },
+                }
                 "NXDOMAIN" | "SERVFAIL" | "FORMERR" | "OtherError" | "REFUSED" => {
                     metrics.push(Metric::sum_with_tags(
                         "bind_resolver_response_errors_total",
@@ -387,20 +396,18 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                         tags!(
                             "view" => view.name.clone(),
                             "error" => c.name,
-                        )
+                        ),
                     ))
-                },
-                "ValOk" | "ValNegOk" => {
-                    metrics.push(Metric::sum_with_tags(
-                        "bind_resolver_dnssec_validation_success_total",
-                        "Number of DNSSEC validation attempts succeeded",
-                        c.counter,
-                        tags!(
-                            "view" => view.name.clone(),
-                            "error" => c.name,
-                        )
-                    ))
-                },
+                }
+                "ValOk" | "ValNegOk" => metrics.push(Metric::sum_with_tags(
+                    "bind_resolver_dnssec_validation_success_total",
+                    "Number of DNSSEC validation attempts succeeded",
+                    c.counter,
+                    tags!(
+                        "view" => view.name.clone(),
+                        "error" => c.name,
+                    ),
+                )),
                 _ => {}
             }
         }
@@ -416,7 +423,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                     tags!(
                         "view" => view.name.clone(),
                         "zone_name" => zone.name,
-                    )
+                    ),
                 ))
             }
         }
@@ -436,6 +443,6 @@ fn task_metrics(s: client::TaskManager) -> Vec<Metric> {
             "bind_worker_threads",
             "Total number of available worker threads",
             s.thread_model.worker_threads,
-        )
+        ),
     ]
 }

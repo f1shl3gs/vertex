@@ -127,8 +127,8 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Buf;
     use super::*;
+    use bytes::Buf;
 
     #[test]
     fn decode_server() {

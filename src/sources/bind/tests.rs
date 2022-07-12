@@ -1,12 +1,12 @@
 use std::future::Future;
 use std::time::Duration;
 
-use http::{Method, Request, Response, StatusCode};
-use hyper::{Body, Server};
-use hyper::service::{make_service_fn, service_fn};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use testify::{pick_unused_local_port};
+use http::{Method, Request, Response, StatusCode};
+use hyper::service::{make_service_fn, service_fn};
+use hyper::{Body, Server};
+use testify::pick_unused_local_port;
 
 static NOTFOUND: &[u8] = b"Not Found";
 
@@ -39,9 +39,15 @@ async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
     }
 
     let path = req.uri().path();
-    for available in ["/xml/v3/server", "/xml/v3/status", "/xml/v3/tasks", "/xml/v3/zones"] {
+    for available in [
+        "/xml/v3/server",
+        "/xml/v3/status",
+        "/xml/v3/tasks",
+        "/xml/v3/zones",
+    ] {
         if available == path {
-            return simple_file_send(available.replace("/xml", "tests/fixtures/bind").as_str()).await;
+            return simple_file_send(available.replace("/xml", "tests/fixtures/bind").as_str())
+                .await;
         }
     }
 
@@ -73,18 +79,14 @@ where
 {
     let port = pick_unused_local_port();
     let endpoint = format!("127.0.0.1:{}", port);
-    let service = make_service_fn(move |_conn| async move {
-        Ok::<_, hyper::Error>(service_fn(handle))
-    });
+    let service =
+        make_service_fn(move |_conn| async move { Ok::<_, hyper::Error>(service_fn(handle)) });
     let addr = endpoint.parse().unwrap();
     let server = Server::bind(&addr).serve(service);
 
     tokio::spawn(async move {
         if let Err(err) = server.await {
-            error!(
-                message = "server error",
-                ?err
-            );
+            error!(message = "server error", ?err);
         }
     });
 
