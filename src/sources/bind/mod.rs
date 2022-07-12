@@ -6,12 +6,10 @@ use chrono::Utc;
 use event::attributes::{Key, Value};
 use event::{tags, Bucket, Metric};
 use framework::config::{
-    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::http::HttpClient;
 use framework::Source;
-use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 
 mod client;
@@ -54,47 +52,50 @@ inventory::submit! {
 #[typetag::serde(name = "bind")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let interval = cx.interval;
-        let mut ticker = ticker_from_duration(interval).take_until(cx.shutdown);
+        let mut interval = tokio::time::interval(cx.interval);
+        let mut shutdown = cx.shutdown;
+        let mut output = cx.output;
         let http_client = HttpClient::new(None, &cx.proxy)?;
         let client = client::Client::new(self.endpoint.clone(), http_client);
         let endpoint = self.endpoint.clone();
-        let mut output = cx.output;
 
         Ok(Box::pin(async move {
             let endpoint_key = Key::from("endpoint");
             let endpoint_value = Value::from(endpoint);
 
-            while ticker.next().await.is_some() {
-                let start = Instant::now();
-                let result = client.stats().await;
-                let elapsed = start.elapsed().as_secs_f64();
-                let success = result.is_ok();
+            loop {
+                tokio::select! {
+                    _ = &mut shutdown => break,
+                    _ = interval.tick() => {
+                        let start = Instant::now();
+                        let result = client.stats().await;
+                        let elapsed = start.elapsed().as_secs_f64();
+                        let success = result.is_ok();
 
-                let mut metrics = vec![
-                    Metric::gauge("bind_up", "Was the Bind instance query successful", success),
-                    Metric::gauge(
-                        "bind_scrape_duration_seconds",
-                        "Duration of scraping",
-                        elapsed,
-                    ),
-                ];
+                        let mut metrics = vec![
+                            Metric::gauge("bind_up", "Was the Bind instance query successful", success),
+                            Metric::gauge(
+                                "bind_scrape_duration_seconds",
+                                "Duration of scraping",
+                                elapsed,
+                            ),
+                        ];
 
-                if let Ok(s) = result {
-                    metrics.extend(server_metrics(s.server));
-                    metrics.extend(task_metrics(s.task_manager));
-                    metrics.extend(view_metrics(s.views, s.zone_views));
-                }
+                        if let Ok(s) = result {
+                            metrics.extend(statistics_to_metrics(s));
+                        }
 
-                let now = Utc::now();
-                metrics.iter_mut().for_each(|metric| {
-                    metric.insert_tag(endpoint_key.clone(), endpoint_value.clone());
-                    metric.timestamp = Some(now);
-                });
+                        let now = Utc::now();
+                        metrics.iter_mut().for_each(|metric| {
+                            metric.insert_tag(endpoint_key.clone(), endpoint_value.clone());
+                            metric.timestamp = Some(now);
+                        });
 
-                if let Err(err) = output.send(metrics).await {
-                    error!(message = "Error sending metrics", ?err);
-                    return Err(());
+                        if let Err(err) = output.send(metrics).await {
+                            error!(message = "Error sending metrics", ?err);
+                            return Err(());
+                        }
+                    }
                 }
             }
 
@@ -109,6 +110,13 @@ impl SourceConfig for Config {
     fn source_type(&self) -> &'static str {
         "bind"
     }
+}
+
+fn statistics_to_metrics(s: client::Statistics) -> Vec<Metric> {
+    let mut metrics = server_metrics(s.server);
+    metrics.extend(task_metrics(s.task_manager));
+    metrics.extend(view_metrics(s.views, s.zone_views));
+    metrics
 }
 
 fn server_metric(c: client::Counter) -> Option<Metric> {

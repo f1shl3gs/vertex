@@ -1,6 +1,7 @@
 use std::future::Future;
 use std::time::Duration;
 
+use crate::sources::bind::{client, statistics_to_metrics};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::{Method, Request, Response, StatusCode};
@@ -102,7 +103,60 @@ async fn v2_client() {
     let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
     let client = super::client::Client::new(endpoint, http_client);
 
-    let _statistics = client.stats().await.unwrap();
+    let s = client.stats().await.unwrap();
+
+    assert_statistics(
+        s,
+        vec![
+            // task
+            "bind_tasks_running 8",
+            "bind_worker_threads 16",
+            // server
+            "bind_boot_time_seconds 1626325868",
+            r#"bind_incoming_queries_total{type="A"} 128417"#,
+            r#"bind_incoming_requests_total{opcode="QUERY"} 37634"#,
+            r#"bind_responses_total{result="Success"} 29313"#,
+            "bind_query_duplicates_total 216",
+            r#"bind_query_errors_total{error="Dropped"} 237"#,
+            r#"bind_query_errors_total{error="Failure"} 2950"#,
+            "bind_query_recursions_total 60946",
+            "bind_zone_transfer_rejected_total 3",
+            "bind_zone_transfer_success_total 25",
+            "bind_zone_transfer_failure_total 1",
+            "bind_recursive_clients 76",
+            // view
+            r#"bind_resolver_cache_rrsets{type="A",view="_default"} 34324"#,
+            r#"bind_resolver_queries_total{type="CNAME",view="_default"} 28"#,
+            r#"bind_resolver_response_errors_total{error="FORMERR",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="FORMERR",view="_default"} 42906"#,
+            r#"bind_resolver_response_errors_total{error="NXDOMAIN",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="NXDOMAIN",view="_default"} 16707"#,
+            r#"bind_resolver_response_errors_total{error="OtherError",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="OtherError",view="_default"} 20660"#,
+            r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_bind"} 0"#,
+            r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_default"} 7596"#,
+            r#"bind_resolver_response_lame_total{view="_default"} 9108"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.01"} 38334"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.1"} 113122"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.5"} 182658"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.8"} 187375"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="1.6"} 188409"#,
+            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="+Inf"} 227755"#,
+            r#"bind_zone_serial{view="_default",zone_name="TEST_ZONE"} 123"#,
+        ],
+    )
+}
+
+fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
+    let got = statistics_to_metrics(s)
+        .into_iter()
+        .map(|m| m.to_string())
+        .inspect(|s| println!("{}", s))
+        .collect::<Vec<_>>();
+
+    for want in want {
+        assert!(got.contains(&want.to_string()), "want {}", want)
+    }
 }
 
 #[tokio::test]
@@ -111,5 +165,20 @@ async fn v3_client() {
     let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
     let client = super::client::Client::new(endpoint, http_client);
 
-    let _statistics = client.stats().await.unwrap();
+    let s = client.stats().await.unwrap();
+    assert_statistics(
+        s,
+        vec![
+            // server
+            r#"bind_config_time_seconds 1626325868"#,
+            r#"bind_response_rcodes_total{rcode="NOERROR"} 989812"#,
+            r#"bind_response_rcodes_total{rcode="NXDOMAIN"} 33958"#,
+            // view
+            r#"bind_resolver_response_errors_total{error="REFUSED",view="_bind"} 17"#,
+            r#"bind_resolver_response_errors_total{error="REFUSED",view="_default"} 5798"#,
+            // task
+            r#"bind_tasks_running 8"#,
+            r#"bind_worker_threads 16"#,
+        ],
+    )
 }

@@ -149,7 +149,9 @@ mod tests {
         let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
         let result: Result<Isc, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {
-            panic!("{} {:?}", err.path().to_string(), err.into_inner())
+            let inner = err.inner();
+            let path = err.path();
+            panic!("{} {:?}", path, inner)
         }
     }
 }

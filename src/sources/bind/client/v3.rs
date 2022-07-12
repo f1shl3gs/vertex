@@ -27,20 +27,30 @@ struct Server {
 }
 
 #[derive(Deserialize)]
+struct Cache {
+    #[serde(default, rename = "rrset")]
+    counters: Vec<Gauge>,
+}
+
+#[derive(Deserialize)]
 struct View {
     name: String,
-    #[serde(default)]
-    cache: Vec<Gauge>,
+    cache: Cache,
     #[serde(default)]
     counters: Vec<Counters>,
+}
+
+#[derive(Deserialize)]
+struct Views {
+    #[serde(default, rename = "view")]
+    views: Vec<View>,
 }
 
 #[derive(Deserialize)]
 struct Statistics {
     server: Server,
     taskmgr: TaskManager,
-    #[serde(default, rename = "view")]
-    views: Vec<View>,
+    views: Views,
 }
 
 #[derive(Deserialize)]
@@ -80,10 +90,10 @@ impl Client {
             }
         }
 
-        for view in stats.views {
+        for view in stats.views.views {
             let mut v = super::View {
                 name: view.name,
-                cache: view.cache,
+                cache: view.cache.counters,
                 resolver_stats: vec![],
                 resolver_queries: vec![],
             };
@@ -136,7 +146,9 @@ mod tests {
         let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
         let result: Result<Statistics, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {
-            panic!("{} {:?}", err.path().to_string(), err.into_inner())
+            let inner = err.inner();
+            let path = err.path();
+            panic!("{} {:?}", path, inner)
         }
     }
 
@@ -146,7 +158,9 @@ mod tests {
         let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
         let result: Result<ZoneStatistics, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {
-            panic!("{} {:?}", err.path().to_string(), err.into_inner())
+            let inner = err.inner();
+            let path = err.path();
+            panic!("{} {:?}", path, inner)
         }
     }
 }

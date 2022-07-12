@@ -21,6 +21,7 @@ pub struct Gauge {
 #[derive(Deserialize)]
 pub struct Counter {
     pub name: String,
+    #[serde(alias = "$value")]
     pub counter: u64,
 }
 
@@ -75,16 +76,6 @@ pub struct ZoneView {
     pub zone_data: Vec<ZoneCounter>,
 }
 
-/// Task represents a single running task.
-#[derive(Deserialize)]
-pub struct Task {
-    id: String,
-    name: String,
-    quantum: u64,
-    references: u64,
-    state: String,
-}
-
 /// ThreadModel contains task and worker information
 #[derive(Default, Deserialize)]
 pub struct ThreadModel {
@@ -106,7 +97,7 @@ pub struct TaskManager {
 }
 
 /// Statistics is a generic representation of BIND statistics.
-#[derive(Default, Deserialize)]
+#[derive(Default)]
 pub struct Statistics {
     pub server: Server,
     pub views: Vec<View>,
