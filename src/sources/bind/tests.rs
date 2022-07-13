@@ -97,6 +97,19 @@ where
     format!("http://{}", endpoint)
 }
 
+fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
+    #[allow(clippy::needless_collect)]
+    let got = statistics_to_metrics(s)
+        .into_iter()
+        .map(|m| m.to_string())
+        .flat_map(|s| s.lines().map(|s| s.to_string()).collect::<Vec<_>>())
+        .collect::<Vec<_>>();
+
+    for want in want {
+        assert!(got.contains(&want.to_string()), "want {}", want)
+    }
+}
+
 #[tokio::test]
 async fn v2_client() {
     let endpoint = start_server(v2_handle).await;
@@ -136,27 +149,15 @@ async fn v2_client() {
             r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_bind"} 0"#,
             r#"bind_resolver_response_errors_total{error="SERVFAIL",view="_default"} 7596"#,
             r#"bind_resolver_response_lame_total{view="_default"} 9108"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.01"} 38334"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.1"} 113122"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.5"} 182658"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="0.8"} 187375"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="1.6"} 188409"#,
-            r#"bind_resolver_query_duration_seconds_bucket{view="_default",le="+Inf"} 227755"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.01",view="_default"} 38334"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.1",view="_default"} 113122"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.5",view="_default"} 182658"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="0.8",view="_default"} 187375"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="1.6",view="_default"} 188409"#,
+            r#"bind_resolver_query_duration_seconds_bucket{le="+Inf",view="_default"} 227755"#,
             r#"bind_zone_serial{view="_default",zone_name="TEST_ZONE"} 123"#,
         ],
     )
-}
-
-fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
-    let got = statistics_to_metrics(s)
-        .into_iter()
-        .map(|m| m.to_string())
-        .inspect(|s| println!("{}", s))
-        .collect::<Vec<_>>();
-
-    for want in want {
-        assert!(got.contains(&want.to_string()), "want {}", want)
-    }
 }
 
 #[tokio::test]

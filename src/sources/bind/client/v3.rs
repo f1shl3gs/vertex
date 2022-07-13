@@ -1,6 +1,10 @@
-use crate::sources::bind::client::{Client, Error, Gauge, TaskManager};
+use std::fmt::Formatter;
+
 use chrono::{DateTime, Utc};
-use serde::Deserialize;
+use serde::de::{MapAccess, Visitor};
+use serde::{Deserialize, Deserializer};
+
+use super::{Client, Error, Gauge, TaskManager};
 
 pub const STATUS_PATH: &str = "/xml/v3/status";
 
@@ -32,12 +36,120 @@ struct Cache {
     counters: Vec<Gauge>,
 }
 
-#[derive(Deserialize)]
 struct View {
     name: String,
     cache: Cache,
-    #[serde(default)]
     counters: Vec<Counters>,
+}
+
+// serde_xml_rs cannot handle array if the elements is unordered, e.g.
+// <store>
+//   <foo/>
+//   <bar/>
+//   <foo/>
+// </store>
+//
+// https://github.com/RReverser/serde-xml-rs/issues/5
+impl<'de> Deserialize<'de> for View {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &["secs", "nanos"];
+
+        enum Field {
+            Name,
+            Cache,
+            Counters,
+        }
+
+        impl<'de> Deserialize<'de> for Field {
+            fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+            where
+                D: Deserializer<'de>,
+            {
+                struct FieldVisitor;
+
+                impl<'de> Visitor<'de> for FieldVisitor {
+                    type Value = Field;
+
+                    fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                        formatter.write_str("`name`, `cache` or `counters`")
+                    }
+
+                    fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match v {
+                            "name" => Ok(Field::Name),
+                            "cache" => Ok(Field::Cache),
+                            "counters" => Ok(Field::Counters),
+                            _ => Err(serde::de::Error::unknown_field(v, FIELDS)),
+                        }
+                    }
+                }
+
+                deserializer.deserialize_identifier(FieldVisitor)
+            }
+        }
+
+        struct ViewVisitor;
+
+        impl<'de> serde::de::Visitor<'de> for ViewVisitor {
+            type Value = View;
+
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str("struct View")
+            }
+
+            fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+            where
+                A: MapAccess<'de>,
+            {
+                let mut name = None;
+                let mut cache = None;
+                let mut counters: Option<Vec<Counters>> = None;
+
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        Field::Name => {
+                            if name.is_some() {
+                                return Err(serde::de::Error::duplicate_field("name"));
+                            }
+
+                            name = Some(map.next_value::<String>()?)
+                        }
+                        Field::Cache => {
+                            if cache.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cache"));
+                            }
+
+                            cache = Some(map.next_value::<Cache>()?);
+                        }
+                        Field::Counters => {
+                            let value = map.next_value::<Vec<Counters>>()?;
+                            let mut cs = counters.unwrap_or_default();
+                            cs.extend(value);
+                            counters = Some(cs);
+                        }
+                    }
+                }
+
+                let name = name.unwrap_or_default();
+                let cache = cache.ok_or_else(|| serde::de::Error::missing_field("cache"))?;
+                let counters = counters.unwrap_or_default();
+
+                Ok(View {
+                    name,
+                    cache,
+                    counters,
+                })
+            }
+        }
+
+        deserializer.deserialize_struct("View", FIELDS, ViewVisitor)
+    }
 }
 
 #[derive(Deserialize)]

@@ -278,6 +278,12 @@ fn histogram(stats: &Vec<client::Counter>) -> Result<(Vec<Bucket>, u64), ParseFl
         }
     }
 
+    // add +inf
+    buckets.push(Bucket {
+        upper: f64::INFINITY,
+        count,
+    });
+
     buckets.sort_by(|a, b| a.upper.total_cmp(&b.upper));
 
     Ok((buckets, count))
@@ -313,7 +319,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
 
         match histogram(&view.resolver_stats) {
             Ok((buckets, count)) => metrics.push(Metric::histogram_with_tags(
-                "bind_resolver_queries_total",
+                "bind_resolver_query_duration_seconds",
                 "Resolver query round-trip time in seconds",
                 tags!(
                     "view" => view.name.clone()
@@ -334,7 +340,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
         for c in view.resolver_stats {
             match c.name.as_str() {
                 "Lame" => metrics.push(Metric::sum_with_tags(
-                    "bind_resolver_resopnse_lame_total",
+                    "bind_resolver_response_lame_total",
                     "Number of lame delegation responses received",
                     c.counter,
                     tags!(
