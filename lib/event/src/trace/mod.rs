@@ -9,7 +9,6 @@ use std::fmt;
 use std::fmt::{Debug, Formatter};
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
-use std::sync::Arc;
 
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
@@ -589,12 +588,12 @@ impl Trace {
         self.metadata.add_finalizer(finalizer);
     }
 
-    pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
+    pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
     }
 
-    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+    pub fn with_batch_notifier_option(mut self, batch: &Option<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self
     }

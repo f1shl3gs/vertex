@@ -9,7 +9,6 @@ pub mod value;
 
 use std::collections::BTreeMap;
 use std::fmt::{Debug, Display};
-use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
@@ -162,7 +161,7 @@ impl LogRecord {
         (self.tags, self.fields, self.metadata)
     }
 
-    pub fn with_batch_notifier(mut self, batch: &Arc<BatchNotifier>) -> Self {
+    pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
     }
@@ -247,7 +246,7 @@ impl LogRecord {
         &mut self.metadata
     }
 
-    pub fn with_batch_notifier_option(mut self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+    pub fn with_batch_notifier_option(mut self, batch: &Option<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self
     }

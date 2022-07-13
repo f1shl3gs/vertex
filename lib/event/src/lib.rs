@@ -21,7 +21,6 @@ pub use trace::{Trace, Traces};
 
 use std::collections::btree_map;
 use std::collections::BTreeMap;
-use std::sync::Arc;
 
 use buffers::EventCount;
 use bytes::Bytes;
@@ -184,7 +183,7 @@ impl Event {
         Event::Log(LogRecord::default())
     }
 
-    pub fn add_batch_notifier(&mut self, batch: Arc<BatchNotifier>) {
+    pub fn add_batch_notifier(&mut self, batch: BatchNotifier) {
         let finalizer = EventFinalizer::new(batch);
         match self {
             Self::Log(log) => log.add_finalizer(finalizer),
@@ -193,7 +192,7 @@ impl Event {
         }
     }
 
-    pub fn with_batch_notifier(self, batch: &Arc<BatchNotifier>) -> Self {
+    pub fn with_batch_notifier(self, batch: &BatchNotifier) -> Self {
         match self {
             Self::Log(log) => log.with_batch_notifier(batch).into(),
             Self::Metric(metric) => metric.with_batch_notifier(batch).into(),
@@ -203,7 +202,7 @@ impl Event {
 
     /// Replace the finalizer with a new one created from the given optional
     /// batch notifier
-    pub fn with_batch_notifier_option(self, batch: &Option<Arc<BatchNotifier>>) -> Self {
+    pub fn with_batch_notifier_option(self, batch: &Option<BatchNotifier>) -> Self {
         match self {
             Self::Log(log) => log.with_batch_notifier_option(batch).into(),
             Self::Metric(metric) => metric.with_batch_notifier_option(batch).into(),
