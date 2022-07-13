@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1657699610418,
+  "lastUpdate": 1657721608562,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19425,6 +19425,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 74.786,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "494db9e8e4e318c06c093ab75a144b4019814b1c",
+          "message": "Merge pull request #434 from f1shl3gs/sharable_batch_notifier\n\nmake `BatchNotifier` shared",
+          "timestamp": "2022-07-13T22:07:12+08:00",
+          "tree_id": "b90cc9a6009930ac57e30ebced1be2bdbf146b46",
+          "url": "https://github.com/f1shl3gs/vertex/commit/494db9e8e4e318c06c093ab75a144b4019814b1c"
+        },
+        "date": 1657721602903,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.619,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 63.531,
             "unit": "ns/op"
           }
         ]
