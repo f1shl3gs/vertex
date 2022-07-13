@@ -262,7 +262,7 @@ fn histogram(stats: &Vec<client::Counter>) -> Result<(Vec<Bucket>, u64), ParseFl
 
     for c in stats {
         if c.name.starts_with("QryRTT") {
-            let mut b = 0f64;
+            let mut b = f64::INFINITY;
 
             if !c.name.ends_with('+') {
                 if let Some(rtt) = c.name.strip_prefix("QryRTT") {
@@ -277,12 +277,6 @@ fn histogram(stats: &Vec<client::Counter>) -> Result<(Vec<Bucket>, u64), ParseFl
             });
         }
     }
-
-    // add +inf
-    buckets.push(Bucket {
-        upper: f64::INFINITY,
-        count,
-    });
 
     buckets.sort_by(|a, b| a.upper.total_cmp(&b.upper));
 
