@@ -350,7 +350,7 @@ impl Attributes {
     }
 
     pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.0.entry(key.into()).or_insert_with(|| value.into());
+        self.0.insert(key.into(), value.into());
     }
 
     #[inline]

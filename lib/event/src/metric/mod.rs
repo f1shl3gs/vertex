@@ -182,32 +182,86 @@ impl Display for Metric {
     /// ```text
     /// 2020-08-12T20:23:37.248661343Z vertex_processed_bytes_total{component_kind="sink",component_type="blackhole"} = 6371
     fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
-        if let Some(timestamp) = &self.timestamp {
-            write!(fmt, "{:?} ", timestamp)?;
-        }
+        fn write_tags(fmt: &mut Formatter<'_>, tags: &Attributes) -> std::fmt::Result {
+            if tags.is_empty() {
+                return write!(fmt, " ");
+            }
 
-        write!(fmt, "{}", self.name())?;
-
-        if !self.series.tags.is_empty() {
             write!(fmt, "{{")?;
-
             let mut n = 0;
-            for (k, v) in self.tags() {
+            for (k, v) in tags {
                 n += 1;
                 write!(fmt, "{}=\"{}\"", k, v)?;
-                if n != self.series.tags.len() {
+                if n != tags.len() {
                     fmt.write_char(',')?;
                 }
             }
 
-            write!(fmt, "}}")?;
+            write!(fmt, "}} ")
         }
 
-        match self.value {
-            MetricValue::Sum(v) | MetricValue::Gauge(v) => {
-                write!(fmt, " {}", v)
+        if let Some(timestamp) = &self.timestamp {
+            write!(fmt, "{:?} ", timestamp)?;
+        }
+
+        match &self.value {
+            MetricValue::Gauge(v) | MetricValue::Sum(v) => {
+                write!(fmt, "{}", self.name())?;
+                write_tags(fmt, &self.series.tags)?;
+                write!(fmt, "{}", v)
             }
-            _ => Ok(()),
+            MetricValue::Histogram {
+                buckets,
+                count,
+                sum,
+            } => {
+                let mut tags = self.series.tags.clone();
+
+                for b in buckets {
+                    if b.upper == f64::INFINITY {
+                        tags.insert("le", "+Inf");
+                    } else {
+                        tags.insert("le", b.upper.to_string());
+                    }
+
+                    write!(fmt, "{}_bucket", self.name())?;
+                    write_tags(fmt, &tags)?;
+                    writeln!(fmt, "{}", b.count)?;
+                }
+
+                // write sum and total
+                tags.remove(&"le".into());
+
+                write!(fmt, "{}_sum", self.name())?;
+                write_tags(fmt, &tags)?;
+                writeln!(fmt, "{}", sum)?;
+
+                write!(fmt, "{}_count", self.name())?;
+                write_tags(fmt, &tags)?;
+                write!(fmt, "{}", count)
+            }
+            MetricValue::Summary {
+                count,
+                sum,
+                quantiles,
+            } => {
+                let mut tags = self.series.tags.clone();
+                for q in quantiles {
+                    tags.insert("quantile", q.quantile.to_string());
+                    write!(fmt, "{}", self.name())?;
+                    write_tags(fmt, &tags)?;
+                    writeln!(fmt, "{}", q.value)?;
+                }
+
+                tags.remove(&"quantile".into());
+                write!(fmt, "{}_sum", self.name())?;
+                write_tags(fmt, &tags)?;
+                writeln!(fmt, "{}", sum)?;
+
+                write!(fmt, "{}_count", self.name())?;
+                write_tags(fmt, &tags)?;
+                write!(fmt, "{}", count)
+            }
         }
     }
 }
