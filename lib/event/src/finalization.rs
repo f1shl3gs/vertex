@@ -208,32 +208,54 @@ impl BatchStatus {
     }
 }
 
-/// A batch notifier contains the status of the current batch along
-/// with a one-shot notifier to send that status back to the source.
-/// It is shared among all events of a batch
+/// The non-shared data underlying the shared `BatchNotifier`
 #[derive(Debug)]
-pub struct BatchNotifier {
+struct OwnedBatchNotifier {
     status: Atomic<BatchStatus>,
     notifier: Option<oneshot::Sender<BatchStatus>>,
 }
 
+impl OwnedBatchNotifier {
+    /// Sends the status of the notifier back to the source.
+    fn send_status(&mut self) {
+        if let Some(notifier) = self.notifier.take() {
+            let status = self.status.load(Ordering::Relaxed);
+            // Ignore the error case, as it will happen during normal
+            // source shutdown and we can't detect that here.
+            let _ = notifier.send(status);
+        }
+    }
+}
+
+impl Drop for OwnedBatchNotifier {
+    fn drop(&mut self) {
+        self.send_status();
+    }
+}
+
+/// A batch notifier contains the status of the current batch along
+/// with a one-shot notifier to send that status back to the source.
+/// It is shared among all events of a batch
+#[derive(Clone, Debug)]
+pub struct BatchNotifier(Arc<OwnedBatchNotifier>);
+
 impl BatchNotifier {
     /// Create a new `BatchNotifier` along with the receiver
     /// used to await its finalization status.
-    pub fn new_with_receiver() -> (Arc<Self>, BatchStatusReceiver) {
+    #[must_use]
+    pub fn new_with_receiver() -> (Self, BatchStatusReceiver) {
         let (sender, receiver) = oneshot::channel();
-        let notifier = Self {
+        let notifier = OwnedBatchNotifier {
             status: Atomic::new(BatchStatus::Delivered),
             notifier: Some(sender),
         };
 
-        (Arc::new(notifier), BatchStatusReceiver(receiver))
+        (Self(Arc::new(notifier)), BatchStatusReceiver(receiver))
     }
 
     /// Optionally call `new_with_receiver` and wrap the result in `Option`s
-    pub fn maybe_new_with_receiver(
-        enabled: bool,
-    ) -> (Option<Arc<Self>>, Option<BatchStatusReceiver>) {
+    #[must_use]
+    pub fn maybe_new_with_receiver(enabled: bool) -> (Option<Self>, Option<BatchStatusReceiver>) {
         if enabled {
             let (batch, receiver) = Self::new_with_receiver();
             (Some(batch), Some(receiver))
@@ -251,7 +273,7 @@ impl BatchNotifier {
         enabled.then(|| {
             let (batch, receiver) = Self::new_with_receiver();
             for event in events {
-                event.add_batch_notifier(Arc::clone(&batch));
+                event.add_batch_notifier(batch.clone());
             }
 
             receiver
@@ -263,28 +285,13 @@ impl BatchNotifier {
         // The status starts as Delivered and can only change if the new status
         // is different than that.
         if status != EventStatus::Delivered && status != EventStatus::Dropped {
-            self.status
+            self.0
+                .status
                 .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |old_status| {
                     Some(old_status.update(status))
                 })
                 .unwrap_or_else(|_| unreachable!());
         }
-    }
-
-    /// Send this notifier's status up to the source.
-    fn send_status(&mut self) {
-        if let Some(notifier) = self.notifier.take() {
-            let status = self.status.load(Ordering::Relaxed);
-            // Ignore the error case, as it will happen during normal source
-            // shutdown and we can't detect that here.
-            let _ = notifier.send(status);
-        }
-    }
-}
-
-impl Drop for BatchNotifier {
-    fn drop(&mut self) {
-        self.send_status();
     }
 }
 
@@ -294,7 +301,7 @@ impl Drop for BatchNotifier {
 #[derive(Debug)]
 pub struct EventFinalizer {
     status: Atomic<EventStatus>,
-    batch: Arc<BatchNotifier>,
+    batch: BatchNotifier,
 }
 
 impl ByteSizeOf for EventFinalizer {
@@ -305,7 +312,7 @@ impl ByteSizeOf for EventFinalizer {
 
 impl EventFinalizer {
     /// Create a new event in a batch
-    pub fn new(batch: Arc<BatchNotifier>) -> Self {
+    pub fn new(batch: BatchNotifier) -> Self {
         let status = Atomic::new(EventStatus::Dropped);
         Self { status, batch }
     }
@@ -461,9 +468,9 @@ mod tests {
     #[test]
     fn multi_event_batch() {
         let (batch, mut receiver) = BatchNotifier::new_with_receiver();
-        let event1 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
-        let mut event2 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
-        let event3 = EventFinalizers::new(EventFinalizer::new(Arc::clone(&batch)));
+        let event1 = EventFinalizers::new(EventFinalizer::new(batch.clone()));
+        let mut event2 = EventFinalizers::new(EventFinalizer::new(batch.clone()));
+        let event3 = EventFinalizers::new(EventFinalizer::new(batch.clone()));
         let event4 = event1.clone();
 
         drop(batch);
