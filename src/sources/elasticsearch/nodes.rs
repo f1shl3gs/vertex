@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
 
-use crate::sources::elasticsearch::Elasticsearch;
 use event::attributes::Attributes;
 use event::{tags, Metric};
 use serde::Deserialize;
+
+use super::Elasticsearch;
 
 /// `IndicesDocs` defines node stats docs information structure for indices.
 #[derive(Deserialize)]
@@ -384,12 +385,6 @@ struct NodeStats {
     process: Process,
 }
 
-impl NodeStats {
-    fn is(&self, role: &str) -> bool {
-        self.roles.iter().any(|s| s == role)
-    }
-}
-
 /// `NodeStatsResp` is a representation of an Elasticsearch Node Stats.
 #[derive(Deserialize)]
 struct NodeStatsResp {
@@ -412,22 +407,30 @@ impl Elasticsearch {
                         1.0,
                         tags!(
                             "cluster" => stats.cluster_name.clone(),
-                            "host" => node.host,
-                            "name" => node.name
+                            "host" => node.host.clone(),
+                            "name" => node.name.clone()
                         ),
                     ))
                 }
             }
 
+            let es_master_node = node.roles.iter().any(|s| s == "master").to_string();
+            let es_data_node = node.roles.iter().any(|s| s == "data").to_string();
+            let es_ingest_node = node.roles.iter().any(|s| s == "ingest").to_string();
+            let es_client_node = node.roles.iter().any(|s| s == "client").to_string();
+
             let tags = tags!(
                 "cluster" => stats.cluster_name.clone(),
                 "host" => node.host,
                 "name" => node.name,
-                "es_master_node" => node.is("master"),
-                "es_data_node" => node.is("data"),
-                "es_ingest_node" => node.is("ingest"),
-                "es_client_node" => node.is("client"),
+                "es_master_node" => es_master_node,
+                "es_data_node" => es_data_node,
+                "es_ingest_node" => es_ingest_node,
+                "es_client_node" => es_client_node,
             );
+            // OS stats
+            metrics.extend(os_metrics(tags.clone(), node.os));
+
             metrics.extend(node_metrics(tags.clone(), &node));
 
             // GC stats
@@ -463,56 +466,61 @@ impl Elasticsearch {
     }
 }
 
-fn node_metrics(tags: Attributes, node: &NodeStats) -> Vec<Metric> {
+fn os_metrics(tags: Attributes, stats: Os) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_os_load1",
             "Shortterm load average",
-            node.os.cpu.load_average.load1,
+            stats.cpu.load_average.load1,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_load5",
             "Midterm load average",
-            node.os.cpu.load_average.load5,
+            stats.cpu.load_average.load5,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_load15",
             "Longterm load average",
-            node.os.cpu.load_average.load15,
+            stats.cpu.load_average.load15,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_cpu_percent",
             "Percent CPU used by OS",
-            node.os.cpu.percent,
+            stats.cpu.percent,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_mem_free_bytes",
             "Amount of free physical memory in bytes",
-            node.os.mem.free_in_bytes,
+            stats.mem.free_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_mem_used_bytes",
             "Amount of used physical memory in bytes",
-            node.os.mem.used_in_bytes,
+            stats.mem.used_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_mem_actual_free_bytes",
             "Amount of free physical memory in bytes",
-            node.os.mem.actual_free_in_bytes,
+            stats.mem.actual_free_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_os_mem_actual_used_bytes",
             "Amount of used physical memory in bytes",
-            node.os.mem.actual_used_in_bytes,
-            tags.clone(),
+            stats.mem.actual_used_in_bytes,
+            tags,
         ),
+    ]
+}
+
+fn node_metrics(tags: Attributes, node: &NodeStats) -> Vec<Metric> {
+    vec![
         Metric::gauge_with_tags(
             "elasticsearch_indices_fielddata_memory_size_bytes",
             "Field data cache memory usage in bytes",
