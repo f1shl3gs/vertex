@@ -382,6 +382,12 @@ impl Attributes {
     pub fn contains_key(&self, key: impl Into<Key>) -> bool {
         self.0.contains_key(&(key.into()))
     }
+
+    pub fn with(&self, key: impl Into<Key>, value: impl Into<Value>) -> Self {
+        let mut new = self.clone();
+        new.0.insert(key, value);
+        new
+    }
 }
 
 impl FromIterator<(Key, Value)> for Attributes {
