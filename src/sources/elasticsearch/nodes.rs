@@ -195,7 +195,7 @@ struct OsSwap {
 #[derive(Deserialize)]
 struct Os {
     timestamp: i64,
-    uptime: uptime_in_millis,
+    uptime_in_millis: i64,
     // LoadAvg was an array of per-cpu values pre-2.0, and is a string in 2.0
     // Leaving this here in case we want to implement parsing logic later.
     //

@@ -1,5 +1,7 @@
 mod nodes;
 
+use async_trait::async_trait;
+use bytes::Buf;
 use event::Metric;
 use framework::config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
@@ -52,21 +54,7 @@ impl Elasticsearch {
         todo!()
     }
 
-    async fn node_stats(&self, node: &str) -> Result<Vec<Metric>, crate::Error> {
-        let url = format!("{}/_node/{}/stats", self.endpoint, node);
-        let req = http::Request::get(url).body(Body::empty())?;
-
-        let resp = self.http_client.send(req).await?;
-        if resp.is_successful() {
-            return Err("Unexpected status code".into());
-        }
-
-        let body = hyper::body::to_bytes(resp.into_body()).await?;
-
-        let n = serde_json::from_slice::<NodeStats>(&body)?;
-    }
-
-    async fn fetch<T>(&self, path: &str) -> Result<T, crate::Error> {
+    async fn fetch<'a, T: Deserialize<'a>>(&self, path: &str) -> Result<T, crate::Error> {
         let mut builder = http::Request::get(format!("{}{}", self.endpoint, path));
 
         if let Some(auth) = &self.auth {
@@ -80,7 +68,7 @@ impl Elasticsearch {
 
         let body = hyper::body::to_bytes(resp.into_body()).await?;
 
-        serde_json::from_slice(&body).map_err(Into::into)
+        serde_json::from_reader(body.reader()).map_err(Into::into)
     }
 }
 
