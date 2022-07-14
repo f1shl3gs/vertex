@@ -385,7 +385,7 @@ impl Attributes {
 
     pub fn with(&self, key: impl Into<Key>, value: impl Into<Value>) -> Self {
         let mut new = self.clone();
-        new.0.insert(key, value);
+        new.0.insert(key.into(), value.into());
         new
     }
 }
