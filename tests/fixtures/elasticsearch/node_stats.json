@@ -1,0 +1,1226 @@
+{
+  "_nodes": {
+    "total": 1,
+    "successful": 1,
+    "failed": 0
+  },
+  "cluster_name": "docker-cluster",
+  "nodes": {
+    "4OMaj5r1QZC5hkBLBCuKaw": {
+      "timestamp": 1657876549950,
+      "name": "58a07c8bfb2c",
+      "transport_address": "172.17.0.2:9300",
+      "host": "172.17.0.2",
+      "ip": "172.17.0.2:9300",
+      "roles": [
+        "data",
+        "data_cold",
+        "data_content",
+        "data_frozen",
+        "data_hot",
+        "data_warm",
+        "ingest",
+        "master",
+        "ml",
+        "remote_cluster_client",
+        "transform"
+      ],
+      "attributes": {
+        "ml.machine_memory": "33401384960",
+        "xpack.installed": "true",
+        "transform.node": "true",
+        "ml.max_open_jobs": "512",
+        "ml.max_jvm_size": "536870912"
+      },
+      "indices": {
+        "docs": {
+          "count": 48,
+          "deleted": 0
+        },
+        "shard_stats": {
+          "total_count": 3
+        },
+        "store": {
+          "size_in_bytes": 39671863,
+          "total_data_set_size_in_bytes": 39671863,
+          "reserved_in_bytes": 0
+        },
+        "indexing": {
+          "index_total": 48,
+          "index_time_in_millis": 1098,
+          "index_current": 0,
+          "index_failed": 0,
+          "delete_total": 0,
+          "delete_time_in_millis": 0,
+          "delete_current": 0,
+          "noop_update_total": 0,
+          "is_throttled": false,
+          "throttle_time_in_millis": 0
+        },
+        "get": {
+          "total": 0,
+          "time_in_millis": 0,
+          "exists_total": 0,
+          "exists_time_in_millis": 0,
+          "missing_total": 0,
+          "missing_time_in_millis": 0,
+          "current": 0
+        },
+        "search": {
+          "open_contexts": 0,
+          "query_total": 43,
+          "query_time_in_millis": 57,
+          "query_current": 0,
+          "fetch_total": 43,
+          "fetch_time_in_millis": 119,
+          "fetch_current": 0,
+          "scroll_total": 3,
+          "scroll_time_in_millis": 49,
+          "scroll_current": 0,
+          "suggest_total": 0,
+          "suggest_time_in_millis": 0,
+          "suggest_current": 0
+        },
+        "merges": {
+          "current": 0,
+          "current_docs": 0,
+          "current_size_in_bytes": 0,
+          "total": 3,
+          "total_time_in_millis": 150,
+          "total_docs": 55,
+          "total_size_in_bytes": 55865295,
+          "total_stopped_time_in_millis": 0,
+          "total_throttled_time_in_millis": 0,
+          "total_auto_throttle_in_bytes": 62914560
+        },
+        "refresh": {
+          "total": 53,
+          "total_time_in_millis": 353,
+          "external_total": 47,
+          "external_total_time_in_millis": 368,
+          "listeners": 0
+        },
+        "flush": {
+          "total": 7,
+          "periodic": 0,
+          "total_time_in_millis": 1000
+        },
+        "warmer": {
+          "current": 0,
+          "total": 43,
+          "total_time_in_millis": 3
+        },
+        "query_cache": {
+          "memory_size_in_bytes": 0,
+          "total_count": 0,
+          "hit_count": 0,
+          "miss_count": 0,
+          "cache_size": 0,
+          "cache_count": 0,
+          "evictions": 0
+        },
+        "fielddata": {
+          "memory_size_in_bytes": 0,
+          "evictions": 0
+        },
+        "completion": {
+          "size_in_bytes": 0
+        },
+        "segments": {
+          "count": 10,
+          "memory_in_bytes": 19096,
+          "terms_memory_in_bytes": 13184,
+          "stored_fields_memory_in_bytes": 4896,
+          "term_vectors_memory_in_bytes": 0,
+          "norms_memory_in_bytes": 256,
+          "points_memory_in_bytes": 0,
+          "doc_values_memory_in_bytes": 760,
+          "index_writer_memory_in_bytes": 0,
+          "version_map_memory_in_bytes": 0,
+          "fixed_bit_set_memory_in_bytes": 0,
+          "max_unsafe_auto_id_timestamp": -1,
+          "file_sizes": {}
+        },
+        "translog": {
+          "operations": 0,
+          "size_in_bytes": 165,
+          "uncommitted_operations": 0,
+          "uncommitted_size_in_bytes": 165,
+          "earliest_last_modified_age": 1817082
+        },
+        "request_cache": {
+          "memory_size_in_bytes": 0,
+          "evictions": 0,
+          "hit_count": 0,
+          "miss_count": 0
+        },
+        "recovery": {
+          "current_as_source": 0,
+          "current_as_target": 0,
+          "throttle_time_in_millis": 0
+        }
+      },
+      "os": {
+        "timestamp": 1657876549952,
+        "cpu": {
+          "percent": 6,
+          "load_average": {
+            "1m": 0.8,
+            "5m": 1.63,
+            "15m": 1.73
+          }
+        },
+        "mem": {
+          "total_in_bytes": 33401384960,
+          "free_in_bytes": 3794391040,
+          "used_in_bytes": 29606993920,
+          "free_percent": 11,
+          "used_percent": 89
+        },
+        "swap": {
+          "total_in_bytes": 4290768896,
+          "free_in_bytes": 4018925568,
+          "used_in_bytes": 271843328
+        },
+        "cgroup": {
+          "cpuacct": {
+            "control_group": "/",
+            "usage_nanos": 219182142940
+          },
+          "cpu": {
+            "control_group": "/",
+            "cfs_period_micros": 100000,
+            "cfs_quota_micros": -1,
+            "stat": {
+              "number_of_elapsed_periods": 0,
+              "number_of_times_throttled": 0,
+              "time_throttled_nanos": 0
+            }
+          },
+          "memory": {
+            "control_group": "/",
+            "limit_in_bytes": "9223372036854771712",
+            "usage_in_bytes": "1074212864"
+          }
+        }
+      },
+      "process": {
+        "timestamp": 1657876549952,
+        "open_file_descriptors": 325,
+        "max_file_descriptors": 1048576,
+        "cpu": {
+          "percent": 0,
+          "total_in_millis": 216030
+        },
+        "mem": {
+          "total_virtual_in_bytes": 9137459200
+        }
+      },
+      "jvm": {
+        "timestamp": 1657876549952,
+        "uptime_in_millis": 109423728,
+        "mem": {
+          "heap_used_in_bytes": 293514464,
+          "heap_used_percent": 54,
+          "heap_committed_in_bytes": 536870912,
+          "heap_max_in_bytes": 536870912,
+          "non_heap_used_in_bytes": 162949272,
+          "non_heap_committed_in_bytes": 169148416,
+          "pools": {
+            "young": {
+              "used_in_bytes": 197132288,
+              "max_in_bytes": 0,
+              "peak_used_in_bytes": 314572800,
+              "peak_max_in_bytes": 0
+            },
+            "old": {
+              "used_in_bytes": 95958528,
+              "max_in_bytes": 536870912,
+              "peak_used_in_bytes": 95958528,
+              "peak_max_in_bytes": 536870912
+            },
+            "survivor": {
+              "used_in_bytes": 423648,
+              "max_in_bytes": 0,
+              "peak_used_in_bytes": 39072160,
+              "peak_max_in_bytes": 0
+            }
+          }
+        },
+        "threads": {
+          "count": 72,
+          "peak_count": 72
+        },
+        "gc": {
+          "collectors": {
+            "young": {
+              "collection_count": 90,
+              "collection_time_in_millis": 249
+            },
+            "old": {
+              "collection_count": 0,
+              "collection_time_in_millis": 0
+            }
+          }
+        },
+        "buffer_pools": {
+          "mapped": {
+            "count": 15,
+            "used_in_bytes": 4728799,
+            "total_capacity_in_bytes": 4728799
+          },
+          "direct": {
+            "count": 58,
+            "used_in_bytes": 17649552,
+            "total_capacity_in_bytes": 17649551
+          },
+          "mapped - 'non-volatile memory'": {
+            "count": 0,
+            "used_in_bytes": 0,
+            "total_capacity_in_bytes": 0
+          }
+        },
+        "classes": {
+          "current_loaded_count": 25800,
+          "total_loaded_count": 25800,
+          "total_unloaded_count": 0
+        }
+      },
+      "thread_pool": {
+        "analyze": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "auto_complete": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "ccr": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "fetch_shard_started": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "fetch_shard_store": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "flush": {
+          "threads": 1,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 1,
+          "completed": 7
+        },
+        "force_merge": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "generic": {
+          "threads": 8,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 8,
+          "completed": 140706
+        },
+        "get": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "listener": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "management": {
+          "threads": 2,
+          "queue": 0,
+          "active": 1,
+          "rejected": 0,
+          "largest": 2,
+          "completed": 29732
+        },
+        "ml_datafeed": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "ml_job_comms": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "ml_utility": {
+          "threads": 2,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 2,
+          "completed": 109390
+        },
+        "refresh": {
+          "threads": 3,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 3,
+          "completed": 328126
+        },
+        "rollup_indexing": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "search": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "search_coordination": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "search_throttled": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "searchable_snapshots_cache_fetch_async": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "searchable_snapshots_cache_prewarming": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "security-crypto": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "security-token-key": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "snapshot": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "snapshot_meta": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "system_critical_read": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "system_critical_write": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "system_read": {
+          "threads": 5,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 5,
+          "completed": 86
+        },
+        "system_write": {
+          "threads": 5,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 5,
+          "completed": 78
+        },
+        "vector_tile_generation": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "warmer": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "watcher": {
+          "threads": 0,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 0,
+          "completed": 0
+        },
+        "write": {
+          "threads": 8,
+          "queue": 0,
+          "active": 0,
+          "rejected": 0,
+          "largest": 8,
+          "completed": 8
+        }
+      },
+      "fs": {
+        "timestamp": 1657876549953,
+        "total": {
+          "total_in_bytes": 53660876800,
+          "free_in_bytes": 7938748416,
+          "available_in_bytes": 7938748416
+        },
+        "data": [
+          {
+            "path": "/usr/share/elasticsearch/data/nodes/0",
+            "mount": "/ (overlay)",
+            "type": "overlay",
+            "total_in_bytes": 53660876800,
+            "free_in_bytes": 7938748416,
+            "available_in_bytes": 7938748416
+          }
+        ],
+        "io_stats": {}
+      },
+      "transport": {
+        "server_open": 0,
+        "total_outbound_connections": 0,
+        "rx_count": 0,
+        "rx_size_in_bytes": 0,
+        "tx_count": 0,
+        "tx_size_in_bytes": 0
+      },
+      "http": {
+        "current_open": 2,
+        "total_opened": 34,
+        "clients": [
+          {
+            "id": 756214176,
+            "agent": "Vertex/0.1.0",
+            "local_address": "172.17.0.2:9200",
+            "remote_address": "172.17.0.1:41236",
+            "last_uri": "/_nodes/_all/stats",
+            "opened_time_millis": 1657876311979,
+            "closed_time_millis": 1657876311979,
+            "last_request_time_millis": 1657876311979,
+            "request_count": 1,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 354885996,
+            "agent": "Vertex/0.1.0",
+            "local_address": "172.17.0.2:9200",
+            "remote_address": "172.17.0.1:41980",
+            "last_uri": "/_nodes/_all/stats",
+            "opened_time_millis": 1657876388831,
+            "closed_time_millis": 1657876388831,
+            "last_request_time_millis": 1657876388831,
+            "request_count": 1,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 338700705,
+            "agent": "Vertex/0.1.0",
+            "local_address": "172.17.0.2:9200",
+            "remote_address": "172.17.0.1:42536",
+            "last_uri": "/_nodes/_all/stats",
+            "opened_time_millis": 1657876447866,
+            "closed_time_millis": 1657876447866,
+            "last_request_time_millis": 1657876447866,
+            "request_count": 1,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 1892425323,
+            "agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+            "local_address": "172.17.0.2:9200",
+            "remote_address": "172.17.0.1:30586",
+            "last_uri": "/favicon.ico",
+            "opened_time_millis": 1657875305612,
+            "closed_time_millis": 1657876549916,
+            "last_request_time_millis": 1657875439271,
+            "request_count": 7,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 1537547880,
+            "remote_address": "172.17.0.1:32904",
+            "opened_time_millis": 1657875439071,
+            "closed_time_millis": 1657876549916,
+            "last_request_time_millis": -1,
+            "request_count": 0,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 1449670908,
+            "remote_address": "172.17.0.1:43534",
+            "opened_time_millis": 1657876549916,
+            "last_request_time_millis": -1,
+            "request_count": 0,
+            "request_size_bytes": 0
+          },
+          {
+            "id": 1766541734,
+            "agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+            "local_address": "172.17.0.2:9200",
+            "remote_address": "172.17.0.1:43536",
+            "last_uri": "/_nodes/_all/stats",
+            "opened_time_millis": 1657876549916,
+            "last_request_time_millis": 1657876549916,
+            "request_count": 1,
+            "request_size_bytes": 0
+          }
+        ]
+      },
+      "breakers": {
+        "request": {
+          "limit_size_in_bytes": 322122547,
+          "limit_size": "307.1mb",
+          "estimated_size_in_bytes": 0,
+          "estimated_size": "0b",
+          "overhead": 1.0,
+          "tripped": 0
+        },
+        "fielddata": {
+          "limit_size_in_bytes": 214748364,
+          "limit_size": "204.7mb",
+          "estimated_size_in_bytes": 0,
+          "estimated_size": "0b",
+          "overhead": 1.03,
+          "tripped": 0
+        },
+        "in_flight_requests": {
+          "limit_size_in_bytes": 536870912,
+          "limit_size": "512mb",
+          "estimated_size_in_bytes": 0,
+          "estimated_size": "0b",
+          "overhead": 2.0,
+          "tripped": 0
+        },
+        "model_inference": {
+          "limit_size_in_bytes": 268435456,
+          "limit_size": "256mb",
+          "estimated_size_in_bytes": 0,
+          "estimated_size": "0b",
+          "overhead": 1.0,
+          "tripped": 0
+        },
+        "eql_sequence": {
+          "limit_size_in_bytes": 268435456,
+          "limit_size": "256mb",
+          "estimated_size_in_bytes": 0,
+          "estimated_size": "0b",
+          "overhead": 1.0,
+          "tripped": 0
+        },
+        "accounting": {
+          "limit_size_in_bytes": 536870912,
+          "limit_size": "512mb",
+          "estimated_size_in_bytes": 19096,
+          "estimated_size": "18.6kb",
+          "overhead": 1.0,
+          "tripped": 0
+        },
+        "parent": {
+          "limit_size_in_bytes": 510027366,
+          "limit_size": "486.3mb",
+          "estimated_size_in_bytes": 293514464,
+          "estimated_size": "279.9mb",
+          "overhead": 1.0,
+          "tripped": 0
+        }
+      },
+      "script": {
+        "compilations": 1,
+        "cache_evictions": 0,
+        "compilation_limit_triggered": 0
+      },
+      "discovery": {
+        "cluster_state_queue": {
+          "total": 0,
+          "pending": 0,
+          "committed": 0
+        },
+        "serialized_cluster_states": {
+          "full_states": {
+            "count": 2,
+            "uncompressed_size_in_bytes": 12222,
+            "compressed_size_in_bytes": 10619
+          },
+          "diffs": {
+            "count": 56,
+            "uncompressed_size_in_bytes": 37225,
+            "compressed_size_in_bytes": 26553
+          }
+        },
+        "published_cluster_states": {
+          "full_states": 2,
+          "incompatible_diffs": 0,
+          "compatible_diffs": 56
+        },
+        "cluster_state_update": {
+          "unchanged": {
+            "count": 249,
+            "computation_time_millis": 25,
+            "notification_time_millis": 4
+          },
+          "success": {
+            "count": 58,
+            "computation_time_millis": 430,
+            "publication_time_millis": 2777,
+            "context_construction_time_millis": 34,
+            "commit_time_millis": 2011,
+            "completion_time_millis": 2067,
+            "master_apply_time_millis": 642,
+            "notification_time_millis": 7
+          },
+          "failure": {
+            "count": 0,
+            "computation_time_millis": 0,
+            "publication_time_millis": 0,
+            "context_construction_time_millis": 0,
+            "commit_time_millis": 0,
+            "completion_time_millis": 0,
+            "master_apply_time_millis": 0,
+            "notification_time_millis": 0
+          }
+        },
+        "cluster_applier_stats": {
+          "recordings": [
+            {
+              "name": "org.elasticsearch.xpack.ml.MlIndexTemplateRegistry@6779f11d",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 124
+            },
+            {
+              "name": "org.elasticsearch.xpack.stack.StackTemplateRegistry@2d6e601c",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 121
+            },
+            {
+              "name": "org.elasticsearch.indices.cluster.IndicesClusterStateService@70035ef6",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 103
+            },
+            {
+              "name": "org.elasticsearch.xpack.watcher.support.WatcherIndexTemplateRegistry@62f174f0",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 43
+            },
+            {
+              "name": "org.elasticsearch.xpack.deprecation.logging.DeprecationIndexingTemplateRegistry@20c102fc",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 26
+            },
+            {
+              "name": "org.elasticsearch.xpack.ilm.IndexLifecycleService@ba83b70",
+              "cumulative_execution_count": 116,
+              "cumulative_execution_time_millis": 24
+            },
+            {
+              "name": "org.elasticsearch.license.LicenseService@4622008b",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 22
+            },
+            {
+              "name": "org.elasticsearch.xpack.core.slm.history.SnapshotLifecycleTemplateRegistry@711defdc",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 22
+            },
+            {
+              "name": "org.elasticsearch.xpack.ilm.history.ILMHistoryTemplateRegistry@18224edc",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 21
+            },
+            {
+              "name": "org.elasticsearch.cluster.InternalClusterInfoService@492b1d54",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 11
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.MlAssignmentNotifier@4722de75",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 11
+            },
+            {
+              "name": "org.elasticsearch.ingest.IngestService@7e3f8590",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 10
+            },
+            {
+              "name": "connecting to new nodes",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 7
+            },
+            {
+              "name": "org.elasticsearch.cluster.metadata.TemplateUpgradeService@14a256b",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 6
+            },
+            {
+              "name": "org.elasticsearch.indices.SystemIndexManager@217fcda1",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 6
+            },
+            {
+              "name": "org.elasticsearch.xpack.fleet.FleetTemplateRegistry@3f291a7a",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 6
+            },
+            {
+              "name": "org.elasticsearch.xpack.security.support.SecurityIndexManager@4d07aeff",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 5
+            },
+            {
+              "name": "org.elasticsearch.xpack.autoscaling.capacity.memory.AutoscalingMemoryInfoService$$Lambda$3323/0x00000008012d6c90@6734cd5a",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 5
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.MlInitializationService@2a0c34f4",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 4
+            },
+            {
+              "name": "org.elasticsearch.xpack.watcher.WatcherLifeCycleService@77f705f5",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 4
+            },
+            {
+              "name": "org.elasticsearch.xpack.slm.SnapshotRetentionService@500deaeb",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 3
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.inference.loadingservice.ModelLoadingService@697e092",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@226be42b",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.snapshots.InternalSnapshotsInfoService@2fd22ba9",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.xpack.searchablesnapshots.cache.blob.BlobStoreCacheMaintenanceService@634f6a05",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.xpack.security.authc.TokenService$$Lambda$3532/0x000000080141c618@4d7fb9e6",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.persistent.PersistentTasksNodeService@361c0f8b",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 2
+            },
+            {
+              "name": "org.elasticsearch.indices.TimestampFieldMapperService@76897b7f",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.snapshots.SnapshotShardsService@5872218a",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.transform.notifications.TransformAuditor$$Lambda$3512/0x0000000801328d98@3dcef351",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.cluster.routing.DelayedAllocationService@7d4c3da6",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.core.async.AsyncTaskMaintenanceService@2af8e410",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.utils.persistence.ResultsPersisterService$$Lambda$3329/0x0000000801309fb0@3452f3fd",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.shutdown.PluginShutdownService@5a9452bb",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.slm.SnapshotLifecycleService@3e0a94a7",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.snapshots.SnapshotsService@5821e6a4",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.security.support.SecurityIndexManager@7c6799d0",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.ccr.action.AutoFollowCoordinator@3dd42c9c",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 1
+            },
+            {
+              "name": "org.elasticsearch.xpack.ccr.action.ShardFollowTaskCleaner@831bf22",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.process.MlMemoryTracker@7b2a48b5",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.job.snapshot.upgrader.SnapshotUpgradeTaskExecutor$$Lambda$4496/0x0000000801593bd8@2372cf56",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.action.TransportStartDataFrameAnalyticsAction$TaskExecutor$$Lambda$4495/0x00000008015933f0@1ce97fe8",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.indices.recovery.PeerRecoverySourceService@72c159c",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.enrich.EnrichPolicyMaintenanceService@33f7e146",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.gateway.GatewayService@37ea5438",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.persistent.PersistentTasksClusterService@dd56ad6",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@4ebf8b3e",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.action.ingest.IngestActionForwarder@24610e92",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.script.ScriptService@6bc63855",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.action.admin.cluster.repositories.cleanup.TransportCleanupRepositoryAction$$Lambda$5250/0x00000008018a6c30@6ed8d2d5",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.node.ResponseCollectorService@764705f2",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.shutdown.NodeSeenService@33293a5a",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.indices.store.IndicesStore@47541f04",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.transform.TransformClusterStateListener@7618f62c",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.security.transport.SecurityServerTransportInterceptor$$Lambda$3629/0x000000080143b0d0@13cf5ed5",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.job.task.OpenJobPersistentTasksExecutor$$Lambda$4494/0x0000000801592978@52cf88d6",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.tasks.TaskManager@7498733b",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.snapshots.RestoreService@14a18d1c",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.watcher.WatcherIndexingListener@53287b2e",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.searchablesnapshots.SearchableSnapshots$RepositoryUuidWatcher@7af636e9",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.repositories.RepositoriesService@409bf1a8",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.job.process.autodetect.AutodetectProcessManager@6067832",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "applying settings",
+              "cumulative_execution_count": 44,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.cluster.metadata.SystemIndexMetadataUpgradeService@75d5e073",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "running task [Publication{term=1, version=58}]",
+              "cumulative_execution_count": 1,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.datafeed.DatafeedRunner$TaskRunner@61f52e45",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.MlUpgradeModeActionFilter$$Lambda$3325/0x0000000801309310@7f27f560",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@5cc76a75",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.autoscaling.MlAutoscalingDeciderService@5c3d91bc",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@555e738e",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.inference.TrainedModelStatsService$$Lambda$3487/0x00000008014033d0@257932db",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@27e848f",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            },
+            {
+              "name": "org.elasticsearch.xpack.ml.notifications.AbstractMlAuditor$$Lambda$1567/0x0000000801075648@1c0b1878",
+              "cumulative_execution_count": 58,
+              "cumulative_execution_time_millis": 0
+            }
+          ]
+        }
+      },
+      "ingest": {
+        "total": {
+          "count": 0,
+          "time_in_millis": 0,
+          "current": 0,
+          "failed": 0
+        },
+        "pipelines": {
+          "xpack_monitoring_6": {
+            "count": 0,
+            "time_in_millis": 0,
+            "current": 0,
+            "failed": 0,
+            "processors": [
+              {
+                "script": {
+                  "type": "script",
+                  "stats": {
+                    "count": 0,
+                    "time_in_millis": 0,
+                    "current": 0,
+                    "failed": 0
+                  }
+                }
+              },
+              {
+                "gsub": {
+                  "type": "gsub",
+                  "stats": {
+                    "count": 0,
+                    "time_in_millis": 0,
+                    "current": 0,
+                    "failed": 0
+                  }
+                }
+              }
+            ]
+          },
+          "xpack_monitoring_7": {
+            "count": 0,
+            "time_in_millis": 0,
+            "current": 0,
+            "failed": 0,
+            "processors": []
+          }
+        }
+      },
+      "adaptive_selection": {},
+      "script_cache": {
+        "sum": {
+          "compilations": 1,
+          "cache_evictions": 0,
+          "compilation_limit_triggered": 0
+        }
+      },
+      "indexing_pressure": {
+        "memory": {
+          "current": {
+            "combined_coordinating_and_primary_in_bytes": 0,
+            "coordinating_in_bytes": 0,
+            "primary_in_bytes": 0,
+            "replica_in_bytes": 0,
+            "all_in_bytes": 0
+          },
+          "total": {
+            "combined_coordinating_and_primary_in_bytes": 39925647,
+            "coordinating_in_bytes": 39925647,
+            "primary_in_bytes": 39926735,
+            "replica_in_bytes": 0,
+            "all_in_bytes": 39925647,
+            "coordinating_rejections": 0,
+            "primary_rejections": 0,
+            "replica_rejections": 0
+          },
+          "limit_in_bytes": 53687091
+        }
+      }
+    }
+  }
+}

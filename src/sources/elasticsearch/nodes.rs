@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::time::Instant;
 
 use event::attributes::Attributes;
 use event::{tags, Metric};
@@ -17,6 +18,7 @@ struct IndicesDocs {
 #[derive(Deserialize)]
 struct IndicesStore {
     size_in_bytes: i64,
+    #[serde(default)]
     throttle_time_in_millis: i64,
 }
 
@@ -75,7 +77,8 @@ struct IndicesSearch {
 }
 
 /// `IndicesCache` defines node stats cache information structure for indices
-#[derive(Deserialize)]
+#[derive(Deserialize, Default)]
+#[serde(default)]
 struct IndicesCache {
     evictions: i64,
     memory_size_in_bytes: i64,
@@ -148,6 +151,7 @@ struct Indices {
     search: IndicesSearch,
     #[serde(rename = "fielddata")]
     field_data: IndicesCache,
+    #[serde(default)]
     filter_cache: IndicesCache,
     query_cache: IndicesCache,
     request_cache: IndicesCache,
@@ -181,7 +185,9 @@ struct OsCpu {
 struct OsMem {
     free_in_bytes: i64,
     used_in_bytes: i64,
+    #[serde(default)]
     actual_free_in_bytes: i64,
+    #[serde(default)]
     actual_used_in_bytes: i64,
 }
 
@@ -196,6 +202,7 @@ struct OsSwap {
 #[derive(Deserialize)]
 struct Os {
     timestamp: i64,
+    #[serde(default)]
     uptime_in_millis: i64,
     // LoadAvg was an array of per-cpu values pre-2.0, and is a string in 2.0
     // Leaving this here in case we want to implement parsing logic later.
@@ -205,32 +212,12 @@ struct Os {
     swap: OsSwap,
 }
 
-/// `Tcp` defines node stats TCP information structure.
-#[derive(Deserialize)]
-struct Tcp {
-    active_opens: i64,
-    passive_opens: i64,
-    curr_estab: i64,
-    in_segs: i64,
-    out_segs: i64,
-    retrans_segs: i64,
-    estab_resets: i64,
-    attempt_fails: i64,
-    in_errs: i64,
-    out_rsts: i64,
-}
-
-/// `Network` defines node stats network information structure
-#[derive(Deserialize)]
-struct Network {
-    tcp: Tcp,
-}
-
 /// `FsData` defines node stats filesystem data structure
 #[derive(Deserialize)]
 struct FsData {
     path: String,
     mount: String,
+    #[serde(default)]
     dev: String,
     total_in_bytes: i64,
     free_in_bytes: i64,
@@ -251,29 +238,31 @@ struct FsIoStatsDevice {
 /// `FsIoStats`
 #[derive(Deserialize)]
 struct FsIoStats {
+    #[serde(default)]
     devices: Vec<FsIoStatsDevice>,
 }
 
+#[derive(Deserialize)]
 struct Fs {
     timestamp: i64,
     data: Vec<FsData>,
     io_stats: FsIoStats,
 }
 
-/// `JvmGcCollector` defines node stats JVM garbage collector collection information strucutre.
+/// `JvmGcCollector` defines node stats JVM garbage collector collection information.
 #[derive(Deserialize)]
 struct JvmGcCollector {
     collection_count: i64,
     collection_time_in_millis: i64,
 }
 
-/// `JvmGc` defines node stats JVM garbage collector information structure.
+/// `JvmGc` defines node stats JVM garbage collector information.
 #[derive(Deserialize)]
 struct JvmGc {
     collectors: BTreeMap<String, JvmGcCollector>,
 }
 
-/// `JvmMemPool` defines node status JVM memory pool information
+/// `JvmMemPool` defines node status JVM memory pool information.
 #[derive(Deserialize, Default)]
 struct JvmMemPool {
     used_in_bytes: i64,
@@ -319,7 +308,9 @@ struct ProcessCpu {
 
 #[derive(Deserialize)]
 struct ProcessMem {
+    #[serde(default)]
     resident_in_bytes: i64,
+    #[serde(default)]
     share_in_bytes: i64,
     total_virtual_in_bytes: i64,
 }
@@ -348,7 +339,7 @@ struct Transport {
 struct Breaker {
     estimated_size_in_bytes: i64,
     limit_size_in_bytes: i64,
-    overhead: i64,
+    overhead: f64,
     tripped: i64,
 }
 
@@ -362,27 +353,70 @@ struct ThreadPool {
     completed: i64,
 }
 
+#[derive(Deserialize)]
+struct HttpClient {
+    id: String,
+}
+
+#[derive(Deserialize)]
+struct Http {
+    #[serde(default)]
+    clients: Vec<HttpClient>,
+}
+
 /// `NodeStats` defines node stats information structure for nodes
+#[allow(dead_code)]
 #[derive(Deserialize)]
 struct NodeStats {
     name: String,
     host: String,
     timestamp: i64,
     transport_address: String,
-    hostname: String,
     #[serde(default)]
+    hostname: String,
     roles: Vec<String>,
     attributes: BTreeMap<String, String>,
     indices: Indices,
     os: Os,
-    network: Network,
     fs: Fs,
     thread_pool: BTreeMap<String, ThreadPool>,
     jvm: Jvm,
     breakers: BTreeMap<String, Breaker>,
-    // http: BtreeMap<String, Http>,
+    #[serde(default)]
+    http: Option<Http>,
     transport: Transport,
     process: Process,
+}
+
+fn get_roles(node: &NodeStats) -> Vec<String> {
+    // default settings(2.x) and map, which roles to consider
+    let mut roles = vec!["client".to_string()];
+
+    // assumption: a 5.x node has at least one role, otherwise it's a
+    // 1.7 or 2.x node.
+    if !node.roles.is_empty() {
+        for role in node.roles.iter() {
+            if roles.contains(role) {
+                roles.push(role.clone());
+            }
+        }
+    } else {
+        for (role, setting) in &node.attributes {
+            if !roles.contains(role) {
+                continue;
+            }
+
+            if setting == "false" {
+                roles.retain(|x| x != role)
+            }
+        }
+    }
+
+    if node.http.is_none() {
+        roles.retain(|x| x != "client");
+    }
+
+    roles
 }
 
 /// `NodeStatsResp` is a representation of an Elasticsearch Node Stats.
@@ -393,14 +427,42 @@ struct NodeStatsResp {
 }
 
 impl Elasticsearch {
-    async fn collect_node_stats(&self, node: &str) -> Result<Vec<Metric>, crate::Error> {
-        let mut metrics = vec![];
-        let url = format!("/_node/{}/stats", node);
-        let stats = self.fetch::<NodeStatsResp>(url.as_str()).await?;
+    pub async fn node_stats(&self, node: &str) -> Vec<Metric> {
+        let url = format!("/_nodes/{}/stats", node);
+        let start = Instant::now();
+        let result = self.fetch::<NodeStatsResp>(url.as_str()).await;
+        let elapsed = start.elapsed().as_secs_f64();
+        let up = result.is_ok();
 
+        let mut metrics = vec![
+            Metric::gauge_with_tags(
+                "elasticsearch_node_stats_up",
+                "Was the last scrape of the Elasticsearch nodes endpoint successful",
+                up,
+                tags!(
+                    "node" => node.to_string(),
+                ),
+            ),
+            Metric::gauge_with_tags(
+                "elasticsearch_node_scrape_duration_seconds",
+                "Duration of scraping node stats",
+                elapsed,
+                tags!(
+                    "node" => node.to_string(),
+                ),
+            ),
+        ];
+
+        if !up {
+            return metrics;
+        }
+
+        let stats = result.unwrap();
         for (_name, node) in stats.nodes {
+            let roles = get_roles(&node);
+
             for role in ["master", "data", "client", "ingest"] {
-                if node.roles.iter().any(|s| s == role) {
+                if roles.iter().any(|s| s == role) {
                     metrics.push(Metric::gauge_with_tags(
                         "elasticsearch_nodes_roles",
                         "Node roles",
@@ -414,10 +476,10 @@ impl Elasticsearch {
                 }
             }
 
-            let es_master_node = node.roles.iter().any(|s| s == "master").to_string();
-            let es_data_node = node.roles.iter().any(|s| s == "data").to_string();
-            let es_ingest_node = node.roles.iter().any(|s| s == "ingest").to_string();
-            let es_client_node = node.roles.iter().any(|s| s == "client").to_string();
+            let es_master_node = roles.iter().any(|s| s == "master").to_string();
+            let es_data_node = roles.iter().any(|s| s == "data").to_string();
+            let es_ingest_node = roles.iter().any(|s| s == "ingest").to_string();
+            let es_client_node = roles.iter().any(|s| s == "client").to_string();
 
             let tags = tags!(
                 "cluster" => stats.cluster_name.clone(),
@@ -431,12 +493,17 @@ impl Elasticsearch {
             // OS stats
             metrics.extend(os_metrics(tags.clone(), node.os));
 
-            metrics.extend(node_metrics(tags.clone(), &node));
+            // Jvm stats
+            metrics.extend(jvm_metrics(tags.clone(), node.jvm));
 
-            // GC stats
-            for (collector, stats) in node.jvm.gc.collectors {
-                metrics.extend(gc_metrics(tags.with("gc", collector), &stats));
-            }
+            // Process stats
+            metrics.extend(process_metrics(tags.clone(), node.process));
+
+            // transport stats
+            metrics.extend(transport_metrics(tags.clone(), node.transport));
+
+            // Indices
+            metrics.extend(indices_metrics(tags.clone(), node.indices));
 
             // Breaker stats
             for (breaker, stats) in node.breakers {
@@ -462,7 +529,7 @@ impl Elasticsearch {
             }
         }
 
-        Ok(metrics)
+        metrics
     }
 }
 
@@ -519,652 +586,620 @@ fn os_metrics(tags: Attributes, stats: Os) -> Vec<Metric> {
     ]
 }
 
-fn node_metrics(tags: Attributes, node: &NodeStats) -> Vec<Metric> {
+fn indices_metrics(tags: Attributes, indices: Indices) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_indices_fielddata_memory_size_bytes",
             "Field data cache memory usage in bytes",
-            node.indices.field_data.memory_size_in_bytes,
+            indices.field_data.memory_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_fielddata_evictions",
             "Evictions from field data",
-            node.indices.field_data.evictions,
+            indices.field_data.evictions,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_completion_size_in_bytes",
             "Completion in bytes",
-            node.indices.completion.size_in_bytes,
+            indices.completion.size_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_filter_cache_memory_size_bytes",
             "Filter cache memory usage in bytes",
-            node.indices.filter_cache.memory_size_in_bytes,
+            indices.filter_cache.memory_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_filter_cache_evictions",
             "Evictions from filter cache",
-            node.indices.filter_cache.evictions,
+            indices.filter_cache.evictions,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_query_cache_memory_size_bytes",
             "Query cache memory usage in bytes",
-            node.indices.query_cache.memory_size_in_bytes,
+            indices.query_cache.memory_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_query_cache_evictions",
             "Evictions from query cache",
-            node.indices.query_cache.evictions,
+            indices.query_cache.evictions,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_query_cache_total",
             "Query cache total count",
-            node.indices.query_cache.total_count,
+            indices.query_cache.total_count,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_query_cache_cache_size",
             "Query cache cache size",
-            node.indices.query_cache.cache_size,
+            indices.query_cache.cache_size,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_query_cache_cache_total",
             "Query cache cache count",
-            node.indices.query_cache.cache_count,
+            indices.query_cache.cache_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_query_cache_count",
             "Query cache count",
-            node.indices.query_cache.hit_count,
+            indices.query_cache.hit_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_query_miss_count",
             "Query miss count",
-            node.indices.query_cache.miss_count,
+            indices.query_cache.miss_count,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_request_cache_memory_size_bytes",
             "Request cache memory usage in bytes",
-            node.indices.request_cache.memory_size_in_bytes,
+            indices.request_cache.memory_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_request_cache_evictions",
             "Evictions from request cache",
-            node.indices.request_cache.evictions,
+            indices.request_cache.evictions,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_request_cache_count",
             "Request cache count",
-            node.indices.request_cache.hit_count,
+            indices.request_cache.hit_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_request_miss_count",
             "Request miss count",
-            node.indices.request_cache.miss_count,
+            indices.request_cache.miss_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_translog_operations",
             "Total translog operations",
-            node.indices.translog.operations,
+            indices.translog.operations,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_translog_size_in_bytes",
             "Total translog size in bytes",
-            node.indices.translog.size_in_bytes,
+            indices.translog.size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_time_seconds",
             "Total get time in seconds",
-            node.indices.get.time_in_millis / 1000,
+            indices.get.time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_total",
             "Total get",
-            node.indices.get.total,
+            indices.get.total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_missing_time_seconds",
             "Total time of get missing in seconds",
-            node.indices.get.missing_time_in_millis / 1000,
+            indices.get.missing_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_missing_total",
             "Total get missing",
-            node.indices.get.missing_total,
+            indices.get.missing_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_exists_time_seconds",
             "Total time get exists in seconds",
-            node.indices.get.exists_time_in_millis / 1000,
+            indices.get.exists_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_get_exists_total",
             "Total get exists operation",
-            node.indices.get.exists_total,
+            indices.get.exists_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_refresh_time_seconds_total",
             "Total time spent refreshing in seconds",
-            node.indices.refresh.total_time_in_millis / 1000,
+            indices.refresh.total_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_refresh_total",
             "Total refreshes",
-            node.indices.refresh.total,
+            indices.refresh.total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_query_time_seconds",
             "Total search query time in seconds",
-            node.indices.search.query_time_in_millis / 1000,
+            indices.search.query_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_query_total",
             "Total number of queries",
-            node.indices.search.query_total,
+            indices.search.query_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_fetch_time_seconds",
             "Total search fetch time in seconds",
-            node.indices.search.fetch_time_in_millis / 1000,
+            indices.search.fetch_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_fetch_total",
             "Total number of fetches",
-            node.indices.search.fetch_total,
+            indices.search.fetch_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_suggest_total",
             "Total number of suggests",
-            node.indices.search.suggest_total,
+            indices.search.suggest_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_suggest_time_seconds",
             "Total suggest time in seconds",
-            node.indices.search.suggest_time_in_millis / 1000,
+            indices.search.suggest_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_scroll_total",
             "Total number of scrolls",
-            node.indices.search.scroll_total,
+            indices.search.scroll_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_search_scroll_time_seconds",
             "Total scroll time in seconds",
-            node.indices.search.scroll_time_in_millis / 1000,
+            indices.search.scroll_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_docs",
             "Count of documents on this node",
-            node.indices.docs.count,
+            indices.docs.count,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_docs_deleted",
             "Count of deleted documents on this node",
-            node.indices.docs.deleted,
+            indices.docs.deleted,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_store_size_bytes",
             "Current size of stored index data in bytes",
-            node.indices.store.size_in_bytes,
+            indices.store.size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_store_throttle_time_seconds_total",
             "Throttle time for index store in seconds",
-            node.indices.store.throttle_time_in_millis / 1000,
+            indices.store.throttle_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_memory_bytes",
             "Current memory size of segments in bytes",
-            node.indices.segments.memory_in_bytes,
+            indices.segments.memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_count",
             "Count of index segments on this node",
-            node.indices.segments.count,
+            indices.segments.count,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_terms_memory_in_bytes",
             "Count of terms in memory for this node",
-            node.indices.segments.terms_memory_in_bytes,
+            indices.segments.terms_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_index_writer_memory_in_bytes",
             "Count of memory for index writer on this node",
-            node.indices.segments.index_writer_memory_in_bytes,
+            indices.segments.index_writer_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_norms_memory_in_bytes",
             "Count of memory used by norms",
-            node.indices.segments.norms_memory_in_bytes,
+            indices.segments.norms_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_stored_fields_memory_in_bytes",
             "Count of stored fields memory",
-            node.indices.segments.stored_fields_memory_in_bytes,
+            indices.segments.stored_fields_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_doc_values_memory_in_bytes",
             "Count of doc values memory",
-            node.indices.segments.doc_values_memory_in_bytes,
+            indices.segments.doc_values_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_fixed_bit_set_memory_in_bytes",
             "count of fixed bit set",
-            node.indices.segments.fixed_bit_set_memory_in_bytes,
+            indices.segments.fixed_bit_set_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_term_vectors_memory_in_bytes",
             "term vectors memory usage in bytes",
-            node.indices.segments.term_vectors_memory_in_bytes,
+            indices.segments.term_vectors_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_points_memory_in_bytes",
             "Point values memory usage in bytes",
-            node.indices.segments.points_memory_in_bytes,
+            indices.segments.points_memory_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_segments_version_map_memory_in_bytes",
             "Version map memory usage in bytes",
-            node.indices.segments.version_map_memory_in_bytes,
+            indices.segments.version_map_memory_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_flush_total",
             "Total flushes",
-            node.indices.flush.total,
+            indices.flush.total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_flush_time_seconds",
             "Cumulative flush time in seconds",
-            node.indices.flush.total_time_in_millis / 1000,
+            indices.flush.total_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_warmer_total",
             "total warmer count",
-            node.indices.warmer.total,
+            indices.warmer.total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_warmer_time_seconds_total",
             "Total warmer time in seconds",
-            node.indices.warmer.total_time_in_millis / 1000,
+            indices.warmer.total_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_indexing_index_time_seconds_total",
             "Cumulative index time in seconds",
-            node.indices.indexing.index_time_in_millis / 1000,
+            indices.indexing.index_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_indexing_index_total",
             "Total index calls",
-            node.indices.indexing.index_total,
+            indices.indexing.index_total,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_indexing_delete_time_seconds_total",
             "Total time indexing delete in seconds",
-            node.indices.indexing.delete_time_in_millis / 1000,
+            indices.indexing.delete_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_indexing_delete_total",
             "Total indexing deletes",
-            node.indices.indexing.delete_total,
+            indices.indexing.delete_total,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_indexing_is_throttled",
             "Indexing throttling",
-            node.indices.indexing.is_throttled,
+            indices.indexing.is_throttled,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_indexing_throttle_time_seconds_total",
             "Cumulative indexing throttling time",
-            node.indices.indexing.throttle_time_in_millis / 1000,
+            indices.indexing.throttle_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_merges_total",
             "Total merges",
-            node.indices.merges.total,
+            indices.merges.total,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_merges_current",
             "Current merge",
-            node.indices.merges.current,
+            indices.merges.current,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_indices_merges_current_size_in_bytes",
             "Size of a current merges in bytes",
-            node.indices.merges.current_size_in_bytes,
+            indices.merges.current_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_merges_docs_total",
             "Cumulative docs merged",
-            node.indices.merges.total_docs,
+            indices.merges.total_docs,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_merges_total_size_bytes_total",
             "Total merge size in bytes",
-            node.indices.merges.total_size_in_bytes,
+            indices.merges.total_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_merges_total_time_seconds_total",
             "Total time spent merging in seconds",
-            node.indices.merges.total_time_in_millis / 1000,
+            indices.merges.total_time_in_millis / 1000,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_indices_merges_total_throttled_time_seconds_total",
             "Total throttled time of merges in seconds",
-            node.indices.merges.total_throttled_time_in_millis / 1000,
-            tags.clone(),
+            indices.merges.total_throttled_time_in_millis / 1000,
+            tags,
         ),
+    ]
+}
+
+fn jvm_metrics(tags: Attributes, mut jvm: Jvm) -> Vec<Metric> {
+    let young = jvm.mem.pools.remove("young").unwrap_or_default();
+    let old = jvm.mem.pools.remove("old").unwrap_or_default();
+    let survivor = jvm.mem.pools.remove("survivor").unwrap_or_default();
+
+    let mut metrics = vec![
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_used_bytes",
             "JVM memory currently used by area",
-            node.jvm.mem.heap_used_in_bytes,
+            jvm.mem.heap_used_in_bytes,
             tags.with("area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_used_bytes",
             "JVM memory currently used by area",
-            node.jvm.mem.non_heap_used_in_bytes,
+            jvm.mem.non_heap_used_in_bytes,
             tags.with("area", "non-heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_max_bytes",
             "JVM memory max",
-            node.jvm.mem.heap_max_in_bytes,
+            jvm.mem.heap_max_in_bytes,
             tags.with("area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_committed_bytes",
             "JVM memory currently committed by area",
-            node.jvm.mem.heap_committed_in_bytes,
+            jvm.mem.heap_committed_in_bytes,
             tags.with("area", "heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_committed_bytes",
             "JVM memory currently committed by area",
-            node.jvm.mem.non_heap_committed_in_bytes,
+            jvm.mem.non_heap_committed_in_bytes,
             tags.with("area", "non-heap"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("young")
-                .unwrap_or_default()
-                .used_in_bytes,
+            young.used_in_bytes,
             tags.with("pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("young")
-                .unwrap_or_default()
-                .max_in_bytes,
+            young.max_in_bytes,
             tags.with("pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("young")
-                .unwrap_or_default()
-                .peak_used_in_bytes,
+            young.peak_used_in_bytes,
             tags.with("pool", "young"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("young")
-                .unwrap_or_default()
-                .peak_max_in_bytes,
+            young.peak_max_in_bytes,
             tags.with("pool", "young"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("survivor")
-                .unwrap_or_default()
-                .used_in_bytes,
+            survivor.used_in_bytes,
             tags.with("pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("survivor")
-                .unwrap_or_default()
-                .max_in_bytes,
+            survivor.max_in_bytes,
             tags.with("pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
-            node.jvm.mem.pools["survivor"].peak_used_in_bytes,
+            survivor.peak_used_in_bytes,
             tags.with("pool", "survivor"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
-            node.jvm.mem.pools["survivor"].peak_max_in_bytes,
+            survivor.peak_max_in_bytes,
             tags.with("pool", "survivor"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_memory_pool_used_bytes",
             "JVM memory currently used by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("old")
-                .unwrap_or_default()
-                .used_in_bytes,
+            old.used_in_bytes,
             tags.with("pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_max_bytes",
             "JVM memory max by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("old")
-                .unwrap_or_default()
-                .max_in_bytes,
+            old.max_in_bytes,
             tags.with("pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_used_bytes",
             "JVM memory peak used by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("old")
-                .unwrap_or_default()
-                .peak_used_in_bytes,
+            old.peak_used_in_bytes,
             tags.with("pool", "old"),
         ),
         Metric::sum_with_tags(
             "elasticsearch_jvm_memory_pool_peak_max_bytes",
             "JVM memory peak max by pool",
-            node.jvm
-                .mem
-                .pools
-                .get("old")
-                .unwrap_or_default()
-                .peak_max_in_bytes,
+            old.peak_max_in_bytes,
             tags.with("pool", "old"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_buffer_pool_used_bytes",
             "JVM buffer currently used",
-            node.jvm
-                .buffer_pools
-                .get("direct")
-                .unwrap_or_default()
-                .used_in_bytes,
+            old.used_in_bytes,
             tags.with("type", "direct"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_buffer_pool_used_bytes",
             "JVM buffer currently used",
-            node.jvm
-                .buffer_pools
-                .get("mapped")
-                .unwrap_or_default()
-                .used_in_bytes,
+            old.used_in_bytes,
             tags.with("type", "mapped"),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_jvm_uptime_seconds",
             "JVM process uptime in seconds",
-            node.jvm.uptime_in_millis / 1000,
+            jvm.uptime_in_millis / 1000,
             tags.clone(),
         ),
+    ];
+
+    // GC stats
+    for (name, collector) in jvm.gc.collectors {
+        metrics.extend(gc_metrics(tags.with("gc", name), collector));
+    }
+
+    metrics
+}
+
+fn process_metrics(tags: Attributes, process: Process) -> Vec<Metric> {
+    vec![
         Metric::gauge_with_tags(
             "elasticsearch_process_cpu_percent",
             "Percent CPU used by process",
-            node.process.cpu.percent,
+            process.cpu.percent,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_process_mem_resident_size_bytes",
             "Resident memory in use by process in bytes",
-            node.process.mem.resident_in_bytes,
+            process.mem.resident_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_process_mem_share_size_bytes",
             "Shared memory in use by process in bytes",
-            node.process.mem.share_in_bytes,
+            process.mem.share_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_process_virtual_size_bytes",
             "Total virtual memory used in bytes",
-            node.process.mem.total_virtual_in_bytes,
+            process.mem.total_virtual_in_bytes,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_process_open_files_count",
             "Open file descriptor",
-            node.process.open_file_descriptors,
+            process.open_file_descriptors,
             tags.clone(),
         ),
         Metric::gauge_with_tags(
             "elasticsearch_process_max_files_descriptors",
             "Max file descriptors",
-            node.process.max_file_descriptors,
+            process.max_file_descriptors,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_process_cpu_seconds_total",
             "Process CPU time in seconds",
-            node.process.cpu.total_in_millis / 1000,
-            tags.clone(),
+            process.cpu.total_in_millis / 1000,
+            tags,
         ),
+    ]
+}
+
+fn transport_metrics(tags: Attributes, transport: Transport) -> Vec<Metric> {
+    vec![
         Metric::sum_with_tags(
             "elasticsearch_transport_rx_packets_total",
             "Count of packets received",
-            node.transport.rx_count,
+            transport.rx_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_transport_rx_size_bytes_total",
             "Total number of bytes received",
-            node.transport.rx_size_in_bytes,
+            transport.rx_size_in_bytes,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_transport_tx_packets_total",
             "Count of packets sent",
-            node.transport.tx_count,
+            transport.tx_count,
             tags.clone(),
         ),
         Metric::sum_with_tags(
             "elasticsearch_transport_tx_size_bytes_total",
             "Total number of bytes sent",
-            node.transport.tx_size_in_bytes,
-            tags.clone(),
+            transport.tx_size_in_bytes,
+            tags,
         ),
     ]
 }
 
-fn gc_metrics(tags: Attributes, stats: &JvmGcCollector) -> Vec<Metric> {
+fn gc_metrics(tags: Attributes, stats: JvmGcCollector) -> Vec<Metric> {
     vec![
         Metric::sum_with_tags(
             "elasticsearch_jvm_gc_collection_seconds_count",
@@ -1251,8 +1286,7 @@ fn thread_pool_metrics(tags: Attributes, stats: ThreadPool) -> Vec<Metric> {
     ]
 }
 
-fn filesystem_data_metrics(tags: Attributes, stats: FsData) -> Vec<Metric> {
-    let mut tags = tags.clone();
+fn filesystem_data_metrics(mut tags: Attributes, stats: FsData) -> Vec<Metric> {
     tags.insert("mount", stats.mount);
     tags.insert("path", stats.path);
 
@@ -1278,8 +1312,7 @@ fn filesystem_data_metrics(tags: Attributes, stats: FsData) -> Vec<Metric> {
     ]
 }
 
-fn filesystem_io_metrics(tags: Attributes, stats: FsIoStatsDevice) -> Vec<Metric> {
-    let mut tags = tags.clone();
+fn filesystem_io_metrics(mut tags: Attributes, stats: FsIoStatsDevice) -> Vec<Metric> {
     tags.insert("device", stats.device_name);
 
     vec![
@@ -1314,4 +1347,22 @@ fn filesystem_io_metrics(tags: Attributes, stats: FsIoStatsDevice) -> Vec<Metric
             tags,
         ),
     ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use bytes::Buf;
+
+    #[test]
+    fn decode() {
+        let data = std::fs::read("tests/fixtures/elasticsearch/node_stats.json").unwrap();
+        let xd = &mut serde_json::Deserializer::from_reader(data.reader());
+        let result: Result<NodeStatsResp, _> = serde_path_to_error::deserialize(xd);
+        if let Err(err) = result {
+            let inner = err.inner();
+            let path = err.path();
+            panic!("{} {:?}", path, inner)
+        }
+    }
 }

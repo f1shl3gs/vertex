@@ -1,0 +1,3 @@
+sources:
+  es:
+    type: elasticsearch
