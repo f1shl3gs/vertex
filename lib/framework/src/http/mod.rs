@@ -265,6 +265,12 @@ pub enum Auth {
     Bearer { token: String },
 }
 
+impl Auth {
+    pub fn basic(user: String, password: String) -> Self {
+        Self::Basic { user, password }
+    }
+}
+
 impl GenerateConfig for Auth {
     fn generate_config() -> String {
         r#"

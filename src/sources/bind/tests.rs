@@ -4,29 +4,10 @@ use std::time::Duration;
 use crate::sources::bind::{client, statistics_to_metrics};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use http::{Method, Request, Response, StatusCode};
+use http::{Method, Request, Response};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
-use testify::pick_unused_local_port;
-
-static NOTFOUND: &[u8] = b"Not Found";
-
-/// HTTP status code 404
-fn not_found() -> Response<Body> {
-    Response::builder()
-        .status(StatusCode::NOT_FOUND)
-        .body(NOTFOUND.into())
-        .unwrap()
-}
-
-async fn simple_file_send(filename: &str) -> hyper::Result<Response<Body>> {
-    if let Ok(contents) = tokio::fs::read(filename).await {
-        let body = contents.into();
-        return Ok(Response::new(body));
-    }
-
-    Ok(not_found())
-}
+use testify::{http::file_send, http::not_found, pick_unused_local_port};
 
 async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
     info!(
@@ -47,8 +28,7 @@ async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
         "/xml/v3/zones",
     ] {
         if available == path {
-            return simple_file_send(available.replace("/xml", "tests/fixtures/bind").as_str())
-                .await;
+            return file_send(available.replace("/xml", "tests/fixtures/bind").as_str()).await;
         }
     }
 
@@ -69,7 +49,7 @@ async fn v2_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
     if req.uri().path() != "/" {
         Ok(not_found())
     } else {
-        simple_file_send("tests/fixtures/bind/v2.xml").await
+        file_send("tests/fixtures/bind/v2.xml").await
     }
 }
 

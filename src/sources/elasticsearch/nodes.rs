@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::collections::BTreeMap;
 use std::time::Instant;
 
@@ -355,7 +357,7 @@ struct ThreadPool {
 
 #[derive(Deserialize)]
 struct HttpClient {
-    id: String,
+    id: i64,
 }
 
 #[derive(Deserialize)]
@@ -375,6 +377,7 @@ struct NodeStats {
     #[serde(default)]
     hostname: String,
     roles: Vec<String>,
+    #[serde(default)]
     attributes: BTreeMap<String, String>,
     indices: Indices,
     os: Os,
@@ -396,8 +399,8 @@ fn get_roles(node: &NodeStats) -> Vec<String> {
     // 1.7 or 2.x node.
     if !node.roles.is_empty() {
         for role in node.roles.iter() {
-            if roles.contains(role) {
-                roles.push(role.clone());
+            if role == "master" || role == "data" || role == "ingest" || role == "client" {
+                roles.push(role.to_string());
             }
         }
     } else {
@@ -434,7 +437,91 @@ impl Elasticsearch {
         let elapsed = start.elapsed().as_secs_f64();
         let up = result.is_ok();
 
-        let mut metrics = vec![
+        let mut metrics = match result {
+            Ok(stats) => {
+                let mut metrics = vec![];
+
+                for (_name, node) in stats.nodes {
+                    let roles = get_roles(&node);
+
+                    for role in ["master", "data", "client", "ingest"] {
+                        if roles.iter().any(|s| s == role) {
+                            metrics.push(Metric::gauge_with_tags(
+                                "elasticsearch_nodes_roles",
+                                "Node roles",
+                                1.0,
+                                tags!(
+                                    "cluster" => stats.cluster_name.clone(),
+                                    "host" => node.host.clone(),
+                                    "name" => node.name.clone()
+                                ),
+                            ))
+                        }
+                    }
+
+                    let es_master_node = roles.iter().any(|s| s == "master").to_string();
+                    let es_data_node = roles.iter().any(|s| s == "data").to_string();
+                    let es_ingest_node = roles.iter().any(|s| s == "ingest").to_string();
+                    let es_client_node = roles.iter().any(|s| s == "client").to_string();
+
+                    let tags = tags!(
+                        "cluster" => stats.cluster_name.clone(),
+                        "host" => node.host,
+                        "name" => node.name,
+                        "es_master_node" => es_master_node,
+                        "es_data_node" => es_data_node,
+                        "es_ingest_node" => es_ingest_node,
+                        "es_client_node" => es_client_node,
+                    );
+                    // OS stats
+                    metrics.extend(os_metrics(tags.clone(), node.os));
+
+                    // Jvm stats
+                    metrics.extend(jvm_metrics(tags.clone(), node.jvm));
+
+                    // Process stats
+                    metrics.extend(process_metrics(tags.clone(), node.process));
+
+                    // transport stats
+                    metrics.extend(transport_metrics(tags.clone(), node.transport));
+
+                    // Indices
+                    metrics.extend(indices_metrics(tags.clone(), node.indices));
+
+                    // Breaker stats
+                    for (breaker, stats) in node.breakers {
+                        metrics.extend(breaker_metrics(
+                            tags.with("breaker", breaker.clone()),
+                            stats,
+                        ));
+                    }
+
+                    // Thread pool stats
+                    for (name, pool) in node.thread_pool {
+                        metrics.extend(thread_pool_metrics(tags.with("pool", name.clone()), pool));
+                    }
+
+                    // Filesystem data stats
+                    for fs_stats in node.fs.data {
+                        metrics.extend(filesystem_data_metrics(tags.clone(), fs_stats));
+                    }
+
+                    // Filesystem IO device stats
+                    for io_stats in node.fs.io_stats.devices {
+                        metrics.extend(filesystem_io_metrics(tags.clone(), io_stats))
+                    }
+                }
+
+                metrics
+            }
+            Err(err) => {
+                warn!(message = "Fetch node stats failed", ?err);
+
+                vec![]
+            }
+        };
+
+        metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
                 "elasticsearch_node_stats_up",
                 "Was the last scrape of the Elasticsearch nodes endpoint successful",
@@ -451,83 +538,7 @@ impl Elasticsearch {
                     "node" => node.to_string(),
                 ),
             ),
-        ];
-
-        if !up {
-            return metrics;
-        }
-
-        let stats = result.unwrap();
-        for (_name, node) in stats.nodes {
-            let roles = get_roles(&node);
-
-            for role in ["master", "data", "client", "ingest"] {
-                if roles.iter().any(|s| s == role) {
-                    metrics.push(Metric::gauge_with_tags(
-                        "elasticsearch_nodes_roles",
-                        "Node roles",
-                        1.0,
-                        tags!(
-                            "cluster" => stats.cluster_name.clone(),
-                            "host" => node.host.clone(),
-                            "name" => node.name.clone()
-                        ),
-                    ))
-                }
-            }
-
-            let es_master_node = roles.iter().any(|s| s == "master").to_string();
-            let es_data_node = roles.iter().any(|s| s == "data").to_string();
-            let es_ingest_node = roles.iter().any(|s| s == "ingest").to_string();
-            let es_client_node = roles.iter().any(|s| s == "client").to_string();
-
-            let tags = tags!(
-                "cluster" => stats.cluster_name.clone(),
-                "host" => node.host,
-                "name" => node.name,
-                "es_master_node" => es_master_node,
-                "es_data_node" => es_data_node,
-                "es_ingest_node" => es_ingest_node,
-                "es_client_node" => es_client_node,
-            );
-            // OS stats
-            metrics.extend(os_metrics(tags.clone(), node.os));
-
-            // Jvm stats
-            metrics.extend(jvm_metrics(tags.clone(), node.jvm));
-
-            // Process stats
-            metrics.extend(process_metrics(tags.clone(), node.process));
-
-            // transport stats
-            metrics.extend(transport_metrics(tags.clone(), node.transport));
-
-            // Indices
-            metrics.extend(indices_metrics(tags.clone(), node.indices));
-
-            // Breaker stats
-            for (breaker, stats) in node.breakers {
-                metrics.extend(breaker_metrics(
-                    tags.with("breaker", breaker.clone()),
-                    stats,
-                ));
-            }
-
-            // Thread pool stats
-            for (name, pool) in node.thread_pool {
-                metrics.extend(thread_pool_metrics(tags.with("pool", name.clone()), pool));
-            }
-
-            // Filesystem data stats
-            for fs_stats in node.fs.data {
-                metrics.extend(filesystem_data_metrics(tags.clone(), fs_stats));
-            }
-
-            // Filesystem IO device stats
-            for io_stats in node.fs.io_stats.devices {
-                metrics.extend(filesystem_io_metrics(tags.clone(), io_stats))
-            }
-        }
+        ]);
 
         metrics
     }
@@ -1352,11 +1363,119 @@ fn filesystem_io_metrics(mut tags: Attributes, stats: FsIoStatsDevice) -> Vec<Me
 #[cfg(test)]
 mod tests {
     use super::*;
-    use bytes::Buf;
+    use crate::testing::trace_init;
+    use framework::config::ProxyConfig;
+    use framework::http::Auth;
+    use http::{Method, Request, Response};
+    use hyper::service::{make_service_fn, service_fn};
+    use hyper::Body;
+    use std::sync::Arc;
+    use std::time::Duration;
+    use testify::http::{file_send, not_found, unauthorized};
+    use testify::pick_unused_local_port;
+
+    struct Context {
+        version: &'static str,
+        auth: Option<(&'static str, &'static str)>,
+    }
+
+    async fn handle(req: Request<Body>, cx: Arc<Context>) -> hyper::Result<Response<Body>> {
+        if req.method() != Method::GET {
+            return Ok(not_found());
+        }
+
+        if let Some((username, password)) = cx.auth {
+            let av = match req.headers().get("Authorization") {
+                Some(value) => value,
+                None => return Ok(unauthorized()),
+            };
+
+            let n = av
+                .to_str()
+                .unwrap()
+                .split_ascii_whitespace()
+                .last()
+                .unwrap();
+            let d = base64::decode(n).unwrap();
+            let decoded = std::str::from_utf8(&d).unwrap();
+            let (k, v) = decoded.split_once(':').unwrap();
+            if k != username || v != password {
+                return Ok(unauthorized());
+            }
+        }
+
+        file_send(format!(
+            "tests/fixtures/elasticsearch/nodestats/{}.json",
+            cx.version
+        ))
+        .await
+    }
+
+    async fn start_server_and_fetch(cx: Arc<Context>) {
+        let version = cx.version;
+        let auth = cx
+            .auth
+            .map(|(user, password)| Auth::basic(user.into(), password.into()));
+        let port = pick_unused_local_port();
+        let endpoint = format!("127.0.0.1:{}", port);
+        let service = make_service_fn(move |_conn| {
+            let cx = Arc::clone(&cx);
+
+            async move {
+                let cx = Arc::clone(&cx);
+
+                Ok::<_, hyper::Error>(service_fn(move |req| {
+                    let cx = Arc::clone(&cx);
+
+                    async move { handle(req, cx).await }
+                }))
+            }
+        });
+        let addr = endpoint.parse().unwrap();
+        let server = hyper::Server::bind(&addr).serve(service);
+
+        tokio::spawn(async move {
+            if let Err(err) = server.await {
+                error!(message = "server error", ?err);
+            }
+        });
+
+        // wait for http server start
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        let http_client = framework::http::HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let es = Elasticsearch {
+            endpoint: format!("http://{}", endpoint),
+            http_client,
+            auth,
+            slm: false,
+            snapshot: false,
+        };
+
+        let metrics = es.node_stats("_all").await;
+        assert!(metrics.len() > 2, "version: {}", version);
+    }
+
+    #[tokio::test]
+    async fn node_stats() {
+        trace_init();
+
+        for version in [
+            "5.4.2", "5.6.16", "6.5.4", "6.8.8", "7.3.0", "7.6.2", "7.13.1",
+        ] {
+            for auth in [None, Some(("elastic", "changeme"))] {
+                let cx = Context { version, auth };
+
+                start_server_and_fetch(Arc::new(cx)).await
+            }
+        }
+    }
 
     #[test]
-    fn decode() {
-        let data = std::fs::read("tests/fixtures/elasticsearch/node_stats.json").unwrap();
+    fn decode_5() {
+        use bytes::Buf;
+
+        let data = std::fs::read("tests/fixtures/elasticsearch/nodestats/5.4.2.json").unwrap();
         let xd = &mut serde_json::Deserializer::from_reader(data.reader());
         let result: Result<NodeStatsResp, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {

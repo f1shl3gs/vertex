@@ -1,4 +1,5 @@
 pub mod event;
+pub mod http;
 mod portpicker;
 pub mod random;
 mod send_lines;

@@ -3,6 +3,7 @@ use serde::Deserialize;
 
 use super::Elasticsearch;
 
+/// `Version` is the version info retrievable from the / endpoint
 #[allow(dead_code)]
 #[derive(Deserialize)]
 struct Version {

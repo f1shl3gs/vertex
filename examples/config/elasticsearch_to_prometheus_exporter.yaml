@@ -1,3 +1,10 @@
 sources:
   es:
     type: elasticsearch
+    endpoint: http://127.0.0.1:9200
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    inputs:
+      - es
