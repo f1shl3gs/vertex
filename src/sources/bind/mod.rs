@@ -1,3 +1,7 @@
+mod client;
+#[cfg(test)]
+mod tests;
+
 use std::num::ParseFloatError;
 use std::time::Instant;
 
@@ -11,10 +15,6 @@ use framework::config::{
 use framework::http::HttpClient;
 use framework::Source;
 use serde::{Deserialize, Serialize};
-
-mod client;
-#[cfg(test)]
-mod tests;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]

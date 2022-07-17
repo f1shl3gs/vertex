@@ -130,6 +130,7 @@ sources = [
     "sources-bind",
     "sources-consul",
     "sources-demo_logs",
+    "sources-elasticsearch",
     "sources-exec",
     "sources-haproxy",
     "sources-internal_logs",
@@ -163,6 +164,7 @@ sources-bind = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
+sources-elasticsearch = []
 sources-haproxy = []
 sources-internal_logs = []
 sources-internal_metrics = []
@@ -312,6 +314,7 @@ prost-build = { version = "0.10.4" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
+base64 = { version = "0.13.0" }
 criterion = { version = "0.3.6", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
