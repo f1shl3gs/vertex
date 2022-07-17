@@ -6,7 +6,7 @@ rustup show # causes installation of version from rust-toolchain.toml
 rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
 
 if [[ "$(cross --version | grep cross)" != "cross 0.2.2" ]]; then
-  rustup run stable cargo install cross --version 0.2.2
+  rustup run stable cargo install cross --version 0.2.2 --force
 fi
 
 # Make sure our release build settings are present.
