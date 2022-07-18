@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658116556107,
+  "lastUpdate": 1658151956034,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19527,6 +19527,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 57.136,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d895d9c73d198de903c984463b163ea1aa2351b",
+          "message": "Merge pull request #438 from f1shl3gs/dependabot/cargo/nix-0.24.2\n\nchore(deps): bump nix from 0.24.1 to 0.24.2",
+          "timestamp": "2022-07-18T21:41:09+08:00",
+          "tree_id": "0e563d5b13eaddf54f7dc8d2d127db028fb649da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d895d9c73d198de903c984463b163ea1aa2351b"
+        },
+        "date": 1658151951400,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.811,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 62.97,
             "unit": "ns/op"
           }
         ]
