@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658151970610,
+  "lastUpdate": 1658152021046,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19595,6 +19595,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 67.806,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8b7e2eb3579250439ee46d9bb52cc45cf0c15181",
+          "message": "Merge pull request #439 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.8\n\nchore(deps): bump dyn-clone from 1.0.6 to 1.0.8",
+          "timestamp": "2022-07-18T21:40:52+08:00",
+          "tree_id": "4afb52df05b964bb96ee87a34e12bac9775fc9d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8b7e2eb3579250439ee46d9bb52cc45cf0c15181"
+        },
+        "date": 1658152015259,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.645,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.58,
             "unit": "ns/op"
           }
         ]
