@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658069089667,
+  "lastUpdate": 1658113509759,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19493,6 +19493,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 62.728,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "87df78e59d4e0190cc729e4f06faff4f0da6f019",
+          "message": "Merge pull request #437 from f1shl3gs/update_workflow_cache_action\n\nupdate cache action to v3",
+          "timestamp": "2022-07-18T10:58:43+08:00",
+          "tree_id": "5662c5a2d8c54345ccdc03560f747eb9ac186390",
+          "url": "https://github.com/f1shl3gs/vertex/commit/87df78e59d4e0190cc729e4f06faff4f0da6f019"
+        },
+        "date": 1658113506161,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 18.615,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 57.136,
             "unit": "ns/op"
           }
         ]
