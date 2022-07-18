@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658173465815,
+  "lastUpdate": 1658174751090,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58575,6 +58575,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1775,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b34afba8ff7d157e8a55e3d199d6b0c067b79019",
+          "message": "Merge pull request #441 from f1shl3gs/souces/elasticsearch_default_config_option\n\nSouces/elasticsearch default config option",
+          "timestamp": "2022-07-19T03:36:39+08:00",
+          "tree_id": "cdb54793aa89030a3df28b8e8520ec942ba67ce7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b34afba8ff7d157e8a55e3d199d6b0c067b79019"
+        },
+        "date": 1658174747772,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1425,
             "unit": "s"
           }
         ]
