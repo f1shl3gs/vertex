@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658114790426,
+  "lastUpdate": 1658116556107,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58323,6 +58323,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1451,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef5a8c791b7805e423b02fab323a66d21c9138d1",
+          "message": "add docker build context",
+          "timestamp": "2022-07-18T11:28:34+08:00",
+          "tree_id": "6914c815d54dd44cd509bcd2841280fdee08fd47",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef5a8c791b7805e423b02fab323a66d21c9138d1"
+        },
+        "date": 1658116552268,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1417,
             "unit": "s"
           }
         ]
