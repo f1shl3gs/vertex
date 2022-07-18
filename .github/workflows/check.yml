@@ -42,14 +42,16 @@ jobs:
       - cancel-previous
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v2.1.7
-        name: Cache Cargo registry + index
+      - uses: actions/cache@v3
         with:
           path: |
-            ~/.cargo/registry
-            ~/.cargo/git
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: ${{ runner.os }}-cargo-
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - name: Check style
         run:  make check_clippy
       - name: Check shell
