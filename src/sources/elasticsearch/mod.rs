@@ -21,7 +21,9 @@ struct Config {
     endpoint: String,
     #[serde(default)]
     auth: Option<Auth>,
+    #[serde(default)]
     slm: bool,
+    #[serde(default)]
     snapshots: bool,
     tls: Option<TlsConfig>,
 }
