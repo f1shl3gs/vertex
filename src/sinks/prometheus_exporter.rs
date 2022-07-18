@@ -278,7 +278,7 @@ fn handle(
 ) -> Response<Body> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/metrics") => {
-            let mut buf = BytesMut::with_capacity(4 * 1024);
+            let mut buf = BytesMut::with_capacity(8 * 1024);
 
             metrics
                 .lock()
@@ -306,8 +306,12 @@ fn handle(
                         }
 
                         if !header {
-                            writeln!(&mut buf, r#"# HELP {} {}"#, name, description).unwrap();
-                            writeln!(&mut buf, r#"# TYPE {} {}"#, name, kind).unwrap();
+                            writeln!(
+                                &mut buf,
+                                r#"# HELP {} {}\n# TYPE {} {}"#,
+                                name, description, name, kind
+                            )
+                            .unwrap();
                             header = true;
                         }
 
