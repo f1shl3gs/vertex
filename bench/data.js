@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658335778884,
+  "lastUpdate": 1658335951443,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58701,6 +58701,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1445,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7bb3279ff00ccec794ef106f97d2731f30189b8b",
+          "message": "Merge pull request #442 from f1shl3gs/ci/test_cache\n\nCi/test cache",
+          "timestamp": "2022-07-21T00:22:32+08:00",
+          "tree_id": "9de95b085f96df7648aefcfa5c95f065f93f9d5b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7bb3279ff00ccec794ef106f97d2731f30189b8b"
+        },
+        "date": 1658335945944,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1579,
             "unit": "s"
           }
         ]
