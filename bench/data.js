@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658334348188,
+  "lastUpdate": 1658334444414,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19697,6 +19697,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 62.823,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0cad1fb88ea5372f042e0e5fd145e77d0c14f6f",
+          "message": "Merge pull request #444 from f1shl3gs/dependabot/cargo/lru-0.7.8\n\nchore(deps): bump lru from 0.7.7 to 0.7.8",
+          "timestamp": "2022-07-21T00:21:57+08:00",
+          "tree_id": "a625a183c8f05f1a3be221a2cfdbb97220120e35",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0cad1fb88ea5372f042e0e5fd145e77d0c14f6f"
+        },
+        "date": 1658334439963,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.546,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 70.797,
             "unit": "ns/op"
           }
         ]
