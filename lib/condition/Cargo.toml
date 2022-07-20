@@ -1,0 +1,11 @@
+[package]
+name = "condition"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+event = { path = "../event" }
+regex = { version = "1.5.6" }
+serde = { version = "1.0.137" }
+thiserror = { version = "1.0.31" }

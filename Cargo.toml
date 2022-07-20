@@ -28,6 +28,7 @@ debug = true
 members = [
     "lib/buffers",
     "lib/codecs",
+    "lib/condition",
     "lib/event",
     "lib/framework",
     "lib/multiline",
@@ -334,6 +335,7 @@ tower-test = { version = "0.4.0" }
 # workspaces
 buffers = { path = "lib/buffers" }
 codecs = { path = "lib/codecs" }
+condition = { path = "lib/condition", optional = true }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }

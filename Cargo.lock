@@ -586,6 +586,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "condition"
+version = "0.1.0"
+dependencies = [
+ "event",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
 name = "console-api"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4943,6 +4953,7 @@ dependencies = [
  "chrono-tz",
  "codecs",
  "colored",
+ "condition",
  "criterion",
  "dyn-clone",
  "encoding_rs",
