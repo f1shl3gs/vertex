@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658420428554,
+  "lastUpdate": 1658421660154,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58919,6 +58919,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1875,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "268698eec2910a2f09e67c6291f91e450412515f",
+          "message": "Merge pull request #449 from f1shl3gs/dependabot/cargo/tracing-test-0.2.3\n\nchore(deps): bump tracing-test from 0.2.2 to 0.2.3",
+          "timestamp": "2022-07-22T00:12:16+08:00",
+          "tree_id": "c5bdecf1705a3e8e34375e0fbad456399628f734",
+          "url": "https://github.com/f1shl3gs/vertex/commit/268698eec2910a2f09e67c6291f91e450412515f"
+        },
+        "date": 1658421656359,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1527,
             "unit": "s"
           }
         ]
