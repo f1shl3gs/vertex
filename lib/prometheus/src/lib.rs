@@ -1,4 +1,5 @@
-mod line;
+mod error;
+mod text;
 
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
@@ -6,8 +7,8 @@ use std::convert::TryFrom;
 use indexmap::IndexMap;
 
 // Re-export
-use crate::line::{Line, Metric, MetricKind};
-pub use line::ErrorKind;
+pub use error::Error;
+pub use text::parse_text;
 
 pub const METRIC_NAME_LABEL: &str = "__name__";
 
@@ -32,18 +33,24 @@ pub mod proto {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum ParseError {
-    WithLine { line: String, kind: ErrorKind },
-    ExpectedLeTag,
-    ExpectedQuantileTag,
-    ParseLabelValue { kind: ErrorKind },
-    ValueOutOfRange { value: f64 },
-    MultipleMetricKinds { name: String },
-    RequestNoNameLabel,
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MetricKind {
+    Counter,
+    Gauge,
+    Histogram,
+    Summary,
+    Untyped,
 }
 
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
+pub struct Metric {
+    pub name: String,
+    pub labels: BTreeMap<String, String>,
+    pub value: f64,
+    pub timestamp: Option<i64>,
+}
+
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct GroupKey {
     pub timestamp: Option<i64>,
     pub labels: BTreeMap<String, String>,
@@ -78,6 +85,12 @@ pub struct HistogramMetric {
 #[derive(Debug, Default, PartialEq)]
 pub struct SimpleMetric {
     pub value: f64,
+}
+
+impl From<f64> for SimpleMetric {
+    fn from(value: f64) -> Self {
+        Self { value }
+    }
 }
 
 pub type MetricMap<T> = IndexMap<GroupKey, T>;
@@ -118,14 +131,20 @@ impl GroupKind {
         }
     }
 
+    fn metric_kind(&self) -> MetricKind {
+        match self {
+            Self::Counter { .. } => MetricKind::Counter,
+            Self::Gauge { .. } => MetricKind::Gauge,
+            Self::Histogram { .. } => MetricKind::Histogram,
+            Self::Summary { .. } => MetricKind::Summary,
+            Self::Untyped { .. } => MetricKind::Untyped,
+        }
+    }
+
     /// Err(_) if there are irrecoverable error.
     /// Ok(Some(metric)) if this metric belongs to another group.
     /// Ok(None) pushed successfully.
-    fn try_push(
-        &mut self,
-        prefix_len: usize,
-        metric: Metric,
-    ) -> Result<Option<Metric>, ParseError> {
+    fn try_push(&mut self, prefix_len: usize, metric: Metric) -> Result<Option<Metric>, Error> {
         let suffix = &metric.name[prefix_len..];
         let mut key = GroupKey {
             timestamp: metric.timestamp,
@@ -151,11 +170,13 @@ impl GroupKind {
 
             Self::Histogram(ref mut metrics) => match suffix {
                 "_bucket" => {
-                    let bucket = key.labels.remove("le").ok_or(ParseError::ExpectedLeTag)?;
-                    let (_, bucket) = Metric::parse_value(&bucket).map_err(|err| {
-                        ParseError::ParseLabelValue {
-                            kind: ErrorKind::from(err),
-                        }
+                    let bucket = key
+                        .labels
+                        .remove("le")
+                        .ok_or_else(|| Error::MissingBucket(metric.name.clone()))?;
+                    let bucket = bucket.parse::<f64>().map_err(|err| Error::InvalidBucket {
+                        line: metric.name,
+                        err,
                     })?;
                     let count = metric.value as u64;
                     matching_group(metrics, key)
@@ -187,10 +208,16 @@ impl GroupKind {
                     let quantile = key
                         .labels
                         .remove("quantile")
-                        .ok_or(ParseError::ExpectedQuantileTag)?;
+                        .ok_or_else(|| Error::MissingQuantile(metric.name.clone()))?;
                     let value = metric.value;
-                    let (_, quantile) = line::Metric::parse_value(&quantile)
-                        .map_err(|err| ParseError::ParseLabelValue { kind: err.into() })?;
+                    let quantile =
+                        quantile
+                            .parse::<f64>()
+                            .map_err(|err| Error::InvalidQuantile {
+                                line: metric.name,
+                                err,
+                            })?;
+
                     matching_group(metrics, key)
                         .quantiles
                         .push(SummaryQuantile { quantile, value })
@@ -216,91 +243,46 @@ impl GroupKind {
 
         Ok(None)
     }
+
+    fn push(&mut self, gk: GroupKey, value: f64) {
+        match self {
+            GroupKind::Gauge(m) | GroupKind::Counter(m) | GroupKind::Untyped(m) => {
+                m.insert(gk, value.into());
+            }
+            _ => {}
+        };
+    }
+
+    fn push_histogram(&mut self, key: GroupKey, value: HistogramMetric) {
+        if let GroupKind::Histogram(m) = self {
+            m.insert(key, value);
+        }
+    }
+
+    fn push_summary(&mut self, key: GroupKey, value: SummaryMetric) {
+        if let GroupKind::Summary(m) = self {
+            m.insert(key, value);
+        }
+    }
 }
 
 fn matching_group<T: Default>(values: &mut MetricMap<T>, group: GroupKey) -> &mut T {
     values.entry(group).or_insert_with(T::default)
 }
 
-fn try_f64_to_u32(f: f64) -> Result<u32, ParseError> {
+fn try_f64_to_u32(f: f64) -> Result<u32, Error> {
     if 0.0 <= f && f <= u32::MAX as f64 {
         Ok(f as u32)
     } else {
-        Err(ParseError::ValueOutOfRange { value: f })
+        Err(Error::ValueOutOfRange { value: f })
     }
 }
 
 #[derive(Debug)]
 pub struct MetricGroup {
     pub name: String,
+    pub description: String,
     pub metrics: GroupKind,
-}
-
-impl MetricGroup {
-    fn new(name: String, kind: MetricKind) -> Self {
-        let metrics = GroupKind::new(kind);
-        MetricGroup { name, metrics }
-    }
-
-    // For cases where a metric group was not defined with `# TYPE ...`.
-    fn new_untyped(metric: Metric) -> Self {
-        let Metric {
-            name,
-            labels,
-            value,
-            timestamp,
-        } = metric;
-
-        let key = GroupKey { timestamp, labels };
-        MetricGroup {
-            name,
-            metrics: GroupKind::new_untyped(key, value),
-        }
-    }
-
-    /// `Err(_)` if there are irrecoverable error.
-    /// `Ok(Some(metric))` if this metric belongs to another group
-    /// `Ok(None)` pushed successfully.
-    fn try_push(&mut self, metric: Metric) -> Result<Option<Metric>, ParseError> {
-        if !metric.name.starts_with(&self.name) {
-            return Ok(Some(metric));
-        }
-
-        self.metrics.try_push(self.name.len(), metric)
-    }
-}
-
-/// Parse the given text input, and group the result into higher-level
-/// metric types based on the declared types in the text.
-pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, ParseError> {
-    let mut groups = Vec::new();
-
-    for line in input.lines() {
-        let line = Line::parse(line).map_err(|kind| ParseError::WithLine {
-            line: line.to_owned(),
-            kind,
-        })?;
-        if let Some(line) = line {
-            match line {
-                Line::Header(header) => {
-                    groups.push(MetricGroup::new(header.metric_name, header.kind));
-                }
-
-                Line::Metric(metric) => {
-                    let metric = match groups.last_mut() {
-                        Some(group) => group.try_push(metric)?,
-                        None => Some(metric),
-                    };
-
-                    if let Some(metric) = metric {
-                        groups.push(MetricGroup::new_untyped(metric))
-                    }
-                }
-            }
-        }
-    }
-
-    Ok(groups)
 }
 
 #[derive(Default)]
@@ -326,11 +308,9 @@ impl MetricGroupSet {
         self.0.get_full_mut(name).unwrap()
     }
 
-    fn insert_metadata(&mut self, name: String, kind: MetricKind) -> Result<(), ParseError> {
+    fn insert_metadata(&mut self, name: String, kind: MetricKind) -> Result<(), Error> {
         match self.0.get(&name) {
-            Some(group) if !group.matches_kind(kind) => {
-                Err(ParseError::MultipleMetricKinds { name })
-            }
+            Some(group) if !group.matches_kind(kind) => Err(Error::MultipleMetricKinds { name }),
             Some(_) => Ok(()), // metadata already exists and is the right type
             None => {
                 self.0.insert(name, GroupKind::new(kind));
@@ -344,7 +324,7 @@ impl MetricGroupSet {
         name: &str,
         labels: &BTreeMap<String, String>,
         sample: proto::Sample,
-    ) -> Result<(), ParseError> {
+    ) -> Result<(), Error> {
         let (_, basename, group) = self.get_group(name);
         if let Some(metric) = group.try_push(
             basename.len(),
@@ -370,7 +350,11 @@ impl MetricGroupSet {
     fn finish(self) -> Vec<MetricGroup> {
         self.0
             .into_iter()
-            .map(|(name, metrics)| MetricGroup { name, metrics })
+            .map(|(name, metrics)| MetricGroup {
+                name,
+                description: "".into(),
+                metrics,
+            })
             .collect()
     }
 }
@@ -390,7 +374,7 @@ impl From<proto::MetricType> for MetricKind {
     }
 }
 
-pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, ParseError> {
+pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Error> {
     let mut groups = MetricGroupSet::default();
 
     for metadata in req.metadata {
@@ -410,7 +394,7 @@ pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Parse
             .collect();
         let name = match labels.remove(METRIC_NAME_LABEL) {
             Some(name) => name,
-            None => return Err(ParseError::RequestNoNameLabel),
+            None => return Err(Error::RequestNoNameLabel),
         };
 
         for sample in timeseries.samples {
@@ -424,6 +408,7 @@ pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Parse
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::Error;
 
     macro_rules! match_group {
         ($group: expr, $name: literal, $kind:ident => $inner:expr) => {{
@@ -459,47 +444,53 @@ mod tests {
 
     #[test]
     fn test_parse_text() {
+        // Untyped not supported
         let input = r##"
-        # HELP http_requests_total The total number of HTTP requests.
-            # TYPE http_requests_total counter
-            http_requests_total{method="post",code="200"} 1027 1395066363000
-            http_requests_total{method="post",code="400"}    3 1395066363000
+# HELP http_requests_total The total number of HTTP requests.
+# TYPE http_requests_total counter
+http_requests_total{method="post",code="200"} 1027 1395066363000
+http_requests_total{method="post",code="400"}    3 1395066363000
 
-            # Escaping in label values:
-            msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9
+# Escaping in label values:
+# msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9
 
-            # Minimalistic line:
-            metric_without_timestamp_and_labels 12.47
+# Minimalistic line:
+# metric_without_timestamp_and_labels 12.47
 
-            # A weird metric from before the epoch:
-            something_weird{problem="division by zero"} +Inf -3982045
+# A weird metric from before the epoch:
+# something_weird{problem="division by zero"} +Inf -3982045
 
-            # A histogram, which has a pretty complex representation in the text format:
-            # HELP http_request_duration_seconds A histogram of the request duration.
-            # TYPE http_request_duration_seconds histogram
-            http_request_duration_seconds_bucket{le="0.05"} 24054
-            http_request_duration_seconds_bucket{le="0.1"} 33444
-            http_request_duration_seconds_bucket{le="0.2"} 100392
-            http_request_duration_seconds_bucket{le="0.5"} 129389
-            http_request_duration_seconds_bucket{le="1"} 133988
-            http_request_duration_seconds_bucket{le="+Inf"} 144320
-            http_request_duration_seconds_sum 53423
-            http_request_duration_seconds_count 144320
+# A histogram, which has a pretty complex representation in the text format:
+# HELP http_request_duration_seconds A histogram of the request duration.
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.05"} 24054
+http_request_duration_seconds_bucket{le="0.1"} 33444
+http_request_duration_seconds_bucket{le="0.2"} 100392
+http_request_duration_seconds_bucket{le="0.5"} 129389
+http_request_duration_seconds_bucket{le="1"} 133988
+http_request_duration_seconds_bucket{le="+Inf"} 144320
+http_request_duration_seconds_sum 53423
+http_request_duration_seconds_count 144320
 
-            # Finally a summary, which has a complex representation, too:
-            # HELP rpc_duration_seconds A summary of the RPC duration in seconds.
-            # TYPE rpc_duration_seconds summary
-            rpc_duration_seconds{quantile="0.01"} 3102
-            rpc_duration_seconds{quantile="0.05"} 3272
-            rpc_duration_seconds{quantile="0.5"} 4773
-            rpc_duration_seconds{quantile="0.9"} 9001
-            rpc_duration_seconds{quantile="0.99"} 76656
-            rpc_duration_seconds_sum 1.7560473e+07
-            rpc_duration_seconds_count 2693
-        "##;
+# Finally a summary, which has a complex representation, too:
+# HELP rpc_duration_seconds A summary of the RPC duration in seconds.
+# TYPE rpc_duration_seconds summary
+rpc_duration_seconds{quantile="0.01"} 3102
+rpc_duration_seconds{quantile="0.05"} 3272
+rpc_duration_seconds{quantile="0.5"} 4773
+rpc_duration_seconds{quantile="0.9"} 9001
+rpc_duration_seconds{quantile="0.99"} 76656
+rpc_duration_seconds_sum 1.7560473e+07
+rpc_duration_seconds_count 2693
+"##;
 
         let output = parse_text(input).unwrap();
-        assert_eq!(output.len(), 6);
+
+        for mg in output.iter() {
+            println!("{:?}", mg);
+        }
+
+        assert_eq!(output.len(), 3);
         match_group!(output[0], "http_requests_total", Counter => |metrics: &MetricMap<SimpleMetric>| {
             assert_eq!(metrics.len(), 2);
             assert_eq!(
@@ -511,7 +502,7 @@ mod tests {
                 simple_metric!(Some(1395066363000), labels!(method => "post", code => 400), 3.0)
             );
         });
-
+/*
         match_group!(output[1], "msdos_file_access_time_seconds", Untyped => |metrics: &MetricMap<SimpleMetric>| {
             assert_eq!(metrics.len(), 1);
             assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(
@@ -533,9 +524,9 @@ mod tests {
                 simple_metric!(Some(-3982045), labels!(problem => "division by zero"), f64::INFINITY)
             );
         });
-
-        match_group!(output[4], "http_request_duration_seconds", Histogram => |metrics: &MetricMap<HistogramMetric>| {
-            assert_eq!(metrics.len(), 1);
+*/
+        match_group!(output[1], "http_request_duration_seconds", Histogram => |metrics: &MetricMap<HistogramMetric>| {
+            assert_eq!(metrics.len(), 1, "length not match");
             assert_eq!(metrics.get_index(0).unwrap(), (
                 &GroupKey {
                     timestamp: None,
@@ -556,7 +547,7 @@ mod tests {
             ));
         });
 
-        match_group!(output[5], "rpc_duration_seconds", Summary => |metrics: &MetricMap<SummaryMetric>| {
+        match_group!(output[2], "rpc_duration_seconds", Summary => |metrics: &MetricMap<SummaryMetric>| {
             assert_eq!(metrics.len(), 1);
             assert_eq!(metrics.get_index(0).unwrap(), (
                 &GroupKey {
@@ -582,23 +573,23 @@ mod tests {
     fn test_f64_to_u32() {
         let value = -1.0;
         let err = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(err, ParseError::ValueOutOfRange { value });
+        assert_eq!(err, Error::ValueOutOfRange { value });
 
         let value = u32::MAX as f64 + 1.0;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParseError::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange { value });
 
         let value = f64::NAN;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert!(matches!(error, ParseError::ValueOutOfRange { value } if value.is_nan()));
+        assert!(matches!(error, Error::ValueOutOfRange { value } if value.is_nan()));
 
         let value = f64::INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParseError::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange { value });
 
         let value = f64::NEG_INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, ParseError::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange { value });
 
         assert_eq!(try_f64_to_u32(0.0).unwrap(), 0);
         assert_eq!(try_f64_to_u32(u32::MAX as f64).unwrap(), u32::MAX);
@@ -606,65 +597,38 @@ mod tests {
 
     #[test]
     fn test_errors() {
-        let input = r#"name{registry="default" content_type="html"} 1890"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::ExpectedChar { expected: ',', .. },
-                ..
-            }
-        ));
+        let tests = [
+            (
+                r#"name{registry="default" content_type="html"} 1890"#,
+                Error::InvalidMetric(r#"name{registry="default" content_type="html"} 1890"#.into()),
+            ),
+            (
+                r#"# TYPE a counte"#,
+                Error::InvalidMetric(r#"# TYPE a counte"#.into()),
+            ),
+            (
+                r#"# TYPEabcd asdf"#,
+                Error::InvalidMetric(r#"# TYPEabcd asdf"#.into()),
+            ),
+            (
+                r#"name{registry="} 1890"#,
+                Error::InvalidMetric(r#"name{registry="} 1890"#.into()),
+            ),
+            (
+                r#"name{registry=} 1890"#,
+                Error::InvalidMetric(r#"name{registry=} 1890"#.into()),
+            ),
+            (r#"name abcd"#, Error::InvalidMetric(r#"name abcd"#.into())),
+        ];
 
-        let input = r#"# TYPE a counte"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::InvalidMetricKind { .. },
-                ..
-            }
-        ));
-
-        let input = r#"# TYPEabcd asdf"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::ExpectedSpace { .. },
-                ..
-            }
-        ));
-
-        let input = r#"name{registry="} 1890"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::ExpectedChar { expected: '"', .. },
-                ..
-            }
-        ));
-
-        let input = r#"name{registry=} 1890"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::ExpectedChar { expected: '"', .. },
-                ..
-            }
-        ));
-
-        let input = r#"name abcd"#;
-        let err = parse_text(input).unwrap_err();
-        assert!(matches!(
-            err,
-            ParseError::WithLine {
-                kind: ErrorKind::ParseFloatError { .. },
-                ..
-            }
-        ));
+        for (input, want) in tests {
+            let got = parse_text(input).unwrap_err();
+            assert_eq!(
+                got, want,
+                "input: {}, want: {:?}, got: {:?}",
+                input, want, got
+            );
+        }
     }
 
     macro_rules! write_request {
