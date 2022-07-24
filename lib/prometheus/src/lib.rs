@@ -502,29 +502,29 @@ rpc_duration_seconds_count 2693
                 simple_metric!(Some(1395066363000), labels!(method => "post", code => 400), 3.0)
             );
         });
-/*
-        match_group!(output[1], "msdos_file_access_time_seconds", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(
-                None,
-                labels!(path => "C:\\DIR\\FILE.TXT", error => "Cannot find file:\n\"FILE.TXT\""),
-                1.458255915e9
-            ));
-        });
+        /*
+                match_group!(output[1], "msdos_file_access_time_seconds", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(
+                        None,
+                        labels!(path => "C:\\DIR\\FILE.TXT", error => "Cannot find file:\n\"FILE.TXT\""),
+                        1.458255915e9
+                    ));
+                });
 
-        match_group!(output[2], "metric_without_timestamp_and_labels", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(None, labels!(), 12.47));
-        });
+                match_group!(output[2], "metric_without_timestamp_and_labels", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(metrics.get_index(0).unwrap(), simple_metric!(None, labels!(), 12.47));
+                });
 
-        match_group!(output[3], "something_weird", Untyped => |metrics: &MetricMap<SimpleMetric>| {
-            assert_eq!(metrics.len(), 1);
-            assert_eq!(
-                metrics.get_index(0).unwrap(),
-                simple_metric!(Some(-3982045), labels!(problem => "division by zero"), f64::INFINITY)
-            );
-        });
-*/
+                match_group!(output[3], "something_weird", Untyped => |metrics: &MetricMap<SimpleMetric>| {
+                    assert_eq!(metrics.len(), 1);
+                    assert_eq!(
+                        metrics.get_index(0).unwrap(),
+                        simple_metric!(Some(-3982045), labels!(problem => "division by zero"), f64::INFINITY)
+                    );
+                });
+        */
         match_group!(output[1], "http_request_duration_seconds", Histogram => |metrics: &MetricMap<HistogramMetric>| {
             assert_eq!(metrics.len(), 1, "length not match");
             assert_eq!(metrics.get_index(0).unwrap(), (
@@ -593,42 +593,6 @@ rpc_duration_seconds_count 2693
 
         assert_eq!(try_f64_to_u32(0.0).unwrap(), 0);
         assert_eq!(try_f64_to_u32(u32::MAX as f64).unwrap(), u32::MAX);
-    }
-
-    #[test]
-    fn test_errors() {
-        let tests = [
-            (
-                r#"name{registry="default" content_type="html"} 1890"#,
-                Error::InvalidMetric(r#"name{registry="default" content_type="html"} 1890"#.into()),
-            ),
-            (
-                r#"# TYPE a counte"#,
-                Error::InvalidMetric(r#"# TYPE a counte"#.into()),
-            ),
-            (
-                r#"# TYPEabcd asdf"#,
-                Error::InvalidMetric(r#"# TYPEabcd asdf"#.into()),
-            ),
-            (
-                r#"name{registry="} 1890"#,
-                Error::InvalidMetric(r#"name{registry="} 1890"#.into()),
-            ),
-            (
-                r#"name{registry=} 1890"#,
-                Error::InvalidMetric(r#"name{registry=} 1890"#.into()),
-            ),
-            (r#"name abcd"#, Error::InvalidMetric(r#"name abcd"#.into())),
-        ];
-
-        for (input, want) in tests {
-            let got = parse_text(input).unwrap_err();
-            assert_eq!(
-                got, want,
-                "input: {}, want: {:?}, got: {:?}",
-                input, want, got
-            );
-        }
     }
 
     macro_rules! write_request {

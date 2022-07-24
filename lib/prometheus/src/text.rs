@@ -74,7 +74,6 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
             metrics: group,
         })
     }
-
 }
 
 fn parse_simple_metrics<'a, I>(
@@ -115,7 +114,7 @@ where
     let mut hm = HistogramMetric::default();
     let mut current = GroupKey {
         timestamp: None,
-        labels: Default::default()
+        labels: Default::default(),
     };
 
     loop {
@@ -373,6 +372,8 @@ mod tests {
     #[test]
     fn test_parse_metric() {
         let tests = [
+            (r#"name{registry="} 1890"#, Err(Error::MissingValue)),
+            (r#"name{registry=} 1890"#, Err(Error::MissingValue)),
             (
                 r##"msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9"##,
                 Ok((
@@ -504,6 +505,28 @@ mod tests {
                     },
                     f64::INFINITY,
                 )),
+            ),
+            (
+                r#"name{registry="default" content_type="html"} 1890"#,
+                Err(Error::InvalidMetric(
+                    r#"{registry="default" content_type="html"} 1890"#.into(),
+                )),
+            ),
+            (
+                r#"# TYPE a counte"#,
+                Err(Error::InvalidMetric(r#"# TYPE a counte"#.into())),
+            ),
+            (
+                r#"# TYPEabcd asdf"#,
+                Err(Error::InvalidMetric(r#"# TYPEabcd asdf"#.into())),
+            ),
+            (r#"name{registry="} 1890"#, Err(Error::MissingValue)),
+            (r#"name{registry=} 1890"#, Err(Error::MissingValue)),
+            (
+                r#"name abcd"#,
+                Err(Error::InvalidValue {
+                    err: "abcd".parse::<f64>().unwrap_err(),
+                }),
             ),
         ];
 
