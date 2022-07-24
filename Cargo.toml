@@ -42,7 +42,9 @@ members = [
     "lib/sysinfo",
     "lib/virt",
     "lib/jaeger",
-    "lib/tracing-internal"
+    "lib/tracing-internal",
+    # tools
+    "tools/fake_node_exporter"
 ]
 
 [features]
