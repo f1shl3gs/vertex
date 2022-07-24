@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658645943442,
+  "lastUpdate": 1658647671342,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59040,6 +59040,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1885,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2488c632ddc8089847ec936e166f5e5c989a0811",
+          "message": "Merge pull request #450 from f1shl3gs/handwritten_prom_parser\n\nHandwritten prom parser",
+          "timestamp": "2022-07-24T14:53:57+08:00",
+          "tree_id": "4c1f664502d75c502b858456c84a889bb4aa357c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2488c632ddc8089847ec936e166f5e5c989a0811"
+        },
+        "date": 1658647665558,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1803,
             "unit": "s"
           }
         ]
