@@ -485,11 +485,6 @@ rpc_duration_seconds_count 2693
 "##;
 
         let output = parse_text(input).unwrap();
-
-        for mg in output.iter() {
-            println!("{:?}", mg);
-        }
-
         assert_eq!(output.len(), 3);
         match_group!(output[0], "http_requests_total", Counter => |metrics: &MetricMap<SimpleMetric>| {
             assert_eq!(metrics.len(), 2);
