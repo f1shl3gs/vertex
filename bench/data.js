@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658763236596,
+  "lastUpdate": 1658763407883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59229,6 +59229,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1835,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58b11e54ea4467ce9a8f75d0c59ba660792ad2de",
+          "message": "Merge pull request #451 from f1shl3gs/dependabot/cargo/bytecheck-0.6.9\n\nchore(deps): bump bytecheck from 0.6.8 to 0.6.9",
+          "timestamp": "2022-07-25T22:58:53+08:00",
+          "tree_id": "d73d484250980b3ade51a31d4e0d59c4bff59f8f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58b11e54ea4467ce9a8f75d0c59ba660792ad2de"
+        },
+        "date": 1658763400358,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 2000,
             "unit": "s"
           }
         ]
