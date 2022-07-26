@@ -7,7 +7,6 @@ use event::LogRecord;
 use crate::ast::field::{FieldExpr, FieldOp, OrderingOp};
 use crate::lexer::Lexer;
 use crate::Error;
-use crate::Error::UnknownOperator;
 
 #[derive(Debug, PartialEq)]
 pub enum CombiningOp {
@@ -58,7 +57,7 @@ impl PartialEq for Expression {
                     op: bo,
                     rhs: br,
                 },
-            ) => al.eq(bl) && ao.eq(bo) && ar.eq(br),
+            ) => ao.eq(bo) && al.eq(bl) && ar.eq(br),
             _ => false,
         }
     }
@@ -146,10 +145,16 @@ impl<'a> Parser<'a> {
         let lhs = self.primary()?;
 
         let op = match self.lexer.next() {
-            Some((pos, token)) => CombiningOp::from_str(token).map_err(|_| UnknownOperator {
-                pos,
-                found: token.to_string(),
-            })?,
+            Some((pos, token)) => {
+                if token == ")" {
+                    return Ok(lhs);
+                }
+
+                CombiningOp::from_str(token).map_err(|_| Error::UnknownOperator {
+                    pos,
+                    found: token.to_string(),
+                })?
+            }
             None => return Ok(lhs),
         };
 
@@ -195,21 +200,8 @@ impl<'a> Parser<'a> {
 
 #[cfg(test)]
 mod tests {
-    #![allow(clippy::print_stdout)]
-
     use super::*;
     use event::{fields, tags};
-
-    #[test]
-    fn parse_and_print() {
-        let input = ".message contains info and (.upper gt 10 or .lower lt -1)";
-
-        let lexer = Lexer::new(input);
-        let mut parser = Parser { lexer };
-
-        let node = parser.parse().unwrap();
-        println!("{:#?}", node);
-    }
 
     #[test]
     fn test_eval() {
@@ -231,13 +223,35 @@ mod tests {
             (".upper <= 8", Ok(true)),
             (".upper == 8", Ok(true)),
             (".upper > 8", Ok(false)),
+            (".message contains info && .upper >= 8", Ok(true)),
+            (".message contains info && .upper > 8", Ok(false)),
+            (".message contains info || .upper >= 8", Ok(true)),
+            (".message contains abc && .upper >= 8", Ok(false)),
+            (".message contains abc && .upper < 8", Ok(false)),
+            (
+                ".message contains info and (.upper gt 10 or .lower lt -1)",
+                Ok(false),
+            ),
+            (".message contains info && (.upper >= 8)", Ok(true)),
+            (".message contains abc && ( .upper >= 8 )", Ok(false)),
+            (
+                ".message contains abc && ( .upper >= 8 && .lower == 0 )",
+                Ok(false),
+            ),
+            (".abc contains abc", Err(Error::MissingField)),
+            (
+                ".message contains info && .abc < 8",
+                Err(Error::MissingField),
+            ),
         ];
 
         for (input, want) in tests {
             let lexer = Lexer::new(input);
             let mut parser = Parser { lexer };
 
-            let expr = parser.parse().unwrap();
+            let expr = parser
+                .parse()
+                .unwrap_or_else(|err| panic!("input: {}\nerr: {:?}", input, err));
             let got = expr.eval(&log);
 
             assert_eq!(
@@ -254,20 +268,20 @@ mod tests {
             // Ordering
             (
                 ".foo lt 10.1",
-                Expression::Field(FieldExpr {
-                    lhs: ".foo".to_string(),
+                Ok(Expression::Field(FieldExpr {
+                    lhs: "foo".to_string(),
                     op: FieldOp::Ordering {
                         op: OrderingOp::LessThan,
                         rhs: 10.1,
                     },
-                }),
+                })),
             ),
             (
                 ".foo lt 10 and .bar gt 2",
-                Expression::Binary {
+                Ok(Expression::Binary {
                     op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: ".foo".into(),
+                        lhs: "foo".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
                             rhs: 10.0,
@@ -275,21 +289,21 @@ mod tests {
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: ".bar".into(),
+                        lhs: "bar".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::GreaterThan,
                             rhs: 2.0,
                         },
                     })
                     .boxed(),
-                },
+                }),
             ),
             (
                 " .foo lt 10 or .bar eq 3",
-                Expression::Binary {
+                Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: ".foo".to_string(),
+                        lhs: "foo".to_string(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
                             rhs: 10.0,
@@ -297,47 +311,47 @@ mod tests {
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: ".bar".into(),
+                        lhs: "bar".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
                             rhs: 3.0,
                         },
                     })
                     .boxed(),
-                },
+                }),
             ),
             (
                 " .foo contains abc or .bar eq 3",
-                Expression::Binary {
+                Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: ".foo".to_string(),
+                        lhs: "foo".to_string(),
                         op: FieldOp::Contains("abc".into()),
                     })
                     .boxed(),
                     rhs: Expression::Field(FieldExpr {
-                        lhs: ".bar".into(),
+                        lhs: "bar".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
                             rhs: 3.0,
                         },
                     })
                     .boxed(),
-                },
+                }),
             ),
             (
                 ".message contains info and (.upper gt 10 or .lower lt -1)",
-                Expression::Binary {
+                Ok(Expression::Binary {
                     op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: ".message".to_string(),
+                        lhs: "message".to_string(),
                         op: FieldOp::Contains("info".into()),
                     })
                     .boxed(),
                     rhs: Expression::Binary {
                         op: CombiningOp::Or,
                         lhs: Expression::Field(FieldExpr {
-                            lhs: ".upper".into(),
+                            lhs: "upper".into(),
                             op: FieldOp::Ordering {
                                 op: OrderingOp::GreaterThan,
                                 rhs: 10.0,
@@ -345,7 +359,7 @@ mod tests {
                         })
                         .boxed(),
                         rhs: Expression::Field(FieldExpr {
-                            lhs: ".lower".into(),
+                            lhs: "lower".into(),
                             op: FieldOp::Ordering {
                                 op: OrderingOp::LessThan,
                                 rhs: -1.0,
@@ -354,7 +368,18 @@ mod tests {
                         .boxed(),
                     }
                     .boxed(),
-                },
+                }),
+            ),
+            ("abc", Err(Error::PathExpected { pos: 0 })),
+            (".abc", Err(Error::EarlyEOF)),
+            (".abc gt", Err(Error::EarlyEOF)),
+            (
+                ".abc gt 1.1a",
+                Err(Error::InvalidNumber {
+                    pos: 8,
+                    token: "1.1a".to_string(),
+                    err: "1.1a".parse::<f64>().unwrap_err(),
+                }),
             ),
         ];
 
@@ -362,7 +387,7 @@ mod tests {
             let lexer = Lexer::new(input);
             let mut p = Parser { lexer };
 
-            let got = p.parse().unwrap();
+            let got = p.parse();
             assert_eq!(
                 got, want,
                 "input: {}\nwant: {:?}\ngot:  {:?}",
