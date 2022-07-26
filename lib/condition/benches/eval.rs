@@ -16,16 +16,17 @@ fn bench_eval(c: &mut Criterion) {
         ("ordering", ".number >= 1"),
         ("contains", ".message contains info"),
         ("match", ".message match .*"),
-        ("ordering_and_contains", ".message contains info and .number >= 1")
+        (
+            "ordering_and_contains",
+            ".message contains info and .number >= 1",
+        ),
     ];
 
     for (name, expr) in expressions {
         group.bench_function(name, |b| {
             let expr = parse(expr).unwrap();
 
-            b.iter(|| {
-                expr.eval(log).expect("eval failed")
-            })
+            b.iter(|| expr.eval(log).expect("eval failed"))
         });
     }
 }

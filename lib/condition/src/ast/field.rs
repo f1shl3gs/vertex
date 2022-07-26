@@ -89,10 +89,7 @@ impl Evaluator for FieldExpr {
 
                 match value {
                     Value::Bytes(b) => {
-                        let result = b
-                            .windows(s.len())
-                            .position(|window| window == s.as_bytes())
-                            .is_some();
+                        let result = b.windows(s.len()).any(|window| window == s.as_bytes());
 
                         Ok(result)
                     }
@@ -104,7 +101,7 @@ impl Evaluator for FieldExpr {
                     .get_field(self.lhs.as_str())
                     .ok_or(Error::MissingField)?;
                 match value {
-                    Value::Bytes(b) => Ok(re.is_match(&b)),
+                    Value::Bytes(b) => Ok(re.is_match(b)),
                     _ => Ok(false),
                 }
             }

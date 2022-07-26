@@ -7,8 +7,9 @@ use event::LogRecord;
 use crate::ast::field::{FieldExpr, FieldOp, OrderingOp};
 use crate::lexer::Lexer;
 use crate::Error;
+use crate::Error::UnknownOperator;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum CombiningOp {
     And,
     Or,
@@ -26,52 +27,6 @@ impl FromStr for CombiningOp {
     }
 }
 
-#[derive(Debug, PartialEq)]
-pub enum Operator {
-    // Logical
-    And,
-    Or,
-
-    // Numbers
-    LessThan,
-    LessEqual,
-    Equal,
-    GreaterEqual,
-    GreaterThan,
-
-    // String
-    Contains,
-    Match,
-}
-
-impl TryFrom<(usize, &str)> for Operator {
-    type Error = Error;
-
-    fn try_from(value: (usize, &str)) -> Result<Self, Self::Error> {
-        let pos = value.0;
-        let value = value.1;
-
-        match value {
-            "and" => Ok(Operator::And),
-            "or" => Ok(Operator::Or),
-
-            "lt" => Ok(Operator::LessThan),
-            "le" => Ok(Operator::LessEqual),
-            "eq" => Ok(Operator::Equal),
-            "ge" => Ok(Operator::GreaterEqual),
-            "gt" => Ok(Operator::GreaterThan),
-
-            "contains" => Ok(Operator::Contains),
-            "match" => Ok(Operator::Match),
-
-            _ => Err(Error::UnknownOperator {
-                pos,
-                found: value.into(),
-            }),
-        }
-    }
-}
-
 pub trait Evaluator {
     fn eval(&self, log: &LogRecord) -> Result<bool, Error>;
 }
@@ -81,7 +36,7 @@ pub enum Expression {
     Field(FieldExpr),
 
     Binary {
-        op: Operator,
+        op: CombiningOp,
         lhs: Box<Expression>,
         rhs: Box<Expression>,
     },
@@ -118,9 +73,8 @@ impl Expression {
         match self {
             Expression::Field(f) => f.eval(log),
             Expression::Binary { op, lhs, rhs } => match op {
-                Operator::And => Ok(lhs.eval(log)? && rhs.eval(log)?),
-                Operator::Or => Ok(lhs.eval(log)? || rhs.eval(log)?),
-                _ => unreachable!(),
+                CombiningOp::And => Ok(lhs.eval(log)? && rhs.eval(log)?),
+                CombiningOp::Or => Ok(lhs.eval(log)? || rhs.eval(log)?),
             },
         }
     }
@@ -191,8 +145,11 @@ impl<'a> Parser<'a> {
     fn term(&mut self) -> Result<Expression, Error> {
         let lhs = self.primary()?;
 
-        let op: Operator = match self.lexer.next() {
-            Some(next) => next.try_into()?,
+        let op = match self.lexer.next() {
+            Some((pos, token)) => CombiningOp::from_str(token).map_err(|_| UnknownOperator {
+                pos,
+                found: token.to_string(),
+            })?,
             None => return Ok(lhs),
         };
 
@@ -208,17 +165,15 @@ impl<'a> Parser<'a> {
     fn expr(&mut self) -> Result<Expression, Error> {
         let mut node = self.term()?;
 
-        loop {
-            let (pos, token) = match self.lexer.next() {
-                Some((pos, token)) => (pos, token),
-                None => break,
-            };
-
+        while let Some((pos, token)) = self.lexer.next() {
             if token == ")" {
                 break;
             }
 
-            let op = (pos, token).try_into()?;
+            let op = CombiningOp::from_str(token).map_err(|_| Error::UnknownOperator {
+                pos,
+                found: token.to_string(),
+            })?;
 
             let rhs = self.term()?;
 
@@ -310,7 +265,7 @@ mod tests {
             (
                 ".foo lt 10 and .bar gt 2",
                 Expression::Binary {
-                    op: Operator::And,
+                    op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
                         lhs: ".foo".into(),
                         op: FieldOp::Ordering {
@@ -332,7 +287,7 @@ mod tests {
             (
                 " .foo lt 10 or .bar eq 3",
                 Expression::Binary {
-                    op: Operator::Or,
+                    op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
                         lhs: ".foo".to_string(),
                         op: FieldOp::Ordering {
@@ -354,7 +309,7 @@ mod tests {
             (
                 " .foo contains abc or .bar eq 3",
                 Expression::Binary {
-                    op: Operator::Or,
+                    op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
                         lhs: ".foo".to_string(),
                         op: FieldOp::Contains("abc".into()),
@@ -373,14 +328,14 @@ mod tests {
             (
                 ".message contains info and (.upper gt 10 or .lower lt -1)",
                 Expression::Binary {
-                    op: Operator::And,
+                    op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
                         lhs: ".message".to_string(),
                         op: FieldOp::Contains("info".into()),
                     })
                     .boxed(),
                     rhs: Expression::Binary {
-                        op: Operator::Or,
+                        op: CombiningOp::Or,
                         lhs: Expression::Field(FieldExpr {
                             lhs: ".upper".into(),
                             op: FieldOp::Ordering {
