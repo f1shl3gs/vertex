@@ -592,7 +592,6 @@ dependencies = [
  "event",
  "regex",
  "serde",
- "thiserror",
 ]
 
 [[package]]
