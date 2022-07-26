@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658842025946,
+  "lastUpdate": 1658843909939,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20061,6 +20061,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 63.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7829856a41ccf18c243ff1e068539ed67a1d6430",
+          "message": "Merge pull request #452 from f1shl3gs/dependabot/cargo/crossbeam-queue-0.3.6\n\nchore(deps): bump crossbeam-queue from 0.3.5 to 0.3.6",
+          "timestamp": "2022-07-26T21:54:17+08:00",
+          "tree_id": "f02e9970898fea9c721e91a36a103a901b9e64c4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7829856a41ccf18c243ff1e068539ed67a1d6430"
+        },
+        "date": 1658843906821,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.791,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 63.916,
             "unit": "ns/op"
           }
         ]
