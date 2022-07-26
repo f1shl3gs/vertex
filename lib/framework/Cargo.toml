@@ -32,7 +32,7 @@ async-trait = { version = "0.1.56" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.2.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
-chrono-tz = { version = "0.6.2", features = ["serde"] }
+chrono-tz = { version = "0.6.3", features = ["serde"] }
 console-subscriber = { version = "0.1.6", optional = true }
 dyn-clone = { version = "1.0.8" }
 encoding_rs = { version = "0.8.31", features = ["serde"]}
