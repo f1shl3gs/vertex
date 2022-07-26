@@ -1,12 +1,10 @@
 mod field;
 
-use std::ops::Deref;
 use std::str::FromStr;
 
-use crate::ast::field::{FieldExpr, FieldOp, OrderingOp};
-use event::attributes::Value;
 use event::LogRecord;
 
+use crate::ast::field::{FieldExpr, FieldOp, OrderingOp};
 use crate::lexer::Lexer;
 use crate::Error;
 
@@ -116,27 +114,31 @@ impl Expression {
         Box::new(self)
     }
 
-    fn eval(&self, log: &LogRecord) -> Result<bool, Error> {
+    pub fn eval(&self, log: &LogRecord) -> Result<bool, Error> {
         match self {
             Expression::Field(f) => f.eval(log),
-            Expression::Binary {op, lhs, rhs} => {
-                match op {
-                    Operator::And => Ok(lhs.eval(log)? && rhs.eval(log)?),
-                    Operator::Or => Ok(lhs.eval(log)? || rhs.eval(log)?),
-                    _ => unreachable!()
-                }
-            }
+            Expression::Binary { op, lhs, rhs } => match op {
+                Operator::And => Ok(lhs.eval(log)? && rhs.eval(log)?),
+                Operator::Or => Ok(lhs.eval(log)? || rhs.eval(log)?),
+                _ => unreachable!(),
+            },
         }
     }
 }
 
-struct Parser<'a> {
+pub struct Parser<'a> {
     lexer: Lexer<'a>,
 }
 
 impl<'a> Parser<'a> {
+    pub fn new(input: &'a str) -> Self {
+        let lexer = Lexer::new(input);
+
+        Self { lexer }
+    }
+
     fn primary(&mut self) -> Result<Expression, Error> {
-        let (_pos, token) = self.lexer.next().ok_or(Error::EarlyEOF)?;
+        let (pos, token) = self.lexer.next().ok_or(Error::EarlyEOF)?;
 
         if token.starts_with('.') {
             self.field(token)
@@ -145,12 +147,7 @@ impl<'a> Parser<'a> {
 
             Ok(node)
         } else {
-            /*if let Ok(f) = token.parse::<f64>() {
-                Ok(Expression::Float(f))
-            } else {
-                Ok(Expression::String(token.into()))
-            }*/
-            panic!()
+            Err(Error::PathExpected { pos })
         }
     }
 
@@ -176,6 +173,7 @@ impl<'a> Parser<'a> {
                 })?;
 
                 let rhs = rhs.parse().map_err(|err| Error::InvalidNumber {
+                    err,
                     pos: rhs_pos,
                     token: rhs.into(),
                 })?;
@@ -185,7 +183,7 @@ impl<'a> Parser<'a> {
         };
 
         Ok(Expression::Field(FieldExpr {
-            lhs: var.into(),
+            lhs: var.strip_prefix('.').unwrap().into(),
             op,
         }))
     }
@@ -245,7 +243,6 @@ mod tests {
     #![allow(clippy::print_stdout)]
 
     use super::*;
-    use crate::ast::Operator::Contains;
     use event::{fields, tags};
 
     #[test]
@@ -272,19 +269,27 @@ mod tests {
             ),
         );
 
-        let tests = [(".message contains info", true)];
+        let tests: Vec<(&str, Result<bool, Error>)> = vec![
+            (".message contains info", Ok(true)),
+            (".message contains abc", Ok(false)),
+            (".upper >= 8", Ok(true)),
+            (".upper <= 8", Ok(true)),
+            (".upper == 8", Ok(true)),
+            (".upper > 8", Ok(false)),
+        ];
 
         for (input, want) in tests {
             let lexer = Lexer::new(input);
             let mut parser = Parser { lexer };
 
             let expr = parser.parse().unwrap();
-            let got = expr.eval(&log).unwrap();
+            let got = expr.eval(&log);
+
             assert_eq!(
-                got, want,
+                want, got,
                 "input: {}\nwant: {:?}\ngot:  {:?}",
                 input, want, got
-            )
+            );
         }
     }
 
@@ -332,16 +337,18 @@ mod tests {
                         lhs: ".foo".to_string(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
-                            rhs: 10.0
-                        }
-                    }).boxed(),
+                            rhs: 10.0,
+                        },
+                    })
+                    .boxed(),
                     rhs: Expression::Field(FieldExpr {
                         lhs: ".bar".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
-                            rhs: 3.0
-                        }
-                    }).boxed(),
+                            rhs: 3.0,
+                        },
+                    })
+                    .boxed(),
                 },
             ),
             (
@@ -357,8 +364,8 @@ mod tests {
                         lhs: ".bar".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::Equal,
-                            rhs: 3.0
-                        }
+                            rhs: 3.0,
+                        },
                     })
                     .boxed(),
                 },
@@ -369,7 +376,7 @@ mod tests {
                     op: Operator::And,
                     lhs: Expression::Field(FieldExpr {
                         lhs: ".message".to_string(),
-                        op: FieldOp::Contains("info".into())
+                        op: FieldOp::Contains("info".into()),
                     })
                     .boxed(),
                     rhs: Expression::Binary {
@@ -378,16 +385,16 @@ mod tests {
                             lhs: ".upper".into(),
                             op: FieldOp::Ordering {
                                 op: OrderingOp::GreaterThan,
-                                rhs: 10.0
-                            }
+                                rhs: 10.0,
+                            },
                         })
                         .boxed(),
                         rhs: Expression::Field(FieldExpr {
                             lhs: ".lower".into(),
                             op: FieldOp::Ordering {
                                 op: OrderingOp::LessThan,
-                                rhs: -1.0
-                            }
+                                rhs: -1.0,
+                            },
                         })
                         .boxed(),
                     }

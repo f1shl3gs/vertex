@@ -4,7 +4,14 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[[bench]]
+name = "eval"
+harness = false
+
 [dependencies]
 event = { path = "../event" }
 regex = { version = "1.5.6" }
 serde = { version = "1.0.137" }
+
+[dev-dependencies]
+criterion = { version = "0.3.6", default-features = false }

@@ -122,6 +122,10 @@ bench-tracing-limit:
 bench-humanize:
 	cargo bench --manifest-path lib/humanize/Cargo.toml
 
+.PHONY: bench-condition
+bench-condition:
+	cargo bench --manifest-path lib/condition/Cargo.toml
+
 .PHONY: images
 images: build_x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless-libc

@@ -1,8 +1,9 @@
+use std::str::FromStr;
+
+use event::{log::Value, LogRecord};
+
 use crate::ast::Evaluator;
 use crate::Error;
-use event::{LogRecord, log::Value};
-use regex::Regex;
-use std::str::FromStr;
 
 #[derive(Debug, PartialEq)]
 pub enum OrderingOp {
@@ -63,12 +64,13 @@ impl Evaluator for FieldExpr {
     fn eval(&self, log: &LogRecord) -> Result<bool, Error> {
         match &self.op {
             FieldOp::Ordering { op, rhs } => {
-                let value = log.get_field(self.lhs.as_str())
+                let value = log
+                    .get_field(self.lhs.as_str())
                     .ok_or(Error::MissingField)?;
                 let value = match value {
                     Value::Float(f) => *f,
                     Value::Int64(i) => *i as f64,
-                    _ => return Ok(false)
+                    _ => return Ok(false),
                 };
 
                 Ok(match op {
@@ -79,31 +81,31 @@ impl Evaluator for FieldExpr {
                     OrderingOp::LessThan => value < *rhs,
                     OrderingOp::LessEqual => value <= *rhs,
                 })
-            },
+            }
             FieldOp::Contains(s) => {
-                let value = log.get_field(self.lhs.as_str())
+                let value = log
+                    .get_field(self.lhs.as_str())
                     .ok_or(Error::MissingField)?;
-
 
                 match value {
                     Value::Bytes(b) => {
-                        let result = b.windows(s.len())
+                        let result = b
+                            .windows(s.len())
                             .position(|window| window == s.as_bytes())
                             .is_some();
 
                         Ok(result)
-                    },
-                    _ => Ok(false)
+                    }
+                    _ => Ok(false),
                 }
-            },
+            }
             FieldOp::Matches(re) => {
-                let value = log.get_field(self.lhs.as_str())
+                let value = log
+                    .get_field(self.lhs.as_str())
                     .ok_or(Error::MissingField)?;
                 match value {
-                    Value::Bytes(b) => {
-                        Ok(re.is_match(&b))
-                    }
-                    _ => Ok(false)
+                    Value::Bytes(b) => Ok(re.is_match(&b)),
+                    _ => Ok(false),
                 }
             }
         }

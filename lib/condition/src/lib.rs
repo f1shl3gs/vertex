@@ -1,9 +1,13 @@
 #![allow(dead_code)]
 
+use std::num::ParseFloatError;
+
+use crate::ast::Expression;
+
 mod ast;
 mod lexer;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Error {
     Empty,
     UnexpectedToken {
@@ -35,6 +39,7 @@ pub enum Error {
     InvalidNumber {
         pos: usize,
         token: String,
+        err: ParseFloatError,
     },
     UnknownFieldOp {
         pos: usize,
@@ -48,4 +53,10 @@ pub enum Error {
 
     // Eval error
     MissingField,
+}
+
+pub fn parse(input: &str) -> Result<Expression, Error> {
+    let mut parser = ast::Parser::new(input);
+
+    parser.parse()
 }
