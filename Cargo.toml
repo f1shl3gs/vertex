@@ -202,6 +202,7 @@ transforms = [
     "transforms-cardinality",
     "transforms-coercer",
     "transforms-dedup",
+    "transforms-filter",
     "transforms-geoip",
     "transforms-enum",
     "transforms-metricalize",
@@ -215,6 +216,7 @@ transforms-cardinality = ["bloom"]
 transforms-coercer = []
 transforms-dedup = ["lru"]
 transforms-enum = []
+transforms-filter = ["condition"]
 transforms-geoip = [ "maxminddb" ]
 transforms-metricalize = ["async-stream"]
 transforms-sample = ["seahash"]
