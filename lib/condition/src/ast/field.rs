@@ -5,7 +5,7 @@ use event::{log::Value, LogRecord};
 use crate::ast::Evaluator;
 use crate::Error;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum OrderingOp {
     Equal,
     NotEqual,
@@ -31,7 +31,7 @@ impl FromStr for OrderingOp {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum FieldOp {
     Ordering { op: OrderingOp, rhs: f64 },
 
@@ -53,7 +53,7 @@ impl PartialEq for FieldOp {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct FieldExpr {
     pub lhs: String,
 
@@ -66,7 +66,7 @@ impl Evaluator for FieldExpr {
             FieldOp::Ordering { op, rhs } => {
                 let value = log
                     .get_field(self.lhs.as_str())
-                    .ok_or(Error::MissingField)?;
+                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
                 let value = match value {
                     Value::Float(f) => *f,
                     Value::Int64(i) => *i as f64,
@@ -85,7 +85,7 @@ impl Evaluator for FieldExpr {
             FieldOp::Contains(s) => {
                 let value = log
                     .get_field(self.lhs.as_str())
-                    .ok_or(Error::MissingField)?;
+                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
 
                 match value {
                     Value::Bytes(b) => {
@@ -99,7 +99,7 @@ impl Evaluator for FieldExpr {
             FieldOp::Matches(re) => {
                 let value = log
                     .get_field(self.lhs.as_str())
-                    .ok_or(Error::MissingField)?;
+                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
                 match value {
                     Value::Bytes(b) => Ok(re.is_match(b)),
                     _ => Ok(false),

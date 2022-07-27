@@ -10,11 +10,6 @@ impl<'a> Lexer<'a> {
             pos: 0,
         }
     }
-
-    #[inline]
-    pub fn pos(&self) -> usize {
-        self.pos
-    }
 }
 
 impl<'a> Iterator for Lexer<'a> {

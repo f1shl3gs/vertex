@@ -1,27 +1,27 @@
 mod field;
+mod lexer;
 
 use std::str::FromStr;
 
-use event::LogRecord;
-
-use crate::ast::field::{FieldExpr, FieldOp, OrderingOp};
-use crate::lexer::Lexer;
 use crate::Error;
+use event::LogRecord;
+use field::{FieldExpr, FieldOp, OrderingOp};
+use lexer::Lexer;
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum CombiningOp {
     And,
     Or,
 }
 
 impl FromStr for CombiningOp {
-    type Err = Error;
+    type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "and" | "&&" => Ok(CombiningOp::And),
             "or" | "||" => Ok(CombiningOp::Or),
-            _ => Err(Error::UnexpectedCombiningOp(s.into())),
+            _ => Err(()),
         }
     }
 }
@@ -30,7 +30,7 @@ pub trait Evaluator {
     fn eval(&self, log: &LogRecord) -> Result<bool, Error>;
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub enum Expression {
     Field(FieldExpr),
 
@@ -150,9 +150,9 @@ impl<'a> Parser<'a> {
                     return Ok(lhs);
                 }
 
-                CombiningOp::from_str(token).map_err(|_| Error::UnknownOperator {
+                CombiningOp::from_str(token).map_err(|_| Error::UnknownCombiningOp {
                     pos,
-                    found: token.to_string(),
+                    token: token.to_string(),
                 })?
             }
             None => return Ok(lhs),
@@ -175,9 +175,9 @@ impl<'a> Parser<'a> {
                 break;
             }
 
-            let op = CombiningOp::from_str(token).map_err(|_| Error::UnknownOperator {
+            let op = CombiningOp::from_str(token).map_err(|_| Error::UnknownCombiningOp {
                 pos,
-                found: token.to_string(),
+                token: token.to_string(),
             })?;
 
             let rhs = self.term()?;
@@ -238,10 +238,10 @@ mod tests {
                 ".message contains abc && ( .upper >= 8 && .lower == 0 )",
                 Ok(false),
             ),
-            (".abc contains abc", Err(Error::MissingField)),
+            (".abc contains abc", Err(Error::MissingField("abc".into()))),
             (
                 ".message contains info && .abc < 8",
-                Err(Error::MissingField),
+                Err(Error::MissingField("abc".into())),
             ),
         ];
 

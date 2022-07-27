@@ -11,6 +11,7 @@ mod coercer;
 mod dedup;
 #[cfg(feature = "transforms-enum")]
 mod r#enum;
+#[cfg(feature = "transforms-filter")]
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;
