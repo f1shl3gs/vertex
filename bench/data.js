@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658937471750,
+  "lastUpdate": 1658937563416,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8807,6 +8807,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 1146500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "219af4e16256f4dfe218233554da37de17cbe9e5",
+          "message": "Merge pull request #457 from f1shl3gs/support_µs_in_benchmarks\n\nsupport µs",
+          "timestamp": "2022-07-27T23:51:49+08:00",
+          "tree_id": "10d354d2fa25e1436eb060edc1e239b088c1640d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/219af4e16256f4dfe218233554da37de17cbe9e5"
+        },
+        "date": 1658937558780,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 825060,
             "unit": "ns/op"
           }
         ]
