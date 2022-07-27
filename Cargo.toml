@@ -202,10 +202,11 @@ transforms = [
     "transforms-cardinality",
     "transforms-coercer",
     "transforms-dedup",
+    "transforms-enum",
     "transforms-filter",
     "transforms-geoip",
-    "transforms-enum",
     "transforms-metricalize",
+    "transforms-route",
     "transforms-sample",
     "transforms-substr",
     "transforms-throttle"
@@ -219,6 +220,7 @@ transforms-enum = []
 transforms-filter = ["condition"]
 transforms-geoip = [ "maxminddb" ]
 transforms-metricalize = ["async-stream"]
+transforms-route = ["condition"]
 transforms-sample = ["seahash"]
 transforms-substr = []
 transforms-throttle = ["governor"]

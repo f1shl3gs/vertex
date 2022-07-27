@@ -38,8 +38,10 @@ pub use shutdown::*;
 pub use signal::*;
 pub use sink::{Healthcheck, HealthcheckError, Sink, StreamSink};
 pub use source::Source;
-pub use transform::{FunctionTransform, OutputBuffer, SyncTransform, TaskTransform, Transform};
-pub(crate) use transform::{TransformOutputs, TransformOutputsBuf};
+pub(crate) use transform::TransformOutputs;
+pub use transform::{
+    FunctionTransform, OutputBuffer, SyncTransform, TaskTransform, Transform, TransformOutputsBuf,
+};
 
 #[macro_use]
 extern crate tracing;

@@ -23,6 +23,7 @@ mod logfmt_parser;
 mod metricalize;
 mod rename_fields;
 mod rename_tags;
+#[cfg(feature = "transforms-route")]
 mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;

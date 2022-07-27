@@ -72,7 +72,8 @@ impl Filter {
         let discarded = metrics::register_counter(
             "events_discarded_total",
             "The total number of events discarded by this component",
-        ).recorder([]);
+        )
+        .recorder([]);
 
         Ok(Self { expr, discarded })
     }
