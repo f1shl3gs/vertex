@@ -62,7 +62,7 @@ struct Filter {
     expr: Expression,
 
     // metrics
-    discarded: metrics::Metric<Counter>,
+    discarded: Counter,
 }
 
 impl Filter {
@@ -72,7 +72,7 @@ impl Filter {
         let discarded = metrics::register_counter(
             "events_discarded_total",
             "The total number of events discarded by this component",
-        );
+        ).recorder([]);
 
         Ok(Self { expr, discarded })
     }
@@ -102,7 +102,7 @@ impl FunctionTransform for Filter {
                 }
             });
 
-            self.discarded.recorder([]).inc(discarded);
+            self.discarded.inc(discarded);
         }
     }
 }
