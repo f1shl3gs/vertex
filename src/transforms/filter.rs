@@ -31,7 +31,8 @@ impl GenerateConfig for Config {
 # required
 condition: ".message contains info"
 
-"##.into()
+"##
+        .into()
     }
 }
 
