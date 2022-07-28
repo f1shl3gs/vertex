@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658997920458,
+  "lastUpdate": 1658997940449,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59875,6 +59875,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1696,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d823f2e8768d0372419500d2c2ab2281f1006b72",
+          "message": "Merge pull request #458 from f1shl3gs/add_github_actions_to_dependabot\n\nadd github actions",
+          "timestamp": "2022-07-28T16:11:07+08:00",
+          "tree_id": "719704669358c649ad177f2f2486b64bae0bec8f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d823f2e8768d0372419500d2c2ab2281f1006b72"
+        },
+        "date": 1658997934569,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1835,
             "unit": "s"
           }
         ]
