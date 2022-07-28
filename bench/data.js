@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658997683572,
+  "lastUpdate": 1658997729158,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59817,6 +59817,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1432,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "497a9777af2b91b692b2dff385c3cb3820f03a25",
+          "message": "Merge pull request #460 from f1shl3gs/dependabot/github_actions/docker/login-action-2\n\nchore(ci): bump docker/login-action from 1 to 2",
+          "timestamp": "2022-07-28T16:13:17+08:00",
+          "tree_id": "ed752d5399d3f116bd59ea4f09a39cb6baeece2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/497a9777af2b91b692b2dff385c3cb3820f03a25"
+        },
+        "date": 1658997725387,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1540,
             "unit": "s"
           }
         ]
