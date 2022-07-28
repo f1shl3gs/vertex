@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658938970357,
+  "lastUpdate": 1658997683572,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59788,6 +59788,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1413,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b890f0471281f78e0097ade41138457474e17133",
+          "message": "Merge pull request #459 from f1shl3gs/dependabot/github_actions/actions/labeler-4\n\nchore(ci): bump actions/labeler from 3 to 4",
+          "timestamp": "2022-07-28T16:14:15+08:00",
+          "tree_id": "a640f3146bec2e6779b548b84ca47106c45edac4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b890f0471281f78e0097ade41138457474e17133"
+        },
+        "date": 1658997679826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1432,
             "unit": "s"
           }
         ]
