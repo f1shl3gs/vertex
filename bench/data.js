@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659028614047,
+  "lastUpdate": 1659028619661,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -60365,6 +60365,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 129.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd2d7f2015e6d01e72e6b03216c95eaf236379ca",
+          "message": "Merge pull request #464 from f1shl3gs/update_tokio_to_1.20.1\n\nUpdate tokio to 1.20.1",
+          "timestamp": "2022-07-29T01:09:09+08:00",
+          "tree_id": "4f8675aed45eab7b2fd37f8a310749f860cae224",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd2d7f2015e6d01e72e6b03216c95eaf236379ca"
+        },
+        "date": 1659028615860,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 54.307,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 57.124,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 72.791,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 129.97,
             "unit": "ns/op"
           }
         ]
