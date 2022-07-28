@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1658997940449,
+  "lastUpdate": 1658999086688,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59904,6 +59904,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1835,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "745993510b427e98efec36242aa3e8dcd6d71f96",
+          "message": "Merge pull request #463 from f1shl3gs/add_github_actions_to_dependabot\n\nCI labels",
+          "timestamp": "2022-07-28T16:32:20+08:00",
+          "tree_id": "ec3a9558021e9bede3b2d4e8f9d3b8c3916ed2dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/745993510b427e98efec36242aa3e8dcd6d71f96"
+        },
+        "date": 1658999081267,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1739,
             "unit": "s"
           }
         ]
