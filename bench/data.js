@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659003577544,
+  "lastUpdate": 1659003590804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -39237,6 +39237,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 327120,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "80d48417ef8886cb54f987e31b3a049b7d2bb9f0",
+          "message": "Merge pull request #461 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.10.0\n\nchore(ci): bump styfle/cancel-workflow-action from 0.9.1 to 0.10.0",
+          "timestamp": "2022-07-28T18:13:26+08:00",
+          "tree_id": "f981ba8d0b5c594af0290d93c7073bee3595212c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/80d48417ef8886cb54f987e31b3a049b7d2bb9f0"
+        },
+        "date": 1659003585710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 821.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 82843,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 419850,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 825340,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 296.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 29053,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 149450,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 307950,
             "unit": "ns/op"
           }
         ]
