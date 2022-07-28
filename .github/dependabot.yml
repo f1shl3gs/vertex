@@ -1,11 +1,20 @@
 version: 2
 updates:
-    - package-ecosystem: cargo
-      directory: /
-      schedule:
-        interval: daily
-        time: "04:00" # UTC
-      labels:
-        - "deps"
-      commit-message:
-        prefix: "chore(deps)"
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: daily
+      time: "04:00" # UTC
+    labels:
+      - "deps"
+    commit-message:
+      prefix: "chore(deps)"
+    open-pull-requests-limit: 20
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: daily
+    labels:
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"
