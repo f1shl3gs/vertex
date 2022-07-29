@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659109010398,
+  "lastUpdate": 1659109046769,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8894,6 +8894,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 836790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66081ce648f7eae69fab2e0351b2af3b08b52831",
+          "message": "Merge pull request #467 from f1shl3gs/cleanup_deps_for_event\n\nCleanup deps for event",
+          "timestamp": "2022-07-29T23:30:50+08:00",
+          "tree_id": "66b58f8561334308351a8cd2e612c00c5fb9b42f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66081ce648f7eae69fab2e0351b2af3b08b52831"
+        },
+        "date": 1659109043243,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 787510,
             "unit": "ns/op"
           }
         ]
