@@ -1,6 +1,3 @@
-mod ser;
-
-use buffers::EventCount;
 use std::{iter, slice, vec};
 
 use shared::ByteSizeOf;
@@ -57,16 +54,6 @@ impl From<Vec<LogRecord>> for Events {
 impl From<Vec<Metric>> for Events {
     fn from(metrics: Vec<Metric>) -> Self {
         Self::Metrics(metrics)
-    }
-}
-
-impl EventCount for Events {
-    fn event_count(&self) -> usize {
-        match self {
-            Events::Logs(logs) => logs.len(),
-            Events::Metrics(metrics) => metrics.len(),
-            Events::Traces(traces) => traces.len(),
-        }
     }
 }
 

@@ -5,7 +5,7 @@ pub mod log;
 mod logfmt;
 mod metadata;
 mod metric;
-mod proto;
+pub mod proto;
 pub mod trace;
 
 // re-export
@@ -22,7 +22,6 @@ pub use trace::{Trace, Traces};
 use std::collections::btree_map;
 use std::collections::BTreeMap;
 
-use buffers::EventCount;
 use bytes::Bytes;
 use chrono::Utc;
 use log_schema::log_schema;
@@ -38,12 +37,6 @@ pub enum Event {
     Log(LogRecord),
     Metric(Metric),
     Trace(Trace),
-}
-
-impl EventCount for Event {
-    fn event_count(&self) -> usize {
-        1
-    }
 }
 
 impl ByteSizeOf for Event {
