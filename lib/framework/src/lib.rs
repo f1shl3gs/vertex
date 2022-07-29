@@ -60,3 +60,19 @@ pub fn get_version() -> String {
     // TODO
     "0.1.0".into()
 }
+
+pub fn num_threads() -> usize {
+    let n = match std::thread::available_parallelism() {
+        Ok(v) => v,
+        Err(err) => {
+            warn!(
+                message = "Failed to determine available parallelism for thread count, defaulting to 1",
+                %err
+            );
+
+            std::num::NonZeroUsize::new(1).unwrap()
+        }
+    };
+
+    usize::from(n)
+}
