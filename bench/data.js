@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659139056227,
+  "lastUpdate": 1659139078578,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8952,6 +8952,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 863570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9945d42085e2b39e8843f075fb162bda11af3262",
+          "message": "Merge pull request #470 from f1shl3gs/worker_threads_for_concurrency_transformers\n\nuse num_threads for concurrency transformers",
+          "timestamp": "2022-07-30T07:51:14+08:00",
+          "tree_id": "524684b900cbc544c70e4cbcaf16eff333e8b270",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9945d42085e2b39e8843f075fb162bda11af3262"
+        },
+        "date": 1659139074444,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 720670,
             "unit": "ns/op"
           }
         ]
