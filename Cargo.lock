@@ -1031,14 +1031,12 @@ dependencies = [
 name = "event"
 version = "0.1.0"
 dependencies = [
- "async-trait",
  "atomig",
  "buffers",
  "bytes",
  "chrono",
  "enumflags2",
  "futures",
- "indoc",
  "log_schema",
  "pin-project",
  "prost",
@@ -1047,7 +1045,6 @@ dependencies = [
  "rand 0.8.5",
  "serde",
  "serde_json",
- "serde_yaml",
  "shared",
  "substring",
  "tokio",
