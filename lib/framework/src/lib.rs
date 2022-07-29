@@ -33,6 +33,7 @@ mod utilization;
 
 pub use common::*;
 pub use extension::Extension;
+use once_cell::sync::OnceCell;
 pub use pipeline::Pipeline;
 pub use shutdown::*;
 pub use signal::*;
@@ -57,22 +58,18 @@ pub fn hostname() -> std::io::Result<String> {
 }
 
 pub fn get_version() -> String {
-    // TODO
+    // TODO: this variable is used by http client and cli, the are implement in
+    //   different mod, but we can get it only in root(aka vertex).
     "0.1.0".into()
 }
 
-pub fn num_threads() -> usize {
-    let n = match std::thread::available_parallelism() {
-        Ok(v) => v,
-        Err(err) => {
-            warn!(
-                message = "Failed to determine available parallelism for thread count, defaulting to 1",
-                %err
-            );
+static WORKER_THREADS: OnceCell<usize> = OnceCell::new();
 
-            std::num::NonZeroUsize::new(1).unwrap()
-        }
-    };
+pub fn num_workers() -> usize {
+    *WORKER_THREADS.get_or_init(num_cpus::get)
+}
 
-    usize::from(n)
+pub fn set_workers(n: usize) {
+    assert!(n > 0, "Worker threads cannot be set to 0");
+    WORKER_THREADS.set(n).expect("set worker num failed");
 }

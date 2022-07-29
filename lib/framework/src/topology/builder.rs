@@ -238,12 +238,11 @@ impl Runner {
     }
 
     async fn run_concurrently(mut self) -> Result<TaskOutput, ()> {
-        // TODO: Retrieve tokio runtime worker num, rather than the num_threads which might be
-        //   overcount because of CGroup or process affinity mask
+        // TODO: Retrieving tokio runtime worker num is a better solution.
         //
         // There is no API for retrieve Tokio's runtime worker num. `RuntimeMetrics` can do that,
         // but it is not stable yet.
-        let concurrency_limit = crate::num_threads();
+        let concurrency_limit = crate::num_workers();
         let mut input_rx = self
             .input_rx
             .take()
@@ -388,7 +387,7 @@ pub async fn build_pieces(
             component_type = %source.inner.source_type(),
         );
 
-        let mut builder = Pipeline::builder().with_buffer(CHUNK_SIZE * crate::num_threads());
+        let mut builder = Pipeline::builder().with_buffer(CHUNK_SIZE * crate::num_workers());
         let mut pumps = Vec::new();
         let mut controls = HashMap::new();
 
