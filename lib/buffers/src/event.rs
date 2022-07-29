@@ -1,12 +1,28 @@
 use std::fmt::{Display, Formatter};
 
-use buffers::encoding::{AsMetadata, Encodable};
 use bytes::{Buf, BufMut};
 use enumflags2::{bitflags, BitFlags, FromBitsError};
+use event::{proto, Event, Events};
 use prost::Message;
 
-use crate::proto;
-use crate::Events;
+use crate::encoding::AsMetadata;
+use crate::{Encodable, EventCount};
+
+impl EventCount for Event {
+    fn event_count(&self) -> usize {
+        1
+    }
+}
+
+impl EventCount for Events {
+    fn event_count(&self) -> usize {
+        match self {
+            Events::Logs(logs) => logs.len(),
+            Events::Metrics(metrics) => metrics.len(),
+            Events::Traces(traces) => traces.len(),
+        }
+    }
+}
 
 #[derive(Debug)]
 pub enum EncodeError {
