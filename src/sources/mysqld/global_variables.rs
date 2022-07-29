@@ -1,9 +1,8 @@
-use nom::FindSubstring;
-use once_cell::sync::Lazy;
 use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
 use event::{tags, Metric};
+use once_cell::sync::Lazy;
 use sqlx::MySqlPool;
 
 use super::{valid_name, MysqlError};
@@ -315,7 +314,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
 
 // parse wsrep_provider_options to get gcache.size in bytes
 fn parse_wsrep_provider_options(s: &str) -> f64 {
-    match s.find_substring("gcache.size = ") {
+    match s.find("gcache.size = ") {
         Some(index) => s
             .chars()
             .skip(index + 14)
