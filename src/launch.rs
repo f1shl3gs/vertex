@@ -85,7 +85,13 @@ impl RootCommand {
         let config_paths = self.config_paths_with_formats();
         #[cfg(all(unix, not(target_os = "macos")))]
         let watch_config = self.watch;
-        let threads = self.threads.unwrap_or_else(num_cpus::get);
+        let threads = match self.threads {
+            Some(threads) => {
+                framework::set_workers(threads);
+                threads
+            }
+            None => framework::num_workers(),
+        };
         let runtime = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(threads)
             .thread_name("vertex-worker")

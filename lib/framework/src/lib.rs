@@ -33,6 +33,7 @@ mod utilization;
 
 pub use common::*;
 pub use extension::Extension;
+use once_cell::sync::OnceCell;
 pub use pipeline::Pipeline;
 pub use shutdown::*;
 pub use signal::*;
@@ -57,6 +58,18 @@ pub fn hostname() -> std::io::Result<String> {
 }
 
 pub fn get_version() -> String {
-    // TODO
+    // TODO: this variable is used by http client and cli, the are implement in
+    //   different mod, but we can get it only in root(aka vertex).
     "0.1.0".into()
+}
+
+static WORKER_THREADS: OnceCell<usize> = OnceCell::new();
+
+pub fn num_workers() -> usize {
+    *WORKER_THREADS.get_or_init(num_cpus::get)
+}
+
+pub fn set_workers(n: usize) {
+    assert!(n > 0, "Worker threads cannot be set to 0");
+    WORKER_THREADS.set(n).expect("set worker num failed");
 }
