@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659112248303,
+  "lastUpdate": 1659113449011,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -51945,6 +51945,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.331,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94e4f1f4ed69472301ba21b89170e0080cc34450",
+          "message": "Merge pull request #468 from f1shl3gs/remove_nom_for_mysqld\n\nremove nom from sources/mysqld",
+          "timestamp": "2022-07-30T00:22:26+08:00",
+          "tree_id": "a0f29bc453b0621ad0208014f3d41941e2a656d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94e4f1f4ed69472301ba21b89170e0080cc34450"
+        },
+        "date": 1659113445030,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 59.532,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 185.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 401.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1032.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 50032000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1096200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.29,
             "unit": "ns/op"
           }
         ]
