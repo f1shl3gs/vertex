@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659029735864,
+  "lastUpdate": 1659085505424,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -60363,6 +60363,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1380,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "af899a38579b4492613daec68796253a578cbdc8",
+          "message": "Merge pull request #466 from f1shl3gs/upgrade_to_rust_1.62.1\n\nupgrade to rust 1.62.1",
+          "timestamp": "2022-07-29T16:37:29+08:00",
+          "tree_id": "3f42ea9f9862813f05e8fcae79f43140ef51f542",
+          "url": "https://github.com/f1shl3gs/vertex/commit/af899a38579b4492613daec68796253a578cbdc8"
+        },
+        "date": 1659085501446,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1445,
             "unit": "s"
           }
         ]
