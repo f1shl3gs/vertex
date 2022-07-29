@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659110309552,
+  "lastUpdate": 1659111999468,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20449,6 +20449,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 69.649,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94e4f1f4ed69472301ba21b89170e0080cc34450",
+          "message": "Merge pull request #468 from f1shl3gs/remove_nom_for_mysqld\n\nremove nom from sources/mysqld",
+          "timestamp": "2022-07-30T00:22:26+08:00",
+          "tree_id": "a0f29bc453b0621ad0208014f3d41941e2a656d2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94e4f1f4ed69472301ba21b89170e0080cc34450"
+        },
+        "date": 1659111996178,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 22.602,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 61.1,
             "unit": "ns/op"
           }
         ]
