@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659139119213,
+  "lastUpdate": 1659140652398,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -52131,6 +52131,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9945d42085e2b39e8843f075fb162bda11af3262",
+          "message": "Merge pull request #470 from f1shl3gs/worker_threads_for_concurrency_transformers\n\nuse num_threads for concurrency transformers",
+          "timestamp": "2022-07-30T07:51:14+08:00",
+          "tree_id": "524684b900cbc544c70e4cbcaf16eff333e8b270",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9945d42085e2b39e8843f075fb162bda11af3262"
+        },
+        "date": 1659140647096,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 74.951,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 229.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 503.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1546,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 47431000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1542500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 27.622,
             "unit": "ns/op"
           }
         ]
