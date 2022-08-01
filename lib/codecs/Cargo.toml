@@ -11,7 +11,7 @@ syslog = []
 event = { path = "../event" }
 serde_json = { version = "1.0.81", default-features = false  }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec"] }
-bytes = { version = "1.2.0", default-features = false }
+bytes = { version = "1.2.1", default-features = false }
 log_schema = { path = "../log_schema" }
 serde = { version = "1.0.140", default-features = false }
 
