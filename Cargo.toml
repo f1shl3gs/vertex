@@ -317,7 +317,7 @@ atty = "0.2.14"
 nix = ">=0.22.2"
 
 [build-dependencies]
-prost-build = { version = "0.10.4" }
+prost-build = { version = "0.11.0" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
