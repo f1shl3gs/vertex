@@ -325,7 +325,7 @@ base64 = { version = "0.13.0" }
 criterion = { version = "0.3.6", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
-indoc = { version = "1.0.6", default-features = false }
+indoc = { version = "1.0.7", default-features = false }
 pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0.0" }
 rand = { version = "0.8.5" }
