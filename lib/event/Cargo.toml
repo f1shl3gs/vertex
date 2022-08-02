@@ -17,7 +17,7 @@ pin-project = { version = "1.0.11", default-features = false }
 prost = { version = "0.10.3", default-features = false, features = ["std"] }
 prost-types = { version = "0.10.1", default-features = false }
 rand = { version = "0.8.5" }
-serde = { version = "1.0.140", features = ["derive"] }
+serde = { version = "1.0.141", features = ["derive"] }
 serde_json = { version = "1.0.82" }
 shared = { path = "../shared" }
 substring = { version = "1.4.5" }
