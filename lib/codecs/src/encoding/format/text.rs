@@ -1,3 +1,4 @@
+use crate::encoding::SerializeError;
 use bytes::{BufMut, BytesMut};
 use event::Event;
 use log_schema::log_schema;
@@ -5,17 +6,18 @@ use tokio_util::codec::Encoder;
 
 /// Serializer that converts a log to bytes by extracting the message key, or converts a metric to
 /// bytes by calling its `Display` implementation.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct TextSerializer;
 
 impl TextSerializer {
+    /// Creates a new `TextSerializer`
     pub const fn new() -> Self {
         Self
     }
 }
 
 impl Encoder<Event> for TextSerializer {
-    type Error = crate::Error;
+    type Error = SerializeError;
 
     fn encode(&mut self, event: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
         match event {

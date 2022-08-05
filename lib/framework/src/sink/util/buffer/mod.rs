@@ -5,7 +5,7 @@ pub mod vec;
 
 use bytes::{BufMut, BytesMut};
 pub use compression::*;
-use flate2::write::GzEncoder;
+use flate2::write::{GzEncoder, ZlibEncoder};
 use std::io::Write;
 
 use crate::batch::{err_event_too_large, Batch, BatchSize, PushResult};
@@ -23,6 +23,7 @@ pub struct Buffer {
 pub enum InnerBuffer {
     Plain(bytes::buf::Writer<BytesMut>),
     Gzip(GzEncoder<bytes::buf::Writer<BytesMut>>),
+    Zlib(ZlibEncoder<bytes::buf::Writer<BytesMut>>),
 }
 
 impl Buffer {
@@ -46,6 +47,7 @@ impl Buffer {
             match compression {
                 Compression::None => InnerBuffer::Plain(writer),
                 Compression::Gzip(level) => InnerBuffer::Gzip(GzEncoder::new(writer, level)),
+                Compression::Zlib(level) => InnerBuffer::Zlib(ZlibEncoder::new(writer, level)),
             }
         })
     }
@@ -60,6 +62,9 @@ impl Buffer {
             InnerBuffer::Gzip(inner) => {
                 inner.write_all(input).unwrap();
             }
+            InnerBuffer::Zlib(inner) => {
+                inner.write_all(input).unwrap();
+            }
         }
     }
 
@@ -69,6 +74,7 @@ impl Buffer {
             .map(|inner| match inner {
                 InnerBuffer::Plain(inner) => inner.get_ref().is_empty(),
                 InnerBuffer::Gzip(inner) => inner.get_ref().get_ref().is_empty(),
+                InnerBuffer::Zlib(inner) => inner.get_ref().get_ref().is_empty(),
             })
             .unwrap_or(true)
     }
@@ -110,6 +116,10 @@ impl Batch for Buffer {
         match self.inner {
             Some(InnerBuffer::Plain(inner)) => inner.into_inner(),
             Some(InnerBuffer::Gzip(inner)) => inner
+                .finish()
+                .expect("This can't fail because the inner writer is a Vec")
+                .into_inner(),
+            Some(InnerBuffer::Zlib(inner)) => inner
                 .finish()
                 .expect("This can't fail because the inner writer is a Vec")
                 .into_inner(),

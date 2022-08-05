@@ -43,7 +43,8 @@ sinks:
   stdout:
     type: console
     stream: stdout
-    encoding: json
+    encoding:
+      codec: json
     inputs:
       - info
       - warn

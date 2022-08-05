@@ -1,13 +1,16 @@
 mod grpc;
 mod http;
+mod serializer;
 mod udp;
 
 use self::http::HttpSinkConfig;
+use crate::sinks::jaeger::serializer::ThriftSerializer;
 use async_trait::async_trait;
+use codecs::encoding::{Serializer, Transformer};
+use codecs::Encoder;
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
 use framework::sink::util::udp::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
-use jaeger::agent::{serialize_batch, BufferClient};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -50,27 +53,11 @@ inventory::submit! {
 #[typetag::serde(name = "jaeger")]
 impl SinkConfig for JaegerConfig {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
+        let transformer = Transformer::default();
+        let encoder = Encoder::<()>::new(Serializer::Boxed(Box::new(ThriftSerializer::new())));
+
         match &self.mode {
-            Mode::Udp(config) => {
-                config.build(cx, move |event| {
-                    // TODO: This buffer_client is dummy, rework it in the future
-                    let mut buffer_client = BufferClient::default();
-                    let trace = event.into_trace();
-
-                    match serialize_batch(
-                        &mut buffer_client,
-                        trace.into(),
-                        jaeger::agent::UDP_PACKET_MAX_LENGTH,
-                    ) {
-                        Ok(data) => Some(data.into()),
-                        Err(err) => {
-                            warn!(message = "Encode batch failed", ?err);
-
-                            None
-                        }
-                    }
-                })
-            }
+            Mode::Udp(config) => config.build(transformer, encoder),
 
             Mode::Http(config) => config.build(cx.proxy, cx.acker),
         }

@@ -4,34 +4,38 @@ use std::fmt::Write;
 use bytes::BytesMut;
 use event::log::Value;
 use event::Event;
+use log_schema::log_schema;
 use tokio_util::codec::Encoder;
 
-#[derive(Clone)]
+use crate::encoding::SerializeError;
+
+/// Serializer that converts an `Event` to bytes using the logfmt format
+#[derive(Clone, Debug)]
 pub struct LogfmtSerializer;
 
 impl LogfmtSerializer {
+    /// Creates a new `LogfmtSerializer`
     pub const fn new() -> Self {
         Self
     }
 }
 
 impl Encoder<Event> for LogfmtSerializer {
-    type Error = crate::Error;
+    type Error = SerializeError;
 
-    fn encode(&mut self, item: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
-        let log = item.as_log();
-        let map = flatten(&log.fields, '.');
-        let last = map.len() - 1;
-
-        for (index, (k, v)) in map.iter().enumerate() {
-            dst.write_str(k)?;
-            dst.write_char('=')?;
-            dst.write_str(v)?;
-
-            if index != last {
+    fn encode(&mut self, event: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
+        let log = event.into_log();
+        if let Some(fields) = log.all_fields() {
+            for (k, v) in fields {
+                dst.write_str(&k)?;
+                dst.write_char('=')?;
+                dst.write_str(v.to_string_lossy().as_str())?;
                 dst.write_char(' ')?;
             }
         }
+
+        // strip the final delimiter
+        dst.truncate(dst.len() - 1);
 
         Ok(())
     }

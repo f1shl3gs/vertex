@@ -26,4 +26,5 @@ sinks:
     inputs:
       - add_tags
     stream: stdout
-    encoding: json
+    encoding:
+      codec: json

@@ -1,11 +1,12 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
+use codecs::EncodingConfig;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSerde};
 use framework::http::{Auth, HttpClient, MaybeAuth};
-use framework::sink::util::encoding::EncodingConfig;
 use framework::sink::util::service::RequestConfig;
+use framework::sink::util::Compression;
 use framework::tls::{TlsConfig, TlsSettings};
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
@@ -14,14 +15,6 @@ use serde::{Deserialize, Serialize};
 
 use super::healthcheck::health_check;
 use super::sink::LokiSink;
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "snake_case")]
-pub enum Encoding {
-    Json,
-    Text,
-    Logfmt,
-}
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct LokiDefaultBatchSettings;
@@ -48,7 +41,7 @@ impl Default for OutOfOrderAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LokiConfig {
     pub endpoint: UriSerde,
-    pub encoding: EncodingConfig<Encoding>,
+    pub encoding: EncodingConfig,
 
     pub tenant: Option<Template>,
     #[serde(default)]
@@ -62,14 +55,17 @@ pub struct LokiConfig {
     pub out_of_order_action: OutOfOrderAction,
 
     pub auth: Option<Auth>,
+    pub tls: Option<TlsConfig>,
+    #[serde(default = "Compression::gzip_default")]
+    pub compression: Compression,
 
     #[serde(default)]
     pub request: RequestConfig,
 
     #[serde(default)]
     pub batch: BatchConfig<LokiDefaultBatchSettings>,
-
-    pub tls: Option<TlsConfig>,
+    #[serde(default)]
+    acknowledgements: bool,
 }
 
 impl LokiConfig {

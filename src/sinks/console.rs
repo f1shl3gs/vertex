@@ -1,9 +1,10 @@
 use std::fmt::Debug;
 
 use async_trait::async_trait;
-use buffers::Acker;
-use event::{Event, EventContainer, Events};
-use framework::sink::util::encoding::{EncodingConfig, EncodingConfiguration};
+use bytes::BytesMut;
+use codecs::encoding::{Framer, NewlineDelimitedEncoder, Transformer};
+use codecs::{Encoder, EncodingConfig};
+use event::{EventContainer, EventStatus, Events, Finalizable};
 use framework::{
     config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
     Healthcheck, Sink, StreamSink,
@@ -12,18 +13,14 @@ use futures::{stream::BoxStream, FutureExt};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncWriteExt;
 use tokio_stream::StreamExt;
+use tokio_util::codec::Encoder as _;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Default)]
 #[serde(rename_all = "snake_case")]
 enum Stream {
+    #[default]
     Stdout,
     Stderr,
-}
-
-impl Default for Stream {
-    fn default() -> Self {
-        Self::Stdout
-    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Eq, PartialEq, Clone)]
@@ -39,14 +36,15 @@ pub struct ConsoleSinkConfig {
     #[serde(default)]
     stream: Stream,
 
-    encoding: EncodingConfig<Encoding>,
+    encoding: EncodingConfig,
 }
 
 impl GenerateConfig for ConsoleSinkConfig {
     fn generate_config() -> String {
         r#"
 stream: stdout
-encoding: text
+encoding:
+  codec: json
 "#
         .into()
     }
@@ -59,17 +57,21 @@ inventory::submit! {
 #[async_trait]
 #[typetag::serde(name = "console")]
 impl SinkConfig for ConsoleSinkConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+    async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let transformer = self.encoding.transformer();
+        let encoder =
+            Encoder::<Framer>::new(NewlineDelimitedEncoder::new().into(), self.encoding.build());
+
         let sink = match self.stream {
             Stream::Stdout => Sink::Stream(Box::new(WriteSink {
-                acker: cx.acker,
                 writer: tokio::io::stdout(),
-                encoding: self.encoding.clone(),
+                transformer,
+                encoder,
             })),
             Stream::Stderr => Sink::Stream(Box::new(WriteSink {
-                acker: cx.acker,
                 writer: tokio::io::stderr(),
-                encoding: self.encoding.clone(),
+                transformer,
+                encoder,
             })),
         };
 
@@ -85,58 +87,10 @@ impl SinkConfig for ConsoleSinkConfig {
     }
 }
 
-fn encode_event(mut event: Event, encoding: &EncodingConfig<Encoding>) -> Option<String> {
-    encoding.apply_rules(&mut event);
-
-    match event {
-        Event::Log(log) => match encoding.codec() {
-            Encoding::Json => serde_json::to_string(&log)
-                .map_err(|err| {
-                    error!(
-                        message = "Error encoding json",
-                        %err
-                    );
-                })
-                .ok(),
-
-            Encoding::Text => {
-                let f = format!("{:?}", log);
-                Some(f)
-            }
-        },
-        Event::Metric(metric) => match encoding.codec() {
-            Encoding::Json => serde_json::to_string(&metric)
-                .map_err(|err| {
-                    error!(
-                        message = "Error encoding json",
-                        %err
-                    );
-                })
-                .ok(),
-            Encoding::Text => {
-                let f = format!("{:?}", metric);
-                Some(f)
-            }
-        },
-        Event::Trace(trace) => match encoding.codec() {
-            Encoding::Json => serde_json::to_string(&trace)
-                .map_err(|err| {
-                    error!(
-                        message = "Error encoding json",
-                        %err
-                    );
-                })
-                .ok(),
-
-            Encoding::Text => Some(format!("{:?}", trace)),
-        },
-    }
-}
-
 struct WriteSink<T> {
-    acker: Acker,
     writer: T,
-    encoding: EncodingConfig<Encoding>,
+    transformer: Transformer,
+    encoder: Encoder<Framer>,
 }
 
 #[async_trait]
@@ -145,26 +99,31 @@ where
     T: tokio::io::AsyncWrite + Send + Sync + Unpin,
 {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let encoding = self.encoding;
-
         while let Some(events) = input.next().await {
-            self.acker.ack(events.len());
+            for mut event in events.into_events() {
+                self.transformer.transform(&mut event);
 
-            for event in events.into_events() {
-                if let Some(mut text) = encode_event(event, &encoding) {
-                    // Without the new line char, the latest line will be buffered
-                    // rather than flush to terminal immediately.
-                    text.push('\n');
+                let finalizers = event.take_finalizers();
+                let mut buf = BytesMut::new();
+                self.encoder.encode(event, &mut buf).map_err(|_| {
+                    // Error is handled by `Encoder`
+                    finalizers.update_status(EventStatus::Errored);
+                })?;
 
-                    self.writer
-                        .write_all(text.as_bytes())
-                        .await
-                        .map_err(|err| {
-                            error!(
-                                message = "Write event to output failed",
-                                %err
-                            );
-                        })?;
+                match self.writer.write_all(&buf).await {
+                    Ok(()) => {
+                        finalizers.update_status(EventStatus::Delivered);
+
+                        // TODO: metrics
+                    }
+                    Err(err) => {
+                        error!(
+                            message = "Write event to output failed, stopping sink",
+                            ?err
+                        );
+
+                        return Err(());
+                    }
                 }
             }
         }

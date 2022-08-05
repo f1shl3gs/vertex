@@ -95,7 +95,7 @@ impl FunctionTransform for Sample {
                 let value = self
                     .key_field
                     .as_ref()
-                    .and_then(|field| log.fields.get(field))
+                    .and_then(|field| log.fields.get(field.as_str()))
                     .map(|v| v.to_string_lossy());
 
                 let num = if let Some(value) = value {

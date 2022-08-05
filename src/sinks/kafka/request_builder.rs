@@ -1,9 +1,11 @@
-use bytes::Bytes;
+use bytes::{Bytes, BytesMut};
+use codecs::encoding::Transformer;
+use codecs::Encoder;
 use event::{log::Value, Event, Finalizable};
-use framework::sink::util::encoding::{Encoder, EncodingConfig, StandardEncodings};
 use framework::template::Template;
 use log_schema::LogSchema;
 use rdkafka::message::OwnedHeaders;
+use tokio_util::codec::Encoder as _;
 
 use super::service::KafkaRequest;
 use super::service::KafkaRequestMetadata;
@@ -12,13 +14,14 @@ pub struct KafkaRequestBuilder {
     pub key_field: Option<String>,
     pub headers_field: Option<String>,
     pub topic_template: Template,
-    pub encoder: EncodingConfig<StandardEncodings>,
+    pub transformer: Transformer,
+    pub encoder: Encoder<()>,
     pub log_schema: &'static LogSchema,
 }
 
 impl KafkaRequestBuilder {
     // TODO: batch events
-    pub fn build_request(&self, mut event: Event) -> Option<KafkaRequest> {
+    pub fn build_request(&mut self, mut event: Event) -> Option<KafkaRequest> {
         let topic = self.topic_template.render_string(&event).ok()?;
         let metadata = KafkaRequestMetadata {
             finalizers: event.take_finalizers(),
@@ -28,9 +31,10 @@ impl KafkaRequestBuilder {
             topic,
         };
 
-        let mut body = vec![];
+        let mut body = BytesMut::new();
         let event_byte_size = event.size_of();
         self.encoder.encode(event, &mut body).ok()?;
+        let body = body.freeze();
 
         Some(KafkaRequest {
             body,
@@ -42,7 +46,7 @@ impl KafkaRequestBuilder {
 
 fn get_key(event: &Event, key_field: &Option<String>) -> Option<Bytes> {
     key_field.as_ref().and_then(|key_field| match event {
-        Event::Log(log) => log.get_field(key_field).map(|v| v.as_bytes()),
+        Event::Log(log) => log.get_field(key_field.as_str()).map(|v| v.as_bytes()),
         Event::Metric(metric) => metric.tag_value(key_field).map(|v| v.to_string().into()),
         Event::Trace(_span) => unreachable!(),
     })
@@ -63,7 +67,7 @@ fn get_timestamp_millis(event: &Event, log_schema: &'static LogSchema) -> Option
 fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<OwnedHeaders> {
     headers_field.as_ref().and_then(|headers_field| {
         if let Event::Log(log) = ev {
-            if let Some(headers) = log.get_field(headers_field) {
+            if let Some(headers) = log.get_field(headers_field.as_str()) {
                 match headers {
                     Value::Object(map) => {
                         let mut owned_headers = OwnedHeaders::new_with_capacity(map.len());

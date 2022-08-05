@@ -4,9 +4,9 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
+use codecs::decoding::{BytesDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer};
+use codecs::Decoder;
 use event::Event;
-use framework::codecs::decoding::BytesDecoder;
-use framework::codecs::{Decoder, OctetCountingDecoder, SyslogDeserializer};
 use framework::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
 use framework::config::{Output, SourceDescription};
 use framework::pipeline::Pipeline;
@@ -17,7 +17,6 @@ use framework::source::util::{
 use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
-use framework::{codecs, udp};
 use futures_util::StreamExt;
 use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use log_schema::log_schema;
@@ -225,13 +224,13 @@ struct SyslogTcpSource {
 }
 
 impl TcpSource for SyslogTcpSource {
-    type Error = codecs::decoding::Error;
+    type Error = DecodeError;
     type Item = SmallVec<[Event; 1]>;
-    type Decoder = codecs::Decoder;
+    type Decoder = Decoder;
     type Acker = TcpNullAcker;
 
     fn decoder(&self) -> Self::Decoder {
-        codecs::Decoder::new(
+        Decoder::new(
             OctetCountingDecoder::new_with_max_length(self.max_length).into(),
             SyslogDeserializer.into(),
         )
@@ -260,7 +259,8 @@ pub fn udp(
             .expect("Failed to bind to UDP listener socket");
 
         if let Some(receive_buffer_bytes) = receive_buffer_bytes {
-            if let Err(err) = udp::set_receive_buffer_size(&socket, receive_buffer_bytes) {
+            if let Err(err) = framework::udp::set_receive_buffer_size(&socket, receive_buffer_bytes)
+            {
                 warn!(
                     message = "Failed configure receive buffer size on UDP socket",
                     %err
@@ -276,7 +276,7 @@ pub fn udp(
 
         let mut stream = UdpFramed::new(
             socket,
-            codecs::Decoder::new(BytesDecoder::new().into(), SyslogDeserializer.into()),
+            Decoder::new(BytesDecoder::new().into(), SyslogDeserializer.into()),
         )
         .take_until(shutdown)
         .filter_map(|frame| {
@@ -364,8 +364,9 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 mod tests {
     use super::*;
     use chrono::{DateTime, Datelike, TimeZone};
+    use codecs::decoding::format::Deserializer;
+    use event::log::Value;
     use event::{assert_event_data_eq, fields, LogRecord};
-    use framework::codecs::decoding::format::Deserializer;
 
     #[test]
     fn generate_config() {
@@ -529,37 +530,44 @@ mod tests {
     #[test]
     fn handles_empty_sd_element() {
         fn there_is_map_called_empty(event: Event) -> bool {
-            event
-                .as_log()
-                .all_fields()
-                .find(|(key, _)| (&key[..]).starts_with("empty"))
-                == None
+            let value = event.as_log().get_field("empty").expect("empty exists");
+
+            matches!(value, Value::Object(_))
         }
 
-        for msg in [
-            format!(
-                r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
-                r#"[empty]"#
+        for (input, want) in [
+            (
+                format!(
+                    r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
+                    r#"[empty]"#
+                ),
+                true,
             ),
-            format!(
-                r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
-                r#"[non_empty x="1"][empty]"#
+            (
+                format!(
+                    r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
+                    r#"[non_empty x="1"][empty]"#
+                ),
+                true,
             ),
-            format!(
-                r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
-                r#"[empty][non_empty x="1"]"#
+            (
+                format!(
+                    r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
+                    r#"[empty][non_empty x="1"]"#
+                ),
+                true,
+            ),
+            (
+                format!(
+                    r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
+                    r#"[empty not_really="testing the test"]"#
+                ),
+                true,
             ),
         ] {
-            let event = event_from_bytes("host", None, msg.into()).unwrap();
-            assert!(there_is_map_called_empty(event));
+            let event = event_from_bytes("host", None, input.clone().into()).unwrap();
+            assert_eq!(there_is_map_called_empty(event), want, "input: {}", input);
         }
-
-        let msg = format!(
-            r#"<13>1 2019-02-13T19:48:34+00:00 74794bfb6795 root 8449 - {} qwerty"#,
-            r#"[empty not_really="testing the test"]"#
-        );
-        let event = event_from_bytes("host", None, msg.into()).unwrap();
-        assert!(!there_is_map_called_empty(event));
     }
 
     #[test]

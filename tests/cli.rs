@@ -45,3 +45,31 @@ fn clean_output() {
         assert_eq!(status.success(), want, "args: {:?}", args)
     }
 }
+
+/// Validate example configs will help us keep them updated.
+#[test]
+fn validate_example_configs() {
+    let mut dir = std::fs::read_dir("examples/config").unwrap();
+
+    // Clippy tell us use `for in`, if we do use `for in`, then
+    // it tell us not to use `for in`.
+    #[allow(clippy::while_let_on_iterator)]
+    while let Some(result) = dir.next() {
+        let entry = result.expect("Scan entry failed");
+
+        let path = entry.path().to_string_lossy().to_string();
+        if !path.ends_with(".yaml") && !path.ends_with(".yml") {
+            continue;
+        }
+
+        let args = vec!["validate", "-c", &path, "--no-environment"];
+        let (output, status) = run_command(args.clone());
+        assert_no_log_lines(output.clone());
+        assert!(
+            status.success(),
+            "args: {:?}\noutput: {:?}",
+            args,
+            String::from_utf8_lossy(&output)
+        );
+    }
+}

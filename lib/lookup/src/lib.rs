@@ -3,10 +3,10 @@ mod concat;
 mod jit;
 mod owned;
 
-use crate::borrowed::BorrowedSegment;
-use crate::concat::PathConcat;
-use crate::jit::{JitLookup, JitPath};
-pub use crate::owned::{OwnedPath, OwnedSegment};
+pub use borrowed::BorrowedSegment;
+use concat::PathConcat;
+use jit::{JitLookup, JitPath};
+pub use owned::{OwnedPath, OwnedSegment};
 
 /// A path is simply the data describing how to look up a value.
 /// This should only be implemented for types that are very cheap to clone, such as references.

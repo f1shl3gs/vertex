@@ -120,7 +120,7 @@ impl FunctionTransform for JsonParser {
     fn transform(&mut self, output: &mut OutputBuffer, events: Events) {
         if let Events::Logs(logs) = events {
             for mut log in logs {
-                let value = log.get_field(&self.field);
+                let value = log.get_field(self.field.as_str());
 
                 let parsed = value
                     .and_then(|value| {
@@ -153,7 +153,7 @@ impl FunctionTransform for JsonParser {
                 if let Some(object) = parsed {
                     match self.target_field {
                         Some(ref target_field) => {
-                            let contains_target = log.contains(&target_field);
+                            let contains_target = log.contains(target_field.as_str());
 
                             if contains_target && !self.overwrite_target {
                                 warn!(
@@ -165,19 +165,21 @@ impl FunctionTransform for JsonParser {
                                 // TODO: metrics
                             } else {
                                 if self.drop_field {
-                                    log.remove_field(&self.field);
+                                    log.remove_field(self.field.as_str());
                                 }
 
-                                log.insert_field(&target_field, Value::Object(object));
+                                log.insert_field(target_field.as_str(), Value::Object(object));
                             }
                         }
                         None => {
                             if self.drop_field {
-                                log.remove_field(&self.field);
+                                log.remove_field(self.field.as_str());
                             }
 
-                            for (key, value) in object {
-                                log.insert_flat_field(key, value);
+                            if let event::log::Value::Object(ref mut map) = log.fields {
+                                for (key, value) in object {
+                                    map.insert(key, value.into());
+                                }
                             }
                         }
                     }
@@ -284,11 +286,11 @@ mod test {
         let event = transform_one(&mut parser, event).unwrap();
 
         assert_eq!(
-            event.as_log().get_flat_field("field.with.dots"),
+            event.as_log().get_field("\"field.with.dots\""),
             Some(&event::log::Value::from("hello")),
         );
         assert_eq!(
-            event.as_log().get_flat_field("sub.field"),
+            event.as_log().get_field("\"sub.field\""),
             Some(&event::log::Value::from(json!({ "another.one": "bob", }))),
         );
         assert_eq!(event.metadata(), &metadata);
@@ -542,9 +544,12 @@ mod test {
         );
         assert_eq!(*event.as_log().get_field("float").unwrap(), 12.34.into());
         assert_eq!(*event.as_log().get_field("int").unwrap(), 56.into());
-        assert_eq!(*event.as_log().get_field("bool true").unwrap(), true.into());
         assert_eq!(
-            *event.as_log().get_field("bool false").unwrap(),
+            *event.as_log().get_field("\"bool true\"").unwrap(),
+            true.into()
+        );
+        assert_eq!(
+            *event.as_log().get_field("\"bool false\"").unwrap(),
             false.into()
         );
         assert_eq!(*event.as_log().get_field("array[0]").unwrap(), "z".into());

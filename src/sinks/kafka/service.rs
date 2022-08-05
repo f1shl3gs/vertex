@@ -22,7 +22,7 @@ pub struct KafkaRequestMetadata {
 }
 
 pub struct KafkaRequest {
-    pub body: Vec<u8>,
+    pub body: Bytes,
     pub metadata: KafkaRequestMetadata,
     pub event_byte_size: usize,
 }
@@ -78,7 +78,7 @@ impl Service<KafkaRequest> for KafkaService {
         let producer = self.producer.clone();
 
         Box::pin(async move {
-            let mut record = FutureRecord::to(&req.metadata.topic).payload(&req.body);
+            let mut record = FutureRecord::to(&req.metadata.topic).payload(req.body.as_ref());
             if let Some(key) = &req.metadata.key {
                 record = record.key(&key[..]);
             }

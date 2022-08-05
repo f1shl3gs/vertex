@@ -480,6 +480,10 @@ impl<'a> Iterator for Iter<'a> {
     }
 }
 
+pub fn skip_serializing_if_empty(attrs: &Attributes) -> bool {
+    attrs.0.is_empty()
+}
+
 #[macro_export]
 macro_rules! tags {
     // Done without trailing comma

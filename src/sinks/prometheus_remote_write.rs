@@ -1,17 +1,18 @@
 use std::task::{Context, Poll};
 use std::time::Duration;
 
-use crate::sinks::BuildError;
 use bytes::{Bytes, BytesMut};
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::HttpRetryLogic;
-use framework::sink::util::metrics::{MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer};
-use framework::sink::util::partition::{PartitionBuffer, PartitionInnerBuffer};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::sink::PartitionBatchSink;
+use framework::sink::util::{
+    MetricNormalize, MetricNormalizer, MetricSet, MetricsBuffer, PartitionBuffer,
+    PartitionInnerBuffer,
+};
 use framework::template::Template;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Healthcheck, HealthcheckError, Sink};
@@ -21,6 +22,8 @@ use hyper::{body, Body};
 use prost::Message;
 use serde::{Deserialize, Serialize};
 use tower::{Service, ServiceBuilder};
+
+use crate::sinks::BuildError;
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct PrometheusRemoteWriteDefaultBatchSettings;

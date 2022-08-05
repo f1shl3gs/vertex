@@ -1,6 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use async_trait::async_trait;
+use codecs::encoding::Transformer;
 use event::log::Value;
 use event::{EventRef, LogRecord};
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
@@ -9,7 +10,7 @@ use framework::config::{
 };
 use framework::http::HttpClient;
 use framework::sink::util::service::{RequestConfig, ServiceBuilderExt};
-use framework::sink::util::{Compression, Transformer};
+use framework::sink::util::Compression;
 use framework::template::Template;
 use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
@@ -163,8 +164,13 @@ impl DataStreamConfig {
         let dataset = self.dataset(&*log);
         let namespace = self.namespace(&*log);
 
+        if log.as_map().is_none() {
+            log.fields = Value::Object(BTreeMap::new());
+        }
+
         let existing = log
-            .fields
+            .as_map_mut()
+            .expect("must be a map")
             .entry("data_stream".into())
             .or_insert_with(|| Value::Object(BTreeMap::new()))
             .as_object_mut_unwrap();
@@ -229,7 +235,7 @@ pub struct ElasticsearchConfig {
     pub request: RequestConfig,
     pub auth: Option<ElasticsearchAuth>,
     pub tls: Option<TlsConfig>,
-    #[serde(skip_serializing_if = "skip_serializing_if_default", default)]
+    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub encoding: Transformer,
     pub query: Option<HashMap<String, String>>,
 

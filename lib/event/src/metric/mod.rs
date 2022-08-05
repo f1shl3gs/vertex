@@ -587,6 +587,11 @@ impl Metric {
     }
 
     #[inline]
+    pub fn tags_mut(&mut self) -> &mut Attributes {
+        &mut self.series.tags
+    }
+
+    #[inline]
     pub fn with_tags(mut self, tags: Attributes) -> Self {
         self.series.tags = tags;
         self

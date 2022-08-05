@@ -2,16 +2,17 @@ use std::fs::remove_file;
 use std::path::PathBuf;
 
 use bytes::Bytes;
+use codecs::decoding::DecodeError;
+use codecs::decoding::StreamDecodingError;
 use event::Event;
 use futures_util::{FutureExt, StreamExt};
+use smallvec::SmallVec;
 use tokio::io::AsyncWriteExt;
 use tokio::net::{UnixListener, UnixStream};
 use tokio_stream::wrappers::UnixListenerStream;
-use tokio_util::codec::FramedRead;
+use tokio_util::codec::{Decoder, FramedRead};
 
 use crate::async_read::VecAsyncReadExt;
-use crate::codecs;
-use crate::codecs::StreamDecodingError;
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::Source;
@@ -20,13 +21,17 @@ use crate::Source;
 /// Passing in different functions for `decoder` and `handle_events` can allow
 /// for different source-specific logic (such as decoding syslog messages in the
 /// syslog source).
-pub fn build_unix_stream_source(
+pub fn build_unix_stream_source<D, H>(
     path: PathBuf,
-    decoder: codecs::Decoder,
-    handle_events: impl Fn(&mut [Event], Option<Bytes>, usize) + Clone + Send + Sync + 'static,
+    decoder: D,
+    handle_events: H,
     shutdown: ShutdownSignal,
     out: Pipeline,
-) -> Source {
+) -> Source
+where
+    D: Clone + Send + Decoder<Item = (SmallVec<[Event; 1]>, usize), Error = DecodeError> + 'static,
+    H: Fn(&mut [Event], Option<Bytes>, usize) + Clone + Send + Sync + 'static,
+{
     Box::pin(async move {
         let listener = UnixListener::bind(&path).expect("Failed to bind to listener socket");
 

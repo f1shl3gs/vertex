@@ -191,7 +191,7 @@ sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
 sources-redis = ["redis"]
 sources-selfstat = ["libc"]
-sources-syslog = ["codecs", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils"]
+sources-syslog = ["codecs/syslog", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils", "smallvec"]
 sources-tail = ["tail", "multiline", "encoding_rs"]
 sources-zookeeper = []
 
@@ -266,9 +266,6 @@ extensions-pprof = ["pprof/flamegraph"]
 extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
 extensions-healthcheck = []
 
-# Codecs
-codecs = ["smallvec", "memchr"]
-
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
 kubernetes = ["k8s-openapi", "kube"]
@@ -338,8 +335,9 @@ tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
 [dependencies]
-# workspaces
+# Workspaces
 buffers = { path = "lib/buffers" }
+codecs = { path = "lib/codecs" }
 condition = { path = "lib/condition", optional = true }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }

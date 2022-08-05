@@ -152,7 +152,7 @@ fn render_fields<'a>(src: &str, event: EventRef<'a>) -> Result<String, TemplateR
                 .expect("src should match regex");
 
             match event {
-                EventRef::Log(log) => log.get_field(&key).map(|val| val.to_string_lossy()),
+                EventRef::Log(log) => log.get_field(key).map(|val| val.to_string_lossy()),
                 EventRef::Metric(metric) => render_metric_field(key, metric),
                 EventRef::Trace(_span) => todo!(),
             }
@@ -236,7 +236,7 @@ impl Serialize for Template {
 mod tests {
     use super::*;
     use chrono::TimeZone;
-    use event::{tags, Event};
+    use event::{fields, tags, Event};
 
     #[test]
     fn get_fields() {
@@ -406,11 +406,13 @@ mod tests {
     #[test]
     fn render_log_dynamic_with_reverse_nested_strftime() {
         let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
-        let mut event = Event::from("hello world");
-        event.as_mut_log().insert_field("%F", "foo");
-        event.as_mut_log().insert_field("timestamp", ts);
+        let event = Event::from(fields!(
+            log_schema().message_key() => "hello world",
+            "%F" => "foo",
+            log_schema().timestamp_key() => ts
+        ));
 
-        let template = Template::try_from("nested {{ %F }} %T").unwrap();
+        let template = Template::try_from("nested {{ \"%F\" }} %T").unwrap();
 
         assert_eq!(
             Ok(Bytes::from("nested foo 04:05:06")),

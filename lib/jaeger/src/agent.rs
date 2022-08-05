@@ -7,8 +7,7 @@ use thrift::protocol::{
 };
 use thrift::transport::{ReadHalf, TIoChannel, WriteHalf};
 
-use crate::thrift::agent::{AgentEmitBatchArgs, TAgentSyncClient};
-use crate::thrift::{agent, jaeger};
+use crate::thrift::agent::{AgentEmitBatchArgs, AgentSyncClient, TAgentSyncClient};
 use crate::transport::{TBufferChannel, TNoopChannel};
 use crate::Batch;
 
@@ -17,7 +16,7 @@ pub const UDP_PACKET_MAX_LENGTH: usize = 65000;
 
 pub struct BufferClient {
     buffer: ReadHalf<TBufferChannel>,
-    client: agent::AgentSyncClient<
+    client: AgentSyncClient<
         TCompactInputProtocol<TNoopChannel>,
         TCompactOutputProtocol<WriteHalf<TBufferChannel>>,
     >,
@@ -37,7 +36,7 @@ impl Default for BufferClient {
         let (buffer, write) = TBufferChannel::with_capacity(UDP_PACKET_MAX_LENGTH)
             .split()
             .unwrap();
-        let client = agent::AgentSyncClient::new(
+        let client = AgentSyncClient::new(
             TCompactInputProtocol::new(TNoopChannel),
             TCompactOutputProtocol::new(write),
         );
@@ -62,7 +61,7 @@ pub fn deserialize_binary_batch(input: Vec<u8>) -> thrift::Result<Batch> {
     Ok(args.batch)
 }
 
-pub fn serialize_binary_batch(batch: jaeger::Batch) -> thrift::Result<Vec<u8>> {
+pub fn serialize_binary_batch(batch: Batch) -> thrift::Result<Vec<u8>> {
     let mut buf = BytesMut::new().writer();
     let mut op = TBinaryOutputProtocol::new(&mut buf, false);
 
@@ -73,7 +72,7 @@ pub fn serialize_binary_batch(batch: jaeger::Batch) -> thrift::Result<Vec<u8>> {
 
 pub fn serialize_batch(
     client: &mut BufferClient,
-    batch: jaeger::Batch,
+    batch: Batch,
     max_packet_size: usize,
 ) -> thrift::Result<Vec<u8>> {
     client.client.emit_batch(batch)?;

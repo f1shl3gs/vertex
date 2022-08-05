@@ -11,3 +11,15 @@ provider:
   # persist: remote.yml
   # attributes:
   #   foo: bar
+
+sources:
+  internal:
+    type: internal_logs
+
+sinks:
+  stdout:
+    type: console
+    inputs:
+      - internal
+    encoding:
+      codec: json

@@ -5,11 +5,9 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
+use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
+use codecs::{Decoder, DecodingConfig};
 use event::{log::Value, BatchNotifier, BatchStatus, Event, LogRecord};
-use framework::codecs::decoding::{DecodingConfig, DeserializerConfig};
-use framework::codecs::{
-    BytesDecoderConfig, BytesDeserializerConfig, Decoder, StreamDecodingError,
-};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
     SourceContext, SourceDescription,
@@ -68,8 +66,8 @@ fn default_headers_key() -> String {
     "headers".to_string()
 }
 
-fn default_decoding() -> DeserializerConfig {
-    BytesDeserializerConfig::new().into()
+fn default_decoding() -> DecodingConfig {
+    DecodingConfig::new(FramingConfig::Bytes, DeserializerConfig::Bytes)
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -116,8 +114,9 @@ struct KafkaSourceConfig {
     headers_key: String,
     #[serde(flatten)]
     auth: KafkaAuthConfig,
+
     #[serde(default = "default_decoding")]
-    decoding: DeserializerConfig,
+    decoding: DecodingConfig,
     #[serde(default)]
     acknowledgement: bool,
 
@@ -283,8 +282,7 @@ impl<'a> From<BorrowedMessage<'a>> for FinalizerEntry {
 #[typetag::serde(name = "kafka")]
 impl SourceConfig for KafkaSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let framing = BytesDecoderConfig::new();
-        let decoder = DecodingConfig::new(framing, self.decoding.clone()).build();
+        let decoder = self.decoding.build();
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
         let consumer = self.create_consumer()?;
 
@@ -641,7 +639,7 @@ mod tests {
 mod integration_tests {
     use chrono::{SubsecRound, Utc};
     use event::{log::Value, EventStatus};
-    use framework::{codecs, Pipeline, ShutdownSignal};
+    use framework::{Pipeline, ShutdownSignal};
     use log_schema::log_schema;
     use rdkafka::config::FromClientConfig;
     use rdkafka::consumer::{BaseConsumer, Consumer};
