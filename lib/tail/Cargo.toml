@@ -16,10 +16,10 @@ criterion = { version = "0.3.6" }
 tracing-test = { version = "0.2.3" }
 
 [dependencies]
-serde = { version = ">=1.0.130", default-features = false, features = ["derive"] }
+serde = { version = "1.0.142", default-features = false, features = ["derive"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 dashmap = { version = "5.2", default-features = false }
-serde_json = { version = "1.0" }
+serde_json = { version = "1.0.83" }
 bytes = { version = "1.2.0" }
 bstr = { version = "0.2" }
 tokio = { version = "1.20.1", default-features = false, features = ["rt", "macros"] }
