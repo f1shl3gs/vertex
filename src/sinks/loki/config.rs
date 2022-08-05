@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
+use codecs::EncodingConfig;
 use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSerde};
 use framework::http::{Auth, HttpClient, MaybeAuth};
-use framework::sink::util::encoding::EncodingConfig;
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
 use framework::tls::{TlsConfig, TlsSettings};
@@ -15,14 +15,6 @@ use serde::{Deserialize, Serialize};
 
 use super::healthcheck::health_check;
 use super::sink::LokiSink;
-
-#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
-#[serde(rename_all = "snake_case")]
-pub enum Encoding {
-    Json,
-    Text,
-    Logfmt,
-}
 
 #[derive(Clone, Copy, Default, Debug)]
 pub struct LokiDefaultBatchSettings;
@@ -49,7 +41,7 @@ impl Default for OutOfOrderAction {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct LokiConfig {
     pub endpoint: UriSerde,
-    pub encoding: EncodingConfig<Encoding>,
+    pub encoding: EncodingConfig,
 
     pub tenant: Option<Template>,
     #[serde(default)]

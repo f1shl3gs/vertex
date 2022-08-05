@@ -4,7 +4,7 @@ use std::iter;
 
 use serde::{Serialize, Serializer};
 
-use super::Value;
+use crate::log::Value;
 
 /// Iterates over all paths in from `a.b[0].c[1]` in alphabetical order.
 /// It is implemented as a wrapper around `all_fields` to reduce code
@@ -24,7 +24,7 @@ pub fn all_fields(
 #[derive(Clone)]
 enum LeafIter<'a> {
     Map(btree_map::Iter<'a, String, Value>),
-    Array(std::iter::Enumerate<std::slice::Iter<'a, Value>>),
+    Array(iter::Enumerate<std::slice::Iter<'a, Value>>),
 }
 
 #[derive(Clone, Copy)]
@@ -77,6 +77,7 @@ impl<'a> FieldsIter<'a> {
     fn make_path(&mut self, component: PathComponent<'a>) -> String {
         let mut res = String::new();
         let mut path_iter = self.path.iter().chain(iter::once(&component)).peekable();
+
         loop {
             match path_iter.next() {
                 None => return res,

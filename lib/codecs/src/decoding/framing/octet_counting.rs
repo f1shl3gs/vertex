@@ -2,28 +2,23 @@ use std::io;
 
 use bytes::{Buf, Bytes, BytesMut};
 use serde::{Deserialize, Serialize};
-use tokio_util::codec::{LinesCodec, LinesCodecError};
 
-use crate::codecs::decoding::BoxedFramingError;
-use crate::config::skip_serializing_if_default;
+use tokio_util::codec::{Framed, LinesCodec, LinesCodecError};
+use tracing::trace;
 
-/// Options for building a `OctetCountingDecoder`
-#[derive(Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
-pub struct OctetCountingDecoderOptions {
-    #[serde(skip_serializing_if = "skip_serializing_if_default")]
+use crate::FramingError;
+
+/// Config used to build a `OctetCountingDecoder`
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct OctetCountingDecoderConfig {
+    #[serde(skip_serializing_if = "Option::is_none")]
     max_length: Option<usize>,
 }
 
-/// Config used to build a `OctetCountingDecoder`
-#[derive(Debug, Clone, Default, Deserialize, Serialize)]
-pub struct OctetCountingDecoderConfig {
-    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-    pub(crate) octet_counting: OctetCountingDecoderOptions,
-}
-
 impl OctetCountingDecoderConfig {
+    /// Build the `OctetCountingDecoder` from this configuration.
     pub fn build(&self) -> OctetCountingDecoder {
-        if let Some(max_length) = self.octet_counting.max_length {
+        if let Some(max_length) = self.max_length {
             OctetCountingDecoder::new_with_max_length(max_length)
         } else {
             OctetCountingDecoder::new()
@@ -31,10 +26,16 @@ impl OctetCountingDecoderConfig {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
-pub enum State {
+/// Decode state for Deserializer
+#[derive(Clone, Copy, Debug, PartialEq)]
+enum State {
+    /// Not discarding any chars
     NotDiscarding,
+
+    /// Discarding n chars
     Discarding(usize),
+
+    /// Discarding to End of line
     DiscardingToEol,
 }
 
@@ -50,12 +51,12 @@ impl OctetCountingDecoder {
     /// Creates a new `OctetCountingDecoder`
     pub fn new() -> Self {
         Self {
-            other: LinesCodec::default(),
+            other: LinesCodec::new(),
             octet_decoding: None,
         }
     }
 
-    /// Creates a `OctetCountingDecoder` with a maximum frame length limit
+    /// Creates a `OctetCountingDecoder` with a maximum frame length limit.
     pub fn new_with_max_length(max_length: usize) -> Self {
         Self {
             other: LinesCodec::new_with_max_length(max_length),
@@ -63,7 +64,7 @@ impl OctetCountingDecoder {
         }
     }
 
-    /// Decode a frame.
+    /// Decode a frame
     fn octet_decode(
         &mut self,
         state: State,
@@ -72,20 +73,20 @@ impl OctetCountingDecoder {
         // Encoding scheme:
         //
         // len ' ' data
-        // |    |  | len number of bytes that contain syslog message
-        // |    |
-        // |    | Separating whitespace
-        // |
-        // | ASCII decimal number of unknown length
+        //  |   |   | len number of bytes that contain syslog message
+        //  |   |
+        //  |   | Separating whitespace
+        //  |
+        //  |  ASCII decimal number of unknown length
+
         let space_pos = src.iter().position(|&b| b == b' ');
 
-        // If we are discarding, discard to the next newline.
+        // if we are discarding, discard to the next newline.
         let newline_pos = src.iter().position(|&b| b == b'\n');
 
         match (state, newline_pos, space_pos) {
             (State::Discarding(chars), _, _) if src.len() >= chars => {
                 // We have a certain number of chars to discard.
-                //
                 // There are enough chars in this frame to discard
                 src.advance(chars);
                 self.octet_decoding = None;
@@ -97,7 +98,6 @@ impl OctetCountingDecoder {
 
             (State::Discarding(chars), _, _) => {
                 // We have a certain number of chars to discard.
-                //
                 // There aren't enough in this frame so we need to discard the
                 // entire frame and adjust the amount to discard accordingly.
                 self.octet_decoding = Some(State::Discarding(src.len() - chars));
@@ -117,7 +117,6 @@ impl OctetCountingDecoder {
 
             (State::DiscardingToEol, None, _) => {
                 // There is no newline in this frame.
-                //
                 // Since we don't have a set number of chars we want to discard,
                 // we need to discard to the next newline. Advance as far as we
                 // can to discard the entire frame.
@@ -126,8 +125,7 @@ impl OctetCountingDecoder {
             }
 
             (State::NotDiscarding, _, Some(space_pos)) if space_pos < self.other.max_length() => {
-                // Everything looks good.
-                //
+                // Everything looks goot.
                 // We aren't discarding, we have a space that is not beyond our
                 // maximum length. Attempt to parse the bytes as a number which
                 // will hopefully give us a sensible length for our message.
@@ -139,8 +137,8 @@ impl OctetCountingDecoder {
                     Err(_) => {
                         // It was not a sensible number
                         //
-                        // Advance the buffer past the erroneous bytes to prevent
-                        // us getting stuck in an infinite loop
+                        // Advance the buffer past then erroneous bytes to
+                        // prevent us getting stuck in an infinite loop.
                         src.advance(space_pos + 1);
                         self.octet_decoding = None;
                         return Err(LinesCodecError::Io(io::Error::new(
@@ -152,11 +150,9 @@ impl OctetCountingDecoder {
 
                 let from = space_pos + 1;
                 let to = from + len;
-
                 if len > self.other.max_length() {
-                    // The length is greater than we want
-                    //
-                    // We need to discard the entire message
+                    // The length is greater than we want.
+                    // We need to discard the entire message.
                     self.octet_decoding = Some(State::Discarding(len));
                     src.advance(space_pos + 1);
 
@@ -165,10 +161,9 @@ impl OctetCountingDecoder {
                     let bytes = match std::str::from_utf8(msg) {
                         Ok(_) => Bytes::copy_from_slice(msg),
                         Err(_) => {
-                            // The data was not valid UTF8
-                            //
-                            // Advance the buffer past the erroneous bytes to prevent us
-                            // getting stuck in an infinite loop
+                            // The data was not valid UTF8.
+                            // Advance the buffer past the erroneous bytes to
+                            // prevent us getting stuck in an infinite loop.
                             src.advance(to);
                             self.octet_decoding = None;
                             return Err(LinesCodecError::Io(io::Error::new(
@@ -203,16 +198,16 @@ impl OctetCountingDecoder {
 
             (State::NotDiscarding, None, _) if src.len() < self.other.max_length() => {
                 // We aren't discarding, but there is no useful character to
-                // tell us what to do next
+                // tell us what to do next.
                 //
                 // We are still not beyond the max length, so just return `None`
-                // to indicate we need to wait for more data
+                // to indicate we need to wait for more data.
                 Ok(None)
             }
 
             (State::NotDiscarding, None, _) => {
                 // There is no newline in this frame and we have more data than
-                // we want to handle
+                // we want to handle.
                 //
                 // Advance as far as we can to discard the entire frame.
                 self.octet_decoding = Some(State::DiscardingToEol);
@@ -222,7 +217,7 @@ impl OctetCountingDecoder {
         }
     }
 
-    /// `None` if this is not octet counting encoded
+    /// `None` if this is not octet counting encoded.
     fn checked_decode(
         &mut self,
         src: &mut BytesMut,
@@ -230,8 +225,8 @@ impl OctetCountingDecoder {
         if let Some(&first_byte) = src.get(0) {
             if (49..=57).contains(&first_byte) {
                 // First character is non zero number so we can assume that
-                // octet count framing is used.
-                trace!(message = "Octet counting encoded event detected");
+                // octet count framing is used
+                trace!("Octet counting encoded event detected");
                 self.octet_decoding = Some(State::NotDiscarding);
             }
         }
@@ -249,13 +244,13 @@ impl Default for OctetCountingDecoder {
 
 impl tokio_util::codec::Decoder for OctetCountingDecoder {
     type Item = Bytes;
-    type Error = BoxedFramingError;
+    type Error = FramingError;
 
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         if let Some(ret) = self.checked_decode(src) {
             ret
         } else {
-            // Octet counting isn't used so fallback to newline codec
+            // Octet counting isn't used so fallback to newline codec.
             self.other
                 .decode(src)
                 .map(|line| line.map(|line| line.into()))
@@ -267,7 +262,7 @@ impl tokio_util::codec::Decoder for OctetCountingDecoder {
         if let Some(ret) = self.checked_decode(buf) {
             ret
         } else {
-            // Octet counting isn't used so fallback to newline codec
+            // Octet counting isn't used so fallback to newline codec.
             self.other
                 .decode_eof(buf)
                 .map(|line| line.map(|line| line.into()))
@@ -280,9 +275,10 @@ impl tokio_util::codec::Decoder for OctetCountingDecoder {
 mod tests {
     #![allow(clippy::print_stdout)]
 
-    use super::*;
     use bytes::BufMut;
     use tokio_util::codec::Decoder;
+
+    use super::*;
 
     #[test]
     fn non_octet_decode_works_with_multiple_frames() {
@@ -298,6 +294,109 @@ mod tests {
         assert_eq!(
             Ok(Some("<57>Mar 25 21:47:46 gleichner6005 quaerat[2444]: There were 8 penguins in the shop.".into())),
             result.map_err(|_| true)
-        )
+        );
+    }
+
+    #[test]
+    fn octet_decode_works_with_multiple_frames() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(30);
+        let mut buffer = BytesMut::with_capacity(16);
+
+        buffer.put(&b"28 abcdefghijklm"[..]);
+        let result = decoder.decode(&mut buffer);
+        assert_eq!(Ok(None), result.map_err(|_| false));
+
+        // Sending another frame starting with a number should not cause it to
+        // try to decode a new message.
+        buffer.put(&b"3 nopqrstuvwxyz"[..]);
+        let result = decoder.decode(&mut buffer);
+        assert_eq!(
+            Ok(Some("abcdefghijklm3 nopqrstuvwxyz".into())),
+            result.map_err(|_| false)
+        );
+    }
+
+    #[test]
+    fn octet_decode_moves_past_invalid_length() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(16);
+
+        // An invalid syslog message that starts with a digit so we think it is starting with the len.
+        buffer.put(&b"232>1 zork"[..]);
+        let result = decoder.decode(&mut buffer);
+
+        assert!(result.is_err());
+        assert_eq!(b"zork"[..], buffer);
+    }
+
+    #[test]
+    fn octet_decode_moves_past_invalid_utf8() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(16);
+
+        // An invalid syslog message containing invalid utf8 bytes.
+        buffer.put(&[b'4', b' ', 0xf0, 0x28, 0x8c, 0xbc][..]);
+        let result = decoder.decode(&mut buffer);
+
+        assert!(result.is_err());
+        assert_eq!(b""[..], buffer);
+    }
+
+    #[test]
+    fn octet_decode_moves_past_exceeded_frame_length() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(32);
+
+        buffer.put(&b"32thisshouldbelongerthanthmaxframeasizewhichmeansthesyslogparserwillnotbeabletodecodeit\n"[..]);
+        let result = decoder.decode(&mut buffer);
+
+        assert!(result.is_err());
+        assert_eq!(b""[..], buffer);
+    }
+
+    #[test]
+    fn octet_decode_rejects_exceeded_frame_length() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(32);
+
+        buffer.put(&b"26 abcdefghijklmnopqrstuvwxyzand here we are"[..]);
+        let result = decoder.decode(&mut buffer);
+        assert_eq!(Ok(None), result.map_err(|_| false));
+        let result = decoder.decode(&mut buffer);
+
+        assert!(result.is_err());
+        assert_eq!(b"and here we are"[..], buffer);
+    }
+
+    #[test]
+    fn octet_decode_rejects_exceeded_frame_length_multiple_frames() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(32);
+
+        buffer.put(&b"26 abc"[..]);
+        let _result = decoder.decode(&mut buffer);
+
+        buffer.put(&b"defghijklmnopqrstuvwxyzand here we are"[..]);
+        let result = decoder.decode(&mut buffer);
+
+        println!("{:?}", result);
+        assert!(result.is_err());
+        assert_eq!(b"and here we are"[..], buffer);
+    }
+
+    #[test]
+    fn octet_decode_moves_past_exceeded_frame_length_multiple_frames() {
+        let mut decoder = OctetCountingDecoder::new_with_max_length(16);
+        let mut buffer = BytesMut::with_capacity(32);
+
+        buffer.put(&b"32thisshouldbelongerthanthmaxframeasizewhichmeansthesyslogparserwillnotbeabletodecodeit"[..]);
+        let _ = decoder.decode(&mut buffer);
+
+        assert_eq!(decoder.octet_decoding, Some(State::DiscardingToEol));
+        buffer.put(&b"wemustcontinuetodiscard\n32 something valid"[..]);
+        let result = decoder.decode(&mut buffer);
+
+        assert!(result.is_err());
+        assert_eq!(b"32 something valid"[..], buffer);
     }
 }

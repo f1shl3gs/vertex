@@ -3,10 +3,10 @@ use std::io;
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use memchr::memchr;
 use serde::{Deserialize, Serialize};
-use tokio_util::codec::{Decoder, Encoder};
+use tokio_util::codec::{Decoder, Encoder, Framed};
+use tracing::{trace, warn};
 
-use crate::codecs::decoding::BoxedFramingError;
-use crate::config::skip_serializing_if_default;
+use crate::FramingError;
 
 /// Options for building a `CharacterDelimitedDecoder`
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
@@ -16,16 +16,18 @@ pub struct CharacterDelimitedDecoderOptions {
     /// The maximum length of the byte buffer
     ///
     /// This length does *not* include the trailing delimiter.
-    #[serde(skip_serializing_if = "skip_serializing_if_default")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     max_length: Option<usize>,
 }
 
+/// Config used to build a `CharacterDelimitedDecoder`
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct CharacterDelimitedDecoderConfig {
     pub(crate) character_delimited: CharacterDelimitedDecoderOptions,
 }
 
 impl CharacterDelimitedDecoderConfig {
+    /// Build the `CharacterDelimitedDecoder` from this configuration.
     pub fn build(&self) -> CharacterDelimitedDecoder {
         if let Some(max_length) = self.character_delimited.max_length {
             CharacterDelimitedDecoder::new_with_max_length(
@@ -74,7 +76,7 @@ impl CharacterDelimitedDecoder {
 
 impl Decoder for CharacterDelimitedDecoder {
     type Item = Bytes;
-    type Error = BoxedFramingError;
+    type Error = FramingError;
 
     fn decode(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         loop {
@@ -86,8 +88,8 @@ impl Decoder for CharacterDelimitedDecoder {
             // of the buffer is discarded
             match memchr(self.delimiter, buf) {
                 None => return Ok(None),
-                Some(next_delimiter_index) => {
-                    if next_delimiter_index > self.max_length {
+                Some(next) => {
+                    if next > self.max_length {
                         // The discovered sub-buffer is too big, so we discard it,
                         // taking care to also discard the delimiter
                         warn!(
@@ -96,9 +98,9 @@ impl Decoder for CharacterDelimitedDecoder {
                             max_length = self.max_length,
                             internal_log_rate_secs = 10
                         );
-                        buf.advance(next_delimiter_index + 1);
+                        buf.advance(next + 1);
                     } else {
-                        let frame = buf.split_to(next_delimiter_index).freeze();
+                        let frame = buf.split_to(next).freeze();
                         buf.advance(1); // scoot past the delimiter
                         return Ok(Some(frame));
                     }
@@ -130,25 +132,9 @@ impl Decoder for CharacterDelimitedDecoder {
     }
 }
 
-impl<T> Encoder<T> for CharacterDelimitedDecoder
-where
-    T: AsRef<[u8]>,
-{
-    type Error = io::Error;
-
-    fn encode(&mut self, item: T, buf: &mut BytesMut) -> Result<(), Self::Error> {
-        let item = item.as_ref();
-        buf.reserve(item.len() + 1);
-        buf.put(item);
-        buf.put_u8(self.delimiter as u8);
-        Ok(())
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-    use indoc::indoc;
     use std::collections::HashMap;
 
     #[test]
@@ -157,14 +143,6 @@ mod tests {
         let buf = &mut BytesMut::new();
         buf.put_slice(b"abc\n");
         assert_eq!(Some("abc".into()), codec.decode(buf).unwrap())
-    }
-
-    #[test]
-    fn character_delimited_encode() {
-        let mut codec = CharacterDelimitedDecoder::new(b'\n');
-        let mut buf = BytesMut::new();
-        codec.encode(b"abc", &mut buf).unwrap();
-        assert_eq!(b"abc\n", &buf[..]);
     }
 
     #[test]
@@ -226,8 +204,7 @@ mod tests {
 
     #[test]
     fn decode_json_multiline() {
-        let events = indoc! {r#"
-            {"log":"\u0009at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)\n","stream":"stdout","time":"2019-01-18T07:49:27.374616758Z"}
+        let events = r#"{"log":"\u0009at org.springframework.security.web.context.SecurityContextPersistenceFilter.doFilter(SecurityContextPersistenceFilter.java:105)\n","stream":"stdout","time":"2019-01-18T07:49:27.374616758Z"}
             {"log":"\u0009at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:334)\n","stream":"stdout","time":"2019-01-18T07:49:27.374640288Z"}
             {"log":"\u0009at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:56)\n","stream":"stdout","time":"2019-01-18T07:49:27.374655505Z"}
             {"log":"\u0009at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:107)\n","stream":"stdout","time":"2019-01-18T07:49:27.374671955Z"}
@@ -278,7 +255,7 @@ mod tests {
             {"log":"\n","stream":"stdout","time":"2019-01-18T07:49:27.375391335Z"}
             {"log":"\n","stream":"stdout","time":"2019-01-18T07:49:27.375416915Z"}
             {"log":"2019-01-18 07:53:06.419 [               ]  INFO 1 --- [vent-bus.prod-1] c.t.listener.CommonListener              : warehousing Dailywarehousing.daily\n","stream":"stdout","time":"2019-01-18T07:53:06.420527437Z"}
-        "#};
+        "#;
 
         let mut codec = CharacterDelimitedDecoder::new(b'\n');
         let buf = &mut BytesMut::new();

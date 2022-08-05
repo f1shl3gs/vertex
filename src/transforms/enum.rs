@@ -85,10 +85,10 @@ struct Enum {
 impl FunctionTransform for Enum {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            if let Some(got) = log.get_field(&self.source) {
+            if let Some(got) = log.get_field(self.source.as_str()) {
                 for MappingItem { key, value } in &self.mapping {
                     if key == got {
-                        log.insert_field(self.target.clone(), value.clone());
+                        log.insert_field(self.target.as_str(), value.clone());
                         return;
                     }
                 }

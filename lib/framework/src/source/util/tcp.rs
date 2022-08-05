@@ -5,6 +5,8 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use bytes::Bytes;
+use codecs::decoding::StreamDecodingError;
+use codecs::ReadyFrames;
 use event::{BatchNotifier, BatchStatus, Event};
 use futures::StreamExt;
 use futures_util::future::BoxFuture;
@@ -18,7 +20,6 @@ use tokio::net::{TcpListener, TcpStream};
 use tokio::time::sleep;
 use tokio_util::codec::{Decoder, FramedRead};
 
-use crate::codecs::{ReadyFrames, StreamDecodingError};
 use crate::config::{Resource, SourceContext};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
@@ -138,7 +139,7 @@ impl TcpSourceAcker for TcpNullAcker {
 
 pub trait TcpSource: Clone + Send + Sync + 'static
 where
-    <<Self as TcpSource>::Decoder as tokio_util::codec::Decoder>::Item: std::marker::Send,
+    <<Self as TcpSource>::Decoder as Decoder>::Item: Send,
 {
     // TODO: replace it once this feature become stable and released
     // Should be default `std::io::Error`
@@ -261,7 +262,7 @@ async fn handle_stream<T>(
     mut output: Pipeline,
     acknowledgements: bool,
 ) where
-    <<T as TcpSource>::Decoder as tokio_util::codec::Decoder>::Item: std::marker::Send,
+    <<T as TcpSource>::Decoder as Decoder>::Item: Send,
     T: TcpSource,
 {
     tokio::select! {

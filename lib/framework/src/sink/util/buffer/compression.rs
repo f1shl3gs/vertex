@@ -10,16 +10,21 @@ pub const GZIP_FAST: u32 = 1;
 pub const GZIP_DEFAULT: u32 = 6;
 pub const GZIP_BEST: u32 = 9;
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq, PartialEq, Default)]
 pub enum Compression {
+    /// No compression
+    #[default]
     None,
-    Gzip(flate2::Compression),
-}
 
-impl Default for Compression {
-    fn default() -> Self {
-        Self::None
-    }
+    /// Gzip compression.
+    ///
+    /// [gzip]: https://en.wikipedia.org/wiki/Gzip
+    Gzip(flate2::Compression),
+
+    /// Zlib compression.
+    ///
+    /// [zlib]: https://en.wikipedia.org/wiki/Zlib
+    Zlib(flate2::Compression),
 }
 
 impl Compression {
@@ -46,6 +51,7 @@ impl Compression {
         match self {
             Self::None => None,
             Self::Gzip(_) => Some("gzip"),
+            Self::Zlib(_) => Some("deflate"),
         }
     }
 }
@@ -55,6 +61,7 @@ impl Display for Compression {
         match *self {
             Self::None => write!(f, "none"),
             Self::Gzip(ref level) => write!(f, "gzip({})", level.level()),
+            Self::Zlib(ref level) => write!(f, "zlib({})", level.level()),
         }
     }
 }
@@ -178,20 +185,33 @@ impl ser::Serialize for Compression {
         S: Serializer,
     {
         let mut map = serializer.serialize_map(None)?;
+        let mut level = None;
 
         match self {
             Compression::None => map.serialize_entry("algorithm", "none")?,
-            Compression::Gzip(level) => {
+            Compression::Gzip(l) => {
                 map.serialize_entry("algorithm", "gzip")?;
-                match level.level() {
-                    GZIP_NONE => map.serialize_entry("level", "none")?,
-                    GZIP_FAST => map.serialize_entry("level", "fast")?,
-                    GZIP_DEFAULT => map.serialize_entry("level", "default")?,
-                    GZIP_BEST => map.serialize_entry("level", "best")?,
-                    level => map.serialize_entry("level", &level)?,
-                };
+                level = Some(*l);
+            }
+            Compression::Zlib(l) => {
+                map.serialize_entry("algorithm", "zlib")?;
+                level = Some(*l);
             }
         };
+
+        // If there's a level present, and it's _not_ the default compression level, then
+        // serialize it. We already handle deserializing as the default level when the level
+        // isn't explicitly specified (but `algorithm` is) so serializing the default would
+        // just clutter the serialized output.
+        if let Some(level) = level {
+            match level.level() {
+                GZIP_NONE => map.serialize_entry("level", "none")?,
+                GZIP_FAST => map.serialize_entry("level", "fast")?,
+                GZIP_DEFAULT => map.serialize_entry("level", "default")?,
+                GZIP_BEST => map.serialize_entry("level", "best")?,
+                level => map.serialize_entry("level", &level)?,
+            };
+        }
 
         map.end()
     }

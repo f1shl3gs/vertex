@@ -33,6 +33,7 @@ buffers = { path = "../buffers" }
 bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
+codecs = { path = "../codecs" }
 console-subscriber = { version = "0.1.6", optional = true }
 dyn-clone = { version = "1.0.6" }
 encoding_rs = { version = "0.8.31", features = ["serde"]}
@@ -71,7 +72,7 @@ serde_yaml = { version = "0.8.24" }
 # remove shared after "shared" merged into this crate
 shared = { path = "../shared" }
 snap = { version = "1.0.5", default-features = false }
-socket2 = { version = "0.4.5", default-features = false }
+socket2 = { version = "0.4.4", default-features = false }
 stream-cancel = { version = "0.8.1" }
 sysinfo = { path = "../sysinfo" }
 syslog_loose = { version = "0.17.0", default-features = false }

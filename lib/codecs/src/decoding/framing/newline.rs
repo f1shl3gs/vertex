@@ -1,9 +1,14 @@
+use crate::FramingError;
 use bytes::{Bytes, BytesMut};
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Decoder;
 
-use super::{character::CharacterDelimitedDecoder, BoxedFramingError};
-use crate::config::skip_serializing_if_default;
+use super::character::CharacterDelimitedDecoder;
+
+#[inline]
+pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
+    e == &E::default()
+}
 
 /// Config used to build a `NewlineDelimitedDecoder`
 #[derive(Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
@@ -83,7 +88,7 @@ impl Default for NewlineDelimitedDecoder {
 
 impl Decoder for NewlineDelimitedDecoder {
     type Item = Bytes;
-    type Error = BoxedFramingError;
+    type Error = FramingError;
 
     fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         self.0.decode(src)

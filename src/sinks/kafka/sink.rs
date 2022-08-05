@@ -1,11 +1,10 @@
 use std::time::Duration;
 
 use buffers::Acker;
+use codecs::encoding::Transformer;
+use codecs::Encoder;
 use event::{Event, EventContainer, Events};
-use framework::sink::util::{
-    builder::SinkBuilderExt,
-    encoding::{EncodingConfig, StandardEncodings},
-};
+use framework::sink::util::builder::SinkBuilderExt;
 use framework::template::{Template, TemplateParseError};
 use framework::StreamSink;
 use futures::{stream::BoxStream, StreamExt};
@@ -31,7 +30,8 @@ pub enum BuildError {
 }
 
 pub struct KafkaSink {
-    encoding: EncodingConfig<StandardEncodings>,
+    transformer: Transformer,
+    encoder: Encoder<()>,
     acker: Acker,
     service: KafkaService,
     topic: Template,
@@ -49,10 +49,14 @@ pub fn create_producer(
 impl KafkaSink {
     pub fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {
         let producer = create_producer(config.to_rdkafka(KafkaRole::Producer)?)?;
+        let transformer = config.encoding.transformer();
+        let serializer = config.encoding.build();
+        let encoder = Encoder::<()>::new(serializer);
 
         Ok(KafkaSink {
             headers_field: config.headers_field,
-            encoding: config.encoding,
+            transformer,
+            encoder,
             acker,
             service: KafkaService::new(producer),
             topic: Template::try_from(config.topic)?,
@@ -64,11 +68,12 @@ impl KafkaSink {
         // rdkafka will internally retry forever, so we need some limit to prevent this from
         // overflowing
         let service = ConcurrencyLimit::new(self.service, QUEUE_MIN_MESSAGES as usize);
-        let request_builder = KafkaRequestBuilder {
+        let mut request_builder = KafkaRequestBuilder {
             key_field: self.key_field,
             headers_field: self.headers_field,
             topic_template: self.topic,
-            encoder: self.encoding,
+            transformer: self.transformer.clone(),
+            encoder: self.encoder.clone(),
             log_schema: log_schema(),
         };
 

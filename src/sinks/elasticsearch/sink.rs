@@ -3,10 +3,10 @@ use std::num::NonZeroUsize;
 
 use async_trait::async_trait;
 use buffers::Acker;
+use codecs::encoding::Transformer;
 use event::log::Value;
 use event::{Event, EventContainer, Events, LogRecord};
 use framework::sink::util::builder::SinkBuilderExt;
-use framework::sink::util::Transformer;
 use framework::stream::{BatcherSettings, DriverResponse};
 use framework::StreamSink;
 use futures_util::stream::BoxStream;

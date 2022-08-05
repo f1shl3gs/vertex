@@ -18,9 +18,10 @@ use tokio::time::{sleep, Sleep};
 use tower::{Service, ServiceBuilder};
 use tracing_futures::Instrument;
 
+use super::buffer::partition::Partition;
 use crate::batch::{Batch, EncodedBatch, EncodedEvent, FinalizersBatch, PushResult, StatefulBatch};
-use crate::sink::util::partition::{Partition, PartitionBuffer, PartitionInnerBuffer};
 use crate::sink::util::service::{Map, ServiceBuilderExt};
+use crate::sink::util::{PartitionBuffer, PartitionInnerBuffer};
 
 /// A Partition based batcher, given some `Service` and `Batch` where the
 /// input is partitionable via the `Partition` trait, it will hold many
@@ -544,13 +545,14 @@ mod tests {
     };
 
     use crate::batch::BatchSettings;
+    use crate::sink::util::buffer::vec::EncodedLength;
+    use crate::sink::util::VecBuffer;
     use buffers::Acker;
     use bytes::Bytes;
     use futures::{future, stream, task::noop_waker_ref, SinkExt, StreamExt};
     use tokio::{task::yield_now, time::Instant};
 
     use super::*;
-    use crate::sink::util::vec::{EncodedLength, VecBuffer};
 
     const TIMEOUT: Duration = Duration::from_secs(10);
 

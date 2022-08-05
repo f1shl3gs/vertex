@@ -57,12 +57,12 @@ impl AddFields {
 impl FunctionTransform for AddFields {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_log(|log| {
-            for (k, v) in self.fields.iter() {
-                if log.fields.contains_key(k) && !self.overwrite {
+            for (path, v) in self.fields.iter() {
+                if log.fields.contains(path.as_str()) && !self.overwrite {
                     continue;
                 }
 
-                log.fields.insert(k.clone(), v.as_str().into());
+                log.fields.insert(path.as_str(), v.to_string());
             }
         });
 

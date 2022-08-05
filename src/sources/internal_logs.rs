@@ -77,10 +77,10 @@ async fn run(
     while let Some(res) = rx.next().await {
         if let Ok(mut log) = res {
             if let Ok(hostname) = &hostname {
-                log.insert_field(host_key.clone(), hostname.to_owned());
+                log.insert_field(host_key.as_str(), hostname.to_owned());
             }
 
-            log.insert_field(pid_key.clone(), pid);
+            log.insert_field(pid_key.as_str(), pid);
             log.insert_field(log_schema().source_type_key(), "internal_log");
             log.insert_field(log_schema().timestamp_key(), Utc::now());
             if let Err(err) = output.send(Event::from(log)).await {
@@ -137,17 +137,23 @@ mod tests {
 
         assert_eq!(events.len(), 2);
         assert_eq!(
-            events[0].as_log().fields["message"],
-            "Before source started".into()
+            events[0].as_log().get_field("message").unwrap(),
+            &Value::from("Before source started")
         );
         assert_eq!(
-            events[1].as_log().fields["message"],
-            "After source started".into()
+            events[1]
+                .as_log()
+                .get_field("message")
+                .unwrap()
+                .to_string_lossy(),
+            "After source started"
         );
 
         for event in events {
             let log = event.as_log();
-            let timestamp = log.fields["timestamp"]
+            let timestamp = log
+                .get_field("timestamp")
+                .unwrap()
                 .as_timestamp()
                 .expect("timestamp isn't a timestamp");
             assert!(*timestamp >= start);

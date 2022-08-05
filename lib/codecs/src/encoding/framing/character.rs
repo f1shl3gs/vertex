@@ -12,10 +12,12 @@ pub struct CharacterDelimitedFramerConfig {
 }
 
 impl CharacterDelimitedFramerConfig {
+    /// Creates a `CharacterDelimitedFramerConfig` with the specified delimiter.
     pub const fn new(delimiter: u8) -> Self {
         Self { delimiter }
     }
 
+    /// Build the `CharacterDelimitedEncoder` from this configuration.
     pub const fn build(&self) -> CharacterDelimitedEncoder {
         CharacterDelimitedEncoder {
             delimiter: self.delimiter,
@@ -23,12 +25,15 @@ impl CharacterDelimitedFramerConfig {
     }
 }
 
+/// An encoder for handling bytes that are delimited by (a) chosen character(s).
 #[derive(Clone, Debug)]
 pub struct CharacterDelimitedEncoder {
-    delimiter: u8,
+    /// The character that delimits byte sequences.
+    pub delimiter: u8,
 }
 
 impl CharacterDelimitedEncoder {
+    /// Creates a new `CharacterDelimitedEncoder` with the delimiter.
     pub const fn new(delimiter: u8) -> Self {
         Self { delimiter }
     }

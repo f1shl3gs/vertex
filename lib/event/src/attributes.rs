@@ -382,6 +382,11 @@ impl Attributes {
     pub fn contains_key(&self, key: impl Into<Key>) -> bool {
         self.0.contains_key(&(key.into()))
     }
+
+    #[inline]
+    pub fn clear(&mut self) {
+        self.0.clear()
+    }
 }
 
 impl FromIterator<(Key, Value)> for Attributes {
@@ -472,6 +477,10 @@ impl<'a> Iterator for Iter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next()
     }
+}
+
+pub fn skip_serializing_if_empty(attrs: &Attributes) -> bool {
+    attrs.0.is_empty()
 }
 
 #[macro_export]

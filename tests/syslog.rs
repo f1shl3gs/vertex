@@ -4,8 +4,9 @@ use std::collections::HashMap;
 use std::fmt;
 use std::str::FromStr;
 
+use codecs::encoding::{FramingConfig, SerializerConfig};
+use codecs::EncodingConfigWithFraming;
 use framework::sink::util::tcp::TcpSinkConfig;
-use framework::sink::util::{encoding::EncodingConfig, Encoding};
 use framework::testing::CountReceiver;
 use rand::{thread_rng, Rng};
 use serde::Deserialize;
@@ -17,6 +18,7 @@ use vertex::sinks::socket;
 use vertex::sinks::socket::SocketSinkConfig;
 use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
 
+use crate::util::trace_init;
 use util::start_topology;
 
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]
@@ -162,12 +164,18 @@ fn random_structured_data(
 fn tcp_json_sink(address: String) -> SocketSinkConfig {
     SocketSinkConfig::new(
         socket::Mode::Tcp(TcpSinkConfig::from_address(address)),
-        EncodingConfig::from(Encoding::Json),
+        EncodingConfigWithFraming::new(
+            Some(FramingConfig::NewlineDelimited),
+            SerializerConfig::Json,
+            Default::default(),
+        ),
     )
 }
 
 #[tokio::test]
 async fn tcp_syslog() {
+    trace_init();
+
     let num = 10000usize;
 
     let in_addr = next_addr();

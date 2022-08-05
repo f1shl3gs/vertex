@@ -40,6 +40,18 @@ impl<'a> From<&'a str> for BorrowedSegment<'a> {
     }
 }
 
+impl<'a> From<&'a String> for BorrowedSegment<'a> {
+    fn from(field: &'a String) -> Self {
+        BorrowedSegment::field(field.as_str())
+    }
+}
+
+impl From<isize> for BorrowedSegment<'_> {
+    fn from(i: isize) -> Self {
+        BorrowedSegment::Index(i)
+    }
+}
+
 impl<'a, 'b: 'a> From<&'b OwnedSegment> for BorrowedSegment<'a> {
     fn from(segment: &'b OwnedSegment) -> Self {
         match segment {
@@ -57,5 +69,21 @@ impl<'a, 'b> Path<'a> for &'b Vec<BorrowedSegment<'a>> {
 
     fn segment_iter(&self) -> Self::Iter {
         self.as_slice().iter().cloned()
+    }
+}
+
+impl<'a, 'b> Path<'a> for &'b [BorrowedSegment<'a>] {
+    type Iter = Cloned<Iter<'b, BorrowedSegment<'a>>>;
+
+    fn segment_iter(&self) -> Self::Iter {
+        self.iter().cloned()
+    }
+}
+
+impl<'a, 'b, const A: usize> Path<'a> for &'b [BorrowedSegment<'a>; A] {
+    type Iter = Cloned<Iter<'b, BorrowedSegment<'a>>>;
+
+    fn segment_iter(&self) -> Self::Iter {
+        self.iter().cloned()
     }
 }

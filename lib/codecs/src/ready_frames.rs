@@ -1,7 +1,8 @@
-use futures::Stream;
-use futures_util::StreamExt;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+use futures::Stream;
+use futures_util::StreamExt;
 
 const DEFAULT_CAPACITY: usize = 1024;
 

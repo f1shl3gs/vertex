@@ -1,38 +1,33 @@
-mod contains;
-pub mod get;
-pub mod get_mut;
-mod insert;
-mod keys;
-pub mod path_iter;
-mod remove;
 pub mod value;
 
 use std::collections::BTreeMap;
-use std::fmt::{Debug, Display};
+use std::fmt::Debug;
 use std::sync::Arc;
 
 use bytes::Bytes;
 use chrono::Utc;
 use log_schema::log_schema;
+use lookup::Path;
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 use tracing::field::Field;
 pub use value::Value;
 
-use crate::attributes::{Attributes, Key};
-use crate::log::keys::all_fields;
+use crate::attributes::{skip_serializing_if_empty, Attributes, Key};
 use crate::metadata::EventMetadata;
 use crate::MaybeAsLogMut;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use value::keys::{all_fields, keys};
 
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;
 
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
+    #[serde(skip_serializing_if = "skip_serializing_if_empty")]
     pub tags: Attributes,
 
-    pub fields: BTreeMap<String, Value>,
+    pub fields: Value,
 
     #[serde(skip)]
     metadata: EventMetadata,
@@ -42,7 +37,7 @@ impl From<BTreeMap<String, Value>> for LogRecord {
     fn from(fields: BTreeMap<String, Value>) -> Self {
         Self {
             tags: Default::default(),
-            fields,
+            fields: Value::Object(fields),
             metadata: EventMetadata::default(),
         }
     }
@@ -152,13 +147,13 @@ impl LogRecord {
     pub fn new(tags: Attributes, fields: BTreeMap<String, Value>) -> Self {
         Self {
             tags,
-            fields,
+            fields: fields.into(),
             metadata: Default::default(),
         }
     }
 
     #[inline]
-    pub fn into_parts(self) -> (Attributes, BTreeMap<String, Value>, EventMetadata) {
+    pub fn into_parts(self) -> (Attributes, Value, EventMetadata) {
         (self.tags, self.fields, self.metadata)
     }
 
@@ -177,62 +172,64 @@ impl LogRecord {
         self.tags.get(key)
     }
 
-    pub fn insert_field(
+    pub fn insert_field<'a>(
         &mut self,
-        key: impl AsRef<str>,
-        value: impl Into<Value> + Debug,
+        path: impl Path<'a>,
+        value: impl Into<Value>,
     ) -> Option<Value> {
-        insert::insert(&mut self.fields, key.as_ref(), value.into())
+        self.fields.insert(path, value.into())
     }
 
-    pub fn try_insert_field(&mut self, key: impl AsRef<str>, value: impl Into<Value> + Debug) {
-        let key = key.as_ref();
-        if !self.contains(key) {
+    // deprecated
+    pub fn try_insert_field<'a>(&mut self, key: impl Path<'a>, value: impl Into<Value> + Debug) {
+        if !self.contains(key.clone()) {
             self.insert_field(key, value);
         }
     }
 
-    /// This function will insert a key in place without reference to any pathing
-    /// information in the key. It will insert over the top of any value that
-    /// exists in the map already.
-    pub fn insert_flat_field<K, V>(&mut self, key: K, value: V) -> Option<Value>
-    where
-        K: Into<String> + Display,
-        V: Into<Value> + Debug,
-    {
-        self.fields.insert(key.into(), value.into())
+    pub fn contains<'a>(&self, path: impl Path<'a>) -> bool {
+        self.fields.get(path).is_some()
     }
 
-    pub fn contains(&self, key: impl AsRef<str>) -> bool {
-        contains::contains(&self.fields, key.as_ref())
+    pub fn get_field<'a>(&self, key: impl Path<'a>) -> Option<&Value> {
+        self.fields.get(key)
     }
 
-    pub fn get_flat_field(&self, key: impl AsRef<str>) -> Option<&Value> {
-        self.fields.get(key.as_ref())
+    pub fn get_field_mut<'a>(&mut self, key: impl Path<'a>) -> Option<&mut Value> {
+        self.fields.get_mut(key)
     }
 
-    pub fn get_field(&self, key: impl AsRef<str>) -> Option<&Value> {
-        get::get(&self.fields, key.as_ref())
+    pub fn remove_field<'a>(&mut self, key: impl Path<'a>) -> Option<Value> {
+        self.fields.remove(key, false)
     }
 
-    pub fn get_field_mut(&mut self, key: impl AsRef<str>) -> Option<&mut Value> {
-        self::get_mut::get_mut(&mut self.fields, key.as_ref())
+    pub fn remove_field_prune<'a>(&mut self, key: impl Path<'a>, prune: bool) -> Option<Value> {
+        self.fields.remove(key, prune)
     }
 
-    pub fn remove_field(&mut self, key: impl AsRef<str>) -> Option<Value> {
-        remove::remove(&mut self.fields, key.as_ref(), false)
+    pub fn keys(&self) -> Option<impl Iterator<Item = String> + '_> {
+        match &self.fields {
+            Value::Object(map) => Some(keys(map)),
+            _ => None,
+        }
     }
 
-    pub fn remove_field_prune(&mut self, key: impl AsRef<str>, prune: bool) -> Option<Value> {
-        remove::remove(&mut self.fields, key.as_ref(), prune)
+    pub fn all_fields(&self) -> Option<impl Iterator<Item = (String, &Value)> + Serialize> {
+        self.as_map().map(all_fields)
     }
 
-    pub fn keys(&self) -> impl Iterator<Item = String> + '_ {
-        keys::keys(&self.fields)
+    pub fn as_map(&self) -> Option<&BTreeMap<String, Value>> {
+        match &self.fields {
+            Value::Object(map) => Some(map),
+            _ => None,
+        }
     }
 
-    pub fn all_fields(&self) -> impl Iterator<Item = (String, &Value)> + Serialize {
-        all_fields(&self.fields)
+    pub fn as_map_mut(&mut self) -> Option<&mut BTreeMap<String, Value>> {
+        match &mut self.fields {
+            Value::Object(map) => Some(map),
+            _ => None,
+        }
     }
 
     pub fn add_finalizer(&mut self, finalizer: EventFinalizer) {

@@ -5,17 +5,16 @@ use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use chrono::Utc;
+use codecs::decoding::StreamDecodingError;
+use codecs::decoding::{DeserializerConfig, FramingConfig};
+use codecs::DecodingConfig;
 use event::Event;
 use framework::async_read::VecAsyncReadExt;
-use framework::codecs::decoding::{
-    BytesDeserializerConfig, DecodingConfig, DeserializerConfig, FramingConfig,
-};
-use framework::codecs::{Decoder, NewlineDelimitedDecoderConfig, StreamDecodingError};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
     SourceContext, SourceDescription,
 };
-use framework::{codecs, Pipeline, ShutdownSignal, Source};
+use framework::{Pipeline, ShutdownSignal, Source};
 use futures::FutureExt;
 use futures_util::StreamExt;
 use humanize::{deserialize_bytes, serialize_bytes};
@@ -81,12 +80,11 @@ const fn default_maximum_buffer_size() -> usize {
     1024 * 1024 // 1MiB
 }
 
-fn default_framing() -> FramingConfig {
-    NewlineDelimitedDecoderConfig::new().into()
-}
-
-fn default_decoding() -> DeserializerConfig {
-    BytesDeserializerConfig::new().into()
+fn default_decoding() -> DecodingConfig {
+    DecodingConfig::new(
+        FramingConfig::NewLineDelimited { max_length: None },
+        DeserializerConfig::Bytes,
+    )
 }
 
 #[derive(Debug, PartialEq, Error)]
@@ -95,11 +93,22 @@ pub enum ExecConfigError {
     CommandEmpty,
     #[error("The maximum buffer size must be greater than zero")]
     ZeroBuffer,
+    #[error("`scheduled` and `streaming` can't be defined at the same time")]
+    Conflict,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+enum Mode {
+    Scheduled(ScheduledConfig),
+    Streaming(StreamingConfig),
 }
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ExecConfig {
+    // TODO: replace with mode, enum can make sure only one of them configured.
+    //   `flatten` or `untag enum` might be needed
     scheduled: Option<ScheduledConfig>,
     streaming: Option<StreamingConfig>,
 
@@ -116,14 +125,16 @@ pub struct ExecConfig {
     )]
     maximum_buffer_size: usize,
 
-    #[serde(default = "default_framing")]
-    framing: FramingConfig,
     #[serde(default = "default_decoding")]
-    decoding: DeserializerConfig,
+    decoding: DecodingConfig,
 }
 
 impl ExecConfig {
     fn validate(&self) -> Result<(), ExecConfigError> {
+        if self.scheduled.is_some() && self.streaming.is_some() {
+            return Err(ExecConfigError::Conflict);
+        }
+
         if self.command.is_empty() {
             Err(ExecConfigError::CommandEmpty)
         } else if self.maximum_buffer_size == 0 {
@@ -136,8 +147,7 @@ impl ExecConfig {
 
 impl GenerateConfig for ExecConfig {
     fn generate_config() -> String {
-        format!(
-            r#"
+        r#"
 # The command to be run, plus any arguments if needed.
 #
 command:
@@ -171,13 +181,9 @@ scheduled:
 
 # Configuration in which way incoming bytes sequences are split up into byte frames.
 #
-# framing:
-{}
-
-#
-"#,
-            FramingConfig::generate_commented_with_indent(2)
-        )
+# framing: newline
+"#
+        .into()
     }
 }
 
@@ -191,11 +197,7 @@ impl SourceConfig for ExecConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.validate()?;
         let hostname = crate::hostname().ok();
-        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
-
-        if self.scheduled.is_some() && self.streaming.is_some() {
-            return Err("`scheduled` and `streaming` can't be defined at the same time".into());
-        }
+        let decoder = self.decoding.build();
 
         if let Some(config) = &self.scheduled {
             Ok(Box::pin(run_scheduled(
@@ -290,7 +292,7 @@ async fn run_command(
     include_stderr: bool,
     hostname: Option<String>,
     shutdown: ShutdownSignal,
-    decoder: Decoder,
+    decoder: codecs::Decoder,
     mut output: Pipeline,
 ) -> Result<Option<ExitStatus>, std::io::Error> {
     let mut cmd = build_command(command.clone(), working_dir, include_stderr);
@@ -414,7 +416,7 @@ fn handle_event(
 ) {
     if let Event::Log(log) = event {
         // Add timestamp
-        log.try_insert_field(log_schema().timestamp_key(), Utc::now());
+        log.insert_field(log_schema().timestamp_key(), Utc::now());
 
         // Add source type
         log.insert_tag(log_schema().source_type_key(), EXEC);
@@ -698,7 +700,7 @@ mod tests {
             );
             assert!(log.get_field(PID_KEY).is_some());
             assert!(log.get_field(log_schema().timestamp_key()).is_some());
-            assert_eq!(7, log.all_fields().count());
+            assert_eq!(7, log.all_fields().unwrap().count());
         }
     }
 }

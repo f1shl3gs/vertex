@@ -1,21 +1,180 @@
 //! A collection of support structures that are used in the process of decoding
 //! bytes into events.
 
-mod format;
+mod config;
+mod error;
+pub mod format;
 mod framing;
 
-use serde::{Deserialize, Serialize};
+use std::fmt::{Debug, Display, Formatter};
 
-/// Configuration for building a `Deserializer`.
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(tag = "codec", rename_all = "snake_case")]
-pub enum DeserializerConfig {
-    /// Configures the `BytesDeserializer`
-    Bytes,
-    /// Configures the `JsonDeserializer`
-    Json,
+use bytes::{Bytes, BytesMut};
+pub use config::*;
+pub use error::{DecodeError, StreamDecodingError};
+use event::Event;
+use format::Deserializer as _;
+pub use format::*;
+pub use framing::*;
+use serde::{Deserialize, Serialize};
+use smallvec::SmallVec;
+use tokio::io::{AsyncRead, AsyncWrite};
+use tokio_util::codec::Framed;
+use tracing::warn;
+
+use crate::decoding::format::DeserializeError;
+use crate::encoding::JsonSerializer;
+use crate::FramingError;
+
+/// Produce byte frames from a byte stream / byte message
+#[derive(Clone, Debug)]
+pub enum Framer {
+    /// Uses a `BytesDecoder` for framing
+    Bytes(BytesDecoder),
+    /// Uses a `CharacterDelimitedDecoder` for framing.
+    CharacterDelimited(CharacterDelimitedDecoder),
+    /// Uses a `NewlineDelimitedDecoder` for framing.
+    NewlineDelimited(NewlineDelimitedDecoder),
+    /// Uses a `OctetCountingDecoder` for framing
+    OctetCounting(OctetCountingDecoder),
+}
+
+impl From<OctetCountingDecoder> for Framer {
+    fn from(f: OctetCountingDecoder) -> Self {
+        Self::OctetCounting(f)
+    }
+}
+
+impl From<BytesDecoder> for Framer {
+    fn from(f: BytesDecoder) -> Self {
+        Self::Bytes(f)
+    }
+}
+
+impl tokio_util::codec::Decoder for Framer {
+    type Item = Bytes;
+    type Error = FramingError;
+
+    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        match self {
+            Framer::Bytes(f) => f.decode(src),
+            Framer::CharacterDelimited(f) => f.decode(src),
+            Framer::NewlineDelimited(f) => f.decode(src),
+            Framer::OctetCounting(f) => f.decode(src),
+        }
+    }
+
+    fn decode_eof(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        match self {
+            Framer::Bytes(f) => f.decode_eof(buf),
+            Framer::CharacterDelimited(f) => f.decode_eof(buf),
+            Framer::NewlineDelimited(f) => f.decode_eof(buf),
+            Framer::OctetCounting(f) => f.decode_eof(buf),
+        }
+    }
+}
+
+/// Parse structured events from bytes
+#[derive(Clone, Debug)]
+pub enum Deserializer {
+    /// Uses a `BytesDeserializer` for deserialization.
+    Bytes(BytesDeserializer),
+    /// Uses a `JsonDeserializer` for deserialization.
+    Json(JsonDeserializer),
+    /// Uses a `LogfmtDeserializer` for deserialization.
+    Logfmt(LogfmtDeserializer),
 
     #[cfg(feature = "syslog")]
-    /// Configures the `SyslogDeserializer`
-    Syslog,
+    /// Uses a `SyslogDeserializer` for deserialization.
+    Syslog(SyslogDeserializer),
+}
+
+#[cfg(feature = "syslog")]
+impl From<SyslogDeserializer> for Deserializer {
+    fn from(d: SyslogDeserializer) -> Self {
+        Self::Syslog(d)
+    }
+}
+
+impl format::Deserializer for Deserializer {
+    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
+        match self {
+            Deserializer::Bytes(d) => d.parse(buf),
+            Deserializer::Json(d) => d.parse(buf),
+            Deserializer::Logfmt(d) => d.parse(buf),
+            #[cfg(feature = "syslog")]
+            Deserializer::Syslog(d) => d.parse(buf),
+        }
+    }
+}
+
+/// A decoder that can decode structured events from a byte stream / byte
+/// messages.
+#[derive(Clone, Debug)]
+pub struct Decoder {
+    framer: Framer,
+    deserializer: Deserializer,
+}
+
+impl Default for Decoder {
+    fn default() -> Self {
+        Self {
+            framer: Framer::NewlineDelimited(NewlineDelimitedDecoder::new()),
+            deserializer: Deserializer::Bytes(BytesDeserializer::new()),
+        }
+    }
+}
+
+impl Decoder {
+    /// Create a new `Decoder` with framer and deserializer.
+    pub fn new(framer: Framer, deserializer: Deserializer) -> Self {
+        Self {
+            framer,
+            deserializer,
+        }
+    }
+
+    /// Handles the framing result and parses it into a structured event, if
+    /// possible.
+    ///
+    /// Emits logs if either framing or parsing failed.
+    fn handle_framing_result(
+        &mut self,
+        frame: Result<Option<Bytes>, FramingError>,
+    ) -> Result<Option<(SmallVec<[Event; 1]>, usize)>, DecodeError> {
+        let frame = frame.map_err(|err| {
+            warn!(
+                message = "Failed framing bytes",
+                ?err,
+                internal_log_rate_secs = 10
+            );
+            DecodeError::Framing(err)
+        })?;
+
+        let frame = match frame {
+            Some(frame) => frame,
+            _ => return Ok(None),
+        };
+
+        let byte_size = frame.len();
+        // Parse structured events from the byte frame.
+        self.deserializer
+            .parse(frame)
+            .map(|events| Some((events, byte_size)))
+            .map_err(DecodeError::Deserialize)
+    }
+}
+
+impl tokio_util::codec::Decoder for Decoder {
+    type Item = (SmallVec<[Event; 1]>, usize);
+    type Error = DecodeError;
+
+    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        let frame = self.framer.decode(src);
+        self.handle_framing_result(frame)
+    }
+
+    fn decode_eof(&mut self, buf: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+        let frame = self.framer.decode_eof(buf);
+        self.handle_framing_result(frame)
+    }
 }

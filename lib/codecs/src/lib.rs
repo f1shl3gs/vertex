@@ -8,8 +8,9 @@
 pub mod decoding;
 pub mod encoding;
 mod error;
+mod ready_frames;
 
+pub use decoding::{Decoder, DecodingConfig};
+pub use encoding::{Encoder, EncodingConfig, EncodingConfigWithFraming};
 pub use error::FramingError;
-
-/// Basic error type, dynamically dispatched and safe to send across threads.
-pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+pub use ready_frames::ReadyFrames;

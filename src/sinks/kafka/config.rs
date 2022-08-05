@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
+use codecs::encoding::EncodingConfig;
 use framework::batch::{BatchConfig, NoDefaultBatchSettings};
 use framework::config::{
     deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
 };
-use framework::sink::util::encoding::{EncodingConfig, StandardEncodings};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rdkafka::ClientConfig;
@@ -21,7 +21,7 @@ pub struct KafkaSinkConfig {
     pub bootstrap_servers: String,
     pub topic: String,
     pub key_field: Option<String>,
-    pub encoding: EncodingConfig<StandardEncodings>,
+    pub encoding: EncodingConfig,
 
     /// These batching options will `not` override librdkafka_options values
     #[serde(default)]

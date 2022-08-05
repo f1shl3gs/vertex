@@ -1,6 +1,6 @@
 use bytes::Bytes;
 use event::{EventFinalizers, Finalizable};
-use framework::sink::util::{Compression, RequestBuilder};
+use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 use shared::ByteSizeOf;
 
 use super::encoder::{ElasticsearchEncoder, ProcessedEvent};
@@ -50,9 +50,13 @@ impl RequestBuilder<Vec<ProcessedEvent>> for ElasticsearchRequestBuilder {
         (metadata, events)
     }
 
-    fn build_request(&self, metadata: Self::Metadata, payload: Self::Payload) -> Self::Request {
+    fn build_request(
+        &self,
+        metadata: Self::Metadata,
+        payload: EncodeResult<Self::Payload>,
+    ) -> Self::Request {
         ElasticsearchRequest {
-            payload,
+            payload: payload.into_payload(),
             finalizers: metadata.finalizers,
             batch_size: metadata.batch_size,
             events_byte_size: metadata.events_byte_size,

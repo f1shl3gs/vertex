@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
 
 use chrono::{TimeZone, Utc};
+use codecs::encoding::Transformer;
 use event::log::Value;
 use event::{fields, LogRecord};
-use framework::sink::util::{Encoder, Transformer};
+use framework::sink::util::Encoder;
 use framework::template::Template;
 use log_schema::log_schema;
 

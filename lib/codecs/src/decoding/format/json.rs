@@ -4,19 +4,21 @@ use event::Event;
 use log_schema::log_schema;
 use smallvec::{smallvec, SmallVec};
 
-use super::{Deserializer, Error};
+use super::{DeserializeError, Deserializer};
 
+/// Deserializer that builds `Event`s from a byte frame containing JSON
 #[derive(Debug, Clone)]
 pub struct JsonDeserializer;
 
 impl JsonDeserializer {
+    /// Creates a new `JsonDeserializer`
     pub const fn new() -> Self {
         Self
     }
 }
 
 impl Deserializer for JsonDeserializer {
-    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, Error> {
+    fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
         // It's common to receive empty frames when parsing NDJSON, since it allows
         // multiple empty newlines. We proceed without a warning here.
         if buf.is_empty() {

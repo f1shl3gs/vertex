@@ -9,6 +9,8 @@ sources:
 
 sinks:
   stdout:
-    type: stdout
+    type: console
     inputs:
       - tail
+    encoding:
+      codec: json

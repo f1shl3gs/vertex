@@ -11,7 +11,7 @@ use chrono::Utc;
 use event::Metric;
 use event::{Events, MetricValue};
 use framework::config::{
-    default_false, DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
+    DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
 };
 use framework::stream::tripwire_handler;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -30,28 +30,24 @@ use stream_cancel::{Trigger, Tripwire};
 pub struct PrometheusExporterConfig {
     pub tls: Option<TlsConfig>,
 
-    #[serde(default = "default_listen_address")]
-    pub listen: SocketAddr,
+    #[serde(default = "default_endpoint")]
+    pub endpoint: SocketAddr,
 
     #[serde(default = "default_telemetry_path")]
     pub telemetry_path: String,
-
-    #[serde(default = "default_false")]
-    pub compression: bool,
 }
 
 impl Default for PrometheusExporterConfig {
     fn default() -> Self {
         Self {
             tls: None,
-            listen: default_listen_address(),
+            endpoint: default_endpoint(),
             telemetry_path: default_telemetry_path(),
-            compression: default_false(),
         }
     }
 }
 
-fn default_listen_address() -> SocketAddr {
+fn default_endpoint() -> SocketAddr {
     SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 9100)
 }
 
@@ -99,7 +95,7 @@ impl SinkConfig for PrometheusExporterConfig {
     }
 
     fn resources(&self) -> Vec<Resource> {
-        vec![Resource::tcp(self.listen)]
+        vec![Resource::tcp(self.endpoint)]
     }
 }
 
@@ -270,7 +266,7 @@ impl PrometheusExporter {
         });
 
         let (trigger, tripwire) = Tripwire::new();
-        let address = self.config.listen;
+        let address = self.config.endpoint;
         let tls = self.config.tls.clone();
         tokio::spawn(async move {
             let tls = MaybeTlsSettings::from_config(&tls, true).map_err(|err| {

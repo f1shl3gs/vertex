@@ -3,7 +3,6 @@
 
 pub mod async_read;
 pub mod batch;
-pub mod codecs;
 mod common;
 pub mod config;
 pub mod dns;

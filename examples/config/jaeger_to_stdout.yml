@@ -10,6 +10,8 @@ sources:
 
 sinks:
   stdout:
-    type: stdout
+    type: console
     inputs:
       - jaeger
+    encoding:
+      codec: json

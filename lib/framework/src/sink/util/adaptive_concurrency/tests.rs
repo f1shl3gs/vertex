@@ -29,7 +29,7 @@ use crate::config::{DataType, SinkConfig, SinkContext};
 use crate::sink::util::adaptive_concurrency::controller::ControllerStatistics;
 use crate::sink::util::retries::RetryLogic;
 use crate::sink::util::service::{Concurrency, RequestConfig};
-use crate::sink::util::vec::{EncodedLength, VecBuffer};
+use crate::sink::util::{EncodedLength, VecBuffer};
 use crate::{Healthcheck, Sink};
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]

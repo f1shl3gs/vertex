@@ -308,7 +308,7 @@ impl From<Metric> for crate::Metric {
     }
 }
 
-impl From<crate::LogRecord> for Log {
+impl From<LogRecord> for Log {
     fn from(log: LogRecord) -> Self {
         WithMetadata::<Self>::from(log).data
     }
@@ -326,18 +326,23 @@ impl From<Metric> for event_wrapper::Event {
     }
 }
 
-impl From<crate::LogRecord> for WithMetadata<Log> {
+impl From<LogRecord> for WithMetadata<Log> {
     fn from(log: LogRecord) -> Self {
         let (tags, fields, metadata) = log.into_parts();
-        let fields = fields
-            .into_iter()
-            .map(|(k, v)| (k, encode_value(v)))
-            .collect::<BTreeMap<_, _>>();
-
         let tags = tags
             .into_iter()
             .map(|(k, v)| (k.to_string(), TagValue::from(v)))
             .collect();
+
+        let fields = if let crate::log::Value::Object(fields) = fields {
+            fields
+                .into_iter()
+                .map(|(k, v)| (k, encode_value(v)))
+                .collect::<BTreeMap<_, _>>()
+        } else {
+            // dummy
+            BTreeMap::new()
+        };
 
         Self {
             data: Log { tags, fields },

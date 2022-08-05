@@ -1,4 +1,4 @@
-use event::Event;
+use event::{fields, Event};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
@@ -19,16 +19,19 @@ labels:
     label2: some-static-label
     label3: "{{ foo }}"
     "{{ foo }}": "{{ foo }}"
-encoding: json
+encoding:
+    codec: json
 remove_label_fields: true
 "#,
     )
     .unwrap();
     let client = config.build_client(cx.clone()).unwrap();
-    let sink = LokiSink::new(config, client, cx).unwrap();
+    let mut sink = LokiSink::new(config, client, cx).unwrap();
 
-    let mut event1 = Event::from("hello");
-    event1.as_mut_log().insert_field("foo", "bar");
+    let event1 = Event::from(fields!(
+        "message" => "hello",
+        "foo" => "bar"
+    ));
 
     let mut record = sink.encoder.encode_event(event1);
 
@@ -37,7 +40,9 @@ remove_label_fields: true
 
     // The final event should have timestamps and labels removed
     let expected = serde_json::to_string(&serde_json::json!({
-        "message": "hello"
+        "fields": {
+            "message": "hello"
+        }
     }))
     .unwrap();
 
@@ -69,13 +74,15 @@ encoding:
     .unwrap();
 
     let client = config.build_client(cx.clone()).unwrap();
-    let sink = LokiSink::new(config, client, cx).unwrap();
+    let mut sink = LokiSink::new(config, client, cx).unwrap();
 
     let mut event = Event::from("hello");
     event.as_mut_log().insert_field("foo", "bar");
     let record = sink.encoder.encode_event(event);
     let want = serde_json::to_string(&serde_json::json!({
-        "message": "hello",
+        "fields": {
+            "message": "hello",
+        }
     }))
     .unwrap();
 
@@ -90,7 +97,8 @@ async fn health_check_includes_auth() {
 endpoint: http://localhost:3100
 labels:
     test_name: placeholder
-encoding: json
+encoding:
+    codec: json
 auth:
     strategy: basic
     user: username

@@ -8,9 +8,11 @@ sources:
 
 sinks:
   stdout:
-    type: stdout
+    type: console
     inputs:
       - traces
+    encoding:
+      codec: json
   prom:
     type: prometheus_exporter
     inputs:
@@ -20,6 +22,6 @@ sinks:
     type: jaeger
     inputs:
       - traces
-    propagator: agent
+    protocol: udp
     address: 127.0.0.1:6831
 

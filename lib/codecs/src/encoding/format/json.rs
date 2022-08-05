@@ -1,13 +1,21 @@
+use crate::encoding::SerializeError;
 use bytes::{BufMut, BytesMut};
 use event::Event;
 use tokio_util::codec::Encoder;
 
 /// Serializer that converts an `Event` to bytes using the JSON format.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub struct JsonSerializer;
 
+impl JsonSerializer {
+    /// Creates a new `JsonSerializer`
+    pub const fn new() -> Self {
+        JsonSerializer
+    }
+}
+
 impl Encoder<Event> for JsonSerializer {
-    type Error = crate::Error;
+    type Error = SerializeError;
 
     fn encode(&mut self, event: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
         let writer = dst.writer();
@@ -36,6 +44,6 @@ mod tests {
 
         serializer.encode(event, &mut bytes).unwrap();
         let encoded = bytes.freeze();
-        assert_eq!(encoded, r#"{"tags":{},"fields":{"foo":"bar"}}"#);
+        assert_eq!(encoded, r#"{"fields":{"foo":"bar"}}"#);
     }
 }

@@ -1,8 +1,13 @@
+mod crud;
+pub mod keys;
+
 use std::collections::BTreeMap;
 use std::convert::TryInto;
 
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, SecondsFormat, Utc};
+pub use crud::ValueCollection;
+use lookup::Path;
 use serde::{Deserialize, Serialize, Serializer};
 use shared::ByteSizeOf;
 
@@ -121,6 +126,43 @@ impl Value {
             Value::Object(m) => m.is_empty(),
             Value::Array(arr) => arr.is_empty(),
         }
+    }
+
+    /// Returns a reference to a field value specified by a path iter.
+    pub fn insert<'a>(&mut self, path: impl Path<'a>, value: impl Into<Self>) -> Option<Self> {
+        let value = value.into();
+        let path_iter = path.segment_iter().peekable();
+
+        crud::insert(self, (), path_iter, value)
+    }
+
+    /// Removes field value specified by the given path and return its value.
+    ///
+    /// A special case worth mentioning: if there is a nested array and an item is removed
+    /// from the middle of this array, then it is just replaced by `Value::Null`
+    pub fn remove<'a>(&mut self, path: impl Path<'a>, prune: bool) -> Option<Self> {
+        crud::remove(self, &(), path.segment_iter(), prune).map(|(prev, _is_empty)| prev)
+    }
+
+    /// Returns a reference to a field value specified by a path iter.
+    pub fn get<'a>(&self, path: impl Path<'a>) -> Option<&Self> {
+        crud::get(self, path.segment_iter())
+    }
+
+    /// Get a mutable borrow of the value by path
+    pub fn get_mut<'a>(&mut self, path: impl Path<'a>) -> Option<&mut Self> {
+        crud::get_mut(self, path.segment_iter())
+    }
+
+    /// Determine if the lookup is contained within the value.
+    pub fn contains<'a>(&self, path: impl Path<'a>) -> bool {
+        self.get(path).is_some()
+    }
+}
+
+impl Default for Value {
+    fn default() -> Self {
+        Value::Object(BTreeMap::new())
     }
 }
 

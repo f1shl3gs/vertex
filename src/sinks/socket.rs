@@ -1,11 +1,11 @@
+use codecs::encoding::{Framer, FramingConfig, SerializerConfig, SinkType};
+use codecs::{Encoder, EncodingConfigWithFraming};
 use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
-use framework::sink::util::encoding::EncodingConfig;
-use framework::{Healthcheck, Sink};
-use serde::{Deserialize, Serialize};
-
 #[cfg(unix)]
 use framework::sink::util::unix::UnixSinkConfig;
-use framework::sink::util::{encode_log, tcp::TcpSinkConfig, udp::UdpSinkConfig, Encoding};
+use framework::sink::util::{tcp::TcpSinkConfig, udp::UdpSinkConfig};
+use framework::{Healthcheck, Sink};
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug)]
 // TODO: add back when serde-rs/serde#1358 is addressed
@@ -13,7 +13,7 @@ use framework::sink::util::{encode_log, tcp::TcpSinkConfig, udp::UdpSinkConfig, 
 pub struct SocketSinkConfig {
     #[serde(flatten)]
     pub mode: Mode,
-    pub encoding: EncodingConfig<Encoding>,
+    pub encoding: EncodingConfigWithFraming,
 }
 
 #[derive(Deserialize, Serialize, Debug, Clone)]
@@ -76,14 +76,15 @@ encoding:
 }
 
 impl SocketSinkConfig {
-    pub const fn new(mode: Mode, encoding: EncodingConfig<Encoding>) -> Self {
+    // TODO: add ack support
+    pub const fn new(mode: Mode, encoding: EncodingConfigWithFraming) -> Self {
         SocketSinkConfig { mode, encoding }
     }
 
     pub fn make_basic_tcp_config(address: String) -> Self {
         Self::new(
             Mode::Tcp(TcpSinkConfig::from_address(address)),
-            EncodingConfig::from(Encoding::Text),
+            (None::<FramingConfig>, SerializerConfig::Text).into(),
         )
     }
 }
@@ -91,14 +92,16 @@ impl SocketSinkConfig {
 #[async_trait::async_trait]
 #[typetag::serde(name = "socket")]
 impl SinkConfig for SocketSinkConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let encoding = self.encoding.clone();
-        let encode_event = move |event| encode_log(event, &encoding);
+    async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let transformer = self.encoding.transformer();
+        let (framer, serializer) = self.encoding.build(SinkType::MessageBased);
+        let encoder = Encoder::<Framer>::new(framer, serializer);
+
         match &self.mode {
-            Mode::Tcp(config) => config.build(cx, encode_event),
-            Mode::Udp(config) => config.build(cx, encode_event),
+            Mode::Tcp(config) => config.build(transformer, encoder),
+            Mode::Udp(config) => config.build(transformer, encoder),
             #[cfg(unix)]
-            Mode::Unix(config) => config.build(cx, encode_event),
+            Mode::Unix(config) => config.build(transformer, encoder),
         }
     }
 

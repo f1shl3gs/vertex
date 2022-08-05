@@ -104,7 +104,7 @@ pub trait SinkBuilderExt: Stream {
                 // Encode the events
                 let payload = builder.encode_events(events)?;
 
-                // Now build the actual request
+                // Now build the actual request.
                 Ok(builder.build_request(metadata, payload))
             })
         })

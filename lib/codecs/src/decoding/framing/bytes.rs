@@ -13,6 +13,7 @@ pub struct BytesDecoder {
 }
 
 impl BytesDecoder {
+    /// Create a new `BytesDecoder`.
     pub const fn new() -> Self {
         Self { flushed: false }
     }

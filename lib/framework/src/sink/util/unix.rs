@@ -1,16 +1,16 @@
-use std::{path::PathBuf, pin::Pin, sync::Arc, time::Duration};
+use std::{path::PathBuf, pin::Pin, time::Duration};
 
 use async_trait::async_trait;
-use buffers::Acker;
-use bytes::Bytes;
+use bytes::{Bytes, BytesMut};
+use codecs::encoding::Transformer;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::{net::UnixStream, time::sleep};
+use tokio_util::codec::Encoder;
 
 use crate::batch::EncodedEvent;
-use crate::config::SinkContext;
 use crate::{
     sink::util::{
         retries::ExponentialBackoff,
@@ -40,11 +40,15 @@ impl UnixSinkConfig {
 
     pub fn build(
         &self,
-        cx: SinkContext,
-        encode_event: impl Fn(Event) -> Option<Bytes> + Send + Sync + 'static,
+        transformer: Transformer,
+        encoder: impl Encoder<Event, Error = codecs::encoding::EncodingError>
+            + Clone
+            + Send
+            + Sync
+            + 'static,
     ) -> crate::Result<(Sink, Healthcheck)> {
         let connector = UnixConnector::new(self.path.clone());
-        let sink = UnixSink::new(connector.clone(), cx.acker(), encode_event);
+        let sink = UnixSink::new(connector.clone(), transformer, encoder);
         Ok((
             Sink::Stream(Box::new(sink)),
             Box::pin(async move { connector.healthcheck().await }),
@@ -105,55 +109,64 @@ impl UnixConnector {
     }
 }
 
-struct UnixSink {
+struct UnixSink<E>
+where
+    E: Encoder<Event, Error = codecs::encoding::EncodingError> + Clone + Send + Sync,
+{
     connector: UnixConnector,
-    acker: Acker,
-    encode_event: Arc<dyn Fn(Event) -> Option<Bytes> + Send + Sync>,
+    transformer: Transformer,
+    encoder: E,
 }
 
-impl UnixSink {
-    pub fn new(
-        connector: UnixConnector,
-        acker: Acker,
-        encode_event: impl Fn(Event) -> Option<Bytes> + Send + Sync + 'static,
-    ) -> Self {
+impl<E> UnixSink<E>
+where
+    E: Encoder<Event, Error = codecs::encoding::EncodingError> + Clone + Send + Sync,
+{
+    pub fn new(connector: UnixConnector, transformer: Transformer, encoder: E) -> Self {
         Self {
             connector,
-            acker,
-            encode_event: Arc::new(encode_event),
+            transformer,
+            encoder,
         }
     }
 
     async fn connect(&mut self) -> BytesSink<UnixStream> {
         let stream = self.connector.connect_backoff().await;
-        BytesSink::new(
-            stream,
-            |_| ShutdownCheck::Alive,
-            self.acker.clone(),
-            SocketMode::Unix,
-        )
+        BytesSink::new(stream, |_| ShutdownCheck::Alive, SocketMode::Unix)
     }
 }
 
 #[async_trait]
-impl StreamSink for UnixSink {
+impl<E> StreamSink for UnixSink<E>
+where
+    E: Encoder<Event, Error = codecs::encoding::EncodingError> + Clone + Send + Sync,
+{
     // Same as TcpSink, more details there.
     async fn run(mut self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let encode_event = Arc::clone(&self.encode_event);
+        let mut encoder = self.encoder.clone();
+        let transformer = self.transformer.clone();
+
         let mut input = input
             .map(|events| {
                 events
                     .into_events()
                     .map(|mut event| {
                         let byte_size = event.size_of();
+                        transformer.transform(&mut event);
+
                         let finalizers = event.metadata_mut().take_finalizers();
-                        encode_event(event)
-                            .map(|item| EncodedEvent {
+                        let mut bytes = BytesMut::new();
+                        if encoder.encode(event, &mut bytes).is_ok() {
+                            let item = bytes.freeze();
+
+                            EncodedEvent {
                                 item,
                                 finalizers,
                                 byte_size,
-                            })
-                            .unwrap_or_else(|| EncodedEvent::new(Bytes::new(), 0))
+                            }
+                        } else {
+                            EncodedEvent::new(Bytes::new(), 0)
+                        }
                     })
                     .collect::<Vec<_>>()
             })
@@ -163,10 +176,7 @@ impl StreamSink for UnixSink {
         while Pin::new(&mut input).peek().await.is_some() {
             let mut sink = self.connect().await;
 
-            let result = match sink
-                .send_all_peekable(&mut (&mut input).map(|item| item.item).peekable())
-                .await
-            {
+            let result = match sink.send_all_peekable(&mut (&mut input).peekable()).await {
                 Ok(()) => sink.close().await,
                 Err(err) => Err(err),
             };
@@ -188,11 +198,12 @@ impl StreamSink for UnixSink {
 
 #[cfg(test)]
 mod tests {
+    use codecs::encoding::{Framer, NewlineDelimitedEncoder, Serializer, TextSerializer};
+    use codecs::Encoder;
     use testify::random::random_lines_with_stream;
     use tokio::net::UnixListener;
 
     use super::*;
-    use crate::sink::util::{encode_log, Encoding};
     use crate::testing::CountReceiver;
 
     fn temp_uds_path(name: &str) -> PathBuf {
@@ -204,7 +215,10 @@ mod tests {
         let good_path = temp_uds_path("valid_uds");
         let _listener = UnixListener::bind(&good_path).unwrap();
         assert!(UnixSinkConfig::new(good_path)
-            .build(SinkContext::new_test(), |_| None)
+            .build(
+                Default::default(),
+                Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
+            )
             .unwrap()
             .1
             .await
@@ -212,7 +226,10 @@ mod tests {
 
         let bad_path = temp_uds_path("no_one_listening");
         assert!(UnixSinkConfig::new(bad_path)
-            .build(SinkContext::new_test(), |_| None)
+            .build(
+                Default::default(),
+                Encoder::<()>::new(Serializer::Text(TextSerializer::new()))
+            )
             .unwrap()
             .1
             .await
@@ -229,10 +246,15 @@ mod tests {
 
         // Set up Sink
         let config = UnixSinkConfig::new(out_path);
-        let cx = SinkContext::new_test();
-        let encoding = Encoding::Text.into();
+
         let (sink, _healthcheck) = config
-            .build(cx, move |event| encode_log(event, &encoding))
+            .build(
+                Default::default(),
+                Encoder::<Framer>::new(
+                    NewlineDelimitedEncoder::new().into(),
+                    TextSerializer::new().into(),
+                ),
+            )
             .unwrap();
 
         // Send the test data

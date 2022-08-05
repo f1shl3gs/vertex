@@ -155,6 +155,14 @@ impl Event {
         }
     }
 
+    pub fn tags_mut(&mut self) -> &mut Attributes {
+        match self {
+            Event::Log(log) => &mut log.tags,
+            Event::Metric(metric) => metric.tags_mut(),
+            Event::Trace(trace) => &mut trace.tags,
+        }
+    }
+
     pub fn tag_entry(&mut self, key: impl Into<Key>) -> btree_map::Entry<Key, attributes::Value> {
         match self {
             Self::Log(log) => log.tags.entry(key),
