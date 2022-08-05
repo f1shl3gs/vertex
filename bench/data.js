@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659716314376,
+  "lastUpdate": 1659716480980,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -61430,6 +61430,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 130.21,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "63663816ffd1adbbc303bb3dd6b420a8d07248c9",
+          "message": "Merge pull request #497 from f1shl3gs/codecs\n\nCodecs",
+          "timestamp": "2022-08-06T00:11:48+08:00",
+          "tree_id": "4e334525d3cb61f879534bc537904be3839330dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/63663816ffd1adbbc303bb3dd6b420a8d07248c9"
+        },
+        "date": 1659716474806,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 56.761,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 60.604,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 71.657,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 123.44,
             "unit": "ns/op"
           }
         ]
