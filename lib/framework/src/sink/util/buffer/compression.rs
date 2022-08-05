@@ -66,7 +66,7 @@ impl Display for Compression {
     }
 }
 
-impl<'de> serde::de::Deserialize<'de> for Compression {
+impl<'de> de::Deserialize<'de> for Compression {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,

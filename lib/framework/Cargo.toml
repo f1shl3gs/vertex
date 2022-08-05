@@ -59,6 +59,7 @@ lookup = { path = "../lookup" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { path = "../metrics" }
 no-proxy = { version = "0.3.2" }
+num_cpus = { version = "1.13.1" }
 once_cell = { version = "1.13", default-features = false }
 openssl = { version = "0.10.40", default-features = false }
 percent-encoding = { version = "2.1.0", default-features = false }

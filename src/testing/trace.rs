@@ -6,7 +6,7 @@ pub fn trace_init() {
     #[cfg(not(unix))]
     let color = false;
 
-    let levels = std::env::var("TEST_LOG").unwrap_or_else(|_| "info".into());
+    let levels = std::env::var("TEST_LOG").unwrap_or_else(|_| "warn".into());
 
     framework::trace::init(color, false, &levels)
 }

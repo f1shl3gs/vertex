@@ -215,9 +215,8 @@ impl EventEncoder {
         }
 
         self.transformer.transform(&mut event);
+
         let mut buf = BytesMut::new();
-        // labels already extract, so we do not need to encode it to message.
-        event.tags_mut().clear();
         self.encoder.encode(event, &mut buf).ok();
 
         // If no labels are provided we set our own default `{agent="vertex"}` label. This can
@@ -229,10 +228,8 @@ impl EventEncoder {
             labels = vec![("agent".to_string(), "vertex".to_string())]
         }
 
-        let partition = PartitionKey::new(tenant, &mut labels);
-
         LokiRecord {
-            partition,
+            partition: PartitionKey::new(tenant, &mut labels),
             labels,
             event: LokiEvent {
                 event: buf.freeze(),

@@ -4,7 +4,6 @@ use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
 use std::collections::HashMap;
 use std::iter;
-use std::sync::Arc;
 
 pub fn random_string(len: usize) -> String {
     thread_rng()
@@ -36,7 +35,7 @@ pub fn random_maps(
 pub fn random_lines_with_stream(
     len: usize,
     count: usize,
-    batch: Option<Arc<BatchNotifier>>,
+    batch: Option<BatchNotifier>,
 ) -> (Vec<String>, impl Stream<Item = Events>) {
     let generator = move |_| random_string(len);
     generate_lines_with_stream(generator, count, batch)
@@ -45,7 +44,7 @@ pub fn random_lines_with_stream(
 pub fn generate_lines_with_stream<Gen: FnMut(usize) -> String>(
     generator: Gen,
     count: usize,
-    batch: Option<Arc<BatchNotifier>>,
+    batch: Option<BatchNotifier>,
 ) -> (Vec<String>, impl Stream<Item = Events>) {
     let lines = (0..count).map(generator).collect::<Vec<_>>();
     let stream = map_batch_stream(stream::iter(lines.clone()).map(LogRecord::from), batch);
@@ -55,7 +54,7 @@ pub fn generate_lines_with_stream<Gen: FnMut(usize) -> String>(
 // TODO refactor to have a single implementation for `Event`, `LogRecord` and `Metric`.
 fn map_batch_stream(
     stream: impl Stream<Item = LogRecord>,
-    batch: Option<Arc<BatchNotifier>>,
+    batch: Option<BatchNotifier>,
 ) -> impl Stream<Item = Events> {
     stream.map(move |log| vec![log.with_batch_notifier_option(&batch)].into())
 }
@@ -63,7 +62,7 @@ fn map_batch_stream(
 pub fn generate_events_with_stream<Gen: FnMut(usize) -> Event>(
     generator: Gen,
     count: usize,
-    batch: Option<Arc<BatchNotifier>>,
+    batch: Option<BatchNotifier>,
 ) -> (Vec<Event>, impl Stream<Item = Events>) {
     let events = (0..count).map(generator).collect::<Vec<_>>();
     let stream = map_batch_stream(
@@ -76,7 +75,7 @@ pub fn generate_events_with_stream<Gen: FnMut(usize) -> Event>(
 pub fn random_events_with_stream(
     len: usize,
     count: usize,
-    batch: Option<Arc<BatchNotifier>>,
+    batch: Option<BatchNotifier>,
 ) -> (Vec<Event>, impl Stream<Item = Events>) {
     let events = (0..count)
         .map(|_| Event::from(random_string(len)))

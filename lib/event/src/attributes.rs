@@ -350,7 +350,7 @@ impl Attributes {
     }
 
     pub fn insert(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.0.entry(key.into()).or_insert_with(|| value.into());
+        self.0.insert(key.into(), value.into());
     }
 
     #[inline]
@@ -383,9 +383,10 @@ impl Attributes {
         self.0.contains_key(&(key.into()))
     }
 
-    #[inline]
-    pub fn clear(&mut self) {
-        self.0.clear()
+    pub fn with(&self, key: impl Into<Key>, value: impl Into<Value>) -> Self {
+        let mut new = self.clone();
+        new.0.insert(key.into(), value.into());
+        new
     }
 }
 

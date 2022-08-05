@@ -29,11 +29,8 @@ use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownCoordinator;
 use crate::{SyncTransform, TaskTransform, Transform, TransformOutputs, TransformOutputsBuf};
 
-pub(crate) const DEFAULT_BUFFER_SIZE: usize = 1024;
+pub(crate) const CHUNK_SIZE: usize = 1024;
 pub(crate) const TOPOLOGY_BUFFER_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(128) };
-
-// TODO: this should be configured by user
-static TRANSFORM_CONCURRENCY_LIMIT: usize = 8;
 
 pub struct Pieces {
     pub inputs: HashMap<ComponentKey, (BufferSender<Events>, Vec<OutputId>)>,
@@ -241,12 +238,16 @@ impl Runner {
     }
 
     async fn run_concurrently(mut self) -> Result<TaskOutput, ()> {
+        // TODO: Retrieving tokio runtime worker num is a better solution.
+        //
+        // There is no API for retrieve Tokio's runtime worker num. `RuntimeMetrics` can do that,
+        // but it is not stable yet.
+        let concurrency_limit = crate::num_workers();
         let mut input_rx = self
             .input_rx
             .take()
             .expect("can't run runer twice")
             .filter(move |event| ready(filter_events_type(event, self.input_type)));
-
         let mut in_flight = FuturesOrdered::new();
         let mut shutting_down = false;
 
@@ -266,7 +267,7 @@ impl Runner {
                     }
                 }
 
-                input_events = input_rx.next(), if in_flight.len() < TRANSFORM_CONCURRENCY_LIMIT && !shutting_down => {
+                input_events = input_rx.next(), if in_flight.len() < concurrency_limit && !shutting_down => {
                     match input_events {
                         Some(events) => {
                             self.on_events_received(&events);
@@ -386,7 +387,7 @@ pub async fn build_pieces(
             component_type = %source.inner.source_type(),
         );
 
-        let mut builder = Pipeline::builder().with_buffer(DEFAULT_BUFFER_SIZE);
+        let mut builder = Pipeline::builder().with_buffer(CHUNK_SIZE * crate::num_workers());
         let mut pumps = Vec::new();
         let mut controls = HashMap::new();
 

@@ -3,6 +3,7 @@ mod acknowledgements;
 mod buffer_usage_data;
 mod config;
 pub mod encoding;
+mod event;
 pub mod topology;
 mod variants;
 

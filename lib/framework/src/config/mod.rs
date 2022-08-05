@@ -102,6 +102,12 @@ impl Output {
     pub const fn default(typ: DataType) -> Self {
         Self { port: None, typ }
     }
+
+    /// Set the port name for this `Output`
+    pub fn with_port(mut self, name: impl Into<String>) -> Self {
+        self.port = Some(name.into());
+        self
+    }
 }
 
 impl<T: Into<String>> From<(T, DataType)> for Output {

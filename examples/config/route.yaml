@@ -1,0 +1,50 @@
+sources:
+  logs1:
+    type: demo_logs
+    rate: 1
+    log: info blah
+
+  logs2:
+    type: demo_logs
+    rate: 1
+    log: warn blah
+
+  logs3:
+    type: demo_logs
+    rate: 1
+    log: error blah
+
+transforms:
+  route:
+    type: route
+    inputs:
+      - logs1
+      - logs2
+      - logs3
+    route:
+      info: .message contains info
+      warn: .message contains warn
+
+  info:
+    type: add_tags
+    inputs:
+      - route.info
+    tags:
+      level: info
+
+  warn:
+    type: add_tags
+    inputs:
+      - route.warn
+    tags:
+      level: warn
+
+sinks:
+  stdout:
+    type: console
+    stream: stdout
+    encoding:
+      codec: json
+    inputs:
+      - info
+      - warn

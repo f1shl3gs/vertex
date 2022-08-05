@@ -1,7 +1,6 @@
 use std::fmt::Formatter;
 use std::io;
 use std::net::{IpAddr, SocketAddr};
-use std::sync::Arc;
 use std::time::Duration;
 
 use bytes::Bytes;
@@ -351,7 +350,7 @@ async fn handle_stream<T>(
                         let mut events = frames.into_iter().flat_map(Into::into).collect::<Vec<Event>>();
                         if let Some(batch) = batch {
                             for event in &mut events {
-                                event.add_batch_notifier(Arc::clone(&batch));
+                                event.add_batch_notifier(batch.clone());
                             }
                         }
                         source.handle_events(&mut events, host.clone(), byte_size);

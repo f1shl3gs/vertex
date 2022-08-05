@@ -13,7 +13,6 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio_stream::wrappers::IntervalStream;
-use typetag::once_cell;
 
 static GAUGE_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = BTreeMap::new();

@@ -98,6 +98,16 @@ impl Transform {
         Transform::Function(Box::new(v))
     }
 
+    /// Create a new synchronous transform.
+    ///
+    /// This is a broader trait than the simple [`FunctionTransform`] in that it allows transforms
+    /// to write to multiple outputs. Those outputs must be known in advanced and returned via
+    /// `TransformConfig::outputs`. Attempting to send to any output not registered in advance is
+    ///considered a bug and will cause a panic.
+    pub fn synchronous(v: impl SyncTransform + 'static) -> Self {
+        Transform::Synchronous(Box::new(v))
+    }
+
     /// Mutably borrow the inner transform as a function transform.
     pub fn as_function(&mut self) -> &mut Box<dyn FunctionTransform> {
         match self {

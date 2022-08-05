@@ -11,6 +11,7 @@ mod coercer;
 mod dedup;
 #[cfg(feature = "transforms-enum")]
 mod r#enum;
+#[cfg(feature = "transforms-filter")]
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;
@@ -22,6 +23,7 @@ mod logfmt_parser;
 mod metricalize;
 mod rename_fields;
 mod rename_tags;
+#[cfg(feature = "transforms-route")]
 mod route;
 #[cfg(feature = "transforms-sample")]
 mod sample;

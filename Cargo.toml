@@ -28,7 +28,7 @@ debug = true
 members = [
     "lib/buffers",
     "lib/codecs",
-    "lib/discovery",
+    "lib/condition",
     "lib/event",
     "lib/framework",
     "lib/multiline",
@@ -43,7 +43,9 @@ members = [
     "lib/sysinfo",
     "lib/virt",
     "lib/jaeger",
-    "lib/tracing-internal"
+    "lib/tracing-internal",
+    # tools
+    "tools/fake_node_exporter"
 ]
 
 [features]
@@ -131,6 +133,7 @@ sources = [
     "sources-bind",
     "sources-consul",
     "sources-demo_logs",
+    "sources-elasticsearch",
     "sources-exec",
     "sources-haproxy",
     "sources-internal_logs",
@@ -164,6 +167,7 @@ sources-bind = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
+sources-elasticsearch = []
 sources-haproxy = []
 sources-internal_logs = []
 sources-internal_metrics = []
@@ -198,9 +202,11 @@ transforms = [
     "transforms-cardinality",
     "transforms-coercer",
     "transforms-dedup",
-    "transforms-geoip",
     "transforms-enum",
+    "transforms-filter",
+    "transforms-geoip",
     "transforms-metricalize",
+    "transforms-route",
     "transforms-sample",
     "transforms-substr",
     "transforms-throttle"
@@ -211,8 +217,10 @@ transforms-cardinality = ["bloom"]
 transforms-coercer = []
 transforms-dedup = ["lru"]
 transforms-enum = []
+transforms-filter = ["condition"]
 transforms-geoip = [ "maxminddb" ]
 transforms-metricalize = ["async-stream"]
+transforms-route = ["condition"]
 transforms-sample = ["seahash"]
 transforms-substr = []
 transforms-throttle = ["governor"]
@@ -234,7 +242,7 @@ sinks = [
 ]
 
 sinks-console = []
-sinks-prometheus_exporter = []
+sinks-prometheus_exporter = ["flate2"]
 sinks-prometheus_remote_write = ["snap"]
 sinks-blackhole = []
 sinks-kafka = ["rdkafka-cmake"]
@@ -310,6 +318,7 @@ prost-build = { version = "0.10.4" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
+base64 = { version = "0.13.0" }
 criterion = { version = "0.3.6", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
@@ -317,10 +326,11 @@ indoc = { version = "1.0.6", default-features = false }
 pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0.0" }
 rand = { version = "0.8.5" }
+serde_path_to_error = { version = "0.1.7" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.19.2", features = ["test-util"] }
+tokio = { version = "1.20.1", features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -328,6 +338,7 @@ tower-test = { version = "0.4.0" }
 # Workspaces
 buffers = { path = "lib/buffers" }
 codecs = { path = "lib/codecs" }
+condition = { path = "lib/condition", optional = true }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { path = "lib/humanize" }
@@ -349,10 +360,10 @@ tikv-jemalloc-ctl = { version = "0.5.0", optional = true }
 tikv-jemalloc-sys = { version = "0.5.0", optional = true, features = ["stats"] }
 
 # Futrures & Tokio
-tokio = { version = "1.19.2", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.20.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.9", features = ["time", "net"] }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec", "time", "net"] }
-bytes = { version = "1.1.0", default-features = false, features = ["serde"] }
+bytes = { version = "1.2.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
 async-trait = { version = "0.1.56" }
@@ -362,7 +373,7 @@ stream-cancel = { version = "0.8.1" }
 # Tracing
 tracing = { version = "0.1.35", default-features = false }
 tracing-log = { version = "0.1.3", default-features = false }
-tracing-subscriber = { version = "0.3.14", optional = true, default-features = false, features = ["std", "registry"] }
+tracing-subscriber = { version = "0.3.15", optional = true, default-features = false, features = ["std", "registry"] }
 tracing-core = { version = "0.1.28" }
 
 # HTTP
@@ -374,8 +385,8 @@ headers = { version = "0.3.7" }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
-serde = { version = "1.0.138", default-features = false, features = ["derive"] }
-serde_yaml = { version = "0.8.24" }
+serde = { version = "1.0.140", default-features = false, features = ["derive"] }
+serde_yaml = { version = "0.8.26" }
 serde_json = { version = "1.0.82", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
@@ -402,23 +413,23 @@ ahash = { version = "0.7.6", default-features = false, optional = true }
 async-stream = { version = "0.3.3", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
-chrono-tz = { version = "0.6.1", features = ["serde"] }
-dyn-clone = { version = "1.0.6" }
+chrono-tz = { version = "0.6.3", features = ["serde"] }
+dyn-clone = { version = "1.0.8" }
 encoding_rs = { version = "0.8.31", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
+flate2 = { version = "1.0.24", optional = true }
 glob = { version = "0.3.0" }
 governor = { version = "0.4.2", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.9.1", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.0" }
 k8s-openapi = { version = "0.15.0", default-features = false, optional = true, features = ["api", "v1_18"] }
-kube = { version = "0.73.1", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
+kube = { version = "0.74.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 libc = { version = "0.2.126", optional = true }
-lru = { version = "0.7.7", default-features = false, optional = true }
+lru = { version = "0.7.8", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
-num_cpus = { version = "1.13.1" }
 nom = { version = "7.1.1", default-features = false }
 once_cell = { version = "1.13.0" }
 # pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
@@ -435,5 +446,5 @@ strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.6.0", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.31" }
 tonic = { version = "0.7.2", optional = true }
-typetag = { version = "0.2.0" }
+typetag = { version = "0.2.1" }
 url = { version = "2.2.2", features = ["serde"] }

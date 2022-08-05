@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v2
         with:
           registry: docker.io
           username: f1shl3gs
@@ -30,7 +30,7 @@ jobs:
           command: build
           args: --target x86_64-unknown-linux-musl --release --no-default-features --features target-x86_64-unknown-linux-musl
       - run: cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker
-      - uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v3
         with:
           context: distribution/docker
           push: true
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      - uses: docker/login-action@v1
+      - uses: docker/login-action@v2
         with:
           registry: docker.io
           username: f1shl3gs
@@ -57,7 +57,7 @@ jobs:
           command: build
           args: --target x86_64-unknown-linux-gnu --release --no-default-features --features target-x86_64-unknown-linux-gnu
       - run: cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker
-      - uses: docker/build-push-action@v2
+      - uses: docker/build-push-action@v3
         with:
           context: distribution/docker
           push: true

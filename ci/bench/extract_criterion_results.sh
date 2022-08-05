@@ -6,7 +6,7 @@ OUTPUT=bench.json
 CONTENT="["
 
 while IFS= read -r LINE; do
-  [[ $LINE =~ ([a-zA-Z0-9/_\/\-]*).*\[[0-9.]*\ (us|ns|ms|s)\ ([0-9.]*)\ (us|ns|ms|s) ]]
+  [[ $LINE =~ ([a-zA-Z0-9/_\/\-]*).*\[[0-9.]*\ (µs|us|ns|ms|s)\ ([0-9.]*)\ (µs|us|ns|ms|s) ]]
   BENCH=${BASH_REMATCH[1]}
   VALUE=${BASH_REMATCH[3]}
   UNIT=${BASH_REMATCH[4]}
@@ -20,6 +20,9 @@ while IFS= read -r LINE; do
     VALUE=$(echo "${VALUE} * 1000.0 * 1000.0" | bc -l)
     ;;
   us)
+    VALUE=$(echo "${VALUE} * 1000.0" | bc -l)
+    ;;
+  µs)
     VALUE=$(echo "${VALUE} * 1000.0" | bc -l)
     ;;
   esac
