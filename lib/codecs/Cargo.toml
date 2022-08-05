@@ -27,7 +27,7 @@ memchr = { version = "2.5.0" }
 serde_json = { version = "1.0.81", default-features = false  }
 tokio = { version = "1.20.1" }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec"] }
-tracing = { version = "0.1.35" }
+tracing = { version = "0.1.36" }
 serde = { version = "1.0.138", default-features = false }
 smallvec = { version = "1.8.0" }
 
