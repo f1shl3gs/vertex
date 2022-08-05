@@ -62,9 +62,9 @@ jobs:
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
       - name: Install Protoc
-          uses: arduino/setup-protoc@v1
-          with:
-            version: '3.14.0'
+        uses: arduino/setup-protoc@v1
+        with:
+          version: '3.14.0'
       - run: make bench-${{ matrix.target }} | tee bench.txt
       - run: bash ./ci/bench/extract_criterion_results.sh
       - name: Store bench results
