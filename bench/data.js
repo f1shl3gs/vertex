@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659717613163,
+  "lastUpdate": 1659768426112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9010,6 +9010,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 710150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "90af60ba58dfbd8b37337d8125ccb967a820c775",
+          "message": "Merge pull request #499 from f1shl3gs/upgrade_deps\n\nUpgrade deps",
+          "timestamp": "2022-08-06T14:42:47+08:00",
+          "tree_id": "8c989bd259cd6d95351e316cbcbbea3f1e51e87a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/90af60ba58dfbd8b37337d8125ccb967a820c775"
+        },
+        "date": 1659768421888,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 720020,
             "unit": "ns/op"
           }
         ]
