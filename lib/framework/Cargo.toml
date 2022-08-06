@@ -31,7 +31,7 @@ async-stream = { version = "0.3.3" }
 async-trait = { version = "0.1.57" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.2.1", default-features = false, features = ["serde"] }
-chrono = { version = "0.4.19", features = ["serde"] }
+chrono = { version = "0.4.20", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 codecs = { path = "../codecs" }
 console-subscriber = { version = "0.1.6", optional = true }
