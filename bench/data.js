@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659773733204,
+  "lastUpdate": 1659774713242,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -52875,6 +52875,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.379,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e23747691f9e6d311cf247c9691351866ffefe80",
+          "message": "Merge pull request #500 from f1shl3gs/cache_owned_path_for_eval\n\nSpeed up condition eval",
+          "timestamp": "2022-08-06T16:09:21+08:00",
+          "tree_id": "331a7ce691bd8c692df2596ceeaa776144ec6480",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e23747691f9e6d311cf247c9691351866ffefe80"
+        },
+        "date": 1659774709065,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 53.809,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 176.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 382.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1130,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 26831000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1059300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.893,
             "unit": "ns/op"
           }
         ]
