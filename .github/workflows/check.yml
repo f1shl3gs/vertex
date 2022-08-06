@@ -22,7 +22,6 @@ env:
   RUST_TEST_THREADS: 1
   RUST_BACKTRACE: full
   PROFILE: debug
-  # RUSTFLAGS: "-D warnings"
 
 jobs:
   cancel-previous:
@@ -52,6 +51,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
+      - name: Prepare
+        run: bash ci/environment/prepare.sh
       - name: Check style
         run:  make check_clippy
       - name: Check shell

@@ -24,7 +24,7 @@ build_x86_64-unknown-linux-musl:
 		--features target-x86_64-unknown-linux-musl
 
 build_x86_64-unknown-linux-gnu:
-	cross build \
+	@cross build \
 		--release \
 		--no-default-features \
 		--target x86_64-unknown-linux-gnu \

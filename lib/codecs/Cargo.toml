@@ -12,23 +12,23 @@ syslog = ["syslog_loose"]
 tokio = { version = "1.19.2", default-features = false, features = ["test-util"] }
 futures-util = { version = "0.3.21" }
 serde_yaml = { version = "0.8.26" }
-serde_path_to_error = { version = "0.1.7" }
+serde_path_to_error = { version = "0.1.8" }
 
 [dependencies]
-bytes = { version = "1.1.0", default-features = false }
+bytes = { version = "1.2.1", default-features = false }
 chrono = { version = "0.4.19", default-features = false }
-dyn-clone = { version = "1.0.8" }
+dyn-clone = { version = "1.0.9" }
 event = { path = "../event" }
 futures = { version = "0.3.21" }
 futures-util = { version = "0.3.21" }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 memchr = { version = "2.5.0" }
-serde_json = { version = "1.0.81", default-features = false  }
+serde_json = { version = "1.0.83", default-features = false  }
 tokio = { version = "1.20.1" }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec"] }
-tracing = { version = "0.1.35" }
-serde = { version = "1.0.138", default-features = false }
+tracing = { version = "0.1.36" }
+serde = { version = "1.0.142", default-features = false }
 smallvec = { version = "1.8.0" }
 
 # Optional

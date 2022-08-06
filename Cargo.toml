@@ -314,7 +314,7 @@ atty = "0.2.14"
 nix = ">=0.22.2"
 
 [build-dependencies]
-prost-build = { version = "0.10.4" }
+prost-build = { version = "0.11.1" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
@@ -322,11 +322,11 @@ base64 = { version = "0.13.0" }
 criterion = { version = "0.3.6", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
-indoc = { version = "1.0.6", default-features = false }
+indoc = { version = "1.0.7", default-features = false }
 pretty_assertions = { version = "1.2.1" }
 proptest = { version = "1.0.0" }
 rand = { version = "0.8.5" }
-serde_path_to_error = { version = "0.1.7" }
+serde_path_to_error = { version = "0.1.8" }
 tempfile = { version = "3.2.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
@@ -363,18 +363,18 @@ tikv-jemalloc-sys = { version = "0.5.0", optional = true, features = ["stats"] }
 tokio = { version = "1.20.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.9", features = ["time", "net"] }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec", "time", "net"] }
-bytes = { version = "1.2.0", default-features = false, features = ["serde"] }
+bytes = { version = "1.2.1", default-features = false, features = ["serde"] }
 futures = { version = "0.3.21", default-features = false }
 futures-util = { version = "0.3.18", default-features = false }
-async-trait = { version = "0.1.56" }
+async-trait = { version = "0.1.57" }
 pin-project = { version = "1.0.11" }
 stream-cancel = { version = "0.8.1" }
 
 # Tracing
-tracing = { version = "0.1.35", default-features = false }
+tracing = { version = "0.1.36", default-features = false }
 tracing-log = { version = "0.1.3", default-features = false }
 tracing-subscriber = { version = "0.3.15", optional = true, default-features = false, features = ["std", "registry"] }
-tracing-core = { version = "0.1.28" }
+tracing-core = { version = "0.1.29" }
 
 # HTTP
 hyper = { version = "0.14.20", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
@@ -385,9 +385,9 @@ headers = { version = "0.3.7" }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
-serde = { version = "1.0.140", default-features = false, features = ["derive"] }
+serde = { version = "1.0.142", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.8.26" }
-serde_json = { version = "1.0.82", default-features = false }
+serde_json = { version = "1.0.83", default-features = false }
 serde-xml-rs = { version = "0.5", default-features = false, optional = true }
 
 # Netlink
@@ -395,8 +395,8 @@ netlink-sys = { version = "0.8.3", features = ["tokio_socket"], optional = true 
 netlink-packet-sock-diag = { version = "0.4.0", optional = true }
 
 # Protobuf
-prost = { version = "0.10.4", default-features = false, features = ["std"] }
-prost-types = { version = "0.10.1", default-features = false }
+prost = { version = "0.11.0", default-features = false, features = ["std"] }
+prost-types = { version = "0.11.1", default-features = false }
 
 # TLS
 openssl-probe = { version = "0.1.5", default-features = false }
@@ -414,7 +414,7 @@ async-stream = { version = "0.3.3", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.19", features = ["serde"] }
 chrono-tz = { version = "0.6.3", features = ["serde"] }
-dyn-clone = { version = "1.0.8" }
+dyn-clone = { version = "1.0.9" }
 encoding_rs = { version = "0.8.31", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
@@ -422,10 +422,10 @@ flate2 = { version = "1.0.24", optional = true }
 glob = { version = "0.3.0" }
 governor = { version = "0.4.2", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.9.1", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.0" }
+inventory = { version = "0.3.1" }
 k8s-openapi = { version = "0.15.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.74.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
-libc = { version = "0.2.126", optional = true }
+libc = { version = "0.2.127", optional = true }
 lru = { version = "0.7.8", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
@@ -443,8 +443,8 @@ seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.9.0", optional = true, features = ["union"] }
 snap = { version = "1.0.5", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
-sqlx = { version = "0.6.0", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-thiserror = { version = "1.0.31" }
-tonic = { version = "0.7.2", optional = true }
-typetag = { version = "0.2.1" }
+sqlx = { version = "0.6.1", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+thiserror = { version = "1.0.32" }
+tonic = { version = "0.8.0", optional = true }
+typetag = { version = "0.2.3" }
 url = { version = "2.2.2", features = ["serde"] }

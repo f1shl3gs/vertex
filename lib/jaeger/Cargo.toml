@@ -6,12 +6,12 @@ publish = false
 build = "build.rs"
 
 [build-dependencies]
-tonic-build = { version = "0.7.2" }
+tonic-build = { version = "0.8.0" }
 
 [dependencies]
 base64 = { version = "0.13.0" }
 event = { path = "../event" }
-prost = { version = "0.10.3" }
-prost-types = { version = "0.10.1" }
+prost = { version = "0.11.0" }
+prost-types = { version = "0.11.1" }
 thrift = { version = "0.16.0" }
-tonic = { version = "0.7.2" }
+tonic = { version = "0.8.0", default-features = false }

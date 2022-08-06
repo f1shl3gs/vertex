@@ -76,6 +76,8 @@ jobs:
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
+      - name: Building container
+        run: docker build -f ci/cross/${{ matrix.target }}.dockerfile -t vertex-cross:${{ matrix.target }} ci/cross
       - run: make build_${{ matrix.target }}
 
   test:
