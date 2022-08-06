@@ -23,3 +23,11 @@ if [[ "${CI-}" == "true" && "${PROFILE-}" != "debug" ]]; then
   } >> "${GITHUB_ENV}"
 fi
 
+# Setup protoc
+#
+# prost need `protoc` to be installed
+PROTOC_VERSION=3.20.1
+curl -L "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc-${PROTOC_VERSION}-linux-x86_64.zip
+unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip
+cp -r include/google /usr/local/include/
+rm protoc-${PROTOC_VERSION}-linux-x86_64.zip

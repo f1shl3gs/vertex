@@ -63,10 +63,6 @@ jobs:
           - x86_64-unknown-linux-musl
     steps:
       - uses: actions/checkout@v3
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          version: '3.14.0'
       - uses: actions/cache@v3
         name: Cache Cargo registry + index
         with:
@@ -80,6 +76,8 @@ jobs:
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/environment/prepare.sh
+      - name: Building container
+        run: docker build -f ci/cross/${{ matrix.target }}.dockerfile -t vertex-cross:${{ matrix.target }} ci/cross
       - run: make build_${{ matrix.target }}
 
   test:
@@ -89,7 +87,6 @@ jobs:
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      # Binary build in container, so we do not need to install protoc here.
       - uses: actions/cache@v3
         with:
           path: |
@@ -114,10 +111,6 @@ jobs:
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          version: '3.14.0'
       - uses: actions/cache@v3
         with:
           path: |

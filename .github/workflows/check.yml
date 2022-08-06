@@ -42,10 +42,6 @@ jobs:
       - cancel-previous
     steps:
       - uses: actions/checkout@v3
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          version: '3.14.0'
       - uses: actions/cache@v3
         with:
           path: |
@@ -56,6 +52,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
+      - name: Prepare
+        run: bash ci/environment/prepare.sh
       - name: Check style
         run:  make check_clippy
       - name: Check shell
