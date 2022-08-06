@@ -7,6 +7,7 @@ use crate::Error;
 use event::LogRecord;
 use field::{FieldExpr, FieldOp, OrderingOp};
 use lexer::Lexer;
+use lookup::parse_path;
 
 #[derive(Clone, Debug, PartialEq)]
 pub enum CombiningOp {
@@ -136,7 +137,7 @@ impl<'a> Parser<'a> {
         };
 
         Ok(Expression::Field(FieldExpr {
-            lhs: var.strip_prefix('.').unwrap().into(),
+            lhs: parse_path(var.strip_prefix('.').unwrap()),
             op,
         }))
     }
@@ -269,7 +270,7 @@ mod tests {
             (
                 ".foo lt 10.1",
                 Ok(Expression::Field(FieldExpr {
-                    lhs: "foo".to_string(),
+                    lhs: "foo".into(),
                     op: FieldOp::Ordering {
                         op: OrderingOp::LessThan,
                         rhs: 10.1,
@@ -303,7 +304,7 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "foo".to_string(),
+                        lhs: "foo".into(),
                         op: FieldOp::Ordering {
                             op: OrderingOp::LessThan,
                             rhs: 10.0,
@@ -325,7 +326,7 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::Or,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "foo".to_string(),
+                        lhs: "foo".into(),
                         op: FieldOp::Contains("abc".into()),
                     })
                     .boxed(),
@@ -344,7 +345,7 @@ mod tests {
                 Ok(Expression::Binary {
                     op: CombiningOp::And,
                     lhs: Expression::Field(FieldExpr {
-                        lhs: "message".to_string(),
+                        lhs: "message".into(),
                         op: FieldOp::Contains("info".into()),
                     })
                     .boxed(),

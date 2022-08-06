@@ -51,51 +51,7 @@ impl Serialize for OwnedPath {
     where
         S: Serializer,
     {
-        if self.segments.is_empty() {
-            return serializer.serialize_str("<invalid>");
-        }
-
-        let mut coalesce_i = 0;
-        let path = self
-            .segments
-            .iter()
-            .enumerate()
-            .map(|(i, segment)| match segment {
-                OwnedSegment::Field(field) => {
-                    serialize_field(field.as_ref(), (i != 0).then(|| "."))
-                }
-
-                OwnedSegment::CoalesceField(field) => {
-                    let output = serialize_field(
-                        field.as_ref(),
-                        Some(if coalesce_i == 0 {
-                            if i == 0 {
-                                "("
-                            } else {
-                                ".("
-                            }
-                        } else {
-                            "|"
-                        }),
-                    );
-
-                    coalesce_i += 1;
-                    output
-                }
-                OwnedSegment::Index(index) => format!("[{}]", index),
-                OwnedSegment::Invalid => {
-                    (if i == 0 { "<invalid>" } else { ".<invalid>" }).to_owned()
-                }
-                OwnedSegment::CoalesceEnd(field) => {
-                    format!(
-                        "{})",
-                        serialize_field(field.as_ref(), (coalesce_i != 0).then(|| "|"))
-                    )
-                }
-            })
-            .collect::<Vec<_>>()
-            .join("");
-
+        let path = self.to_string();
         serializer.serialize_str(&path)
     }
 }
@@ -135,6 +91,66 @@ fn serialize_field(field: &str, separator: Option<&str>) -> String {
 impl From<Vec<OwnedSegment>> for OwnedPath {
     fn from(segments: Vec<OwnedSegment>) -> Self {
         Self { segments }
+    }
+}
+
+impl From<String> for OwnedPath {
+    fn from(s: String) -> Self {
+        parse_path(s.as_str())
+    }
+}
+
+impl From<&str> for OwnedPath {
+    fn from(s: &str) -> Self {
+        parse_path(s)
+    }
+}
+
+impl ToString for OwnedPath {
+    fn to_string(&self) -> String {
+        if self.segments.is_empty() {
+            return "<invalid>".into();
+        }
+
+        let mut coalesce_i = 0;
+        self.segments
+            .iter()
+            .enumerate()
+            .map(|(i, segment)| match segment {
+                OwnedSegment::Field(field) => {
+                    serialize_field(field.as_ref(), (i != 0).then(|| "."))
+                }
+
+                OwnedSegment::CoalesceField(field) => {
+                    let output = serialize_field(
+                        field.as_ref(),
+                        Some(if coalesce_i == 0 {
+                            if i == 0 {
+                                "("
+                            } else {
+                                ".("
+                            }
+                        } else {
+                            "|"
+                        }),
+                    );
+
+                    coalesce_i += 1;
+                    output
+                }
+                OwnedSegment::Index(index) => format!("[{}]", index),
+                OwnedSegment::Invalid => {
+                    (if i == 0 { "<invalid>" } else { ".<invalid>" }).to_owned()
+                }
+                OwnedSegment::CoalesceEnd(field) => {
+                    format!(
+                        "{})",
+                        serialize_field(field.as_ref(), (coalesce_i != 0).then(|| "|"))
+                    )
+                }
+            })
+            .collect::<Vec<_>>()
+            .join("")
     }
 }
 
