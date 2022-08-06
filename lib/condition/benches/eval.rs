@@ -8,13 +8,17 @@ fn bench_eval(c: &mut Criterion) {
         tags!(),
         fields!(
             "number" => "1",
-            "message" => "info blah blah"
+            "message" => "info blah blah",
+            "map" => fields!(
+                "number" => 1.2
+            )
         ),
     );
 
     let expressions = [
         ("ordering", ".number >= 1"),
         ("contains", ".message contains info"),
+        ("nested", ".map.number >= 1"),
         ("match", ".message match .*"),
         (
             "ordering_and_contains",

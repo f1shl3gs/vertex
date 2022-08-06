@@ -1,6 +1,7 @@
 use std::str::FromStr;
 
 use event::{log::Value, LogRecord};
+use lookup::OwnedPath;
 
 use crate::ast::Evaluator;
 use crate::Error;
@@ -55,7 +56,7 @@ impl PartialEq for FieldOp {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct FieldExpr {
-    pub lhs: String,
+    pub lhs: OwnedPath,
 
     pub op: FieldOp,
 }
@@ -65,8 +66,8 @@ impl Evaluator for FieldExpr {
         match &self.op {
             FieldOp::Ordering { op, rhs } => {
                 let value = log
-                    .get_field(self.lhs.as_str())
-                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
+                    .get_field(&self.lhs)
+                    .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
                 let value = match value {
                     Value::Float(f) => *f,
                     Value::Int64(i) => *i as f64,
@@ -84,8 +85,8 @@ impl Evaluator for FieldExpr {
             }
             FieldOp::Contains(s) => {
                 let value = log
-                    .get_field(self.lhs.as_str())
-                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
+                    .get_field(&self.lhs)
+                    .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
 
                 match value {
                     Value::Bytes(b) => {
@@ -98,8 +99,8 @@ impl Evaluator for FieldExpr {
             }
             FieldOp::Matches(re) => {
                 let value = log
-                    .get_field(self.lhs.as_str())
-                    .ok_or_else(|| Error::MissingField(self.lhs.clone()))?;
+                    .get_field(&self.lhs)
+                    .ok_or_else(|| Error::MissingField(self.lhs.to_string()))?;
                 match value {
                     Value::Bytes(b) => Ok(re.is_match(b)),
                     _ => Ok(false),
