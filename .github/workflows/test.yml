@@ -89,10 +89,7 @@ jobs:
     if: ${{ needs.changes.outputs.source == 'true' }}
     steps:
       - uses: actions/checkout@v3
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v1
-        with:
-          version: '3.14.0'
+      # Binary build in container, so we do not need to install protoc here.
       - uses: actions/cache@v3
         with:
           path: |
