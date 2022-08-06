@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659773690894,
+  "lastUpdate": 1659773733204,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -62207,6 +62207,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 106.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e23747691f9e6d311cf247c9691351866ffefe80",
+          "message": "Merge pull request #500 from f1shl3gs/cache_owned_path_for_eval\n\nSpeed up condition eval",
+          "timestamp": "2022-08-06T16:09:21+08:00",
+          "tree_id": "331a7ce691bd8c692df2596ceeaa776144ec6480",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e23747691f9e6d311cf247c9691351866ffefe80"
+        },
+        "date": 1659773728089,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.116,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.349,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 63.547,
             "unit": "ns/op"
           }
         ]
