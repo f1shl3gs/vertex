@@ -29,7 +29,14 @@ apt install --yes \
   llvm \
   locales \
   pkg-config \
-  wget
+  unzip
+
+# Setup protoc
+PROTOC_VERSION=3.20.1
+curl -L "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VERSION}/protoc-${PROTOC_VERSION}-linux-x86_64.zip" -o protoc-${PROTOC_VERSION}-linux-x86_64.zip
+unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip
+cp -r include/google /usr/local/include/
+rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
 
 # Locales
 locale-gen en_US.UTF-8
