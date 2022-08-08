@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1659942120609,
+  "lastUpdate": 1659942140819,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9097,6 +9097,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 709850,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "12b83042837a91391d031277423e302af148d349",
+          "message": "Merge pull request #501 from f1shl3gs/dependabot/cargo/openssl-0.10.41\n\nchore(deps): bump openssl from 0.10.40 to 0.10.41",
+          "timestamp": "2022-08-08T14:58:19+08:00",
+          "tree_id": "fedc10fea81e76cbfecedf192aebfd912d76cfff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/12b83042837a91391d031277423e302af148d349"
+        },
+        "date": 1659942137445,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 713650,
             "unit": "ns/op"
           }
         ]
