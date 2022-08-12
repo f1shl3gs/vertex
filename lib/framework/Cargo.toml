@@ -34,7 +34,7 @@ bytes = { version = "1.2.1", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.21", features = ["serde"] }
 chrono-tz = { version = "0.6.1", features = ["serde"] }
 codecs = { path = "../codecs" }
-console-subscriber = { version = "0.1.6", optional = true }
+console-subscriber = { version = "0.1.7", optional = true }
 dyn-clone = { version = "1.0.9" }
 encoding_rs = { version = "0.8.31", features = ["serde"]}
 event = { path = "../event" }
