@@ -1247,7 +1247,7 @@ dependencies = [
  "lookup",
  "memchr 2.5.0",
  "metrics",
- "nix",
+ "nix 0.25.0",
  "no-proxy",
  "notify",
  "num_cpus",
@@ -2563,7 +2563,20 @@ dependencies = [
  "bitflags",
  "cfg-if 1.0.0",
  "libc",
+]
+
+[[package]]
+name = "nix"
+version = "0.25.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e322c04a9e3440c327fca7b6c8a63e6890a32fa2ad689db972425f07e0d22abb"
+dependencies = [
+ "autocfg",
+ "bitflags",
+ "cfg-if 1.0.0",
+ "libc",
  "memoffset",
+ "pin-utils",
 ]
 
 [[package]]
@@ -3092,7 +3105,7 @@ dependencies = [
  "inferno",
  "libc",
  "log",
- "nix",
+ "nix 0.24.2",
  "once_cell",
  "parking_lot 0.12.1",
  "protobuf",
@@ -5055,7 +5068,7 @@ dependencies = [
  "multiline",
  "netlink-packet-sock-diag",
  "netlink-sys",
- "nix",
+ "nix 0.25.0",
  "nom 7.1.1",
  "once_cell",
  "openssl-probe",
