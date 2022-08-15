@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660579209306,
+  "lastUpdate": 1660580383840,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -63656,6 +63656,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1273,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d9166b7347c0e9d4d0859d1de556eeab9b6db90",
+          "message": "Merge pull request #511 from f1shl3gs/dependabot/cargo/nix-0.25.0\n\nchore(deps): bump nix from 0.24.2 to 0.25.0",
+          "timestamp": "2022-08-15T23:53:29+08:00",
+          "tree_id": "08304dea8484c3ed131ad41c5fe2afe18674939b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d9166b7347c0e9d4d0859d1de556eeab9b6db90"
+        },
+        "date": 1660580379711,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1362,
             "unit": "s"
           }
         ]
