@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660679492863,
+  "lastUpdate": 1660679543462,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -64115,6 +64115,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1237,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c9b51879967365e31f342c7b3df1b8aa661c89d4",
+          "message": "Merge pull request #516 from f1shl3gs/dependabot/cargo/memmap2-0.5.7\n\nchore(deps): bump memmap2 from 0.5.6 to 0.5.7",
+          "timestamp": "2022-08-17T03:27:45+08:00",
+          "tree_id": "c9c6da8a802520873644f223888a87435b5f8da2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c9b51879967365e31f342c7b3df1b8aa661c89d4"
+        },
+        "date": 1660679539252,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1260,
             "unit": "s"
           }
         ]
