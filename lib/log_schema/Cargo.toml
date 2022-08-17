@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 # std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
-once_cell = { version = "1.13.0" }
+once_cell = { version = "1.13.1" }
 serde = { version = "1.0.143", default-features = false }
