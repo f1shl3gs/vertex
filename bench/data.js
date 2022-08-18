@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660849868016,
+  "lastUpdate": 1660849934224,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -66367,6 +66367,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.919,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9304c11a6a29b43a7340f7e0f2089788bcc29359",
+          "message": "Merge pull request #519 from f1shl3gs/upgrade_futures_util\n\nUpgrade futures-util to 0.3.23",
+          "timestamp": "2022-08-19T03:06:51+08:00",
+          "tree_id": "3e734be1287805a03782ab19051452adf17d6b30",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9304c11a6a29b43a7340f7e0f2089788bcc29359"
+        },
+        "date": 1660849929143,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.997,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.297,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.685,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.373,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.147,
             "unit": "ns/op"
           }
         ]
