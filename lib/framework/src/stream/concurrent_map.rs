@@ -67,7 +67,7 @@ where
                     Poll::Ready(Some(item)) => {
                         let fut = (this.f)(item);
                         let handle = tokio::spawn(fut);
-                        this.inflight.push(handle);
+                        this.inflight.push_back(handle);
                     }
                 }
             } else {

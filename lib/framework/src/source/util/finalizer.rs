@@ -162,7 +162,7 @@ impl<F: Future> FuturesSet<F> for FuturesOrdered<F> {
     }
 
     fn push(&mut self, fut: F) {
-        Self::push(self, fut);
+        Self::push_back(self, fut);
     }
 }
 

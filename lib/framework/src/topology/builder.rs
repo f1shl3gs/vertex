@@ -278,7 +278,7 @@ impl Runner {
                                 t.transform(events, &mut outputs_buf);
                                 outputs_buf
                             });
-                            in_flight.push(task);
+                            in_flight.push_back(task);
                         },
 
                         None => {

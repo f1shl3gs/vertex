@@ -51,7 +51,7 @@ impl<F: Future> FuturesUnorderedChunked<F> {
     /// Callers must poll this stream in order to drive the underlying futures that have
     /// been stored.
     pub fn push(&mut self, fut: F) {
-        self.futures.push(fut);
+        self.futures.push_back(fut);
     }
 
     /// Returns `true` if the set contains no futures.
