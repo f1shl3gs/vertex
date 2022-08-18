@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1660832523694,
+  "lastUpdate": 1660832606042,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -65903,6 +65903,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 51.813,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d56bc8b29211dc45cb5cf9f6a556970827ac7e7",
+          "message": "Merge pull request #506 from f1shl3gs/dependabot/cargo/ahash-0.8.0\n\nchore(deps): bump ahash from 0.7.6 to 0.8.0",
+          "timestamp": "2022-08-18T22:16:04+08:00",
+          "tree_id": "6e42759a05e08b6a8f37b0ad621ff41534dcc81f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d56bc8b29211dc45cb5cf9f6a556970827ac7e7"
+        },
+        "date": 1660832599348,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 32.943,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 33.733,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.746,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.436,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 73.782,
             "unit": "ns/op"
           }
         ]
