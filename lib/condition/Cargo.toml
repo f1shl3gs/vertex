@@ -12,7 +12,7 @@ harness = false
 event = { path = "../event" }
 lookup = { path = "../lookup" }
 regex = { version = "1.5.6" }
-serde = { version = "1.0.143" }
+serde = { version = "1.0.144" }
 
 [dev-dependencies]
 criterion = { version = "0.3.6", default-features = false }
