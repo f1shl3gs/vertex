@@ -365,7 +365,7 @@ tokio-stream = { version = "0.1.9", features = ["time", "net"] }
 tokio-util = { version = "0.7.3", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.2.1", default-features = false, features = ["serde"] }
 futures = { version = "0.3.23", default-features = false }
-futures-util = { version = "0.3.23", default-features = false }
+futures-util = { version = "0.3.24", default-features = false }
 async-trait = { version = "0.1.57" }
 pin-project = { version = "1.0.12" }
 stream-cancel = { version = "0.8.1" }
