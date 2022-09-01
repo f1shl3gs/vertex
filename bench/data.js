@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662070118188,
+  "lastUpdate": 1662070199381,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57466,6 +57466,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.202,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cda60ace88e4c9bbd891e2067a387d5913c81c3",
+          "message": "Merge pull request #527 from f1shl3gs/dependabot/cargo/iana-time-zone-0.1.47\n\nchore(deps): bump iana-time-zone from 0.1.44 to 0.1.47",
+          "timestamp": "2022-09-02T05:37:45+08:00",
+          "tree_id": "1c2c526e14115c377d3585cb7e8601011f9195c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5cda60ace88e4c9bbd891e2067a387d5913c81c3"
+        },
+        "date": 1662070194576,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 54.513,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 184.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 401.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1110.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27120000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1039600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.365,
             "unit": "ns/op"
           }
         ]
