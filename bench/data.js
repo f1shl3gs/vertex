@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662070199381,
+  "lastUpdate": 1662070305651,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -67155,6 +67155,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1320,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b15b24cae36a80db14da5cad81d40fb71214ee8",
+          "message": "Merge pull request #532 from f1shl3gs/dependabot/cargo/serde-xml-rs-0.6.0\n\nchore(deps): bump serde-xml-rs from 0.5.1 to 0.6.0",
+          "timestamp": "2022-09-02T05:36:03+08:00",
+          "tree_id": "6caca357d4be12a019bfc0c47a713d043ab50b62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b15b24cae36a80db14da5cad81d40fb71214ee8"
+        },
+        "date": 1662070298925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1627,
             "unit": "s"
           }
         ]
