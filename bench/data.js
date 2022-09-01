@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662068882449,
+  "lastUpdate": 1662068919415,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -68239,6 +68239,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.397,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5cda60ace88e4c9bbd891e2067a387d5913c81c3",
+          "message": "Merge pull request #527 from f1shl3gs/dependabot/cargo/iana-time-zone-0.1.47\n\nchore(deps): bump iana-time-zone from 0.1.44 to 0.1.47",
+          "timestamp": "2022-09-02T05:37:45+08:00",
+          "tree_id": "1c2c526e14115c377d3585cb7e8601011f9195c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5cda60ace88e4c9bbd891e2067a387d5913c81c3"
+        },
+        "date": 1662068914944,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.173,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.793,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.724,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.163,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.638,
             "unit": "ns/op"
           }
         ]
