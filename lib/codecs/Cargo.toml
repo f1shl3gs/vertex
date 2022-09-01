@@ -19,7 +19,7 @@ bytes = { version = "1.2.1", default-features = false }
 chrono = { version = "0.4.22", default-features = false }
 dyn-clone = { version = "1.0.9" }
 event = { path = "../event" }
-futures = { version = "0.3.23" }
+futures = { version = "0.3.24" }
 futures-util = { version = "0.3.23" }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
