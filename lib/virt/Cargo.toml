@@ -7,6 +7,6 @@ edition = "2021"
 xdrgen = { git="https://github.com/f1shl3gs/rust-xdr", rev = "9775f74" }
 
 [dependencies]
-tokio = { version = "1.20.1", features = ["net", "rt", "macros", "io-util"] }
+tokio = { version = "1.21.0", features = ["net", "rt", "macros", "io-util"] }
 uuid = { version = "1.1.2" }
 xdr-codec = { git="https://github.com/f1shl3gs/rust-xdr", rev = "9775f74", features = ["bytecodec"] }
