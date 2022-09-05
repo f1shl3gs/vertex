@@ -379,7 +379,7 @@ tracing-core = { version = "0.1.29" }
 # HTTP
 hyper = { version = "0.14.20", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 http = { version = "0.2.8", default-features = false }
-headers = { version = "0.3.7" }
+headers = { version = "0.3.8" }
 
 # Tower
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
