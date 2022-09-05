@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662390907438,
+  "lastUpdate": 1662390974822,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -69599,6 +69599,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.709,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "20eea28f2802d6495a2810612fcfc1c3e9b114ae",
+          "message": "Merge pull request #533 from f1shl3gs/dependabot/cargo/headers-0.3.8\n\nchore(deps): bump headers from 0.3.7 to 0.3.8",
+          "timestamp": "2022-09-05T23:06:20+08:00",
+          "tree_id": "90607428f72d61447a7997da68061106aa84fee1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/20eea28f2802d6495a2810612fcfc1c3e9b114ae"
+        },
+        "date": 1662390970027,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.664,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.354,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.968,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 30.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.106,
             "unit": "ns/op"
           }
         ]
