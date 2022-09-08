@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662663759132,
+  "lastUpdate": 1662663816071,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -68748,6 +68748,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1540,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c5428198c6eb65190afdd6606884766645c45677",
+          "message": "Merge pull request #541 from f1shl3gs/dependabot/cargo/tonic-0.8.1\n\nchore(deps): bump tonic from 0.8.0 to 0.8.1",
+          "timestamp": "2022-09-09T02:33:46+08:00",
+          "tree_id": "e260def0be79c0db37af524b15a39d33db942493",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c5428198c6eb65190afdd6606884766645c45677"
+        },
+        "date": 1662663810597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1551,
             "unit": "s"
           }
         ]
