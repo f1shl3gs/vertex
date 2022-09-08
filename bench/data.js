@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662669552536,
+  "lastUpdate": 1662669555489,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -68963,6 +68963,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1551,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b47d6bd3a93da295347b9ac2cdaedaea1d93f498",
+          "message": "Merge pull request #540 from f1shl3gs/dependabot/cargo/url-2.3.0\n\nchore(deps): bump url from 2.2.2 to 2.3.0",
+          "timestamp": "2022-09-09T04:08:39+08:00",
+          "tree_id": "8a0b060e2c4086bb1481bce4b61d6246efe5b366",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b47d6bd3a93da295347b9ac2cdaedaea1d93f498"
+        },
+        "date": 1662669547854,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1577,
             "unit": "s"
           }
         ]
