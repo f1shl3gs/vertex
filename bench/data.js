@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1662702063961,
+  "lastUpdate": 1662702105908,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22998,6 +22998,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 71.658,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "46414974a974784446859500b5f8b34474e596f8",
+          "message": "Merge pull request #542 from f1shl3gs/dependabot/cargo/percent-encoding-2.2.0\n\nchore(deps): bump percent-encoding from 2.1.0 to 2.2.0",
+          "timestamp": "2022-09-09T13:36:40+08:00",
+          "tree_id": "79b307968c624c6e7e081afa3b58895714a786b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/46414974a974784446859500b5f8b34474e596f8"
+        },
+        "date": 1662702099719,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 24.329,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 74.051,
             "unit": "ns/op"
           }
         ]
