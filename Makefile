@@ -131,6 +131,10 @@ images: build_x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless-libc
 	cd distribution/docker/distroless-libc && docker build -t f1shl3gs/vertex:nightly-distroless .
 
+container_x86_64-unknown-linux-musl:
+	cp target/x86_64-unknown-linux-musl/release/vertex distribution/docker/alpine
+	cd distribution/docker/alpine && docker build -t f1shl3gs/vertex:nightly .
+
 .PHONY: kind_load
 kind_load: images
 	kind load docker-image f1shl3gs/vertex:nightly-distroless
