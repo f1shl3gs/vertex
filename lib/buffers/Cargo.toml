@@ -30,7 +30,7 @@ rkyv = { version = "0.7.39", default-features = false, features = ["size_32", "s
 serde = { version = "1.0.144", default-features = false, features = ["derive"] }
 shared = { path = "../shared" }
 thiserror = { version = "1.0.34" }
-tokio = { version = "1.21.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
+tokio = { version = "1.21.1", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-stream = { version = "0.1", default-features = false, features = ["sync"] }
 tokio-util = { version = "0.7.4", default-features = false }
 tracing = { version = "0.1.36", default-features = false, features = ["attributes"] }
