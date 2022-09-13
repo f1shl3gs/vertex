@@ -402,7 +402,7 @@ prost-types = { version = "0.11.1", default-features = false }
 openssl-probe = { version = "0.1.5", default-features = false }
 
 # Profile
-pprof = { version = "0.9.1", default-features = false, optional = true, features = ["flamegraph", "protobuf", "backtrace-rs"] }
+pprof = { version = "0.10.1", default-features = false, optional = true, features = ["flamegraph", "protobuf"] }
 
 # Cli
 argh = { version = "0.1.8" }
