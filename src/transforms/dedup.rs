@@ -1,3 +1,4 @@
+use std::num::NonZeroUsize;
 use std::sync::Arc;
 
 use async_trait::async_trait;
@@ -16,7 +17,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct CacheConfig {
-    size: usize,
+    size: NonZeroUsize,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -32,8 +33,10 @@ inventory::submit! {
     TransformDescription::new::<Config>("dedup")
 }
 
-const fn default_cache_config() -> CacheConfig {
-    CacheConfig { size: 4 * 1024 }
+fn default_cache_config() -> CacheConfig {
+    CacheConfig {
+        size: NonZeroUsize::new(4 * 1024).unwrap(),
+    }
 }
 
 impl GenerateConfig for Config {
@@ -235,7 +238,9 @@ mod tests {
 
     fn make_match_transform(size: usize, fields: Vec<String>) -> Dedup {
         Dedup::new(Config {
-            cache: CacheConfig { size },
+            cache: CacheConfig {
+                size: NonZeroUsize::new(size).unwrap(),
+            },
             fields: Some(FieldMatchConfig::MatchFields(fields)),
         })
     }
@@ -286,7 +291,9 @@ mod tests {
         fields.extend(given_fields);
 
         Dedup::new(Config {
-            cache: CacheConfig { size },
+            cache: CacheConfig {
+                size: NonZeroUsize::new(size).unwrap(),
+            },
             fields: Some(FieldMatchConfig::IgnoreFields(fields)),
         })
     }

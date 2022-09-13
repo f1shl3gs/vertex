@@ -13,6 +13,7 @@ exclude = [
 # build times. It's most suitable for final release builds.
 [profile.release]
 debug = false
+opt-level = 2
 lto = "thin"
 
 # This profile optimizes for short build times at the expense of larger binary size and slower
@@ -319,7 +320,7 @@ prost-build = { version = "0.11.1" }
 [dev-dependencies]
 assert_cmd = { version = "2.0.2" }
 base64 = { version = "0.13.0" }
-criterion = { version = "0.3.6", default-features = false, features = ["async_tokio"] }
+criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
 indoc = { version = "1.0.7", default-features = false }
@@ -426,7 +427,7 @@ inventory = { version = "0.3.1" }
 k8s-openapi = { version = "0.15.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.74.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 libc = { version = "0.2.132", optional = true }
-lru = { version = "0.7.8", default-features = false, optional = true }
+lru = { version = "0.8.0", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
@@ -436,7 +437,7 @@ once_cell = { version = "1.13.1" }
 parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.1.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
-redis = { version = "0.21.4", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
+redis = { version = "0.21.6", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
 regex = { version = "1.6.0" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
