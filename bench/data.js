@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663248622522,
+  "lastUpdate": 1663248636270,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10141,6 +10141,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 769380,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d295158c7583efaa33ea6fdea0d187e76e45da7f",
+          "message": "Merge pull request #552 from f1shl3gs/dependabot/cargo/sqlx-0.6.2\n\nchore(deps): bump sqlx from 0.6.1 to 0.6.2",
+          "timestamp": "2022-09-15T21:26:05+08:00",
+          "tree_id": "dfed4b4071012939defbcb4274742a5473bb29da",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d295158c7583efaa33ea6fdea0d187e76e45da7f"
+        },
+        "date": 1663248631009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 708740,
             "unit": "ns/op"
           }
         ]
