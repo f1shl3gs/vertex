@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1663249972378,
+  "lastUpdate": 1663257609624,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -69852,6 +69852,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1324,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "25ce4512d05a919eb38e8d1a7bae297f9c3061d5",
+          "message": "Merge pull request #553 from f1shl3gs/update_toolchain_to_1.63.0\n\nupdate rust to 1.63.0",
+          "timestamp": "2022-09-15T23:35:12+08:00",
+          "tree_id": "69592a3083e284dca4360733c73c10256368e4fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/25ce4512d05a919eb38e8d1a7bae297f9c3061d5"
+        },
+        "date": 1663257601062,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1262,
             "unit": "s"
           }
         ]
