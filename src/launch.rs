@@ -365,7 +365,7 @@ macro_rules! impl_list_and_example {
 }
 
 #[derive(Debug, FromArgs)]
-#[argh(subcommand, name = "sources", description = "supported sources")]
+#[argh(subcommand, name = "sources", description = "List all sources")]
 pub struct Sources {
     #[argh(positional, description = "source name")]
     name: Option<String>,
