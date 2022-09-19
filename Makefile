@@ -16,14 +16,17 @@ hooks:
 fmt:
 	cargo fmt
 
-build_x86_64-unknown-linux-musl:
+build:
+	cargo build --release
+
+x86_64-unknown-linux-musl:
 	@cross build \
 		--release \
 		--target x86_64-unknown-linux-musl \
 		--no-default-features \
 		--features target-x86_64-unknown-linux-musl
 
-build_x86_64-unknown-linux-gnu:
+x86_64-unknown-linux-gnu:
 	@cross build \
 		--release \
 		--no-default-features \
@@ -127,7 +130,7 @@ bench-condition:
 	cargo bench --manifest-path lib/condition/Cargo.toml
 
 .PHONY: images
-images: build_x86_64-unknown-linux-gnu
+images: x86_64-unknown-linux-gnu
 	cp target/x86_64-unknown-linux-gnu/release/vertex distribution/docker/distroless-libc
 	cd distribution/docker/distroless-libc && docker build -t f1shl3gs/vertex:nightly-distroless .
 

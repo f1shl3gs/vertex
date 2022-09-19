@@ -11,7 +11,16 @@ always check out the supported extensions by
 vertex sources
 ```
 
-show config example
+## Build
+Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
+
+```shell
+make build
+```
+
+## Configuration
+
+Show config example for Consul
 ```shell
 vertex sources consul
 # HTTP/HTTPS endpoint to Consul server.
@@ -48,6 +57,8 @@ endpoints:
 #  # understand the risks of not verifying the remote hostname.
 #  verify_hostname: true
 ```
+
+There are more example configurations under `examples/config` to help you know what's Vertex capable of.
 
 ## Sources
 A source defines how Vertex should collect data from(push or pull), 
