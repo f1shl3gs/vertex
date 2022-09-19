@@ -147,7 +147,7 @@ fn parse_stat_and_threads(content: &str) -> Option<(&str, usize)> {
     let (_, s) = content.split_at(index + 1);
     let list = s.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
-    let state = match list.get(0) {
+    let state = match list.first() {
         Some(s) => *s,
         None => return None,
     };

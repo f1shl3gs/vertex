@@ -227,7 +227,7 @@ impl JournaldSource {
                     }
                 };
 
-                if let Some(tmp) = entry.remove(&*CURSOR) {
+                if let Some(tmp) = entry.remove(CURSOR) {
                     if let Value::Bytes(_) = tmp {
                         *cursor = Some(tmp.to_string_lossy());
                     }
@@ -298,7 +298,7 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
     }
     // Translate the timestamp, and so leave both old and new names
     if let Some(Value::Bytes(timestamp)) = log
-        .get_field(&*SOURCE_TIMESTAMP)
+        .get_field(SOURCE_TIMESTAMP)
         .or_else(|| log.get_field(RECEIVED_TIMESTAMP))
     {
         if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {

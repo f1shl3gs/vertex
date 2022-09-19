@@ -103,7 +103,7 @@ impl TraceContext {
     pub fn get<T: 'static>(&self) -> Option<&T> {
         self.entries
             .get(&TypeId::of::<T>())
-            .and_then(|rc| (&*rc).downcast_ref())
+            .and_then(|rc| rc.downcast_ref())
     }
 
     /// Returns a copy of the context with the new value included.
@@ -131,7 +131,7 @@ impl TraceContext {
 fn get_current<F: FnMut(&TraceContext) -> T, T>(mut f: F) -> T {
     CURRENT_CONTEXT
         .try_with(|cx| f(&*cx.borrow()))
-        .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(&*cx)))
+        .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(cx)))
 }
 
 /// A reference to the currently active span in this context.

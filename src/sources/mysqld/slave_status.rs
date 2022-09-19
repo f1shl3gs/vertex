@@ -103,7 +103,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
         }
     }
 
-    return match record {
+    match record {
         Some(record) => {
             let mut metrics = Vec::with_capacity(record.values.len());
 
@@ -125,8 +125,8 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
         }
 
         // Replication is not enabled
-        None => return Ok(vec![]),
-    };
+        None => Ok(vec![]),
+    }
 }
 
 static LOG_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#".+\.(\d+)$"#).unwrap());
