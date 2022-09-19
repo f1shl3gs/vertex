@@ -449,7 +449,7 @@ mod integration_tests {
         let body = serde_json::to_vec(svc).unwrap();
         let req = http::Request::put(path).body(Body::from(body)).unwrap();
 
-        return match client.send(req).await {
+        match client.send(req).await {
             Ok(resp) => {
                 let (parts, _body) = resp.into_parts();
                 match parts.status {
@@ -458,7 +458,7 @@ mod integration_tests {
                 }
             }
             Err(err) => Err(ConsulError::HttpErr(err)),
-        };
+        }
     }
 
     #[tokio::test]

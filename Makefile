@@ -93,7 +93,7 @@ test:
 
 .PHONY: check_clippy
 check_clippy:
-	cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings
+	cargo clippy --workspace --all-targets --features all-integration-tests -- -D warnings -A clippy::derive_partial_eq_without_eq
 
 .PHONY: check_shell
 check_shell:
