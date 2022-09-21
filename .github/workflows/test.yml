@@ -78,7 +78,7 @@ jobs:
       - run: bash ci/environment/prepare.sh
       - name: Building container
         run: docker build -f ci/cross/${{ matrix.target }}.dockerfile -t vertex-cross:${{ matrix.target }} ci/cross
-      - run: make build_${{ matrix.target }}
+      - run: make ${{ matrix.target }}
 
   test:
     name: Cargo test
