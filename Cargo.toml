@@ -424,7 +424,7 @@ governor = { version = "0.5.0", default-features = false, optional = true, featu
 indexmap = { version = "1.9.1", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.1" }
 k8s-openapi = { version = "0.15.0", default-features = false, optional = true, features = ["api", "v1_18"] }
-kube = { version = "0.74.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
+kube = { version = "0.75.0", default-features = false, optional = true, features = ["client", "native-tls", "runtime"] }
 libc = { version = "0.2.133", optional = true }
 lru = { version = "0.8.0", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
