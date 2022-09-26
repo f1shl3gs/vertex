@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664183740925,
+  "lastUpdate": 1664183905189,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23725,6 +23725,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 70.921,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "c3ad6bc3df690c50b4f59d93b1a934eafa525cec",
+          "message": "update toolchain to 1.64.0",
+          "timestamp": "2022-09-26T17:12:46+08:00",
+          "tree_id": "408bd6f274c2ad066a81cf83fb792efc3eaf0858",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c3ad6bc3df690c50b4f59d93b1a934eafa525cec"
+        },
+        "date": 1664183898989,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 21.784,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 67.102,
             "unit": "ns/op"
           }
         ]
