@@ -117,12 +117,8 @@ where
         labels: Default::default(),
     };
 
-    loop {
-        if let Some(line) = lines.peek() {
-            if line.starts_with('#') {
-                break;
-            }
-        } else {
+    while let Some(line) = lines.peek() {
+        if line.starts_with('#') {
             break;
         }
 
@@ -306,7 +302,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
             pos += 1;
         }
 
-        let line = (&line[pos..]).trim();
+        let line = line[pos..].trim();
 
         let mut parts = line.split_whitespace();
         let value = parts.next().ok_or(Error::MissingValue)?.parse::<f64>()?;

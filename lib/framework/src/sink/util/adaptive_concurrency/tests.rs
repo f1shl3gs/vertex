@@ -70,7 +70,7 @@ struct LimitParams {
 impl LimitParams {
     fn action_at_level(&self, level: usize) -> Option<Action> {
         self.limit
-            .and_then(|limit| (level > limit).then(|| self.action))
+            .and_then(|limit| (level > limit).then_some(self.action))
     }
 
     fn scale(&self, level: usize) -> f64 {
@@ -527,7 +527,7 @@ mod mock {
         mut output: Pipeline,
     ) -> Result<(), ()> {
         let mut interval = (!interval.is_zero())
-            .then(|| interval)
+            .then_some(interval)
             .map(tokio::time::interval);
 
         for _i in 0..count {

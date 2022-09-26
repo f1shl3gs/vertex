@@ -285,9 +285,9 @@ impl<L> Controller<L> {
         }
 
         self.limit.record(inner.current_limit as f64);
-        let reached_limit = inner.reached_limit.then(|| 1.0).unwrap_or_default();
+        let reached_limit = inner.reached_limit.then_some(1.0).unwrap_or_default();
         self.reached_limit.record(reached_limit);
-        let back_pressure = inner.had_back_pressure.then(|| 1.0).unwrap_or_default();
+        let back_pressure = inner.had_back_pressure.then_some(1.0).unwrap_or_default();
         self.back_pressure.record(back_pressure);
         self.past_rtt_mean.record(past_rtt.mean);
 

@@ -118,7 +118,7 @@ impl ToString for OwnedPath {
             .enumerate()
             .map(|(i, segment)| match segment {
                 OwnedSegment::Field(field) => {
-                    serialize_field(field.as_ref(), (i != 0).then(|| "."))
+                    serialize_field(field.as_ref(), (i != 0).then_some("."))
                 }
 
                 OwnedSegment::CoalesceField(field) => {
@@ -145,7 +145,7 @@ impl ToString for OwnedPath {
                 OwnedSegment::CoalesceEnd(field) => {
                     format!(
                         "{})",
-                        serialize_field(field.as_ref(), (coalesce_i != 0).then(|| "|"))
+                        serialize_field(field.as_ref(), (coalesce_i != 0).then_some("|"))
                     )
                 }
             })
