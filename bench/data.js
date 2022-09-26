@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664182599510,
+  "lastUpdate": 1664183740925,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -71786,6 +71786,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1555,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "af8d187c0c441de8b6e549143cc2972bf08a8ab9",
+          "message": "Merge pull request #564 from f1shl3gs/dependabot/cargo/thiserror-1.0.36\n\nchore(deps): bump thiserror from 1.0.35 to 1.0.36",
+          "timestamp": "2022-09-26T16:49:38+08:00",
+          "tree_id": "3fef6b07c4339ee51282ae06e0ee33e3050ad877",
+          "url": "https://github.com/f1shl3gs/vertex/commit/af8d187c0c441de8b6e549143cc2972bf08a8ab9"
+        },
+        "date": 1664183735653,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1282,
             "unit": "s"
           }
         ]
