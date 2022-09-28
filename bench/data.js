@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664343583957,
+  "lastUpdate": 1664344573406,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -61989,6 +61989,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.289,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca4d84719b0b536407be865898a218044535d0e0",
+          "message": "Merge pull request #566 from f1shl3gs/dependabot/cargo/tokio-1.21.2\n\nchore(deps): bump tokio from 1.21.1 to 1.21.2",
+          "timestamp": "2022-09-28T13:33:11+08:00",
+          "tree_id": "de29757debb48611f9a7ca929f3af5beb4b3dcfc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca4d84719b0b536407be865898a218044535d0e0"
+        },
+        "date": 1664344568039,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 48.843,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 162.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 375.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1108.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 28388000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 934810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20,
             "unit": "ns/op"
           }
         ]
