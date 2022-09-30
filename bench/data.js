@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664555634731,
+  "lastUpdate": 1664555650362,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -46954,6 +46954,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 262610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8d99856f69a43ebc419e7ac6b247e0613544f73",
+          "message": "Merge pull request #572 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.25.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.1+5.3.0-patched to 0.5.2+5.3.0-patched",
+          "timestamp": "2022-10-01T00:26:07+08:00",
+          "tree_id": "e0b0ac9f330bd91fa2db7184d94b7bb96f3c7c41",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c8d99856f69a43ebc419e7ac6b247e0613544f73"
+        },
+        "date": 1664555644456,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 604.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 60403,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 301500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 603850,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 311.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 31118,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 155480,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 310860,
             "unit": "ns/op"
           }
         ]
