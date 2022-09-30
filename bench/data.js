@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664556700691,
+  "lastUpdate": 1664556929422,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -62860,6 +62860,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.308,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8d99856f69a43ebc419e7ac6b247e0613544f73",
+          "message": "Merge pull request #572 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.25.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.1+5.3.0-patched to 0.5.2+5.3.0-patched",
+          "timestamp": "2022-10-01T00:26:07+08:00",
+          "tree_id": "e0b0ac9f330bd91fa2db7184d94b7bb96f3c7c41",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c8d99856f69a43ebc419e7ac6b247e0613544f73"
+        },
+        "date": 1664556921884,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 66.971,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 207.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 522.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1360.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 42281000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1299500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.811,
             "unit": "ns/op"
           }
         ]
