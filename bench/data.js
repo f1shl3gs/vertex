@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1664806728328,
+  "lastUpdate": 1664806737352,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -77454,6 +77454,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.586,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a9fd05e75e74432e92e902bfee8079bf31f222e",
+          "message": "Merge pull request #573 from f1shl3gs/dependabot/github_actions/styfle/cancel-workflow-action-0.10.1\n\nchore(ci): bump styfle/cancel-workflow-action from 0.10.0 to 0.10.1",
+          "timestamp": "2022-10-03T22:13:13+08:00",
+          "tree_id": "77239b5d061cf95d1bd156aec5b7b4c1e6a9852e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a9fd05e75e74432e92e902bfee8079bf31f222e"
+        },
+        "date": 1664806728699,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.669,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.675,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.043,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.909,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 64.418,
             "unit": "ns/op"
           }
         ]
