@@ -65,7 +65,7 @@ openssl = { version = "0.10.42", default-features = false }
 percent-encoding = { version = "2.2.0", default-features = false }
 pin-project = { version = "1.0.12" }
 regex = { version = "1.6.0" }
-smallvec = { version = "1.9.0", features = ["union"] }
+smallvec = { version = "1.10.0", features = ["union"] }
 serde = { version = "1.0.145", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.85", default-features = false }
 serde_regex = { path = "../serde_regex" }
