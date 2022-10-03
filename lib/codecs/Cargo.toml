@@ -29,7 +29,7 @@ tokio = { version = "1.21.2" }
 tokio-util = { version = "0.7.4", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.36" }
 serde = { version = "1.0.145", default-features = false }
-smallvec = { version = "1.8.0" }
+smallvec = { version = "1.10.0" }
 
 # Optional
 syslog_loose = { version = "0.17.0", default-features = false, optional = true }
