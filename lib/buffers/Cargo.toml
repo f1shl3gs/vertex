@@ -44,4 +44,4 @@ quickcheck = { version = "1.0.3" }
 tempdir = "0.3"
 tokio-test = { version  = "0.4.2" }
 tracing-fluent-assertions = { version = "0.3.0" }
-tracing-subscriber = { version = "0.3.15" }
+tracing-subscriber = { version = "0.3.16" }
