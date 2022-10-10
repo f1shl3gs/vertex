@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665399822767,
+  "lastUpdate": 1665399841409,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -78363,6 +78363,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 64.269,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8decfe805550c588ec0bced95fd54384d55b618f",
+          "message": "Merge pull request #578 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.16\n\nchore(deps): bump tracing-subscriber from 0.3.15 to 0.3.16",
+          "timestamp": "2022-10-10T18:58:02+08:00",
+          "tree_id": "2105b1efc441fec7a5647c47711c7064f47f1187",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8decfe805550c588ec0bced95fd54384d55b618f"
+        },
+        "date": 1665399836038,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.258,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.638,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.086,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.065,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 59.78,
             "unit": "ns/op"
           }
         ]
