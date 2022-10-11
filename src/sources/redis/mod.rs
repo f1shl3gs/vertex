@@ -1,6 +1,11 @@
+mod client;
+
+use bytes::{Buf, Bytes};
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
+use std::io::BufRead;
 
+use client::{Client, RespErr};
 use event::{tags, Metric};
 use framework::config::{
     DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
@@ -210,9 +215,6 @@ enum ParseError {
 
 #[derive(Debug, Error)]
 enum Error {
-    #[error("Invalid data: {0}")]
-    InvalidData(String),
-
     #[error("Invalid slave line")]
     InvalidSlaveLine,
 
@@ -222,11 +224,14 @@ enum Error {
     #[error("Invalid keyspace line")]
     InvalidKeyspaceLine,
 
-    #[error("Redis error: {0}")]
-    Redis(#[from] redis::RedisError),
-
     #[error("Parse error: {0}")]
     Parse(ParseError),
+
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+
+    #[error("Redis error: {0}")]
+    Resp(#[from] RespErr),
 }
 
 impl From<std::num::ParseIntError> for Error {
@@ -244,8 +249,8 @@ impl From<std::num::ParseFloatError> for Error {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct RedisSourceConfig {
-    // something looks like this, e.g. redis://host:port/db
-    url: String,
+    // something looks like this, e.g. host:port
+    endpoint: String,
 
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
@@ -262,13 +267,12 @@ impl GenerateConfig for RedisSourceConfig {
         r#"
 # The endpoints to connect to redis
 #
-endpoint: redis://localhost:6379
+endpoint: localhost:6379
 
 # The interval between scrapes.
 #
 # interval: 15s
 
-# TODO: example for configuring "user" and password
 "#
         .into()
     }
@@ -287,7 +291,7 @@ fn default_namespace() -> Option<String> {
 impl SourceConfig for RedisSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let src = RedisSource {
-            url: self.url.clone(),
+            url: self.endpoint.clone(),
             namespace: self.namespace.clone(),
             interval: cx.interval,
             client_name: None,
@@ -322,7 +326,7 @@ impl RedisSource {
             IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            let mut metrics = match self.gather().await {
+            let mut metrics = match self.collect().await {
                 Err(err) => {
                     warn!(
                         message = "collect redis metrics failed",
@@ -368,20 +372,15 @@ impl RedisSource {
         Ok(())
     }
 
-    async fn gather(&self) -> Result<Vec<Metric>, Error> {
+    async fn collect(&self) -> Result<Vec<Metric>, Error> {
         let mut metrics = vec![];
-        let cli = redis::Client::open(self.url.as_str())?;
-        let mut conn = cli.get_async_connection().await?;
+        let mut cli = Client::connect(&self.url).await?;
 
-        if let Some(ref client_name) = self.client_name {
-            redis::cmd("CLIENT")
-                .arg("SETNAME")
-                .arg(client_name)
-                .query_async(&mut conn)
-                .await?;
+        if let Some(ref name) = self.client_name {
+            cli.query::<String>(&["client", "setname", name]).await?;
         }
 
-        let mut db_count = match query_databases(&mut conn).await {
+        let mut db_count = match databases(&mut cli).await {
             Ok(n) => n,
             Err(err) => {
                 debug!(message = "redis config get failed", ?err);
@@ -389,20 +388,22 @@ impl RedisSource {
             }
         };
 
-        let infos = query_infos(&mut conn).await?;
+        let infos = cli.query::<Bytes>(&["info", "all"]).await?;
+        let infos = std::str::from_utf8(&infos).unwrap();
 
         if infos.contains("cluster_enabled:1") {
-            match cluster_info(&mut conn).await {
-                Ok(info) => {
-                    if let Ok(ms) = extract_cluster_info_metrics(info) {
+            match cluster_info(&mut cli).await {
+                Ok(ms) => {
+                    if !metrics.is_empty() {
                         metrics.extend(ms);
                     }
 
-                    // in cluster mode Redis only supports one database so no extra DB number padding needed
+                    // in cluster mode Redis only supports one database so no extra DB
+                    // number padding needed
                     db_count = 1;
                 }
                 Err(err) => {
-                    error!(
+                    warn!(
                         message = "Redis CLUSTER INFO failed",
                         ?err,
                         internal_log_rate_secs = 30
@@ -416,16 +417,16 @@ impl RedisSource {
         }
 
         // info metrics
-        if let Ok(ms) = extract_info_metrics(infos.as_str(), db_count) {
+        if let Ok(ms) = extract_info_metrics(infos, db_count) {
             metrics.extend(ms);
         }
 
         // latency
-        if let Ok(ms) = extract_latency_metrics(&mut conn).await {
+        if let Ok(ms) = latency_metrics(&mut cli).await {
             metrics.extend(ms);
         }
 
-        if let Ok(ms) = extract_slowlog_metrics(&mut conn).await {
+        if let Ok(ms) = slowlog_metrics(&mut cli).await {
             metrics.extend(ms);
         }
 
@@ -449,15 +450,27 @@ impl RedisSource {
     }
 }
 
-async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
+async fn databases(cli: &mut Client) -> Result<u64, Error> {
+    let parts = cli.query::<Vec<String>>(&["config", "get", "*"]).await?;
+
+    for pos in 0..parts.len() / 2 {
+        let key = &parts[2 * pos];
+        if key == "databases" {
+            let value = &parts[2 * pos + 1];
+
+            return value.parse::<u64>().map_err(|_err| {
+                RespErr::ServerErr("invalid `databases` value".to_string()).into()
+            });
+        }
+    }
+
+    Ok(0)
+}
+
+async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
-    match redis::cmd("SLOWLOG")
-        .arg("LEN")
-        .query_async::<C, f64>(conn)
-        .await
-    {
+
+    match cli.query::<u64>(&["slowlog", "len"]).await {
         Ok(length) => {
             metrics.push(Metric::gauge("slowlog_length", "Total slowlog", length));
         }
@@ -466,11 +479,7 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
         }
     }
 
-    let values: Vec<i64> = redis::cmd("SLOWLOG")
-        .arg("GET")
-        .arg("1")
-        .query_async(conn)
-        .await?;
+    let values: Vec<i64> = cli.query(&["slowlog", "get", "1"]).await?;
 
     let mut last_id: i64 = 0;
     let mut last_slow_execution_second: f64 = 0.0;
@@ -494,14 +503,9 @@ async fn extract_slowlog_metrics<C: redis::aio::ConnectionLike>(
 }
 
 // https://redis.io/commands/latency-latest
-async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
-    conn: &mut C,
-) -> Result<Vec<Metric>, Error> {
+async fn latency_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
     let mut metrics = vec![];
-    let values: Vec<Vec<String>> = redis::cmd("LATENCY")
-        .arg("LATEST")
-        .query_async(conn)
-        .await?;
+    let values: Vec<Vec<String>> = cli.query(&["latency", "latest"]).await?;
 
     for parts in values {
         let event = Cow::from(parts[0].clone());
@@ -531,28 +535,40 @@ async fn extract_latency_metrics<C: redis::aio::ConnectionLike>(
     Ok(metrics)
 }
 
-fn extract_cluster_info_metrics(info: String) -> Result<Vec<Metric>, Error> {
-    let mut metrics = vec![];
-    info.split("\r\n").for_each(|line| {
-        let part = line.split(':').collect::<Vec<_>>();
+async fn cluster_info(cli: &mut Client) -> Result<Vec<Metric>, Error> {
+    let keyword = "cluster_enabled:1".as_bytes();
+    let infos = cli.query::<Bytes>(&["cluster", "info"]).await?;
 
-        if part.len() != 2 {
-            return;
-        }
+    if (infos[..]).windows(keyword.len()).any(|p| p == keyword) {
+        let mut metrics = vec![];
 
-        if !include_metric(part[0]) {
-            return;
-        }
+        infos
+            .reader()
+            .lines()
+            .filter_map(|line| line.ok())
+            .for_each(|line| {
+                let part = line.split(':').collect::<Vec<_>>();
 
-        if let Ok(m) = parse_and_generate(part[0], part[1]) {
-            metrics.push(m);
-        }
-    });
+                if part.len() != 2 {
+                    return;
+                }
 
-    Ok(metrics)
+                if !include_metric(part[0]) {
+                    return;
+                }
+
+                if let Ok(m) = parse_and_generate(part[0], part[1]) {
+                    metrics.push(m);
+                }
+            });
+
+        Ok(metrics)
+    } else {
+        Ok(vec![])
+    }
 }
 
-fn extract_info_metrics(infos: &str, dbcount: i64) -> Result<Vec<Metric>, std::io::Error> {
+fn extract_info_metrics(infos: &str, dbcount: u64) -> Result<Vec<Metric>, std::io::Error> {
     let mut metrics = vec![];
     let mut kvs = BTreeMap::new();
     let mut handled_dbs = BTreeSet::new();
@@ -1022,43 +1038,6 @@ fn include_metric(s: &str) -> bool {
     COUNTER_METRICS.contains_key(s)
 }
 
-async fn query_databases<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<i64, Error> {
-    let resp: Vec<String> = redis::cmd("CONFIG")
-        .arg("GET")
-        .arg("*")
-        .query_async(conn)
-        .await?;
-
-    if resp.len() % 2 != 0 {
-        return Err(Error::InvalidData("config response".to_string()));
-    }
-
-    for pos in 0..resp.len() / 2 {
-        let key = resp[2 * pos].as_str();
-        let value = resp[2 * pos + 1].as_str();
-
-        if key == "databases" {
-            return value
-                .parse()
-                .map_err(|_err| Error::InvalidData(value.to_string()));
-        }
-    }
-
-    Ok(0)
-}
-
-async fn cluster_info<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
-    let resp = redis::cmd("CLUSTER").arg("INFO").query_async(conn).await?;
-
-    Ok(resp)
-}
-
-async fn query_infos<C: redis::aio::ConnectionLike>(conn: &mut C) -> Result<String, Error> {
-    let resp = redis::cmd("INFO").arg("ALL").query_async(conn).await?;
-
-    Ok(resp)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1084,25 +1063,20 @@ mod tests {
     }
 }
 
-#[cfg(all(test, feature = "integration-tests-redis"))]
+// #[cfg(all(test, feature = "integration-tests-redis"))]
+#[cfg(test)]
 mod integration_tests {
     use super::*;
-    use redis::ToRedisArgs;
     use testcontainers::images::redis::Redis;
 
     const REDIS_PORT: u16 = 6379;
 
-    async fn write_testdata<C: redis::aio::ConnectionLike>(conn: &mut C) {
+    async fn write_testdata(cli: &mut Client) {
         for i in 0..100 {
-            let key = format!("key_{}", i).to_redis_args();
-            let value = format!("value_{}", i).to_redis_args();
-
-            redis::cmd("SET")
-                .arg(key)
-                .arg(value)
-                .query_async::<C, ()>(conn)
-                .await
-                .unwrap();
+            let key = format!("key_{}", i);
+            let value = format!("value_{}", i);
+            let resp = cli.query::<String>(&["set", &key, &value]).await.unwrap();
+            assert_eq!(resp, "OK")
         }
     }
 
@@ -1111,17 +1085,10 @@ mod integration_tests {
         let client = testcontainers::clients::Cli::default();
         let service = client.run(Redis::default());
         let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("redis://localhost:{}", host_port);
+        let url = format!("localhost:{}", host_port);
 
-        let cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_async_connection().await.unwrap();
-
-        let resp: Vec<String> = redis::cmd("CONFIG")
-            .arg("GET")
-            .arg("*")
-            .query_async(&mut conn)
-            .await
-            .unwrap();
+        let mut cli = Client::connect(url).await.unwrap();
+        let resp: Vec<String> = cli.query(&["config", "get", "*"]).await.unwrap();
 
         assert_ne!(resp.len(), 0);
     }
@@ -1131,26 +1098,13 @@ mod integration_tests {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("redis://localhost:{}", host_port);
-        let cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+        let url = format!("localhost:{}", host_port);
+        let mut cli = Client::connect(url).await.unwrap();
 
-        write_testdata(&mut conn).await;
+        write_testdata(&mut cli).await;
 
-        let v = extract_slowlog_metrics(&mut conn).await.unwrap();
+        let v = slowlog_metrics(&mut cli).await.unwrap();
         assert_eq!(v.len(), 3);
-    }
-
-    #[tokio::test]
-    async fn test_query_databases() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("redis://localhost:{}", host_port);
-        let cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
-        let n = query_databases(&mut conn).await.unwrap();
-        assert_eq!(n, 16)
     }
 
     #[tokio::test]
@@ -1158,12 +1112,11 @@ mod integration_tests {
         let docker = testcontainers::clients::Cli::default();
         let service = docker.run(Redis::default());
         let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("redis://localhost:{}", host_port);
-        let cli = redis::Client::open(url).unwrap();
-        let mut conn = cli.get_multiplexed_tokio_connection().await.unwrap();
+        let url = format!("localhost:{}", host_port);
+        let mut cli = Client::connect(url).await.unwrap();
 
-        write_testdata(&mut conn).await;
+        write_testdata(&mut cli).await;
 
-        extract_latency_metrics(&mut conn).await.unwrap();
+        latency_metrics(&mut cli).await.unwrap();
     }
 }
