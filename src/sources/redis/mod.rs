@@ -1063,8 +1063,7 @@ mod tests {
     }
 }
 
-// #[cfg(all(test, feature = "integration-tests-redis"))]
-#[cfg(test)]
+#[cfg(all(test, feature = "integration-tests-redis"))]
 mod integration_tests {
     use super::*;
     use testcontainers::images::redis::Redis;

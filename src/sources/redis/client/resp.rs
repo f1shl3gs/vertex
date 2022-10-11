@@ -61,6 +61,10 @@ impl FromRespValue for String {
     fn from_frame(frame: Frame) -> Result<Self, RespErr> {
         match frame {
             Frame::Simple(s) => Ok(s),
+            Frame::Bulk(b) => {
+                String::from_utf8(b.to_vec())
+                    .map_err(|_err| RespErr::ServerErr("invalid utf8 bulk".to_string()))
+            }
             _ => Err(FrameErr::InvalidResponseType.into()),
         }
     }

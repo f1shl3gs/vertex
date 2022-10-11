@@ -79,6 +79,8 @@ impl Client {
 
         let frame = self.read_frame().await?;
 
+        println!("frame: {:?}", frame);
+
         if let Some(frame) = frame {
             FromRespValue::from_frame(frame)
         } else {
