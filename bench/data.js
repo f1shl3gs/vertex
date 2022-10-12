@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665559985591,
+  "lastUpdate": 1665560245596,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -65151,6 +65151,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 21.798,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5746bade7315f08ce86d81c501996533245baab",
+          "message": "Merge pull request #584 from f1shl3gs/remove_redis_dep\n\nremove redis_dep",
+          "timestamp": "2022-10-12T15:08:07+08:00",
+          "tree_id": "f50e114cd07f8e31665509c7458a50c562a42535",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5746bade7315f08ce86d81c501996533245baab"
+        },
+        "date": 1665560237786,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 75.701,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 226.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 550.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1475.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 45089000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1370100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.678,
             "unit": "ns/op"
           }
         ]
