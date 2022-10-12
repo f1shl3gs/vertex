@@ -65,9 +65,7 @@ mod tail;
 #[cfg(feature = "sources-zookeeper")]
 mod zookeeper;
 
-use thiserror::Error;
-
-#[derive(Debug, Error)]
+#[derive(Debug, thiserror::Error)]
 enum BuildError {
     #[error("URI parse error: {0}")]
     UriParseError(::http::uri::InvalidUri),

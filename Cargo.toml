@@ -189,7 +189,7 @@ sources-nvidia_smi = ["serde-xml-rs"]
 sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
-sources-redis = ["redis"]
+sources-redis = ["atoi"]
 sources-selfstat = ["libc"]
 sources-syslog = ["codecs/syslog", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils", "smallvec"]
 sources-tail = ["tail", "multiline", "encoding_rs"]
@@ -436,7 +436,7 @@ once_cell = { version = "1.15.0" }
 parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
-redis = { version = "0.21.6", default-features = false, optional = true, features = ["tokio-comp", "connection-manager"] }
+atoi = { version = "1.0.0", optional = true }
 regex = { version = "1.6.0" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }

@@ -80,12 +80,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "595d3cfa7a60d4555cb5067b99f07142a08ea778de5cf993f7b75c7d8fabc486"
 
 [[package]]
-name = "arc-swap"
-version = "1.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6df5aef5c5830360ce5218cecb8f018af3438af5686ae945094affc86fdec63"
-
-[[package]]
 name = "argh"
 version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -644,20 +638,6 @@ dependencies = [
  "atty",
  "lazy_static",
  "winapi",
-]
-
-[[package]]
-name = "combine"
-version = "4.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a909e4d93292cd8e9c42e189f61681eff9d67b6541f96b8a1a737f23737bd001"
-dependencies = [
- "bytes",
- "futures-core",
- "memchr 2.5.0",
- "pin-project-lite",
- "tokio",
- "tokio-util 0.6.9",
 ]
 
 [[package]]
@@ -3412,27 +3392,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "redis"
-version = "0.21.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "571c252c68d09a2ad3e49edd14e9ee48932f3e0f27b06b4ea4c9b2a706d31103"
-dependencies = [
- "arc-swap",
- "async-trait",
- "bytes",
- "combine",
- "futures",
- "futures-util",
- "itoa 1.0.1",
- "percent-encoding",
- "pin-project-lite",
- "ryu",
- "tokio",
- "tokio-util 0.7.4",
- "url",
-]
-
-[[package]]
 name = "redox_syscall"
 version = "0.2.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4893,6 +4852,7 @@ dependencies = [
  "assert_cmd",
  "async-stream",
  "async-trait",
+ "atoi",
  "atty",
  "base64",
  "bloom",
@@ -4953,7 +4913,6 @@ dependencies = [
  "prost-types",
  "rand 0.8.5",
  "rdkafka",
- "redis",
  "regex",
  "rsntp",
  "seahash",
