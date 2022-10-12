@@ -215,6 +215,7 @@ pub struct Buffer<T> {
     _t: PhantomData<T>,
 }
 
+#[allow(clippy::type_complexity)]
 impl<T> Buffer<T>
 where
     T: Bufferable,
