@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665558838563,
+  "lastUpdate": 1665558854609,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -24951,6 +24951,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 66.014,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5746bade7315f08ce86d81c501996533245baab",
+          "message": "Merge pull request #584 from f1shl3gs/remove_redis_dep\n\nremove redis_dep",
+          "timestamp": "2022-10-12T15:08:07+08:00",
+          "tree_id": "f50e114cd07f8e31665509c7458a50c562a42535",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5746bade7315f08ce86d81c501996533245baab"
+        },
+        "date": 1665558846822,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 20.635,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 66.652,
             "unit": "ns/op"
           }
         ]
