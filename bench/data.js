@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665558719016,
+  "lastUpdate": 1665558754985,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -79390,6 +79390,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.428,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "385a9084c0519a624449c3611e3a5af18ae61dae",
+          "message": "Merge pull request #585 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.11\n\nchore(deps): bump tokio-stream from 0.1.10 to 0.1.11",
+          "timestamp": "2022-10-12T15:07:03+08:00",
+          "tree_id": "6ff5796ac3d159fb89f6f54c51fbda0fa7e5ac2f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/385a9084c0519a624449c3611e3a5af18ae61dae"
+        },
+        "date": 1665558749282,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.685,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.347,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.527,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 30.772,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.53,
             "unit": "ns/op"
           }
         ]
