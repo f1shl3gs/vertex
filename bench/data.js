@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665641706194,
+  "lastUpdate": 1665641729185,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -80338,6 +80338,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.792,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4220d9a16a25902a1ee628400f64e04b0501a5ab",
+          "message": "Merge pull request #587 from f1shl3gs/dependabot/cargo/atoi-2.0.0\n\nchore(deps): bump atoi from 1.0.0 to 2.0.0",
+          "timestamp": "2022-10-13T14:08:39+08:00",
+          "tree_id": "0545c716f4dda69ef39cb5b3c2ca1d6a8326294e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4220d9a16a25902a1ee628400f64e04b0501a5ab"
+        },
+        "date": 1665641720822,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.572,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.813,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.916,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.876,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 62.987,
             "unit": "ns/op"
           }
         ]
