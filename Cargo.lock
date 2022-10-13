@@ -179,6 +179,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "atoi"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f28d99ec8bfea296261ca1af174f24225171fea9664ba9003cbebee704810528"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "atomig"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3881,7 +3890,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcbc16ddba161afc99e14d1713a453747a2b07fc097d2009f4c300ec99286105"
 dependencies = [
  "ahash 0.7.6",
- "atoi",
+ "atoi 1.0.0",
  "bitflags",
  "byteorder",
  "bytes",
@@ -4852,7 +4861,7 @@ dependencies = [
  "assert_cmd",
  "async-stream",
  "async-trait",
- "atoi",
+ "atoi 2.0.0",
  "atty",
  "base64",
  "bloom",
