@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665641748211,
+  "lastUpdate": 1665641766311,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -49016,6 +49016,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 262150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4220d9a16a25902a1ee628400f64e04b0501a5ab",
+          "message": "Merge pull request #587 from f1shl3gs/dependabot/cargo/atoi-2.0.0\n\nchore(deps): bump atoi from 1.0.0 to 2.0.0",
+          "timestamp": "2022-10-13T14:08:39+08:00",
+          "tree_id": "0545c716f4dda69ef39cb5b3c2ca1d6a8326294e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4220d9a16a25902a1ee628400f64e04b0501a5ab"
+        },
+        "date": 1665641758936,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 612.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 61143,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 305990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 612200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 319.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 31806,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 158970,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 317700,
             "unit": "ns/op"
           }
         ]
