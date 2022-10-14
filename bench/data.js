@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665724615391,
+  "lastUpdate": 1665725799238,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -76975,6 +76975,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1565,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f20a647efff9ddb9d3b77fea7b196e8867a51419",
+          "message": "Merge pull request #588 from f1shl3gs/dependabot/cargo/mimalloc-0.1.30\n\nchore(deps): bump mimalloc from 0.1.29 to 0.1.30",
+          "timestamp": "2022-10-14T13:10:45+08:00",
+          "tree_id": "2d222abfd3b4924e9583519e0761cd507a80b3ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f20a647efff9ddb9d3b77fea7b196e8867a51419"
+        },
+        "date": 1665725793904,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1279,
             "unit": "s"
           }
         ]
