@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1665753657520,
+  "lastUpdate": 1665753665870,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25266,6 +25266,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "duration_to_string",
             "value": 62.664,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bac20d2e6d16e9c76db16e433ffdba43e1e43f73",
+          "message": "Merge pull request #589 from f1shl3gs/optimize_dependencies\n\noptimize dependencies",
+          "timestamp": "2022-10-14T21:15:24+08:00",
+          "tree_id": "c5bf1aeb77eab7ef58c075ddd02bee82c5aa4761",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bac20d2e6d16e9c76db16e433ffdba43e1e43f73"
+        },
+        "date": 1665753658103,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "parse_duration",
+            "value": 27.786,
+            "unit": "ns/op"
+          },
+          {
+            "name": "duration_to_string",
+            "value": 75.147,
             "unit": "ns/op"
           }
         ]
