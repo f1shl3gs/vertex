@@ -436,7 +436,7 @@ once_cell = { version = "1.15.0" }
 parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 rdkafka = { version = "0.28.0", default-features = false, optional = true, features = ["tokio", "zstd", "libz"] }
-atoi = { version = "1.0.0", optional = true }
+atoi = { version = "2.0.0", optional = true }
 regex = { version = "1.6.0" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
