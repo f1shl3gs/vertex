@@ -317,7 +317,7 @@ nix = "0.25.0"
 prost-build = { version = "0.11.1" }
 
 [dev-dependencies]
-assert_cmd = { version = "2.0.2" }
+assert_cmd = { version = "2.0.5" }
 base64 = { version = "0.13.0" }
 criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
 env-test-util = { version = "1.0.1" }
