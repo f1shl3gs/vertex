@@ -621,7 +621,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_path_to_error",
- "serde_yaml",
+ "serde_yaml 0.9.13",
  "smallvec",
  "syslog_loose",
  "tokio",
@@ -1263,7 +1263,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_regex",
- "serde_yaml",
+ "serde_yaml 0.9.13",
  "shared",
  "smallvec",
  "snap",
@@ -2035,7 +2035,7 @@ dependencies = [
  "secrecy",
  "serde",
  "serde_json",
- "serde_yaml",
+ "serde_yaml 0.8.26",
  "thiserror",
  "tokio",
  "tokio-native-tls",
@@ -2363,7 +2363,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_regex",
- "serde_yaml",
+ "serde_yaml 0.9.13",
  "tokio",
  "tokio-util 0.7.4",
 ]
@@ -3756,6 +3756,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_yaml"
+version = "0.9.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8613d593412a0deb7bbd8de9d908efff5a0cb9ccd8f62c641e7b2ed2f57291d1"
+dependencies = [
+ "indexmap",
+ "itoa 1.0.1",
+ "ryu",
+ "serde",
+ "unsafe-libyaml",
+]
+
+[[package]]
 name = "sha1"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4777,6 +4790,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "39ec24b3121d976906ece63c9daad25b85969647682eee313cb5779fdd69e14e"
 
 [[package]]
+name = "unsafe-libyaml"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1e5fa573d8ac5f1a856f8d7be41d390ee973daf97c806b2c1a465e4e1406e68"
+
+[[package]]
 name = "untrusted"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4910,7 +4929,7 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_path_to_error",
- "serde_yaml",
+ "serde_yaml 0.9.13",
  "shared",
  "smallvec",
  "snap",
