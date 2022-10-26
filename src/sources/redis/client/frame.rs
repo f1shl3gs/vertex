@@ -20,6 +20,7 @@ pub enum Frame {
     Array(Vec<Frame>),
 }
 
+#[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug)]
 pub enum Error {
     /// Not enough data is available to parse a message
@@ -202,11 +203,18 @@ fn skip(src: &mut Cursor<&[u8]>, n: usize) -> Result<(), Error> {
 
 /// Read a new-line terminated decimal
 fn get_decimal(src: &mut Cursor<&[u8]>) -> Result<u64, Error> {
-    use atoi::atoi;
-
     let line = get_line(src)?;
+    let mut n = 0;
 
-    atoi::<u64>(line).ok_or_else(|| "protocol error; invalid frame format".into())
+    for c in line.iter() {
+        if !c.is_ascii_digit() {
+            return Err("protocol error; invalid frame format".into());
+        }
+
+        n = n * 10 + (c - b'0') as u64
+    }
+
+    Ok(n)
 }
 
 /// Find a line
@@ -261,6 +269,27 @@ impl fmt::Display for Error {
             Error::Incomplete => "stream ended early".fmt(fmt),
             Error::InvalidResponseType => "invalid response type".fmt(fmt),
             Error::Other(err) => err.fmt(fmt),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn decimal() {
+        let tests = [
+            ("123", Err(Error::Incomplete)),
+            ("123\n", Err(Error::Incomplete)),
+            ("123\r\n", Ok(123u64))
+        ];
+
+        for (input, want) in tests {
+            let mut cursor = Cursor::new(input.as_bytes());
+            let got = get_decimal(&mut cursor);
+
+            assert_eq!(got, want, "input: {}", input)
         }
     }
 }
