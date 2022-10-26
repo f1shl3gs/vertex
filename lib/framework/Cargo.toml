@@ -45,7 +45,7 @@ futures = { version = "0.3.25", default-features = false }
 futures-util = { version = "0.3.23", default-features = false }
 glob = { version = "0.3.0" }
 headers = { version = "0.3.8" }
-humanize = { path = "../humanize" }
+humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"] }
 hostname = { version = "0.3.1" }
 http = { version = "0.2.8", default-features = false }
 hyper = { version = "0.14.20", features = ["client", "runtime", "http1", "http2", "server", "stream"] }

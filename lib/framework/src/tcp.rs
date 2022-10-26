@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use socket2::SockRef;
 use tokio::net::TcpStream;
 
-use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
+use crate::config::GenerateConfig;
 
 /// Configuration for keepalive probes in a TCP Stream
 ///
@@ -11,10 +11,7 @@ use crate::config::{deserialize_duration_option, serialize_duration_option, Gene
 #[derive(Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct TcpKeepaliveConfig {
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub timeout: Option<std::time::Duration>,
 }
 

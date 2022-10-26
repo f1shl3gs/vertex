@@ -44,10 +44,7 @@ pub use builder::Builder;
 use crate::{transform::Noop, Extension, Pipeline};
 use buffers::{Acker, BufferType};
 pub use global::GlobalOptions;
-pub use helper::{
-    deserialize_duration, deserialize_regex, serialize_duration, serialize_regex,
-    skip_serializing_if_default,
-};
+pub use helper::{deserialize_regex, serialize_regex, skip_serializing_if_default};
 pub use loading::load_from_paths_with_provider;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
@@ -160,10 +157,7 @@ pub struct SourceOuter {
     pub(super) acknowledgements: bool,
 
     #[serde(default)]
-    #[serde(
-        serialize_with = "serialize_duration_option",
-        deserialize_with = "deserialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub(super) interval: Option<Duration>,
 }
 
@@ -660,8 +654,7 @@ sinks:
     fn deserialize_with_duration() {
         #[derive(Serialize, Deserialize)]
         struct WithDuration {
-            #[serde(serialize_with = "serialize_duration")]
-            #[serde(deserialize_with = "deserialize_duration")]
+            #[serde(with = "humanize::duration::serde")]
             pub d: Duration,
         }
 

@@ -11,13 +11,11 @@ use codecs::DecodingConfig;
 use event::Event;
 use framework::async_read::VecAsyncReadExt;
 use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
-    SourceContext, SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::FutureExt;
 use futures_util::StreamExt;
-use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
@@ -53,10 +51,7 @@ impl Default for RestartPolicy {
 
 #[derive(Debug, Deserialize, Serialize)]
 struct ScheduledConfig {
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     interval: Duration,
 }
 
@@ -64,11 +59,7 @@ struct ScheduledConfig {
 struct StreamingConfig {
     #[serde(default)]
     restart_policy: RestartPolicy,
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration",
-        default = "default_restart_delay"
-    )]
+    #[serde(default = "default_restart_delay", with = "humanize::duration::serde")]
     delay: Duration,
 }
 
@@ -120,8 +111,7 @@ pub struct ExecConfig {
     include_stderr: bool,
     #[serde(
         default = "default_maximum_buffer_size",
-        deserialize_with = "deserialize_bytes",
-        serialize_with = "serialize_bytes"
+        with = "humanize::bytes::serde"
     )]
     maximum_buffer_size: usize,
 

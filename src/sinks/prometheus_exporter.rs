@@ -16,8 +16,7 @@ use chrono::Utc;
 use event::Metric;
 use event::{Events, MetricValue};
 use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Resource, SinkConfig,
-    SinkContext, SinkDescription,
+    DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
 };
 use framework::stream::tripwire_handler;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -40,10 +39,7 @@ struct PrometheusExporterConfig {
     endpoint: SocketAddr,
 
     #[serde(default = "default_ttl")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     ttl: Duration,
 }
 

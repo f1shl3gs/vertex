@@ -1,45 +1,9 @@
 mod charset;
 
-use std::borrow::Cow;
 use std::time::Duration;
 
-use serde::{Deserialize, Deserializer, Serializer};
 pub use serde_regex::*;
 use tokio_stream::wrappers::IntervalStream;
-
-pub fn deserialize_duration<'de, D: Deserializer<'de>>(
-    deserializer: D,
-) -> Result<std::time::Duration, D::Error> {
-    let s: Cow<str> = serde::__private::de::borrow_cow_str(deserializer)?;
-    humanize::parse_duration(&s).map_err(serde::de::Error::custom)
-}
-
-pub fn serialize_duration<S: Serializer>(d: &std::time::Duration, s: S) -> Result<S::Ok, S::Error> {
-    s.serialize_str(&humanize::duration(d))
-}
-
-pub fn deserialize_duration_option<'de, D: Deserializer<'de>>(
-    deserializer: D,
-) -> Result<Option<std::time::Duration>, D::Error> {
-    let s: Option<String> = Option::deserialize(deserializer)?;
-    match s {
-        Some(text) => {
-            let duration = humanize::parse_duration(&text).map_err(serde::de::Error::custom)?;
-            Ok(Some(duration))
-        }
-        None => Ok(None),
-    }
-}
-
-pub fn serialize_duration_option<S: Serializer>(
-    d: &Option<std::time::Duration>,
-    s: S,
-) -> Result<S::Ok, S::Error> {
-    match d {
-        Some(d) => s.serialize_str(&humanize::duration(d)),
-        None => s.serialize_none(),
-    }
-}
 
 pub const fn default_true() -> bool {
     true

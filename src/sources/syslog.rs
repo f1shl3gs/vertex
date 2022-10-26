@@ -18,7 +18,6 @@ use framework::tcp::TcpKeepaliveConfig;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
 use futures_util::StreamExt;
-use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use log_schema::log_schema;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
@@ -37,21 +36,13 @@ pub enum Mode {
         address: SocketListenAddr,
         keepalive: Option<TcpKeepaliveConfig>,
         tls: Option<TlsConfig>,
-        #[serde(
-            default,
-            deserialize_with = "deserialize_bytes_option",
-            serialize_with = "serialize_bytes_option"
-        )]
+        #[serde(default, with = "humanize::bytes::serde_option")]
         receive_buffer_bytes: Option<usize>,
         connection_limit: Option<u32>,
     },
     Udp {
         address: SocketAddr,
-        #[serde(
-            default,
-            deserialize_with = "deserialize_bytes_option",
-            serialize_with = "serialize_bytes_option"
-        )]
+        #[serde(default, with = "humanize::bytes::serde_option")]
         receive_buffer_bytes: Option<usize>,
     },
     #[cfg(unix)]
@@ -122,7 +113,7 @@ address: 0.0.0.0:514
         "#,
             TcpKeepaliveConfig::generate_commented_with_indent(2),
             TlsConfig::generate_commented_with_indent(2),
-            humanize::bytes(default_max_length()),
+            humanize::bytes::bytes(default_max_length()),
         )
     }
 }

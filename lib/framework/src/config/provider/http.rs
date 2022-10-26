@@ -11,8 +11,8 @@ use sysinfo::unix::{kernel_version, machine_id, os_version};
 use url::Url;
 
 use crate::config::{
-    default_interval, deserialize_duration, provider::ProviderConfig, serialize_duration, Builder,
-    GenerateConfig, ProviderDescription, ProxyConfig,
+    default_interval, provider::ProviderConfig, Builder, GenerateConfig, ProviderDescription,
+    ProxyConfig,
 };
 use crate::http::HttpClient;
 use crate::signal;
@@ -30,10 +30,7 @@ pub struct RequestConfig {
 pub struct HttpConfig {
     url: Option<Url>,
     request: RequestConfig,
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     interval: Duration,
     tls: Option<TlsConfig>,
     proxy: ProxyConfig,
@@ -119,7 +116,7 @@ url: http://config.example.com/config
 #
 
         "#,
-            humanize::duration(&default_interval()),
+            humanize::duration::duration(&default_interval()),
             TlsConfig::generate_commented_with_indent(2),
             ProxyConfig::generate_commented_with_indent(2)
         )

@@ -9,8 +9,7 @@ use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
 use event::{log::Value, BatchNotifier, BatchStatus, Event, LogRecord};
 use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, SourceConfig,
-    SourceContext, SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -79,28 +78,16 @@ struct KafkaSourceConfig {
     #[serde(default = "default_auto_offset_reset")]
     auto_offset_reset: String,
     #[serde(default = "default_session_timeout")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     session_timeout: Duration,
     #[serde(default = "default_socket_timeout")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     socket_timeout: Duration,
     #[serde(default = "default_fetch_wait_max")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     fetch_wait_max: Duration,
     #[serde(default = "default_commit_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     commit_interval: Duration,
     #[serde(default = "default_key_field")]
     key_field: String,
