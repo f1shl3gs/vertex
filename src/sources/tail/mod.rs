@@ -10,15 +10,12 @@ use chrono::Utc;
 use encoding_transcode::{Decoder, Encoder};
 use event::{fields, tags, BatchNotifier, BatchStatus, Event, LogRecord};
 use framework::config::{
-    deserialize_duration, deserialize_duration_option, serialize_duration,
-    serialize_duration_option, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
+    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::source::util::OrderedFinalizer;
 use framework::{hostname, Pipeline, ShutdownSignal, Source};
 use futures::Stream;
 use futures_util::{FutureExt, StreamExt, TryFutureExt};
-use humanize::{deserialize_bytes, serialize_bytes};
 use log_schema::log_schema;
 use multiline::{LineAgg, Logic, MultilineConfig, Parser};
 use serde::{Deserialize, Serialize};
@@ -50,10 +47,7 @@ fn default_file_key() -> String {
 #[serde(deny_unknown_fields)]
 struct TailConfig {
     #[serde(default = "default_ignore_older_than")]
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     ignore_older_than: Option<Duration>,
 
     host_key: Option<String>,
@@ -66,26 +60,15 @@ struct TailConfig {
     exclude: Vec<PathBuf>,
 
     read_from: Option<ReadFromConfig>,
-    #[serde(
-        default = "default_max_line_bytes",
-        deserialize_with = "deserialize_bytes",
-        serialize_with = "serialize_bytes"
-    )]
+    #[serde(default = "default_max_line_bytes", with = "humanize::bytes::serde")]
     max_line_bytes: usize,
-    #[serde(
-        default = "default_max_read_bytes",
-        deserialize_with = "deserialize_bytes",
-        serialize_with = "serialize_bytes"
-    )]
+    #[serde(default = "default_max_read_bytes", with = "humanize::bytes::serde")]
     max_read_bytes: usize,
     #[serde(default = "default_line_delimiter")]
     line_delimiter: String,
 
     #[serde(default = "default_glob_interval")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     glob_interval: Duration,
 
     charset: Option<&'static encoding_rs::Encoding>,
@@ -183,9 +166,9 @@ include:
 
 #
             "#,
-            humanize::bytes(default_max_line_bytes()),
-            humanize::bytes(default_max_read_bytes()),
-            humanize::duration(&default_glob_interval()),
+            humanize::bytes::bytes(default_max_line_bytes()),
+            humanize::bytes::bytes(default_max_read_bytes()),
+            humanize::duration::duration(&default_glob_interval()),
         )
     }
 }

@@ -13,8 +13,7 @@ use event::attributes::Key;
 use event::log::Value;
 use event::LogRecord;
 use framework::config::{
-    default_true, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
+    default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
 };
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
@@ -105,11 +104,7 @@ pub struct Config {
 
     /// How long to delay removing entries from our map when we receive a deletion
     /// event from the watched stream.
-    #[serde(
-        default = "default_delay_deletion",
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(default = "default_delay_deletion", with = "humanize::duration::serde")]
     delay_deletion: Duration,
 }
 
@@ -180,8 +175,8 @@ impl GenerateConfig for Config {
 timezone: local
 
 "#,
-            humanize::ibytes(default_max_line_bytes()),
-            humanize::ibytes(default_max_read_bytes()),
+            humanize::bytes::ibytes(default_max_line_bytes()),
+            humanize::bytes::ibytes(default_max_read_bytes()),
             FieldsSpec::generate_commented_with_indent(2)
         )
     }

@@ -357,7 +357,6 @@ mod integration_tests {
     use super::*;
     use event::MetricValue;
     use framework::config::ProxyConfig;
-    use framework::config::{deserialize_duration, serialize_duration};
     use framework::http::HttpClient;
     use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
@@ -418,15 +417,9 @@ mod integration_tests {
         pub check_id: String,
         pub name: String,
         pub tcp: String,
-        #[serde(
-            deserialize_with = "deserialize_duration",
-            serialize_with = "serialize_duration"
-        )]
+        #[serde(with = "humanize::duration::serde")]
         pub timeout: std::time::Duration,
-        #[serde(
-            deserialize_with = "deserialize_duration",
-            serialize_with = "serialize_duration"
-        )]
+        #[serde(with = "humanize::duration::serde")]
         pub interval: std::time::Duration,
     }
 

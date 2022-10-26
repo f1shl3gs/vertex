@@ -2,10 +2,7 @@ use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{
-        default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig,
-        Output, SourceConfig, SourceContext,
-    },
+    config::{default_interval, DataType, GenerateConfig, Output, SourceConfig, SourceContext},
     register_source_config, Source,
 };
 use futures::StreamExt;
@@ -18,10 +15,7 @@ use tokio_stream::wrappers::IntervalStream;
 #[serde(deny_unknown_fields)]
 pub struct NtpConfig {
     #[serde(default = "default_timeout")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub timeout: Duration,
 
     pub pools: Vec<String>,

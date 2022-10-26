@@ -21,7 +21,7 @@ use tower::timeout::Timeout;
 use tower::{Layer, Service, ServiceBuilder};
 
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
-use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
+use crate::config::GenerateConfig;
 use crate::sink::util::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use crate::sink::util::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use crate::sink::util::retries::{FixedRetryPolicy, RetryLogic};
@@ -46,27 +46,15 @@ pub struct RequestConfig {
     #[serde(default)]
     #[serde(skip_serializing_if = "concurrency_is_none")]
     pub concurrency: Concurrency,
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub timeout: Option<Duration>,
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub rate_limit_duration: Option<Duration>,
     pub rate_limit_num: Option<u64>,
     pub retry_attempts: Option<usize>,
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub retry_max_duration: Option<Duration>,
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub retry_initial_backoff: Option<Duration>,
     #[serde(default)]
     pub adaptive_concurrency: AdaptiveConcurrencySettings,

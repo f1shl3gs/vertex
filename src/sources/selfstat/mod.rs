@@ -50,7 +50,7 @@ impl GenerateConfig for SelfStatConfig {
 #
 interval: {}
 "#,
-            humanize::duration(&default_interval())
+            humanize::duration::duration(&default_interval())
         )
     }
 }

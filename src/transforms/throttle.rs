@@ -6,8 +6,7 @@ use async_stream::stream;
 use async_trait::async_trait;
 use event::{EventContainer, Events};
 use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, Output, TransformConfig,
-    TransformContext, TransformDescription,
+    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
 };
 use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
@@ -23,11 +22,7 @@ const fn default_window() -> Duration {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct ThrottleConfig {
     threshold: u32,
-    #[serde(
-        default = "default_window",
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(default = "default_window", with = "humanize::duration::serde")]
     window: Duration,
     key_field: Option<Template>,
 }
@@ -53,7 +48,7 @@ threshold: 100
 #
 # window: {}
 "#,
-            humanize::duration(&default_window())
+            humanize::duration::duration(&default_window())
         )
     }
 }

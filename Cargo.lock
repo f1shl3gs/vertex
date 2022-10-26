@@ -1672,8 +1672,8 @@ checksum = "6456b8a6c8f33fee7d958fcd1b60d55b11940a79e63ae87013e6d22e26034440"
 [[package]]
 name = "humanize"
 version = "0.1.0"
+source = "git+https://github.com/f1shl3gs/humanize#765041c0aeb3b567ba8912fa508f96e3d632b465"
 dependencies = [
- "criterion",
  "serde",
 ]
 

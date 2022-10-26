@@ -3,11 +3,10 @@ use std::num::NonZeroUsize;
 use std::time::Duration;
 
 use event::EventFinalizers;
-use humanize::{deserialize_bytes_option, serialize_bytes_option};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::config::{deserialize_duration_option, serialize_duration_option, GenerateConfig};
+use crate::config::GenerateConfig;
 use crate::stream::BatcherSettings;
 
 // Provide sensible sink default 10MB with 1s timeout.
@@ -180,16 +179,10 @@ pub struct Unmerged;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
-    #[serde(
-        deserialize_with = "deserialize_bytes_option",
-        serialize_with = "serialize_bytes_option"
-    )]
+    #[serde(with = "humanize::bytes::serde_option")]
     pub max_bytes: Option<usize>,
     pub max_events: Option<usize>,
-    #[serde(
-        deserialize_with = "deserialize_duration_option",
-        serialize_with = "serialize_duration_option"
-    )]
+    #[serde(with = "humanize::duration::serde_option")]
     pub timeout: Option<Duration>,
 
     #[serde(skip)]

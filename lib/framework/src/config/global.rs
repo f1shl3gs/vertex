@@ -6,10 +6,7 @@ use log_schema::LogSchema;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::config::{
-    default_interval, deserialize_duration, serialize_duration, skip_serializing_if_default,
-    ProxyConfig,
-};
+use crate::config::{default_interval, skip_serializing_if_default, ProxyConfig};
 use crate::timezone;
 
 #[derive(Debug, Error)]
@@ -52,10 +49,7 @@ pub struct GlobalOptions {
     // NB: not all source need this, they might report events
     // as soon as possible once they receive any.
     #[serde(default = "default_interval")]
-    #[serde(
-        serialize_with = "serialize_duration",
-        deserialize_with = "deserialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub interval: Duration,
 }
 

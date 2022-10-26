@@ -1,6 +1,7 @@
 use std::fmt::Formatter;
 use std::time::Duration;
 
+use humanize::duration::parse_duration;
 use regex::bytes::Regex;
 use serde::de::{Error, MapAccess};
 use serde::{de, Deserializer, Serializer};
@@ -186,7 +187,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                                 return Err(de::Error::duplicate_field("timeout"));
                             }
 
-                            let v = humanize::parse_duration(&value).map_err(|_err| {
+                            let v = parse_duration(&value).map_err(|_err| {
                                 de::Error::invalid_value(
                                     de::Unexpected::Str(&value),
                                     &r#"something like 5s, 10s"#,

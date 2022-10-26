@@ -1,14 +1,12 @@
 use std::collections::{BTreeMap, HashMap};
 
 use bytes::Buf;
+use framework::http::HttpClient;
 use http::StatusCode;
 use hyper::Body;
 use percent_encoding::{percent_encode, NON_ALPHANUMERIC};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-
-use framework::config::{deserialize_duration, serialize_duration};
-use framework::http::HttpClient;
 
 #[derive(Debug, Error)]
 pub enum ConsulError {
@@ -112,10 +110,7 @@ pub struct QueryOptions {
     // StaleIfError to a longer duration to change this behavior. It is ignored
     // if the endpoint supports background refresh caching. See
     // https://www.consul.io/api/features/caching.html for more details.
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub max_age: std::time::Duration,
 
     // StaleIfError specifies how stale the client will accept a cached response
@@ -123,10 +118,7 @@ pub struct QueryOptions {
     // UseCache is true and MaxAge is set to a lower, non-zero value. It is
     // ignored if the endpoint supports background refresh caching. See
     // https://www.consul.io/api/features/caching.html for more details.
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub stale_if_error: std::time::Duration,
 
     // WaitIndex is used to enable a blocking query. Waits
@@ -141,10 +133,7 @@ pub struct QueryOptions {
 
     // WaitTime is used to bound the duration of a wait.
     // Defaults to that of the Config, but can be overridden.
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub wait_time: std::time::Duration,
 
     // Token is used to provide a per-request ACL token

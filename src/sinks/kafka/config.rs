@@ -3,9 +3,7 @@ use std::time::Duration;
 
 use codecs::encoding::EncodingConfig;
 use framework::batch::{BatchConfig, NoDefaultBatchSettings};
-use framework::config::{
-    deserialize_duration, serialize_duration, DataType, GenerateConfig, SinkConfig, SinkContext,
-};
+use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rdkafka::ClientConfig;
@@ -32,16 +30,10 @@ pub struct KafkaSinkConfig {
     #[serde(default = "default_auth")]
     pub auth: KafkaAuthConfig,
     #[serde(default = "default_socket_timeout")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub socket_timeout: Duration,
     #[serde(default = "default_message_timeout")]
-    #[serde(
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(with = "humanize::duration::serde")]
     pub message_timeout: Duration,
     #[serde(default)]
     pub librdkafka_options: HashMap<String, String>,
@@ -283,8 +275,8 @@ encoding:
 "#,
             BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2),
             KafkaSaslConfig::generate_commented_with_indent(2),
-            humanize::duration(&default_socket_timeout()),
-            humanize::duration(&default_message_timeout()),
+            humanize::duration::duration(&default_socket_timeout()),
+            humanize::duration::duration(&default_message_timeout()),
         )
     }
 }

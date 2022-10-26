@@ -11,8 +11,8 @@ use event::{
     log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
 };
 use framework::config::{
-    default_interval, deserialize_duration, serialize_duration, DataType, GenerateConfig, Output,
-    TransformConfig, TransformContext, TransformDescription,
+    default_interval, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
+    TransformDescription,
 };
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
@@ -133,11 +133,7 @@ impl MetricConfig {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct MetricalizeConfig {
-    #[serde(
-        default = "default_interval",
-        deserialize_with = "deserialize_duration",
-        serialize_with = "serialize_duration"
-    )]
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
     metrics: Vec<MetricConfig>,
 }
