@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666809371083,
+  "lastUpdate": 1666812158354,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -78998,6 +78998,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1656,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d3ed117b60660073e4e2d4515b6a4eeaeba0b8fe",
+          "message": "Merge pull request #602 from f1shl3gs/remove_lib_humanize\n\nswitch to humanize",
+          "timestamp": "2022-10-27T02:57:05+08:00",
+          "tree_id": "6665bf11a6cfe04fe3378aa31e48ec1232eb0e6e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d3ed117b60660073e4e2d4515b6a4eeaeba0b8fe"
+        },
+        "date": 1666812151662,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1240,
             "unit": "s"
           }
         ]
