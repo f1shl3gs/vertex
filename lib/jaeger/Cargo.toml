@@ -9,7 +9,7 @@ build = "build.rs"
 tonic-build = { version = "0.8.2" }
 
 [dependencies]
-base64 = { version = "0.13.0" }
+base64 = { version = "0.13.1" }
 event = { path = "../event" }
 prost = { version = "0.11.0" }
 prost-types = { version = "0.11.1" }
