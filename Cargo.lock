@@ -4842,7 +4842,6 @@ dependencies = [
  "assert_cmd",
  "async-stream",
  "async-trait",
- "atoi",
  "atty",
  "base64",
  "bloom",
