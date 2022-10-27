@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666853636313,
+  "lastUpdate": 1666866058382,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11388,6 +11388,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 826810,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "276d44110d2d871b7e588b700a72e5968984e3d3",
+          "message": "Merge pull request #604 from f1shl3gs/remove_humanize_bench\n\nremove humanize bench",
+          "timestamp": "2022-10-27T18:16:21+08:00",
+          "tree_id": "97851b3ad7515434199f907ad2ac92e09d2c90b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/276d44110d2d871b7e588b700a72e5968984e3d3"
+        },
+        "date": 1666866052338,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 721050,
             "unit": "ns/op"
           }
         ]
