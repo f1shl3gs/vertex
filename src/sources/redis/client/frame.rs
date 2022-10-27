@@ -282,7 +282,7 @@ mod tests {
         let tests = [
             ("123", Err(Error::Incomplete)),
             ("123\n", Err(Error::Incomplete)),
-            ("123\r\n", Ok(123u64))
+            ("123\r\n", Ok(123u64)),
         ];
 
         for (input, want) in tests {
