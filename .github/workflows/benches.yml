@@ -45,7 +45,6 @@ jobs:
           - vertex
           - prometheus
           - tracing-limit
-          - humanize
           - condition
     steps:
       - uses: actions/checkout@v3
