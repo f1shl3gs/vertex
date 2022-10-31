@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1666867265627,
+  "lastUpdate": 1667218325181,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -69188,6 +69188,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.934,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c9773dc7863bf1009f5fed2fae9894bb37210377",
+          "message": "Merge pull request #606 from f1shl3gs/dependabot/cargo/humanize-8890918\n\nchore(deps): bump humanize from `765041c` to `8890918`",
+          "timestamp": "2022-10-31T20:06:54+08:00",
+          "tree_id": "653390dfbbd9ebbde9a11e16d8287953fc4565d4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c9773dc7863bf1009f5fed2fae9894bb37210377"
+        },
+        "date": 1667218318151,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.723,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.339,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.731,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.484,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.396,
             "unit": "ns/op"
           }
         ]
