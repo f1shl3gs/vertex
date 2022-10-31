@@ -4,7 +4,7 @@ use codecs::Encoder;
 use event::{log::Value, Event, Finalizable};
 use framework::template::Template;
 use log_schema::LogSchema;
-use rdkafka::message::OwnedHeaders;
+use rdkafka::message::{Header, OwnedHeaders};
 use tokio_util::codec::Encoder as _;
 
 use super::service::KafkaRequest;
@@ -73,7 +73,10 @@ fn get_headers(ev: &Event, headers_field: &Option<String>) -> Option<OwnedHeader
                         let mut owned_headers = OwnedHeaders::new_with_capacity(map.len());
                         for (key, value) in map {
                             if let Value::Bytes(b) = value {
-                                owned_headers = owned_headers.add(key, b.as_ref());
+                                owned_headers = owned_headers.insert(Header {
+                                    key,
+                                    value: Some(b.as_ref())
+                                });
                             } else {
                                 // TODO: metrics
                                 warn!(
