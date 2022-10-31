@@ -446,12 +446,12 @@ impl ReceivedMessage {
             // Using index-based for loop because rdkafka's `Headers` trait does not provide
             // Interator-based API
             for i in 0..borrowed.count() {
-                if let Some(header) = borrowed.get(i) {
-                    headers.insert(
-                        header.0.to_string(),
-                        Bytes::from(header.1.to_owned()).into(),
-                    );
-                }
+                let header = borrowed.get(i);
+                let value = header
+                    .value
+                    .map(Bytes::copy_from_slice)
+                    .unwrap_or_else(Bytes::new);
+                headers.insert(header.key.to_string(), value.into());
             }
         }
 
@@ -630,7 +630,7 @@ mod integration_tests {
     use log_schema::log_schema;
     use rdkafka::config::FromClientConfig;
     use rdkafka::consumer::{BaseConsumer, Consumer};
-    use rdkafka::message::OwnedHeaders;
+    use rdkafka::message::{Header, OwnedHeaders};
     use rdkafka::producer::{FutureProducer, FutureRecord};
     use rdkafka::{ClientConfig, Offset, TopicPartitionList};
     use std::time::Duration;
@@ -760,7 +760,10 @@ mod integration_tests {
                 .payload(&payload)
                 .key(key)
                 .timestamp(timestamp)
-                .headers(OwnedHeaders::new().add(header_key, header_value));
+                .headers(OwnedHeaders::new().insert(Header {
+                    key: header_key,
+                    value: Some(header_value),
+                }));
 
             match producer.send(record, Duration::from_secs(3)).await {
                 Ok((_partition, _offset)) => {
