@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667219907660,
+  "lastUpdate": 1667226709798,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -69648,6 +69648,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.702,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8d5f3abd96479497ce58bea90b9608fa37cd9563",
+          "message": "Merge pull request #607 from f1shl3gs/dependabot/cargo/rdkafka-0.29.0\n\nchore(deps): bump rdkafka from 0.28.0 to 0.29.0",
+          "timestamp": "2022-10-31T22:26:44+08:00",
+          "tree_id": "02e044a27c1f590b29c6d69c0ff6abbc3e8c3d48",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d5f3abd96479497ce58bea90b9608fa37cd9563"
+        },
+        "date": 1667226702998,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.803,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.813,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.277,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.384,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.035,
             "unit": "ns/op"
           }
         ]
