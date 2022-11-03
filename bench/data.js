@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667457688220,
+  "lastUpdate": 1667457806082,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36521,6 +36521,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 261760,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d473e53a487a59327c00a9dab1f5cdd3ab69d86",
+          "message": "Merge pull request #610 from f1shl3gs/dependabot/cargo/chrono-tz-0.8.0\n\nchore(deps): bump chrono-tz from 0.7.0 to 0.8.0",
+          "timestamp": "2022-11-03T14:37:42+08:00",
+          "tree_id": "b49a4fa69a9cd73885fa8e86be32bd8e1f9e9613",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d473e53a487a59327c00a9dab1f5cdd3ab69d86"
+        },
+        "date": 1667457800044,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 469.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 46894,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 234320,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 463930,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 262.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 26041,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 130070,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 259950,
             "unit": "ns/op"
           }
         ]
