@@ -123,14 +123,14 @@ impl TraceContext {
         if let Some(span) = self.get::<SynchronizedSpan>() {
             SpanRef(span)
         } else {
-            SpanRef(&*NOOP_SPAN)
+            SpanRef(&NOOP_SPAN)
         }
     }
 }
 
 fn get_current<F: FnMut(&TraceContext) -> T, T>(mut f: F) -> T {
     CURRENT_CONTEXT
-        .try_with(|cx| f(&*cx.borrow()))
+        .try_with(|cx| f(&cx.borrow()))
         .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(cx)))
 }
 
@@ -151,7 +151,7 @@ impl SpanRef<'_> {
     fn with_inner_mut<F: FnOnce(&mut Span)>(&self, f: F) {
         if let Some(ref inner) = self.0.inner {
             match inner.lock() {
-                Ok(mut locked) => f(&mut *locked),
+                Ok(mut locked) => f(&mut locked),
                 Err(err) => {
                     eprintln!("Trace error occurred. {}", err)
                 }

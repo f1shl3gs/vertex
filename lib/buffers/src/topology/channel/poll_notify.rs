@@ -76,6 +76,6 @@ impl fmt::Debug for PollNotify {
 
 impl AsRef<Notify> for PollNotify {
     fn as_ref(&self) -> &Notify {
-        &*self.notify
+        &self.notify
     }
 }

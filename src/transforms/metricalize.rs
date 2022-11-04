@@ -122,7 +122,7 @@ impl MetricConfig {
                     .iter()
                     .map(|upper| Bucket {
                         upper: *upper,
-                        count: if value <= *upper { 1 } else { 0 },
+                        count: u64::from(value <= *upper),
                     })
                     .collect(),
             },

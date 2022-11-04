@@ -158,8 +158,8 @@ where
 
                                     let (old, new) = (&watcher.path, &path);
                                     if let (Ok(old_modified_time), Ok(new_modified_time)) = (
-                                        std::fs::metadata(&old).and_then(|m| m.modified()),
-                                        std::fs::metadata(&new).and_then(|m| m.modified()),
+                                        std::fs::metadata(old).and_then(|m| m.modified()),
+                                        std::fs::metadata(new).and_then(|m| m.modified()),
                                     ) {
                                         if old_modified_time < new_modified_time {
                                             info!(
