@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1667573468626,
+  "lastUpdate": 1667574079448,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -66181,6 +66181,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1440,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4b12c70f4d9de2879cbac0c9b7b3c34a53b2e215",
+          "message": "Merge pull request #612 from f1shl3gs/rust_1_65\n\nupdate toolchain to 1.65.0",
+          "timestamp": "2022-11-04T22:39:26+08:00",
+          "tree_id": "a5e20a6ff47582697c8ada92c5f803bd06031d73",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4b12c70f4d9de2879cbac0c9b7b3c34a53b2e215"
+        },
+        "date": 1667574072960,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1040,
             "unit": "s"
           }
         ]
