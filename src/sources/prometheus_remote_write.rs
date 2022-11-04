@@ -126,7 +126,7 @@ impl HttpSource for RemoteWriteSource {
         if headers
             .get("Content-Encoding")
             .map(|header| header.as_ref())
-            != None
+            .is_some()
         {
             body = decode(Some("snappy"), body)?;
         }
