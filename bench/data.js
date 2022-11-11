@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668145979358,
+  "lastUpdate": 1668146423835,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -67869,6 +67869,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1076,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81578480424010d92a505b91b806051250d67348",
+          "message": "Merge pull request #621 from f1shl3gs/dependabot/cargo/ahash-0.8.2\n\nchore(deps): bump ahash from 0.8.1 to 0.8.2",
+          "timestamp": "2022-11-11T13:30:40+08:00",
+          "tree_id": "b1feec4e344968cdfd577f625f5bb333a6b99b6f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81578480424010d92a505b91b806051250d67348"
+        },
+        "date": 1668146415134,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1397,
             "unit": "s"
           }
         ]
