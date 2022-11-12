@@ -96,6 +96,14 @@ the downstream service it interacts with.
 | prometheus_remote_write  | Push metrics to Prometheus                                        | &check; | &cross; | &cross; |
 | socket                   | Push data                                                         | &check; | &check; | &check; |
 
+#### Extensions
+An extension is
+
+| Name                | Description                                                            |
+|---------------------|------------------------------------------------------------------------|
+| healthcheck         | Start an HTTP server, and return 200 to represent Vertex is health     |
+| pprof               | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs) |
+
 ## Build
 Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
 
