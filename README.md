@@ -11,58 +11,24 @@ always check out the supported extensions by
 vertex sources
 ```
 
-## Build
-Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
+## Concepts
+### Event
+Events represent the individual units of data in Vertex. An event
+could be:
+- log
+- metric
+- trace
 
-```shell
-make build
-```
+### Components
+Component is the generic term for `sources`, `transforms`, `sinks` and `extensions`. Components
+ingest, transform, route events and extension Vertex. Users could compose components to craete topologies.
 
-## Configuration
+#### Sources
+A source defines where Vertex should pull data from, or how it should receive data pushed to it.
+A topology can have any number of sources, and as they ingest data they proceed to normalize it into events.
+This sets the stage for easy and consistent processing of your data.
 
-Show config example for Consul
-```shell
-vertex sources consul
-# HTTP/HTTPS endpoint to Consul server.
-endpoints:
-- http://localhost:8500
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Configures the TLS options for outgoing connections.
-# tls:
-#  # Absolute path to an additional CA certificate file, in DER or PEM
-#  # format(X.509), or an inline CA certificate in PEM format
-#  ca_file: /path/to/certificate_authority.crt
-#  
-#  # Absolute path to a certificate file used to identify this connection,
-#  # in DER or PEM format (X.509) or PKCS#12, or an inline certificate in
-#  # PEM format. If this is set and is not a PKCS#12 archive, "key_file"
-#  # must also be set.
-#  crt_file: /path/to/host_certificate.crt
-#  
-#  # Absolute path to a private key file used to identify this connection,
-#  # in DER or PEM format (PKCS#8), or an inline private key in PEM format.
-#  # If this is set, "crt_file" must also be set.
-#  key_file: /path/to/host_certificate.key
-#  
-#  # Pass phrase used to unlock the encrypted key file. This has no effect
-#  # unless "key_file" is set.
-#  key_pass: some_password
-#  
-#  # If "true", Vertex will validate the configured remote host name against
-#  # the remote host's TLS certificate. Do NOT set this to false unless you
-#  # understand the risks of not verifying the remote hostname.
-#  verify_hostname: true
-```
-
-There are more example configurations under `examples/config` to help you know what's Vertex capable of.
-
-## Sources
-A source defines how Vertex should collect data from(push or pull), 
-a lot [prometheus exporter](https://prometheus.io/docs/instrumenting/exporters/#exporters-and-integrations)
+A lot [prometheus exporter](https://prometheus.io/docs/instrumenting/exporters/#exporters-and-integrations)
 has already been ported.
 
 | Name                    | Description                                                       | Status  |
@@ -96,16 +62,91 @@ has already been ported.
 | tail                    | Watch and collect log files                                       | &check; |
 | zookeeper               | Collect metrics from Zookeeper ( mntr )                           | &check; |
 
-### Node
-#### todo:
-- vmstat_numa: https://github.com/prometheus/node_exporter/pull/1951
-- protocols: https://github.com/prometheus/node_exporter/pull/1921
-- netdev: implement with netlink? https://github.com/prometheus/node_exporter/pull/2074
-- mountstats: disabled by default. Exposes filesystem statistics from `/proc/self/mountstats`. 
-  Exposes detailed NFS client statistics.
-- processes: disabled by default, Exposes aggregate process statistics from
-- network_route: Exposes the routing table as metrics, which can be implemented by netlink
+#### Transforms
+A transform is responsible for mutating events as they are transported by Vertex. This
+might involve parsing, filtering, sampling or aggregating. You can have any number of
+transforms in your pipeline, and how they are composed is up to you.
 
-## TLS
-At the beginning, Rustls is our first choice, but there is something we don't expect
-(https://github.com/briansmith/webpki/pull/120), which is necessary for self-sign certs.
+
+
+#### Sinks
+A sink is a destination for events. Each sink's design and transmission method is dicated by
+the downstream service it interacts with.
+
+## Build
+Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
+
+### Install additional dependencies
+- Rust (a recent stable version, 1.60 or higher). To install Rust, we recommend using rustup.
+- make
+- protobuf
+- docker
+- [cross](https://github.com/cross-rs/cross)
+
+### Build with make
+
+```shell
+make build
+```
+
+build for x86_64-unknown-linux-musl
+```shell
+make x86_64-unknown-linux-musl
+```
+
+## Configuration
+Let's see this `node_exporter` alternative configuration
+
+```yaml
+sources:
+  selfstat:
+    type: selfstat
+  node:
+    type: node_metrics
+    # default value is 15s
+    # interval: 15s
+
+transforms:
+  add_hosts:
+    type: add_tags
+    tags:
+      foo: bar
+      host: ${HOSTNAME} # environment variables
+    inputs:
+      - selfstat
+      - node
+
+sinks:
+  prom:
+    type: prometheus_exporter
+    # default listent to 0.0.0.0:9100
+    endpoint: 0.0.0.0:9100
+    inputs:
+      - add_hosts
+```
+
+There are some keywords
+- `type` is used to represent component type
+- `inputs` is an array used to build the Topology(DAG)
+
+### Config example
+There are dozens of components, configuration could be very difficult. Therefore,
+`vertex sources|transforms|sinks|extensions [name]` could be very help
+
+For example,
+```shell
+$ ./target/release/vertex sources node
+# The interval between scrapes.
+#
+# interval: 15s
+
+# Proc path
+#
+proc_path: /proc
+
+# Sys path
+#
+sys_path: /sys
+```
+
+There are more example configurations under `examples/config` to help you know what's Vertex capable of.
