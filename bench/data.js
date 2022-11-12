@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668245622330,
+  "lastUpdate": 1668245684079,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -67956,6 +67956,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1077,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "013ddd78241e902487b2fa478c9a84ad8de061ed",
+          "message": "add extenstion description table",
+          "timestamp": "2022-11-12T17:12:47+08:00",
+          "tree_id": "627fc322c1ea7b5c76fe35c129974d9862b1cc1c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/013ddd78241e902487b2fa478c9a84ad8de061ed"
+        },
+        "date": 1668245677087,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1104,
             "unit": "s"
           }
         ]
