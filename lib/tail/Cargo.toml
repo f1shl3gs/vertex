@@ -17,7 +17,7 @@ tracing-test = { version = "0.2.3" }
 
 [dependencies]
 serde = { version = "1.0.147", default-features = false, features = ["derive"] }
-chrono = { version = "0.4.22", features = ["serde"] }
+chrono = { version = "0.4.23", features = ["serde"] }
 dashmap = { version = "5.2", default-features = false }
 serde_json = { version = "1.0.87" }
 bytes = { version = "1.2.1" }
