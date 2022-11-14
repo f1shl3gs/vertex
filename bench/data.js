@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668245684079,
+  "lastUpdate": 1668450925920,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11910,6 +11910,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 798270,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f035e538d13cf8ae8df9cedbdde2f6a0f4a88663",
+          "message": "Merge pull request #623 from f1shl3gs/dependabot/cargo/thrift-0.17.0\n\nchore(deps): bump thrift from 0.16.0 to 0.17.0",
+          "timestamp": "2022-11-15T02:29:18+08:00",
+          "tree_id": "e6f69a69f7d32f427f522a3061017b24d5fbd5a3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f035e538d13cf8ae8df9cedbdde2f6a0f4a88663"
+        },
+        "date": 1668450918804,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716610,
             "unit": "ns/op"
           }
         ]
