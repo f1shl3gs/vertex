@@ -1283,7 +1283,7 @@ dependencies = [
  "twox-hash",
  "typetag",
  "url",
- "uuid 1.2.1",
+ "uuid 1.2.2",
 ]
 
 [[package]]
@@ -2155,7 +2155,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14e4fcc00ff6731d94b70e16e71f43bda62883461f31230742e3bc6dddf12988"
 dependencies = [
  "libc",
- "uuid 1.2.1",
+ "uuid 1.2.2",
  "winapi",
 ]
 
@@ -4794,9 +4794,9 @@ checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
 
 [[package]]
 name = "uuid"
-version = "1.2.1"
+version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "feb41e78f93363bb2df8b0e86a2ca30eed7806ea16ea0c790d757cf93f79be83"
+checksum = "422ee0de9031b5b948b97a8fc04e3aa35230001a722ddd27943e0be31564ce4c"
 dependencies = [
  "getrandom",
 ]
@@ -4932,7 +4932,7 @@ name = "virt"
 version = "0.1.0"
 dependencies = [
  "tokio",
- "uuid 1.2.1",
+ "uuid 1.2.2",
  "xdr-codec",
  "xdrgen",
 ]
