@@ -54,7 +54,7 @@ fn decode_value(input: Value) -> Option<crate::log::Value> {
         Some(value::Kind::Array(a)) => decode_array(a.items),
         Some(value::Kind::Map(m)) => decode_map(m.map),
         Some(value::Kind::Timestamp(ts)) => Some(crate::log::Value::Timestamp(
-            chrono::Utc.timestamp(ts.seconds, ts.nanos as u32),
+            chrono::Utc.timestamp_nanos(ts.seconds * 1_000_000_000 + ts.nanos as i64),
         )),
         Some(value::Kind::Null(_)) => Some(crate::log::Value::Null),
         None => {
@@ -262,7 +262,8 @@ impl From<Metric> for crate::Metric {
             ..
         } = metric;
 
-        let timestamp = timestamp.map(|ts| chrono::Utc.timestamp(ts.seconds, ts.nanos as u32));
+        let timestamp = timestamp
+            .map(|ts| chrono::Utc.timestamp_nanos(ts.seconds * 1_000_000_000 + ts.nanos as i64));
 
         let value = match value.unwrap() {
             metric::Value::Counter(counter) => MetricValue::Sum(counter.value),

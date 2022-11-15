@@ -352,7 +352,7 @@ mod tests {
 
     #[test]
     fn render_log_timestamp_strftime_style() {
-        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
+        let ts = Utc.with_ymd_and_hms(2001, 2, 3, 4, 5, 6).unwrap();
         let mut event = Event::from("hello world");
         event.as_mut_log().insert_field("timestamp", ts);
         let template = Template::try_from("abcd-%F").unwrap();
@@ -362,7 +362,7 @@ mod tests {
 
     #[test]
     fn render_log_timestamp_multiple_strftime_style() {
-        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
+        let ts = Utc.with_ymd_and_hms(2001, 2, 3, 4, 5, 6).unwrap();
         let mut event = Event::from("hello world");
         event.as_mut_log().insert_field("timestamp", ts);
         let template = Template::try_from("abcd-%F_%T").unwrap();
@@ -375,7 +375,7 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_strftime() {
-        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
+        let ts = Utc.with_ymd_and_hms(2001, 2, 3, 4, 5, 6).unwrap();
         let mut event = Event::from("hello world");
         event.as_mut_log().insert_field("foo", "butts");
         event.as_mut_log().insert_field("timestamp", ts);
@@ -390,7 +390,7 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_nested_strftime() {
-        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
+        let ts = Utc.with_ymd_and_hms(2001, 2, 3, 4, 5, 6).unwrap();
         let mut event = Event::from("hello world");
         event.as_mut_log().insert_field("format", "%F");
         event.as_mut_log().insert_field("timestamp", ts);
@@ -405,7 +405,7 @@ mod tests {
 
     #[test]
     fn render_log_dynamic_with_reverse_nested_strftime() {
-        let ts = Utc.ymd(2001, 2, 3).and_hms(4, 5, 6);
+        let ts = Utc.with_ymd_and_hms(2001, 2, 3, 4, 5, 6).unwrap();
         let event = Event::from(fields!(
             log_schema().message_key() => "hello world",
             "%F" => "foo",
@@ -421,7 +421,8 @@ mod tests {
     }
 
     fn sample_metric() -> Metric {
-        Metric::sum("a-counter", "", 1).with_timestamp(Some(Utc.ymd(2002, 3, 4).and_hms(5, 6, 7)))
+        Metric::sum("a-counter", "", 1)
+            .with_timestamp(Some(Utc.with_ymd_and_hms(2002, 3, 4, 5, 6, 7).unwrap()))
     }
 
     #[test]

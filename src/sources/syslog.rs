@@ -354,7 +354,7 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{DateTime, Datelike, TimeZone};
+    use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
     use event::log::Value;
     use event::{assert_event_data_eq, fields, LogRecord};
@@ -460,7 +460,7 @@ mod tests {
 
         let log = LogRecord::from(fields!(
             log_schema().message_key() => msg,
-            log_schema().timestamp_key() => chrono::Utc.ymd(2019, 2, 13).and_hms(19, 48, 34),
+            log_schema().timestamp_key() => chrono::Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
             log_schema().source_type_key() => "syslog",
             "host" => "74794bfb6795",
             "hostname" => "74794bfb6795",
@@ -495,7 +495,7 @@ mod tests {
         let event = event_from_bytes("host", None, raw.into()).unwrap();
 
         let want = Event::from(LogRecord::from(fields!(
-            log_schema().timestamp_key() => chrono::Utc.ymd(2019, 2, 13).and_hms(19, 48, 34),
+            log_schema().timestamp_key() => chrono::Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
             log_schema().host_key() => "74794bfb6795",
             log_schema().source_type_key() => "syslog",
             "hostname" => "74794bfb6795",
@@ -586,7 +586,10 @@ mod tests {
             .get_field(log_schema().timestamp_key())
             .unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
-        let date: DateTime<Utc> = chrono::Local.ymd(year, 2, 13).and_hms(20, 7, 26).into();
+        let date: DateTime<Utc> = chrono::Local
+            .with_ymd_and_hms(year, 2, 13, 20, 7, 26)
+            .unwrap()
+            .into();
 
         let want: Event = LogRecord::from(fields!(
             log_schema().timestamp_key() => date,
@@ -618,7 +621,10 @@ mod tests {
             .get_field(log_schema().timestamp_key())
             .unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
-        let date: DateTime<Utc> = chrono::Local.ymd(year, 2, 13).and_hms(21, 31, 56).into();
+        let date: DateTime<Utc> = chrono::Local
+            .with_ymd_and_hms(year, 2, 13, 21, 31, 56)
+            .unwrap()
+            .into();
         let want: Event = LogRecord::from(fields!(
             log_schema().timestamp_key() => date,
             log_schema().message_key() => msg,
@@ -649,8 +655,13 @@ mod tests {
         );
         let event = event_from_bytes("host", None, raw.into()).unwrap();
 
+        let dt = NaiveDate::from_ymd_opt(2019, 2, 13)
+            .unwrap()
+            .and_hms_micro_opt(21, 53, 30, 605_850)
+            .unwrap();
+
         let want: Event = LogRecord::from(fields!(
-            log_schema().timestamp_key() => chrono::Utc.ymd(2019, 2, 13).and_hms_micro(21, 53, 30, 605_850),
+            log_schema().timestamp_key() => Utc.from_utc_datetime(&dt),
             log_schema().message_key() => msg,
             log_schema().source_type_key() => "syslog",
             "host" => "74794bfb6795",
@@ -664,7 +675,8 @@ mod tests {
                 "x-pid" => "9043",
                 "x-info" => "http://www.rsyslog.com",
             )
-        )).into();
+        ))
+        .into();
 
         assert_event_data_eq!(event, want);
     }

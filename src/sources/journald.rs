@@ -302,10 +302,13 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
         .or_else(|| log.get_field(RECEIVED_TIMESTAMP))
     {
         if let Ok(timestamp) = String::from_utf8_lossy(timestamp).parse::<u64>() {
-            let timestamp = chrono::Utc.timestamp(
-                (timestamp / 1_000_000) as i64,
-                (timestamp % 1_000_000) as u32 * 1_000,
-            );
+            let timestamp = chrono::Utc
+                .timestamp_opt(
+                    (timestamp / 1_000_000) as i64,
+                    (timestamp % 1_000_000) as u32 * 1_000,
+                )
+                .unwrap();
+
             log.insert_field(log_schema().timestamp_key(), Value::Timestamp(timestamp));
         }
     }
@@ -843,7 +846,7 @@ MESSAGE=audit log
     }
 
     fn value_ts(secs: i64, usecs: u32) -> Value {
-        Value::Timestamp(chrono::Utc.timestamp(secs, usecs))
+        Value::Timestamp(chrono::Utc.timestamp_opt(secs, usecs).unwrap())
     }
 
     fn timestamp(event: &Event) -> Value {
