@@ -622,7 +622,7 @@ mod tests {
             .unwrap();
         let year = value.as_timestamp().unwrap().naive_local().year();
         let date: DateTime<Utc> = chrono::Local
-            .with_ymd_and_hms(year, 2, 12, 21, 31, 56)
+            .with_ymd_and_hms(year, 2, 13, 21, 31, 56)
             .unwrap()
             .into();
         let want: Event = LogRecord::from(fields!(
