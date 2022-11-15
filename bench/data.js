@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668452008639,
+  "lastUpdate": 1668489892847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11939,6 +11939,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 716610,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81e18ec243cedeeac6dbb7f8588bf4d3a7b40485",
+          "message": "Merge pull request #624 from f1shl3gs/dependabot/cargo/uuid-1.2.2\n\nchore(deps): bump uuid from 1.2.1 to 1.2.2",
+          "timestamp": "2022-11-15T13:19:46+08:00",
+          "tree_id": "653dd0da0ffcd8894677a1d7943db012cda68f6a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81e18ec243cedeeac6dbb7f8588bf4d3a7b40485"
+        },
+        "date": 1668489886542,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719070,
             "unit": "ns/op"
           }
         ]
