@@ -39,7 +39,7 @@ pub struct Server {
 
 impl Default for Server {
     fn default() -> Self {
-        let zero = DateTime::from_utc(NaiveDateTime::from_timestamp(0, 0), Utc);
+        let zero = DateTime::from_utc(NaiveDateTime::from_timestamp_millis(0).unwrap(), Utc);
 
         Self {
             boot_time: zero,

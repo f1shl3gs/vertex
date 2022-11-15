@@ -159,7 +159,7 @@ fn structures_events_correctly() {
             let (batch, mut receiver) = BatchNotifier::new_with_receiver();
             let input = LogRecord::from(fields!(
                 log_schema().message_key() => "raw log line",
-                log_schema().timestamp_key() => Utc.ymd(2020, 12, 1).and_hms(1, 2, 3),
+                log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
                 "my_id" => "42",
                 "foo" => "bar"
             ))

@@ -36,7 +36,7 @@ impl TimeZone {
 
 /// Convert a timestamp with a non-UTC time zone into UTC
 pub fn datetime_to_utc<TZ: chrono::TimeZone>(ts: &DateTime<TZ>) -> DateTime<Utc> {
-    Utc.timestamp(ts.timestamp(), ts.timestamp_subsec_micros())
+    Utc.timestamp_nanos(ts.timestamp_nanos())
 }
 
 pub mod ser_de {

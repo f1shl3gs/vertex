@@ -27,7 +27,7 @@ async fn sets_create_action_when_configured() {
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
     let log = LogRecord::from(fields!(
         log_schema().message_key() => "hi there",
-        log_schema().timestamp_key() => Utc.ymd(2020, 12, 1).and_hms(1, 2, 3),
+        log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
         "action" => "crea"
     ));
 
@@ -70,7 +70,7 @@ async fn encode_datastream_mode() {
 
     let log = LogRecord::from(fields!(
         log_schema().message_key() => "hi there",
-        log_schema().timestamp_key() => Utc.ymd(2020, 12, 1).and_hms(1, 2, 3),
+        log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
         "data_stream" => data_stream_body()
     ));
 
@@ -110,7 +110,7 @@ async fn encode_datastream_mode_no_routing() {
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
     let log = LogRecord::from(fields!(
         log_schema().message_key() => "hi there",
-        log_schema().timestamp_key() => Utc.ymd(2020, 12, 1).and_hms(1, 2, 3),
+        log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
         "data_stream" => data_stream_body()
     ));
 
@@ -190,7 +190,7 @@ async fn encode_datastream_mode_no_sync() {
     let es = ElasticsearchCommon::parse_config(&config).await.unwrap();
     let log = LogRecord::from(fields!(
         log_schema().message_key() => "hi there",
-        log_schema().timestamp_key() => Utc.ymd(2020, 12, 1).and_hms(1, 2, 3),
+        log_schema().timestamp_key() => Utc.with_ymd_and_hms(2020, 12, 1, 1, 2, 3).unwrap(),
         "data_stream" => data_stream_body(),
     ));
 
