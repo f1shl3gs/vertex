@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1668586801834,
+  "lastUpdate": 1668883284718,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74105,6 +74105,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 51.809,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fccc91e307794392bbcd74abfa4451f3a7c86532",
+          "message": "Merge pull request #626 from f1shl3gs/dependabot/cargo/indexmap-1.9.2\n\nchore(deps): bump indexmap from 1.9.1 to 1.9.2",
+          "timestamp": "2022-11-20T02:34:50+08:00",
+          "tree_id": "8945e7ba47b8ed025e201cb7ef380388f0abbecb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fccc91e307794392bbcd74abfa4451f3a7c86532"
+        },
+        "date": 1668883278191,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.162,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.187,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.812,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.674,
             "unit": "ns/op"
           }
         ]
