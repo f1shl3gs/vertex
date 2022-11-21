@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669047947440,
+  "lastUpdate": 1669048023154,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -69164,6 +69164,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1047,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f3beb2917e94c1036baf42ab1d406c7b05867a6a",
+          "message": "Merge pull request #628 from f1shl3gs/dependabot/cargo/crossbeam-queue-0.3.7\n\nchore(deps): bump crossbeam-queue from 0.3.6 to 0.3.7",
+          "timestamp": "2022-11-22T00:02:15+08:00",
+          "tree_id": "63d5c756e7c50f79429efab65322271257d1b29c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f3beb2917e94c1036baf42ab1d406c7b05867a6a"
+        },
+        "date": 1669048016584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1128,
             "unit": "s"
           }
         ]
