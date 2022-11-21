@@ -439,7 +439,7 @@ regex = { version = "1.7.0" }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.10.0", optional = true, features = ["union"] }
-snap = { version = "1.0.5", default-features = false, optional = true }
+snap = { version = "1.1.0", default-features = false, optional = true }
 strip-ansi-escapes = { version = "0.1.1", default-features = false }
 sqlx = { version = "0.6.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.37" }
