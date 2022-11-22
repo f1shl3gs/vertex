@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669127317454,
+  "lastUpdate": 1669127345624,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12113,6 +12113,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 709700,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66dd40252be45d5243c669f87335bc63731787b8",
+          "message": "Merge pull request #630 from f1shl3gs/dependabot/cargo/snap-1.1.0\n\nchore(deps): bump snap from 1.0.5 to 1.1.0",
+          "timestamp": "2022-11-22T22:23:46+08:00",
+          "tree_id": "d54bafa612f9b51d84f7f52c51753b4b8d3ad7e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66dd40252be45d5243c669f87335bc63731787b8"
+        },
+        "date": 1669127337471,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 913200,
             "unit": "ns/op"
           }
         ]
