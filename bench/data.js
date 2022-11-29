@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669736513220,
+  "lastUpdate": 1669736521401,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12432,6 +12432,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 717180,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b295d510c9bfc671a4b7e4405d60be664e1ec75f",
+          "message": "Merge pull request #641 from f1shl3gs/dependabot/cargo/tonic-0.8.3\n\nchore(deps): bump tonic from 0.8.2 to 0.8.3",
+          "timestamp": "2022-11-29T23:36:29+08:00",
+          "tree_id": "1a342626572a8e41a3706cf75b2b2434b4a0bba0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b295d510c9bfc671a4b7e4405d60be664e1ec75f"
+        },
+        "date": 1669736512866,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 857990,
             "unit": "ns/op"
           }
         ]
