@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669801030559,
+  "lastUpdate": 1669801196595,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12577,6 +12577,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 718620,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a3f64f1e73bf068f274a856f26da512e3ee163f9",
+          "message": "Merge pull request #643 from f1shl3gs/dependabot/cargo/governor-0.5.1\n\nchore(deps): bump governor from 0.5.0 to 0.5.1",
+          "timestamp": "2022-11-30T17:31:41+08:00",
+          "tree_id": "e4796e8426ebd0e3060ee23e8ade49be3c917fcf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a3f64f1e73bf068f274a856f26da512e3ee163f9"
+        },
+        "date": 1669801191427,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 559140,
             "unit": "ns/op"
           }
         ]
