@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669800930848,
+  "lastUpdate": 1669800933455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12548,6 +12548,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 720100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "47d70ddeb59c35b64ddb845799ebff6d9ebe4e96",
+          "message": "Merge pull request #647 from f1shl3gs/dependabot/cargo/chrono-tz-0.8.1\n\nchore(deps): bump chrono-tz from 0.8.0 to 0.8.1",
+          "timestamp": "2022-11-30T17:31:04+08:00",
+          "tree_id": "8184db611a01203f94b81347e093853ac1e070c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/47d70ddeb59c35b64ddb845799ebff6d9ebe4e96"
+        },
+        "date": 1669800926492,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 718620,
             "unit": "ns/op"
           }
         ]
