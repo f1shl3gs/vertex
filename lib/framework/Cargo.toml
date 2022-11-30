@@ -98,4 +98,4 @@ uuid = { version = "1.2", default-features = false, features = ["v4"] }
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
 notify = { version = "5.0.0" }
-nix = { version = "0.25.0" }
+nix = { version = "0.26.1" }
