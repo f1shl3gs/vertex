@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1669802097861,
+  "lastUpdate": 1669802187592,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59453,6 +59453,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 21.872,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "47d70ddeb59c35b64ddb845799ebff6d9ebe4e96",
+          "message": "Merge pull request #647 from f1shl3gs/dependabot/cargo/chrono-tz-0.8.1\n\nchore(deps): bump chrono-tz from 0.8.0 to 0.8.1",
+          "timestamp": "2022-11-30T17:31:04+08:00",
+          "tree_id": "8184db611a01203f94b81347e093853ac1e070c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/47d70ddeb59c35b64ddb845799ebff6d9ebe4e96"
+        },
+        "date": 1669802180076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "attributes/insert",
+            "value": 52.798,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 173.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 401.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "attributes/insert",
+            "value": 1170.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "haproxy/parse_csv",
+            "value": 45142000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1070700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.445,
             "unit": "ns/op"
           }
         ]
