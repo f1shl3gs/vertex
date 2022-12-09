@@ -37,7 +37,8 @@ apt install --yes \
     shellcheck \
     sudo \
     wget \
-    zlib1g-dev
+    zlib1g-dev \
+    zlib
 
 # Locales
 locale-gen en_US.UTF-8

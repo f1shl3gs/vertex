@@ -30,6 +30,7 @@ apt install --yes \
   locales \
   pkg-config \
   unzip \
+  zlib \
   zlib1g-dev
 
 # Setup protoc
