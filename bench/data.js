@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670552376984,
+  "lastUpdate": 1670552600006,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12664,6 +12664,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 718220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "8d2b42a7533405916e06814d0d659d03f7fff746",
+          "message": "add rdkafka/libz-static for  x86_64-unknown-linux-musl",
+          "timestamp": "2022-12-09T10:17:34+08:00",
+          "tree_id": "ee09047824264694777616fc74a6b69cc32be3e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8d2b42a7533405916e06814d0d659d03f7fff746"
+        },
+        "date": 1670552592707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 721030,
             "unit": "ns/op"
           }
         ]
