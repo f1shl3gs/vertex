@@ -36,7 +36,8 @@ apt install --yes \
     ruby-bundler \
     shellcheck \
     sudo \
-    wget
+    wget \
+    zlib1g-dev
 
 # Locales
 locale-gen en_US.UTF-8
