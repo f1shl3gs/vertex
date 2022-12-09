@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670555922906,
+  "lastUpdate": 1670577226054,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12693,6 +12693,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 721030,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "910b9c69e8a98d8612520af8a01b5297d5d5daa7",
+          "message": "optimize features",
+          "timestamp": "2022-12-09T17:09:21+08:00",
+          "tree_id": "45decb8fdb3e6aa973e4f00fee8d6cdc1ce77d04",
+          "url": "https://github.com/f1shl3gs/vertex/commit/910b9c69e8a98d8612520af8a01b5297d5d5daa7"
+        },
+        "date": 1670577219246,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719040,
             "unit": "ns/op"
           }
         ]
