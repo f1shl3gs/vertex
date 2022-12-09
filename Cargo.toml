@@ -55,35 +55,37 @@ benches = [
 ]
 
 default = [
-    # "tokio-console",
-    # common
-    "disk-buffer",
+    "common",
+
+    "extensions",
     "sources",
     "transforms",
-    "sinks",
-    # extensions
-    "extensions-pprof",
-    "extensions-healthcheck",
+    "sinks"
 ]
 
 target-x86_64-unknown-linux-musl = [
-    "disk-buffer",
+    "common",
+
     "extensions",
     "sinks",
     "sources",
     "transforms",
-    "unix",
-    "rdkafka/libz-static"
 ]
 
 target-x86_64-unknown-linux-gnu = [
-    "disk-buffer",
+    "common",
+
     "extensions",
     "sinks",
     "sources",
     "transforms",
-    "unix",
+
     "extensions-pprof"
+]
+
+common = [
+  "disk-buffer",
+  "unix"
 ]
 
 # Integration tests
@@ -120,7 +122,9 @@ integration-tests-redis = []
 integration-tests-zookeeper = []
 
 # Common
-disk-buffer = []
+disk-buffer = [
+  "dep:buffers"
+]
 tokio-console = ["framework/tokio-console", "tokio/tracing"]
 
 # Allocator
@@ -336,7 +340,7 @@ tower-test = { version = "0.4.0" }
 
 [dependencies]
 # Workspaces
-buffers = { path = "lib/buffers" }
+buffers = { path = "lib/buffers", optional = true }
 codecs = { path = "lib/codecs" }
 condition = { path = "lib/condition", optional = true }
 event = { path = "lib/event" }
