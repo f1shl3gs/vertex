@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670054803131,
+  "lastUpdate": 1670552376984,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -72691,6 +72691,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1048,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "bd32d511f2ea922d46b741c2bfebbda10f43f2e3",
+          "message": "add zlib1g-dev",
+          "timestamp": "2022-12-09T09:49:59+08:00",
+          "tree_id": "b525b2e2b579824c1bca8bb569b09a9b7eeb802d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bd32d511f2ea922d46b741c2bfebbda10f43f2e3"
+        },
+        "date": 1670552367621,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1294,
             "unit": "s"
           }
         ]
