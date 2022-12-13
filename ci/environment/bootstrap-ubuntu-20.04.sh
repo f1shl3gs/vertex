@@ -76,3 +76,5 @@ if [[ "${CI-}" == "true" && "${PROFILE-}" != "debug" ]]; then
     echo "CARGO_PROFILE_RELEASE_DEBUG=false";
   } >> "${GITHUB_ENV}"
 fi
+
+bash ci/install_protoc.sh

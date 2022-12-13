@@ -51,7 +51,10 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - run: sudo apt-get install -y shellcheck
+      - name: Install Shellcheck
+        run: sudo apt-get install -y shellcheck
+      - name: Install Protoc
+        run: shell ci/install_protoc.sh
       - name: Check style
         run:  make check_clippy
       - name: Check shell
