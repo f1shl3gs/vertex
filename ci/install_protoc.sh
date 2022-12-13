@@ -8,6 +8,6 @@ unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip
 
 cp bin/protoc /usr/local/bin
 
-mkdir -p /usr/local/include/google
-cp -r include/google /usr/local/include/
+sudo mkdir -p /usr/local/include/google
+sudo cp -r include/google /usr/local/include/
 rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
