@@ -4,12 +4,12 @@ Vertex is a fork/rewrite/rebranding of [Vector](https://github.com/vectordotdev/
 by [OpenTelemetry](https://opentelemetry.io/).
 
 Vertex is used for collecting and processing observability data(metrics, logs and traces). it can be used to
-replace some part of your monitor infra, like `node_exporter`, `fluent-bit`, `jaeger-agent` and etc. You can
-always check out the supported extensions by 
-```shell
-# list all supported source extension
-vertex sources
-```
+replace some part of your monitor infra, like `node_exporter`, `fluent-bit`, `jaeger-agent` and etc.
+
+## Features
+- Hot reload from files or HTTP endpoint
+  - File watch needs `inotify`, so only Linux supported.
+  - HTTP support get or get-and-watch style(like Kubernetes), WebSocket is not supported.
 
 ## Build
 Note: Only x86_64-unknown-linux-gnu(or musl) is supported.

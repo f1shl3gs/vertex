@@ -1,3 +1,7 @@
+mod chunk;
+
+pub use chunk::ChunkedDecoder;
+
 use std::borrow::Cow;
 use std::{
     fmt,
