@@ -51,8 +51,7 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
-      - name: Prepare
-        run: bash ci/environment/prepare.sh
+      - run: apt-get install shellcheck -y
       - name: Check style
         run:  make check_clippy
       - name: Check shell

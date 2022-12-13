@@ -59,7 +59,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash ci/environment/prepare.sh
       - run: make bench-${{ matrix.target }} | tee bench.txt
       - run: bash ./ci/bench/extract_criterion_results.sh
       - name: Store bench results
