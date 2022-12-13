@@ -75,6 +75,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/prepare.sh
       - name: Building container
         run: docker build -f ci/cross/${{ matrix.target }}.dockerfile -t vertex-cross:${{ matrix.target }} ci/cross
       - run: make ${{ matrix.target }}
@@ -97,6 +98,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/prepare.sh
       - name: Install nextest
         uses: taiki-e/install-action@nextest
       - run: make test
@@ -120,4 +122,5 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
+      - run: bash ci/prepare.sh
       - run: make integration-tests
