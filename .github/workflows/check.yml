@@ -54,7 +54,7 @@ jobs:
       - name: Install Shellcheck
         run: sudo apt-get install -y shellcheck
       - name: Install Protoc
-        run: shell ci/install_protoc.sh
+        run: sh ci/install_protoc.sh
       - name: Check style
         run:  make check_clippy
       - name: Check shell
