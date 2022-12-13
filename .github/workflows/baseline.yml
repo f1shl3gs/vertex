@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
-      - run: bash ci/environment/prepare.sh
+      - run: bash ci/prepare.sh
       - run: cargo build --release 2>&1 | tee build.txt
       - run: bash ./ci/extract_build_time.sh > build.json
       - name: Store bench results

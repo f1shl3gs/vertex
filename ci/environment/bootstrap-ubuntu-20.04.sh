@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+
 set -e -o verbose
 
 export DEBIAN_FRONTEND=noninteractive
@@ -13,15 +14,12 @@ apt install --yes \
   apt-utils \
   apt-transport-https
 
-apt upgrade --yes
-
 # Deps
 apt install --yes \
     bc \
     build-essential \
     ca-certificates \
     cmake \
-    cmark-gfm \
     curl \
     gawk \
     libclang-dev \
@@ -30,18 +28,18 @@ apt install --yes \
     llvm \
     locales \
     pkg-config \
-    python3-pip \
-    rename \
-    rpm \
-    ruby-bundler \
     shellcheck \
     sudo \
     wget
+
+# Apt cleanup
+apt clean
 
 # Locales
 locale-gen en_US.UTF-8
 dpkg-reconfigure locales
 
+# Install rust
 if ! command -v rustup ; then
   # Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04,
   # so this is really just make sure the path is configured.
@@ -56,5 +54,3 @@ else
     echo "export PATH=\"$HOME/.cargo/bin:\$PATH\"" >> "${HOME}/.bash_profile"
 fi
 
-# Apt cleanup
-apt clean
