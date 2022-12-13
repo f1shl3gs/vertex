@@ -29,9 +29,7 @@ apt install --yes \
   llvm \
   locales \
   pkg-config \
-  unzip \
-  zlib \
-  zlib1g-dev
+  unzip
 
 # Setup protoc
 #
