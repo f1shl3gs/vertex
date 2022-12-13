@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670909404059,
+  "lastUpdate": 1670947117678,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -79653,6 +79653,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 63.031,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b4a1b79e636b3a06b100e71658d6e22326f33355",
+          "message": "Merge pull request #656 from f1shl3gs/fix_ci_build\n\nFix CI build",
+          "timestamp": "2022-12-13T23:51:46+08:00",
+          "tree_id": "5422865f379ca26da8a161b34eb777f42761ed2f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b4a1b79e636b3a06b100e71658d6e22326f33355"
+        },
+        "date": 1670947110826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.542,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.302,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.816,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.541,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.853,
             "unit": "ns/op"
           }
         ]
