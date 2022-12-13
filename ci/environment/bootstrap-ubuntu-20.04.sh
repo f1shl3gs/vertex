@@ -45,6 +45,8 @@ if ! command -v rustup ; then
   # so this is really just make sure the path is configured.
   curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
 fi
+
+source "$HOME/.cargo/env"
 rustup show # causes installation of version from rust-toolchain.toml
 rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
 
