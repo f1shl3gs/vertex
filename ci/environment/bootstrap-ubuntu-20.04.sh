@@ -46,21 +46,21 @@ if ! command -v rustup ; then
   curl https://sh.rustup.rs -sSf | sh -s -- -y --profile minimal
 fi
 
-source "$HOME/.cargo/env"
-rustup show # causes installation of version from rust-toolchain.toml
-rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
-
-# Setup cargo-cross
-if [[ "$(cross --version | grep cross)" != "cross 0.2.4" ]]; then
-  rustup run stable cargo install cross --version 0.2.4 --force
-fi
-
 # Rust/Cargo should already be installed on both GH Actions-provided Ubuntu 20.04,
 # so this is really just make sure the path is configured.
 if [ -n "${CI-}" ] ; then
     echo "${HOME}/.cargo/bin" >> "${GITHUB_PATH}"
 else
     echo "export PATH=\"$HOME/.cargo/bin:\$PATH\"" >> "${HOME}/.bash_profile"
+fi
+
+# Setup cargo-cross
+source "$HOME/.cargo/env"
+rustup show # causes installation of version from rust-toolchain.toml
+rustup default "$(rustup show active-toolchain | awk '{print $1;}')"
+
+if [[ "$(cross --version | grep cross)" != "cross 0.2.4" ]]; then
+  rustup run stable cargo install cross --version 0.2.4 --force
 fi
 
 # Make sure our release build settings are present.
