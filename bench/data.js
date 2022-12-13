@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670947162197,
+  "lastUpdate": 1670948086704,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -73174,6 +73174,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1046,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b4a1b79e636b3a06b100e71658d6e22326f33355",
+          "message": "Merge pull request #656 from f1shl3gs/fix_ci_build\n\nFix CI build",
+          "timestamp": "2022-12-13T23:51:46+08:00",
+          "tree_id": "5422865f379ca26da8a161b34eb777f42761ed2f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b4a1b79e636b3a06b100e71658d6e22326f33355"
+        },
+        "date": 1670948079249,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1123,
             "unit": "s"
           }
         ]
