@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670989252502,
+  "lastUpdate": 1670989253726,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12896,6 +12896,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 834980,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "851302ebc27fbb047a477628e0097ce9e29efb5e",
+          "message": "Merge pull request #650 from f1shl3gs/dependabot/cargo/tokio-1.23.0\n\nchore(deps): bump tokio from 1.22.0 to 1.23.0",
+          "timestamp": "2022-12-14T11:36:31+08:00",
+          "tree_id": "d4ffba7186413202d6662b301683e8d253c0a6dd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/851302ebc27fbb047a477628e0097ce9e29efb5e"
+        },
+        "date": 1670989245646,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 853250,
             "unit": "ns/op"
           }
         ]
