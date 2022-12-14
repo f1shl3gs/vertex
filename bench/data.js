@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671002856964,
+  "lastUpdate": 1671003833790,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74272,6 +74272,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1228,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8ce09eaea4ed7c8f46058567b4d42f034ded9d9",
+          "message": "Merge pull request #659 from f1shl3gs/move_backoff_to_lib\n\nMove backoff to lib",
+          "timestamp": "2022-12-14T15:22:56+08:00",
+          "tree_id": "b7b084f8e6a7d181cec27a15da6fc6a457b447ed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c8ce09eaea4ed7c8f46058567b4d42f034ded9d9"
+        },
+        "date": 1671003826611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1016,
             "unit": "s"
           }
         ]
