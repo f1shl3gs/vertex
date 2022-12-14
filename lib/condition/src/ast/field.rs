@@ -6,6 +6,7 @@ use lookup::OwnedPath;
 use crate::ast::Evaluator;
 use crate::Error;
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, PartialEq)]
 pub enum OrderingOp {
     Equal,

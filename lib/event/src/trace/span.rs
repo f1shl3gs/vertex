@@ -58,6 +58,7 @@ impl ByteSizeOf for Event {
 /// | `Producer` |     | yes |     | yes |
 /// | `Consumer` |     | yes | yes |     |
 /// | `Internal` |     |     |     |     |
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, PartialOrd)]
 pub enum SpanKind {
     /// Indicates that the span describes a synchronous request to
@@ -133,6 +134,7 @@ impl Link {
 
 /// For the semantics of status codes see
 /// https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub enum StatusCode {
     /// The default status

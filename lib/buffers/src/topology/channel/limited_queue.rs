@@ -16,6 +16,7 @@ use crate::Bufferable;
 use super::{poll_notify::PollNotify, poll_semaphore::PollSemaphore};
 
 /// Error returned by `LimitedSender`.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, PartialEq)]
 pub struct SendError<T>(pub T);
 
