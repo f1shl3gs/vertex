@@ -1,6 +1,7 @@
 use std::{path::PathBuf, pin::Pin, time::Duration};
 
 use async_trait::async_trait;
+use backoff::ExponentialBackoff;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use event::{Event, EventContainer, Events};
@@ -13,7 +14,6 @@ use tokio_util::codec::Encoder;
 use crate::batch::EncodedEvent;
 use crate::{
     sink::util::{
-        retries::ExponentialBackoff,
         socket_bytes_sink::{BytesSink, ShutdownCheck},
         SocketMode,
     },

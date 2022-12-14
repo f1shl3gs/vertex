@@ -2,6 +2,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use async_stream::stream;
+use backoff::ExponentialBackoff;
 use bytes::Buf;
 use futures::{Stream, StreamExt, TryStreamExt};
 use http::{header, Request, Response};
@@ -159,7 +160,12 @@ fn poll_http(
     tls_options: Option<TlsConfig>,
     proxy: ProxyConfig,
 ) -> impl Stream<Item = Builder> {
-    let backoff = || tokio::time::sleep(Duration::from_secs(5));
+    let mut b = ExponentialBackoff::from_secs(3).max_delay(Duration::from_secs(60));
+    let mut backoff = move || {
+        let to_sleep = b.next().expect("backoff should always return a duration");
+
+        tokio::time::sleep(to_sleep)
+    };
 
     stream! {
         loop {
