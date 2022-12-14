@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670988613343,
+  "lastUpdate": 1670988860849,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -73511,6 +73511,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1038,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e051bc4fb5f5abb43891582025db54de6c655ae4",
+          "message": "Merge pull request #655 from f1shl3gs/dependabot/cargo/base64-0.20.0\n\nchore(deps): bump base64 from 0.13.1 to 0.20.0",
+          "timestamp": "2022-12-14T11:08:57+08:00",
+          "tree_id": "7f07c6cb3a6b78ec6bdcdaa40b306f45b57663d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e051bc4fb5f5abb43891582025db54de6c655ae4"
+        },
+        "date": 1670988852539,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1240,
             "unit": "s"
           }
         ]
