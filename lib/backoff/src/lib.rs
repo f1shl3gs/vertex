@@ -31,6 +31,10 @@ impl ExponentialBackoff {
         }
     }
 
+    pub const fn from_secs(base: u64) -> ExponentialBackoff {
+        Self::from_millis(base * 1000)
+    }
+
     /// A multiplicative factor that will be applied to the retry delay.
     ///
     /// For example, using a factor of `1000` will make each delay in units of seconds.
