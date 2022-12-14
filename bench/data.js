@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670987595185,
+  "lastUpdate": 1670987599663,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -79960,6 +79960,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.752,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d96cfc065d88e3b9adccbdf52e79fbce18265e95",
+          "message": "Merge pull request #657 from f1shl3gs/watch_config_from_http_resp\n\nsupport watch configs from http endpoint",
+          "timestamp": "2022-12-14T11:08:39+08:00",
+          "tree_id": "8303e95bfcadcd0a148cd33f5766904c8ea8bd5f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d96cfc065d88e3b9adccbdf52e79fbce18265e95"
+        },
+        "date": 1670987591741,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.268,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.256,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.682,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.766,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.913,
             "unit": "ns/op"
           }
         ]
