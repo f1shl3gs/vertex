@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1670990570747,
+  "lastUpdate": 1670990599904,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74028,6 +74028,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1037,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e1a71bcd9dcea1352464d94c29ddad42da81442",
+          "message": "Merge pull request #652 from f1shl3gs/dependabot/cargo/openssl-0.10.44\n\nchore(deps): bump openssl from 0.10.43 to 0.10.44",
+          "timestamp": "2022-12-14T11:36:23+08:00",
+          "tree_id": "4e03bd3d8414af5175d217a8470882c280064aed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e1a71bcd9dcea1352464d94c29ddad42da81442"
+        },
+        "date": 1670990590435,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1320,
             "unit": "s"
           }
         ]
