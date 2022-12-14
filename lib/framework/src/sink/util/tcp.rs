@@ -7,6 +7,7 @@ use std::{
 };
 
 use async_trait::async_trait;
+use backoff::ExponentialBackoff;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use event::{Event, EventContainer, Events};
@@ -23,10 +24,7 @@ use tokio_util::codec::Encoder;
 use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
 use crate::dns;
-use crate::sink::util::{
-    retries::ExponentialBackoff,
-    socket_bytes_sink::{BytesSink, ShutdownCheck},
-};
+use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsSettings, MaybeTlsStream, TlsConfig, TlsError};

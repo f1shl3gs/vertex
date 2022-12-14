@@ -6,6 +6,7 @@ use std::{
 };
 
 use async_trait::async_trait;
+use backoff::ExponentialBackoff;
 use bytes::BytesMut;
 use codecs::encoding::Transformer;
 use event::{Event, EventContainer, EventStatus, Events, Finalizable};
@@ -15,7 +16,6 @@ use thiserror::Error;
 use tokio::{net::UdpSocket, sync::oneshot, time::sleep};
 use tokio_util::codec::Encoder;
 
-use super::retries::ExponentialBackoff;
 use super::SinkBuildError;
 use crate::{dns, udp, Healthcheck, Sink, StreamSink};
 

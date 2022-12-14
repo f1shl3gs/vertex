@@ -26,6 +26,7 @@ debug = true
 
 [workspace]
 members = [
+    "lib/backoff",
     "lib/buffers",
     "lib/codecs",
     "lib/condition",
