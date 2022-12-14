@@ -76,6 +76,7 @@ impl Default for HealthcheckOptions {
     }
 }
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Clone, PartialEq, Copy)]
 pub enum DataType {
     Any,

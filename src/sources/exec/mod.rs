@@ -78,6 +78,7 @@ fn default_decoding() -> DecodingConfig {
     )
 }
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, PartialEq, Error)]
 pub enum ExecConfigError {
     #[error("A non-empty list for command must be provided")]

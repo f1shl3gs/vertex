@@ -20,6 +20,7 @@ pub enum Frame {
     Array(Vec<Frame>),
 }
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[cfg_attr(test, derive(PartialEq))]
 #[derive(Debug)]
 pub enum Error {

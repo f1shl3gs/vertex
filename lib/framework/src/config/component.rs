@@ -47,6 +47,7 @@ macro_rules! register_source_config {
     };
 }
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Error, Clone, PartialEq)]
 pub enum ExampleError {
     #[error("unable to create an example for this component")]

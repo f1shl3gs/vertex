@@ -9,6 +9,7 @@ use field::{FieldExpr, FieldOp, OrderingOp};
 use lexer::Lexer;
 use lookup::parse_path;
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, PartialEq)]
 pub enum CombiningOp {
     And,

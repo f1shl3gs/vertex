@@ -59,6 +59,7 @@ const fn default_auth() -> KafkaAuthConfig {
 
 /// Used to determine the options to set in configs, since both kafka consumers and providers have
 /// unique options, they use the same struct, and the error if given the wrong options.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, PartialOrd, PartialEq)]
 pub enum KafkaRole {
     Consumer,

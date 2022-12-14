@@ -34,6 +34,7 @@ pub fn log_schema() -> &'static LogSchema {
     LOG_SCHEMA.get().unwrap_or(&LOG_SCHEMA_DEFAULT)
 }
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct LogSchema {
     #[serde(default = "default_message_key")]

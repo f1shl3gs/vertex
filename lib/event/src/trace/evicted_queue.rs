@@ -3,6 +3,7 @@ use std::collections::VecDeque;
 use serde::{Deserialize, Serialize};
 use shared::ByteSizeOf;
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct EvictedQueue<T> {
     queue: Option<VecDeque<T>>,

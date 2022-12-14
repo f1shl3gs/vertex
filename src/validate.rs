@@ -11,6 +11,7 @@ use framework::config::{load_builder_from_paths, Config, ConfigDiff, ConfigPath}
 use framework::topology::{build_pieces, take_healthchecks, Pieces};
 use tracing::error;
 
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(FromArgs, PartialEq, Debug)]
 #[argh(
     subcommand,

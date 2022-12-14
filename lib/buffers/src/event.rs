@@ -70,6 +70,7 @@ impl std::error::Error for DecodeError {}
 ///
 /// This enumeration should never have any flags removed, only added.  This ensures that previously
 /// used flags cannot have their meaning changed/repurposed after-the-fact.
+#[allow(clippy::derive_partial_eq_without_eq)]
 #[bitflags]
 #[repr(u32)]
 #[derive(Copy, Clone, Debug, PartialEq)]
