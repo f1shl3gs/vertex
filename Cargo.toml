@@ -87,8 +87,7 @@ target-x86_64-unknown-linux-gnu = [
 ]
 
 common = [
-  "disk-buffer",
-  "unix"
+  "disk-buffer"
 ]
 
 # Integration tests
@@ -134,6 +133,20 @@ tokio-console = ["framework/tokio-console", "tokio/tracing"]
 # mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
 # need to declare it again.
 jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
+
+# Extensions
+extensions = [
+    "extensions-healthcheck",
+    "extensions-heartbeat",
+    # Musl does not provide "pthread_getname_np" in current release.
+    # https://github.com/tikv/pprof-rs/issues/41
+    # "extensions-pprof"
+]
+
+extensions-heartbeat = ["uuid", "sysinfo", "parking_lot/serde"]
+extensions-healthcheck = []
+extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
+extensions-pprof = ["pprof/flamegraph"]
 
 # Sources
 sources = [
@@ -261,18 +274,6 @@ sinks-vertex = []
 sinks-clickhouse = []
 sinks-socket = []
 
-# extensions
-extensions = [
-    "extensions-healthcheck",
-    # Musl does not provide "pthread_getname_np" in current release.
-    # https://github.com/tikv/pprof-rs/issues/41
-    # "extensions-pprof"
-]
-
-extensions-pprof = ["pprof/flamegraph"]
-extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
-extensions-healthcheck = []
-
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
 kubernetes = ["k8s-openapi", "kube"]
@@ -287,9 +288,6 @@ bench = [
     "sources-haproxy",
     "sources-node_metrics",
 ]
-
-# Enables features that work only on systems providing `cfg(unix)`
-unix = []
 
 [[bench]]
 name = "loki"
@@ -350,7 +348,7 @@ lookup = { path = "lib/lookup" }
 multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
 shared = { path = "lib/shared" }
-sysinfo = { path = "lib/sysinfo" }
+sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }
 metrics = { path = "lib/metrics" }
@@ -449,3 +447,4 @@ thiserror = { version = "1.0.37" }
 tonic = { version = "0.8.3", optional = true }
 typetag = { version = "0.2.3" }
 url = { version = "2.3.1", features = ["serde"] }
+uuid = { version = "1.2", default-features = false, features = ["v4"], optional = true }

@@ -2179,6 +2179,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "88943dd7ef4a2e5a4bfa2753aaab3013e34ce2533d1996fb18ef591e315e2b3b"
 dependencies = [
  "scopeguard",
+ "serde",
 ]
 
 [[package]]
@@ -4952,6 +4953,7 @@ dependencies = [
  "tracing-subscriber",
  "typetag",
  "url",
+ "uuid 1.2.2",
  "virt",
 ]
 

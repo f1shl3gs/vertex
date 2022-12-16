@@ -1,4 +1,4 @@
-pub fn kernel_version() -> Option<String> {
+pub fn kernel() -> Option<String> {
     let mut raw = std::mem::MaybeUninit::<libc::utsname>::zeroed();
 
     if unsafe { libc::uname(raw.as_mut_ptr()) } == 0 {
@@ -43,15 +43,16 @@ pub fn os_version() -> Option<String> {
 }
 
 pub fn machine_id() -> std::io::Result<String> {
-    std::fs::read_to_string("/etc/machine-id")
+    std::fs::read_to_string("/etc/machine-id").map(|s| s.trim().to_string())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[cfg(unix)]
     #[test]
     fn test_kernel_version() {
-        kernel_version().unwrap();
+        kernel().unwrap();
     }
 }
