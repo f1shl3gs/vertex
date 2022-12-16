@@ -1,3 +1,4 @@
+use std::collections::BTreeMap;
 use std::fmt::Debug;
 use std::net::Ipv4Addr;
 use std::ops::Deref;
@@ -30,6 +31,9 @@ pub struct Config {
     tls: Option<TlsConfig>,
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
+
+    #[serde(default)]
+    tags: BTreeMap<String, String>,
 }
 
 impl GenerateConfig for Config {
@@ -65,6 +69,7 @@ impl ExtensionConfig for Config {
         status.os = sysinfo::os().unwrap_or_default();
         status.address = get_advertise_addr()?;
         status.kernel = sysinfo::kernel().unwrap_or_default();
+        status.tags = self.tags.clone();
 
         let tls = TlsSettings::from_options(&self.tls)?;
         let client = HttpClient::new(tls, &ProxyConfig::default())?;
@@ -99,6 +104,7 @@ struct Status {
     lease: String, // 1 interval + 15 seconds
     os: String,
     uptime: String,
+    tags: BTreeMap<String, String>,
 
     #[cfg(unix)]
     kernel: String,
