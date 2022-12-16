@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671206730632,
+  "lastUpdate": 1671207841843,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74516,6 +74516,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1018,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d459e0822ec07d96d966dff8dfa0cf14078bf7ec",
+          "message": "Merge pull request #661 from f1shl3gs/heartbeat_extension\n\nadd heartbeat extension",
+          "timestamp": "2022-12-17T00:00:27+08:00",
+          "tree_id": "3527dc1065702326e8e816e99cea89299f9d1b3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d459e0822ec07d96d966dff8dfa0cf14078bf7ec"
+        },
+        "date": 1671207833772,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1158,
             "unit": "s"
           }
         ]
