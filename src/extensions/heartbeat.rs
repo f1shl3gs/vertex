@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use std::net::Ipv4Addr;
-use std::ops::{Deref};
+use std::ops::Deref;
 use std::time::Duration;
 
 use async_trait::async_trait;
@@ -87,7 +87,7 @@ struct Resource {
     name: String,
     component_type: String,
     address: String,
-    port: u16
+    port: u16,
 }
 
 #[derive(Default, Debug, Serialize)]
@@ -118,7 +118,7 @@ pub fn report_config(config: &framework::config::Config) {
                 name: key.to_string(),
                 component_type: ext.extension_type().to_string(),
                 address: format!("{}", addr.ip()),
-                port: addr.port()
+                port: addr.port(),
             }),
 
             _ => None,
@@ -131,7 +131,7 @@ pub fn report_config(config: &framework::config::Config) {
                 name: key.to_string(),
                 component_type: source.source_type().to_string(),
                 address: format!("{}", addr.ip()),
-                port: addr.port()
+                port: addr.port(),
             }),
 
             _ => None,
@@ -144,7 +144,7 @@ pub fn report_config(config: &framework::config::Config) {
                 name: key.to_string(),
                 component_type: sink.sink_type().to_string(),
                 address: format!("{}", addr.ip()),
-                port: addr.port()
+                port: addr.port(),
             }),
 
             _ => None,
@@ -209,22 +209,26 @@ fn get_uuid() -> String {
 fn get_advertise_addr() -> std::io::Result<String> {
     let ifaddrs = nix::ifaddrs::getifaddrs()?;
 
-    let addrs = ifaddrs.filter_map(|addr| {
-        if addr.flags.intersects(InterfaceFlags::IFF_LOOPBACK) || !addr.flags.intersects(InterfaceFlags::IFF_RUNNING) {
-            return None
-        }
+    let addrs = ifaddrs
+        .filter_map(|addr| {
+            if addr.flags.intersects(InterfaceFlags::IFF_LOOPBACK)
+                || !addr.flags.intersects(InterfaceFlags::IFF_RUNNING)
+            {
+                return None;
+            }
 
-        let sockaddr = addr.address?.as_sockaddr_in()?.ip();
-        let ne = u32::from_be(sockaddr);
-        let ip = Ipv4Addr::new(
-            (ne & 0xFF) as u8,
-            ((ne >> 8) & 0xFF) as u8,
-            ((ne >> 16) & 0xFF) as u8,
-            (ne >> 24) as u8,
-        );
+            let sockaddr = addr.address?.as_sockaddr_in()?.ip();
+            let ne = u32::from_be(sockaddr);
+            let ip = Ipv4Addr::new(
+                (ne & 0xFF) as u8,
+                ((ne >> 8) & 0xFF) as u8,
+                ((ne >> 16) & 0xFF) as u8,
+                (ne >> 24) as u8,
+            );
 
-        Some(ip.to_string())
-    }).collect::<Vec<_>>();
+            Some(ip.to_string())
+        })
+        .collect::<Vec<_>>();
 
     Ok(if addrs.is_empty() {
         "".to_string()
