@@ -172,6 +172,10 @@ impl SourceOuter {
         }
     }
 
+    pub fn source_type(&self) -> &'static str {
+        self.inner.source_type()
+    }
+
     pub fn resources(&self) -> Vec<Resource> {
         self.inner.resources()
     }
@@ -311,6 +315,10 @@ impl<T> SinkOuter<T> {
             proxy: Default::default(),
             health_check: true,
         }
+    }
+
+    pub fn sink_type(&self) -> &'static str {
+        self.inner.sink_type()
     }
 
     pub fn resources(&self, id: &ComponentKey) -> Vec<Resource> {

@@ -16,6 +16,8 @@ use tracing::{error, info, warn};
 use crate::validate;
 #[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
+#[cfg(feature = "extensions-heartbeat")]
+use vertex::extensions::heartbeat;
 
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
@@ -186,6 +188,9 @@ impl RootCommand {
 
             let (mut topology, graceful_crash) = result.ok_or(exitcode::CONFIG).unwrap();
 
+            #[cfg(feature = "extensions-heartbeat")]
+            heartbeat::report_config(topology.config());
+
             // run
             let mut graceful_crash = UnboundedReceiverStream::new(graceful_crash);
             let mut sources_finished = topology.sources_finished();
@@ -204,6 +209,9 @@ impl RootCommand {
                                         new_config.healthchecks.set_require_healthy(true);
                                         match topology.reload_config_and_respawn(new_config).await {
                                             Ok(true) => {
+                                                #[cfg(feature = "extensions-heartbeat")]
+                                                heartbeat::report_config(topology.config());
+
                                                 info!("Vertex reloaded");
                                             },
                                             Ok(false) => {
