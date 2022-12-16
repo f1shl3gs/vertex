@@ -175,7 +175,8 @@ pub fn check_provider(builder: &Builder) -> Result<(), Vec<String>> {
             || !builder.sinks.is_empty())
     {
         Err(vec![
-            "No extensions/sources/transforms/sinks are allowed if provider config is present".to_string(),
+            "No extensions/sources/transforms/sinks are allowed if provider config is present"
+                .to_string(),
         ])
     } else {
         Ok(())
