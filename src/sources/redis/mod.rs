@@ -495,7 +495,7 @@ async fn slowlog_metrics(cli: &mut Client) -> Result<Vec<Metric>, Error> {
         Metric::gauge(
             "last_slow_execution_duration_seconds",
             "The amount of time needed for last slow execution, in seconds",
-            last_slow_execution_second as f64,
+            last_slow_execution_second,
         ),
     ]);
 

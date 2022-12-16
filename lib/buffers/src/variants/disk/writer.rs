@@ -362,7 +362,7 @@ where
         let amount = u64::try_from(amount)
             .expect("Vector does not yet support running on 128-bit architectures.");
         self.current_data_file_size == 0
-            || self.current_data_file_size + amount as u64 <= self.max_data_file_size
+            || self.current_data_file_size + amount <= self.max_data_file_size
     }
 
     /// Archives a record.

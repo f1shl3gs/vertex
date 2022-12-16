@@ -213,8 +213,8 @@ impl TransformOutputsBuf {
         self.primary_buffer.as_ref().map_or(0, OutputBuffer::len)
             + self
                 .named_buffers
-                .iter()
-                .map(|(_, buf)| buf.len())
+                .values()
+                .map(|buf| buf.len())
                 .sum::<usize>()
     }
 
@@ -228,8 +228,8 @@ impl ByteSizeOf for TransformOutputsBuf {
         self.primary_buffer.size_of()
             + self
                 .named_buffers
-                .iter()
-                .map(|(_, buf)| buf.size_of())
+                .values()
+                .map(|buf| buf.size_of())
                 .sum::<usize>()
     }
 }

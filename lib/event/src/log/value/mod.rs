@@ -378,7 +378,7 @@ mod tests {
                     std::fs::read_dir(path).unwrap().for_each(|ent| match ent {
                         Ok(file) => {
                             let path = file.path();
-                            let buf = parse_artifact(&path).unwrap();
+                            let buf = parse_artifact(path).unwrap();
 
                             let serde_value: serde_json::Value =
                                 serde_json::from_slice(&buf).unwrap();

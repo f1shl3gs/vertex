@@ -6,9 +6,9 @@ const USER_HZ: f64 = 100.0;
 const PAGE_SIZE: f64 = 4096.0;
 
 pub async fn proc_info() -> Result<Vec<Metric>, std::io::Error> {
-    let pid = unsafe { libc::getpid() as i32 };
+    let pid = unsafe { libc::getpid() };
     let fds = open_fds(pid)? as f64;
-    let max_fds = max_fds(pid)? as f64;
+    let max_fds = max_fds(pid)?;
     let (cpu_total, threads, start_time, vsize, rss) = get_proc_stat("/proc", pid).await?;
 
     Ok(vec![
@@ -59,7 +59,7 @@ const MAXFD_PATTERN: &str = "Max open files";
 
 fn max_fds(pid: i32) -> Result<f64, std::io::Error> {
     let mut buffer = String::new();
-    std::fs::File::open(&format!("/proc/{}/limits", pid))
+    std::fs::File::open(format!("/proc/{}/limits", pid))
         .and_then(|mut f| f.read_to_string(&mut buffer))?;
 
     find_statistic(&buffer, MAXFD_PATTERN)

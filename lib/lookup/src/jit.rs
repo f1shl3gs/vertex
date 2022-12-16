@@ -276,7 +276,7 @@ impl<'a> Iterator for JitLookup<'a> {
                                 self.coalesce_count += 1;
                                 (
                                     Some(Some(BorrowedSegment::CoalesceField(Cow::Borrowed(
-                                        &self.path[(start as usize)..(end as usize)],
+                                        &self.path[start..end],
                                     )))),
                                     JitState::CoalesceStart,
                                 )
@@ -288,7 +288,7 @@ impl<'a> Iterator for JitLookup<'a> {
                                     self.coalesce_count = 0;
                                     (
                                         Some(Some(BorrowedSegment::CoalesceEnd(Cow::Borrowed(
-                                            &self.path[(start as usize)..(end as usize)],
+                                            &self.path[start..end],
                                         )))),
                                         JitState::Continue,
                                     )
