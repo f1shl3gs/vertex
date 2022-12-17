@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
@@ -12,7 +11,10 @@ use hyper::{
     service::{make_service_fn, service_fn},
     Body, Request, Response, Server,
 };
+use pprof::protos::Message;
 use serde::{Deserialize, Serialize};
+
+const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -46,20 +48,20 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
 }
 
 async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let params: HashMap<String, String> = req
-        .uri()
-        .query()
-        .map(|v| {
-            url::form_urlencoded::parse(v.as_bytes())
-                .into_owned()
-                .collect()
-        })
-        .unwrap_or_else(HashMap::new);
+    let mut seconds = DEFAULT_PROFILE_SECONDS;
+    let mut flamegraph = false;
 
-    let seconds = match params.get("seconds") {
-        Some(value) => value.parse().unwrap_or(30u64),
-        _ => 30,
-    };
+    if let Some(query) = req.uri().query() {
+        url::form_urlencoded::parse(query.as_bytes())
+            .into_owned()
+            .for_each(|(k, v)| {
+                if k == "seconds" {
+                    seconds = v.parse().unwrap_or(DEFAULT_PROFILE_SECONDS);
+                } else if k == "flamegraph" && v == "true" {
+                    flamegraph = true;
+                }
+            });
+    }
 
     let guard = pprof::ProfilerGuard::new(100).unwrap();
 
@@ -67,10 +69,20 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
     match guard.report().build() {
         Ok(report) => {
-            let mut buf = BytesMut::new().writer();
-            report.flamegraph(&mut buf).unwrap();
+            let buf = if flamegraph {
+                let mut buf = BytesMut::with_capacity(4 * 1024).writer();
+                report.flamegraph(&mut buf).unwrap();
 
-            Ok(Response::new(Body::from(buf.into_inner().freeze())))
+                buf.into_inner().freeze()
+            } else {
+                let mut buf = BytesMut::new();
+                let profile = report.pprof().unwrap();
+                profile.encode(&mut buf).unwrap();
+
+                buf.freeze()
+            };
+
+            Ok(Response::new(Body::from(buf)))
         }
 
         Err(err) => {
