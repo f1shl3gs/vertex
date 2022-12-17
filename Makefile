@@ -1,21 +1,5 @@
 VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 
-build-timing:
-	cargo build -p vertex --bin vertex --timings --release
-
-bloat:
-	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200
-
-lines:
-	@./scripts/lines.sh
-
-hooks:
-	ln -sf ../../scripts/pre-commit.sh .git/hooks/pre-commit
-
-.PHONY: fmt
-fmt:
-	cargo fmt
-
 build:
 	cargo build --release
 
@@ -32,6 +16,22 @@ x86_64-unknown-linux-gnu:
 		--no-default-features \
 		--target $@ \
 		--features target-$@
+
+build-timing:
+	cargo build -p vertex --bin vertex --timings --release
+
+bloat:
+	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200
+
+lines:
+	@./scripts/lines.sh
+
+hooks:
+	ln -sf ../../scripts/pre-commit.sh .git/hooks/pre-commit
+
+.PHONY: fmt
+fmt:
+	cargo fmt
 
 ## Build Container
 .PHONY: builder-x86_64-unknown-linux-musl
