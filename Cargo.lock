@@ -905,11 +905,11 @@ checksum = "76fbd10dce159c002b9c688ae8ab7cd531151e185e0ad360f4bfea3b0eede3a8"
 
 [[package]]
 name = "debugid"
-version = "0.7.2"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f91cf5a8c2f2097e2a32627123508635d47ce10563d999ec1a95addf08b502ba"
+checksum = "bef552e6f588e446098f6ba40d89ac146c8c7b64aade83c051ee00bb5d2bc18d"
 dependencies = [
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
@@ -1295,7 +1295,7 @@ dependencies = [
  "twox-hash",
  "typetag",
  "url",
- "uuid 1.2.2",
+ "uuid",
 ]
 
 [[package]]
@@ -2168,7 +2168,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "14e4fcc00ff6731d94b70e16e71f43bda62883461f31230742e3bc6dddf12988"
 dependencies = [
  "libc",
- "uuid 1.2.2",
+ "uuid",
  "winapi",
 ]
 
@@ -2261,16 +2261,6 @@ name = "memchr"
 version = "2.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
-
-[[package]]
-name = "memmap"
-version = "0.7.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6585fd95e7bb50d6cc31e20d4cf9afb4e2ba16c5846fc76793f11218da9c475b"
-dependencies = [
- "libc",
- "winapi",
-]
 
 [[package]]
 name = "memmap2"
@@ -3003,9 +2993,9 @@ dependencies = [
 
 [[package]]
 name = "pprof"
-version = "0.9.1"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a97149c0eacaa6b8f8cedea99f68bb3a0517fa20f8de8d8c24c1a810f38d235d"
+checksum = "e20150f965e0e4c925982b9356da71c84bcd56cb66ef4e894825837cbcf6613e"
 dependencies = [
  "backtrace",
  "cfg-if",
@@ -3016,7 +3006,10 @@ dependencies = [
  "nix 0.24.2",
  "once_cell",
  "parking_lot 0.12.1",
- "protobuf",
+ "prost",
+ "prost-build",
+ "prost-derive",
+ "sha2",
  "smallvec",
  "symbolic-demangle",
  "tempfile",
@@ -3182,12 +3175,6 @@ dependencies = [
  "bytes",
  "prost",
 ]
-
-[[package]]
-name = "protobuf"
-version = "2.27.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cf7e6d18738ecd0902d30d1ad232c9125985a3422929b16c65517b38adc14f96"
 
 [[package]]
 name = "ptr_meta"
@@ -4036,21 +4023,21 @@ checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
 
 [[package]]
 name = "symbolic-common"
-version = "8.3.0"
+version = "10.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "348885c332e7d0784d661844b13b198464144a5ebcd3bfc047a6c441867ea467"
+checksum = "1b55cdc318ede251d0957f07afe5fed912119b8c1bc5a7804151826db999e737"
 dependencies = [
  "debugid",
- "memmap",
+ "memmap2",
  "stable_deref_trait",
- "uuid 0.8.2",
+ "uuid",
 ]
 
 [[package]]
 name = "symbolic-demangle"
-version = "8.3.0"
+version = "10.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6780c62bfbd609bffaa13d6959715850578aa43caaae7aee14f1f24ceb64f433"
+checksum = "79be897be8a483a81fff6a3a4e195b4ac838ef73ca42d348b3f722da9902e489"
 dependencies = [
  "rustc-demangle",
  "symbolic-common",
@@ -4817,12 +4804,6 @@ checksum = "936e4b492acfd135421d8dca4b1aa80a7bfc26e702ef3af710e0752684df5372"
 
 [[package]]
 name = "uuid"
-version = "0.8.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
-
-[[package]]
-name = "uuid"
 version = "1.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "422ee0de9031b5b948b97a8fc04e3aa35230001a722ddd27943e0be31564ce4c"
@@ -4953,7 +4934,7 @@ dependencies = [
  "tracing-subscriber",
  "typetag",
  "url",
- "uuid 1.2.2",
+ "uuid",
  "virt",
 ]
 
@@ -4962,7 +4943,7 @@ name = "virt"
 version = "0.1.0"
 dependencies = [
  "tokio",
- "uuid 1.2.2",
+ "uuid",
  "xdr-codec",
  "xdrgen",
 ]
