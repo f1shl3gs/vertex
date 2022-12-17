@@ -1,8 +1,8 @@
-use super::{read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
 use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
-use tokio::fs;
+
+use super::{read_to_string, Error, ErrorContext};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
@@ -268,10 +268,10 @@ pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>
 
 async fn net_class_devices(sys_path: &str) -> Result<Vec<String>, Error> {
     let path = format!("{}/class/net", sys_path);
-    let mut dirs = tokio::fs::read_dir(path).await?;
+    let mut dirs = std::fs::read_dir(path)?;
     let mut devices = Vec::new();
 
-    while let Some(ent) = dirs.next_entry().await? {
+    while let Some(Ok(ent)) = dirs.next() {
         devices.push(ent.file_name().into_string().unwrap());
     }
 
@@ -363,11 +363,10 @@ struct NetClassInterface {
 
 impl NetClassInterface {
     pub async fn from(device_path: &str) -> Result<NetClassInterface, Error> {
-        let mut dirs = fs::read_dir(device_path).await?;
-
+        let mut dirs = std::fs::read_dir(device_path)?;
         let mut nci = NetClassInterface::default();
 
-        while let Some(entry) = dirs.next_entry().await? {
+        while let Some(Ok(entry)) = dirs.next() {
             let file = entry.file_name();
             let file = file.to_str().unwrap();
 

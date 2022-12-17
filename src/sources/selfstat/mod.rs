@@ -17,7 +17,6 @@ use framework::{
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
-use tracing::Instrument;
 
 #[derive(Copy, Clone, Debug, Deserialize, Serialize)]
 struct SelfStatConfig {}
@@ -69,7 +68,7 @@ impl SelfStat {
         let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
         while ticker.next().await.is_some() {
-            match gather().instrument(info_span!("selfstat.gather")).await {
+            match gather().await {
                 Ok(mut metrics) => {
                     let now = Some(chrono::Utc::now());
                     metrics.iter_mut().for_each(|m| m.timestamp = now);
