@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671277243257,
+  "lastUpdate": 1671285409617,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74789,6 +74789,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1008,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7c54a1b94a819391cfc1defb0cc45efc1b5e009a",
+          "message": "Merge pull request #664 from f1shl3gs/remove_useless_tracing\n\nRemove useless tracing",
+          "timestamp": "2022-12-17T21:34:49+08:00",
+          "tree_id": "3d85f81b780efbbeef7647972c637e76b4224577",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7c54a1b94a819391cfc1defb0cc45efc1b5e009a"
+        },
+        "date": 1671285401959,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1063,
             "unit": "s"
           }
         ]
