@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671276351062,
+  "lastUpdate": 1671277243257,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -74760,6 +74760,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1227,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c6875a8627d6036202a4e170a83036e6d8dd4664",
+          "message": "Merge pull request #663 from f1shl3gs/upgrade_pprof\n\nUpgrade pprof to 0.11.0",
+          "timestamp": "2022-12-17T19:19:43+08:00",
+          "tree_id": "c23e49c7a408e200d485fa315e68faee498a8201",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c6875a8627d6036202a4e170a83036e6d8dd4664"
+        },
+        "date": 1671277236047,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1008,
             "unit": "s"
           }
         ]
