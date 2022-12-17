@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671255621324,
+  "lastUpdate": 1671255637047,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -81734,6 +81734,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.094,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4cfcc567cbb1bcc50c3b6d6bbc326371c34ef427",
+          "message": "Merge pull request #662 from f1shl3gs/upgrade_to_rust_1_66_0\n\nupgrade to rust 1.66.0",
+          "timestamp": "2022-12-17T13:36:16+08:00",
+          "tree_id": "3fdbaa25d8b98cfdd798b1a221708f70ad99a510",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4cfcc567cbb1bcc50c3b6d6bbc326371c34ef427"
+        },
+        "date": 1671255629478,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.126,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.108,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.395,
             "unit": "ns/op"
           }
         ]
