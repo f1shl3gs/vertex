@@ -222,7 +222,7 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
             if element == "beep" {
                 let name = name + "_enabled";
                 metrics.push(Metric::gauge_with_tags(
-                    &name,
+                    name,
                     "Hardware monitor sensor has beeping enabled",
                     pv,
                     tags!(

@@ -232,7 +232,7 @@ async fn collect_services_metric(
     )];
 
     if health_summary {
-        futures::future::try_join_all(services.iter().map(|(name, _)| async move {
+        futures::future::try_join_all(services.keys().map(|name| async move {
             let entries = match client.service(name, opts).await {
                 Ok(entries) => entries,
                 Err(err) => {

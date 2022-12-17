@@ -27,7 +27,7 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     let divisor = match tx.status & STA_NANO {
         0 => MICROSECONDS,
         _ => NANOSECONDS,
-    } as f64;
+    };
     // See NOTES in adjtimex(2).
     const PPM16FRAC: f64 = 1000000.0 * 65536.0;
 
@@ -149,8 +149,8 @@ struct Timex {
 impl From<libc::timex> for Timex {
     fn from(tx: libc::timex) -> Self {
         Self {
-            modes: tx.modes as u32,
-            offset: tx.offset as i64,
+            modes: tx.modes,
+            offset: tx.offset,
             freq: tx.freq,
             maxerror: tx.maxerror,
             esterror: tx.esterror,
@@ -177,7 +177,7 @@ fn adjtimex() -> Result<(Timex, i32), Error> {
         let mut tx = std::mem::zeroed();
         let r = libc::adjtimex(&mut tx);
 
-        (Timex::from(tx), r as i32)
+        (Timex::from(tx), r)
     };
 
     Ok(result)
