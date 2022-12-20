@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671538072610,
+  "lastUpdate": 1671538937683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -75858,6 +75858,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1372,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0d76c2ac264019eaec89f3b873947d58a3324589",
+          "message": "Merge pull request #674 from f1shl3gs/dependabot/cargo/serde_path_to_error-0.1.9\n\nchore(deps): bump serde_path_to_error from 0.1.8 to 0.1.9",
+          "timestamp": "2022-12-20T20:02:30+08:00",
+          "tree_id": "ce681962628b83d297a012aeefae19216341e3bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0d76c2ac264019eaec89f3b873947d58a3324589"
+        },
+        "date": 1671538930098,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1015,
             "unit": "s"
           }
         ]
