@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671508951274,
+  "lastUpdate": 1671508984121,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13157,6 +13157,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 842220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "deb6c0820af78c994a80b5dbec147ed1261025c2",
+          "message": "Merge pull request #667 from f1shl3gs/dependabot/cargo/thiserror-1.0.38\n\nchore(deps): bump thiserror from 1.0.37 to 1.0.38",
+          "timestamp": "2022-12-20T11:58:19+08:00",
+          "tree_id": "b85d873b4b2223008b23249480bfb4b8e59260c9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/deb6c0820af78c994a80b5dbec147ed1261025c2"
+        },
+        "date": 1671508974988,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 836650,
             "unit": "ns/op"
           }
         ]
