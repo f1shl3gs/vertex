@@ -3,6 +3,9 @@ VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 build:
 	cargo build --release
 
+clean:
+	rm -rf target
+
 x86_64-unknown-linux-musl:
 	@cross build \
 		--release \
@@ -17,7 +20,7 @@ x86_64-unknown-linux-gnu:
 		--target $@ \
 		--features target-$@
 
-build-timing:
+build-timing: clean
 	cargo build -p vertex --bin vertex --timings --release
 
 bloat:
