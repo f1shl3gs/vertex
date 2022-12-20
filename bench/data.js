@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671509259545,
+  "lastUpdate": 1671509397901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -41822,6 +41822,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 334400,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5fd467b7bf63d5931a3aa754e2a5c60f7d751e2b",
+          "message": "Merge pull request #669 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.10\n\nchore(deps): bump dyn-clone from 1.0.9 to 1.0.10",
+          "timestamp": "2022-12-20T12:01:17+08:00",
+          "tree_id": "5655cd9fd7637a56cbb35de73825c4cf3733d846",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5fd467b7bf63d5931a3aa754e2a5c60f7d751e2b"
+        },
+        "date": 1671509389975,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 498.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 49851,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 248820,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 497540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 253.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 25307,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 126360,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 252880,
             "unit": "ns/op"
           }
         ]
