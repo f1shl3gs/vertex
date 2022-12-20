@@ -442,32 +442,32 @@ mod tests {
             // unknown parser
             (
                 "parser: abc",
-                Err("unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `custom` at line 1 column 7")
+                Err("unknown variant `parser`, expected one of `cri`, `docker`, `go`, `java`, `custom`")
             ),
             // unknown mode
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: foo\ntimeout: 6s",
-                Err("unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with` at line 1 column 7")
+                Err("unknown variant `mode`, expected one of `continue_through`, `continue_past`, `halt_before`, `halt_with`")
             ),
             // invalid timeout
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\nmode: continue_through\ntimeout: 100",
-                Err("invalid value: string \"100\", expected something like 5s, 10s at line 1 column 7")
+                Err("invalid value: string \"100\", expected something like 5s, 10s")
             ),
             // missing start_pattern
             (
                 "parser: custom\ncondition_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Err("missing field `start_pattern` at line 1 column 7")
+                Err("missing field `start_pattern`")
             ),
             // missing condition_pattern
             (
                 "parser: custom\nstart_pattern: .*\nmode: continue_through\ntimeout: 6s",
-                Err("missing field `condition_pattern` at line 1 column 7"),
+                Err("missing field `condition_pattern`"),
             ),
             // missing mode
             (
                 "parser: custom\nstart_pattern: .*\ncondition_pattern: .*\ntimeout: 6s",
-                Err("missing field `mode` at line 1 column 7")
+                Err("missing field `mode`")
             )
         ];
 
