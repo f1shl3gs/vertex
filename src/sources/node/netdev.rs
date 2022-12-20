@@ -285,7 +285,7 @@ mod tests {
         #[derive(Deserialize)]
         struct Dummy {
             #[serde(with = "serde_yaml::with::singleton_map")]
-            config: NetdevConfig
+            config: NetdevConfig,
         }
 
         serde_yaml::from_str::<Dummy>(

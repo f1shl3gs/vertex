@@ -135,7 +135,10 @@ struct Collectors {
     #[serde(default = "default_netclass_config")]
     pub netclass: Option<netclass::NetClassConfig>,
 
-    #[serde(default = "default_netdev_config", with = "serde_yaml::with::singleton_map")]
+    #[serde(
+        default = "default_netdev_config",
+        with = "serde_yaml::with::singleton_map"
+    )]
     pub netdev: Option<netdev::NetdevConfig>,
 
     #[serde(default = "default_netstat_config")]
