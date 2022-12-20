@@ -65,15 +65,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4b46cbb362ab8752921c97e041f5e366ee6297bd428a31275b9fcf1e380f7299"
 
 [[package]]
-name = "ansi_term"
-version = "0.12.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d52a9bb7ec0cf484c551830a7ce27bd20d67eac647e1befb56b0be4ee39a55d2"
-dependencies = [
- "winapi",
-]
-
-[[package]]
 name = "anyhow"
 version = "1.0.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -422,7 +413,6 @@ dependencies = [
  "tempdir",
  "thiserror",
  "tokio",
- "tokio-stream",
  "tokio-test",
  "tokio-util 0.7.4",
  "tracing",
@@ -1088,7 +1078,6 @@ dependencies = [
  "serde",
  "serde_json",
  "shared",
- "substring",
  "tokio",
  "tracing",
 ]
@@ -1115,14 +1104,6 @@ name = "exitcode"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de853764b47027c2e862a995c34978ffa63c1501f2e15f987ba11bd4f9bba193"
-
-[[package]]
-name = "fake_node_exporter"
-version = "0.1.0"
-dependencies = [
- "hyper",
- "tokio",
-]
 
 [[package]]
 name = "fastrand"
@@ -1263,7 +1244,6 @@ dependencies = [
  "snap",
  "socket2",
  "stream-cancel",
- "sysinfo",
  "syslog_loose",
  "tempfile",
  "testify",
@@ -1285,7 +1265,6 @@ dependencies = [
  "twox-hash",
  "typetag",
  "url",
- "uuid",
 ]
 
 [[package]]
@@ -3933,15 +3912,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
-name = "substring"
-version = "1.4.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42ee6433ecef213b2e72f587ef64a2f5943e7cd16fbd82dbe8bc07486c534c86"
-dependencies = [
- "autocfg",
-]
-
-[[package]]
 name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4532,7 +4502,6 @@ dependencies = [
 name = "tracing-limit"
 version = "0.1.0"
 dependencies = [
- "ansi_term",
  "criterion",
  "dashmap",
  "mock_instant",

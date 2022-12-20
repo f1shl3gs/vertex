@@ -1,9 +1,0 @@
-[package]
-name = "log_generator"
-version = "0.1.0"
-edition = "2021"
-publish = false
-
-[dependencies]
-argh = { version = "0.1.8" }
-governor = { version = "0.4.2" }
