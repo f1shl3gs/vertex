@@ -25,7 +25,7 @@ struct CacheConfig {
 struct Config {
     #[serde(default = "default_cache_config")]
     cache: CacheConfig,
-    #[serde(default)]
+    #[serde(default, with = "serde_yaml::with::singleton_map")]
     fields: Option<FieldMatchConfig>,
 }
 

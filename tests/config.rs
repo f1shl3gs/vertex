@@ -20,83 +20,6 @@ async fn load(config: &str, format: config::Format) -> Result<Vec<String>, Vec<S
 }
 
 #[tokio::test]
-#[cfg(all(
-    feature = "sources-generator",
-    feature = "transforms-add_tags",
-    feature = "sinks-stdout"
-))]
-#[ignore]
-async fn happy_path() {
-    load(
-        r#"
-sources:
-    in:
-        type: generator
-
-transforms:
-    add_tags:
-        type: add_tags
-        inputs:
-            - in
-        tags:
-            foo: bar
-
-sinks:
-    stdout:
-        type: stdout
-        inputs:
-            - add_tags
-        "#,
-        Format::YAML,
-    )
-    .await
-    .unwrap();
-
-    load(
-        r#"{
-  "sources": {
-    "in": {
-      "type": "generator"
-    }
-  },
-  "transforms": {
-    "add_tags": {
-      "type": "add_tags",
-      "inputs": [
-        "in"
-      ],
-      "tags": {
-        "foo": "bar"
-      }
-    }
-  },
-  "sinks": {
-    "stdout": {
-      "type": "stdout",
-      "inputs": [
-        "add_tags"
-      ]
-    }
-  }
-}"#,
-        Format::JSON,
-    )
-    .await
-    .unwrap();
-}
-
-#[tokio::test]
-async fn early_eof() {
-    let errs = load("sinks:\nfo", Format::YAML).await.unwrap_err();
-
-    assert_eq!(errs.len(), 1);
-    assert_eq!(
-        errs[0],
-        "sinks: invalid type: string \"fo\", expected a map at line 2 column 1"
-    );
-}
-
-#[tokio::test]
 #[ignore]
 async fn bad_type() {
     let errs = load(
@@ -185,5 +108,3 @@ sinks:
         ]
     )
 }
-
-// TODO: check cycle

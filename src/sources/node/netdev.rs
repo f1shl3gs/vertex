@@ -282,9 +282,16 @@ mod tests {
 
     #[test]
     fn test_deserialize() {
-        let _conf: NetdevConfig = serde_yaml::from_str(
+        #[derive(Deserialize)]
+        struct Dummy {
+            #[serde(with = "serde_yaml::with::singleton_map")]
+            config: NetdevConfig,
+        }
+
+        serde_yaml::from_str::<Dummy>(
             r#"
-include: .*
+config:
+    include: .*
         "#,
         )
         .unwrap();

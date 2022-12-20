@@ -70,14 +70,7 @@ use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 use typetag;
 
-use self::cpu::CPUConfig;
-use self::diskstats::DiskStatsConfig;
 use self::errors::{Error, ErrorContext};
-use self::ipvs::IPVSConfig;
-use self::netclass::NetClassConfig;
-use self::netdev::NetdevConfig;
-use self::netstat::NetstatConfig;
-use self::vmstat::VMStatConfig;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -95,13 +88,13 @@ struct Collectors {
     pub conntrack: bool,
 
     #[serde(default = "default_cpu_config")]
-    pub cpu: Option<CPUConfig>,
+    pub cpu: Option<cpu::CPUConfig>,
 
     #[serde(default = "default_true")]
     pub cpufreq: bool,
 
     #[serde(default = "default_diskstats_config")]
-    pub diskstats: Option<DiskStatsConfig>,
+    pub diskstats: Option<diskstats::DiskStatsConfig>,
 
     #[serde(default)]
     pub drm: bool,
@@ -128,7 +121,7 @@ struct Collectors {
     pub infiniband: bool,
 
     #[serde(default = "default_ipvs_config")]
-    pub ipvs: Option<IPVSConfig>,
+    pub ipvs: Option<ipvs::IPVSConfig>,
 
     #[serde(default = "default_true")]
     pub loadavg: bool,
@@ -142,7 +135,10 @@ struct Collectors {
     #[serde(default = "default_netclass_config")]
     pub netclass: Option<netclass::NetClassConfig>,
 
-    #[serde(default = "default_netdev_config")]
+    #[serde(
+        default = "default_netdev_config",
+        with = "serde_yaml::with::singleton_map"
+    )]
     pub netdev: Option<netdev::NetdevConfig>,
 
     #[serde(default = "default_netstat_config")]
@@ -217,32 +213,32 @@ struct Collectors {
     pub boot_time: bool,
 }
 
-fn default_cpu_config() -> Option<CPUConfig> {
-    Some(CPUConfig::default())
+fn default_cpu_config() -> Option<cpu::CPUConfig> {
+    Some(cpu::CPUConfig::default())
 }
 
-fn default_diskstats_config() -> Option<DiskStatsConfig> {
-    Some(DiskStatsConfig::default())
+fn default_diskstats_config() -> Option<diskstats::DiskStatsConfig> {
+    Some(diskstats::DiskStatsConfig::default())
 }
 
 fn default_filesystem_config() -> Option<filesystem::FileSystemConfig> {
     Some(filesystem::FileSystemConfig::default())
 }
 
-fn default_ipvs_config() -> Option<IPVSConfig> {
+fn default_ipvs_config() -> Option<ipvs::IPVSConfig> {
     Some(ipvs::IPVSConfig::default())
 }
 
 fn default_netclass_config() -> Option<netclass::NetClassConfig> {
-    Some(NetClassConfig::default())
+    Some(netclass::NetClassConfig::default())
 }
 
 fn default_netdev_config() -> Option<netdev::NetdevConfig> {
-    Some(NetdevConfig::default())
+    Some(netdev::NetdevConfig::default())
 }
 
 fn default_netstat_config() -> Option<netstat::NetstatConfig> {
-    Some(NetstatConfig::default())
+    Some(netstat::NetstatConfig::default())
 }
 
 fn default_powersupply_config() -> Option<powersupplyclass::PowerSupplyConfig> {
@@ -250,7 +246,7 @@ fn default_powersupply_config() -> Option<powersupplyclass::PowerSupplyConfig> {
 }
 
 fn default_vmstat_config() -> Option<vmstat::VMStatConfig> {
-    Some(VMStatConfig::default())
+    Some(vmstat::VMStatConfig::default())
 }
 
 impl Default for Collectors {
