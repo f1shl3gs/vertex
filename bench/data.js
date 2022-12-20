@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671510237554,
+  "lastUpdate": 1671510287804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -75341,6 +75341,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1345,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7ddfd87cd9dcc24d21211ec80653c3e63565bcf8",
+          "message": "Merge pull request #671 from f1shl3gs/dependabot/cargo/indoc-1.0.8\n\nchore(deps): bump indoc from 1.0.7 to 1.0.8",
+          "timestamp": "2022-12-20T12:02:35+08:00",
+          "tree_id": "fa513bc0b04fbe1fd1a129f4f607354551e9730d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7ddfd87cd9dcc24d21211ec80653c3e63565bcf8"
+        },
+        "date": 1671510280380,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1083,
             "unit": "s"
           }
         ]
