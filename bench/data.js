@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671628191086,
+  "lastUpdate": 1671628204782,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -84035,6 +84035,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.251,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3be9d1d9ed8ec7ab5cee1065421e7c6bd66c4294",
+          "message": "Merge pull request #679 from f1shl3gs/dependabot/cargo/num_cpus-1.15.0\n\nchore(deps): bump num_cpus from 1.14.0 to 1.15.0",
+          "timestamp": "2022-12-21T21:05:33+08:00",
+          "tree_id": "aac1e2ae7e2ae8fcfa6f18f987f7354a2b082616",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3be9d1d9ed8ec7ab5cee1065421e7c6bd66c4294"
+        },
+        "date": 1671628195663,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.069,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.181,
             "unit": "ns/op"
           }
         ]
