@@ -425,7 +425,7 @@ indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.3" }
 k8s-openapi = { version = "0.16.0", default-features = false, optional = true, features = ["api", "v1_18"] }
 kube = { version = "0.77.0", default-features = false, optional = true, features = ["client", "runtime", "openssl-tls"] }
-libc = { version = "0.2.138", optional = true }
+libc = { version = "0.2.139", optional = true }
 lru = { version = "0.8.1", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
