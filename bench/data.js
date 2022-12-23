@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1671772375294,
+  "lastUpdate": 1671772383091,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -84876,6 +84876,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.719,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b82aa3b8fe8e8985d53f4cd672f5e62f39d9933",
+          "message": "Merge pull request #681 from f1shl3gs/dependabot/cargo/libc-0.2.139\n\nchore(deps): bump libc from 0.2.138 to 0.2.139",
+          "timestamp": "2022-12-23T13:07:30+08:00",
+          "tree_id": "af1d93ad6478a3af0e926b46f3e15f8e3ebf82c3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b82aa3b8fe8e8985d53f4cd672f5e62f39d9933"
+        },
+        "date": 1671772373883,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.576,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.239,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.397,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.926,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.538,
             "unit": "ns/op"
           }
         ]
