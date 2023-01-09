@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673261570599,
+  "lastUpdate": 1673261608004,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -86487,6 +86487,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09ae91242902785f2bf4f69c8fc5e28567fe265d",
+          "message": "Merge pull request #690 from f1shl3gs/dependabot/cargo/tokio-1.24.1\n\nchore(deps): bump tokio from 1.24.0 to 1.24.1",
+          "timestamp": "2023-01-09T18:49:02+08:00",
+          "tree_id": "fa5fb78f2dfac94037cdd19c446cd08532e0a868",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09ae91242902785f2bf4f69c8fc5e28567fe265d"
+        },
+        "date": 1673261600186,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.756,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.762,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.75,
             "unit": "ns/op"
           }
         ]
