@@ -419,7 +419,7 @@ encoding_rs = { version = "0.8.31", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.25", optional = true }
-glob = { version = "0.3.0" }
+glob = { version = "0.3.1" }
 governor = { version = "0.5.1", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.3" }
