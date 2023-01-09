@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673240614653,
+  "lastUpdate": 1673241529777,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -77868,6 +77868,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1103,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "304a19890b8a08122c2f9bbf50ff315a5d79d4a3",
+          "message": "Merge pull request #693 from f1shl3gs/dependabot/cargo/glob-0.3.1\n\nchore(deps): bump glob from 0.3.0 to 0.3.1",
+          "timestamp": "2023-01-09T12:57:46+08:00",
+          "tree_id": "8cec26191232f662a029c3c75ebfa0f491058f91",
+          "url": "https://github.com/f1shl3gs/vertex/commit/304a19890b8a08122c2f9bbf50ff315a5d79d4a3"
+        },
+        "date": 1673241522353,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1078,
             "unit": "s"
           }
         ]
