@@ -1,3 +1,5 @@
+use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
+use base64::Engine;
 use event::attributes::{Attributes, Value};
 use event::{
     trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId, SpanKind, TraceId, TraceState},
@@ -69,7 +71,7 @@ impl From<proto::Batch> for Trace {
                         } else if kv.v_type == ValueType::Float64 as i32 {
                             Value::from(kv.v_float64)
                         } else {
-                            Value::from(base64::encode(kv.v_binary))
+                            Value::from(BASE64_STANDARD.encode(kv.v_binary))
                         };
 
                         (event::attributes::Key::new(kv.key), value)
@@ -98,7 +100,7 @@ impl From<proto::KeyValue> for (Key, AnyValue) {
         } else if kv.v_type == ValueType::Float64 as i32 {
             kv.v_float64.into()
         } else {
-            base64::encode(kv.v_binary).into()
+            BASE64_STANDARD.encode(kv.v_binary).into()
         };
 
         (kv.key.into(), value)
