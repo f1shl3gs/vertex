@@ -1364,6 +1364,7 @@ fn filesystem_io_metrics(mut tags: Attributes, stats: FsIoStatsDevice) -> Vec<Me
 mod tests {
     use super::*;
     use crate::testing::trace_init;
+    use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine};
     use framework::config::ProxyConfig;
     use framework::http::Auth;
     use http::{Method, Request, Response};
@@ -1396,7 +1397,7 @@ mod tests {
                 .split_ascii_whitespace()
                 .last()
                 .unwrap();
-            let d = base64::decode(n).unwrap();
+            let d = BASE64_STANDARD.decode(n).unwrap();
             let decoded = std::str::from_utf8(&d).unwrap();
             let (k, v) = decoded.split_once(':').unwrap();
             if k != username || v != password {

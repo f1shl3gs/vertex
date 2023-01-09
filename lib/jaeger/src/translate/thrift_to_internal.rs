@@ -1,11 +1,12 @@
-use event::attributes::Value;
+use base64::Engine;
 use std::collections::HashMap;
 
+use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
 use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
     Status, StatusCode,
 };
-use event::Trace;
+use event::{attributes::Value, Trace};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
 use crate::translate::id::to_trace_id;
@@ -33,7 +34,7 @@ impl From<Batch> for Trace {
                     TagType::Long => Value::from(tag.v_long.unwrap_or_default()),
                     TagType::Binary => {
                         let value = tag.v_binary.unwrap_or_default();
-                        Value::from(base64::encode(value))
+                        Value::from(BASE64_STANDARD.encode(value))
                     }
                 };
 
@@ -121,7 +122,7 @@ impl From<Tag> for KeyValue {
             }
             TagType::Bool => tag.v_bool.unwrap_or_default().into(),
             TagType::Long => tag.v_long.unwrap_or_default().into(),
-            TagType::Binary => base64::encode(tag.v_binary.unwrap()).into(),
+            TagType::Binary => BASE64_STANDARD.encode(tag.v_binary.unwrap()).into(),
         };
 
         KeyValue { key, value }
@@ -209,7 +210,7 @@ impl Tag {
             TagType::Long => self.v_long.unwrap_or_default().to_string(),
             TagType::Binary => {
                 let value = self.v_binary.unwrap_or_default();
-                base64::encode(value)
+                BASE64_STANDARD.encode(value)
             }
         }
     }
