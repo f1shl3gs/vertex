@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673347950975,
+  "lastUpdate": 1673348180702,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -78414,6 +78414,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1090,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "772a072af5a27ad694cef4980d6123ec3988d0a2",
+          "message": "Merge pull request #696 from f1shl3gs/dependabot/cargo/assert_cmd-2.0.8\n\nchore(deps): bump assert_cmd from 2.0.7 to 2.0.8",
+          "timestamp": "2023-01-10T18:31:29+08:00",
+          "tree_id": "d11ae4c5c5c17066b55dfd83bd1af51b3520f589",
+          "url": "https://github.com/f1shl3gs/vertex/commit/772a072af5a27ad694cef4980d6123ec3988d0a2"
+        },
+        "date": 1673348170795,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1278,
             "unit": "s"
           }
         ]
