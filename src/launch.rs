@@ -19,6 +19,8 @@ use vertex::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
 use vertex::extensions::heartbeat;
 
+const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
+
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
 pub struct RootCommand {
@@ -56,6 +58,12 @@ pub struct RootCommand {
         description = "specify how many threads the Tokio runtime will use"
     )]
     pub threads: Option<usize>,
+
+    #[argh(
+        option,
+        description = "specify keepalive of blocking threads, in seconds"
+    )]
+    pub blocking_thread_keepalive: Option<u64>,
 
     #[argh(subcommand)]
     pub sub_commands: Option<SubCommands>,
@@ -96,6 +104,12 @@ impl RootCommand {
         };
         let runtime = tokio::runtime::Builder::new_multi_thread()
             .worker_threads(threads)
+            // default interval of sources is 15s, 30s should reduce some overhead for
+            // create/destroy threads.
+            .thread_keep_alive(Duration::from_secs(
+                self.blocking_thread_keepalive
+                    .unwrap_or(DEFAULT_BLOCKING_THREAD_KEEPALIVE),
+            ))
             .thread_name("vertex-worker")
             .enable_io()
             .enable_time()
