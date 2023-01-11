@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673430619343,
+  "lastUpdate": 1673430652635,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -87371,6 +87371,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.721,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f23ba8ce659dd5a9306b541066f7eb36c486290",
+          "message": "Merge pull request #699 from f1shl3gs/dependabot/cargo/prost-0.11.6\n\nchore(deps): bump prost from 0.11.5 to 0.11.6",
+          "timestamp": "2023-01-11T17:46:16+08:00",
+          "tree_id": "3b9dd2634e242227081336f115bfa329493c0dda",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f23ba8ce659dd5a9306b541066f7eb36c486290"
+        },
+        "date": 1673430644434,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.426,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.416,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.458,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.878,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.532,
             "unit": "ns/op"
           }
         ]
