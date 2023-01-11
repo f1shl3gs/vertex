@@ -390,11 +390,7 @@ impl Formatter {
         let width = print
             .as_ref()
             .lines()
-            .map(|line| {
-                String::from_utf8_lossy(&strip_ansi_escapes::strip(line).unwrap())
-                    .chars()
-                    .count()
-            })
+            .map(|line| line.chars().count())
             .max()
             .unwrap_or(0);
         self.max_line_width = width.max(self.max_line_width);
