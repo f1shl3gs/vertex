@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673444571779,
+  "lastUpdate": 1673444584203,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14085,6 +14085,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 725440,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ae309703a0870b3c7887b5eae4fbd21905d2603",
+          "message": "Merge pull request #701 from f1shl3gs/rename_shared_to_measurable\n\nrename shared to measurable",
+          "timestamp": "2023-01-11T21:38:25+08:00",
+          "tree_id": "5f4134d84e406a2e9de3bcc19a874a50d3069eb0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ae309703a0870b3c7887b5eae4fbd21905d2603"
+        },
+        "date": 1673444573521,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 852420,
             "unit": "ns/op"
           }
         ]
