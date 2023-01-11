@@ -1,5 +1,5 @@
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::finalization::{EventFinalizers, EventStatus};
 use crate::{BatchNotifier, EventFinalizer};

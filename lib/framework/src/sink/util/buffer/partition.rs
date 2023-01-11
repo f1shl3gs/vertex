@@ -1,4 +1,4 @@
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 
 use crate::batch::{Batch, BatchConfig, BatchError, Merged, PushResult, SinkBatchSettings};
 use crate::sink::util::ElementCount;

@@ -7,8 +7,8 @@ use bytes::Bytes;
 use chrono::Utc;
 use log_schema::log_schema;
 use lookup::Path;
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 use tracing::field::Field;
 pub use value::Value;
 

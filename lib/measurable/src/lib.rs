@@ -1,5 +1,6 @@
-use bytes::{Bytes, BytesMut};
 use std::collections::BTreeMap;
+
+use bytes::{Bytes, BytesMut};
 
 pub trait ByteSizeOf {
     /// Returns the in-memory size of this type

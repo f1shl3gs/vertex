@@ -8,8 +8,8 @@ use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, SecondsFormat, Utc};
 pub use crud::ValueCollection;
 use lookup::Path;
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize, Serializer};
-use shared::ByteSizeOf;
 
 #[derive(PartialEq, PartialOrd, Debug, Clone, Deserialize)]
 #[serde(untagged)]

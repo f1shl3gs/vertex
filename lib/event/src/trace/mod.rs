@@ -10,8 +10,8 @@ use std::fmt::{Debug, Formatter};
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::attributes::Attributes;
 use crate::{

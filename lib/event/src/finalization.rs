@@ -7,8 +7,8 @@ use std::task::Poll;
 
 use atomig::{Atom, Atomic, Ordering};
 use futures::future::FutureExt;
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 use tokio::sync::oneshot;
 use tracing::error;
 

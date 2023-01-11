@@ -1,8 +1,8 @@
 use std::{error, fmt, io, mem};
 
 use bytes::{Buf, BufMut};
+use measurable::ByteSizeOf;
 use quickcheck::{Arbitrary, Gen};
-use shared::ByteSizeOf;
 
 use crate::{encoding::FixedEncodable, EventCount};
 

@@ -13,8 +13,8 @@ use futures::ready;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
 use hyper::{body, Body};
+use measurable::ByteSizeOf;
 use pin_project::pin_project;
-use shared::ByteSizeOf;
 use tower::Service;
 
 use crate::batch::{Batch, EncodedEvent};

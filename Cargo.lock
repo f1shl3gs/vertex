@@ -403,6 +403,7 @@ dependencies = [
  "event",
  "fslock",
  "futures",
+ "measurable",
  "memmap2",
  "metrics",
  "num-traits",
@@ -414,7 +415,6 @@ dependencies = [
  "quickcheck",
  "rkyv",
  "serde",
- "shared",
  "temp-dir",
  "tempdir",
  "thiserror",
@@ -1076,6 +1076,7 @@ dependencies = [
  "futures",
  "log_schema",
  "lookup",
+ "measurable",
  "pin-project",
  "prost",
  "prost-build",
@@ -1083,7 +1084,6 @@ dependencies = [
  "rand 0.8.5",
  "serde",
  "serde_json",
- "shared",
  "tokio",
  "tracing",
 ]
@@ -1226,6 +1226,7 @@ dependencies = [
  "listenfd",
  "log_schema",
  "lookup",
+ "measurable",
  "memchr 2.5.0",
  "metrics",
  "nix 0.26.1",
@@ -1245,7 +1246,6 @@ dependencies = [
  "serde_json",
  "serde_regex",
  "serde_yaml 0.9.16",
- "shared",
  "smallvec",
  "snap",
  "socket2",
@@ -2216,6 +2216,13 @@ dependencies = [
  "log",
  "memchr 2.5.0",
  "serde",
+]
+
+[[package]]
+name = "measurable"
+version = "0.1.0"
+dependencies = [
+ "bytes",
 ]
 
 [[package]]
@@ -3722,13 +3729,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "shared"
-version = "0.1.0"
-dependencies = [
- "bytes",
-]
-
-[[package]]
 name = "signal-hook-registry"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4795,6 +4795,7 @@ dependencies = [
  "lookup",
  "lru",
  "maxminddb",
+ "measurable",
  "memchr 2.5.0",
  "metrics",
  "mimalloc",
@@ -4825,7 +4826,6 @@ dependencies = [
  "serde_json",
  "serde_path_to_error",
  "serde_yaml 0.9.16",
- "shared",
  "smallvec",
  "snap",
  "sqlx",

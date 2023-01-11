@@ -10,9 +10,9 @@ use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
 use futures::Stream;
 use futures_util::StreamExt;
+use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
 use pin_project::pin_project;
-use shared::ByteSizeOf;
 use tokio::sync::mpsc;
 
 use crate::config::Output;

@@ -347,7 +347,7 @@ log_schema = { path = "lib/log_schema" }
 lookup = { path = "lib/lookup" }
 multiline = { path = "lib/multiline", optional = true }
 prometheus = { path = "lib/prometheus", optional = true }
-shared = { path = "lib/shared" }
+measurable = { path = "lib/measurable" }
 sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
 virt = { path = "lib/virt", optional = true }

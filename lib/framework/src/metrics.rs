@@ -3,9 +3,9 @@ use std::task::{Context, Poll};
 
 use event::EventContainer;
 use futures::Stream;
+use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
 use pin_project::pin_project;
-use shared::ByteSizeOf;
 
 #[pin_project]
 #[derive(Clone, Debug)]

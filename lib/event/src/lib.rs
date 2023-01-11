@@ -25,8 +25,8 @@ use std::collections::BTreeMap;
 use bytes::Bytes;
 use chrono::Utc;
 use log_schema::log_schema;
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::attributes::{Attributes, Key};
 use crate::log::Logs;

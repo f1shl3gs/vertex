@@ -11,7 +11,7 @@ use framework::stream::{BatcherSettings, DriverResponse};
 use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 use tower::Service;
 
 use super::encoder::ProcessedEvent;

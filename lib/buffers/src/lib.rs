@@ -18,8 +18,8 @@ pub use topology::{builder, channel};
 
 use std::fmt::Debug;
 
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
