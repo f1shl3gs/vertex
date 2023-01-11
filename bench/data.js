@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673431611186,
+  "lastUpdate": 1673444571779,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14056,6 +14056,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 729470,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "802f13da0d85551c7aa8b2e190c8f438940915a4",
+          "message": "Merge pull request #700 from f1shl3gs/remove_strip_ansi_escapes\n\nremove strip-ansi-escapes",
+          "timestamp": "2023-01-11T21:38:42+08:00",
+          "tree_id": "012afe649e113aa4fe5847184189f43a4dbf12b5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/802f13da0d85551c7aa8b2e190c8f438940915a4"
+        },
+        "date": 1673444562993,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 725440,
             "unit": "ns/op"
           }
         ]
