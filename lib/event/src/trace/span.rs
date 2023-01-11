@@ -3,8 +3,8 @@ use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId, TraceState};
 

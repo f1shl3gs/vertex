@@ -1,7 +1,7 @@
 use std::{error, fmt, mem};
 
 use bytes::{Buf, BufMut};
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 
 use crate::{encoding::FixedEncodable, EventCount};
 

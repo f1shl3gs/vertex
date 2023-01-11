@@ -1,8 +1,8 @@
 use std::fmt::{Display, Formatter, Write};
 
 use chrono::{DateTime, Utc};
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::attributes::{Attributes, Key, Value};
 use crate::metadata::EventMetadata;

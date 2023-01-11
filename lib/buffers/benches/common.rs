@@ -10,7 +10,7 @@ use buffers::{
 };
 use bytes::{Buf, BufMut};
 use futures::{Sink, SinkExt, Stream, StreamExt};
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 use tracing::Span;
 
 #[derive(Clone, Copy, Debug)]

@@ -17,7 +17,7 @@ use framework::template::Template;
 use framework::StreamSink;
 use futures_util::stream::BoxStream;
 use futures_util::StreamExt;
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
 

@@ -8,7 +8,7 @@ use framework::sink::util::Compression;
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::{Request, Response, Uri};
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::task::{Context, Poll};

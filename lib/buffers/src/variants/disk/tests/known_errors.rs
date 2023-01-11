@@ -4,8 +4,8 @@ use std::{
 };
 
 use bytes::{Buf, BufMut};
+use measurable::ByteSizeOf;
 use memmap2::MmapMut;
-use shared::ByteSizeOf;
 use tokio::{
     fs::OpenOptions,
     io::{AsyncSeekExt, AsyncWriteExt},

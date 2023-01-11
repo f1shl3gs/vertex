@@ -23,9 +23,9 @@ use kube::api::ListParams;
 use kube::runtime::watcher;
 use kube::{Api, Client};
 use log_schema::log_schema;
+use measurable::ByteSizeOf;
 use provider::KubernetesPathsProvider;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 use tail::{Checkpointer, Line};
 
 const fn default_max_read_bytes() -> usize {

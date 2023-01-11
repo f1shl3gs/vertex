@@ -1,6 +1,6 @@
 use std::{iter, slice, vec};
 
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 
 use crate::{
     Attributes, Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Trace, Traces,

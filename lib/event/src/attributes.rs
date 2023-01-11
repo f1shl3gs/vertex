@@ -4,8 +4,8 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes.
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]

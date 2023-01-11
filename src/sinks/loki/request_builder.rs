@@ -5,9 +5,9 @@ use std::io::Write;
 use crate::sinks::loki::sanitize::sanitize_label_value;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::encoding::Encoder;
+use measurable::ByteSizeOf;
 use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
-use shared::ByteSizeOf;
 
 use super::sanitize::sanitize_label_key;
 

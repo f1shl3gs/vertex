@@ -9,7 +9,7 @@ use buffers::{Ackable, Acker};
 use event::Finalizable;
 use futures::Stream;
 use futures_util::{stream::Map, StreamExt};
-use shared::ByteSizeOf;
+use measurable::ByteSizeOf;
 use tower::Service;
 
 use super::request_builder::{IncrementalRequestBuilder, RequestBuilder};

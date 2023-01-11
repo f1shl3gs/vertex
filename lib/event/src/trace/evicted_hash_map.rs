@@ -2,8 +2,8 @@ use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::collections::{HashMap, LinkedList};
 
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::trace::{AnyValue, Key, KeyValue};
 

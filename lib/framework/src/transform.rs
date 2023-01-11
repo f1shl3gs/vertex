@@ -5,8 +5,8 @@ use async_trait::async_trait;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
+use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-use shared::ByteSizeOf;
 
 use crate::config::{DataType, Output, TransformConfig, TransformContext};
 use crate::topology::{ControlChannel, Fanout};
