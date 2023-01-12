@@ -47,12 +47,6 @@ members = [
 ]
 
 [features]
-
-benches = [
-    "sources-syslog",
-    "sinks-loki"
-]
-
 default = [
     "common",
 
@@ -88,6 +82,12 @@ target-x86_64-unknown-linux-gnu = [
 
 common = [
   "disk-buffer"
+]
+
+benches = [
+    "sources-node_metrics",
+    "sources-haproxy",
+    "sinks-loki",
 ]
 
 # Integration tests
@@ -269,7 +269,7 @@ sinks-kafka = ["rdkafka"]
 sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
-sinks-loki = ["snap"]
+sinks-loki = ["snap", "dep:buffers"]
 sinks-vertex = []
 sinks-clickhouse = []
 sinks-socket = []
