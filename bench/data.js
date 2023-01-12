@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673514738891,
+  "lastUpdate": 1673515296969,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -79082,6 +79082,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1270,
+            "unit": "s"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10b027987fbdc1841c9dc38ef47842676b3f8e82",
+          "message": "Merge pull request #702 from f1shl3gs/dependabot/cargo/argh-0.1.10\n\nchore(deps): bump argh from 0.1.9 to 0.1.10",
+          "timestamp": "2023-01-12T16:55:51+08:00",
+          "tree_id": "d7110b3125f247227e0b90d9e3c27377859632d5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10b027987fbdc1841c9dc38ef47842676b3f8e82"
+        },
+        "date": 1673515287096,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1278,
             "unit": "s"
           }
         ]
