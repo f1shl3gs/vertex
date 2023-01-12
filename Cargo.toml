@@ -405,7 +405,7 @@ openssl-probe = { version = "0.1.5", default-features = false }
 pprof = { version = "0.11.0", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
 
 # Cli
-argh = { version = "0.1.9" }
+argh = { version = "0.1.10" }
 colored = { version = "2.0.0", default-features = false }
 
 # External libs
