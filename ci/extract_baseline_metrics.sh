@@ -17,4 +17,4 @@ done
 # shellcheck disable=SC2012
 SIZE=$(ls -all target/release/vertex | awk '{print $5}')
 
-echo "[{\"name\": \"Baseline\", \"unit\": \"s\", \"value\": ${DURATION}}, {\"name\": \"Binary size\", \"unit\": \"bytes\", \"value\": ${SIZE}]"
+echo "[{\"name\": \"Baseline\", \"unit\": \"s\", \"value\": ${DURATION}}, {\"name\": \"Binary size\", \"unit\": \"bytes\", \"value\": ${SIZE}}]"
