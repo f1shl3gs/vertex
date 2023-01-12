@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673527371544,
+  "lastUpdate": 1673527417380,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -79961,6 +79961,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.392,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eeed755d04be30363240cb20492f7c4709b45f18",
+          "message": "Merge pull request #705 from f1shl3gs/add_binary_size_for_baseline\n\nAdd binary size for baseline",
+          "timestamp": "2023-01-12T20:38:40+08:00",
+          "tree_id": "e9166edf52894b6f6a5f8f455355e2711da52cd7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eeed755d04be30363240cb20492f7c4709b45f18"
+        },
+        "date": 1673527409204,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.015,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.967,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.423,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 30.827,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.904,
             "unit": "ns/op"
           }
         ]
