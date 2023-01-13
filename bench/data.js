@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673530399236,
+  "lastUpdate": 1673588931957,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "03c0c0b94dce7f59e5fbc32016db390832f5d3ad",
-          "message": "Merge pull request #410 from f1shl3gs/dependabot/cargo/thrift-0.16.0\n\nchore(deps): bump thrift from 0.15.0 to 0.16.0",
-          "timestamp": "2022-07-05T02:49:26+08:00",
-          "tree_id": "2962d0313889d476ec9087686c1dc99830cb6d01",
-          "url": "https://github.com/f1shl3gs/vertex/commit/03c0c0b94dce7f59e5fbc32016db390832f5d3ad"
-        },
-        "date": 1656961061891,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 1151500,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 727950,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b55db9935e972a9815a407109ab08250eb9568e",
+          "message": "Merge pull request #707 from f1shl3gs/dependabot/cargo/prost-build-0.11.6\n\nchore(deps): bump prost-build from 0.11.5 to 0.11.6",
+          "timestamp": "2023-01-13T13:42:25+08:00",
+          "tree_id": "32af8ae3cae782351b0588ccad1fac115f7fd9e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b55db9935e972a9815a407109ab08250eb9568e"
+        },
+        "date": 1673588923797,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 710390,
             "unit": "ns/op"
           }
         ]
