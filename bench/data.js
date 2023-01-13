@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673589913818,
+  "lastUpdate": 1673605094635,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30422,35 +30422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fd2d7f2015e6d01e72e6b03216c95eaf236379ca",
-          "message": "Merge pull request #464 from f1shl3gs/update_tokio_to_1.20.1\n\nUpdate tokio to 1.20.1",
-          "timestamp": "2022-07-29T01:09:09+08:00",
-          "tree_id": "4f8675aed45eab7b2fd37f8a310749f860cae224",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fd2d7f2015e6d01e72e6b03216c95eaf236379ca"
-        },
-        "date": 1659029732191,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1380,
-            "unit": "s"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "af899a38579b4492613daec68796253a578cbdc8",
           "message": "Merge pull request #466 from f1shl3gs/upgrade_to_rust_1.62.1\n\nupgrade to rust 1.62.1",
           "timestamp": "2022-07-29T16:37:29+08:00",
@@ -36210,6 +36181,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56929936,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b55db9935e972a9815a407109ab08250eb9568e",
+          "message": "Merge pull request #707 from f1shl3gs/dependabot/cargo/prost-build-0.11.6\n\nchore(deps): bump prost-build from 0.11.5 to 0.11.6",
+          "timestamp": "2023-01-13T13:42:25+08:00",
+          "tree_id": "32af8ae3cae782351b0588ccad1fac115f7fd9e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b55db9935e972a9815a407109ab08250eb9568e"
+        },
+        "date": 1673605082965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1255,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56931168,
             "unit": "bytes"
           }
         ]
