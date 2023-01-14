@@ -6,7 +6,7 @@ use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
     Status, StatusCode,
 };
-use event::{attributes::Value, Trace};
+use event::{tags::Value, Trace};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
 use crate::translate::id::to_trace_id;
@@ -38,7 +38,7 @@ impl From<Batch> for Trace {
                     }
                 };
 
-                (event::attributes::Key::from(tag.key), value)
+                (event::tags::Key::from(tag.key), value)
             })
             .collect();
 
@@ -85,7 +85,7 @@ impl From<Span> for event::trace::Span {
             kind,
             start_time: js.start_time * 1000,
             end_time: end_time * 1000,
-            attributes,
+            tags: attributes,
             events: jaeger_logs_to_internal_event(js.logs),
             links: references_to_links(js.references).into(),
             status,

@@ -9,8 +9,8 @@ use annotator::FieldsSpec;
 use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::Utc;
-use event::attributes::Key;
 use event::log::Value;
+use event::tags::Key;
 use event::LogRecord;
 use framework::config::{
     default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,

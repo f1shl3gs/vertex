@@ -4,8 +4,8 @@ use chrono::{DateTime, Utc};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
-use crate::attributes::{Attributes, Key, Value};
 use crate::metadata::EventMetadata;
+use crate::tags::{Key, Tags, Value};
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 pub const INSTANCE_KEY: Key = Key::from_static_str("instance");
@@ -95,7 +95,7 @@ impl MetricValue {
 #[derive(Clone, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Serialize)]
 pub struct MetricSeries {
     pub name: String,
-    pub tags: Attributes,
+    pub tags: Tags,
 }
 
 impl ByteSizeOf for MetricSeries {
@@ -181,7 +181,7 @@ impl Display for Metric {
     /// ```text
     /// 2020-08-12T20:23:37.248661343Z vertex_processed_bytes_total{component_kind="sink",component_type="blackhole"} = 6371
     fn fmt(&self, fmt: &mut Formatter<'_>) -> std::fmt::Result {
-        fn write_tags(fmt: &mut Formatter<'_>, tags: &Attributes) -> std::fmt::Result {
+        fn write_tags(fmt: &mut Formatter<'_>, tags: &Tags) -> std::fmt::Result {
             if tags.is_empty() {
                 return write!(fmt, " ");
             }
@@ -324,7 +324,7 @@ impl Metric {
     pub fn new(
         name: impl ToString,
         description: Option<String>,
-        tags: Attributes,
+        tags: Tags,
         ts: DateTime<Utc>,
         value: MetricValue,
     ) -> Self {
@@ -344,7 +344,7 @@ impl Metric {
     #[inline]
     pub fn new_with_metadata(
         name: String,
-        tags: Attributes,
+        tags: Tags,
         value: MetricValue,
         timestamp: Option<DateTime<Utc>>,
         metadata: EventMetadata,
@@ -357,10 +357,6 @@ impl Metric {
             value,
             metadata,
         }
-    }
-
-    pub fn attributes(&self) -> &Attributes {
-        &self.series.tags
     }
 
     #[inline]
@@ -394,7 +390,7 @@ impl Metric {
         N: Into<String>,
         D: Into<String>,
         V: IntoF64,
-        A: Into<Attributes>,
+        A: Into<Tags>,
     {
         Self {
             series: MetricSeries {
@@ -435,7 +431,7 @@ impl Metric {
         N: Into<String>,
         D: Into<String>,
         V: IntoF64,
-        A: Into<Attributes>,
+        A: Into<Tags>,
     {
         Self {
             series: MetricSeries {
@@ -487,7 +483,7 @@ impl Metric {
     where
         N: Into<String>,
         D: Into<String>,
-        A: Into<Attributes>,
+        A: Into<Tags>,
         C: Into<u64>,
         S: IntoF64,
     {
@@ -582,17 +578,17 @@ impl Metric {
     }
 
     #[inline]
-    pub fn tags(&self) -> &Attributes {
+    pub fn tags(&self) -> &Tags {
         &self.series.tags
     }
 
     #[inline]
-    pub fn tags_mut(&mut self) -> &mut Attributes {
+    pub fn tags_mut(&mut self) -> &mut Tags {
         &mut self.series.tags
     }
 
     #[inline]
-    pub fn with_tags(mut self, tags: Attributes) -> Self {
+    pub fn with_tags(mut self, tags: Tags) -> Self {
         self.series.tags = tags;
         self
     }

@@ -95,12 +95,7 @@ where
     T: PreSampledTracer + 'static,
 {
     /// Creates a `Span` for the corresponding tracing::Span
-    fn on_new_span(
-        &self,
-        attrs: &tracing_core::span::Attributes<'_>,
-        id: &tracing_core::span::Id,
-        ctx: Context<'_, S>,
-    ) {
+    fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, ctx: Context<'_, S>) {
         let span = ctx.span(id).expect("Span not found, this is a bug");
         let mut extensions = span.extensions_mut();
 
@@ -121,15 +116,15 @@ where
         }
 
         if let Some(filename) = metadata.file() {
-            span.attributes.insert("code.filepath", filename);
+            span.tags.insert("code.filepath", filename);
         }
 
         if let Some(module) = metadata.module_path() {
-            span.attributes.insert("code.namespace", module);
+            span.tags.insert("code.namespace", module);
         }
 
         if let Some(line) = metadata.line() {
-            span.attributes.insert("code.lineno", line)
+            span.tags.insert("code.lineno", line)
         }
 
         attrs.record(&mut SpanAttributeVisitor(&mut span));
@@ -208,15 +203,15 @@ where
 
                 if self.event_location {
                     if let Some(file) = metadata.file() {
-                        span.attributes.insert("code.filepath", file);
+                        span.tags.insert("code.filepath", file);
                     }
 
                     if let Some(module) = metadata.module_path() {
-                        span.attributes.insert("code.namespace", module);
+                        span.tags.insert("code.namespace", module);
                     }
 
                     if let Some(line) = metadata.line() {
-                        span.attributes.insert("code.lineno", line);
+                        span.tags.insert("code.lineno", line);
                     }
                 }
 
@@ -270,8 +265,8 @@ where
             if self.tracked_inactivity {
                 // Append busy/idle timings when enabled.
                 if let Some(timings) = extensions.get_mut::<Timings>() {
-                    span.attributes.insert("busy_ns", timings.busy);
-                    span.attributes.insert("idle_ns", timings.idle);
+                    span.tags.insert("busy_ns", timings.busy);
+                    span.tags.insert("idle_ns", timings.idle);
                 }
             }
 
@@ -337,25 +332,23 @@ impl<'a> SpanAttributeVisitor<'a> {}
 
 impl<'a> tracing::field::Visit for SpanAttributeVisitor<'a> {
     fn record_f64(&mut self, field: &Field, value: f64) {
-        self.0.attributes.insert(field.name(), value)
+        self.0.tags.insert(field.name(), value)
     }
 
     fn record_i64(&mut self, field: &Field, value: i64) {
-        self.0.attributes.insert(field.name(), value)
+        self.0.tags.insert(field.name(), value)
     }
 
     fn record_bool(&mut self, field: &Field, value: bool) {
-        self.0.attributes.insert(field.name(), value)
+        self.0.tags.insert(field.name(), value)
     }
 
     fn record_str(&mut self, field: &Field, value: &str) {
-        self.0.attributes.insert(field.name(), value)
+        self.0.tags.insert(field.name(), value)
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.0
-            .attributes
-            .insert(field.name(), format!("{:?}", value))
+        self.0.tags.insert(field.name(), format!("{:?}", value))
     }
 }
 

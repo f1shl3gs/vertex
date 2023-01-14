@@ -5,10 +5,10 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 use tracing::error;
 
-use crate::attributes::Array;
 use crate::metadata::WithMetadata;
 use crate::proto::event_wrapper::Event;
-use crate::{Attributes, Key, LogRecord, MetricValue};
+use crate::tags::Array;
+use crate::{Key, LogRecord, MetricValue, Tags};
 
 fn encode_array(items: Vec<crate::log::Value>) -> ValueArray {
     ValueArray {
@@ -92,21 +92,19 @@ fn decode_array(items: Vec<Value>) -> Option<crate::log::Value> {
     Some(crate::log::Value::Array(accum))
 }
 
-impl From<TagValueArray> for crate::attributes::Array {
+impl From<TagValueArray> for crate::tags::Array {
     fn from(array: TagValueArray) -> Self {
         match array.kind {
-            0 => crate::attributes::Array::Bool(array.bool),
-            1 => crate::attributes::Array::I64(array.i64),
-            2 => crate::attributes::Array::F64(array.f64),
-            3 => {
-                crate::attributes::Array::String(array.string.into_iter().map(Cow::from).collect())
-            }
+            0 => crate::tags::Array::Bool(array.bool),
+            1 => crate::tags::Array::I64(array.i64),
+            2 => crate::tags::Array::F64(array.f64),
+            3 => crate::tags::Array::String(array.string.into_iter().map(Cow::from).collect()),
             _ => unreachable!(), // TryFrom is what we need
         }
     }
 }
 
-impl From<crate::attributes::Array> for TagValueArray {
+impl From<crate::tags::Array> for TagValueArray {
     fn from(array: Array) -> Self {
         match array {
             Array::Bool(b) => TagValueArray {
@@ -133,36 +131,36 @@ impl From<crate::attributes::Array> for TagValueArray {
     }
 }
 
-impl From<TagValue> for crate::attributes::Value {
+impl From<TagValue> for crate::tags::Value {
     fn from(value: TagValue) -> Self {
         match value.value.unwrap() {
-            tag_value::Value::Bool(b) => crate::attributes::Value::Bool(b),
-            tag_value::Value::I64(i) => crate::attributes::Value::I64(i),
-            tag_value::Value::F64(f) => crate::attributes::Value::F64(f),
-            tag_value::Value::String(s) => crate::attributes::Value::String(Cow::from(s)),
-            tag_value::Value::Array(a) => crate::attributes::Value::Array(a.into()),
+            tag_value::Value::Bool(b) => crate::tags::Value::Bool(b),
+            tag_value::Value::I64(i) => crate::tags::Value::I64(i),
+            tag_value::Value::F64(f) => crate::tags::Value::F64(f),
+            tag_value::Value::String(s) => crate::tags::Value::String(Cow::from(s)),
+            tag_value::Value::Array(a) => crate::tags::Value::Array(a.into()),
         }
     }
 }
 
-impl From<crate::attributes::Value> for TagValue {
-    fn from(value: crate::attributes::Value) -> Self {
+impl From<crate::tags::Value> for TagValue {
+    fn from(value: crate::tags::Value) -> Self {
         let tv = match value {
-            crate::attributes::Value::Bool(b) => tag_value::Value::Bool(b),
-            crate::attributes::Value::I64(i) => tag_value::Value::I64(i),
-            crate::attributes::Value::F64(f) => tag_value::Value::F64(f),
-            crate::attributes::Value::String(s) => tag_value::Value::String(s.to_string()),
-            crate::attributes::Value::Array(a) => tag_value::Value::Array(a.into()),
+            crate::tags::Value::Bool(b) => tag_value::Value::Bool(b),
+            crate::tags::Value::I64(i) => tag_value::Value::I64(i),
+            crate::tags::Value::F64(f) => tag_value::Value::F64(f),
+            crate::tags::Value::String(s) => tag_value::Value::String(s.to_string()),
+            crate::tags::Value::Array(a) => tag_value::Value::Array(a.into()),
         };
 
         TagValue { value: Some(tv) }
     }
 }
 
-impl From<BTreeMap<String, TagValue>> for Attributes {
+impl From<BTreeMap<String, TagValue>> for Tags {
     fn from(m: BTreeMap<String, TagValue>) -> Self {
         m.into_iter()
-            .map(|(k, v)| (Key::from(k), crate::attributes::Value::from(v)))
+            .map(|(k, v)| (Key::from(k), crate::tags::Value::from(v)))
             .collect()
     }
 }
@@ -302,7 +300,7 @@ impl From<Metric> for crate::Metric {
 
         let tags = tags
             .into_iter()
-            .map(|(k, v)| (Key::from(k), crate::attributes::Value::from(v)))
+            .map(|(k, v)| (Key::from(k), crate::tags::Value::from(v)))
             .collect();
 
         crate::Metric::new(name, Some(description), tags, timestamp.unwrap(), value)

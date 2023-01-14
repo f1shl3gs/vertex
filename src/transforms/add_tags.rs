@@ -37,7 +37,7 @@ impl AddTags {
 impl FunctionTransform for AddTags {
     fn transform(&mut self, output: &mut OutputBuffer, mut events: Events) {
         events.for_each_event(|event| {
-            let attrs = event.attributes();
+            let attrs = event.tags();
 
             for (key, value) in &self.tags {
                 match (attrs.entry(key), self.overwrite) {

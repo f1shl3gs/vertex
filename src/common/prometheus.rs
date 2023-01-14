@@ -1,5 +1,5 @@
 use chrono::Utc;
-use event::attributes::Attributes;
+use event::tags::Tags;
 use event::{Metric, MetricValue};
 use indexmap::IndexMap;
 use prometheus::{proto, METRIC_NAME_LABEL};
@@ -47,7 +47,7 @@ impl TimeSeries {
         name: &str,
         suffix: Option<&str>,
         value: f64,
-        tags: &Attributes,
+        tags: &Tags,
         extra: Option<(&str, String)>,
     ) {
         let timestamp = timestamp.unwrap_or_else(|| self.default_timestamp());
@@ -128,7 +128,7 @@ impl TimeSeries {
     }
 
     fn make_labels(
-        attrs: &Attributes,
+        attrs: &Tags,
         name: &str,
         suffix: Option<&str>,
         extra: Option<(&str, String)>,

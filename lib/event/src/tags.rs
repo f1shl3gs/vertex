@@ -337,9 +337,9 @@ impl fmt::Display for Value {
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize, Hash, PartialEq, PartialOrd, Eq)]
-pub struct Attributes(BTreeMap<Key, Value>);
+pub struct Tags(BTreeMap<Key, Value>);
 
-impl Attributes {
+impl Tags {
     pub fn new() -> Self {
         Self(BTreeMap::new())
     }
@@ -390,16 +390,16 @@ impl Attributes {
     }
 }
 
-impl FromIterator<(Key, Value)> for Attributes {
+impl FromIterator<(Key, Value)> for Tags {
     fn from_iter<T: IntoIterator<Item = (Key, Value)>>(iter: T) -> Self {
-        let mut attrs = Attributes::default();
+        let mut attrs = Tags::default();
         iter.into_iter().for_each(|(k, v)| attrs.insert(k, v));
 
         attrs
     }
 }
 
-impl From<BTreeMap<String, String>> for Attributes {
+impl From<BTreeMap<String, String>> for Tags {
     fn from(map: BTreeMap<String, String>) -> Self {
         let map = map
             .into_iter()
@@ -410,7 +410,7 @@ impl From<BTreeMap<String, String>> for Attributes {
     }
 }
 
-impl ByteSizeOf for Attributes {
+impl ByteSizeOf for Tags {
     fn allocated_bytes(&self) -> usize {
         self.0
             .iter()
@@ -426,7 +426,7 @@ impl ByteSizeOf for Attributes {
     }
 }
 
-impl<T> std::ops::Index<T> for Attributes
+impl<T> std::ops::Index<T> for Tags
 where
     T: AsRef<str>,
 {
@@ -450,7 +450,7 @@ impl Iterator for IntoIter {
     }
 }
 
-impl IntoIterator for Attributes {
+impl IntoIterator for Tags {
     type Item = (Key, Value);
     type IntoIter = IntoIter;
 
@@ -459,7 +459,7 @@ impl IntoIterator for Attributes {
     }
 }
 
-impl<'a> IntoIterator for &'a Attributes {
+impl<'a> IntoIterator for &'a Tags {
     type Item = (&'a Key, &'a Value);
     type IntoIter = Iter<'a>;
 
@@ -480,7 +480,7 @@ impl<'a> Iterator for Iter<'a> {
     }
 }
 
-pub fn skip_serializing_if_empty(attrs: &Attributes) -> bool {
+pub fn skip_serializing_if_empty(attrs: &Tags) -> bool {
     attrs.0.is_empty()
 }
 
@@ -488,7 +488,7 @@ pub fn skip_serializing_if_empty(attrs: &Attributes) -> bool {
 macro_rules! tags {
     // Done without trailing comma
     ( $($x:expr => $y:expr),* ) => ({
-        let mut _attrs = $crate::attributes::Attributes::new();
+        let mut _attrs = $crate::tags::Tags::new();
         $(
             _attrs.insert($x, $y);
         )*

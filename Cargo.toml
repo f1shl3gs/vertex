@@ -305,9 +305,9 @@ harness = false
 path = "benches/haproxy.rs"
 
 [[bench]]
-name = "attributes"
+name = "tags"
 harness = false
-path = "benches/attributes.rs"
+path = "benches/tags.rs"
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"

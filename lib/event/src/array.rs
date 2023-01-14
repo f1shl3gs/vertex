@@ -3,7 +3,7 @@ use std::{iter, slice, vec};
 use measurable::ByteSizeOf;
 
 use crate::{
-    Attributes, Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Trace, Traces,
+    Event, EventMetadata, EventRef, LogRecord, Logs, Metric, Metrics, Tags, Trace, Traces,
 };
 
 /// An array of one of the `Event` variants exclusively
@@ -221,7 +221,7 @@ impl<'a> EventMutRef<'a> {
         }
     }
 
-    pub fn attributes(self) -> &'a mut Attributes {
+    pub fn tags(self) -> &'a mut Tags {
         match self {
             Self::Log(log) => &mut log.tags,
             Self::Metric(metric) => &mut metric.series.tags,

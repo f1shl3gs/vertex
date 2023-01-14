@@ -272,7 +272,7 @@ pub struct Span {
 
     /// `tags` is a collection of key/value pairs. The value can be a string, an
     /// integer, a double or the Boolean value `true` or `false`.
-    pub attributes: EvictedHashMap,
+    pub tags: EvictedHashMap,
 
     /// `events` is a collection of event items.
     pub events: EvictedQueue<Event>,
@@ -301,7 +301,7 @@ impl Span {
             kind: SpanKind::Client,
             start_time: 0,
             end_time: 0,
-            attributes: EvictedHashMap::new(128, 0),
+            tags: EvictedHashMap::new(128, 0),
             events: EvictedQueue::new(128),
             links: EvictedQueue::new(128),
             status: Status::default(),
@@ -378,8 +378,6 @@ impl Span {
 
 impl ByteSizeOf for Span {
     fn allocated_bytes(&self) -> usize {
-        self.name.allocated_bytes()
-            + self.attributes.allocated_bytes()
-            + self.events.allocated_bytes()
+        self.name.allocated_bytes() + self.tags.allocated_bytes() + self.events.allocated_bytes()
     }
 }

@@ -129,8 +129,8 @@ impl PartialOrd<Self> for ExpiringEntry {
 
 impl Ord for ExpiringEntry {
     fn cmp(&self, other: &Self) -> Ordering {
-        let a = self.attributes();
-        let b = other.attributes();
+        let a = self.tags();
+        let b = other.tags();
 
         a.partial_cmp(b).unwrap_or(Ordering::Greater)
     }

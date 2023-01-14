@@ -7,7 +7,7 @@ use std::time::Instant;
 
 use async_trait::async_trait;
 use chrono::Utc;
-use event::attributes::{Key, Value};
+use event::tags::{Key, Value};
 use event::{tags, Bucket, Metric};
 use framework::config::{
     DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,

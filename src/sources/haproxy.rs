@@ -3,7 +3,7 @@ use std::io::BufRead;
 
 use bytes::Buf;
 use chrono::Utc;
-use event::attributes::Key;
+use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::{
     ticker_from_duration, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig,

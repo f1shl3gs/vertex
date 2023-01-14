@@ -1,7 +1,7 @@
 /// Exposes error detection and correction statistics
 use std::borrow::Cow;
 
-use event::attributes::Key;
+use event::tags::Key;
 use event::{tags, Metric};
 
 use super::{read_into, Error, ErrorContext};
