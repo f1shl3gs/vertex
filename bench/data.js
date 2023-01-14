@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673681567516,
+  "lastUpdate": 1673682838274,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9a40665be1c3868e5f68e67e5497d79a1db847a1",
-          "message": "Merge pull request #411 from f1shl3gs/dependabot/cargo/tracing-subscriber-0.3.14\n\nchore(deps): bump tracing-subscriber from 0.3.12 to 0.3.14",
-          "timestamp": "2022-07-05T02:51:01+08:00",
-          "tree_id": "ddc597fe51e4591449ccf382a6f51f704f627bde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9a40665be1c3868e5f68e67e5497d79a1db847a1"
-        },
-        "date": 1656961172580,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 1142300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 714500,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "863422b677fc640b28009c69d7a28f815f834b0b",
+          "message": "Merge pull request #709 from f1shl3gs/rename_attributes_to_tags\n\nrename attributes to tags",
+          "timestamp": "2023-01-14T15:49:59+08:00",
+          "tree_id": "93ffad583749c9b61cb03c572644bd43702d6ada",
+          "url": "https://github.com/f1shl3gs/vertex/commit/863422b677fc640b28009c69d7a28f815f834b0b"
+        },
+        "date": 1673682830170,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716720,
             "unit": "ns/op"
           }
         ]
