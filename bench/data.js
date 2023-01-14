@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673682952607,
+  "lastUpdate": 1673684088644,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30422,35 +30422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "66081ce648f7eae69fab2e0351b2af3b08b52831",
-          "message": "Merge pull request #467 from f1shl3gs/cleanup_deps_for_event\n\nCleanup deps for event",
-          "timestamp": "2022-07-29T23:30:50+08:00",
-          "tree_id": "66b58f8561334308351a8cd2e612c00c5fb9b42f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/66081ce648f7eae69fab2e0351b2af3b08b52831"
-        },
-        "date": 1659110305749,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1447,
-            "unit": "s"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "94e4f1f4ed69472301ba21b89170e0080cc34450",
           "message": "Merge pull request #468 from f1shl3gs/remove_nom_for_mysqld\n\nremove nom from sources/mysqld",
           "timestamp": "2022-07-30T00:22:26+08:00",
@@ -36220,6 +36191,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56931168,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "863422b677fc640b28009c69d7a28f815f834b0b",
+          "message": "Merge pull request #709 from f1shl3gs/rename_attributes_to_tags\n\nrename attributes to tags",
+          "timestamp": "2023-01-14T15:49:59+08:00",
+          "tree_id": "93ffad583749c9b61cb03c572644bd43702d6ada",
+          "url": "https://github.com/f1shl3gs/vertex/commit/863422b677fc640b28009c69d7a28f815f834b0b"
+        },
+        "date": 1673684078719,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1283,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56930896,
             "unit": "bytes"
           }
         ]
