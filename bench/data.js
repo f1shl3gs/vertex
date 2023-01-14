@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673682860793,
+  "lastUpdate": 1673682878883,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -45528,6 +45528,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "counter",
             "value": 283.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "863422b677fc640b28009c69d7a28f815f834b0b",
+          "message": "Merge pull request #709 from f1shl3gs/rename_attributes_to_tags\n\nrename attributes to tags",
+          "timestamp": "2023-01-14T15:49:59+08:00",
+          "tree_id": "93ffad583749c9b61cb03c572644bd43702d6ada",
+          "url": "https://github.com/f1shl3gs/vertex/commit/863422b677fc640b28009c69d7a28f815f834b0b"
+        },
+        "date": 1673682868362,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "counter",
+            "value": 110.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "counter",
+            "value": 241.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "counter",
+            "value": 392.75,
             "unit": "ns/op"
           }
         ]
