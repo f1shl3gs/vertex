@@ -1,7 +1,9 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 
 pub fn register(c: &mut Criterion) {
-    c.bench_function("counter without labels", |b| {
+    let mut group = c.benchmark_group("metrics");
+
+    group.bench_function("without_labels", |b| {
         b.iter(|| {
             metrics::register_counter("foo", "foo description")
                 .recorder(&[])
@@ -9,7 +11,7 @@ pub fn register(c: &mut Criterion) {
         })
     });
 
-    c.bench_function("counter with 2 labels", |b| {
+    group.bench_function("with_2_labels", |b| {
         b.iter(|| {
             metrics::register_counter("counter2", "counter 2 description")
                 .recorder(&[("key1", "value"), ("key2", "value")])
@@ -17,7 +19,7 @@ pub fn register(c: &mut Criterion) {
         })
     });
 
-    c.bench_function("counter with 4 labels", |b| {
+    group.bench_function("with_4_labels", |b| {
         b.iter(|| {
             metrics::register_counter("counter2", "counter 2 description")
                 .recorder(&[
