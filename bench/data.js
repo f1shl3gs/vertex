@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673709593510,
+  "lastUpdate": 1673709677419,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -223,6 +223,67 @@ window.BENCHMARK_DATA = {
             "name": "Binary size",
             "value": 56930896,
             "unit": "bytes"
+          }
+        ]
+      }
+    ],
+    "vertex": [
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "49dfea83db53aeefe58e59116dfd484c0852e188",
+          "message": "Merge pull request #710 from f1shl3gs/fix_bench_charts_name\n\nfix bench name",
+          "timestamp": "2023-01-14T22:59:04+08:00",
+          "tree_id": "7abdd153c16fac584f3033b1748d455a947b0c3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/49dfea83db53aeefe58e59116dfd484c0852e188"
+        },
+        "date": 1673709669539,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 44082000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1011700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.415,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 57.009,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 404.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1164.9,
+            "unit": "ns/op"
           }
         ]
       }
