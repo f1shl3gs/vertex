@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673684088644,
+  "lastUpdate": 1673684098989,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18620,65 +18620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9cbe2e5ca26fdce6b55ca91444b05c0d01f64b74",
-          "message": "Merge pull request #354 from f1shl3gs/dependabot/cargo/parking_lot-0.12.1\n\nchore(deps): bump parking_lot from 0.12.0 to 0.12.1",
-          "timestamp": "2022-06-01T02:00:19+08:00",
-          "tree_id": "b586d985607c08c7b2df51c14ad31a1a00903c3f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9cbe2e5ca26fdce6b55ca91444b05c0d01f64b74"
-        },
-        "date": 1654021817272,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "attributes/insert",
-            "value": 60.533,
-            "unit": "ns/op"
-          },
-          {
-            "name": "attributes/insert",
-            "value": 194.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "attributes/insert",
-            "value": 434.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "attributes/insert",
-            "value": 1211.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "haproxy/parse_csv",
-            "value": 44632000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1050200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.032,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ef3db94fbd595837a0a214cb7ea98eb0e604e0a5",
           "message": "Merge pull request #355 from f1shl3gs/dependabot/cargo/listenfd-1.0.0\n\nchore(deps): bump listenfd from 0.5.0 to 1.0.0",
           "timestamp": "2022-06-01T15:24:08+08:00",
@@ -30403,6 +30344,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.034,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "863422b677fc640b28009c69d7a28f815f834b0b",
+          "message": "Merge pull request #709 from f1shl3gs/rename_attributes_to_tags\n\nrename attributes to tags",
+          "timestamp": "2023-01-14T15:49:59+08:00",
+          "tree_id": "93ffad583749c9b61cb03c572644bd43702d6ada",
+          "url": "https://github.com/f1shl3gs/vertex/commit/863422b677fc640b28009c69d7a28f815f834b0b"
+        },
+        "date": 1673684088503,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 35354000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1136900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 64.179,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 208.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 474.19,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1353.2,
             "unit": "ns/op"
           }
         ]
