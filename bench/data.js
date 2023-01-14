@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673681525483,
+  "lastUpdate": 1673681567516,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30422,35 +30422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "af899a38579b4492613daec68796253a578cbdc8",
-          "message": "Merge pull request #466 from f1shl3gs/upgrade_to_rust_1.62.1\n\nupgrade to rust 1.62.1",
-          "timestamp": "2022-07-29T16:37:29+08:00",
-          "tree_id": "3f42ea9f9862813f05e8fcae79f43140ef51f542",
-          "url": "https://github.com/f1shl3gs/vertex/commit/af899a38579b4492613daec68796253a578cbdc8"
-        },
-        "date": 1659085501446,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1445,
-            "unit": "s"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "66081ce648f7eae69fab2e0351b2af3b08b52831",
           "message": "Merge pull request #467 from f1shl3gs/cleanup_deps_for_event\n\nCleanup deps for event",
           "timestamp": "2022-07-29T23:30:50+08:00",
@@ -36210,6 +36181,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1255,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56931168,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3561d92acdcbed5e1c41171ae7d2cf171403b098",
+          "message": "Merge pull request #708 from f1shl3gs/bench-metrics\n\nBench metrics",
+          "timestamp": "2023-01-14T15:12:29+08:00",
+          "tree_id": "ecaa6c6abb616870dd03534e545ac1966aa8f936",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3561d92acdcbed5e1c41171ae7d2cf171403b098"
+        },
+        "date": 1673681559119,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1033,
             "unit": "s"
           },
           {
