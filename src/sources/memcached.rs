@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::Instant;
 
-use event::attributes::Key;
+use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::{
     ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,

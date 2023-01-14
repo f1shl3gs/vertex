@@ -79,7 +79,7 @@ impl From<event::trace::Span> for Span {
             start_time: span.start_time / 1000,
             duration: (span.end_time - span.start_time) / 1000,
             tags: Some(build_span_tags(
-                span.attributes,
+                span.tags,
                 span.status.status_code,
                 span.status.message.into_owned(),
                 span.kind,

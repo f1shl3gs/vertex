@@ -476,8 +476,8 @@ mod tests {
     use super::*;
     use crate::testing::trace_init;
     use encoding_rs::UTF_16LE;
-    use event::attributes::Key;
     use event::log::Value;
+    use event::tags::Key;
     use event::EventStatus;
     use framework::{Pipeline, ShutdownSignal};
     use multiline::Mode;

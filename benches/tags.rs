@@ -1,24 +1,16 @@
 use criterion::{criterion_group, criterion_main, Criterion};
-use event::attributes::{Attributes, Key};
+use event::tags::{Key, Tags};
 
 fn bench_insert(c: &mut Criterion) {
-    let mut group = c.benchmark_group("attributes");
+    let mut group = c.benchmark_group("tags");
 
-    group.bench_function("insert 1", |b| {
-        b.iter(|| insert_keys(Attributes::default(), 1))
-    });
+    group.bench_function("insert/1", |b| b.iter(|| insert_keys(Tags::default(), 1)));
 
-    group.bench_function("insert 5", |b| {
-        b.iter(|| insert_keys(Attributes::default(), 5))
-    });
+    group.bench_function("insert/5", |b| b.iter(|| insert_keys(Tags::default(), 5)));
 
-    group.bench_function("insert 10", |b| {
-        b.iter(|| insert_keys(Attributes::default(), 10))
-    });
+    group.bench_function("insert/10", |b| b.iter(|| insert_keys(Tags::default(), 10)));
 
-    group.bench_function("insert 20", |b| {
-        b.iter(|| insert_keys(Attributes::default(), 20))
-    });
+    group.bench_function("insert/20", |b| b.iter(|| insert_keys(Tags::default(), 20)));
 }
 
 const MAP_KEYS: [Key; 20] = [
@@ -44,7 +36,7 @@ const MAP_KEYS: [Key; 20] = [
     Key::from_static_str("key20"),
 ];
 
-fn insert_keys(mut attrs: Attributes, n: usize) {
+fn insert_keys(mut attrs: Tags, n: usize) {
     for (i, key) in MAP_KEYS.into_iter().enumerate().take(n) {
         attrs.insert(key, i as i64)
     }

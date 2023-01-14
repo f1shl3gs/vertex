@@ -1,4 +1,4 @@
-use event::attributes::Key;
+use event::tags::Key;
 use event::LogRecord;
 use framework::config::GenerateConfig;
 use k8s_openapi::{

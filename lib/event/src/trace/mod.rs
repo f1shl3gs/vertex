@@ -13,7 +13,7 @@ use std::str::FromStr;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
-use crate::attributes::Attributes;
+use crate::tags::Tags;
 use crate::{
     BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
 };
@@ -532,7 +532,7 @@ impl fmt::LowerHex for TraceFlags {
 pub struct Trace {
     pub service: Cow<'static, str>,
 
-    pub tags: Attributes,
+    pub tags: Tags,
 
     pub spans: Vec<Span>,
 
@@ -561,7 +561,7 @@ impl EventDataEq for Trace {
 }
 
 impl Trace {
-    pub fn new(service: impl Into<Cow<'static, str>>, tags: Attributes, spans: Vec<Span>) -> Trace {
+    pub fn new(service: impl Into<Cow<'static, str>>, tags: Tags, spans: Vec<Span>) -> Trace {
         Self {
             service: service.into(),
             tags,

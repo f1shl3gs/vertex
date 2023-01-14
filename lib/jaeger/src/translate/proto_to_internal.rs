@@ -1,6 +1,6 @@
 use base64::engine::general_purpose::STANDARD as BASE64_STANDARD;
 use base64::Engine;
-use event::attributes::{Attributes, Value};
+use event::tags::{Tags, Value};
 use event::{
     trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId, SpanKind, TraceId, TraceState},
     Trace,
@@ -46,7 +46,7 @@ impl From<proto::Span> for event::trace::Span {
             kind,
             start_time,
             end_time,
-            attributes,
+            tags: attributes,
             events: span.logs.into_iter().map(Into::into).collect(),
             links: Default::default(),
             status: Default::default(),
@@ -74,13 +74,13 @@ impl From<proto::Batch> for Trace {
                             Value::from(BASE64_STANDARD.encode(kv.v_binary))
                         };
 
-                        (event::attributes::Key::new(kv.key), value)
+                        (event::tags::Key::new(kv.key), value)
                     })
                     .collect();
 
                 (process.service_name, attrs)
             }
-            None => (String::new(), Attributes::default()),
+            None => (String::new(), Tags::default()),
         };
 
         let spans = batch.spans.into_iter().map(Into::into).collect();

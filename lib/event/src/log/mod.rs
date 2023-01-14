@@ -12,8 +12,8 @@ use serde::{Deserialize, Serialize};
 use tracing::field::Field;
 pub use value::Value;
 
-use crate::attributes::{skip_serializing_if_empty, Attributes, Key};
 use crate::metadata::EventMetadata;
+use crate::tags::{skip_serializing_if_empty, Key, Tags};
 use crate::MaybeAsLogMut;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 use value::keys::{all_fields, keys};
@@ -24,7 +24,7 @@ pub type Logs = Vec<LogRecord>;
 #[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct LogRecord {
     #[serde(skip_serializing_if = "skip_serializing_if_empty")]
-    pub tags: Attributes,
+    pub tags: Tags,
 
     pub fields: Value,
 
@@ -143,7 +143,7 @@ impl Finalizable for LogRecord {
 }
 
 impl LogRecord {
-    pub fn new(tags: Attributes, fields: BTreeMap<String, Value>) -> Self {
+    pub fn new(tags: Tags, fields: BTreeMap<String, Value>) -> Self {
         Self {
             tags,
             fields: fields.into(),
@@ -152,7 +152,7 @@ impl LogRecord {
     }
 
     #[inline]
-    pub fn into_parts(self) -> (Attributes, Value, EventMetadata) {
+    pub fn into_parts(self) -> (Tags, Value, EventMetadata) {
         (self.tags, self.fields, self.metadata)
     }
 
@@ -162,12 +162,12 @@ impl LogRecord {
     }
 
     #[inline]
-    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::attributes::Value>) {
+    pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::tags::Value>) {
         self.tags.insert(key, value)
     }
 
     #[inline]
-    pub fn get_tag(&self, key: &Key) -> Option<&crate::attributes::Value> {
+    pub fn get_tag(&self, key: &Key) -> Option<&crate::tags::Value> {
         self.tags.get(key)
     }
 

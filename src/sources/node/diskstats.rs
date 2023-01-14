@@ -3,7 +3,7 @@
 /// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
 use std::borrow::Cow;
 
-use event::{attributes::Key, tags, Metric};
+use event::{tags, tags::Key, Metric};
 use framework::config::{deserialize_regex, serialize_regex};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;

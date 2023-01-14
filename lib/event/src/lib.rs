@@ -1,11 +1,11 @@
 pub mod array;
-pub mod attributes;
 mod finalization;
 pub mod log;
 mod logfmt;
 mod metadata;
 mod metric;
 pub mod proto;
+pub mod tags;
 pub mod trace;
 
 // re-export
@@ -28,8 +28,8 @@ use log_schema::log_schema;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
-use crate::attributes::{Attributes, Key};
 use crate::log::Logs;
+use crate::tags::{Key, Tags};
 
 #[derive(PartialEq, Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -139,7 +139,7 @@ impl Event {
         }
     }
 
-    pub fn tags(&self) -> &Attributes {
+    pub fn tags(&self) -> &Tags {
         match self {
             Event::Log(log) => &log.tags,
             Event::Metric(metric) => metric.tags(),
@@ -147,7 +147,7 @@ impl Event {
         }
     }
 
-    pub fn tags_mut(&mut self) -> &mut Attributes {
+    pub fn tags_mut(&mut self) -> &mut Tags {
         match self {
             Event::Log(log) => &mut log.tags,
             Event::Metric(metric) => metric.tags_mut(),
@@ -155,7 +155,7 @@ impl Event {
         }
     }
 
-    pub fn tag_entry(&mut self, key: impl Into<Key>) -> btree_map::Entry<Key, attributes::Value> {
+    pub fn tag_entry(&mut self, key: impl Into<Key>) -> btree_map::Entry<Key, tags::Value> {
         match self {
             Self::Log(log) => log.tags.entry(key),
             Self::Metric(metric) => metric.series.tags.entry(key),

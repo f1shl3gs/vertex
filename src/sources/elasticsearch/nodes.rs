@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 use std::time::Instant;
 
-use event::attributes::Attributes;
+use event::tags::Tags;
 use event::{tags, Metric};
 use serde::Deserialize;
 
@@ -544,7 +544,7 @@ impl Elasticsearch {
     }
 }
 
-fn os_metrics(tags: Attributes, stats: Os) -> Vec<Metric> {
+fn os_metrics(tags: Tags, stats: Os) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_os_load1",
@@ -597,7 +597,7 @@ fn os_metrics(tags: Attributes, stats: Os) -> Vec<Metric> {
     ]
 }
 
-fn indices_metrics(tags: Attributes, indices: Indices) -> Vec<Metric> {
+fn indices_metrics(tags: Tags, indices: Indices) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_indices_fielddata_memory_size_bytes",
@@ -998,7 +998,7 @@ fn indices_metrics(tags: Attributes, indices: Indices) -> Vec<Metric> {
     ]
 }
 
-fn jvm_metrics(tags: Attributes, mut jvm: Jvm) -> Vec<Metric> {
+fn jvm_metrics(tags: Tags, mut jvm: Jvm) -> Vec<Metric> {
     let young = jvm.mem.pools.remove("young").unwrap_or_default();
     let old = jvm.mem.pools.remove("old").unwrap_or_default();
     let survivor = jvm.mem.pools.remove("survivor").unwrap_or_default();
@@ -1134,7 +1134,7 @@ fn jvm_metrics(tags: Attributes, mut jvm: Jvm) -> Vec<Metric> {
     metrics
 }
 
-fn process_metrics(tags: Attributes, process: Process) -> Vec<Metric> {
+fn process_metrics(tags: Tags, process: Process) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_process_cpu_percent",
@@ -1181,7 +1181,7 @@ fn process_metrics(tags: Attributes, process: Process) -> Vec<Metric> {
     ]
 }
 
-fn transport_metrics(tags: Attributes, transport: Transport) -> Vec<Metric> {
+fn transport_metrics(tags: Tags, transport: Transport) -> Vec<Metric> {
     vec![
         Metric::sum_with_tags(
             "elasticsearch_transport_rx_packets_total",
@@ -1210,7 +1210,7 @@ fn transport_metrics(tags: Attributes, transport: Transport) -> Vec<Metric> {
     ]
 }
 
-fn gc_metrics(tags: Attributes, stats: JvmGcCollector) -> Vec<Metric> {
+fn gc_metrics(tags: Tags, stats: JvmGcCollector) -> Vec<Metric> {
     vec![
         Metric::sum_with_tags(
             "elasticsearch_jvm_gc_collection_seconds_count",
@@ -1227,7 +1227,7 @@ fn gc_metrics(tags: Attributes, stats: JvmGcCollector) -> Vec<Metric> {
     ]
 }
 
-fn breaker_metrics(tags: Attributes, stats: Breaker) -> Vec<Metric> {
+fn breaker_metrics(tags: Tags, stats: Breaker) -> Vec<Metric> {
     vec![
         Metric::gauge_with_tags(
             "elasticsearch_breakers_estimated_size_bytes",
@@ -1256,7 +1256,7 @@ fn breaker_metrics(tags: Attributes, stats: Breaker) -> Vec<Metric> {
     ]
 }
 
-fn thread_pool_metrics(tags: Attributes, stats: ThreadPool) -> Vec<Metric> {
+fn thread_pool_metrics(tags: Tags, stats: ThreadPool) -> Vec<Metric> {
     vec![
         Metric::sum_with_tags(
             "elasticsearch_thread_pool_completed_count",
@@ -1297,7 +1297,7 @@ fn thread_pool_metrics(tags: Attributes, stats: ThreadPool) -> Vec<Metric> {
     ]
 }
 
-fn filesystem_data_metrics(mut tags: Attributes, stats: FsData) -> Vec<Metric> {
+fn filesystem_data_metrics(mut tags: Tags, stats: FsData) -> Vec<Metric> {
     tags.insert("mount", stats.mount);
     tags.insert("path", stats.path);
 
@@ -1323,7 +1323,7 @@ fn filesystem_data_metrics(mut tags: Attributes, stats: FsData) -> Vec<Metric> {
     ]
 }
 
-fn filesystem_io_metrics(mut tags: Attributes, stats: FsIoStatsDevice) -> Vec<Metric> {
+fn filesystem_io_metrics(mut tags: Tags, stats: FsIoStatsDevice) -> Vec<Metric> {
     tags.insert("device", stats.device_name);
 
     vec![

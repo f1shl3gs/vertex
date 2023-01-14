@@ -6,7 +6,7 @@ use std::time::Duration;
 use async_stream::stream;
 use async_trait::async_trait;
 use chrono::Utc;
-use event::attributes::Attributes;
+use event::tags::Tags;
 use event::{
     log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
 };
@@ -91,7 +91,7 @@ impl MetricConfig {
             _ => return None,
         };
 
-        let mut attrs = Attributes::new();
+        let mut attrs = Tags::new();
         for (k, v) in tags {
             let value = match log.get_field(v.as_str()) {
                 Some(value) => value.to_string_lossy(),

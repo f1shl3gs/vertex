@@ -3,7 +3,7 @@ use std::fmt::{Debug, Formatter};
 
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
-use event::attributes::{Key, Value};
+use event::tags::{Key, Value};
 use event::{EventContainer, Events};
 use framework::config::{DataType, GenerateConfig, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
@@ -215,7 +215,7 @@ impl FunctionTransform for Cardinality {
             'outer: for mut metric in metrics {
                 let mut to_delete = vec![];
 
-                for (k, v) in metric.attributes() {
+                for (k, v) in metric.tags() {
                     if !self.try_accept_tag(k, v) {
                         // reject
                         match self.action {
