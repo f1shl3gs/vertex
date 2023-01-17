@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1673953155279,
+  "lastUpdate": 1673953192390,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -305,6 +305,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.596,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7f8de1b0269da75a24928b9741533700bd39f5d9",
+          "message": "Merge pull request #711 from f1shl3gs/dependabot/cargo/nom-7.1.3\n\nchore(deps): bump nom from 7.1.2 to 7.1.3",
+          "timestamp": "2023-01-17T18:55:16+08:00",
+          "tree_id": "b4dc84ffb1eaa4f9a1218afab4c848d58ae4a98f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7f8de1b0269da75a24928b9741533700bd39f5d9"
+        },
+        "date": 1673953184242,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.934,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.213,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.063,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.073,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.437,
             "unit": "ns/op"
           }
         ]
