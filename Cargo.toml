@@ -311,7 +311,7 @@ path = "benches/tags.rs"
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
-nix = "0.26.1"
+nix = "0.26.2"
 
 [build-dependencies]
 prost-build = { version = "0.11.6" }
