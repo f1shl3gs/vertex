@@ -619,7 +619,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_path_to_error",
- "serde_yaml 0.9.16",
+ "serde_yaml 0.9.17",
  "smallvec",
  "syslog_loose",
  "tokio",
@@ -1244,7 +1244,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_regex",
- "serde_yaml 0.9.16",
+ "serde_yaml 0.9.17",
  "smallvec",
  "snap",
  "socket2",
@@ -2345,7 +2345,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_regex",
- "serde_yaml 0.9.16",
+ "serde_yaml 0.9.17",
  "tokio",
  "tokio-util 0.7.4",
 ]
@@ -3685,9 +3685,9 @@ dependencies = [
 
 [[package]]
 name = "serde_yaml"
-version = "0.9.16"
+version = "0.9.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92b5b431e8907b50339b51223b97d102db8d987ced36f6e4d03621db9316c834"
+checksum = "8fb06d4b6cdaef0e0c51fa881acb721bed3c924cfaa71d9c94a3b771dfdf6567"
 dependencies = [
  "indexmap",
  "itoa 1.0.1",
@@ -4809,7 +4809,7 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_path_to_error",
- "serde_yaml 0.9.16",
+ "serde_yaml 0.9.17",
  "smallvec",
  "snap",
  "sqlx",
