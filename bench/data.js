@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1674210468738,
+  "lastUpdate": 1674210508293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -656,6 +656,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.463,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2bd2e6cd9c3eda572a47496fd72831532a7a3455",
+          "message": "Merge pull request #715 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.17\n\nchore(deps): bump serde_yaml from 0.9.16 to 0.9.17",
+          "timestamp": "2023-01-20T18:22:47+08:00",
+          "tree_id": "3e59d0ee6440fdf02d53cc968578da34a3ebd5bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2bd2e6cd9c3eda572a47496fd72831532a7a3455"
+        },
+        "date": 1674210497796,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.197,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.356,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.254,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.654,
             "unit": "ns/op"
           }
         ]
