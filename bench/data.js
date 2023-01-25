@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1674677715796,
+  "lastUpdate": 1674677721692,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -584,6 +584,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 281.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "02402ff53b962ace61150a547882d882661042d7",
+          "message": "Merge pull request #719 from f1shl3gs/dependabot/cargo/num_enum-0.5.9\n\nchore(deps): bump num_enum from 0.5.7 to 0.5.9",
+          "timestamp": "2023-01-26T04:11:38+08:00",
+          "tree_id": "bc1aaefe03526f4bb0e77021c6131940f4f52ee7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/02402ff53b962ace61150a547882d882661042d7"
+        },
+        "date": 1674677713095,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 97.083,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 177.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 281.59,
             "unit": "ns/op"
           }
         ]
