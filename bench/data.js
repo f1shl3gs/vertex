@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1674907012475,
+  "lastUpdate": 1674907044059,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2338,6 +2338,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56930624,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a63041eb89989c73fad11259daf1fdc452b34f33",
+          "message": "Merge pull request #716 from f1shl3gs/dependabot/cargo/bumpalo-3.12.0\n\nchore(deps): bump bumpalo from 3.7.0 to 3.12.0",
+          "timestamp": "2023-01-28T19:36:15+08:00",
+          "tree_id": "bf0b954d8e5bcc3811c54fbfebd00fc31f8be138",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a63041eb89989c73fad11259daf1fdc452b34f33"
+        },
+        "date": 1674907035368,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1064,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56929480,
             "unit": "bytes"
           }
         ]
