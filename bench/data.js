@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675106298371,
+  "lastUpdate": 1675106330491,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2475,6 +2475,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 261480,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "722f7865735b268f1eb537fb773c10b7c8121032",
+          "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
+          "timestamp": "2023-01-31T03:13:06+08:00",
+          "tree_id": "ac8a93f56ade88f74b517ca18edecd5684914f20",
+          "url": "https://github.com/f1shl3gs/vertex/commit/722f7865735b268f1eb537fb773c10b7c8121032"
+        },
+        "date": 1675106320879,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 545.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 51304,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 264990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 558610,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 299.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 29489,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 153750,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 297260,
             "unit": "ns/op"
           }
         ]
