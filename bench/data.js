@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675108023433,
+  "lastUpdate": 1675108055195,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1709,6 +1709,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.996,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4198c1ca299e06df3f10a48f88d3d4104ef681da",
+          "message": "Merge pull request #722 from f1shl3gs/dependabot/cargo/notify-5.1.0\n\nchore(deps): bump notify from 5.0.0 to 5.1.0",
+          "timestamp": "2023-01-31T03:42:03+08:00",
+          "tree_id": "1a1c5c263e18de22de23a34793cfe37956314126",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4198c1ca299e06df3f10a48f88d3d4104ef681da"
+        },
+        "date": 1675108045025,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.273,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.681,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.024,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.972,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.346,
             "unit": "ns/op"
           }
         ]
