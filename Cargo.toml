@@ -203,7 +203,7 @@ sources-memcached = []
 sources-mongodb = []
 sources-mysqld = ["sqlx"]
 sources-nginx_stub = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys"]
+sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "netlink-packet-core"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-nvidia_smi = ["serde-xml-rs"]
 sources-pulsar = []
@@ -393,6 +393,7 @@ serde-xml-rs = { version = "0.6", default-features = false, optional = true }
 # Netlink
 netlink-sys = { version = "0.8.4", features = ["tokio_socket"], optional = true }
 netlink-packet-sock-diag = { version = "0.4.1", optional = true }
+netlink-packet-core = { version = "0.5.0", optional = true }
 
 # Protobuf
 prost = { version = "0.11.6", default-features = false, features = ["std"] }

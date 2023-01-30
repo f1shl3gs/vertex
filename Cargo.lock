@@ -4784,6 +4784,7 @@ dependencies = [
  "metrics",
  "mimalloc",
  "multiline",
+ "netlink-packet-core",
  "netlink-packet-sock-diag",
  "netlink-sys",
  "nix 0.26.2",
