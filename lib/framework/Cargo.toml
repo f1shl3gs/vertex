@@ -95,5 +95,5 @@ url = { version = "2.3.1", features = ["serde"] }
 
 [target.'cfg(unix)'.dependencies]
 atty = "0.2.14"
-notify = { version = "5.0.0" }
+notify = { version = "5.1.0" }
 nix = { version = "0.26.2" }
