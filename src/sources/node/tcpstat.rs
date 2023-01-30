@@ -1,8 +1,13 @@
 use event::{tags, Metric};
+use netlink_packet_core::{
+    constants::{NLM_F_DUMP, NLM_F_REQUEST},
+    NetlinkHeader, NetlinkMessage, NetlinkPayload,
+};
 use netlink_packet_sock_diag::{
-    constants::*,
     inet::{ExtensionFlags, InetRequest, SocketId, StateFlags},
-    NetlinkHeader, NetlinkMessage, NetlinkPayload, SockDiagMessage, NLM_F_DUMP, NLM_F_REQUEST,
+    SockDiagMessage, AF_INET, AF_INET6, IPPROTO_TCP, TCP_CLOSE, TCP_CLOSE_WAIT, TCP_CLOSING,
+    TCP_ESTABLISHED, TCP_FIN_WAIT1, TCP_FIN_WAIT2, TCP_LAST_ACK, TCP_LISTEN, TCP_SYN_RECV,
+    TCP_SYN_SENT, TCP_TIME_WAIT,
 };
 use netlink_sys::{protocols::NETLINK_SOCK_DIAG, AsyncSocket, AsyncSocketExt, TokioSocket};
 
@@ -72,10 +77,8 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
     let mut stats = Statistics::default();
     let mut socket = TokioSocket::new(NETLINK_SOCK_DIAG).unwrap();
 
-    let header = NetlinkHeader {
-        flags: NLM_F_REQUEST | NLM_F_DUMP,
-        ..Default::default()
-    };
+    let mut header = NetlinkHeader::default();
+    header.flags = NLM_F_REQUEST | NLM_F_DUMP;
 
     let socket_id = match family {
         AF_INET => SocketId::new_v4(),
@@ -83,9 +86,9 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
         _ => panic!("unknown family"),
     };
 
-    let mut packet = NetlinkMessage {
+    let mut packet = NetlinkMessage::new(
         header,
-        payload: SockDiagMessage::InetRequest(InetRequest {
+        SockDiagMessage::InetRequest(InetRequest {
             family,
             protocol: IPPROTO_TCP,
             extensions: ExtensionFlags::empty(),
@@ -93,7 +96,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
             socket_id,
         })
         .into(),
-    };
+    );
 
     packet.finalize();
 

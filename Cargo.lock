@@ -2358,9 +2358,9 @@ checksum = "e5ce46fe64a9d73be07dcbe690a38ce1b293be448fd8ce1e6c1b8062c9f72c6a"
 
 [[package]]
 name = "netlink-packet-core"
-version = "0.4.1"
+version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8349128e95f5dabcb8a18587ad06b3ca7993e90c0c360b4a2abac0313ebce727"
+checksum = "7e5cf0b54effda4b91615c40ff0fd12d0d4c9a6e0f5116874f03941792ff535a"
 dependencies = [
  "anyhow",
  "byteorder",
@@ -2370,9 +2370,9 @@ dependencies = [
 
 [[package]]
 name = "netlink-packet-sock-diag"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "724ff241faf54c9abcf74b14d3fcb6e3ff6067c684e7f3924f2d2e99692573c2"
+checksum = "f7cda6f6ccb6eb273a18695bee7aab8b57ff0158a642019b726048be3bdef8fc"
 dependencies = [
  "anyhow",
  "bitflags",
@@ -2385,9 +2385,9 @@ dependencies = [
 
 [[package]]
 name = "netlink-packet-utils"
-version = "0.5.0"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a008a56eceb0cab06739c7f37f15bda27f1147a14d0e7136e8c913b94f1441d"
+checksum = "0ede8a08c71ad5a95cdd0e4e52facd37190977039a4704eb82a283f713747d34"
 dependencies = [
  "anyhow",
  "byteorder",
@@ -4784,6 +4784,7 @@ dependencies = [
  "metrics",
  "mimalloc",
  "multiline",
+ "netlink-packet-core",
  "netlink-packet-sock-diag",
  "netlink-sys",
  "nix 0.26.2",
