@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675136342046,
+  "lastUpdate": 1675136422787,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1826,6 +1826,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.346,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d6b53f22945b69f1fa4ebdf4c035b204c45e9594",
+          "message": "Merge pull request #725 from f1shl3gs/remove_indoc\n\nremove indoc",
+          "timestamp": "2023-01-31T11:34:48+08:00",
+          "tree_id": "2634cc65c57c5aecb3151e3e87407416eb8bc764",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d6b53f22945b69f1fa4ebdf4c035b204c45e9594"
+        },
+        "date": 1675136413190,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.333,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.909,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.812,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.497,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 61.151,
             "unit": "ns/op"
           }
         ]
