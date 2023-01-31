@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675137356288,
+  "lastUpdate": 1675137382644,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3408,6 +3408,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1035,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56929496,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36f366bfd74eed6d131806a371004245fe324f8f",
+          "message": "Merge pull request #726 from f1shl3gs/dependabot/github_actions/docker/build-push-action-4\n\nchore(ci): bump docker/build-push-action from 3 to 4",
+          "timestamp": "2023-01-31T11:35:40+08:00",
+          "tree_id": "25ca442111e8facb06b290756661510d4cc965b1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36f366bfd74eed6d131806a371004245fe324f8f"
+        },
+        "date": 1675137373914,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1043,
             "unit": "s"
           },
           {
