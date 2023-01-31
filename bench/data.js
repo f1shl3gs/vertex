@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675136469220,
+  "lastUpdate": 1675137356288,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4300,6 +4300,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1181.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d6b53f22945b69f1fa4ebdf4c035b204c45e9594",
+          "message": "Merge pull request #725 from f1shl3gs/remove_indoc\n\nremove indoc",
+          "timestamp": "2023-01-31T11:34:48+08:00",
+          "tree_id": "2634cc65c57c5aecb3151e3e87407416eb8bc764",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d6b53f22945b69f1fa4ebdf4c035b204c45e9594"
+        },
+        "date": 1675137348268,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 40896000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1334000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.361,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 54.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 175.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 416.4,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1176.4,
             "unit": "ns/op"
           }
         ]
