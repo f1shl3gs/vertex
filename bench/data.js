@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675240270800,
+  "lastUpdate": 1675240633929,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1361,6 +1361,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 281.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31dc04d0dc00638ae628508597b1d1b042492942",
+          "message": "Merge pull request #732 from f1shl3gs/bump_bytes_to_1.4.0\n\nupdate bytes to 1.4.0",
+          "timestamp": "2023-02-01T16:33:08+08:00",
+          "tree_id": "049a53009d32abc190fb8264ede0a9370bc3cd92",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31dc04d0dc00638ae628508597b1d1b042492942"
+        },
+        "date": 1675240625331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 96.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 176.59,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 280.9,
             "unit": "ns/op"
           }
         ]
