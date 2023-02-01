@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675240155209,
+  "lastUpdate": 1675240228243,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2294,6 +2294,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.764,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fd236090050024f6868bf5f5f64f0b59fc0b14a1",
+          "message": "Merge pull request #731 from f1shl3gs/dependabot/cargo/bytes-1.4.0\n\nchore(deps): bump bytes from 1.3.0 to 1.4.0",
+          "timestamp": "2023-02-01T16:24:59+08:00",
+          "tree_id": "3c3808d61c4622bce0ec3f6b0d4628fcb3e1b0c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fd236090050024f6868bf5f5f64f0b59fc0b14a1"
+        },
+        "date": 1675240218751,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.224,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.899,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.642,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.143,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 63.613,
             "unit": "ns/op"
           }
         ]
