@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675241600701,
+  "lastUpdate": 1675241973469,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4517,6 +4517,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1075,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56915136,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31dc04d0dc00638ae628508597b1d1b042492942",
+          "message": "Merge pull request #732 from f1shl3gs/bump_bytes_to_1.4.0\n\nupdate bytes to 1.4.0",
+          "timestamp": "2023-02-01T16:33:08+08:00",
+          "tree_id": "049a53009d32abc190fb8264ede0a9370bc3cd92",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31dc04d0dc00638ae628508597b1d1b042492942"
+        },
+        "date": 1675241964304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1350,
             "unit": "s"
           },
           {
