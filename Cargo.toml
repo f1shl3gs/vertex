@@ -29,6 +29,8 @@ members = [
     "lib/backoff",
     "lib/buffers",
     "lib/codecs",
+    "lib/configurable",
+    "lib/configurable-derive",
     "lib/condition",
     "lib/event",
     "lib/framework",

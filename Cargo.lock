@@ -650,6 +650,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "configurable"
+version = "0.1.0"
+dependencies = [
+ "configurable-derive",
+ "indexmap",
+ "inventory",
+ "schemars",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "configurable-derive"
+version = "0.1.0"
+dependencies = [
+ "configurable",
+ "inventory",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "console-api"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3537,6 +3561,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "schemars"
+version = "0.8.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2a5fb6c61f29e723026dc8e923d94c694313212abbecbbe5f55a7748eec5b307"
+dependencies = [
+ "dyn-clone",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

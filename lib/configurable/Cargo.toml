@@ -1,0 +1,17 @@
+[package]
+name = "configurable"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+schemars = { version = "0.8.11", default-features = false }
+inventory = { version = "0.3.2" }
+thiserror = { version = "1.0.37" }
+configurable-derive = { path = "../configurable-derive" }
+serde = { version = "1.0.150" }
+serde_json = { version = "1.0.89", default-features = false }
+indexmap = { version = "1.9.2" }
+
+[dev-dependencies]
+serde_json = { version = "1.0.89" }

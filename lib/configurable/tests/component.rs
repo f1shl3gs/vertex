@@ -1,0 +1,29 @@
+// #![deny(warnings)]
+
+use configurable::NamedComponent;
+use configurable_derive::configurable_component;
+
+#[allow(clippy::print_stdout)]
+#[test]
+fn test_generate() {
+    #[configurable_component(sink, name = "some")]
+    #[derive(Debug, Default)]
+    pub struct SomeConfig {
+        #[configurable(required)]
+        foo: String,
+    }
+
+    impl configurable::GenerateConfig for SomeConfig {
+        fn generate_config() -> String {
+            "todo!()".to_string()
+        }
+    }
+
+    assert!("some" == SomeConfig::NAME);
+
+    let schema = configurable::schema::generate_root_schema::<SomeConfig>().unwrap();
+    let json = serde_json::to_string_pretty(&schema)
+        .expect("rendering root schema to JSON should not fail");
+
+    println!("{}", json);
+}
