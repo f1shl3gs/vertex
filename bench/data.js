@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675316321163,
+  "lastUpdate": 1675316335616,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6614,6 +6614,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 982.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "00e176fe5227ced54c38f81982be47813096fdb0",
+          "message": "Merge pull request #734 from f1shl3gs/dependabot/cargo/tracing-test-0.2.4\n\nchore(deps): bump tracing-test from 0.2.3 to 0.2.4",
+          "timestamp": "2023-02-02T13:18:14+08:00",
+          "tree_id": "f3a7922a87e1d9b8d58c50b9dd8a847344097606",
+          "url": "https://github.com/f1shl3gs/vertex/commit/00e176fe5227ced54c38f81982be47813096fdb0"
+        },
+        "date": 1675316327112,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 33350000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 979180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.603,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 70.777,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 193.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 419.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1174.2,
             "unit": "ns/op"
           }
         ]
