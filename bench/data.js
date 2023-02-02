@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675316345210,
+  "lastUpdate": 1675316374467,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5348,6 +5348,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56914736,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da8b332744bceaa3727fc36eccd8ae6d4b8fbd00",
+          "message": "Merge pull request #733 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.32\n\nchore(deps): bump encoding_rs from 0.8.31 to 0.8.32",
+          "timestamp": "2023-02-02T13:18:33+08:00",
+          "tree_id": "a9983bf65fee99cbe1d1a4e2f409b4274bab5070",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da8b332744bceaa3727fc36eccd8ae6d4b8fbd00"
+        },
+        "date": 1675316366597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1064,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56915144,
             "unit": "bytes"
           }
         ]
