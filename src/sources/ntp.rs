@@ -3,7 +3,7 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
     config::{default_interval, DataType, GenerateConfig, Output, SourceConfig, SourceContext},
-    register_source_config, Source,
+    Source,
 };
 use futures::StreamExt;
 use rsntp;
@@ -49,7 +49,9 @@ pools:
     }
 }
 
-register_source_config!("ntp", NtpConfig);
+inventory::submit! {
+    framework::config::SourceDescription::new::<NtpConfig>("ntp")
+}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]

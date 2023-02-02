@@ -33,20 +33,6 @@ pub trait GenerateConfig {
     }
 }
 
-#[macro_export]
-macro_rules! register_source_config {
-    ($name:expr, $type:ty) => {
-        inventory::submit! {
-            $crate::config::SourceDescription::new::<$type>($name)
-        }
-    };
-    (name = $name:expr, typ =  $type:ty) => {
-        inventory::submit! {
-            $crate::config::SourceDescription::new::<$type>($name)
-        }
-    };
-}
-
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Error, Clone, PartialEq)]
 pub enum ExampleError {
