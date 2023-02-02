@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675315575112,
+  "lastUpdate": 1675315615066,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4417,6 +4417,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 307970,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da8b332744bceaa3727fc36eccd8ae6d4b8fbd00",
+          "message": "Merge pull request #733 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.32\n\nchore(deps): bump encoding_rs from 0.8.31 to 0.8.32",
+          "timestamp": "2023-02-02T13:18:33+08:00",
+          "tree_id": "a9983bf65fee99cbe1d1a4e2f409b4274bab5070",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da8b332744bceaa3727fc36eccd8ae6d4b8fbd00"
+        },
+        "date": 1675315606733,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 481.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 48157,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 240620,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 482380,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 258.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 25838,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 128410,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 256900,
             "unit": "ns/op"
           }
         ]
