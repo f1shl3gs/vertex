@@ -86,11 +86,12 @@ fn impl_from_struct(
 
     let mapped_fields = fields.named.iter()
         .map(|field| {
-            let attrs = FieldAttrs::parse(errs, field);
             let field_key = field.ident.clone().expect("filed has a name").to_string();
             let field_typ = &field.ty;
 
-            let maybe_field_required = if attrs.required {
+            let field_attrs = FieldAttrs::parse(errs, field);
+
+            let maybe_field_required = if field_attrs.required {
                 Some(quote!(
                     required.insert(#field_key.to_string());
                 ))
@@ -98,25 +99,40 @@ fn impl_from_struct(
                 None
             };
 
-            let maybe_description = attrs.description.map(|desc| {
+            let maybe_description = field_attrs.description.map(|desc| {
                 let value = desc.content.value();
 
                 quote!( metadata.description = Some(#value.to_string()); )
             });
 
-            let maybe_deprecated = if attrs.deprecated {
+            let maybe_deprecated = if field_attrs.deprecated {
                 quote!( metadata.deprecated = true; )
             } else {
                 quote!()
             };
 
+            let maybe_default = field_attrs.default.map(|value| {
+                quote!( metadata.default = Some(::serde_json::Value::from(#value)); )
+            });
+            let maybe_format = field_attrs
+                .format
+                .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+            let maybe_example = field_attrs.example.map(|example| {
+                quote!( metadata.examples = vec![ ::serde_json::Value::from( #example ) ]; )
+            });
+
             quote!(
                 {
                     let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
+
+                    #maybe_format
+
                     let metadata = subschema.metadata();
 
                     #maybe_description
                     #maybe_deprecated
+                    #maybe_default
+                    #maybe_example
 
                     #maybe_field_required
                     properties.insert(#field_key.to_string(), subschema);
@@ -266,19 +282,30 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     let field_key = field_name.to_string();
 
     let errs = &Errors::default();
-    let attr = FieldAttrs::parse(errs, field);
-
+    let field_attrs = FieldAttrs::parse(errs, field);
     let field_schema = generate_struct_field(field);
 
-    let maybe_required = if attr.required {
+    let maybe_required = if field_attrs.required {
         quote!( required.insert(#field_key.to_string()); )
     } else {
         quote!()
     };
 
-    let may_description = if let Some(desc) = attr.description {
+    let maybe_description = if let Some(desc) = field_attrs.description {
         let value = desc.content.value();
         quote!( metadata.description = Some(#value.to_string()); )
+    } else {
+        quote!()
+    };
+    let maybe_default = field_attrs
+        .default
+        .map(|ls| quote!( metadata.default = Some(::serde_json::Value::from( #ls )); ));
+    let maybe_format = field_attrs
+        .format
+        .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+
+    let maybe_deprecated = if field_attrs.deprecated {
+        quote!( metadata.deprecated = true; )
     } else {
         quote!()
     };
@@ -289,8 +316,11 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
 
             let metadata = subschema.metadata();
 
-            #may_description
+            #maybe_description
             #maybe_required
+            #maybe_default
+            #maybe_format
+            #maybe_deprecated
 
             properties.insert(#field_key.to_string(), subschema);
         }

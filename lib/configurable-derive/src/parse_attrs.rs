@@ -1,6 +1,5 @@
-use syn::LitStr;
-
 use crate::errors::Errors;
+use syn::{Lit, LitStr};
 
 /// A description of a `#[configurable(...)]` struct.
 ///
@@ -16,9 +15,10 @@ pub struct Description {
 /// Attributes applied to a field of a `#[configurable(...)]` struct.
 #[derive(Default, Debug)]
 pub struct FieldAttrs {
-    pub default: Option<syn::LitStr>,
+    pub default: Option<Lit>,
+    pub format: Option<LitStr>,
     pub description: Option<Description>,
-    pub examples: Option<syn::LitStr>,
+    pub example: Option<syn::Lit>,
     pub required: bool,
     pub deprecated: bool,
 }
@@ -53,13 +53,17 @@ impl FieldAttrs {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
                         parse_attr_lit(errs, m, &mut this.default)
                     }
-                } else if name.is_ident("examples") {
+                } else if name.is_ident("example") {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
-                        parse_attr_lit(errs, m, &mut this.examples)
+                        parse_attr_lit(errs, m, &mut this.example)
                     }
                 } else if name.is_ident("description") {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
                         parse_attr_description(errs, m, &mut this.description)
+                    }
+                } else if name.is_ident("format") {
+                    if let Some(m) = errs.expect_meta_name_value(meta) {
+                        parse_attr_litstr(errs, m, &mut this.format)
                     }
                 } else {
                     errs.err(
@@ -136,11 +140,11 @@ impl TypeAttrs {
                     }
                 } else if name.is_ident("name") {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
-                        parse_attr_lit(errs, m, &mut this.name);
+                        parse_attr_litstr(errs, m, &mut this.name);
                     }
                 } else if name.is_ident("title") {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
-                        parse_attr_lit(errs, m, &mut this.title);
+                        parse_attr_litstr(errs, m, &mut this.title);
                     }
                 } else if name.is_ident("source")
                     || name.is_ident("transform")
@@ -239,7 +243,7 @@ fn configurable_attr_to_meta_list(errors: &Errors, attr: &syn::Attribute) -> Opt
     attr_to_meta_list(errors, attr)
 }
 
-pub fn parse_attr_lit(errs: &Errors, m: &syn::MetaNameValue, slot: &mut Option<LitStr>) {
+pub fn parse_attr_litstr(errs: &Errors, m: &syn::MetaNameValue, slot: &mut Option<LitStr>) {
     let lit_str = if let Some(lit_str) = errs.expect_lit_str(&m.lit) {
         lit_str
     } else {
@@ -247,4 +251,8 @@ pub fn parse_attr_lit(errs: &Errors, m: &syn::MetaNameValue, slot: &mut Option<L
     };
 
     *slot = Some(lit_str.clone())
+}
+
+pub fn parse_attr_lit(_errs: &Errors, m: &syn::MetaNameValue, slot: &mut Option<Lit>) {
+    *slot = Some(m.lit.clone());
 }

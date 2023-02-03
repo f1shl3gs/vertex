@@ -7,9 +7,6 @@ fn gen<T: Configurable + Serialize + Sized>() {
     let schema =
         configurable::schema::generate_root_schema::<T>().expect("generate root schema failed");
 
-    // let m = schema.schema.metadata();
-    // m.deprecated
-
     let json = serde_json::to_string_pretty(&schema)
         .expect("rendering root schema to JSON should not fail");
 
@@ -31,17 +28,27 @@ fn derive_gen() {
         second: bool,
     }
 
+    /// foo is root
+    ///
+    /// blah blah
     #[derive(Serialize, Configurable)]
     struct Foo {
-        #[configurable(required, description = "number field")]
+        #[configurable(required, description = "number field", default = 12)]
         field_num: u32,
-        #[configurable()]
+        #[configurable(default = "aaaaa")]
         filed_str: String,
         non_num: NonZeroI64,
 
+        /// filed bool is
+        #[configurable(default = true)]
+        field_bool: bool,
+
+        /// inner is inner type
         inner: Inner,
 
         variant: Variant,
+
+        optional: Option<String>,
     }
 
     #[derive(Serialize, Configurable)]
@@ -50,7 +57,12 @@ fn derive_gen() {
         Internal {
             #[configurable(description = "first desc", required)]
             first: String,
+            #[configurable(default = 12)]
             second: u32,
+
+            /// uri for ....
+            #[configurable(format = "uri")]
+            uri: String,
         },
         External(External),
         // Tuple((i32, i32))

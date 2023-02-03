@@ -11,7 +11,7 @@ use schemars::schema::{
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::configurable::ConfigurableString;
+use crate::stdlib::ConfigurableString;
 use crate::{Configurable, GenerateError};
 use num::ConfigurableNumber;
 
@@ -208,6 +208,56 @@ pub fn generate_one_of_schema(subschemas: &[SchemaObject]) -> SchemaObject {
     }
 }
 
+pub fn make_schema_optional(schema: &mut SchemaObject) -> Result<(), GenerateError> {
+    // We do a little dance here to add an ad
+    match schema.instance_type.as_mut() {
+        None => match schema.subschemas.as_mut() {
+            None => return Err(GenerateError::InvalidOptionalSchema),
+            Some(subschemas) => {
+                if let Some(any_of) = subschemas.any_of.as_mut() {
+                    any_of.push(Schema::Object(generate_null_schema()));
+                } else if let Some(one_of) = subschemas.one_of.as_mut() {
+                    one_of.push(Schema::Object(generate_null_schema()));
+                } else if subschemas.all_of.is_some() {
+                    // If we're dealing with an all-of schema, we have to build a new
+                    // one-of schema where the two choices are either the `null` schema,
+                    // or a subschema comprised of the all-of subschemas.
+                    let all_of = subschemas
+                        .all_of
+                        .take()
+                        .expect("all-of subschemas must be present here");
+                    let new_all_of_schema = SchemaObject {
+                        subschemas: Some(Box::new(SubschemaValidation {
+                            all_of: Some(all_of),
+                            ..Default::default()
+                        })),
+                        ..Default::default()
+                    };
+
+                    subschemas.one_of = Some(vec![
+                        Schema::Object(generate_null_schema()),
+                        Schema::Object(new_all_of_schema),
+                    ]);
+                } else {
+                    return Err(GenerateError::InvalidOptionalSchema);
+                }
+            }
+        },
+
+        Some(sov) => match sov {
+            SingleOrVec::Single(ty) if **ty != InstanceType::Null => {
+                *sov = vec![**ty, InstanceType::Null].into()
+            }
+            SingleOrVec::Vec(ty) if !ty.contains(&InstanceType::Null) => {
+                ty.push(InstanceType::Null)
+            }
+            _ => {}
+        },
+    }
+
+    Ok(())
+}
+
 pub fn generate_null_schema() -> SchemaObject {
     SchemaObject {
         instance_type: Some(InstanceType::Null.into()),
@@ -225,6 +275,13 @@ pub fn generate_const_string_schema(value: String) -> SchemaObject {
 pub fn generate_bool_schema() -> SchemaObject {
     SchemaObject {
         instance_type: Some(InstanceType::Boolean.into()),
+        ..Default::default()
+    }
+}
+
+pub fn generate_string_schema() -> SchemaObject {
+    SchemaObject {
+        instance_type: Some(InstanceType::String.into()),
         ..Default::default()
     }
 }

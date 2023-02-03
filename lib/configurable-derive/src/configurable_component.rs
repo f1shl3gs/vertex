@@ -5,7 +5,7 @@ use syn::token::Comma;
 use syn::{parse_quote, parse_quote_spanned, AttributeArgs, DeriveInput, Path};
 
 use crate::errors::Errors;
-use crate::parse_attrs::parse_attr_lit;
+use crate::parse_attrs::parse_attr_litstr;
 
 pub fn configurable_component_impl(
     args: proc_macro::TokenStream,
@@ -118,11 +118,11 @@ impl StructAttrs {
             let name = meta.path();
             if name.is_ident("name") {
                 if let Some(m) = errs.expect_meta_name_value(meta) {
-                    parse_attr_lit(errs, m, &mut this.name);
+                    parse_attr_litstr(errs, m, &mut this.name);
                 }
             } else if name.is_ident("description") {
                 if let Some(m) = errs.expect_meta_name_value(meta) {
-                    parse_attr_lit(errs, m, &mut this.description);
+                    parse_attr_litstr(errs, m, &mut this.description);
                 }
             } else if name.is_ident("provider") {
                 this.component_type = Some(ComponentType::Provider);
