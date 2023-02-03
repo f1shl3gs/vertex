@@ -1,6 +1,7 @@
+use std::num::NonZeroI64;
+
 use configurable::Configurable;
 use serde::Serialize;
-use std::num::NonZeroI64;
 
 #[allow(clippy::print_stdout)]
 fn gen<T: Configurable + Serialize + Sized>() {

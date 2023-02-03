@@ -3,6 +3,7 @@ mod num;
 use std::collections::BTreeSet;
 
 use indexmap::IndexMap;
+use num::ConfigurableNumber;
 use schemars::gen::{SchemaGenerator, SchemaSettings};
 use schemars::schema::{
     InstanceType, NumberValidation, ObjectValidation, RootSchema, Schema, SchemaObject,
@@ -13,7 +14,6 @@ use serde_json::Value;
 
 use crate::stdlib::ConfigurableString;
 use crate::{Configurable, GenerateError};
-use num::ConfigurableNumber;
 
 pub fn generate_struct_schema(
     properties: IndexMap<String, SchemaObject>,

@@ -7,12 +7,12 @@ mod named;
 pub mod schema;
 mod stdlib;
 
+pub use component::GenerateConfig;
+pub use configurable::Configurable;
 pub use errors::GenerateError;
 pub use named::NamedComponent;
 
 // re-export
-pub use component::GenerateConfig;
-pub use configurable::Configurable;
 pub use indexmap::IndexMap;
 pub use schemars;
 
