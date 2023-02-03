@@ -34,6 +34,7 @@ bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.23", features = ["serde"] }
 chrono-tz = { version = "0.8.1", features = ["serde"] }
 codecs = { path = "../codecs" }
+configurable = { path = "../configurable" }
 console-subscriber = { version = "0.1.8", optional = true }
 dyn-clone = { version = "1.0.10" }
 encoding_rs = { version = "0.8.32", features = ["serde"]}

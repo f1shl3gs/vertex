@@ -1228,6 +1228,7 @@ dependencies = [
  "chrono",
  "chrono-tz",
  "codecs",
+ "configurable",
  "console-subscriber",
  "dyn-clone",
  "encoding_rs",

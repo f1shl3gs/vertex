@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
 use super::GenerateConfig;
@@ -5,10 +6,19 @@ use super::GenerateConfig;
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum ExampleError {
-    // #[error("unable to create an example for this component")]
     MissingExample,
-    // #[error("type '{0}' does not exist")]
     DoesNotExist(String),
+}
+
+impl Display for ExampleError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            ExampleError::MissingExample => {
+                f.write_str("unable to create an example for this component")
+            }
+            ExampleError::DoesNotExist(s) => write!(f, r#"type "{}" does not exist"#, s),
+        }
+    }
 }
 
 /// Description of a component.

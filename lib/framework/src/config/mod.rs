@@ -1,5 +1,4 @@
 mod builder;
-mod component;
 mod diff;
 mod format;
 mod global;
@@ -16,7 +15,13 @@ mod validation;
 pub mod watcher;
 
 // re-export
-pub use component::{ComponentDescription, ExampleError, GenerateConfig};
+pub use configurable::{
+    component::{
+        ExampleError, ExtensionDescription, SinkDescription, SourceDescription,
+        TransformDescription,
+    },
+    GenerateConfig,
+};
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};
 pub use helper::*;
@@ -563,18 +568,6 @@ pub trait ExtensionConfig: core::fmt::Debug + Send + Sync {
         Vec::new()
     }
 }
-
-pub type SourceDescription = ComponentDescription<Box<dyn SourceConfig>>;
-inventory::collect!(SourceDescription);
-
-pub type TransformDescription = ComponentDescription<Box<dyn TransformConfig>>;
-inventory::collect!(TransformDescription);
-
-pub type SinkDescription = ComponentDescription<Box<dyn SinkConfig>>;
-inventory::collect!(SinkDescription);
-
-pub type ExtensionDescription = ComponentDescription<Box<dyn ExtensionConfig>>;
-inventory::collect!(ExtensionDescription);
 
 #[cfg(test)]
 mod tests {
