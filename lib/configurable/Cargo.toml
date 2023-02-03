@@ -12,7 +12,6 @@ configurable-derive = { path = "../configurable-derive" }
 serde = { version = "1.0.150" }
 serde_json = { version = "1.0.89", default-features = false }
 indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
-humanize = { git = "https://github.com/f1shl3gs/humanize", rev = "8db231bb6ff864cb15e608adf1701d7627973ba7" }
 
 # externals
 url = { version = "2.3.1", default-features = false }

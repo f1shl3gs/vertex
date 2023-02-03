@@ -303,3 +303,14 @@ fn poll_http(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_generate_config() {
+        let cfg = HttpConfig::generate_config();
+        serde_yaml::from_str::<HttpConfig>(&cfg).expect("Invalid config generated");
+    }
+}

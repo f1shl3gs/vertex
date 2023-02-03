@@ -654,7 +654,6 @@ name = "configurable"
 version = "0.1.0"
 dependencies = [
  "configurable-derive",
- "humanize 0.1.0 (git+https://github.com/f1shl3gs/humanize?rev=8db231bb6ff864cb15e608adf1701d7627973ba7)",
  "indexmap",
  "inventory",
  "schemars",
@@ -1242,7 +1241,7 @@ dependencies = [
  "headers",
  "hostname",
  "http",
- "humanize 0.1.0 (git+https://github.com/f1shl3gs/humanize)",
+ "humanize",
  "hyper",
  "hyper-openssl",
  "hyper-proxy",
@@ -1685,15 +1684,7 @@ checksum = "6456b8a6c8f33fee7d958fcd1b60d55b11940a79e63ae87013e6d22e26034440"
 [[package]]
 name = "humanize"
 version = "0.1.0"
-source = "git+https://github.com/f1shl3gs/humanize?rev=8db231bb6ff864cb15e608adf1701d7627973ba7#8db231bb6ff864cb15e608adf1701d7627973ba7"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "humanize"
-version = "0.1.0"
-source = "git+https://github.com/f1shl3gs/humanize#88909181cae00e859a646162cb2521b40006b526"
+source = "git+https://github.com/f1shl3gs/humanize?rev=88909181cae00e859a646162cb2521b40006b526#88909181cae00e859a646162cb2521b40006b526"
 dependencies = [
  "serde",
 ]
@@ -2367,7 +2358,7 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "futures",
- "humanize 0.1.0 (git+https://github.com/f1shl3gs/humanize)",
+ "humanize",
  "pin-project-lite",
  "regex",
  "serde",
@@ -4805,7 +4796,7 @@ dependencies = [
  "governor",
  "headers",
  "http",
- "humanize 0.1.0 (git+https://github.com/f1shl3gs/humanize)",
+ "humanize",
  "hyper",
  "indexmap",
  "inventory",

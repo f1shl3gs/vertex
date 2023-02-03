@@ -429,28 +429,4 @@ pub struct Providers {
     name: Option<String>,
 }
 
-impl Providers {
-    #![allow(clippy::print_stdout)]
-    pub fn run(&self) -> Result<(), ExitCode> {
-        match &self.name {
-            Some(name) => match ProviderDescription::example(name) {
-                Ok(example) => {
-                    println!("{}", serde_yaml::to_string(&example).unwrap());
-                    Ok(())
-                }
-                Err(err) => {
-                    println!("Generate example failed: {:?}", err);
-
-                    Err(exitcode::USAGE)
-                }
-            },
-            _ => {
-                for desc in inventory::iter::<ProviderDescription> {
-                    println!("{}", desc.type_str)
-                }
-
-                Ok(())
-            }
-        }
-    }
-}
+impl_list_and_example!(Providers, ProviderDescription);
