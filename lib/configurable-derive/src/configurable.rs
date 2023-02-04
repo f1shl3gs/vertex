@@ -111,9 +111,14 @@ fn impl_from_struct(
                 quote!()
             };
 
-            let maybe_default = field_attrs.default.map(|value| {
-                quote!( metadata.default = Some(::serde_json::Value::from(#value)); )
-            });
+            let maybe_default = if let Some(default_fn) = field_attrs.default_fn {
+                let default_fn: Ident = Ident::new_raw(&default_fn.value(), default_fn.span());
+                quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
+            } else if let Some(value) = field_attrs.default {
+                quote!( metadata.default = Some(::serde_json::Value::from( #value )); )
+            } else {
+                quote!()
+            };
             let maybe_format = field_attrs
                 .format
                 .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
@@ -297,9 +302,14 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     } else {
         quote!()
     };
-    let maybe_default = field_attrs
-        .default
-        .map(|ls| quote!( metadata.default = Some(::serde_json::Value::from( #ls )); ));
+    let maybe_default = if let Some(default_fn) = field_attrs.default_fn {
+        let default_fn: Ident = Ident::new_raw(&default_fn.value(), default_fn.span());
+        quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
+    } else if let Some(value) = field_attrs.default {
+        quote!( metadata.default = Some(::serde_json::Value::from( #value )); )
+    } else {
+        quote!()
+    };
     let maybe_format = field_attrs
         .format
         .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
