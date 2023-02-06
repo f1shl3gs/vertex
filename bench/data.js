@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675679062267,
+  "lastUpdate": 1675679442232,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3084,6 +3084,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 51.541,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "23b306fd916563271ba89406ccff371ae0956977",
+          "message": "Merge pull request #740 from f1shl3gs/dependabot/cargo/proptest-1.1.0\n\nchore(deps): bump proptest from 1.0.0 to 1.1.0",
+          "timestamp": "2023-02-06T18:16:47+08:00",
+          "tree_id": "816b6b01a93dc50ee2118f16e5f432acce36315b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/23b306fd916563271ba89406ccff371ae0956977"
+        },
+        "date": 1675679431611,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.103,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.945,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.906,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.158,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 63.631,
             "unit": "ns/op"
           }
         ]
