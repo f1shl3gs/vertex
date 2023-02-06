@@ -33,21 +33,23 @@ pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> proc_macro::T
     };
 
     let configurable_impl = quote!(
-        #[automatically_derived]
-        #[allow(unused_qualifications)]
-        impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
-            fn reference() -> Option<&'static str> {
-                let self_type_name = ::std::any::type_name::<Self>();
+        const _: () = {
+            #[automatically_derived]
+            #[allow(unused_qualifications)]
+            impl #impl_generics ::configurable::Configurable for #name #type_generics #where_clause {
+                fn reference() -> Option<&'static str> {
+                    let self_type_name = ::std::any::type_name::<Self>();
 
-                if !self_type_name.starts_with(std::module_path!()) {
-                    Some(std::concat!(std::module_path!(), "::", #ref_name))
-                } else {
-                    Some(self_type_name)
+                    if !self_type_name.starts_with(std::module_path!()) {
+                        Some(std::concat!(std::module_path!(), "::", #ref_name))
+                    } else {
+                        Some(self_type_name)
+                    }
                 }
-            }
 
-            #generate_schema
-        }
+                #generate_schema
+            }
+        };
     );
 
     configurable_impl.into()
@@ -113,7 +115,21 @@ fn impl_from_struct(
 
             let maybe_default = if let Some(default_fn) = field_attrs.default_fn {
                 let default_fn: Ident = Ident::new_raw(&default_fn.value(), default_fn.span());
-                quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
+
+                match field_attrs.serde_with {
+                    Some(serde_mod) => {
+                        let path: syn::Path = serde_mod.parse().expect("value of #[serde(with = \"xxx\")] should be a valid path");
+
+                        quote!{
+                            let value = #path::serialize(& #default_fn(), serde_json::value::Serializer).unwrap();
+                            println!("{}", value);
+                            metadata.default = Some(::serde_json::Value::from( value ));
+                        }
+                    },
+                    None => {
+                        quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
+                    }
+                }
             } else if let Some(value) = field_attrs.default {
                 quote!( metadata.default = Some(::serde_json::Value::from( #value )); )
             } else {

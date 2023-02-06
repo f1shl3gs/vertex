@@ -654,6 +654,7 @@ name = "configurable"
 version = "0.1.0"
 dependencies = [
  "configurable-derive",
+ "humanize",
  "indexmap",
  "inventory",
  "schemars",
@@ -3571,6 +3572,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2a5fb6c61f29e723026dc8e923d94c694313212abbecbbe5f55a7748eec5b307"
 dependencies = [
  "dyn-clone",
+ "indexmap",
  "serde",
  "serde_json",
 ]
@@ -4780,6 +4782,7 @@ dependencies = [
  "codecs",
  "colored",
  "condition",
+ "configurable",
  "criterion",
  "dyn-clone",
  "encoding_rs",

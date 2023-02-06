@@ -78,6 +78,13 @@ pub fn configurable_component_impl(
             const NAME: &'static str = #name;
         }
 
+        // TODO: this should be removed, once configurable_component used for all config.
+        impl #impl_generics ::configurable::GenerateConfig for #ident #type_generics #where_clause {
+            fn generate_config() -> String {
+                ::configurable::generate_example::<#ident>()
+            }
+        }
+
         ::inventory::submit! {
             #desc_type::new::<#ident>(#name)
         }

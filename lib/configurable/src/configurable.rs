@@ -36,3 +36,7 @@ where
         gen: &mut schemars::gen::SchemaGenerator,
     ) -> Result<schemars::schema::SchemaObject, GenerateError>;
 }
+
+pub trait ConfigurableString: Configurable {}
+
+impl ConfigurableString for String {}

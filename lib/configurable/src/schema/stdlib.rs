@@ -1,9 +1,11 @@
 use std::collections::BTreeMap;
+use std::time::Duration;
 
 use schemars::gen::SchemaGenerator;
 use schemars::schema::{ArrayValidation, InstanceType, SchemaObject, SingleOrVec};
 use serde::Serialize;
 
+use crate::configurable::ConfigurableString;
 use crate::schema::generate_number_schema;
 use crate::schema::{
     assert_string_schema_for_map, generate_baseline_schema, generate_bool_schema,
@@ -68,10 +70,6 @@ where
     }
 }
 
-pub trait ConfigurableString: Configurable {}
-
-impl ConfigurableString for String {}
-
 // Array
 impl<T> Configurable for Vec<T>
 where
@@ -79,6 +77,15 @@ where
 {
     fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         generate_array_schema::<T>(gen)
+    }
+}
+
+impl Configurable for Duration {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        Ok(SchemaObject {
+            instance_type: Some(InstanceType::String.into()),
+            ..Default::default()
+        })
     }
 }
 

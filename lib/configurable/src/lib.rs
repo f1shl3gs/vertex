@@ -1,15 +1,16 @@
 pub mod component;
 mod configurable;
 mod errors;
+pub mod example;
 mod external;
 pub mod format;
 mod named;
 pub mod schema;
-mod stdlib;
 
 pub use component::GenerateConfig;
 pub use configurable::Configurable;
 pub use errors::GenerateError;
+pub use example::generate_example;
 pub use named::NamedComponent;
 
 // re-export

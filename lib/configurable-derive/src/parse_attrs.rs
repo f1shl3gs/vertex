@@ -18,6 +18,7 @@ pub struct FieldAttrs {
     pub default: Option<Lit>,
     pub default_fn: Option<LitStr>,
     pub format: Option<LitStr>,
+    pub serde_with: Option<LitStr>,
     pub description: Option<Description>,
     pub example: Option<syn::Lit>,
     pub required: bool,
@@ -44,6 +45,12 @@ impl FieldAttrs {
                             if name.is_ident("default") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.default_fn)
+                                }
+                            }
+
+                            if name.is_ident("with") {
+                                if let Some(m) = errs.expect_meta_name_value(m) {
+                                    parse_attr_litstr(errs, m, &mut this.serde_with)
                                 }
                             }
                         };

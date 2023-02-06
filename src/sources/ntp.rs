@@ -1,23 +1,27 @@
+use configurable::configurable_component;
 use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{default_interval, DataType, GenerateConfig, Output, SourceConfig, SourceContext},
+    config::{DataType, Output, SourceConfig, SourceContext},
     Source,
 };
 use futures::StreamExt;
 use rsntp;
-use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "ntp")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct NtpConfig {
+    /// The NTP client query timeout
     #[serde(default = "default_timeout")]
     #[serde(with = "humanize::duration::serde")]
     pub timeout: Duration,
 
+    /// NTP servers to use.
+    #[configurable(required, format = "hostname", example = "pool.ntp.org")]
     pub pools: Vec<String>,
 }
 
@@ -25,6 +29,7 @@ const fn default_timeout() -> Duration {
     Duration::from_secs(10)
 }
 
+/*
 impl GenerateConfig for NtpConfig {
     fn generate_config() -> String {
         format!(
@@ -52,6 +57,7 @@ pools:
 inventory::submit! {
     framework::config::SourceDescription::new::<NtpConfig>("ntp")
 }
+*/
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]

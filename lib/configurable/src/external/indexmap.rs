@@ -1,10 +1,11 @@
-use crate::schema::{assert_string_schema_for_map, generate_map_schema};
-use crate::stdlib::ConfigurableString;
-use crate::{Configurable, GenerateError};
 use indexmap::IndexMap;
 use schemars::gen::SchemaGenerator;
 use schemars::schema::SchemaObject;
 use serde::Serialize;
+
+use crate::configurable::ConfigurableString;
+use crate::schema::{assert_string_schema_for_map, generate_map_schema};
+use crate::{Configurable, GenerateError};
 
 impl<K, V> Configurable for IndexMap<K, V>
 where

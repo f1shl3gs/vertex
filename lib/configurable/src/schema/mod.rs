@@ -1,4 +1,5 @@
 mod num;
+mod stdlib;
 
 use std::collections::BTreeSet;
 
@@ -12,7 +13,7 @@ use schemars::schema::{
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::stdlib::ConfigurableString;
+use crate::configurable::ConfigurableString;
 use crate::{Configurable, GenerateError};
 
 pub fn generate_struct_schema(

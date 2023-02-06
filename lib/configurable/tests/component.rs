@@ -13,12 +13,6 @@ fn test_generate() {
         foo: String,
     }
 
-    impl configurable::GenerateConfig for SomeConfig {
-        fn generate_config() -> String {
-            "todo!()".to_string()
-        }
-    }
-
     assert!("some" == SomeConfig::NAME);
 
     let schema = configurable::schema::generate_root_schema::<SomeConfig>().unwrap();
