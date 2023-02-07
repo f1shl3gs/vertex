@@ -13,6 +13,7 @@ use std::time::Duration;
 
 use crate::batch::Batch;
 use buffers::Acker;
+use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 use tower::layer::util::Stack;
 use tower::limit::RateLimit;
@@ -40,7 +41,7 @@ pub type Svc<S, L> = RateLimit<AdaptiveConcurrencyLimit<Retry<FixedRetryPolicy<L
 pub type BatchedSink<S, B, RL> = BatchSink<Svc<S, RL>, B>;
 pub type PartitionSink<S, B, RL, K> = PartitionBatchSink<Svc<S, RL>, B, K>;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct RequestConfig {
     #[serde(default)]

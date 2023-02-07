@@ -6,20 +6,20 @@ use tokio_util::codec::{Decoder, Framed};
 ///
 /// This is basically a no-op and is used to convert from `BytesMut` to `Bytes`
 #[derive(Clone, Debug)]
-pub struct BytesDecoder {
+pub struct BytesDeserializerConfig {
     /// Whether the empty buffer has been flushed. This is important to
     /// propagate empty frames in message based transports.
     flushed: bool,
 }
 
-impl BytesDecoder {
+impl BytesDeserializerConfig {
     /// Create a new `BytesDecoder`.
     pub const fn new() -> Self {
         Self { flushed: false }
     }
 }
 
-impl Decoder for BytesDecoder {
+impl Decoder for BytesDeserializerConfig {
     type Item = Bytes;
     type Error = FramingError;
 
@@ -48,7 +48,7 @@ mod tests {
     #[test]
     fn decode() {
         let mut input = BytesMut::from("some bytes");
-        let mut decoder = BytesDecoder::new();
+        let mut decoder = BytesDeserializerConfig::new();
 
         assert_eq!(decoder.decode(&mut input).unwrap(), None);
         assert_eq!(
@@ -61,7 +61,7 @@ mod tests {
     #[tokio::test]
     async fn decode_frame_reader() {
         let input: &[u8] = b"foo";
-        let decoder = BytesDecoder::new();
+        let decoder = BytesDeserializerConfig::new();
 
         let mut reader = FramedRead::new(input, decoder);
 
@@ -72,7 +72,7 @@ mod tests {
     #[tokio::test]
     async fn decode_empty() {
         let input: &[u8] = b"";
-        let decoder = BytesDecoder::new();
+        let decoder = BytesDeserializerConfig::new();
 
         let mut reader = FramedRead::new(input, decoder);
 

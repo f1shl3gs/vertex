@@ -2,9 +2,10 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
+use configurable::configurable_component;
 use event::{Event, Metric};
 use framework::batch::{BatchConfig, EncodedEvent, SinkBatchSettings};
-use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription};
+use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::HttpRetryLogic;
 use framework::sink::util::service::RequestConfig;
@@ -20,7 +21,6 @@ use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
 use http::{StatusCode, Uri};
 use hyper::{body, Body};
 use prost::Message;
-use serde::{Deserialize, Serialize};
 use tower::{Service, ServiceBuilder};
 
 use crate::sinks::BuildError;
@@ -34,67 +34,27 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
     const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "prometheus_remote_write")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct RemoteWriteConfig {
+    /// Endpoint of Prometheus's remote write API.
+    #[configurable(required, format = "uri", example = "http://10.1.1.1:8000")]
     pub endpoint: String,
 
     #[serde(default)]
     pub batch: BatchConfig<PrometheusRemoteWriteDefaultBatchSettings>,
+
+    /// Configures the sink request behavior.
     #[serde(default)]
     pub request: RequestConfig,
 
+    /// Tenant ID is a special label for Cortex, Thanos or VictoriaMetrics.
     #[serde(default)]
     pub tenant_id: Option<Template>,
 
     pub tls: Option<TlsConfig>,
     pub auth: Option<Auth>,
-}
-
-impl GenerateConfig for RemoteWriteConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# Endpoint of Prometheus's remote write API
-endpoint: http://prom.example.com/write
-
-# Config batch behavior
-batch:
-  # The maximum size of a batch, before it is flushed
-  #
-  max_bytes: 128 Ki
-
-  # The maximum events of a batch, before it is flushed
-  #
-  max_events: 4096
-
-  # The maximum age of a batch before it is flushed
-  #
-  timeout: 5s
-
-# Configures the sink request behavior
-#
-# request:
-{}
-
-# Configures the TLS options for outgoing connections
-# tls:
-{}
-
-# Configures the authentication strategy
-# auth:
-{}
-
-"#,
-            RequestConfig::generate_commented_with_indent(2),
-            TlsConfig::generate_commented_with_indent(2),
-            Auth::generate_commented_with_indent(2)
-        )
-    }
-}
-
-inventory::submit! {
-    SinkDescription::new::<RemoteWriteConfig>("prometheus_remote_write")
 }
 
 #[async_trait::async_trait]

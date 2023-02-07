@@ -2,41 +2,68 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use codecs::encoding::EncodingConfig;
+use configurable::configurable_component;
 use framework::batch::{BatchConfig, NoDefaultBatchSettings};
-use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext};
+use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rdkafka::ClientConfig;
-use serde::{Deserialize, Serialize};
 
 use super::sink::health_check;
-use crate::common::kafka::{KafkaAuthConfig, KafkaCompression, KafkaSaslConfig};
+use crate::common::kafka::{KafkaAuthConfig, KafkaCompression};
 
 pub const QUEUE_MIN_MESSAGES: u64 = 100000;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "kafka")]
+#[derive(Clone, Debug)]
 pub struct KafkaSinkConfig {
-    pub bootstrap_servers: String,
+    /// A comma-separated list of host and port pairs that are the addresses of
+    /// the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
+    /// connects to initially ot bootstrap itself.
+    #[configurable(required, format = "ip-address", example = "127.0.0.1:9092")]
+    pub bootstrap_servers: Vec<String>,
+
+    /// The Kafka topic name to write events to
+    #[configurable(required)]
     pub topic: String,
+
+    /// The log field name or tags key to use for the topic key. If the field
+    /// does not exist in the log or in tags, a blank value will be used. If
+    /// unspecified, the key is not sent. Kafka uses a hash of the key to choose
+    /// the partition or uses round-robin if the record has no key.
     pub key_field: Option<String>,
+    /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
 
     /// These batching options will `not` override librdkafka_options values
     #[serde(default)]
     pub batch: BatchConfig<NoDefaultBatchSettings>,
+
+    /// The compression strategy used to compress the encoded event
+    /// data before transmission.
     #[serde(default)]
     pub compression: KafkaCompression,
 
     #[serde(default = "default_auth")]
     pub auth: KafkaAuthConfig,
+
+    /// Default timeout for network requests
     #[serde(default = "default_socket_timeout")]
     #[serde(with = "humanize::duration::serde")]
     pub socket_timeout: Duration,
+
+    /// Local message timeout
     #[serde(default = "default_message_timeout")]
     #[serde(with = "humanize::duration::serde")]
     pub message_timeout: Duration,
+
+    /// Advanced options. See librdkafka decumentation for details.
+    /// https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
     #[serde(default)]
     pub librdkafka_options: HashMap<String, String>,
+
+    /// The log field name to use for the Kafka headers. If omitted,
+    /// no headers will be written.
     pub headers_field: Option<String>,
 }
 
@@ -70,7 +97,7 @@ impl KafkaSinkConfig {
     pub fn to_rdkafka(&self, role: KafkaRole) -> crate::Result<ClientConfig> {
         let mut config = ClientConfig::new();
         config
-            .set("bootstrap.servers", &self.bootstrap_servers)
+            .set("bootstrap.servers", &self.bootstrap_servers.join(","))
             .set("compression.codec", &to_string(self.compression))
             .set(
                 "socket.timeout.ms",
@@ -179,107 +206,6 @@ impl KafkaSinkConfig {
 fn to_string(value: impl serde::Serialize) -> String {
     let value = serde_json::to_value(value).unwrap();
     value.as_str().unwrap().into()
-}
-
-impl GenerateConfig for KafkaSinkConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# A comma-separated list of host and port pairs that are the addresses of
-# the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
-# connects to initially ot bootstrap itself.
-#
-bootstrap_servers: 127.0.0.1:9092,127.0.0.2:9092
-
-# The Kafka topic name to write events to
-#
-topic: some-topic
-
-# The log field name or tags key to use for the topic key. If the field
-# does not exist in the log or in tags, a blank value will be used. If
-# unspecified, the key is not sent. Kafka uses a hash of the key to choose
-# the partition or uses round-robin if the record has no key.
-#
-# key_field: user_id
-
-# Configures the encoding specific sink behavior.
-#
-
-# Configures the encoding specific sink behavior.
-#
-encoding:
-  # The encoding codec used to serialize the events before outputting.
-  #
-  # Availabel values:
-  # json      JSON encoded event
-  # logfmt    logfmt encoded event, see https://brandur.org/logfmt
-  # text      The message field from the event
-  #
-  codec: json
-
-  # Prevent the sink from encoding the specified fields.
-  #
-  # except_fields:
-  # - foo
-  # - bar.key
-
-  # Makes the sink encode only the specified fields.
-  #
-  # only_fields:
-  # - k01
-  # - k02.k03
-
-  # How to format event timestamps
-  #
-  # Availabel values:
-  # rfc3339     Formats as a RFC3339 string
-  # unix        Formats as a unix timestamp
-  #
-  # timestamp_format: rfc3339
-
-# Configures the sink batching behavior
-#
-# batch:
-{}
-
-# The compression strategy used to compress the encoded event
-# data before transmission.
-#
-# Available values:
-# gzip           Gzip standard DEFLATE compression
-# lz4            lz4 compression
-# none           none compression
-# snappy         snappy compression
-# zstd           zstd compression
-
-# Options for SASL/SCRAM authentication support
-# sasl:
-{}
-
-# Default timeout for network requests
-#
-# socket_timeout: {}
-
-# Local message timeout
-#
-# message_timeout: {}
-
-# Advanced options. See librdkafka decumentation for details.
-# https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-#
-# librdkafka_options: {{}}
-
-# The log field name to use for the Kafka headers. If omitted,
-# no headers will be written.
-#
-# headers_key: null
-"#,
-            BatchConfig::<NoDefaultBatchSettings>::generate_commented_with_indent(2),
-            KafkaSaslConfig::generate_commented_with_indent(2),
-            humanize::duration::duration(&default_socket_timeout()),
-            humanize::duration::duration(&default_message_timeout()),
-        )
-    }
 }
 
 #[async_trait::async_trait]

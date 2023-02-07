@@ -5,10 +5,10 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use chrono::{DateTime, TimeZone, Utc};
+use configurable::configurable_component;
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
 use framework::config::{
-    default_false, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig, SourceContext,
-    SourceDescription,
+    default_false, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
 };
 use framework::http::{Auth, HttpClient};
 use framework::pipeline::Pipeline;
@@ -18,61 +18,29 @@ use framework::Source;
 use futures::{FutureExt, StreamExt};
 use http::{StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
-use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "prometheus_scrape")]
+#[derive(Debug)]
+#[serde(deny_unknown_fields)]
 struct PrometheusScrapeConfig {
+    /// Endpoints to scrape metrics from.
+    #[configurable(required, format = "uri", example = "http://example.com/metrics")]
     endpoints: Vec<String>,
+
+    /// Controls how tag conflicts are handled if the scraped source has tags
+    /// that Vertex would add. If true Vertex will not add the new tag if the
+    /// scraped metric has the tag already. If false, Vertex will rename the
+    /// conflicting tag by adding "exported_" to it. This matches Prometheus's
+    /// "honor_labels" configuration.
     #[serde(default = "default_false")]
     honor_labels: bool,
+
     tls: Option<TlsConfig>,
     auth: Option<Auth>,
 
     /// Global jitterSeed seed is used to spread scrape workload across HA setup.
     jitter_seed: Option<u64>,
-}
-
-impl GenerateConfig for PrometheusScrapeConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# Endpoints to scrape metrics from.
-#
-endpoints:
-- http://localhost:9090/metrics
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Controls how tag conflicts are handled if the scraped source has tags
-# that Vertex would add. If true Vertex will not add the new tag if the
-# scraped metric has the tag already. If false, Vertex will rename the
-# conflicting tag by adding "exported_" to it. This matches Prometheus's
-# "honor_labels" configuration.
-#
-# honor_labels: false
-
-# Configures the TLS options for outgoing connections.
-#
-# tls:
-{}
-
-# Configures the authentication strategy.
-#
-# auth:
-{}
-
-"#,
-            TlsConfig::generate_commented_with_indent(2),
-            Auth::generate_commented_with_indent(2)
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<PrometheusScrapeConfig>("prometheus_scrape")
 }
 
 #[async_trait::async_trait]

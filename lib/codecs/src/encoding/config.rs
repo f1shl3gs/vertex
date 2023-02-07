@@ -1,7 +1,8 @@
-use crate::encoding::{BytesEncoder, CharacterDelimitedEncoder, NewlineDelimitedEncoder};
+use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
 use super::{transformer::Transformer, Framer, Serializer, SerializerConfig};
+use crate::encoding::{BytesEncoder, CharacterDelimitedEncoder, NewlineDelimitedEncoder};
 
 /// Configuration for building a `Framer`.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
@@ -36,10 +37,10 @@ impl FramingConfig {
 }
 
 /// Encoding configuration
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct EncodingConfig {
-    #[serde(rename = "codec")]
+    /// The encoding codec used to serialize the events before outputting.
     encoding: SerializerConfig,
 
     #[serde(flatten)]
@@ -48,9 +49,9 @@ pub struct EncodingConfig {
 
 impl EncodingConfig {
     /// Creates a new `EncodingConfig` with the provided `SerializerConfig` and `Transformer`.
-    pub fn new(encoding: SerializerConfig, transformer: Transformer) -> Self {
+    pub fn new(codec: SerializerConfig, transformer: Transformer) -> Self {
         Self {
-            encoding,
+            encoding: codec,
             transformer,
         }
     }
@@ -112,7 +113,7 @@ impl EncodingConfigWithFraming {
         Self {
             framing,
             encoding: EncodingConfig {
-                encoding,
+                encoding: encoding,
                 transformer,
             },
         }

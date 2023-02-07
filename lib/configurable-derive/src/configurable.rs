@@ -1,10 +1,10 @@
 use proc_macro2::{Ident, TokenStream};
 use quote::{quote, quote_spanned};
 use syn::spanned::Spanned;
-use syn::Fields;
+use syn::{Fields, Path};
 
 use crate::errors::Errors;
-use crate::parse_attrs::{FieldAttrs, TypeAttrs};
+use crate::parse_attrs::{is_doc_attr, parse_attr_doc, Description, FieldAttrs, TypeAttrs};
 
 pub fn derive_configurable_impl(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = &syn::parse_macro_input!(input as syn::DeriveInput);
@@ -92,6 +92,9 @@ fn impl_from_struct(
             let field_typ = &field.ty;
 
             let field_attrs = FieldAttrs::parse(errs, field);
+            if field_attrs.skip {
+                return quote!();
+            }
 
             let maybe_field_required = if field_attrs.required {
                 Some(quote!(
@@ -113,28 +116,29 @@ fn impl_from_struct(
                 quote!()
             };
 
-            let maybe_default = if let Some(default_fn) = field_attrs.default_fn {
-                let default_fn: Ident = Ident::new_raw(&default_fn.value(), default_fn.span());
+            let maybe_default = if let Some(default_fn) = field_attrs.default {
+                let default_fn: Path = default_fn.parse().expect("valid serde default value");
 
                 match field_attrs.serde_with {
-                    Some(serde_mod) => {
-                        let path: syn::Path = serde_mod.parse().expect("value of #[serde(with = \"xxx\")] should be a valid path");
+                    Some(serde_with) => {
+                        let serde_with: Path = serde_with.parse().expect("valid serde with value");
 
                         quote!{
-                            let value = #path::serialize(& #default_fn(), serde_json::value::Serializer).unwrap();
-                            println!("{}", value);
-                            metadata.default = Some(::serde_json::Value::from( value ));
+                            let value = #serde_with::serialize(& #default_fn(), serde_json::value::Serializer).expect("serialize default value");
+                            metadata.default = Some( value );
                         }
                     },
                     None => {
-                        quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
+                        quote!{
+                            let value = ::serde_json::to_value( & #default_fn() ).expect("transform default value to serde_json::Value");
+                            metadata.default = Some(value);
+                        }
                     }
                 }
-            } else if let Some(value) = field_attrs.default {
-                quote!( metadata.default = Some(::serde_json::Value::from( #value )); )
             } else {
                 quote!()
             };
+
             let maybe_format = field_attrs
                 .format
                 .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
@@ -211,13 +215,16 @@ fn generate_struct_field(field: &syn::Field) -> TokenStream {
 }
 
 fn impl_from_enum(
-    _errs: &Errors,
+    errs: &Errors,
     _name: &Ident,
     type_attrs: &TypeAttrs,
     _generic_args: &syn::Generics,
     de: &syn::DataEnum,
 ) -> TokenStream {
-    let mapped_variants = de.variants.iter().map(generate_enum_variant_schema);
+    let mapped_variants = de
+        .variants
+        .iter()
+        .map(|variant| generate_enum_variant_schema(errs, type_attrs, variant));
 
     let maybe_description = type_attrs.description.as_ref().map(|desc| {
         let desc = desc.content.value();
@@ -242,6 +249,30 @@ fn impl_from_enum(
     }
 }
 
+fn apply_rename(variant: &str, rule: &syn::LitStr) -> String {
+    let snake_case = || -> String {
+        let mut snake = String::new();
+        for (i, ch) in variant.char_indices() {
+            if i > 0 && ch.is_uppercase() {
+                snake.push('_');
+            }
+            snake.push(ch.to_ascii_lowercase());
+        }
+        snake
+    };
+
+    match rule.value().as_str() {
+        "lowercase" => variant.to_ascii_lowercase(),
+        "UPPERCASE" => variant.to_ascii_uppercase(),
+        "camelCase" => variant[..1].to_ascii_lowercase() + &variant[1..],
+        "snake_case" => snake_case(),
+        "SCREAMING_SNAKE_CASE" => snake_case().to_ascii_uppercase(),
+        "kebab-case" => snake_case().replace('_', "-"),
+        "SCREAMING-KEBAB-CASE" => snake_case().to_ascii_uppercase().replace('-', "-"),
+        _ => variant.to_owned(),
+    }
+}
+
 fn generate_enum_struct_named_variant_schema(variant: &syn::Variant) -> TokenStream {
     let mapped_fields = variant.fields.iter().map(generate_named_enum_field);
 
@@ -261,7 +292,11 @@ fn generate_enum_struct_named_variant_schema(variant: &syn::Variant) -> TokenStr
     }
 }
 
-fn generate_enum_variant_schema(variant: &syn::Variant) -> TokenStream {
+fn generate_enum_variant_schema(
+    errs: &Errors,
+    type_attrs: &TypeAttrs,
+    variant: &syn::Variant,
+) -> TokenStream {
     //
     //     enum Variant {
     //         Unit,
@@ -269,12 +304,15 @@ fn generate_enum_variant_schema(variant: &syn::Variant) -> TokenStream {
     //             internal: String
     //         },
     //         Unnamed(External),
-
     //     }
     //
     let variant_schema = match &variant.fields {
         Fields::Unit => {
-            let ident = &variant.ident.to_string();
+            let ident = match &type_attrs.rename_all {
+                Some(rule) => apply_rename(&variant.ident.to_string(), rule),
+                None => variant.ident.to_string(),
+            };
+
             quote! { ::configurable::schema::generate_const_string_schema( #ident.to_string() ) }
         }
 
@@ -283,7 +321,7 @@ fn generate_enum_variant_schema(variant: &syn::Variant) -> TokenStream {
         Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(variant),
     };
 
-    generate_enum_variant_subschema(variant, variant_schema)
+    generate_enum_variant_subschema(errs, variant, variant_schema)
 }
 
 fn generate_enum_unamed_variant_schema(variant: &syn::Variant) -> TokenStream {
@@ -304,6 +342,10 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
 
     let errs = &Errors::default();
     let field_attrs = FieldAttrs::parse(errs, field);
+    if field_attrs.skip {
+        return quote!();
+    }
+
     let field_schema = generate_struct_field(field);
 
     let maybe_required = if field_attrs.required {
@@ -318,14 +360,30 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     } else {
         quote!()
     };
-    let maybe_default = if let Some(default_fn) = field_attrs.default_fn {
-        let default_fn: Ident = Ident::new_raw(&default_fn.value(), default_fn.span());
-        quote!( metadata.default = Some(::serde_json::Value::from( #default_fn() )); )
-    } else if let Some(value) = field_attrs.default {
-        quote!( metadata.default = Some(::serde_json::Value::from( #value )); )
+
+    let maybe_default = if let Some(default_fn) = field_attrs.default {
+        let default_fn: Path = default_fn.parse().expect("valid serde default value");
+
+        match field_attrs.serde_with {
+            Some(serde_with) => {
+                let serde_with: Path = serde_with.parse().expect("valid serde with value");
+
+                quote! {
+                    let value = #serde_with::serialize(& #default_fn(), serde_json::value::Serializer).expect("serialize default value");
+                    metadata.default = Some( value );
+                }
+            }
+            None => {
+                quote! {
+                    let value = ::serde_json::to_value( & #default_fn() ).expect("transform default value to serde_json::Value");
+                    metadata.default = Some(value);
+                }
+            }
+        }
     } else {
         quote!()
     };
+
     let maybe_format = field_attrs
         .format
         .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
@@ -354,12 +412,32 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
 }
 
 fn generate_enum_variant_subschema(
-    _variant: &syn::Variant,
+    errs: &Errors,
+    variant: &syn::Variant,
     variant_schema: TokenStream,
 ) -> TokenStream {
+    let mut desc: Option<Description> = None;
+
+    for attr in &variant.attrs {
+        if is_doc_attr(attr) {
+            parse_attr_doc(errs, attr, &mut desc);
+        }
+    }
+
+    let maybe_description = match desc {
+        Some(desc) => {
+            let desc = desc.content;
+            quote!( metadata.description = Some(#desc.to_string()); )
+        }
+        None => quote!(),
+    };
+
     quote! {
         {
             let mut subschema = { #variant_schema };
+            let metadata = subschema.metadata();
+
+            #maybe_description
 
             subschemas.push(subschema);
         }

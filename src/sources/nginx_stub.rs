@@ -4,10 +4,9 @@ use std::ops::Sub;
 
 use bytes::Bytes;
 use chrono::Utc;
+use configurable::configurable_component;
 use event::Metric;
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
@@ -19,45 +18,23 @@ use nom::{
     error::ErrorKind,
     sequence::{preceded, terminated, tuple},
 };
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "nginx_stub")]
+#[derive(Debug)]
 struct NginxStubConfig {
+    /// HTTP/HTTPS endpoint to Nginx server.
+    ///
+    /// http://nginx.org/en/docs/http/ngx_http_stub_status_module.html
+    #[configurable(required, format = "uri", example = "http://127.0.0.1:8080/nginx_stub")]
     endpoints: Vec<String>,
+
+    /// Configures the TLS options for outgoing connections.
     tls: Option<TlsConfig>,
+
+    /// Configures the authentication strategy.
     auth: Option<Auth>,
-}
-
-impl GenerateConfig for NginxStubConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# HTTP/HTTPS endpoint to Consul server.
-endpoints:
-- http://localhost:8500
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Configures the TLS options for outgoing connections.
-# tls:
-{}
-
-# Configures the authentication strategy.
-# auth:
-{}
-"#,
-            TlsConfig::generate_commented_with_indent(2),
-            Auth::generate_commented_with_indent(2),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<NginxStubConfig>("nginx_stub")
 }
 
 #[async_trait::async_trait]

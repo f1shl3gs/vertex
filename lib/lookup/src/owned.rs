@@ -1,5 +1,10 @@
-use crate::{parse_path, BorrowedSegment, Path};
+use configurable::schema::generate_array_schema;
+use configurable::schemars::gen::SchemaGenerator;
+use configurable::schemars::schema::SchemaObject;
+use configurable::{Configurable, GenerateError};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+
+use crate::{parse_path, BorrowedSegment, Path};
 
 #[derive(Clone, Debug, PartialEq, Eq, Default)]
 pub struct OwnedPath {
@@ -33,6 +38,12 @@ impl OwnedPath {
 
     pub fn single_field(field: &str) -> Self {
         vec![OwnedSegment::field(field)].into()
+    }
+}
+
+impl Configurable for OwnedPath {
+    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        generate_array_schema::<String>(gen)
     }
 }
 

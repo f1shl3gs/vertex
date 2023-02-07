@@ -262,6 +262,7 @@ impl<B> fmt::Debug for HttpClient<B> {
     }
 }
 
+/// The authentication strategy for http request/response
 #[derive(Configurable, Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]
 pub enum Auth {

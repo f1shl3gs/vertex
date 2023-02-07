@@ -1,3 +1,4 @@
+use configurable::Configurable;
 use event::Event;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
@@ -6,12 +7,13 @@ use super::Decoder;
 #[cfg(feature = "syslog")]
 use crate::decoding::SyslogDeserializer;
 use crate::decoding::{
-    BytesDecoder, BytesDeserializer, CharacterDelimitedDecoder, DecodeError, Deserializer, Framer,
-    JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoder, OctetCountingDecoder,
+    BytesDeserializer, BytesDeserializerConfig, CharacterDelimitedDecoder, DecodeError,
+    Deserializer, Framer, JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoder,
+    OctetCountingDecoder,
 };
 
 /// Configuration for building a `Framer`.
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum FramingConfig {
     /// Configuration the `BytesFramer`
@@ -52,7 +54,7 @@ impl FramingConfig {
     /// Build a `Framer` for this configuration.
     pub fn build(&self) -> Framer {
         match self {
-            FramingConfig::Bytes => Framer::Bytes(BytesDecoder::new()),
+            FramingConfig::Bytes => Framer::Bytes(BytesDeserializerConfig::new()),
             FramingConfig::CharacterDelimited {
                 delimiter,
                 max_length,
@@ -87,7 +89,7 @@ impl FramingConfig {
 }
 
 /// Configuration for building a `Deserializer`.
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "codec", rename_all = "snake_case")]
 pub enum DeserializerConfig {
     /// Configures the `BytesDeserializer`

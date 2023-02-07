@@ -1,9 +1,10 @@
 use std::fmt::Formatter;
 
+use configurable::Configurable;
 use serde::de::{Error, Unexpected, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Eq, PartialEq, Serialize)]
 pub enum Concurrency {
     None,
     Adaptive,

@@ -7,10 +7,9 @@ use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
+use configurable::configurable_component;
 use event::{log::Value, BatchNotifier, BatchStatus, Event, LogRecord};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::source::util::OrderedFinalizer;
@@ -20,7 +19,6 @@ use log_schema::{log_schema, LogSchema};
 use rdkafka::consumer::{Consumer, StreamConsumer};
 use rdkafka::message::{BorrowedMessage, Headers};
 use rdkafka::{ClientConfig, Message};
-use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
 
 use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
@@ -65,127 +63,90 @@ fn default_headers_key() -> String {
     "headers".to_string()
 }
 
-fn default_decoding() -> DecodingConfig {
-    DecodingConfig::new(FramingConfig::Bytes, DeserializerConfig::Bytes)
+const fn default_decoding() -> DeserializerConfig {
+    DeserializerConfig::Bytes
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+const fn default_framing_message_based() -> FramingConfig {
+    FramingConfig::Bytes
+}
+
+#[configurable_component(source, name = "kafka")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct KafkaSourceConfig {
-    bootstrap_servers: String,
+    /// A comma-separated list of host and port pairs that are the address
+    /// of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
+    /// client connects to initially to bootstrap itself.
+    #[configurable(required, format = "ip-address", example = "10.14.22.123:9092")]
+    bootstrap_servers: Vec<String>,
+
+    /// The Kafka topics names to read events from. Regex is supported if
+    /// the topic begins with `^`.
     topics: Vec<String>,
+
+    /// The consumer group name to be used to consume events from Kafka.
     group: String,
+
+    /// If offsets for consumer group do not exist, set them using this
+    /// strategy. See the librdkafka documentation for the
+    /// "auto.offset.reset" option for further clarification.
     #[serde(default = "default_auto_offset_reset")]
     auto_offset_reset: String,
+
+    /// The Kafka session timeout.
     #[serde(default = "default_session_timeout")]
     #[serde(with = "humanize::duration::serde")]
     session_timeout: Duration,
+
+    /// Default timeout for network requests.
     #[serde(default = "default_socket_timeout")]
     #[serde(with = "humanize::duration::serde")]
     socket_timeout: Duration,
+
+    /// Maximum time the broker may wait to fill the response.
     #[serde(default = "default_fetch_wait_max")]
     #[serde(with = "humanize::duration::serde")]
     fetch_wait_max: Duration,
+
+    /// The frequency that the consumer offsets are committed(written) to
+    /// offset storage.
     #[serde(default = "default_commit_interval")]
     #[serde(with = "humanize::duration::serde")]
     commit_interval: Duration,
+
+    /// The log field name to use for the Kafka message key.
     #[serde(default = "default_key_field")]
     key_field: String,
+
+    /// The log field name to use for the Kafka topic.
     #[serde(default = "default_topic_key")]
     topic_key: String,
+    /// The log field name to use for the Kafka partition name.
     #[serde(default = "default_partition_key")]
     partition_key: String,
+    /// The log field name to use for the Kafka offset
     #[serde(default = "default_offset_key")]
     offset_key: String,
+    /// The log field name to use for the Kafka headers.
     #[serde(default = "default_headers_key")]
     headers_key: String,
+
     #[serde(flatten)]
     auth: KafkaAuthConfig,
 
+    #[serde(default = "default_framing_message_based")]
+    framing: FramingConfig,
+
     #[serde(default = "default_decoding")]
-    decoding: DecodingConfig,
+    decoding: DeserializerConfig,
+
     #[serde(default)]
     acknowledgement: bool,
 
+    /// Advanced options. See librdkafka documentation for more details.
+    /// https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
     librdkafka_options: Option<HashMap<String, String>>,
-}
-
-impl GenerateConfig for KafkaSourceConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# A comma-separated list of host and port pairs that are the address
-# of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
-# client connects to initially to bootstrap itself.
-bootstrap_servers: 10.14.22.123:9092,10.14.23.332:9092
-
-# The Kafka topics names to read eevnts from. Regex is supported if
-# the topic begins with `^`.
-topics:
-- ^(prefix1|prefix2)-.*
-- topic1
-- topic2
-
-# The consumer group name to be used to consume events from Kafka.
-group: foo
-
-# If offsets for consumer group do not exist, set them using this
-# strategy. See the librdkafka documentation for the
-# "auto.offset.reset" option for further clarification.
-#
-# auto_offset_reset: "largest"
-
-# The Kafka session timeout.
-# session_timeout: {}s
-
-# Default timeout for network requests.
-socket_timeout: {}s
-
-# Maximum time the broker may wait to fill the response.
-fetch_wait_max: {}s
-
-# The frequency that the consumer offsets are committed(written) to
-# offset storage.
-# commit_interval: {}s
-
-# The log field name to use for the Kafka message key.
-# key_field: {}
-
-# The log field name to use for the Kafka topic.
-# topic_key: {}
-
-# The log field name to use for the Kafka partition name.
-# partition_key: {}
-
-# The log field name to use for the Kafka offset
-# offset_key: {}
-
-# The log field name to use for the Kafka headers.
-# headers_key: {}
-
-# auth:
-
-# Advanced options. See librdkafka documentation for more details.
-# https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-# librdkafka_options:
-#   foo: bar
-
-"#,
-            default_session_timeout().as_secs(),
-            default_socket_timeout().as_secs(),
-            default_fetch_wait_max().as_secs(),
-            default_commit_interval().as_secs(),
-            default_key_field(),
-            default_topic_key(),
-            default_partition_key(),
-            default_offset_key(),
-            default_headers_key(),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<KafkaSourceConfig>("kafka")
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -202,7 +163,7 @@ impl KafkaSourceConfig {
 
         client_config
             .set("group.id", &self.group)
-            .set("bootstrap.servers", &self.bootstrap_servers)
+            .set("bootstrap.servers", &self.bootstrap_servers.join(","))
             .set("enable.partition.eof", "false")
             .set("session.timeout.ms", "6000")
             .set("enable.auto.commit", "true")
@@ -269,9 +230,9 @@ impl<'a> From<BorrowedMessage<'a>> for FinalizerEntry {
 #[typetag::serde(name = "kafka")]
 impl SourceConfig for KafkaSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let decoder = self.decoding.build();
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
         let consumer = self.create_consumer()?;
+        let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
 
         Ok(Box::pin(run(
             self.clone(),
@@ -586,7 +547,7 @@ mod tests {
         group: &str,
     ) -> KafkaSourceConfig {
         KafkaSourceConfig {
-            bootstrap_servers: bootstrap_servers.into(),
+            bootstrap_servers: vec![bootstrap_servers.to_string()],
             topics: vec![topic.into()],
             group: group.into(),
             auto_offset_reset: "beginning".to_string(),
@@ -603,6 +564,7 @@ mod tests {
             librdkafka_options: None,
             acknowledgement: false,
             decoding: default_decoding(),
+            framing: default_framing_message_based(),
         }
     }
 
@@ -771,7 +733,7 @@ mod integration_tests {
                 }
                 Err(err) => {
                     panic!(
-                        "Cannot send event to Kafka, server: {}, err: {:?}",
+                        "Cannot send event to Kafka, server: {:?}, err: {:?}",
                         servers, err
                     )
                 }

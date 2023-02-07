@@ -5,57 +5,36 @@ mod slm;
 mod snapshot;
 
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::Metric;
-use framework::config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Pipeline, ShutdownSignal, Source};
 use hyper::Body;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use tokio::time::Interval;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "elasticsearch")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// Address of the Elasticsearch node we should connect to.
+    #[configurable]
     endpoint: String,
+
     #[serde(default)]
     auth: Option<Auth>,
+
+    /// Query stats for SLM.
     #[serde(default)]
     slm: bool,
+
+    /// Query stats for the cluster snapshots.
     #[serde(default)]
     snapshots: bool,
     tls: Option<TlsConfig>,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        format!(
-            r##"
-# Address of the Elasticsearch node we should connect to.
-#
-# required
-endpoint: http://localhost:9200
-
-{}
-
-{}
-
-# Query stats for SLM
-#
-# optional, default false
-slm: false
-
-# Query stats for the cluster snapshots
-#
-# optional, default false
-snapshots: false
-
-"##,
-            Auth::generate_commented(),
-            TlsConfig::generate_commented()
-        )
-    }
 }
 
 #[async_trait]

@@ -6,6 +6,7 @@ use std::time::Duration;
 use bytes::Bytes;
 use codecs::decoding::StreamDecodingError;
 use codecs::ReadyFrames;
+use configurable::Configurable;
 use event::{BatchNotifier, BatchStatus, Event};
 use futures::StreamExt;
 use futures_util::future::BoxFuture;
@@ -25,7 +26,7 @@ use crate::shutdown::ShutdownSignal;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings, TlsError};
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
 pub enum SocketListenAddr {
     SocketAddr(SocketAddr),

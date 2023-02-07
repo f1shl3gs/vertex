@@ -4,9 +4,10 @@ use async_trait::async_trait;
 use bytes::BytesMut;
 use codecs::encoding::{Framer, NewlineDelimitedEncoder, Transformer};
 use codecs::{Encoder, EncodingConfig};
+use configurable::{configurable_component, Configurable};
 use event::{EventContainer, EventStatus, Events, Finalizable};
 use framework::{
-    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
+    config::{DataType, SinkConfig, SinkContext},
     Healthcheck, Sink, StreamSink,
 };
 use futures::{stream::BoxStream, FutureExt};
@@ -15,8 +16,8 @@ use tokio::io::AsyncWriteExt;
 use tokio_stream::StreamExt;
 use tokio_util::codec::Encoder as _;
 
-#[derive(Debug, Deserialize, Serialize, Default)]
-#[serde(rename_all = "snake_case")]
+#[derive(Configurable, Debug, Deserialize, Serialize, Default)]
+#[serde(rename_all = "lowercase")]
 enum Stream {
     #[default]
     Stdout,
@@ -30,28 +31,15 @@ pub enum Encoding {
     Text,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "console")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ConsoleSinkConfig {
+    /// The standard stream to write to.
     #[serde(default)]
     stream: Stream,
 
     encoding: EncodingConfig,
-}
-
-impl GenerateConfig for ConsoleSinkConfig {
-    fn generate_config() -> String {
-        r#"
-stream: stdout
-encoding:
-  codec: json
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SinkDescription::new::<ConsoleSinkConfig>("console")
 }
 
 #[async_trait]

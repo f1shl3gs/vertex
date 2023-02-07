@@ -1,3 +1,4 @@
+use configurable::Configurable;
 use hyper::http::uri::InvalidUri;
 use hyper_proxy::Custom;
 use hyper_proxy::{Intercept, Proxy, ProxyConnector};
@@ -40,7 +41,7 @@ impl NoProxyInterceptor {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ProxyConfig {
     #[serde(

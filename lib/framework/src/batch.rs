@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 use std::num::NonZeroUsize;
 use std::time::Duration;
 
+use configurable::Configurable;
 use event::EventFinalizers;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -178,11 +179,16 @@ pub struct Merged;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Unmerged;
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Default, Deserialize, Serialize)]
 pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
+    /// The maximum size of a batch, before it is flushed.
     #[serde(with = "humanize::bytes::serde_option")]
     pub max_bytes: Option<usize>,
+
+    /// The maximum events of a batch, before it is flushed.
     pub max_events: Option<usize>,
+
+    /// The maximum age of a batch before it is flushed.
     #[serde(with = "humanize::duration::serde_option")]
     pub timeout: Option<Duration>,
 

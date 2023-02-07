@@ -1,6 +1,6 @@
 use std::path::{Path, PathBuf};
 
-use framework::config::GenerateConfig;
+use configurable::Configurable;
 use framework::tls::TlsConfig;
 use framework::Error;
 use metrics::{Counter, Gauge};
@@ -15,7 +15,7 @@ enum KafkaError {
     InvalidPath(PathBuf),
 }
 
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum KafkaCompression {
     None,
@@ -31,45 +31,26 @@ impl Default for KafkaCompression {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct KafkaSaslConfig {
+    /// Enable SASL/SCRAM authentication to the remote. (Not
+    /// supported on Windows at this time)
     enabled: Option<bool>,
+    /// The Kafka SASL/SCRAM authentication username.
     username: Option<String>,
+    /// The Kafka SASL/SCRAM authentication password.
     password: Option<String>,
+    /// The kafka SASL/SCRAM mechanisms
     mechanism: Option<String>,
 }
 
-impl GenerateConfig for KafkaSaslConfig {
-    fn generate_config() -> String {
-        r#"
-# Enable SASL/SCRAM authentication to the remote. (Not
-# supported on Windows at this time)
-#
-# enabled: false
-
-# The kafka SASL/SCRAM mechanisms
-#
-# mechanism: SCRAM-SHA-512
-
-# The Kafka SASL/SCRAM authentication password.
-#
-# password: password
-
-# The Kafka SASL/SCRAM authentication username.
-#
-# username: username
-"#
-        .into()
-    }
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct KafkaTLSConfig {
     pub enabled: Option<bool>,
     pub options: TlsConfig,
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct KafkaAuthConfig {
     pub sasl: Option<KafkaSaslConfig>,
     pub tls: Option<KafkaTLSConfig>,

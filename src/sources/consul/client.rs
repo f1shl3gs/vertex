@@ -1,6 +1,7 @@
 use std::collections::{BTreeMap, HashMap};
 
 use bytes::Buf;
+use configurable::Configurable;
 use framework::http::HttpClient;
 use http::StatusCode;
 use hyper::Body;
@@ -78,94 +79,95 @@ pub struct ServiceEntry {
     pub checks: Vec<HealthCheck>,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct QueryOptions {
-    // Namespace overrides the `default` namespace
-    // Note: Namespaces are available only in Consul Enterprise
+    /// Namespace overrides the `default` namespace.
+    ///
+    /// Note: Namespaces are available only in Consul Enterprise
     pub namespace: String,
 
-    // Providing a datacenter overwrites the DC provided
-    // by the Config
+    /// Providing a datacenter overwrites the DC provided
+    /// by the Config
     pub datacenter: String,
 
-    // AllowStale allows any Consul server (non-leader) to service
-    // a read. This allows for lower latency and higher throughput
+    /// AllowStale allows any Consul server (non-leader) to service
+    /// a read. This allows for lower latency and higher throughput
     pub allow_stale: bool,
 
-    // RequireConsistent forces the read to be fully consistent.
-    // This is more expensive but prevents ever performing a stale
-    // read.
+    /// RequireConsistent forces the read to be fully consistent.
+    /// This is more expensive but prevents ever performing a stale
+    /// read.
     pub require_consistent: bool,
 
-    // UseCache requests that the agent cache results locally. See
-    // https://www.consul.io/api/features/caching.html for more details on the
-    // semantics.
+    /// UseCache requests that the agent cache results locally. See
+    /// https://www.consul.io/api/features/caching.html for more details on the
+    /// semantics.
     pub use_cache: bool,
 
-    // MaxAge limits how old a cached value will be returned if UseCache is true.
-    // If there is a cached response that is older than the MaxAge, it is treated
-    // as a cache miss and a new fetch invoked. If the fetch fails, the error is
-    // returned. Clients that wish to allow for stale results on error can set
-    // StaleIfError to a longer duration to change this behavior. It is ignored
-    // if the endpoint supports background refresh caching. See
-    // https://www.consul.io/api/features/caching.html for more details.
+    /// MaxAge limits how old a cached value will be returned if UseCache is true.
+    /// If there is a cached response that is older than the MaxAge, it is treated
+    /// as a cache miss and a new fetch invoked. If the fetch fails, the error is
+    /// returned. Clients that wish to allow for stale results on error can set
+    /// StaleIfError to a longer duration to change this behavior. It is ignored
+    /// if the endpoint supports background refresh caching. See
+    /// https://www.consul.io/api/features/caching.html for more details.
     #[serde(with = "humanize::duration::serde")]
     pub max_age: std::time::Duration,
 
-    // StaleIfError specifies how stale the client will accept a cached response
-    // if the servers are unavailable to fetch a fresh one. Only makes sense when
-    // UseCache is true and MaxAge is set to a lower, non-zero value. It is
-    // ignored if the endpoint supports background refresh caching. See
-    // https://www.consul.io/api/features/caching.html for more details.
+    /// StaleIfError specifies how stale the client will accept a cached response
+    /// if the servers are unavailable to fetch a fresh one. Only makes sense when
+    /// UseCache is true and MaxAge is set to a lower, non-zero value. It is
+    /// ignored if the endpoint supports background refresh caching. See
+    /// https://www.consul.io/api/features/caching.html for more details.
     #[serde(with = "humanize::duration::serde")]
     pub stale_if_error: std::time::Duration,
 
-    // WaitIndex is used to enable a blocking query. Waits
-    // until the timeout or the next index is reached
+    /// WaitIndex is used to enable a blocking query. Waits
+    /// until the timeout or the next index is reached
     pub wait_index: u64,
 
-    // WaitHash is used by some endpoints instead of WaitIndex to perform blocking
-    // on state based on a hash of the response rather than a monotonic index.
-    // This is required when the state being blocked on is not stored in Raft, for
-    // example agent-local proxy configuration.
+    /// WaitHash is used by some endpoints instead of WaitIndex to perform blocking
+    /// on state based on a hash of the response rather than a monotonic index.
+    /// This is required when the state being blocked on is not stored in Raft, for
+    /// example agent-local proxy configuration.
     pub wait_hash: String,
 
-    // WaitTime is used to bound the duration of a wait.
-    // Defaults to that of the Config, but can be overridden.
+    /// WaitTime is used to bound the duration of a wait.
+    /// Defaults to that of the Config, but can be overridden.
     #[serde(with = "humanize::duration::serde")]
     pub wait_time: std::time::Duration,
 
-    // Token is used to provide a per-request ACL token
-    // which overrides the agent's default token.
+    /// Token is used to provide a per-request ACL token
+    /// which overrides the agent's default token.
     pub token: String,
 
-    // Near is used to provide a node name that will sort the results
-    // in ascending order based on the estimated round trip time from
-    // that node. Setting this to "_agent" will use the agent's node
-    // for the sort.
+    /// Near is used to provide a node name that will sort the results
+    /// in ascending order based on the estimated round trip time from
+    /// that node. Setting this to "_agent" will use the agent's node
+    /// for the sort.
     pub near: String,
 
-    // NodeMeta is used to filter results by nodes with the given
-    // metadata key/value pairs. Currently, only one key/value pair can
-    // be provided for filtering.
+    /// NodeMeta is used to filter results by nodes with the given
+    /// metadata key/value pairs. Currently, only one key/value pair can
+    /// be provided for filtering.
     pub node_meta: HashMap<String, String>,
 
-    // RelayFactor is used in keyring operations to cause responses to be
-    // relayed back to the sender through N other random nodes. Must be
-    // a value from 0 to 5 (inclusive).
+    /// RelayFactor is used in keyring operations to cause responses to be
+    /// relayed back to the sender through N other random nodes. Must be
+    /// a value from 0 to 5 (inclusive).
     pub relay_factor: u8,
 
-    // LocalOnly is used in keyring list operation to force the keyring
-    // query to only hit local servers (no WAN traffic).
+    /// LocalOnly is used in keyring list operation to force the keyring
+    /// query to only hit local servers (no WAN traffic).
     pub local_only: bool,
 
-    // Connect filters prepared query execution to only include Connect-capable
-    // services. This currently affects prepared query execution.
+    /// Connect filters prepared query execution to only include Connect-capable
+    /// services. This currently affects prepared query execution.
     pub connect: bool,
 
-    // Filter requests filtering data prior to it being returned. The string
-    // is a go-bexpr compatible expression.
+    /// Filter requests filtering data prior to it being returned. The string
+    /// is a go-bexpr compatible expression.
     pub filter: String,
 }
 

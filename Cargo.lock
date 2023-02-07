@@ -609,6 +609,7 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "chrono",
+ "configurable",
  "dyn-clone",
  "event",
  "futures",
@@ -657,6 +658,7 @@ dependencies = [
  "humanize",
  "indexmap",
  "inventory",
+ "no-proxy",
  "schemars",
  "serde",
  "serde_json",
@@ -2186,6 +2188,7 @@ dependencies = [
 name = "lookup"
 version = "0.1.0"
 dependencies = [
+ "configurable",
  "criterion",
  "serde",
  "serde_json",

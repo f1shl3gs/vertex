@@ -1,5 +1,9 @@
 use std::fmt::{Debug, Display, Formatter};
 
+use configurable::schema::generate_string_schema;
+use configurable::schemars::gen::SchemaGenerator;
+use configurable::schemars::schema::SchemaObject;
+use configurable::{Configurable, GenerateError};
 use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
 use serde::Deserializer;
@@ -53,6 +57,13 @@ impl Compression {
             Self::Gzip(_) => Some("gzip"),
             Self::Zlib(_) => Some("deflate"),
         }
+    }
+}
+
+impl Configurable for Compression {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        // TODO: validate!?
+        Ok(generate_string_schema())
     }
 }
 

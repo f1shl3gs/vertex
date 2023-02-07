@@ -10,6 +10,7 @@ mod tests;
 // Re-export
 pub use layer::AdaptiveConcurrencyLimitLayer;
 
+use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
 pub(self) const MAX_CONCURRENCY: usize = 256;
@@ -17,7 +18,7 @@ pub(self) const MAX_CONCURRENCY: usize = 256;
 /// The defaults for these values were chosen after running several simulations
 /// on a test service that had various responses to load. The values are the best
 /// balances found between competing outcomes.
-#[derive(Clone, Copy, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct AdaptiveConcurrencySettings {
     /// This value maintained high concurrency without holding it too high under

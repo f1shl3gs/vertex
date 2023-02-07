@@ -4,22 +4,23 @@ use std::collections::HashSet;
 use std::time::Instant;
 
 use chrono::Utc;
+use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{
-    default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
 use framework::http::HttpClient;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "consul")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
+    /// HTTP/HTTPS endpoint to Consul server.
+    #[configurable(required, format = "uri", example = "http://localhost:8500")]
     endpoints: Vec<String>,
 
     #[serde(default)]
@@ -30,34 +31,6 @@ struct ConsulSourceConfig {
 
     #[serde(default)]
     query_options: Option<QueryOptions>,
-}
-
-impl GenerateConfig for ConsulSourceConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# HTTP/HTTPS endpoint to Consul server.
-endpoints:
-- http://localhost:8500
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Configures the TLS options for outgoing connections.
-# tls:
-{}
-
-
-
-"#,
-            TlsConfig::generate_commented_with_indent(2)
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<ConsulSourceConfig>("consul")
 }
 
 #[async_trait::async_trait]
@@ -361,6 +334,7 @@ mod integration_tests {
     use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
     use hyper::Body;
+    use serde::{Deserialize, Serialize};
     use testcontainers::core::WaitFor;
     use testcontainers::images::generic::GenericImage;
     use testcontainers::RunnableImage;

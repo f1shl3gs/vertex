@@ -20,6 +20,12 @@ fn generate_example() {
         Duration::from_secs(10)
     }
 
+    fn default_sub() -> Sub {
+        Sub {
+            offset: "ssss".to_string(),
+        }
+    }
+
     #[derive(Clone, Debug, Configurable, Deserialize, Serialize)]
     #[serde(deny_unknown_fields)]
     pub struct NtpConfig {
@@ -30,6 +36,7 @@ fn generate_example() {
         struct_arr: Vec<Sub>,
 
         /// sub desc
+        #[serde(default = "default_sub")]
         sub: Sub,
 
         /// Time for NTP round-trip. in seconds.

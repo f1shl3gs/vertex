@@ -4,11 +4,14 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
-use codecs::decoding::{BytesDecoder, DecodeError, OctetCountingDecoder, SyslogDeserializer};
+use codecs::decoding::{
+    BytesDeserializerConfig, DecodeError, OctetCountingDecoder, SyslogDeserializer,
+};
 use codecs::Decoder;
+use configurable::{configurable_component, Configurable};
 use event::Event;
-use framework::config::{DataType, GenerateConfig, Resource, SourceConfig, SourceContext};
-use framework::config::{Output, SourceDescription};
+use framework::config::Output;
+use framework::config::{DataType, Resource, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::source::util::{
@@ -29,97 +32,65 @@ pub const fn default_max_length() -> usize {
     128 * 1024
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "mode", rename_all = "snake_case")]
 pub enum Mode {
     Tcp {
+        /// The address to listen for connections on, or systemd#N to use the Nth
+        /// socket passed by systemd socket activation. If an address is used it
+        /// must include a port.
+        #[configurable(required, format = "ip-address", "0.0.0.0:9000")]
         address: SocketListenAddr,
+
+        /// Configures the TCP keepalive behavior for the connection to the source.
         keepalive: Option<TcpKeepaliveConfig>,
+
+        /// Configures the TLS options for incoming connections.
         tls: Option<TlsConfig>,
+
+        /// Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
         #[serde(default, with = "humanize::bytes::serde_option")]
         receive_buffer_bytes: Option<usize>,
+
+        /// The max number of TCP connections that will be processed.
         connection_limit: Option<u32>,
     },
     Udp {
+        /// The address to listen for connections on, or systemd#N to use the Nth
+        /// socket passed by systemd socket activation. If an address is used it
+        /// must include a port
         address: SocketAddr,
+
+        /// Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
         #[serde(default, with = "humanize::bytes::serde_option")]
         receive_buffer_bytes: Option<usize>,
     },
     #[cfg(unix)]
-    Unix { path: PathBuf },
+    Unix {
+        /// Unix socket file path.
+        #[configurable(required)]
+        path: PathBuf,
+    },
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-// #[serde(deny_unknown_fields)]
+#[configurable_component(source, name = "syslog")]
+#[derive(Debug)]
+#[serde(deny_unknown_fields)]
 pub struct SyslogConfig {
+    /// The type of socket to use.
     #[serde(flatten)]
     pub mode: Mode,
+
+    /// The maximum buffer size of incoming messages. Messages larger than
+    /// this are truncated.
     #[serde(default = "default_max_length")]
     pub max_length: usize,
-    // The host key of the log. This differs from `hostname`
+
+    /// The key name added to each event representing the current host. This can
+    /// be globally set via the global "host_key" option.
+    ///
+    /// The host key of the log. This differs from `hostname`
     pub host_key: Option<String>,
-}
-
-impl GenerateConfig for SyslogConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The type of socket to use
-#
-# Available values:
-# tcp:      TCP socket
-# udp:      UDP socket
-# unix:     Unix domain stream socket (*nix only)
-mode: tcp
-
-# The address to listen for connections on, or systemd#N to use the Nth
-# socket passed by systemd socket activation. If an address is used it
-# must inlucde a port
-#
-address: 0.0.0.0:514
-
-# The max number of TCP connections that will be processed
-#
-# Availabel only when mode is "tcp"
-# connection_limit: 1024
-
-# Configures the TCP keepalive behavior for the connection to the source.
-#
-# Availabel only when mode is "tcp"
-# keepalive:
-{}
-
-# Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
-#
-# Availabel only when mode is "tcp"
-# receive_buffer_bytes: 64ki
-
-# Configures the TLS options for incoming connections
-#
-# Availabel only when mode is "tcp"
-# tls:
-{}
-
-# The maximum buffer size of incoming messages. Messages larger than
-# this are truncated.
-#
-# max_length: {}
-
-# The key name added to each event representing the current host. This can
-# be globally set via the global "host_key" option.
-#
-# host_key: host
-
-        "#,
-            TcpKeepaliveConfig::generate_commented_with_indent(2),
-            TlsConfig::generate_commented_with_indent(2),
-            humanize::bytes::bytes(default_max_length()),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<SyslogConfig>("syslog")
 }
 
 #[async_trait::async_trait]
@@ -267,7 +238,10 @@ pub fn udp(
 
         let mut stream = UdpFramed::new(
             socket,
-            Decoder::new(BytesDecoder::new().into(), SyslogDeserializer.into()),
+            Decoder::new(
+                BytesDeserializerConfig::new().into(),
+                SyslogDeserializer.into(),
+            ),
         )
         .take_until(shutdown)
         .filter_map(|frame| {
