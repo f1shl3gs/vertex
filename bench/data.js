@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675747092785,
+  "lastUpdate": 1675747186748,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7778,6 +7778,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1171.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eca3fb2ac99c3989e28433c3b84f2379af651b44",
+          "message": "Merge pull request #743 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.35.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.2+5.3.0-patched to 0.5.3+5.3.0-patched",
+          "timestamp": "2023-02-07T12:57:51+08:00",
+          "tree_id": "d64ae472c32ee3253ccc81923629d2a0de58fd59",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eca3fb2ac99c3989e28433c3b84f2379af651b44"
+        },
+        "date": 1675747178582,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 40270000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1016800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 55.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 408.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1165.9,
             "unit": "ns/op"
           }
         ]
