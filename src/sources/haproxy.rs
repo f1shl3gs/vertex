@@ -3,18 +3,17 @@ use std::io::BufRead;
 
 use bytes::Buf;
 use chrono::Utc;
+use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::{
-    ticker_from_duration, DataType, GenerateConfig, Output, ProxyConfig, SourceConfig,
-    SourceContext, SourceDescription,
+    ticker_from_duration, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
 };
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Error, Source};
 use futures::StreamExt;
 use http::{StatusCode, Uri};
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 // HAProxy 1.4
@@ -42,46 +41,21 @@ const FRONTEND_KEY: Key = Key::from_static_str("frontend");
 const INSTANCE_KEY: Key = Key::from_static_str("instance");
 const SERVER_KEY: Key = Key::from_static_str("server");
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "haproxy")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct HaproxyConfig {
+    /// HTTP/HTTPS endpoint to Consul server.
+    #[configurable(required)]
     endpoints: Vec<String>,
 
+    /// Configures the TLS options for outgoing connections.
     #[serde(default)]
     tls: Option<TlsConfig>,
 
+    /// Configures the authentication strategy.
     #[serde(default)]
     auth: Option<Auth>,
-}
-
-impl GenerateConfig for HaproxyConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# HTTP/HTTPS endpoint to Consul server.
-endpoints:
-- http://localhost:8500
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Configures the TLS options for outgoing connections.
-# tls:
-{}
-
-# Configures the authentication strategy.
-# auth:
-{}
-"#,
-            TlsConfig::generate_commented_with_indent(2),
-            Auth::generate_commented_with_indent(2),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<HaproxyConfig>("haproxy")
 }
 
 #[async_trait::async_trait]

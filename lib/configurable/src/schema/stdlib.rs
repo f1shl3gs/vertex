@@ -1,4 +1,5 @@
 use std::collections::BTreeMap;
+use std::path::PathBuf;
 use std::time::Duration;
 
 use schemars::gen::SchemaGenerator;
@@ -6,11 +7,11 @@ use schemars::schema::{ArrayValidation, InstanceType, SchemaObject, SingleOrVec}
 use serde::Serialize;
 
 use crate::configurable::ConfigurableString;
-use crate::schema::generate_number_schema;
 use crate::schema::{
     assert_string_schema_for_map, generate_baseline_schema, generate_bool_schema,
     generate_map_schema, get_or_generate_schema, make_schema_optional,
 };
+use crate::schema::{generate_number_schema, generate_string_schema};
 use crate::{Configurable, GenerateError};
 
 impl<K, V> Configurable for BTreeMap<K, V>
@@ -86,6 +87,17 @@ impl Configurable for Duration {
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         })
+    }
+}
+
+impl Configurable for PathBuf {
+    fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        let mut schema = generate_string_schema();
+        let metadata = schema.metadata();
+
+        metadata.description = Some("file path".to_string());
+
+        Ok(generate_string_schema())
     }
 }
 

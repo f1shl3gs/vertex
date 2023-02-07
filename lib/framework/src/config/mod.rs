@@ -464,6 +464,7 @@ pub trait SourceConfig: core::fmt::Debug + Send + Sync {
 
     fn outputs(&self) -> Vec<Output>;
 
+    // TODO: remove this once we migrate to configurable
     fn source_type(&self) -> &'static str;
 
     /// Resources that the source is using

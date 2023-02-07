@@ -1,13 +1,13 @@
 mod chunk;
 
-pub use chunk::ChunkedDecoder;
-
 use std::borrow::Cow;
 use std::{
     fmt,
     task::{Context, Poll},
 };
 
+pub use chunk::ChunkedDecoder;
+use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
 use http::{header, header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
@@ -262,7 +262,7 @@ impl<B> fmt::Debug for HttpClient<B> {
     }
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
+#[derive(Configurable, Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]
 pub enum Auth {
     Basic { user: String, password: String },

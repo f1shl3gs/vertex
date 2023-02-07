@@ -5,6 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use configurable::Configurable;
 use openssl::{
     pkcs12::{ParsedPkcs12, Pkcs12},
     pkey::{PKey, Private},
@@ -65,15 +66,12 @@ impl TlsConfig {
 }
 
 /// Standard TLS options
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct TlsConfig {
     pub verify_certificate: Option<bool>,
     pub verify_hostname: Option<bool>,
-    #[serde(alias = "ca_path")]
     pub ca_file: Option<PathBuf>,
-    #[serde(alias = "crt_path")]
     pub crt_file: Option<PathBuf>,
-    #[serde(alias = "key_path")]
     pub key_file: Option<PathBuf>,
     pub key_pass: Option<String>,
 }
