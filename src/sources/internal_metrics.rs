@@ -1,44 +1,33 @@
 use std::collections::BTreeMap;
 use std::time::Duration;
 
+use configurable::configurable_component;
 use event::Bucket;
-use framework::config::{GenerateConfig, Output, SourceDescription};
+use framework::config::Output;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{DataType, SourceConfig, SourceContext},
+    config::{default_interval, DataType, SourceConfig, SourceContext},
     Source,
 };
 use futures::StreamExt;
 use metrics::{Attributes, Observation};
-use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "internal_metrics")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
-struct InternalMetricsConfig {}
-
-impl GenerateConfig for InternalMetricsConfig {
-    fn generate_config() -> String {
-        r#"
-# The interval between scrapes.
-#
-# Default: 15s
-# interval: 15s
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<InternalMetricsConfig>("internal_metrics")
+struct InternalMetricsConfig {
+    /// Duration between reports
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_metrics")]
 impl SourceConfig for InternalMetricsConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        Ok(Box::pin(run(cx.interval, cx.shutdown, cx.output)))
+        Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
     }
 
     fn outputs(&self) -> Vec<Output> {
