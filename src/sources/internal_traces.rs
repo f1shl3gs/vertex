@@ -2,35 +2,24 @@ use std::borrow::Cow;
 use std::fmt::Debug;
 
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::{tags, Trace};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
-use serde::{Deserialize, Serialize};
 
 pub fn default_service() -> String {
     "vertex".into()
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "internal_traces")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct InternalTracesConfig {
     #[serde(default = "default_service")]
     pub service: String,
-}
-
-impl GenerateConfig for InternalTracesConfig {
-    fn generate_config() -> String {
-        r#"{}"#.into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<InternalTracesConfig>("internal_traces")
 }
 
 #[async_trait]
