@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675747043008,
+  "lastUpdate": 1675747046294,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -811,6 +811,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 711870,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "264a44230309d3694d8f937204e63eab08106810",
+          "message": "Merge pull request #742 from f1shl3gs/configurable\n\nConfigurable",
+          "timestamp": "2023-02-07T13:13:33+08:00",
+          "tree_id": "da8c48d5a20dfa7a7df09992c645828303e1256f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/264a44230309d3694d8f937204e63eab08106810"
+        },
+        "date": 1675747037592,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 713770,
             "unit": "ns/op"
           }
         ]
