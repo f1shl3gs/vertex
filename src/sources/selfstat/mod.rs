@@ -3,30 +3,33 @@ mod built_info;
 mod linux;
 
 use std::fmt::Debug;
+use std::time::Duration;
 
+use configurable::configurable_component;
 use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{
-        default_interval, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-        SourceDescription,
-    },
+    config::{default_interval, DataType, Output, SourceConfig, SourceContext},
     Source,
 };
 use futures::StreamExt;
-use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Copy, Clone, Debug, Deserialize, Serialize)]
-struct SelfStatConfig {}
+#[configurable_component(source, name = "selfstat")]
+#[derive(Copy, Clone, Debug)]
+struct SelfStatConfig {
+    /// The interval between scrapes.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "selfstat")]
 impl SourceConfig for SelfStatConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ss = SelfStat {
-            interval: cx.interval,
+            interval: self.interval,
         };
 
         Ok(Box::pin(ss.run(cx.shutdown, cx.output)))
@@ -41,25 +44,8 @@ impl SourceConfig for SelfStatConfig {
     }
 }
 
-impl GenerateConfig for SelfStatConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The interval between scrapes.
-#
-interval: {}
-"#,
-            humanize::duration::duration(&default_interval())
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<SelfStatConfig>("selfstat")
-}
-
 struct SelfStat {
-    interval: std::time::Duration,
+    interval: Duration,
 }
 
 impl SelfStat {
