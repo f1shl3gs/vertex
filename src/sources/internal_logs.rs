@@ -1,33 +1,23 @@
 use chrono::Utc;
+use configurable::configurable_component;
 use event::Event;
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
 use log_schema::log_schema;
-use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[configurable_component(source, name = "internal_logs")]
+#[derive(Debug, Default)]
 #[serde(deny_unknown_fields)]
 pub struct InternalLogsConfig {
+    /// Host key
     host_key: Option<String>,
+
+    /// Pid key
     pid_key: Option<String>,
-}
-
-impl GenerateConfig for InternalLogsConfig {
-    fn generate_config() -> String {
-        r#"# No need to config anything
-{}"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<InternalLogsConfig>("internal_logs")
 }
 
 #[async_trait::async_trait]
