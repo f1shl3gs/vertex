@@ -29,36 +29,6 @@ const fn default_timeout() -> Duration {
     Duration::from_secs(10)
 }
 
-/*
-impl GenerateConfig for NtpConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# NTP servers to use.
-pools:
-- 0.pool.ntp.org
-- 1.pool.ntp.org
-- 2.pool.ntp.org
-- 3.pool.ntp.org
-
-# The query timeout
-# timeout: {}s
-
-# The interval between scrapes.
-#
-# interval: {}s
-"#,
-            default_timeout().as_secs(),
-            default_interval().as_secs()
-        )
-    }
-}
-
-inventory::submit! {
-    framework::config::SourceDescription::new::<NtpConfig>("ntp")
-}
-*/
-
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]
 impl SourceConfig for NtpConfig {
