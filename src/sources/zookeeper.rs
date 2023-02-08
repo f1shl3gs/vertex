@@ -1,44 +1,24 @@
-// mntr
-
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
+use configurable::configurable_component;
 use event::{tags, Metric, INSTANCE_KEY};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
 use futures::StreamExt;
-use serde::{Deserialize, Serialize};
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "zookeeper")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct ZookeeperConfig {
+    /// The endpoints to connect to.
+    #[configurable(required)]
     endpoint: String,
-}
-
-impl GenerateConfig for ZookeeperConfig {
-    fn generate_config() -> String {
-        r#"
-# The endpoints to connect to.
-#
-endpoint: 127.0.0.1:2181
-
-# The interval between scrapes.
-#
-# interval: 15s
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<ZookeeperConfig>("zookeeper")
 }
 
 struct ZookeeperSource {
