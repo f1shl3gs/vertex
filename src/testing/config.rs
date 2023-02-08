@@ -7,7 +7,7 @@ where
     let cfg = T::generate_config();
     if let Err(err) = serde_yaml::from_str::<T>(&cfg) {
         panic!(
-            "{}\n\n----------------- Generated config -------------{}\n",
+            "{}\n\n----------------- Generated config -------------\n{}\n",
             err, cfg
         )
     }
