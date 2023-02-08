@@ -26,17 +26,21 @@ impl SinkBatchSettings for LokiDefaultBatchSettings {
     const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
-#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum OutOfOrderAction {
+    /// Drop the event.
+    #[default]
     Drop,
-    RewriteTimestamp,
-}
 
-impl Default for OutOfOrderAction {
-    fn default() -> Self {
-        Self::Drop
-    }
+    /// Rewrite the timestamp of the event to the timestamp of the latest event seen by the sink.
+    RewriteTimestamp,
+    // /// Accept the event.
+    // ///
+    // /// The event is not dropped and is sent without modification.
+    // ///
+    // /// Requires Loki 2.4.0 or newer.
+    // Accept,
 }
 
 #[configurable_component(sink, name = "loki")]
@@ -70,6 +74,7 @@ pub struct LokiConfig {
 
     /// If this is set to "true" then when labels are collected from
     /// events those fields will also get removed from the event.
+    #[serde(default)]
     pub remove_label_fields: bool,
 
     /// If this is set to "true" then the timestamp will be removed
@@ -89,6 +94,7 @@ pub struct LokiConfig {
 
     pub auth: Option<Auth>,
     pub tls: Option<TlsConfig>,
+
     #[serde(default = "Compression::gzip_default")]
     pub compression: Compression,
 

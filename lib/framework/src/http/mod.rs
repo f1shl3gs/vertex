@@ -266,8 +266,26 @@ impl<B> fmt::Debug for HttpClient<B> {
 #[derive(Configurable, Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]
 pub enum Auth {
-    Basic { user: String, password: String },
-    Bearer { token: String },
+    /// Basic authentication.
+    ///
+    /// The username and password are concatenated and encoded via [base64][base64].
+    ///
+    /// [base64]: https://en.wikipedia.org/wiki/Base64
+    Basic {
+        /// The basic authentication username.
+        user: String,
+
+        /// The basic authentication password.
+        password: String,
+    },
+
+    /// Bearer authentication.
+    ///
+    /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
+    Bearer {
+        /// The bearer authentication token.
+        token: String,
+    },
 }
 
 impl Auth {

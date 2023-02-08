@@ -1,4 +1,3 @@
-use std::path::PathBuf;
 use std::time::Duration;
 
 use async_stream::stream;
@@ -39,18 +38,15 @@ pub struct HttpConfig {
     #[configurable(required, format = "uri", example = "https://exampel.com/config")]
     url: Url,
 
-    request: RequestConfig,
-
     /// The interval between fetch config.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
-    /// Configures the TLS options for outgoing connections.
+
     tls: Option<TlsConfig>,
     /// Configures an HTTP/HTTPS proxy for Vertex to use. By default, the globally
     /// configured proxy is used.
-    proxy: ProxyConfig,
     #[serde(default)]
-    persist: Option<PathBuf>,
+    proxy: ProxyConfig,
 }
 
 #[async_trait::async_trait]

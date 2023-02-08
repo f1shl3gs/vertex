@@ -8,9 +8,9 @@ publish = false
 proc-macro = true
 
 [dependencies]
-proc-macro2 = { version = "1.0", default-features = false }
-quote = { version = "1.0", default-features = false }
-syn = { version = "1.0", default-features = false, features = [ "parsing", "proc-macro", "derive", "extra-traits" ] }
+proc-macro2 = { version = "1.0.51", default-features = false }
+quote = { version = "1.0.23", default-features = false }
+syn = { version = "1.0.7", default-features = false, features = [ "parsing", "proc-macro", "derive", "extra-traits" ] }
 
 [dev-dependencies]
 configurable = { path = "../configurable" }

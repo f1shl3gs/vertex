@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[test]
 fn generate_example() {
-    #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+    #[derive(Configurable, Clone, Debug, Deserialize, Serialize, Default)]
     pub struct Sub {
         /// offset
         #[configurable(example = "-8")]

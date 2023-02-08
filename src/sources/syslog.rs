@@ -39,7 +39,7 @@ pub enum Mode {
         /// The address to listen for connections on, or systemd#N to use the Nth
         /// socket passed by systemd socket activation. If an address is used it
         /// must include a port.
-        #[configurable(required, format = "ip-address", "0.0.0.0:9000")]
+        #[configurable(required, format = "ip-address", example = "0.0.0.0:9000")]
         address: SocketListenAddr,
 
         /// Configures the TCP keepalive behavior for the connection to the source.
@@ -59,6 +59,7 @@ pub enum Mode {
         /// The address to listen for connections on, or systemd#N to use the Nth
         /// socket passed by systemd socket activation. If an address is used it
         /// must include a port
+        #[configurable(required, format = "ip-address", example = "0.0.0.0:9000")]
         address: SocketAddr,
 
         /// Configures the recive buffer size using the "SO_RCVBUF" option on the socket.
@@ -75,7 +76,6 @@ pub enum Mode {
 
 #[configurable_component(source, name = "syslog")]
 #[derive(Debug)]
-#[serde(deny_unknown_fields)]
 pub struct SyslogConfig {
     /// The type of socket to use.
     #[serde(flatten)]
@@ -340,8 +340,11 @@ mod tests {
 
     #[test]
     fn config_tcp() {
-        let config: SyslogConfig =
-            serde_yaml::from_str("mode: tcp\naddress: \"127.0.0.1:12345\"").unwrap();
+        let text = r#"
+mode: tcp
+address: 127.0.0.1:12345
+"#;
+        let config: SyslogConfig = serde_yaml::from_str(text).unwrap();
 
         assert!(matches!(config.mode, Mode::Tcp { .. }));
     }

@@ -15,9 +15,3 @@ mod tests;
 pub(super) mod proto {
     include!(concat!(env!("OUT_DIR"), "/loki.rs"));
 }
-
-use config::LokiConfig;
-
-inventory::submit! {
-    framework::config::SinkDescription::new::<LokiConfig>("loki")
-}

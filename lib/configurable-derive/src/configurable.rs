@@ -86,84 +86,10 @@ fn impl_from_struct(
         quote!( metadata.description = Some(#value.to_string()); )
     });
 
-    let mapped_fields = fields.named.iter()
-        .map(|field| {
-            let field_key = field.ident.clone().expect("filed has a name").to_string();
-            let field_typ = &field.ty;
-
-            let field_attrs = FieldAttrs::parse(errs, field);
-            if field_attrs.skip {
-                return quote!();
-            }
-
-            let maybe_field_required = if field_attrs.required {
-                Some(quote!(
-                    required.insert(#field_key.to_string());
-                ))
-            } else {
-                None
-            };
-
-            let maybe_description = field_attrs.description.map(|desc| {
-                let value = desc.content.value();
-
-                quote!( metadata.description = Some(#value.to_string()); )
-            });
-
-            let maybe_deprecated = if field_attrs.deprecated {
-                quote!( metadata.deprecated = true; )
-            } else {
-                quote!()
-            };
-
-            let maybe_default = if let Some(default_fn) = field_attrs.default {
-                let default_fn: Path = default_fn.parse().expect("valid serde default value");
-
-                match field_attrs.serde_with {
-                    Some(serde_with) => {
-                        let serde_with: Path = serde_with.parse().expect("valid serde with value");
-
-                        quote!{
-                            let value = #serde_with::serialize(& #default_fn(), serde_json::value::Serializer).expect("serialize default value");
-                            metadata.default = Some( value );
-                        }
-                    },
-                    None => {
-                        quote!{
-                            let value = ::serde_json::to_value( & #default_fn() ).expect("transform default value to serde_json::Value");
-                            metadata.default = Some(value);
-                        }
-                    }
-                }
-            } else {
-                quote!()
-            };
-
-            let maybe_format = field_attrs
-                .format
-                .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
-            let maybe_example = field_attrs.example.map(|example| {
-                quote!( metadata.examples = vec![ ::serde_json::Value::from( #example ) ]; )
-            });
-
-            quote!(
-                {
-                    let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
-
-                    #maybe_format
-
-                    let metadata = subschema.metadata();
-
-                    #maybe_description
-                    #maybe_deprecated
-                    #maybe_default
-                    #maybe_example
-
-                    #maybe_field_required
-                    properties.insert(#field_key.to_string(), subschema);
-                }
-            )
-        });
+    let mapped_fields = fields
+        .named
+        .iter()
+        .map(|field| generate_named_struct_field(errs, type_attrs, field));
 
     let generate_schema = quote!(
         fn generate_schema(schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator)
@@ -201,6 +127,109 @@ fn impl_from_struct(
     );
 
     generate_schema
+}
+
+fn generate_named_struct_field(
+    errs: &Errors,
+    _type_attrs: &TypeAttrs,
+    field: &syn::Field,
+) -> TokenStream {
+    let field_key = field.ident.clone().expect("filed has a name").to_string();
+    let field_typ = &field.ty;
+
+    let field_attrs = FieldAttrs::parse(errs, field);
+    if field_attrs.skip {
+        return quote!();
+    }
+
+    // If the field is flattened, we store it into a different list of flattened
+    // subschemas vs adding it directly as a field via `properties`/`required`.
+    let insert_fields = if field_attrs.flatten {
+        quote!( flattened_subschemas.push(subschema); )
+    } else {
+        quote!( properties.insert(#field_key.to_string(), subschema); )
+    };
+
+    let maybe_field_required = if field_attrs.required {
+        Some(quote!(
+            required.insert(#field_key.to_string());
+        ))
+    } else {
+        None
+    };
+
+    let maybe_description = field_attrs.description.map(|desc| {
+        let value = desc.content.value();
+
+        quote!( metadata.description = Some(#value.to_string()); )
+    });
+
+    let maybe_deprecated = if field_attrs.deprecated {
+        quote!( metadata.deprecated = true; )
+    } else {
+        quote!()
+    };
+
+    let maybe_default = if let Some(default_fn) = field_attrs.default {
+        let default_value = if default_fn.value().is_empty() {
+            quote!( let default_value: #field_typ = Default::default(); )
+        } else {
+            let default_fn: Path = default_fn.parse().expect("valid serde default value");
+            quote!( let default_value = #default_fn(); )
+        };
+
+        let json_value = match field_attrs.serde_with {
+            Some(serde_with) => {
+                let serde_with: Path = serde_with.parse().expect("valid serde with value");
+
+                quote! {
+                    let value = #serde_with::serialize(&default_value, serde_json::value::Serializer)
+                        .expect("serialize default value");
+                }
+            }
+            None => {
+                quote! {
+                    let value = ::serde_json::to_value( & default_value )
+                        .expect("transform default value to serde_json::Value");
+                }
+            }
+        };
+
+        quote! {
+            #default_value
+            #json_value
+
+            metadata.default = Some(value);
+        }
+    } else {
+        quote!()
+    };
+
+    let maybe_format = field_attrs
+        .format
+        .map(|ls| quote!( subschema.format = Some(#ls.to_string()); ));
+    let maybe_example = field_attrs.example.map(
+        |example| quote!( metadata.examples = vec![ ::serde_json::Value::from( #example ) ]; ),
+    );
+
+    quote!(
+        {
+            let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_typ>(schema_gen)?;
+
+            #maybe_format
+
+            let metadata = subschema.metadata();
+
+            #maybe_description
+            #maybe_deprecated
+            #maybe_default
+            #maybe_example
+
+            #maybe_field_required
+
+            #insert_fields
+        }
+    )
 }
 
 fn generate_struct_field(field: &syn::Field) -> TokenStream {
@@ -268,19 +297,40 @@ fn apply_rename(variant: &str, rule: &syn::LitStr) -> String {
         "snake_case" => snake_case(),
         "SCREAMING_SNAKE_CASE" => snake_case().to_ascii_uppercase(),
         "kebab-case" => snake_case().replace('_', "-"),
-        "SCREAMING-KEBAB-CASE" => snake_case().to_ascii_uppercase().replace('-', "-"),
+        "SCREAMING-KEBAB-CASE" => snake_case().to_ascii_uppercase().replace('_', "-"),
         _ => variant.to_owned(),
     }
 }
 
-fn generate_enum_struct_named_variant_schema(variant: &syn::Variant) -> TokenStream {
+fn generate_enum_struct_named_variant_schema(
+    type_attrs: &TypeAttrs,
+    variant: &syn::Variant,
+) -> TokenStream {
     let mapped_fields = variant.fields.iter().map(generate_named_enum_field);
+    let maybe_tag_schema = match &type_attrs.tag {
+        Some(tag) => {
+            let ident = variant.ident.to_string();
+            let ident = match &type_attrs.rename_all {
+                Some(rule) => apply_rename(&ident, rule),
+                None => ident,
+            };
+
+            quote! {
+                {
+                    let tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
+                    properties.insert(#tag.to_string(), tag_schema);
+                }
+            }
+        }
+        None => quote!(),
+    };
 
     quote! {
         {
             let mut properties = ::configurable::IndexMap::new();
             let mut required = ::std::collections::BTreeSet::new();
 
+            #maybe_tag_schema
             #(#mapped_fields)*
 
             ::configurable::schema::generate_struct_schema(
@@ -316,7 +366,7 @@ fn generate_enum_variant_schema(
             quote! { ::configurable::schema::generate_const_string_schema( #ident.to_string() ) }
         }
 
-        Fields::Named(_named) => generate_enum_struct_named_variant_schema(variant),
+        Fields::Named(_named) => generate_enum_struct_named_variant_schema(type_attrs, variant),
 
         Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(variant),
     };
@@ -339,6 +389,7 @@ fn generate_enum_unamed_variant_schema(variant: &syn::Variant) -> TokenStream {
 fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     let field_name = field.ident.as_ref().expect("field should be named");
     let field_key = field_name.to_string();
+    let field_typ = &field.ty;
 
     let errs = &Errors::default();
     let field_attrs = FieldAttrs::parse(errs, field);
@@ -362,23 +413,35 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     };
 
     let maybe_default = if let Some(default_fn) = field_attrs.default {
-        let default_fn: Path = default_fn.parse().expect("valid serde default value");
+        let default_value = if default_fn.value().is_empty() {
+            quote!( let default_value: #field_typ = Default::default(); )
+        } else {
+            let default_fn: Path = default_fn.parse().expect("valid serde default value");
+            quote!( let default_value = #default_fn(); )
+        };
 
-        match field_attrs.serde_with {
+        let json_value = match field_attrs.serde_with {
             Some(serde_with) => {
                 let serde_with: Path = serde_with.parse().expect("valid serde with value");
 
                 quote! {
-                    let value = #serde_with::serialize(& #default_fn(), serde_json::value::Serializer).expect("serialize default value");
-                    metadata.default = Some( value );
+                    let value = #serde_with::serialize(&default_value, serde_json::value::Serializer)
+                        .expect("serialize default value");
                 }
             }
             None => {
                 quote! {
-                    let value = ::serde_json::to_value( & #default_fn() ).expect("transform default value to serde_json::Value");
-                    metadata.default = Some(value);
+                    let value = ::serde_json::to_value( & default_value )
+                        .expect("transform default value to serde_json::Value");
                 }
             }
+        };
+
+        quote! {
+            #default_value
+            #json_value
+
+            metadata.default = Some(value);
         }
     } else {
         quote!()

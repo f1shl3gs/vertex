@@ -5,7 +5,7 @@ use super::{transformer::Transformer, Framer, Serializer, SerializerConfig};
 use crate::encoding::{BytesEncoder, CharacterDelimitedEncoder, NewlineDelimitedEncoder};
 
 /// Configuration for building a `Framer`.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum FramingConfig {
     /// Configure the `BytesEncoder`
@@ -41,7 +41,8 @@ impl FramingConfig {
 #[serde(deny_unknown_fields)]
 pub struct EncodingConfig {
     /// The encoding codec used to serialize the events before outputting.
-    encoding: SerializerConfig,
+    #[configurable(required)]
+    codec: SerializerConfig,
 
     #[serde(flatten)]
     transformer: Transformer,
@@ -50,15 +51,12 @@ pub struct EncodingConfig {
 impl EncodingConfig {
     /// Creates a new `EncodingConfig` with the provided `SerializerConfig` and `Transformer`.
     pub fn new(codec: SerializerConfig, transformer: Transformer) -> Self {
-        Self {
-            encoding: codec,
-            transformer,
-        }
+        Self { codec, transformer }
     }
 
     /// Get the encoding configuration.
     pub fn config(&self) -> &SerializerConfig {
-        &self.encoding
+        &self.codec
     }
 
     /// Build a `Transformer` that applies the encoding rules to an event before serialization.
@@ -68,7 +66,7 @@ impl EncodingConfig {
 
     /// Build a `Serializer` with this configuration.
     pub fn build(&self) -> Serializer {
-        self.encoding.build()
+        self.codec.build()
     }
 }
 
@@ -78,7 +76,7 @@ where
 {
     fn from(s: T) -> Self {
         Self {
-            encoding: s.into(),
+            codec: s.into(),
             transformer: Default::default(),
         }
     }
@@ -94,7 +92,7 @@ pub enum SinkType {
 }
 
 /// Encoding configuration with Framing
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct EncodingConfigWithFraming {
     framing: Option<FramingConfig>,
@@ -113,7 +111,7 @@ impl EncodingConfigWithFraming {
         Self {
             framing,
             encoding: EncodingConfig {
-                encoding: encoding,
+                codec: encoding,
                 transformer,
             },
         }
@@ -126,7 +124,7 @@ impl EncodingConfigWithFraming {
 
     /// Get the encoding configuration.
     pub const fn config(&self) -> (&Option<FramingConfig>, &SerializerConfig) {
-        (&self.framing, &self.encoding.encoding)
+        (&self.framing, &self.encoding.codec)
     }
 
     /// Build the `Framer` and `Serializer` for this config.

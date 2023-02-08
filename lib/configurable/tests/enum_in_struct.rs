@@ -3,6 +3,7 @@ use configurable::schema::generate_root_schema;
 use configurable::{configurable_component, Configurable};
 use serde::{Deserialize, Serialize};
 
+#[allow(clippy::print_stdout)]
 #[test]
 fn enum_in_struct() {
     let root_schema = generate_root_schema::<ConsoleSinkConfig>().expect("generate schema success");
@@ -32,6 +33,21 @@ fn enum_in_struct() {
         Text,
     }
 
+    #[derive(Configurable, Serialize, Debug, Deserialize)]
+    struct EncodingConfig {
+        #[configurable(required)]
+        encoding: Encoding,
+
+        #[serde(flatten)]
+        flatten: Flatten,
+    }
+
+    #[derive(Configurable, Deserialize, Serialize, Debug)]
+    struct Flatten {
+        first: String,
+        second: String,
+    }
+
     #[configurable_component(sink, name = "console")]
     #[derive(Debug)]
     #[serde(deny_unknown_fields)]
@@ -40,6 +56,6 @@ fn enum_in_struct() {
         #[serde(default)]
         stream: Stream,
 
-        encoding: Encoding,
+        encoding: EncodingConfig,
     }
 }

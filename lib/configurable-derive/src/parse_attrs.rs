@@ -1,3 +1,4 @@
+use syn::spanned::Spanned;
 use syn::{Lit, LitStr};
 
 use crate::errors::Errors;
@@ -19,6 +20,7 @@ pub struct FieldAttrs {
     pub skip: bool,
     pub required: bool,
     pub deprecated: bool,
+    pub flatten: bool,
 
     /// Default fn from serde
     pub default: Option<LitStr>,
@@ -48,11 +50,15 @@ impl FieldAttrs {
                             if name.is_ident("default") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.default)
+                                } else {
+                                    this.default = Some(LitStr::new("", m.span()))
                                 }
                             } else if name.is_ident("with") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.serde_with)
                                 }
+                            } else if name.is_ident("flatten") {
+                                this.flatten = true
                             } else if name.is_ident("skip") {
                                 this.skip = true;
                                 return this;
@@ -135,7 +141,10 @@ pub struct TypeAttrs {
     pub title: Option<syn::LitStr>,
     pub description: Option<Description>,
     pub component_type: Option<syn::Ident>,
+
+    // serde's attributes
     pub rename_all: Option<syn::LitStr>,
+    pub tag: Option<LitStr>,
 }
 
 impl TypeAttrs {
@@ -157,6 +166,10 @@ impl TypeAttrs {
                             if name.is_ident("rename_all") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.rename_all)
+                                }
+                            } else if name.is_ident("tag") {
+                                if let Some(m) = errs.expect_meta_name_value(m) {
+                                    parse_attr_litstr(errs, m, &mut this.tag)
                                 }
                             }
                         };

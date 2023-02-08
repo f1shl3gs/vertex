@@ -1,16 +1,14 @@
+#![allow(clippy::print_stdout)]
+
+use configurable::example::Visitor;
+use configurable::schema::generate_root_schema;
+use configurable_derive::Configurable;
+use serde::de::Unexpected;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::fmt::Formatter;
 
-use configurable::schema::{
-    generate_const_string_schema, generate_number_schema, generate_one_of_schema,
-};
-use configurable::schemars::gen::SchemaGenerator;
-use configurable::schemars::schema::SchemaObject;
-use configurable::{Configurable, GenerateError};
-use serde::de::{Error, Unexpected, Visitor};
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
-/// Configuration for outbound request concurrency.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]
+/// Concurrency struct doc
+#[derive(Configurable, Default)]
 pub enum Concurrency {
     /// A fixed concurrency of 1.
     ///
@@ -25,38 +23,6 @@ pub enum Concurrency {
     Fixed(usize),
 }
 
-impl Configurable for Concurrency {
-    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        let schema = generate_one_of_schema(&[
-            generate_const_string_schema("none".to_string()),
-            generate_const_string_schema("adaptive".to_string()),
-            generate_number_schema::<usize>(),
-        ]);
-
-        Ok(schema)
-    }
-}
-
-impl Concurrency {
-    pub const fn if_none(self, other: Self) -> Self {
-        match self {
-            Self::None => other,
-            _ => self,
-        }
-    }
-
-    pub const fn parse_concurrency(&self, default: Self) -> Option<usize> {
-        match self.if_none(default) {
-            Concurrency::None | Concurrency::Adaptive => None,
-            Concurrency::Fixed(limit) => Some(limit),
-        }
-    }
-}
-
-pub const fn concurrency_is_none(c: &Concurrency) -> bool {
-    matches!(c, Concurrency::None)
-}
-
 impl<'de> Deserialize<'de> for Concurrency {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
@@ -64,7 +30,7 @@ impl<'de> Deserialize<'de> for Concurrency {
     {
         struct UsizeOrAdaptive;
 
-        impl<'de> Visitor<'de> for UsizeOrAdaptive {
+        impl<'de> serde::de::Visitor<'de> for UsizeOrAdaptive {
             type Value = Concurrency;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
@@ -73,12 +39,12 @@ impl<'de> Deserialize<'de> for Concurrency {
 
             fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
             where
-                E: Error,
+                E: serde::de::Error,
             {
                 if v > 0 {
                     Ok(Concurrency::Fixed(v as usize))
                 } else {
-                    Err(Error::invalid_value(
+                    Err(serde::de::Error::invalid_value(
                         Unexpected::Signed(v),
                         &"positive integer",
                     ))
@@ -87,12 +53,12 @@ impl<'de> Deserialize<'de> for Concurrency {
 
             fn visit_u64<E>(self, v: u64) -> Result<Self::Value, E>
             where
-                E: Error,
+                E: serde::de::Error,
             {
                 if v > 0 {
                     Ok(Concurrency::Fixed(v as usize))
                 } else {
-                    Err(Error::invalid_value(
+                    Err(serde::de::Error::invalid_value(
                         Unexpected::Unsigned(v),
                         &"positive integer",
                     ))
@@ -101,14 +67,12 @@ impl<'de> Deserialize<'de> for Concurrency {
 
             fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
             where
-                E: Error,
+                E: serde::de::Error,
             {
                 if v == "adaptive" {
                     Ok(Concurrency::Adaptive)
-                } else if v == "none" {
-                    Ok(Concurrency::None)
                 } else {
-                    Err(Error::unknown_variant(v, &["adaptive"]))
+                    Err(serde::de::Error::unknown_variant(v, &["adaptive"]))
                 }
             }
         }
@@ -128,4 +92,33 @@ impl Serialize for Concurrency {
             Concurrency::Fixed(s) => serializer.serialize_u64(*s as u64),
         }
     }
+}
+
+#[derive(Deserialize, Serialize, Configurable)]
+struct Outer {
+    #[serde(default)]
+    concurrency: Concurrency,
+
+    #[serde(default)]
+    string: Option<String>,
+}
+
+#[test]
+fn default_value() {
+    let root_schema = generate_root_schema::<Outer>().unwrap();
+
+    let text = serde_json::to_string_pretty(&root_schema).unwrap();
+    println!("{}", text);
+
+    let visitor = Visitor::new(root_schema);
+    let example = visitor.example();
+
+    println!("{}", example)
+}
+
+#[test]
+fn none() {
+    let value: Concurrency = Default::default();
+    let value = serde_json::to_value(value).unwrap();
+    println!("{}", value)
 }

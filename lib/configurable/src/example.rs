@@ -1,9 +1,12 @@
 use std::cell::RefCell;
 
+use schemars::schema::{
+    InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject, SingleOrVec,
+};
+use serde_json::{Map, Number, Value};
+
 use crate::schema::generate_root_schema;
 use crate::Configurable;
-use schemars::schema::{InstanceType, RootSchema, Schema, SchemaObject, SingleOrVec};
-use serde_json::{Number, Value};
 
 struct Buf {
     ident: u32,
@@ -64,8 +67,12 @@ impl Visitor {
                 } else {
                     panic!("one_of's first schema should be a SchemaObject")
                 }
-            } else {
-                panic!("one_of is missing")
+            } else if let Some(allof) = &subschemas.all_of {
+                for schema in allof {
+                    if let Schema::Object(obj) = schema {
+                        self.visit_obj(obj)
+                    }
+                }
             }
         } else {
             self.visit_obj(root)
@@ -75,13 +82,22 @@ impl Visitor {
         buf.data
     }
 
-    fn write_comment(&self, desc: Option<&String>) {
+    fn write_comment(&self, desc: Option<&String>, required: bool) {
         if let Some(desc) = desc {
             let mut buf = self.buf.borrow_mut();
             buf.append_ident();
             buf.push('#');
             buf.push_str(desc.as_str());
             buf.push('\n');
+
+            buf.append_ident();
+            buf.push_str("#\n");
+            buf.append_ident();
+            if required {
+                buf.push_str("# Required\n");
+            } else {
+                buf.push_str("# Optional\n");
+            }
         }
     }
 
@@ -93,15 +109,32 @@ impl Visitor {
     }
 
     fn visit_obj(&self, obj: &SchemaObject) {
-        let obj = obj.object.as_ref().unwrap();
+        let obj = match &obj.reference {
+            Some(reference) => {
+                if let Some(Schema::Object(obj)) = self.get_referenced(reference) {
+                    obj
+                } else {
+                    return;
+                }
+            }
+            None => obj,
+        };
 
+        let obj = extract(obj);
+
+        if obj.properties.is_empty() {
+            self.push_value(&Value::Object(Map::new()));
+            return;
+        }
+
+        let required = &obj.required;
         for (k, v) in &obj.properties {
             let sub_obj = match v {
                 Schema::Object(obj) => obj,
                 _ => continue,
             };
 
-            let desc = if let Some(meta) = sub_obj.metadata.as_ref() {
+            let mut desc = if let Some(meta) = sub_obj.metadata.as_ref() {
                 if meta.deprecated {
                     continue;
                 }
@@ -114,7 +147,15 @@ impl Visitor {
             let sub_obj = match &sub_obj.reference {
                 Some(reference) => {
                     match self.get_referenced(reference) {
-                        Some(Schema::Object(so)) => so,
+                        Some(Schema::Object(so)) => {
+                            if let Some(meta) = so.metadata.as_ref() {
+                                if desc.is_none() {
+                                    desc = meta.description.as_ref();
+                                }
+                            }
+
+                            so
+                        }
                         _ => {
                             // TODO:
                             continue;
@@ -125,7 +166,7 @@ impl Visitor {
             };
 
             self.add_newline();
-            self.write_comment(desc);
+            self.write_comment(desc, required.contains(k));
             self.write_key(k);
             self.visit_schema_object(sub_obj);
         }
@@ -196,8 +237,17 @@ impl Visitor {
                     // always pick first one
                     if let Some(Schema::Object(first)) = oneof.first() {
                         self.visit_schema_object(first);
-                        return;
                     }
+                } else if let Some(allof) = &subschema.all_of {
+                    self.incr_ident();
+                    for schema in allof {
+                        if let Schema::Object(obj) = schema {
+                            self.visit_obj(obj)
+                        }
+                    }
+                    self.decr_ident();
+
+                    return;
                 }
             } else if let Some(value) = &obj.const_value {
                 self.push_value(value)
@@ -267,6 +317,30 @@ fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
     }
 
     None
+}
+
+fn extract(obj: &SchemaObject) -> &ObjectValidation {
+    match &obj.object {
+        Some(obj) => obj,
+        None => {
+            // flatten field with enum type goes here
+            if let Some(subschemas) = &obj.subschemas {
+                if let Some(oneof) = &subschemas.one_of {
+                    // handle first only
+                    if let Some(Schema::Object(first)) = oneof.first() {
+                        return first
+                            .object
+                            .as_ref()
+                            .expect("flattened field cannot be empty");
+                    }
+                }
+
+                panic!("subschemas should have a non-empty one_of");
+            } else {
+                panic!("schema object should have at least one of `object` or `subschemas`");
+            }
+        }
+    }
 }
 
 /// Generate YAML example from a JSON Schema

@@ -33,7 +33,7 @@ impl TlsConfig {
     }
 }
 
-/// Standard TLS options
+/// Configures the TLS options for incoming/outgoing connections.
 #[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct TlsConfig {
     pub verify_certificate: Option<bool>,

@@ -14,6 +14,7 @@ pub const GZIP_FAST: u32 = 1;
 pub const GZIP_DEFAULT: u32 = 6;
 pub const GZIP_BEST: u32 = 9;
 
+/// Compression configuration.
 #[derive(Debug, Copy, Clone, Eq, PartialEq, Default)]
 pub enum Compression {
     /// No compression

@@ -1,12 +1,13 @@
-use serde::Serialize;
 use configurable_derive::Configurable;
+use serde::Serialize;
 
+#[allow(clippy::print_stdout)]
 #[test]
 fn struct_in_struct() {
     #[derive(Configurable, Serialize)]
     struct Inner {
         foo: String,
-        bar: String
+        bar: String,
     }
 
     #[derive(Configurable, Serialize)]
@@ -14,7 +15,7 @@ fn struct_in_struct() {
         /// inner desc
         inner: Inner,
 
-        boolean: bool
+        boolean: bool,
     }
 
     let example = configurable::generate_example::<Outer>();
