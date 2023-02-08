@@ -1,15 +1,12 @@
 use std::borrow::Cow;
 use std::time::Instant;
 
+use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{
-    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
-};
+use framework::config::{ticker_from_duration, DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 use virt::{Client, Error};
 
 const DOMAIN_KEY: Key = Key::from_static_str("domain");
@@ -18,29 +15,13 @@ fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "libvirt")]
+#[derive(Debug)]
 struct LibvirtSourceConfig {
+    /// The socket path of libvirtd, read permission is required.
     #[serde(default = "default_sock")]
+    #[configurable(required)]
     sock: String,
-}
-
-impl GenerateConfig for LibvirtSourceConfig {
-    fn generate_config() -> String {
-        r#"
-# The interval between scrapes.
-#
-# interval: 15s
-
-# The socket path of libvirtd, read permission is required
-#
-sock: /run/libvirt/libvirt-sock-ro
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<LibvirtSourceConfig>("libvirt")
 }
 
 #[async_trait::async_trait]
