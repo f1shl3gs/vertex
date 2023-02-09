@@ -33,6 +33,7 @@ pub use validation::warnings;
 
 use async_trait::async_trait;
 use std::collections::HashSet;
+use std::fmt::Debug;
 use std::path::PathBuf;
 use std::time::Duration;
 // IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
@@ -47,6 +48,7 @@ pub use builder::Builder;
 
 use crate::{transform::Noop, Extension, Pipeline};
 use buffers::{Acker, BufferType};
+use configurable::NamedComponent;
 pub use global::GlobalOptions;
 pub use helper::{deserialize_regex, serialize_regex, skip_serializing_if_default};
 pub use loading::load_from_paths_with_provider;
@@ -176,8 +178,8 @@ impl SourceOuter {
         }
     }
 
-    pub fn source_type(&self) -> &'static str {
-        self.inner.source_type()
+    pub fn component_name(&self) -> &'static str {
+        self.inner.component_name()
     }
 
     pub fn resources(&self) -> Vec<Resource> {
@@ -459,13 +461,10 @@ impl SourceContext {
 
 #[async_trait::async_trait]
 #[typetag::serde(tag = "type")]
-pub trait SourceConfig: core::fmt::Debug + Send + Sync {
+pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
     async fn build(&self, cx: SourceContext) -> crate::Result<crate::Source>;
 
     fn outputs(&self) -> Vec<Output>;
-
-    // TODO: remove this once we migrate to configurable
-    fn source_type(&self) -> &'static str;
 
     /// Resources that the source is using
     fn resources(&self) -> Vec<Resource> {
@@ -475,7 +474,7 @@ pub trait SourceConfig: core::fmt::Debug + Send + Sync {
 
 #[async_trait]
 #[typetag::serde(tag = "type")]
-pub trait TransformConfig: core::fmt::Debug + Send + Sync + dyn_clone::DynClone {
+pub trait TransformConfig: Debug + Send + Sync + dyn_clone::DynClone {
     async fn build(&self, cx: &TransformContext) -> crate::Result<crate::Transform>;
 
     fn input_type(&self) -> DataType;

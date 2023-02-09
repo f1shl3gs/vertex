@@ -76,10 +76,6 @@ impl SourceConfig for KmsgConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "kmsg"
-    }
 }
 
 fn parse_line(buf: &[u8], size: usize) -> Result<(u8, u64, u64, String), ()> {

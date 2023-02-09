@@ -189,10 +189,6 @@ impl SourceConfig for ExecConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        EXEC
-    }
 }
 
 async fn run_scheduled(

@@ -58,10 +58,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "elasticsearch"
-    }
 }
 
 struct Elasticsearch {

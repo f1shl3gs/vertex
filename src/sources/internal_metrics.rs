@@ -33,10 +33,6 @@ impl SourceConfig for InternalMetricsConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "internal_metrics"
-    }
 }
 
 async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {

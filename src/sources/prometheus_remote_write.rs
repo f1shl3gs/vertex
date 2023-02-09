@@ -13,8 +13,6 @@ use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
 
-const SOURCE_NAME: &str = "prometheus_remote_write";
-
 #[configurable_component(source, name = "prometheus_remote_write")]
 #[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
@@ -52,10 +50,6 @@ impl SourceConfig for PrometheusRemoteWriteConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        SOURCE_NAME
     }
 
     fn resources(&self) -> Vec<Resource> {

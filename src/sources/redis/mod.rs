@@ -283,10 +283,6 @@ impl SourceConfig for RedisSourceConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "redis"
-    }
 }
 
 struct RedisSource {

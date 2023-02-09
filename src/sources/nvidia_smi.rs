@@ -63,10 +63,6 @@ impl SourceConfig for NvidiaSmiConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "nvidia_smi"
-    }
 }
 
 async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {

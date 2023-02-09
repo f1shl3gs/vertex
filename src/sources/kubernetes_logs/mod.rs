@@ -157,10 +157,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "kubernetes_logs"
-    }
 }
 
 #[derive(Clone)]

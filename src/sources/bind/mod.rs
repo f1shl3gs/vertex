@@ -89,10 +89,6 @@ impl SourceConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "bind"
-    }
 }
 
 fn statistics_to_metrics(s: client::Statistics) -> Vec<Metric> {

@@ -73,10 +73,6 @@ impl SourceConfig for PrometheusScrapeConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "prometheus_scrape"
-    }
 }
 
 fn calculate_hash<T: Hash>(t: &T) -> u64 {

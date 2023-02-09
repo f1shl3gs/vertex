@@ -142,10 +142,6 @@ impl SourceConfig for ZookeeperConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "zookeeper"
-    }
 }
 
 fn parse_version(input: &str) -> String {

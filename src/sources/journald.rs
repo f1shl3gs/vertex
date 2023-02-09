@@ -108,10 +108,6 @@ impl SourceConfig for JournaldConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "journald"
-    }
 }
 
 /// Map the given unit name into a valid systemd unit

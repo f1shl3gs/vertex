@@ -165,10 +165,6 @@ impl SourceConfig for SyslogConfig {
         vec![Output::default(DataType::Log)]
     }
 
-    fn source_type(&self) -> &'static str {
-        "syslog"
-    }
-
     fn resources(&self) -> Vec<Resource> {
         match self.mode.clone() {
             Mode::Tcp { address, .. } => vec![address.into()],

@@ -66,10 +66,6 @@ impl SourceConfig for MemcachedConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "memcached1"
-    }
 }
 
 macro_rules! get_value {

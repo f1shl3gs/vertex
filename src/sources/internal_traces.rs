@@ -66,10 +66,6 @@ impl SourceConfig for InternalTracesConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Trace)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "internal_traces"
-    }
 }
 
 #[cfg(test)]

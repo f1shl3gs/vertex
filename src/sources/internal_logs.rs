@@ -37,10 +37,6 @@ impl SourceConfig for InternalLogsConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "internal_logs"
-    }
 }
 
 async fn run(

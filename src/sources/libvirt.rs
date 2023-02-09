@@ -70,10 +70,6 @@ impl SourceConfig for LibvirtSourceConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "libvirt"
-    }
 }
 
 async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {

@@ -166,10 +166,6 @@ impl SourceConfig for TailConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "tail"
-    }
 }
 
 fn tail_source(

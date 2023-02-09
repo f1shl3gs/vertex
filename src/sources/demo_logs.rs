@@ -77,10 +77,6 @@ impl SourceConfig for DemoLogsConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "demo_logs"
-    }
 }
 
 #[cfg(test)]

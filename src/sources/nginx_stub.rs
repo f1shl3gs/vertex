@@ -87,10 +87,6 @@ impl SourceConfig for NginxStubConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "nginx_stub"
-    }
 }
 
 #[derive(Debug, Error)]

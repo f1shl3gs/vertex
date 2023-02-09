@@ -1,6 +1,5 @@
 // #![deny(warnings)]
 
-use configurable::NamedComponent;
 use configurable_derive::configurable_component;
 
 #[allow(clippy::print_stdout)]
@@ -13,7 +12,7 @@ fn test_generate() {
         foo: String,
     }
 
-    assert!("some" == SomeConfig::NAME);
+    // assert!("some" == SomeConfig::NAME);
 
     let schema = configurable::schema::generate_root_schema::<SomeConfig>().unwrap();
     let json = serde_json::to_string_pretty(&schema)

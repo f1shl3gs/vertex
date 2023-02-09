@@ -86,10 +86,6 @@ impl SourceConfig for ConsulSourceConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "consul"
-    }
 }
 
 async fn gather(client: &Client, health_summary: bool, opts: &Option<QueryOptions>) -> Vec<Metric> {

@@ -108,10 +108,6 @@ impl SourceConfig for HaproxyConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "haproxy"
-    }
 }
 
 async fn scrap(

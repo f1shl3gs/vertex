@@ -192,10 +192,6 @@ impl SourceConfig for MysqldConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "mysqld"
-    }
 }
 
 pub async fn gather(instance: &str, pool: Pool<MySql>) -> Result<Vec<Metric>, MysqlError> {

@@ -46,10 +46,6 @@ impl SourceConfig for NtpConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "ntp"
-    }
 }
 
 struct Ntp {

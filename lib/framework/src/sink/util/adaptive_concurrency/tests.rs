@@ -484,13 +484,14 @@ mod mock {
     use crate::config::{DataType, Output, SourceConfig, SourceContext};
     use crate::{Pipeline, ShutdownSignal, Source};
     use chrono::Utc;
+    use configurable::configurable_component;
     use event::LogRecord;
     use log_schema::log_schema;
-    use serde::{Deserialize, Serialize};
     use std::task::Poll;
     use std::time::Duration;
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[configurable_component(source, name = "mock_logs")]
+    #[derive(Debug)]
     pub struct MockLogsConfig {
         pub lines: Vec<String>,
         pub count: usize,
@@ -512,10 +513,6 @@ mod mock {
 
         fn outputs(&self) -> Vec<Output> {
             vec![Output::default(DataType::Log)]
-        }
-
-        fn source_type(&self) -> &'static str {
-            "mock_logs"
         }
     }
 

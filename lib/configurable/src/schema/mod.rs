@@ -38,6 +38,17 @@ pub fn generate_struct_schema(
     }
 }
 
+pub fn generate_empty_struct_schema() -> SchemaObject {
+    SchemaObject {
+        instance_type: Some(InstanceType::Object.into()),
+        object: Some(Box::new(ObjectValidation {
+            properties: Default::default(),
+            ..Default::default()
+        })),
+        ..Default::default()
+    }
+}
+
 pub fn convert_to_flattened_schema(primary: &mut SchemaObject, mut subschema: Vec<SchemaObject>) {
     let primary_subschema = std::mem::take(primary);
     subschema.insert(0, primary_subschema);

@@ -828,10 +828,6 @@ impl SourceConfig for NodeMetricsConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "node_metrics"
-    }
 }
 
 #[cfg(test)]

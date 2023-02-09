@@ -38,10 +38,6 @@ impl SourceConfig for SelfStatConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "selfstat"
-    }
 }
 
 struct SelfStat {

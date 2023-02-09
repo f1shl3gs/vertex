@@ -78,7 +78,16 @@ fn impl_from_struct(
                 "`#[configurable_component(...)]` cannot be applied to unit structs",
             );
 
-            return TokenStream::new();
+            return quote!(
+                fn generate_schema(
+                    schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator,
+                ) -> std::result::Result<
+                    ::configurable::schemars::schema::SchemaObject,
+                    ::configurable::GenerateError,
+                > {
+                    Ok(::configurable::schema::generate_empty_struct_schema())
+                }
+            );
         }
     };
     let maybe_description = type_attrs.description.as_ref().map(|desc| {

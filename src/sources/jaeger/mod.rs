@@ -182,10 +182,6 @@ impl SourceConfig for JaegerConfig {
         vec![Output::default(DataType::Trace)]
     }
 
-    fn source_type(&self) -> &'static str {
-        "jaeger"
-    }
-
     fn resources(&self) -> Vec<Resource> {
         let mut resources = vec![];
 
