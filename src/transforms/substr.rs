@@ -1,47 +1,27 @@
 use async_trait::async_trait;
 use bytes::Buf;
+use configurable::configurable_component;
 use event::{log::Value, Events};
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "substr")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct SubstrConfig {
+    /// Which field to transform.
+    #[configurable(required)]
     field: String,
+
+    /// Offset from start, count from zero.
     #[serde(default)]
     offset: Option<usize>,
+
+    /// Length from offset, keeping the first `length` bytes and dropping the
+    /// rest. If `length` is greater than the bytes's current length, this has no
+    /// effect.
     #[serde(default)]
     length: Option<usize>,
-}
-
-impl GenerateConfig for SubstrConfig {
-    fn generate_config() -> String {
-        r#"
-# Substr works like "Bash's Substring", e.g. "${variable:4:6}"
-
-# Which field to transform.
-#
-field: some.value
-
-# Offset from start, count from zero.
-#
-# offset: 0
-
-# Lenght from offset, keeping the first `length` bytes and dropping the
-# rest. If `length` is greater than the bytes's current length, this has no
-# effect.
-#
-length: 10
-"#
-        .to_string()
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<SubstrConfig>("substr")
 }
 
 #[async_trait]
@@ -61,10 +41,6 @@ impl TransformConfig for SubstrConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "substr"
     }
 }
 

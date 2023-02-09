@@ -215,7 +215,7 @@ impl TransformOuter<String> {
         if !self.inner.nestable(parent_types) {
             return Err(format!(
                 "the component {} cannot be nested in {:?}",
-                self.inner.transform_type(),
+                self.inner.component_name(),
                 parent_types
             ));
         }
@@ -226,7 +226,7 @@ impl TransformOuter<String> {
             .map_err(|err| format!("failed to expand transform '{}': {}", key, err))?;
 
         let mut ptypes = parent_types.clone();
-        ptypes.insert(self.inner.transform_type());
+        ptypes.insert(self.inner.component_name());
 
         if let Some((expanded, expand_type)) = expansion {
             let mut children = Vec::new();
@@ -474,14 +474,12 @@ pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
 
 #[async_trait]
 #[typetag::serde(tag = "type")]
-pub trait TransformConfig: Debug + Send + Sync + dyn_clone::DynClone {
+pub trait TransformConfig: NamedComponent + Debug + Send + Sync {
     async fn build(&self, cx: &TransformContext) -> crate::Result<crate::Transform>;
 
     fn input_type(&self) -> DataType;
 
     fn outputs(&self) -> Vec<Output>;
-
-    fn transform_type(&self) -> &'static str;
 
     /// Returns true if the transform is able to be run across multiple tasks simultaneously
     /// with no concerns around statfulness, ordering, etc
@@ -504,8 +502,6 @@ pub trait TransformConfig: Debug + Send + Sync + dyn_clone::DynClone {
         Ok(None)
     }
 }
-
-dyn_clone::clone_trait_object!(TransformConfig);
 
 #[derive(Debug, Clone)]
 pub struct SinkContext {

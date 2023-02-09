@@ -4,39 +4,24 @@ use std::collections::HashMap;
 
 use crate::transforms::coercer::conversion::{parse_conversion_map, Conversion};
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::log::Value;
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::timezone::TimeZone;
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "coercer")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct CoercerConfig {
+    /// Coerce log filed to another type.
+    ///
+    /// NB: nonconvertible filed will be dropped.
+    #[configurable(required)]
     types: HashMap<String, String>,
+
     timezone: Option<TimeZone>,
-}
-
-impl GenerateConfig for CoercerConfig {
-    fn generate_config() -> String {
-        r##"
-# Coerce log filed to another type.
-#
-# NB: nonconvertible filed will be dropped.
-#
-types:
-    "foo": int
-    "bar.some_none_int_key": int
-"##
-        .to_string()
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<CoercerConfig>("coercer")
 }
 
 #[async_trait]
@@ -55,10 +40,6 @@ impl TransformConfig for CoercerConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "coercer"
     }
 }
 

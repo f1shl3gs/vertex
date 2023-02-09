@@ -3,15 +3,17 @@ use std::fmt::{Debug, Formatter};
 
 use async_trait::async_trait;
 use bloom::{BloomFilter, ASMS};
+use configurable::{configurable_component, Configurable};
 use event::tags::{Key, Value};
 use event::{EventContainer, Events};
-use framework::config::{DataType, GenerateConfig, Output, TransformConfig, TransformContext};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Copy, Clone, Debug, Serialize, PartialEq)]
+#[derive(Configurable, Copy, Clone, Debug, Serialize, PartialEq)]
+#[serde(rename_all = "snake_case")]
 pub enum LimitExceededAction {
     DropEvent,
     DropTag,
@@ -53,31 +55,17 @@ impl Default for LimitExceededAction {
     }
 }
 
-#[derive(Copy, Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
+#[configurable_component(transform, name = "cardinality")]
+#[derive(Copy, Clone, Debug, Default, PartialEq)]
 #[serde(deny_unknown_fields)]
 struct CardinalityConfig {
+    /// How many distict values for any given key.
+    #[configurable(required)]
     pub limit: usize,
 
+    /// The behavior of limit exceeded action.
     #[serde(default)]
     pub action: LimitExceededAction,
-}
-
-impl GenerateConfig for CardinalityConfig {
-    fn generate_config() -> String {
-        r##"
-# How many distict values for any given key.
-#
-limit: 1024
-
-# The behavior of limit exceeded action.
-# Available values:
-#   "drop": drop the metric
-#   "drop_tag": drop tags only, the metric will be keeped
-#
-action: drop
-"##
-        .to_string()
-    }
 }
 
 #[async_trait]
@@ -96,10 +84,6 @@ impl TransformConfig for CardinalityConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "cardinality"
     }
 }
 

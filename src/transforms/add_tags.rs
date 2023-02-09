@@ -1,25 +1,24 @@
-use async_trait::async_trait;
-use serde::{Deserialize, Serialize};
 use std::collections::btree_map::Entry;
 use std::collections::BTreeMap;
 
+use async_trait::async_trait;
+use configurable::configurable_component;
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{default_true, DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "add_tags")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct AddTagsConfig {
+    /// Tags add to the event.
+    #[configurable(required)]
     pub tags: BTreeMap<String, String>,
 
-    #[serde(default = "default_overwrite")]
+    /// Controls how tag conflicts are handled if the event has tags that
+    /// Vertex would add.
+    #[serde(default = "default_true")]
     pub overwrite: bool,
-}
-
-const fn default_overwrite() -> bool {
-    true
 }
 
 #[derive(Clone, Debug)]
@@ -79,32 +78,6 @@ impl TransformConfig for AddTagsConfig {
             Output::default(DataType::Metric),
             Output::default(DataType::Log),
         ]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "add_tags"
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<AddTagsConfig>("add_tags")
-}
-
-impl GenerateConfig for AddTagsConfig {
-    fn generate_config() -> String {
-        r#"
-# Tags add to the event
-tags:
-  foo: bar
-  host: ${HOSTNAME}
-
-# Controls how tag conflicts are handled if the event has tags that
-# Vertex would add.
-#
-# overwrite: false
-
-"#
-        .into()
     }
 }
 

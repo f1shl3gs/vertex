@@ -1,38 +1,26 @@
+use configurable::configurable_component;
 use event::{Event, EventContainer, Events};
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "sample")]
+#[derive(Clone, Debug)]
 struct SampleConfig {
+    /// The rate at which events will be forwarded, expressed as 1/N. For
+    /// example, "10" means 1 out of every 10 events will be forwarded and
+    /// rest will be dropped
+    #[configurable(required)]
     rate: u64,
+
+    /// The name of the log field whose value will be hased to determine
+    /// if the event should be passed.
+    ///
+    /// Consistently samples the same events. Actual rate of sampling may
+    /// differ from the configured one if values in the field are not
+    /// uniformly distributed. If left unspecified, or if the event doesn't
+    /// have "key_field", events will be count rated.
     key_field: Option<String>,
-}
-
-impl GenerateConfig for SampleConfig {
-    fn generate_config() -> String {
-        r#"
-# The rate at which events will be forwarded, expressed as 1/N. For
-# example, "10" means 1 out of every 10 events will be forwarded and
-# rest will be dropped
-#
-rate: 10
-
-# The name of the log field whose value will be hased to determine
-# if the event should be passed.
-#
-# Consistently samples the same events. Actual rate of sampling may
-# differ from the configured one if values in the field are not
-# uniformly distributed. If left unspecified, or if the event doesn't
-# have "key_field", events will be count rated.
-#
-# key_field: foo.bar
-        "#
-        .into()
-    }
 }
 
 #[async_trait::async_trait]
@@ -52,14 +40,6 @@ impl TransformConfig for SampleConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn transform_type(&self) -> &'static str {
-        "sample"
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<SampleConfig>("sample")
 }
 
 #[derive(Clone, Debug)]

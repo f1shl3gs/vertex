@@ -117,7 +117,8 @@ impl SourceConfig for MockSourceConfig {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "mock")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct MockTransformConfig {
     #[serde(default)]
@@ -148,10 +149,6 @@ impl TransformConfig for MockTransformConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Any)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "mock"
     }
 }
 

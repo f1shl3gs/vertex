@@ -1,23 +1,32 @@
+use configurable::configurable_component;
 use event::Events;
-use framework::config::{
-    default_true, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
-    TransformDescription,
-};
+use framework::config::{default_true, DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
 use metrics::Counter;
-use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[configurable_component(transform, name = "json_parser")]
+#[derive(Debug, Clone)]
 #[serde(deny_unknown_fields, default)]
 pub struct JsonParserConfig {
+    /// Which field to parse, by default log_schema's message key is used.
     pub field: Option<String>,
+
+    /// Should Vertex drop the invalid event.
+    #[serde(default = "default_true")]
     pub drop_invalid: bool,
+
     #[serde(default = "default_true")]
     pub drop_field: bool,
+
+    /// Which field to store the parsed result. If this is not set, the resultd
+    /// will set as log's fields, which means other filed will dropped.
     pub target_field: Option<String>,
-    pub overwrite_target: Option<bool>,
+
+    /// Overwrite target filed.
+    #[serde(default)]
+    pub overwrite_target: bool,
 }
 
 impl Default for JsonParserConfig {
@@ -25,38 +34,10 @@ impl Default for JsonParserConfig {
         Self {
             field: None,
             drop_invalid: false,
-            drop_field: default_true(),
+            drop_field: true,
             target_field: None,
-            overwrite_target: None,
+            overwrite_target: false,
         }
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<JsonParserConfig>("json_parser")
-}
-
-impl GenerateConfig for JsonParserConfig {
-    fn generate_config() -> String {
-        r#"
-# Which field to parse, by default log_schema's message key is used.
-#
-# field: message
-
-# Should Vertex drop the invalid event
-#
-drop_invalid: true
-
-# Which field to store the parsed result. If this is not set, the resultd
-# will set as log's fields, which means other filed will dropped.
-#
-# target_field: null
-
-# Overwrite the target field.
-#
-# overwrite_target: false
-"#
-        .into()
     }
 }
 
@@ -73,10 +54,6 @@ impl TransformConfig for JsonParserConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "json_parser"
     }
 
     fn enable_concurrency(&self) -> bool {
@@ -108,7 +85,7 @@ impl From<JsonParserConfig> for JsonParser {
             drop_invalid: config.drop_invalid,
             drop_field: config.drop_field,
             target_field: config.target_field,
-            overwrite_target: config.overwrite_target.unwrap_or(false),
+            overwrite_target: config.overwrite_target,
             discarded_events: metrics::register_counter("component_errors_total", "").recorder(&[]),
             invalid_events: metrics::register_counter("component_errors_total", "")
                 .recorder(&[("error", "invalid json")]),
@@ -659,7 +636,7 @@ mod test {
         let mut parser = JsonParser::from(JsonParserConfig {
             drop_field: false,
             target_field: Some("message".into()),
-            overwrite_target: Some(true),
+            overwrite_target: true,
             ..Default::default()
         });
 

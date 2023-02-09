@@ -44,10 +44,6 @@ impl TransformConfig for Config {
         result
     }
 
-    fn transform_type(&self) -> &'static str {
-        "route"
-    }
-
     fn enable_concurrency(&self) -> bool {
         true
     }

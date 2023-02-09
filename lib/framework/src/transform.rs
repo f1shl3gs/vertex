@@ -2,11 +2,11 @@ use std::collections::HashMap;
 use std::pin::Pin;
 
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::{Event, EventContainer, EventDataEq, EventRef, Events};
 use futures::Stream;
 use futures_util::{stream, StreamExt};
 use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
 
 use crate::config::{DataType, Output, TransformConfig, TransformContext};
 use crate::topology::{ControlChannel, Fanout};
@@ -291,7 +291,8 @@ impl TransformOutputs {
     }
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[configurable_component(transform, name = "noop")]
+#[derive(Clone, Debug, Default)]
 pub struct Noop;
 
 #[async_trait]
@@ -307,10 +308,6 @@ impl TransformConfig for Noop {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Any)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "noop"
     }
 }
 

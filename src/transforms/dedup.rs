@@ -3,67 +3,38 @@ use std::sync::Arc;
 
 use async_trait::async_trait;
 use bytes::Bytes;
+use configurable::{configurable_component, Configurable};
 use event::log::Value;
 use event::{Events, LogRecord};
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use log_schema::log_schema;
 use lru::LruCache;
 use parking_lot::Mutex;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct CacheConfig {
     size: NonZeroUsize,
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "dedup")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// Options controlling how we cache recent Events for future duplicate checking.
     #[serde(default = "default_cache_config")]
     cache: CacheConfig,
+
+    /// Options controlling what fields to match against.
     #[serde(default, with = "serde_yaml::with::singleton_map")]
     fields: Option<FieldMatchConfig>,
-}
-
-inventory::submit! {
-    TransformDescription::new::<Config>("dedup")
 }
 
 fn default_cache_config() -> CacheConfig {
     CacheConfig {
         size: NonZeroUsize::new(4 * 1024).unwrap(),
-    }
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        format!(
-            r##"
-# Options controlling how we cache recent Events for future duplicate checking.
-#
-# cache:
-#    size: {}
-
-# Options controlling what fields to match against.
-#
-fields:
-    # The field names to ignore when deciding if an Event is a duplicate. Incompatible with the fields.match option.
-    #
-    # ignore:
-    #     - foo.bar[2]
-
-    # The field names considered when deciding if an Event is a duplicate. This can also be globally set via the global log_schema options. Incompatible with the fields.ignore option.
-    #
-    match:
-        - foo
-        - foo.bar
-"##,
-            default_cache_config().size
-        )
     }
 }
 
@@ -73,9 +44,9 @@ impl Config {
     /// after we've already parsed the config.
     fn fill_default_fields_match(&self) -> FieldMatchConfig {
         match &self.fields {
-            Some(FieldMatchConfig::MatchFields(m)) => FieldMatchConfig::MatchFields(m.clone()),
-            Some(FieldMatchConfig::IgnoreFields(i)) => FieldMatchConfig::IgnoreFields(i.clone()),
-            None => FieldMatchConfig::MatchFields(vec![
+            Some(FieldMatchConfig::Match(m)) => FieldMatchConfig::Match(m.clone()),
+            Some(FieldMatchConfig::Ignore(i)) => FieldMatchConfig::Ignore(i.clone()),
+            None => FieldMatchConfig::Match(vec![
                 log_schema().timestamp_key().into(),
                 log_schema().host_key().into(),
                 log_schema().message_key().into(),
@@ -98,10 +69,6 @@ impl TransformConfig for Config {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "dedup"
     }
 }
 
@@ -149,13 +116,17 @@ enum CacheEntry {
     Ignore(Vec<(String, TypeId, Bytes)>),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub enum FieldMatchConfig {
-    #[serde(rename = "match")]
-    MatchFields(Vec<String>),
-    #[serde(rename = "ignore")]
-    IgnoreFields(Vec<String>),
+    /// The field names considered when deciding if an Event is a duplicate.
+    /// This can also be globally set via the global log_schema options.
+    /// Incompatible with the fields.ignore option.
+    Match(Vec<String>),
+
+    /// The field names to ignore when deciding if an Event is a duplicate.
+    /// Incompatible with the fields.match option.
+    Ignore(Vec<String>),
 }
 
 #[derive(Clone)]
@@ -177,7 +148,7 @@ impl Dedup {
     /// against according to the specified FieldMatchConfig.
     fn build_cache_entry(&self, log: &LogRecord) -> CacheEntry {
         match &self.fields {
-            FieldMatchConfig::MatchFields(fields) => {
+            FieldMatchConfig::Match(fields) => {
                 let mut entry = Vec::new();
 
                 for field_name in fields.iter() {
@@ -190,7 +161,7 @@ impl Dedup {
 
                 CacheEntry::Match(entry)
             }
-            FieldMatchConfig::IgnoreFields(fields) => {
+            FieldMatchConfig::Ignore(fields) => {
                 let mut entry = Vec::new();
 
                 if let Some(all_fields) = log.all_fields() {
@@ -241,7 +212,7 @@ mod tests {
             cache: CacheConfig {
                 size: NonZeroUsize::new(size).unwrap(),
             },
-            fields: Some(FieldMatchConfig::MatchFields(fields)),
+            fields: Some(FieldMatchConfig::Match(fields)),
         })
     }
 
@@ -294,7 +265,7 @@ mod tests {
             cache: CacheConfig {
                 size: NonZeroUsize::new(size).unwrap(),
             },
-            fields: Some(FieldMatchConfig::IgnoreFields(fields)),
+            fields: Some(FieldMatchConfig::Ignore(fields)),
         })
     }
 
