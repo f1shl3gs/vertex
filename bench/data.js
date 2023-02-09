@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675964565142,
+  "lastUpdate": 1675964606510,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3932,6 +3932,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.515,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a77619b50ac7688238d4e94f1c35e9a8db21dc3",
+          "message": "Merge pull request #751 from f1shl3gs/migrate_transforms_to_configurable\n\nMigrate transforms to configurable",
+          "timestamp": "2023-02-10T01:38:40+08:00",
+          "tree_id": "44e17bcd649aeaf962d93faa2707e7c5d4650d9a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a77619b50ac7688238d4e94f1c35e9a8db21dc3"
+        },
+        "date": 1675964597976,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.133,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.333,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.935,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.057,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.338,
             "unit": "ns/op"
           }
         ]
