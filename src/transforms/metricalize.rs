@@ -304,14 +304,16 @@ mod tests {
     fn record() {
         let cases = [
             // name, config, logs, want
-            /*(
+            (
                 "sample_counter",
-                MetricConfig::Counter(CounterConfig {
+                MetricConfig{
                     name: "sample_counter".to_string(),
                     field: "foo".to_string(),
                     tags: Default::default(),
-                    increment_by_value: false,
-                }),
+                    typ: MetricType::Counter {
+                        increment_by_value: false
+                    }
+                },
                 vec![fields!("foo" => "bar")],
                 vec![
                     // name, tags, value
@@ -320,12 +322,14 @@ mod tests {
             ),
             (
                 "sample_counter_with_increase_by_value",
-                MetricConfig::Counter(CounterConfig {
+                MetricConfig{
                     name: "test".into(),
                     field: "foo".into(),
                     tags: Default::default(),
-                    increment_by_value: true,
-                }),
+                    typ: MetricType::Counter {
+                        increment_by_value: true
+                    }
+                },
                 vec![
                     // This fields can't be extract, it should be ignored
                     fields!("foo" => "bar"),
@@ -335,7 +339,7 @@ mod tests {
                     fields!("foo" => 4.3),
                 ],
                 vec![("test", tags!(), MetricValue::Sum(10.5))],
-            ),*/
+            ),
             (
                 "sample_counter_with_tags_and_complex_field",
                 MetricConfig {
