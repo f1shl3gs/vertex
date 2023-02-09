@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675952170881,
+  "lastUpdate": 1675952278952,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6457,6 +6457,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56939560,
+            "unit": "bytes"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e89e00086db989d461f75d93cbb1535c0d3154b5",
+          "message": "Merge pull request #750 from f1shl3gs/migrate_sources_to_configurable\n\nMigrate sources to configurable",
+          "timestamp": "2023-02-09T21:55:12+08:00",
+          "tree_id": "94f1d0599f8f9787521f98b7c59af64b0dc0163b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e89e00086db989d461f75d93cbb1535c0d3154b5"
+        },
+        "date": 1675952270331,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1152,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57451168,
             "unit": "bytes"
           }
         ]
