@@ -6,14 +6,12 @@ use std::time::Duration;
 use async_stream::stream;
 use async_trait::async_trait;
 use chrono::Utc;
+use configurable::{configurable_component, Configurable};
 use event::tags::Tags;
 use event::{
     log::Value, Bucket, EventMetadata, Events, LogRecord, Metric, MetricSeries, MetricValue,
 };
-use framework::config::{
-    default_interval, DataType, GenerateConfig, Output, TransformConfig, TransformContext,
-    TransformDescription,
-};
+use framework::config::{default_interval, DataType, Output, TransformConfig, TransformContext};
 use framework::{TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use metrics::Counter;
@@ -29,53 +27,55 @@ fn default_buckets() -> Vec<f64> {
     ]
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct CounterConfig {
-    name: String,
-    field: String,
-    #[serde(default)]
-    tags: BTreeMap<String, String>,
-    #[serde(default = "default_increase_by_value")]
-    increment_by_value: bool,
+#[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
+#[serde(rename_all = "lowercase", tag = "type")]
+enum MetricType {
+    Counter {
+        /// Controls how to increase the counter.
+        #[serde(default = "default_increase_by_value")]
+        increment_by_value: bool,
+    },
+    Gauge,
+    Histogram {
+        /// Specify histogram buckets.
+        /// Available for "histogram" only
+        /// Default: 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0
+        #[serde(default = "default_buckets")]
+        buckets: Vec<f64>,
+    },
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct GaugeConfig {
+#[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
+struct MetricConfig {
+    /// Metric name, it's highly recommend to see
+    /// https://prometheus.io/docs/practices/naming/
+    #[configurable(required)]
     name: String,
+
+    /// Which field to extract values
+    ///
+    /// Path is support too, e.g. field: value.i64
+    #[configurable(required)]
     field: String,
+
+    /// Tags to set, this field is not required,
+    /// but is is recommend to set some tags to identify your metrics.
     #[serde(default)]
     tags: BTreeMap<String, String>,
-}
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct HistogramConfig {
-    name: String,
-    field: String,
-    #[serde(default)]
-    tags: BTreeMap<String, String>,
-    #[serde(default = "default_buckets")]
-    buckets: Vec<f64>,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(tag = "type", rename_all = "snake_case")]
-enum MetricConfig {
-    Counter(CounterConfig),
-    Gauge(GaugeConfig),
-    Histogram(HistogramConfig),
+    #[serde(flatten)]
+    typ: MetricType,
 }
 
 impl MetricConfig {
     fn build_series_and_value(&self, log: &LogRecord) -> Option<(MetricSeries, f64)> {
-        let (name, tags, field, parse_value) = match self {
-            MetricConfig::Counter(config) => (
-                &config.name,
-                &config.tags,
-                &config.field,
-                config.increment_by_value,
-            ),
-            MetricConfig::Histogram(config) => (&config.name, &config.tags, &config.field, true),
-            MetricConfig::Gauge(config) => (&config.name, &config.tags, &config.field, true),
+        let MetricConfig {
+            name, field, tags, ..
+        } = self;
+
+        let parse_value = match self.typ {
+            MetricType::Counter { increment_by_value } => increment_by_value,
+            _ => true,
         };
 
         let value = match log.get_field(field.as_str())? {
@@ -111,14 +111,13 @@ impl MetricConfig {
     }
 
     fn new_metric_value(&self, value: f64) -> MetricValue {
-        match self {
-            MetricConfig::Counter(_) => MetricValue::Sum(value),
-            MetricConfig::Gauge(_) => MetricValue::Gauge(value),
-            MetricConfig::Histogram(config) => MetricValue::Histogram {
+        match &self.typ {
+            MetricType::Counter { .. } => MetricValue::Sum(value),
+            MetricType::Gauge => MetricValue::Gauge(value),
+            MetricType::Histogram { buckets } => MetricValue::Histogram {
                 count: 1,
                 sum: value,
-                buckets: config
-                    .buckets
+                buckets: buckets
                     .iter()
                     .map(|upper| Bucket {
                         upper: *upper,
@@ -130,70 +129,21 @@ impl MetricConfig {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "metricalize")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct MetricalizeConfig {
+    /// The interval between flushes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
+
+    /// A table of key/value pairs representing the keys to be added to the event.
+    ///
+    /// Available values:
+    /// counter:     Counter
+    /// gauge:       Gauge
+    /// histogram:   Histogram
     metrics: Vec<MetricConfig>,
-}
-
-impl GenerateConfig for MetricalizeConfig {
-    fn generate_config() -> String {
-        r#"
-# The interval between flushes.
-#
-# interval: 15s
-
-# A table of key/value pairs representing the keys to be added to the event.
-#
-metrics:
-# Metric type
-#
-# Availabel values
-# counter:     Counter
-# gauge:       Gauge
-# histogram:   Histogram
-#
-- type: counter
-  # Metric name, it's highly recomment to see
-  # https://prometheus.io/docs/practices/naming/
-  #
-  name: some_error_total
-
-  # Which field to extract values
-  #
-  # Path is support too, e.g.
-  # field: value.i64
-  field: value
-
-  # Tags to set, this field is not required,
-  # but is is recomment to set some tags to identify your metrics.
-  #
-  # tags:
-  #   foo: bar
-  #   hostname: ${ HOSTNAME }
-  #   inner: some.inner1.array[0]
-
-  # Controls how to increase the counter.
-  # Available for "counter" only.
-  #
-  # increase_by_value: false
-
-  # Specify histogram buckets.
-  # Available for "histogram" only
-  # Default: 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0, 10.0
-  #
-  # buckets:
-  # - 0.1
-  # - 0.2
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<MetricalizeConfig>("metricalize")
 }
 
 #[async_trait]
@@ -210,10 +160,6 @@ impl TransformConfig for MetricalizeConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "metricalize"
     }
 }
 
@@ -294,12 +240,12 @@ impl Metricalize {
                                     let existing = entry.get_mut();
 
                                     // In order to update the new and old kind must match
-                                    match (&existing.0, config) {
-                                        (MetricValue::Sum(_), MetricConfig::Counter(_))
-                                        | (MetricValue::Gauge(_), MetricConfig::Gauge(_))
+                                    match (&existing.0, &config.typ) {
+                                        (MetricValue::Sum(_), MetricType::Counter { .. })
+                                        | (MetricValue::Gauge(_), MetricType::Gauge)
                                         | (
                                             MetricValue::Histogram { .. },
-                                            MetricConfig::Histogram(_),
+                                            MetricType::Histogram { .. },
                                         ) => {
                                             existing.0.merge(value);
                                             existing.1.merge(metadata.clone());
@@ -358,14 +304,16 @@ mod tests {
     fn record() {
         let cases = [
             // name, config, logs, want
-            /*(
+            (
                 "sample_counter",
-                MetricConfig::Counter(CounterConfig {
+                MetricConfig {
                     name: "sample_counter".to_string(),
                     field: "foo".to_string(),
                     tags: Default::default(),
-                    increment_by_value: false,
-                }),
+                    typ: MetricType::Counter {
+                        increment_by_value: false,
+                    },
+                },
                 vec![fields!("foo" => "bar")],
                 vec![
                     // name, tags, value
@@ -374,12 +322,14 @@ mod tests {
             ),
             (
                 "sample_counter_with_increase_by_value",
-                MetricConfig::Counter(CounterConfig {
+                MetricConfig {
                     name: "test".into(),
                     field: "foo".into(),
                     tags: Default::default(),
-                    increment_by_value: true,
-                }),
+                    typ: MetricType::Counter {
+                        increment_by_value: true,
+                    },
+                },
                 vec![
                     // This fields can't be extract, it should be ignored
                     fields!("foo" => "bar"),
@@ -389,10 +339,10 @@ mod tests {
                     fields!("foo" => 4.3),
                 ],
                 vec![("test", tags!(), MetricValue::Sum(10.5))],
-            ),*/
+            ),
             (
                 "sample_counter_with_tags_and_complex_field",
-                MetricConfig::Counter(CounterConfig {
+                MetricConfig {
                     name: "test".to_string(),
                     field: "foo.bar".to_string(),
                     tags: btreemap!(
@@ -400,8 +350,10 @@ mod tests {
                         "tag2" => "tags.k1",
                         "tag3" => "tags.k2"
                     ),
-                    increment_by_value: false,
-                }),
+                    typ: MetricType::Counter {
+                        increment_by_value: false,
+                    },
+                },
                 vec![
                     fields!(),
                     fields!(
@@ -427,22 +379,25 @@ mod tests {
             ),
             (
                 "gauge",
-                MetricConfig::Gauge(GaugeConfig {
+                MetricConfig {
                     name: "test".into(),
                     field: "foo".to_string(),
                     tags: Default::default(),
-                }),
+                    typ: MetricType::Gauge,
+                },
                 vec![fields!("foo" => "1"), fields!("foo" => 2.1)],
                 vec![("test", tags!(), MetricValue::Gauge(2.1))],
             ),
             (
                 "histogram",
-                MetricConfig::Histogram(HistogramConfig {
+                MetricConfig {
                     name: "test".to_string(),
                     field: "foo".to_string(),
                     tags: Default::default(),
-                    buckets: default_buckets(),
-                }),
+                    typ: MetricType::Histogram {
+                        buckets: default_buckets(),
+                    },
+                },
                 vec![fields!("foo" => 0.0005), fields!("foo" => "5")],
                 vec![(
                     "test",
@@ -527,12 +482,14 @@ mod tests {
 
     #[test]
     fn test_build_series_and_value() {
-        let config = MetricConfig::Counter(CounterConfig {
+        let config = MetricConfig {
             name: "name".to_string(),
             field: "value".to_string(),
             tags: Default::default(),
-            increment_by_value: false,
-        });
+            typ: MetricType::Counter {
+                increment_by_value: false,
+            },
+        };
 
         let (series, value) = config
             .build_series_and_value(&LogRecord::from(fields!( "value" => "a")))
@@ -541,12 +498,14 @@ mod tests {
         assert_eq!(series.name, "name");
         assert_eq!(value, 1.0);
 
-        let config = MetricConfig::Counter(CounterConfig {
+        let config = MetricConfig {
             name: "name".to_string(),
             field: "a.b".to_string(),
             tags: Default::default(),
-            increment_by_value: false,
-        });
+            typ: MetricType::Counter {
+                increment_by_value: false,
+            },
+        };
 
         let (series, value) = config
             .build_series_and_value(&LogRecord::from(fields!( "a" => fields!( "b" => 1))))

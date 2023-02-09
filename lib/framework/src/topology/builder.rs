@@ -491,7 +491,7 @@ pub async fn build_pieces(
 
         let node = TransformNode {
             key: key.clone(),
-            typetag: transform.inner.transform_type(),
+            typetag: transform.inner.component_name(),
             inputs: transform.inputs.clone(),
             input_type: transform.inner.input_type(),
             outputs: transform.inner.outputs(),

@@ -1,14 +1,16 @@
 use std::collections::HashMap;
 
+use configurable::configurable_component;
 use event::Events;
 use framework::config::{default_true, Output, TransformContext};
 use framework::config::{DataType, TransformConfig};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "add_fields")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct AddFieldsConfig {
+    #[configurable(required)]
     pub fields: HashMap<String, String>,
 
     #[serde(default = "default_true")]
@@ -32,10 +34,6 @@ impl TransformConfig for AddFieldsConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "add_fields"
     }
 }
 

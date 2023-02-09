@@ -4,57 +4,36 @@ use std::time::Duration;
 
 use async_stream::stream;
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::{EventContainer, Events};
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
 use governor::{clock, Quota, RateLimiter};
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 const fn default_window() -> Duration {
     Duration::from_secs(1)
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "throttle")]
+#[derive(Debug)]
 struct ThrottleConfig {
+    /// The name of the log field whose value will be hashed to determine if the
+    /// event should be rate limited.
+    ///
+    /// If left unspecified, or if the event doesn't have "key_field", the
+    /// event be will not rate limited separately.
+    key_field: Option<Template>,
+
+    /// The number of events allowed for a given bucket per configured window.
+    /// Each unique key will have its own threshold.
     threshold: u32,
+
+    /// The time frame in which the configured "threshold" is applied.
     #[serde(default = "default_window", with = "humanize::duration::serde")]
     window: Duration,
-    key_field: Option<Template>,
-}
-
-impl GenerateConfig for ThrottleConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The name of the log field whose value will be hashed to determine if the
-# event should be rate limited.
-#
-# If left unspecified, or if the event doesn't have "key_field", the
-# event be will not rate limited separately.
-#
-key_field: hostname
-
-# The number of events allowed for a given bucket per configured window.
-# Each unique key will have its own threshold
-#
-threshold: 100
-
-# The time frame in which the configured "threshold" is applied
-#
-# window: {}
-"#,
-            humanize::duration::duration(&default_window())
-        )
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<ThrottleConfig>("throttle")
 }
 
 #[async_trait]
@@ -77,10 +56,6 @@ impl TransformConfig for ThrottleConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "throttle"
     }
 }
 

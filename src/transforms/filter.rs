@@ -1,39 +1,23 @@
 use async_trait::async_trait;
 use condition::Expression;
+use configurable::configurable_component;
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "filter")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// The condition to be matched against every input event. Only messages that pass
+    /// the condition are forwarded; messages that don’t pass are dropped.
+    /// The LHS is always start with '.' and it's a path,
+    /// e.g.
+    ///   .meta.foo[0] contains bar
+    ///   .message contains bar && (.upper > 10 or .lower lt 5.001)
+    #[configurable(required, example = ".meta.foo[0]")]
     condition: String,
-}
-
-inventory::submit! {
-    TransformDescription::new::<Config>("filter")
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        r##"
-# The condition to be matched against every input event. Only messages that pass
-# the condition are forwarded; messages that don’t pass are dropped.
-# The LHS is always start with '.' and it's a path,
-# e.g.
-#   .meta.foo[0] contains bar
-#   .message contains bar && (.upper > 10 or .lower lt 5.001)
-#
-# required
-condition: ".message contains info"
-
-"##
-        .into()
-    }
 }
 
 #[async_trait]
@@ -50,10 +34,6 @@ impl TransformConfig for Config {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "filter"
     }
 }
 

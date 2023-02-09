@@ -3,22 +3,38 @@ use std::str::FromStr;
 use std::sync::Arc;
 
 use async_trait::async_trait;
+use configurable::configurable_component;
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use maxminddb;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "geoip")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
+    /// databases, such as the country database, are not supported.
+    ///
+    /// GeoIP2: https://dev.maxmind.com/geoip/geoip2/downloadable
+    /// GeoLite2: https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access
+    #[configurable(required)]
     pub database: PathBuf,
 
+    /// The field to insert the resulting GeoIP data into.
     #[serde(default = "default_target")]
+    #[configurable(required)]
     pub target: String,
+
+    /// The field name that contains the IP address. This field should contain a
+    /// valid IPv4 or IPv6 address.
+    #[configurable(required, example = ".foo.bar[2]")]
     pub source: String,
+
+    /// valid locales are: “de”, "en", “es”, “fr”, “ja”, “pt-BR”, “ru”, and “zh-CN” .
+    ///
+    /// https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en
     #[serde(default = "default_locale")]
     pub locale: String,
 }
@@ -27,40 +43,8 @@ fn default_target() -> String {
     "geoip".to_string()
 }
 
-// valid locales are: “de”, "en", “es”, “fr”, “ja”, “pt-BR”, “ru”, and “zh-CN” .
-//
-// https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en
 fn default_locale() -> String {
     "en".to_string()
-}
-
-inventory::submit! {
-    TransformDescription::new::<Config>("geoip")
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        format!(
-            r##"
-# Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
-# databases, such as the country database, are not supported.
-#
-# GeoIP2: https://dev.maxmind.com/geoip/geoip2/downloadable
-# GeoLite2: https://dev.maxmind.com/geoip/geoip2/geolite2/#Download_Access
-database: '/path/to/your/geoip/database'
-
-# The field name that contains the IP address. This field should contain a
-# valid IPv4 or IPv6 address.
-source: ip
-
-# The field to insert the resulting GeoIP data into
-#
-# optional, default is {}
-# target: geo
-"##,
-            default_target()
-        )
-    }
 }
 
 #[async_trait]
@@ -83,10 +67,6 @@ impl TransformConfig for Config {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "geoip"
     }
 }
 

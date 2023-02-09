@@ -227,6 +227,7 @@ transforms = [
     "transforms-enum",
     "transforms-filter",
     "transforms-geoip",
+    "transforms-json_parser",
     "transforms-metricalize",
     "transforms-route",
     "transforms-sample",
@@ -241,6 +242,7 @@ transforms-dedup = ["lru"]
 transforms-enum = []
 transforms-filter = ["condition"]
 transforms-geoip = [ "maxminddb" ]
+transforms-json_parser = []
 transforms-metricalize = ["async-stream"]
 transforms-route = ["condition"]
 transforms-sample = ["seahash"]

@@ -1,52 +1,126 @@
+use std::fmt::Formatter;
+
 use async_trait::async_trait;
-use event::log::Value;
+use bytes::Bytes;
+use configurable::{configurable_component, Configurable};
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use serde::{Deserialize, Serialize};
+use serde::de::Error;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-struct MappingItem {
-    key: Value,
-    value: Value,
+#[derive(Configurable, Clone, Debug)]
+enum Value {
+    Integer(i64),
+    Float(f64),
+    String(String),
+    Bool(bool),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
-struct Config {
-    source: String,
-    target: String,
+impl<'de> Deserialize<'de> for Value {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        struct Delegate;
 
-    mapping: Vec<MappingItem>,
-}
+        impl<'de> serde::de::Visitor<'de> for Delegate {
+            type Value = Value;
 
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        r##"
-# source is the filed to evaluate
-#
-source: foo
+            fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
+                formatter.write_str(r#"integer, float, string or bool expect"#)
+            }
 
-# target the field to store mapped value
-#
-target: bar
+            fn visit_bool<E>(self, v: bool) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                Ok(Value::Bool(v))
+            }
 
-# mapping table
-mapping:
-  - key: 0
-    value: success
-  - key: 1
-    value: error
+            fn visit_i64<E>(self, v: i64) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                Ok(Value::Integer(v))
+            }
 
-"##
-        .to_string()
+            fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
+            where
+                E: Error,
+            {
+                Ok(Value::String(v.to_string()))
+            }
+        }
+
+        deserializer.deserialize_any(Delegate)
     }
 }
 
-inventory::submit! {
-    TransformDescription::new::<Config>("enum")
+impl Serialize for Value {
+    fn serialize<S>(&self, _serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        todo!()
+    }
+}
+
+impl From<&Value> for event::log::Value {
+    fn from(value: &Value) -> Self {
+        match value {
+            Value::Integer(i) => event::log::Value::Int64(*i),
+            Value::Float(f) => event::log::Value::Float(*f),
+            Value::String(s) => event::log::Value::Bytes(Bytes::from(s.to_owned())),
+            Value::Bool(b) => event::log::Value::Boolean(*b),
+        }
+    }
+}
+
+impl From<i64> for Value {
+    fn from(value: i64) -> Self {
+        Self::Integer(value)
+    }
+}
+
+impl From<&str> for Value {
+    fn from(value: &str) -> Self {
+        Self::String(value.to_string())
+    }
+}
+
+impl From<f64> for Value {
+    fn from(value: f64) -> Self {
+        Self::Float(value)
+    }
+}
+
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+struct MappingItem {
+    /// Key value could be integer, float, string or boolean
+    #[configurable(required)]
+    key: Value,
+
+    /// Value's value could be integer, float, string or boolean
+    #[configurable(required)]
+    value: Value,
+}
+
+#[configurable_component(transform, name = "enum")]
+#[derive(Clone, Debug)]
+#[serde(deny_unknown_fields)]
+struct Config {
+    /// source is the filed to evaluate.
+    #[configurable(required)]
+    source: String,
+
+    /// target the field to store mapped value
+    #[configurable(required)]
+    target: String,
+
+    /// mapping table
+    #[configurable(required)]
+    mapping: Vec<MappingItem>,
 }
 
 #[async_trait]
@@ -69,10 +143,6 @@ impl TransformConfig for Config {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn transform_type(&self) -> &'static str {
-        "enum"
-    }
 }
 
 #[derive(Clone)]
@@ -87,8 +157,17 @@ impl FunctionTransform for Enum {
         events.for_each_log(|log| {
             if let Some(got) = log.get_field(self.source.as_str()) {
                 for MappingItem { key, value } in &self.mapping {
-                    if key == got {
-                        log.insert_field(self.target.as_str(), value.clone());
+                    let equal = match (key, got) {
+                        (Value::Integer(ai), event::log::Value::Int64(bi)) => ai == bi,
+                        (Value::Float(af), event::log::Value::Float(bf)) => af == bf,
+                        (Value::String(astr), event::log::Value::Bytes(bs)) => astr == bs,
+                        (Value::Bool(ab), event::log::Value::Boolean(bb)) => ab == bb,
+                        _ => false,
+                    };
+
+                    if equal {
+                        let n: event::log::Value = From::from(value);
+                        log.insert_field(self.target.as_str(), n);
                         return;
                     }
                 }
@@ -106,7 +185,7 @@ mod tests {
     use event::{fields, Event};
 
     #[test]
-    fn test_generate_config() {
+    fn generate_config() {
         crate::testing::test_generate_config::<Config>();
     }
 

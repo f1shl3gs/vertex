@@ -1,42 +1,24 @@
 use async_trait::async_trait;
 use condition::Expression;
+use configurable::configurable_component;
 use event::Events;
-use framework::config::{
-    DataType, GenerateConfig, Output, TransformConfig, TransformContext, TransformDescription,
-};
+use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{SyncTransform, Transform, TransformOutputsBuf};
 use indexmap::IndexMap;
-use serde::{Deserialize, Serialize};
 
 const UNMATCHED_ROUTE: &str = "_unmatched";
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(transform, name = "route")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// A table of route identifiers to logical conditions representing the filter of the route.
+    /// Each route can then be referenced as an input by other components with the name
+    /// <transform_name>.<route_id>. If an event doesn’t match any route, it will be sent to
+    /// the <transform_name>._unmatched output. Note, _unmatched is a reserved output name and
+    /// cannot be used as a route name. _default is also reserved for future use.
+    #[configurable(required)]
     route: IndexMap<String, String>,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        r##"
-# A table of route identifiers to logical conditions representing the filter of the route.
-# Each route can then be referenced as an input by other components with the name
-# <transform_name>.<route_id>. If an event doesn’t match any route, it will be sent to
-# the <transform_name>._unmatched output. Note, _unmatched is a reserved output name and
-# cannot be used as a route name. _default is also reserved for future use.
-#
-# required
-route:
-    info: .message contains info
-    warn: .message contains warn
-
-"##
-        .into()
-    }
-}
-
-inventory::submit! {
-    TransformDescription::new::<Config>("route")
 }
 
 #[async_trait]
@@ -60,10 +42,6 @@ impl TransformConfig for Config {
         result.push(Output::default(DataType::Log).with_port(UNMATCHED_ROUTE));
 
         result
-    }
-
-    fn transform_type(&self) -> &'static str {
-        "route"
     }
 
     fn enable_concurrency(&self) -> bool {

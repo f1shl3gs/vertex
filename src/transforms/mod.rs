@@ -2,7 +2,6 @@
 mod add_fields;
 #[cfg(feature = "transforms-add_tags")]
 mod add_tags;
-mod ansii_striper;
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
 #[cfg(feature = "transforms-coercer")]
@@ -15,10 +14,8 @@ mod r#enum;
 mod filter;
 #[cfg(feature = "transforms-geoip")]
 mod geoip;
-mod grok_parser;
-mod jsmn_parser;
+#[cfg(feature = "transforms-json_parser")]
 mod json_parser;
-mod logfmt_parser;
 #[cfg(feature = "transforms-metricalize")]
 mod metricalize;
 mod rename_fields;

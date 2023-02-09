@@ -372,16 +372,16 @@ mod tests {
     use crate::config::{DataType, Output, SinkContext, SourceContext, TransformContext};
     use async_trait::async_trait;
     use configurable::configurable_component;
-    use serde::{Deserialize, Serialize};
 
-    #[configurable_component(source, name = "mock_source")]
+    #[configurable_component(source, name = "mock")]
     #[derive(Debug)]
     struct MockSourceConfig;
 
-    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[configurable_component(transform, name = "mock")]
+    #[derive(Debug, Clone)]
     struct MockTransformConfig;
 
-    #[configurable_component(sink, name = "mock_sink")]
+    #[configurable_component(sink, name = "mock")]
     #[derive(Debug)]
     struct MockSinkConfig;
 
@@ -410,10 +410,6 @@ mod tests {
 
         fn outputs(&self) -> Vec<Output> {
             vec![Output::default(DataType::Any)]
-        }
-
-        fn transform_type(&self) -> &'static str {
-            "mock"
         }
     }
 
