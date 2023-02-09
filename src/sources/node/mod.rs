@@ -58,13 +58,14 @@ use std::io::Read;
 use std::str::FromStr;
 use std::{path::Path, sync::Arc};
 
+use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::{
-    default_false, default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
+    default_false, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::{config::SourceDescription, Source};
+use framework::Source;
 use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use tokio_stream::wrappers::IntervalStream;
@@ -303,7 +304,8 @@ impl Default for Collectors {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "node")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct NodeMetricsConfig {
     #[serde(default = "default_proc_path")]
@@ -313,6 +315,7 @@ pub struct NodeMetricsConfig {
     sys_path: String,
 
     #[serde(default = "default_collectors")]
+    #[configurable(skip)]
     collectors: Collectors,
 }
 
@@ -335,29 +338,6 @@ impl Default for NodeMetricsConfig {
             sys_path: default_sys_path(),
             collectors: default_collectors(),
         }
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<NodeMetricsConfig>("node")
-}
-
-impl GenerateConfig for NodeMetricsConfig {
-    fn generate_config() -> String {
-        r#"
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Proc path
-#
-proc_path: /proc
-
-# Sys path
-#
-sys_path: /sys
-"#
-        .into()
     }
 }
 

@@ -7,45 +7,28 @@ use std::time::Instant;
 
 use async_trait::async_trait;
 use chrono::Utc;
+use configurable::configurable_component;
 use event::tags::{Key, Value};
 use event::{tags, Bucket, Metric};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::http::HttpClient;
 use framework::Source;
-use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+/// Make sure BIND was built with libxml2 support. You can check with the following command:
+///    named -V | grep libxml2
+///
+/// Configure BIND to open a statistics channel. e.g.
+///
+/// statistics-channels {
+///   inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
+/// };
+#[configurable_component(source, name = "bind")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
+    /// Endpoint for the BIND statistics api
+    #[configurable(required, format = "uri", example = "http://127.0.0.1:8053")]
     endpoint: String,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        r#"
-# Make sure BIND was built with libxml2 support. You can check with the following command:
-#    named -V | grep libxml2
-#
-# Configure BIND to open a statistics channel. e.g.
-#
-# statistics-channels {
-#   inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
-# };
-#
-
-# Endpoint for the BIND statistics api
-#
-# required
-endpoint: http://127.0.0.1:8053
-        "#
-        .to_string()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<Config>("bind")
 }
 
 #[async_trait]

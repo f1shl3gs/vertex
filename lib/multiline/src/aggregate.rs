@@ -5,6 +5,7 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use bytes::{Bytes, BytesMut};
+use configurable::Configurable;
 use futures::Stream;
 use futures::StreamExt;
 use pin_project_lite::pin_project;
@@ -16,7 +17,7 @@ use tokio_util::time::DelayQueue;
 
 /// The mode of operation of the line aggregator
 #[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Hash, Clone, Copy, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Mode {
     /// All consecutive lines matching this pattern are included in the group.

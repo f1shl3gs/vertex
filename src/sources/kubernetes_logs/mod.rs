@@ -9,12 +9,11 @@ use annotator::FieldsSpec;
 use async_trait::async_trait;
 use bytes::Bytes;
 use chrono::Utc;
+use configurable::configurable_component;
 use event::log::Value;
 use event::tags::Key;
 use event::LogRecord;
-use framework::config::{
-    default_true, DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{FutureExt, StreamExt, TryFutureExt, TryStreamExt};
@@ -25,7 +24,6 @@ use kube::{Api, Client};
 use log_schema::log_schema;
 use measurable::ByteSizeOf;
 use provider::KubernetesPathsProvider;
-use serde::{Deserialize, Serialize};
 use tail::{Checkpointer, Line};
 
 const fn default_max_read_bytes() -> usize {
@@ -49,7 +47,8 @@ const fn default_delay_deletion() -> Duration {
 }
 
 /// Configuration for the `kubernetes_logs` source.
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "kubernetes_logs")]
+#[derive(Debug)]
 pub struct Config {
     /// Specifies the label selector to filter `Pod`s with, to be used in
     /// addition to the built-in `vertex.io/exclude` filter
@@ -96,7 +95,7 @@ pub struct Config {
 
     /// Specifies the field names for Pod metadata annotation.
     #[serde(default)]
-    annotation_fields: annotator::FieldsSpec,
+    annotation_fields: FieldsSpec,
 
     /// The default timezone for timestamps without an explicit zone
     #[serde(default)]
@@ -106,84 +105,6 @@ pub struct Config {
     /// event from the watched stream.
     #[serde(default = "default_delay_deletion", with = "humanize::duration::serde")]
     delay_deletion: Duration,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# Specifies the label selector to filter Pods with.
-#
-# extra_label_selector: app=foo
-
-# The name of the Kubernetes Node this Vector instance runs at. Configured to
-# use an env var by default, to be evaluated to a value provided by Kubernetes
-# at Pod deploy time.
-#
-# self_node_name: ${{VERTEX_NODE_NAME}}
-
-# Specifies the field selector to filter Pod with, to be used in addition to the
-# built-in `Node` filter. The name of the Kubernetes Node this Vertex instance
-# runs at. Configured to use an env var by default, to be evaluated to a value
-# provided by Kubernetes at Pod deploy time.
-#
-# extra_field_selector: foo=bar
-
-# Automatically merge partial messages into a single event. Partial here is in
-# respect to messages that were split by the Kubernetes Container Runtime log
-# driver
-#
-# default: true
-#
-# auto_partial_merge: true
-
-# The directory used to persist file checkpoint positions. By default, the global
-# `data_dir` option is used. Please make sure the Vertex instance has write
-# permissions to this dir.
-#
-# data_dir: /path/to/your/data_dir
-
-# A list of glob patterns to exclude from reading the files.
-#
-# exclude_paths_glob_patterns:
-# - "**/*.gz"
-# - "**/*.tmp"
-
-# THe maximum number of bytes a line can contain before being discarded.
-# This protects against malformed lines or tailing incorrect files.
-#
-# max_line_bytes: {}
-
-# An approximate limit on the amount of data read from a single pod log file
-# at a given time.
-#
-# max_read_bytes: {}
-
-# The exact time the event was ingested into Vertex.
-#
-# ingestion_timestamp_field: "ingestion_timestamp"
-
-# Configuration for how the events are annotated with Pod metadata.
-#
-# annotation_fields:
-{}
-
-# The name of the time zone to apply to timestamp conversions that do not contain
-# an explicit time zone. This overrides the global timezone option. The time zone
-# name may be any name in the TZ database, or `local` to indicate system local time.
-#
-timezone: local
-
-"#,
-            humanize::bytes::ibytes(default_max_line_bytes()),
-            humanize::bytes::ibytes(default_max_read_bytes()),
-            FieldsSpec::generate_commented_with_indent(2)
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<Config>("kubernetes_logs")
 }
 
 impl Config {

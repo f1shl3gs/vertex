@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 use std::net::SocketAddr;
 use std::path::PathBuf;
@@ -109,6 +110,12 @@ impl Configurable for String {
             instance_type: Some(InstanceType::String.into()),
             ..Default::default()
         })
+    }
+}
+
+impl Configurable for Cow<'static, str> {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        Ok(generate_string_schema())
     }
 }
 

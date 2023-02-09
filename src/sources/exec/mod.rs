@@ -8,11 +8,10 @@ use chrono::Utc;
 use codecs::decoding::StreamDecodingError;
 use codecs::decoding::{DeserializerConfig, FramingConfig};
 use codecs::DecodingConfig;
+use configurable::{configurable_component, Configurable};
 use event::Event;
 use framework::async_read::VecAsyncReadExt;
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures::FutureExt;
 use futures_util::StreamExt;
@@ -37,7 +36,8 @@ const fn default_restart_delay() -> Duration {
     Duration::from_secs(1)
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "lowercase")]
 enum RestartPolicy {
     Always,
     Never,
@@ -49,16 +49,24 @@ impl Default for RestartPolicy {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 struct ScheduledConfig {
+    /// The interval, in seconds, between scheduled command runs.
+    ///
+    /// If the command takes longer than `exec_interval_secs` to run, it will be killed.
     #[serde(with = "humanize::duration::serde")]
+    #[configurable(required, example = "1m")]
     interval: Duration,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 struct StreamingConfig {
+    /// Whether or not the command should be rerun if the command exits.
     #[serde(default)]
     restart_policy: RestartPolicy,
+
+    /// The amount of time, in seconds, that Vector will wait before rerunning a
+    /// streaming command that exited.
     #[serde(default = "default_restart_delay", with = "humanize::duration::serde")]
     delay: Duration,
 }
@@ -69,13 +77,6 @@ const fn default_include_stderr() -> bool {
 
 const fn default_maximum_buffer_size() -> usize {
     1024 * 1024 // 1MiB
-}
-
-fn default_decoding() -> DecodingConfig {
-    DecodingConfig::new(
-        FramingConfig::NewLineDelimited { max_length: None },
-        DeserializerConfig::Bytes,
-    )
 }
 
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -96,7 +97,8 @@ enum Mode {
     Streaming(StreamingConfig),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "exec")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ExecConfig {
     // TODO: replace with mode, enum can make sure only one of them configured.
@@ -104,20 +106,28 @@ pub struct ExecConfig {
     scheduled: Option<ScheduledConfig>,
     streaming: Option<StreamingConfig>,
 
+    /// The command to be run, plus any arguments if needed.
+    #[configurable(required)]
     command: Vec<String>,
+
+    /// The directory in which to run the command.
     #[serde(default)]
     working_directory: Option<PathBuf>,
 
+    /// Whether or not the output from stderr should be included when generating events.
     #[serde(default = "default_include_stderr")]
     include_stderr: bool,
+
+    /// The maximum buffer size allowed before a log event will be generated.
     #[serde(
         default = "default_maximum_buffer_size",
         with = "humanize::bytes::serde"
     )]
     maximum_buffer_size: usize,
 
-    #[serde(default = "default_decoding")]
-    decoding: DecodingConfig,
+    framing: Option<FramingConfig>,
+    #[serde(default)]
+    decoding: DeserializerConfig,
 }
 
 impl ExecConfig {
@@ -136,59 +146,17 @@ impl ExecConfig {
     }
 }
 
-impl GenerateConfig for ExecConfig {
-    fn generate_config() -> String {
-        r#"
-# The command to be run, plus any arguments if needed.
-#
-command:
-  - echo
-  - $HOSTNAME
-
-# The scheduled options
-#
-scheduled:
-  interval: 10s
-
-# The streaming options
-#
-# streaming:
-#   restart_policy: always
-#   delay: 3s
-
-# The scheduled options
-#
-# Available only when `mode: scheduled`
-# interval: 10s
-
-# Configures in which way frames are decoded into events.
-#
-# Available Options:
-#   bytes:     Events containing the byte frame as-is.
-#   json:      Events being parsed from a JSON string
-#   syslog:    Events being parsed form a Syslog message.
-#
-# decoding: bytes
-
-# Configuration in which way incoming bytes sequences are split up into byte frames.
-#
-# framing: newline
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<ExecConfig>("exec")
-}
-
 #[async_trait]
 #[typetag::serde(name = "exec")]
 impl SourceConfig for ExecConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.validate()?;
         let hostname = crate::hostname().ok();
-        let decoder = self.decoding.build();
+        let framing = self
+            .framing
+            .clone()
+            .unwrap_or_else(|| self.decoding.default_stream_framing());
+        let decoder = DecodingConfig::new(framing, self.decoding.clone()).build();
 
         if let Some(config) = &self.scheduled {
             Ok(Box::pin(run_scheduled(

@@ -98,6 +98,8 @@ impl FieldAttrs {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
                         parse_attr_litstr(errs, m, &mut this.format)
                     }
+                } else if name.is_ident("skip") {
+                    this.skip = true;
                 } else {
                     errs.err(
                         &meta,

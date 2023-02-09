@@ -2,10 +2,9 @@ use std::collections::BTreeSet;
 
 use async_trait::async_trait;
 use chrono::Utc;
+use configurable::configurable_component;
 use event::{fields, tags, LogRecord};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
@@ -13,22 +12,15 @@ use k8s_openapi::api::core::v1::Event;
 use kube::api::ListParams;
 use kube::runtime::{watcher, WatchStreamExt};
 use kube::{Api, Client};
-use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "kubernetes_events")]
+#[derive(Debug)]
 struct Config {
+    /// Namespaces to watch for, if this field is empty, all namespaces will
+    /// be watched.
     #[serde(default)]
+    #[configurable(required)]
     namespaces: Vec<String>,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        todo!()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<Config>("kubernetes_events")
 }
 
 #[async_trait]

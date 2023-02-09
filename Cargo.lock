@@ -654,11 +654,14 @@ dependencies = [
 name = "configurable"
 version = "0.1.0"
 dependencies = [
+ "chrono-tz",
  "configurable-derive",
+ "encoding_rs",
  "humanize",
  "indexmap",
  "inventory",
  "no-proxy",
+ "regex",
  "schemars",
  "serde",
  "serde_json",
@@ -2354,6 +2357,7 @@ name = "multiline"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "configurable",
  "futures",
  "humanize",
  "pin-project-lite",
