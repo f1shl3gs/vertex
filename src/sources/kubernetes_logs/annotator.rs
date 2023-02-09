@@ -1,6 +1,7 @@
-use event::tags::Key;
+use std::borrow::Cow;
+
+use configurable::Configurable;
 use event::LogRecord;
-use framework::config::GenerateConfig;
 use k8s_openapi::{
     api::core::v1::{Container, ContainerStatus, Pod, PodSpec, PodStatus},
     apimachinery::pkg::apis::meta::v1::ObjectMeta,
@@ -12,20 +13,34 @@ use super::reflector::Store;
 /// The delimiter used in the log path.
 const LOG_PATH_DELIMITER: &str = "_";
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+pub type Key = Cow<'static, str>;
+
+#[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields, default)]
 pub struct FieldsSpec {
+    /// Event field for the Pod's name.
     pub pod_name: Key,
+    /// Event field for the Pod's namespace.
     pub pod_namespace: Key,
+    /// Event field for the Pod's uid.
     pub pod_uid: Key,
+    /// Event field for the Pod's IPv4 address.
     pub pod_ip: Key,
+    /// Event field for the Pod's IPv4 and IPv6 addresses.
     pub pod_ips: Key,
+    /// Event field for the `Pod`'s labels.
     pub pod_labels: Key,
+    /// Event field for the Pod's annotations.
     pub pod_annotations: Key,
+    /// Event field for the Pod's node_name.
     pub pod_node_name: Key,
+    /// Event field for the Pod's owner reference.
     pub pod_owner: Key,
+    /// Event field for the Container's name.
     pub container_name: Key,
+    /// Event field for the Container's ID.
     pub container_id: Key,
+    /// Event field for the Container's image.
     pub container_image: Key,
 }
 
@@ -45,60 +60,6 @@ impl Default for FieldsSpec {
             container_id: "kubernetes.container_id".into(),
             container_image: "kubernetes.container_image".into(),
         }
-    }
-}
-
-impl GenerateConfig for FieldsSpec {
-    fn generate_config() -> String {
-        r#"
-# Tag key for Pod name
-#
-pod_name: kubernetes.pod_name
-
-# Tag key for Pod namespace
-#
-pod_namespace: kubernetes.pod_namespace
-
-# Tag key for Pod uid
-#
-pod_uid: kubernetes.pod_uid
-
-# Tag key for Pod ip
-#
-pod_ip: kubernetes.pod_ip
-
-# Tag key for Pod ips
-#
-pod_ips: kubernetes.pod_ips
-
-# Tag key for Pod labels
-#
-pod_labels: kubernetes.pod_labels
-
-# Tag key for Pod annotations
-#
-pod_annotations: kubernetes.pod_annotations
-
-# Tag key for Pod's node_name
-#
-pod_node_name: kubernetes.pod_node_name
-
-# Tag key for Pod owner
-#
-pod_owner: kubernetes.pod_owner
-
-# Tag key for Pod container_name
-#
-container_name: kubernetes.container_name
-
-# Tag key for Pod container id
-#
-container_id: kubernetes.container_id
-
-# Tag key for Pod container's image
-container_image: kubernetes.container_image
-"#
-        .into()
     }
 }
 

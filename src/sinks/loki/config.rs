@@ -2,8 +2,9 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use codecs::EncodingConfig;
+use configurable::{configurable_component, Configurable};
 use framework::batch::{BatchConfig, SinkBatchSettings};
-use framework::config::{DataType, GenerateConfig, SinkConfig, SinkContext, UriSerde};
+use framework::config::{DataType, SinkConfig, SinkContext, UriSerde};
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
@@ -25,37 +26,75 @@ impl SinkBatchSettings for LokiDefaultBatchSettings {
     const TIMEOUT: Duration = Duration::from_secs(1);
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum OutOfOrderAction {
+    /// Drop the event.
+    #[default]
     Drop,
+
+    /// Rewrite the timestamp of the event to the timestamp of the latest event seen by the sink.
     RewriteTimestamp,
+    // /// Accept the event.
+    // ///
+    // /// The event is not dropped and is sent without modification.
+    // ///
+    // /// Requires Loki 2.4.0 or newer.
+    // Accept,
 }
 
-impl Default for OutOfOrderAction {
-    fn default() -> Self {
-        Self::Drop
-    }
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "loki")]
+#[derive(Clone, Debug)]
 pub struct LokiConfig {
+    /// The base URL of the Loki instance
+    #[configurable(required, format = "uri", example = "http://example.com/ingest")]
     pub endpoint: UriSerde,
+
+    /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
 
+    /// The tenant id that's sent with every request, by default
+    /// this is not required since a proxy should set this header.
+    /// When running Loki locally a tenant id is not required either.
+    /// Your can read more abount tenant id's at
+    /// https://github.com/grafana/loki/blob/master/docs/operations/multi-tenancy.md
+    ///
+    /// Note: This parameter supports Vertex's template syntax, which
+    /// enables you to use dynamic per-event value.
     pub tenant: Option<Template>,
+
+    /// A set of labels that are attached to each batch of events.
+    /// Both keys and values are templatable, which enables you to
+    /// attach dynamic labels to events. Note: If the set of labels
+    /// has high cardinality, this can cause drastic performance
+    /// issues with Loki. To prevent this from happening, reduce
+    /// the number of unique label keys and values.
     #[serde(default)]
     pub labels: HashMap<Template, Template>,
 
-    #[serde(default = "framework::config::default_false")]
+    /// If this is set to "true" then when labels are collected from
+    /// events those fields will also get removed from the event.
+    #[serde(default)]
     pub remove_label_fields: bool,
+
+    /// If this is set to "true" then the timestamp will be removed
+    /// from the evnt payload. Note the event timestamp will still be
+    /// sent as metadata to Loki for indexing.
     #[serde(default = "framework::config::default_true")]
     pub remove_timestamp: bool,
+
+    /// Some sources may generate events with timestamps that aren't
+    /// in strictly chronological order. The Loki service can't
+    /// accept a stream of such events. Vertex sorts events before
+    /// sending them to Loki, however some late events might
+    /// arrive after a batch has been sent. This option specifies
+    /// what Vertex should do with those events.
     #[serde(default)]
     pub out_of_order_action: OutOfOrderAction,
 
     pub auth: Option<Auth>,
     pub tls: Option<TlsConfig>,
+
     #[serde(default = "Compression::gzip_default")]
     pub compression: Compression,
 
@@ -73,116 +112,6 @@ impl LokiConfig {
         let tls = TlsSettings::from_options(&self.tls)?;
         let client = HttpClient::new(tls, cx.proxy())?;
         Ok(client)
-    }
-}
-
-impl GenerateConfig for LokiConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The base URL of the Loki instance
-#
-endpoint: http://loki.example.com:3100
-
-# Configures the encoding specific sink behavior.
-#
-encoding:
-  # The encoding codec used to serialize the events before outputting.
-  #
-  codec: json
-
-  # Prevent the sink from encoding the specified fields.
-  #
-  # except_fields:
-  # - foo
-  # - bar.key
-
-  # Makes the sink encode only the specified fields.
-  #
-  # only_fields:
-  # - k01
-  # - k02.k03
-
-  # How to format event timestamps
-  #
-  # Availabel values:
-  # rfc3339     Formats as a RFC3339 string
-  # unix        Formats as a unix timestamp
-  #
-  # timestamp_format: rfc3339
-
-# The tenant id that's sent with every request, by default
-# this is not required since a proxy should set this header.
-# When running Loki locally a tenant id is not required either.
-# Your can read more abount tenant id's at
-# https://github.com/grafana/loki/blob/master/docs/operations/multi-tenancy.md
-#
-# Note: This parameter supports Vertex's template syntax, which
-# enables you to use dynamic per-event value.
-#
-# tenant_id: some_tenant_id
-
-# A set of labels that are attached to each batch of events.
-# Both keys and values are templatable, which enables you to
-# attach dynamic labels to events. Note: If the set of labels
-# has high cardinality, this can cause drastic performance
-# issues with Loki. To prevent this from happening, reduce
-# the number of unique label keys and values.
-#
-# labels:
-#   foo: bar
-#   another_foo: {{ .field.key }}
-
-# If this is set to "true" then when labels are collected from
-# events those fields will also get removed from the event.
-#
-# remote_label_fields: false
-
-# If this is set to "true" then the timestamp will be removed
-# from the evnt payload. Note the event timestamp will still be
-# sent as metadata to Loki for indexing.
-#
-# remove_timestamp: true
-
-# Some sources may generate events with timestamps that aren't
-# in strictly chronological order. The Loki service can't
-# accept a stream of such events. Vertex sorts events before
-# sending them to Loki, however some late events might
-# arrive after a batch has been sent. This option specifies
-# what Vertex should do with those events.
-#
-# Availabel values:
-# drop                  Drop the event, with a warning
-# rewrite_timestamp     Rewrite timestamp of the event to the
-#         latest timestamp that was pushed.
-#
-# out_of_order_action: drop
-
-# Configures the authentication strategy
-#
-# auth:
-{}
-
-# Configures the sink request behavior.
-#
-# request:
-{}
-
-# Configures the sink batching behavior.
-#
-# TODO
-
-# Configures the TLS options for outgoing connections.
-#
-# tls:
-{}
-
-# TODO: compression
-        "#,
-            Auth::generate_commented_with_indent(2),
-            RequestConfig::generate_commented_with_indent(2),
-            TlsConfig::generate_commented_with_indent(2),
-        )
     }
 }
 

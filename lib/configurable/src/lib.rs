@@ -12,7 +12,7 @@ pub use errors::GenerateError;
 pub use example::generate_example;
 pub use named::NamedComponent;
 
-pub use crate::configurable::Configurable;
+pub use crate::configurable::{Configurable, ConfigurableString};
 
 // re-export
 pub use indexmap::IndexMap;

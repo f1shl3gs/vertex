@@ -1,3 +1,4 @@
+use configurable::Configurable;
 use event::Event;
 use serde::{Deserialize, Serialize};
 use smallvec::SmallVec;
@@ -6,22 +7,31 @@ use super::Decoder;
 #[cfg(feature = "syslog")]
 use crate::decoding::SyslogDeserializer;
 use crate::decoding::{
-    BytesDecoder, BytesDeserializer, CharacterDelimitedDecoder, DecodeError, Deserializer, Framer,
-    JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoder, OctetCountingDecoder,
+    BytesDeserializer, BytesDeserializerConfig, CharacterDelimitedDecoder, DecodeError,
+    Deserializer, Framer, JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoder,
+    OctetCountingDecoder,
 };
 
 /// Configuration for building a `Framer`.
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum FramingConfig {
     /// Configuration the `BytesFramer`
     Bytes,
 
     /// Configures the `NewlineDelimitedFramer`
-    NewLineDelimited {
+    NewlineDelimited {
         /// The maximum length of the byte buffer.
         ///
         /// This length does *not* include the trailing delimiter.
+        ///
+        /// By default, there is no maximum length enforced. If events are malformed, this can lead to
+        /// additional resource usage as events continue to be buffered in memory, and can potentially
+        /// lead to memory exhaustion in extreme cases.
+        ///
+        /// If there is a risk of processing malformed data, such as logs with user-controlled input,
+        /// consider setting the maximum length to a reasonably large value as a safety net. This will
+        /// ensure that processing is not truly unbounded.
         #[serde(skip_serializing_if = "Option::is_none")]
         max_length: Option<usize>,
     },
@@ -52,7 +62,7 @@ impl FramingConfig {
     /// Build a `Framer` for this configuration.
     pub fn build(&self) -> Framer {
         match self {
-            FramingConfig::Bytes => Framer::Bytes(BytesDecoder::new()),
+            FramingConfig::Bytes => Framer::Bytes(BytesDeserializerConfig::new()),
             FramingConfig::CharacterDelimited {
                 delimiter,
                 max_length,
@@ -66,7 +76,7 @@ impl FramingConfig {
 
                 Framer::CharacterDelimited(framer)
             }
-            FramingConfig::NewLineDelimited { max_length } => {
+            FramingConfig::NewlineDelimited { max_length } => {
                 let framer = match max_length {
                     Some(max_length) => NewlineDelimitedDecoder::new_with_max_length(*max_length),
                     None => NewlineDelimitedDecoder::new(),
@@ -87,10 +97,11 @@ impl FramingConfig {
 }
 
 /// Configuration for building a `Deserializer`.
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(tag = "codec", rename_all = "snake_case")]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize, Default)]
+#[serde(rename_all = "snake_case")]
 pub enum DeserializerConfig {
     /// Configures the `BytesDeserializer`
+    #[default]
     Bytes,
     /// Configures the `JsonDeserializer`
     Json,
@@ -111,6 +122,18 @@ impl DeserializerConfig {
             DeserializerConfig::Logfmt => Deserializer::Logfmt(LogfmtDeserializer),
             #[cfg(feature = "syslog")]
             DeserializerConfig::Syslog => Deserializer::Syslog(SyslogDeserializer),
+        }
+    }
+
+    /// Return an appropriate default framer for the given deserializer
+    pub fn default_stream_framing(&self) -> FramingConfig {
+        match self {
+            DeserializerConfig::Bytes | DeserializerConfig::Json | DeserializerConfig::Logfmt => {
+                FramingConfig::NewlineDelimited { max_length: None }
+            }
+
+            #[cfg(feature = "syslog")]
+            DeserializerConfig::Syslog => FramingConfig::NewlineDelimited { max_length: None },
         }
     }
 }

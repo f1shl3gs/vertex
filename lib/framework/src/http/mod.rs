@@ -1,13 +1,13 @@
 mod chunk;
 
-pub use chunk::ChunkedDecoder;
-
 use std::borrow::Cow;
 use std::{
     fmt,
     task::{Context, Poll},
 };
 
+pub use chunk::ChunkedDecoder;
+use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
 use http::{header, header::HeaderValue, request::Builder, uri::InvalidUri, HeaderMap, Request};
@@ -262,11 +262,30 @@ impl<B> fmt::Debug for HttpClient<B> {
     }
 }
 
-#[derive(Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
+/// The authentication strategy for http request/response
+#[derive(Configurable, Deserialize, Serialize, Clone, Debug, PartialEq, Eq)]
 #[serde(deny_unknown_fields, rename_all = "snake_case", tag = "strategy")]
 pub enum Auth {
-    Basic { user: String, password: String },
-    Bearer { token: String },
+    /// Basic authentication.
+    ///
+    /// The username and password are concatenated and encoded via [base64][base64].
+    ///
+    /// [base64]: https://en.wikipedia.org/wiki/Base64
+    Basic {
+        /// The basic authentication username.
+        user: String,
+
+        /// The basic authentication password.
+        password: String,
+    },
+
+    /// Bearer authentication.
+    ///
+    /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
+    Bearer {
+        /// The bearer authentication token.
+        token: String,
+    },
 }
 
 impl Auth {

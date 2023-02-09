@@ -11,6 +11,7 @@ use std::{cmp, io, path::PathBuf, time::Duration};
 
 use bytes::{Buf, BytesMut};
 use chrono::TimeZone;
+use configurable::configurable_component;
 use event::{log::Value, Event};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -22,7 +23,6 @@ use nix::{
     sys::signal::{kill, Signal},
     unistd::Pid,
 };
-use serde::{Deserialize, Serialize};
 use tokio::fs::OpenOptions;
 use tokio::io::{AsyncReadExt, AsyncSeekExt, AsyncWriteExt};
 use tokio::{process::Command, time::sleep};
@@ -40,7 +40,8 @@ const RECEIVED_TIMESTAMP: &str = "__REALTIME_TIMESTAMP";
 const BACKOFF_DURATION: Duration = Duration::from_secs(1);
 const JOURNALCTL: &str = "journalctl";
 
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[configurable_component(source, name = "journald")]
+#[derive(Debug, Default)]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub struct JournaldConfig {
     pub current_boot_only: Option<bool>,
@@ -106,10 +107,6 @@ impl SourceConfig for JournaldConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "journald"
     }
 }
 

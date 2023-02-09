@@ -35,6 +35,12 @@ impl From<&'static str> for Key {
     }
 }
 
+impl From<Cow<'static, str>> for Key {
+    fn from(value: Cow<'static, str>) -> Self {
+        Self(value)
+    }
+}
+
 impl From<String> for Key {
     /// Convert a `String` to a `Key`.
     fn from(string: String) -> Self {

@@ -1,6 +1,10 @@
 use std::fmt::{Debug, Display, Formatter};
 use std::str::FromStr;
 
+use configurable::schema::generate_string_schema;
+use configurable::schemars::gen::SchemaGenerator;
+use configurable::schemars::schema::SchemaObject;
+use configurable::{Configurable, GenerateError};
 use http::uri::{Authority, PathAndQuery, Scheme};
 use http::Uri;
 use percent_encoding::percent_decode_str;
@@ -16,6 +20,20 @@ use crate::http::Auth;
 pub struct UriSerde {
     pub uri: Uri,
     pub auth: Option<Auth>,
+}
+
+impl Configurable for UriSerde {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        let mut schema = generate_string_schema();
+        schema.format = Some("uri".to_string());
+
+        let metadata = schema.metadata();
+        metadata.examples = vec![serde_json::Value::String(
+            "http://username:password@example.com/some/resource".to_string(),
+        )];
+
+        Ok(schema)
+    }
 }
 
 impl UriSerde {

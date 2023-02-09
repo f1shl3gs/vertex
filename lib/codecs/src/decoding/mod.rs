@@ -29,7 +29,7 @@ use crate::FramingError;
 #[derive(Clone, Debug)]
 pub enum Framer {
     /// Uses a `BytesDecoder` for framing
-    Bytes(BytesDecoder),
+    Bytes(BytesDeserializerConfig),
     /// Uses a `CharacterDelimitedDecoder` for framing.
     CharacterDelimited(CharacterDelimitedDecoder),
     /// Uses a `NewlineDelimitedDecoder` for framing.
@@ -44,8 +44,8 @@ impl From<OctetCountingDecoder> for Framer {
     }
 }
 
-impl From<BytesDecoder> for Framer {
-    fn from(f: BytesDecoder) -> Self {
+impl From<BytesDeserializerConfig> for Framer {
+    fn from(f: BytesDeserializerConfig) -> Self {
         Self::Bytes(f)
     }
 }

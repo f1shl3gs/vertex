@@ -1,17 +1,14 @@
-use chrono::Utc;
 use std::borrow::Cow;
 use std::collections::HashMap;
 use std::time::Instant;
 
+use chrono::Utc;
+use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{
-    ticker_from_duration, DataType, GenerateConfig, Output, SourceConfig, SourceContext,
-    SourceDescription,
-};
+use framework::config::{ticker_from_duration, DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
@@ -22,29 +19,12 @@ const STAT_PREFIX: &str = "STAT";
 const SLAB_KEY: Key = Key::from_static_str("slab");
 const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "memcached")]
+#[derive(Debug)]
 struct MemcachedConfig {
+    /// The endpoint to Memcached servers.
+    #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]
     endpoints: Vec<String>,
-}
-
-impl GenerateConfig for MemcachedConfig {
-    fn generate_config() -> String {
-        r#"
-# The endpoint to Consul server.
-endpoints:
-- 127.0.0.1:1111
-- 127.0.0.1:2222
-
-# The interval between scrapes.
-#
-# interval: 15s
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<MemcachedConfig>("memcached")
 }
 
 #[async_trait::async_trait]
@@ -85,10 +65,6 @@ impl SourceConfig for MemcachedConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "memcached1"
     }
 }
 

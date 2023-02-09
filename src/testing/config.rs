@@ -5,5 +5,10 @@ where
     for<'de> T: GenerateConfig + serde::Deserialize<'de>,
 {
     let cfg = T::generate_config();
-    serde_yaml::from_str::<T>(&cfg).expect("Invalid config generated");
+    if let Err(err) = serde_yaml::from_str::<T>(&cfg) {
+        panic!(
+            "{}\n\n----------------- Generated config -------------\n{}\n",
+            err, cfg
+        )
+    }
 }

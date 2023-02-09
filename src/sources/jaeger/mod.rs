@@ -5,9 +5,8 @@ mod udp;
 use std::net::SocketAddr;
 
 use async_trait::async_trait;
-use framework::config::{
-    DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext, SourceDescription,
-};
+use configurable::{configurable_component, Configurable};
+use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
 use framework::tls::TlsConfig;
 use framework::Source;
 use futures_util::FutureExt;
@@ -40,13 +39,16 @@ fn default_grpc_endpoint() -> SocketAddr {
 /// The Agent can only receive spans over UDP in Thrift format.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ThriftCompactConfig {
     #[serde(default = "default_thrift_compact_socketaddr")]
+    #[configurable(required)]
     endpoint: SocketAddr,
+
     #[serde(default = "default_max_packet_size")]
     max_packet_size: usize,
+
     #[serde(default)]
     socket_buffer_size: Option<usize>,
 }
@@ -55,13 +57,16 @@ struct ThriftCompactConfig {
 /// do not support it (notably, Node.js) and use Thrift’s binary encoding.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ThriftBinaryConfig {
     #[serde(default = "default_thrift_binary_socketaddr")]
+    #[configurable(required)]
     endpoint: SocketAddr,
+
     #[serde(default = "default_max_packet_size")]
     max_packet_size: usize,
+
     #[serde(default)]
     socket_buffer_size: Option<usize>,
 }
@@ -72,11 +77,13 @@ struct ThriftBinaryConfig {
 /// to the Collectors over HTTP/HTTPS.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct ThriftHttpConfig {
     #[serde(default = "default_thrift_http_endpoint")]
+    #[configurable(required)]
     endpoint: SocketAddr,
+
     #[serde(default)]
     tls: Option<TlsConfig>,
 }
@@ -84,9 +91,10 @@ pub struct ThriftHttpConfig {
 /// In a typical Jaeger deployment, Agents receive spans from Clients and forward them to Collectors
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#protobuf-via-grpc-stable
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct GrpcServerConfig {
+    #[configurable(required)]
     #[serde(default = "default_grpc_endpoint")]
     endpoint: SocketAddr,
 }
@@ -94,7 +102,7 @@ pub struct GrpcServerConfig {
 /// There a lot APIs for receiving spans
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 struct Protocols {
     thrift_http: Option<ThriftHttpConfig>,
     thrift_compact: Option<ThriftCompactConfig>,
@@ -102,19 +110,10 @@ struct Protocols {
     grpc: Option<GrpcServerConfig>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "jaeger")]
+#[derive(Debug)]
 struct JaegerConfig {
     protocols: Protocols,
-}
-
-impl GenerateConfig for JaegerConfig {
-    fn generate_config() -> String {
-        r#""#.into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<JaegerConfig>("jaeger")
 }
 
 #[async_trait]
@@ -183,10 +182,6 @@ impl SourceConfig for JaegerConfig {
         vec![Output::default(DataType::Trace)]
     }
 
-    fn source_type(&self) -> &'static str {
-        "jaeger"
-    }
-
     fn resources(&self) -> Vec<Resource> {
         let mut resources = vec![];
 
@@ -207,5 +202,15 @@ impl SourceConfig for JaegerConfig {
         }
 
         resources
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<JaegerConfig>()
     }
 }

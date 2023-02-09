@@ -377,14 +377,14 @@ pub async fn build_pieces(
     {
         debug!(message = "Building new source", component = %key);
 
-        let typetag = source.inner.source_type();
+        let typetag = source.inner.component_name();
         let source_outputs = source.inner.outputs();
 
         let span = error_span!(
             "source",
             component_kind = "source",
             component_id = %key.id(),
-            component_type = %source.inner.source_type(),
+            component_type = %source.inner.component_name(),
         );
 
         let mut builder = Pipeline::builder().with_buffer(CHUNK_SIZE * crate::num_workers());

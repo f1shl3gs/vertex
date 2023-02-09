@@ -609,6 +609,7 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "chrono",
+ "configurable",
  "dyn-clone",
  "event",
  "futures",
@@ -653,10 +654,14 @@ dependencies = [
 name = "configurable"
 version = "0.1.0"
 dependencies = [
+ "chrono-tz",
  "configurable-derive",
+ "encoding_rs",
  "humanize",
  "indexmap",
  "inventory",
+ "no-proxy",
+ "regex",
  "schemars",
  "serde",
  "serde_json",
@@ -2186,6 +2191,7 @@ dependencies = [
 name = "lookup"
 version = "0.1.0"
 dependencies = [
+ "configurable",
  "criterion",
  "serde",
  "serde_json",
@@ -2351,6 +2357,7 @@ name = "multiline"
 version = "0.1.0"
 dependencies = [
  "bytes",
+ "configurable",
  "futures",
  "humanize",
  "pin-project-lite",
@@ -3055,9 +3062,9 @@ dependencies = [
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.46"
+version = "1.0.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "94e2ef8dbfc347b10c094890f778ee2e36ca9bb4262e86dc99cd217e35f3470b"
+checksum = "5d727cae5b39d21da60fa540906919ad737832fe0b1c165da3a34d6548c849d6"
 dependencies = [
  "unicode-ident",
 ]
@@ -3203,9 +3210,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.18"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1feb54ed693b93a84e14094943b84b7c4eae204c512b7ccb95ab0c66d278ad1"
+checksum = "8856d8364d252a14d474036ea1358d63c9e6965c8e5c1885c18f73d70bff9c7b"
 dependencies = [
  "proc-macro2",
 ]

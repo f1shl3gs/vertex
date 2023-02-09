@@ -5,29 +5,18 @@ use std::io::{self, Read};
 use std::time;
 
 use chrono::{TimeZone, Utc};
+use configurable::configurable_component;
 use event::{fields, LogRecord};
 use framework::{
-    config::{DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription},
+    config::{DataType, Output, SourceConfig, SourceContext},
     Source,
 };
-use serde::{Deserialize, Serialize};
 use tokio::io::AsyncReadExt;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "kmsg")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct KmsgConfig {}
-
-impl GenerateConfig for KmsgConfig {
-    fn generate_config() -> String {
-        r#"# No more config option is needed
-{}"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<KmsgConfig>("kmsg")
-}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kmsg")]
@@ -86,10 +75,6 @@ impl SourceConfig for KmsgConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "kmsg"
     }
 }
 

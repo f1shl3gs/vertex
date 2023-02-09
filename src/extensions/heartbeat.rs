@@ -135,7 +135,7 @@ pub fn report_config(config: &framework::config::Config) {
         resources.extend(source.resources().into_iter().filter_map(|r| match r {
             framework::config::Resource::Port(addr, _) => Some(Resource {
                 name: key.to_string(),
-                component_type: source.source_type().to_string(),
+                component_type: source.component_name().to_string(),
                 address: format!("{}", addr.ip()),
                 port: addr.port(),
             }),

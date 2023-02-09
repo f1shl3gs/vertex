@@ -1,3 +1,4 @@
+use syn::spanned::Spanned;
 use syn::{Lit, LitStr};
 
 use crate::errors::Errors;
@@ -6,6 +7,7 @@ use crate::errors::Errors;
 ///
 /// Defaults to the docstring if one is present, or `#[configurable(description = "...")]`
 /// if one is provided.
+#[derive(Debug)]
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
     pub explicit: bool,
@@ -13,16 +15,19 @@ pub struct Description {
 }
 
 /// Attributes applied to a field of a `#[configurable(...)]` struct.
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct FieldAttrs {
-    pub default: Option<Lit>,
-    pub default_fn: Option<LitStr>,
+    pub skip: bool,
+    pub required: bool,
+    pub deprecated: bool,
+    pub flatten: bool,
+
+    /// Default fn from serde
+    pub default: Option<LitStr>,
     pub format: Option<LitStr>,
     pub serde_with: Option<LitStr>,
     pub description: Option<Description>,
     pub example: Option<syn::Lit>,
-    pub required: bool,
-    pub deprecated: bool,
 }
 
 impl FieldAttrs {
@@ -44,14 +49,19 @@ impl FieldAttrs {
 
                             if name.is_ident("default") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
-                                    parse_attr_litstr(errs, m, &mut this.default_fn)
+                                    parse_attr_litstr(errs, m, &mut this.default)
+                                } else {
+                                    this.default = Some(LitStr::new("", m.span()))
                                 }
-                            }
-
-                            if name.is_ident("with") {
+                            } else if name.is_ident("with") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.serde_with)
                                 }
+                            } else if name.is_ident("flatten") {
+                                this.flatten = true
+                            } else if name.is_ident("skip") {
+                                this.skip = true;
+                                return this;
                             }
                         };
                     }
@@ -76,10 +86,6 @@ impl FieldAttrs {
 
                 if name.is_ident("required") {
                     this.required = true
-                } else if name.is_ident("default") {
-                    if let Some(m) = errs.expect_meta_name_value(meta) {
-                        parse_attr_lit(errs, m, &mut this.default)
-                    }
                 } else if name.is_ident("example") {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
                         parse_attr_lit(errs, m, &mut this.example)
@@ -92,6 +98,8 @@ impl FieldAttrs {
                     if let Some(m) = errs.expect_meta_name_value(meta) {
                         parse_attr_litstr(errs, m, &mut this.format)
                     }
+                } else if name.is_ident("skip") {
+                    this.skip = true;
                 } else {
                     errs.err(
                         &meta,
@@ -135,6 +143,10 @@ pub struct TypeAttrs {
     pub title: Option<syn::LitStr>,
     pub description: Option<Description>,
     pub component_type: Option<syn::Ident>,
+
+    // serde's attributes
+    pub rename_all: Option<syn::LitStr>,
+    pub tag: Option<LitStr>,
 }
 
 impl TypeAttrs {
@@ -144,6 +156,28 @@ impl TypeAttrs {
         for attr in &input.attrs {
             if is_doc_attr(attr) {
                 parse_attr_doc(errs, attr, &mut this.description);
+                continue;
+            }
+
+            if is_serde_attr(attr) {
+                if let Some(ml) = attr_to_meta_list(errs, attr) {
+                    for meta in &ml.nested {
+                        if let Some(m) = errs.expect_nested_meta(meta) {
+                            let name = m.path();
+
+                            if name.is_ident("rename_all") {
+                                if let Some(m) = errs.expect_meta_name_value(m) {
+                                    parse_attr_litstr(errs, m, &mut this.rename_all)
+                                }
+                            } else if name.is_ident("tag") {
+                                if let Some(m) = errs.expect_meta_name_value(m) {
+                                    parse_attr_litstr(errs, m, &mut this.tag)
+                                }
+                            }
+                        };
+                    }
+                }
+
                 continue;
             }
 
@@ -179,6 +213,10 @@ impl TypeAttrs {
                     || name.is_ident("provider")
                 {
                     this.component_type = name.get_ident().cloned();
+                } else if name.is_ident("rename_all") {
+                    if let Some(m) = errs.expect_meta_name_value(meta) {
+                        parse_attr_litstr(errs, m, &mut this.rename_all);
+                    }
                 } else {
                     errs.err(
                         &meta,
@@ -196,7 +234,7 @@ impl TypeAttrs {
     }
 }
 
-fn parse_attr_doc(errors: &Errors, attr: &syn::Attribute, slot: &mut Option<Description>) {
+pub fn parse_attr_doc(errors: &Errors, attr: &syn::Attribute, slot: &mut Option<Description>) {
     let nv = if let Some(nv) = attr_to_meta_name_value(errors, attr) {
         nv
     } else {
@@ -226,7 +264,7 @@ fn parse_attr_doc(errors: &Errors, attr: &syn::Attribute, slot: &mut Option<Desc
 }
 
 /// Checks for `#[doc ...]`, which is generated by doc comments.
-fn is_doc_attr(attr: &syn::Attribute) -> bool {
+pub fn is_doc_attr(attr: &syn::Attribute) -> bool {
     is_matching_attr("doc", attr)
 }
 

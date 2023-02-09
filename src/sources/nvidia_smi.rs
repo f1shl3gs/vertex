@@ -3,50 +3,27 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::Instant;
 
+use configurable::configurable_component;
 use event::{tags, Metric};
+use framework::config::Output;
+use framework::{
+    config::{ticker_from_duration, DataType, SourceConfig, SourceContext},
+    Error, Source,
+};
 use futures::StreamExt;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-use framework::config::Output;
-use framework::{
-    config::{
-        ticker_from_duration, DataType, GenerateConfig, SourceConfig, SourceContext,
-        SourceDescription,
-    },
-    Error, Source,
-};
-
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "nvidia_smi")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct NvidiaSmiConfig {
+    /// The nvidia_smi's absolutely path.
     #[serde(default = "default_smi_path")]
     path: PathBuf,
 }
 
 fn default_smi_path() -> PathBuf {
     "/usr/bin/nvidia-smi".into()
-}
-
-impl GenerateConfig for NvidiaSmiConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The interval between scrapes.
-#
-# interval: 15s
-
-# The nvidia_smi's absolutely path
-#
-path: {:?}
-
-"#,
-            default_smi_path()
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<NvidiaSmiConfig>("nvidia_smi")
 }
 
 #[async_trait::async_trait]
@@ -85,10 +62,6 @@ impl SourceConfig for NvidiaSmiConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "nvidia_smi"
     }
 }
 

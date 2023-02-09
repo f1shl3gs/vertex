@@ -5,6 +5,10 @@ use std::path::PathBuf;
 use bytes::Bytes;
 use chrono::format::{Item, StrftimeItems};
 use chrono::Utc;
+use configurable::schema::generate_string_schema;
+use configurable::schemars::gen::SchemaGenerator;
+use configurable::schemars::schema::SchemaObject;
+use configurable::{Configurable, ConfigurableString, GenerateError};
 use event::{log::Value, EventRef, Metric};
 use log_schema::log_schema;
 use once_cell::sync::Lazy;
@@ -15,12 +19,20 @@ use thiserror::Error;
 
 static RE: Lazy<Regex> = Lazy::new(|| Regex::new(r"\{\{(?P<key>[^\}]+)\}\}").unwrap());
 
-#[derive(Debug, Default, PartialEq, Eq, Hash, Clone)]
+#[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Ord, PartialOrd)]
 pub struct Template {
     src: String,
     has_ts: bool,
     has_fields: bool,
 }
+
+impl Configurable for Template {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        Ok(generate_string_schema())
+    }
+}
+
+impl ConfigurableString for Template {}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Error)]
 pub enum TemplateParseError {

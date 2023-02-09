@@ -1,26 +1,17 @@
+use configurable::Configurable;
 use headers::{Authorization, HeaderMapExt};
 use http::{HeaderMap, HeaderValue};
 use serde::{Deserialize, Serialize};
 
-use crate::config::GenerateConfig;
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct HttpSourceAuthConfig {
+    /// The basic authentication user name.
+    #[configurable(required)]
     pub username: String,
+
+    /// The basic authentication password.
+    #[configurable(required)]
     pub password: String,
-}
-
-impl GenerateConfig for HttpSourceAuthConfig {
-    fn generate_config() -> String {
-        r#"
-# The basic authentication user name.
-username: username
-
-# The basic authentication password.
-password: password
-        "#
-        .into()
-    }
 }
 
 impl TryFrom<Option<&HttpSourceAuthConfig>> for HttpSourceAuth {

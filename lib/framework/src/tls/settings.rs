@@ -5,6 +5,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use configurable::Configurable;
 use openssl::{
     pkcs12::{ParsedPkcs12, Pkcs12},
     pkey::{PKey, Private},
@@ -15,7 +16,6 @@ use openssl::{
 use serde::{Deserialize, Serialize};
 
 use super::{MaybeTls, Result, TlsError};
-use crate::config::GenerateConfig;
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
@@ -26,37 +26,6 @@ pub const TEST_PEM_CRT_PATH: &str = "tests/fixtures/tls/localhost.crt";
 #[cfg(any(test, feature = "test-util"))]
 pub const TEST_PEM_KEY_PATH: &str = "tests/fixtures/tls/localhost.key";
 
-impl GenerateConfig for TlsConfig {
-    fn generate_config() -> String {
-        r#"
-# Absolute path to an additional CA certificate file, in DER or PEM
-# format(X.509), or an inline CA certificate in PEM format
-ca_file: /path/to/certificate_authority.crt
-
-# Absolute path to a certificate file used to identify this connection,
-# in DER or PEM format (X.509) or PKCS#12, or an inline certificate in
-# PEM format. If this is set and is not a PKCS#12 archive, "key_file"
-# must also be set.
-crt_file: /path/to/host_certificate.crt
-
-# Absolute path to a private key file used to identify this connection,
-# in DER or PEM format (PKCS#8), or an inline private key in PEM format.
-# If this is set, "crt_file" must also be set.
-key_file: /path/to/host_certificate.key
-
-# Pass phrase used to unlock the encrypted key file. This has no effect
-# unless "key_file" is set.
-key_pass: some_password
-
-# If "true", Vertex will validate the configured remote host name against
-# the remote host's TLS certificate. Do NOT set this to false unless you
-# understand the risks of not verifying the remote hostname.
-verify_hostname: true
-"#
-        .into()
-    }
-}
-
 impl TlsConfig {
     #[cfg(any(test, feature = "test-util"))]
     pub fn test_config() -> Self {
@@ -64,17 +33,28 @@ impl TlsConfig {
     }
 }
 
-/// Standard TLS options
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+/// Configures the TLS options for incoming/outgoing connections.
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct TlsConfig {
     pub verify_certificate: Option<bool>,
+    /// If "true", Vertex will validate the configured remote host name against
+    /// the remote host's TLS certificate. Do NOT set this to false unless you
+    /// understand the risks of not verifying the remote hostname.
     pub verify_hostname: Option<bool>,
-    #[serde(alias = "ca_path")]
+    /// Absolute path to an additional CA certificate file, in DER or PEM
+    /// format(X.509), or an inline CA certificate in PEM format.
     pub ca_file: Option<PathBuf>,
-    #[serde(alias = "crt_path")]
+    /// Absolute path to a certificate file used to identify this connection,
+    /// in DER or PEM format (X.509) or PKCS#12, or an inline certificate in
+    /// PEM format. If this is set and is not a PKCS#12 archive, "key_file"
+    /// must also be set.
     pub crt_file: Option<PathBuf>,
-    #[serde(alias = "key_path")]
+    /// Absolute path to a private key file used to identify this connection,
+    /// in DER or PEM format (PKCS#8), or an inline private key in PEM format.
+    /// If this is set, "crt_file" must also be set.
     pub key_file: Option<PathBuf>,
+    /// Pass phrase used to unlock the encrypted key file. This has no effect
+    /// unless "key_file" is set.
     pub key_pass: Option<String>,
 }
 

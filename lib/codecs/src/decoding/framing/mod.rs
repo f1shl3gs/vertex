@@ -11,7 +11,7 @@ use std::fmt::Debug;
 use tokio::io::{AsyncRead, AsyncWrite};
 use tokio_util::codec::Framed;
 
-pub use self::bytes::BytesDecoder;
+pub use self::bytes::BytesDeserializerConfig;
 use crate::FramingError;
 pub use character::{CharacterDelimitedDecoder, CharacterDelimitedDecoderConfig};
 pub use newline::NewlineDelimitedDecoder;

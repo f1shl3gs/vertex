@@ -1,21 +1,19 @@
 mod client;
 
-use bytes::{Buf, Bytes};
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::BufRead;
 
+use bytes::{Buf, Bytes};
 use client::{Client, RespErr};
+use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use futures::StreamExt;
 use once_cell::sync::Lazy;
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tokio_stream::wrappers::IntervalStream;
 
@@ -246,10 +244,12 @@ impl From<std::num::ParseFloatError> for Error {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "redis")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct RedisSourceConfig {
-    // something looks like this, e.g. host:port
+    /// Redis address
+    #[configurable(required, format = "ip-address")]
     endpoint: String,
 
     #[serde(default = "default_namespace")]
@@ -260,26 +260,6 @@ pub struct RedisSourceConfig {
 
     #[serde(default)]
     password: Option<String>,
-}
-
-impl GenerateConfig for RedisSourceConfig {
-    fn generate_config() -> String {
-        r#"
-# The endpoints to connect to redis
-#
-endpoint: localhost:6379
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<RedisSourceConfig>("redis")
 }
 
 fn default_namespace() -> Option<String> {
@@ -302,10 +282,6 @@ impl SourceConfig for RedisSourceConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "redis"
     }
 }
 
@@ -1041,6 +1017,11 @@ fn include_metric(s: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<RedisSourceConfig>()
+    }
 
     #[test]
     fn test_parse_db_keyspace() {

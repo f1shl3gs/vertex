@@ -7,8 +7,8 @@ use indexmap::IndexMap;
 use num::ConfigurableNumber;
 use schemars::gen::{SchemaGenerator, SchemaSettings};
 use schemars::schema::{
-    InstanceType, NumberValidation, ObjectValidation, RootSchema, Schema, SchemaObject,
-    SingleOrVec, SubschemaValidation,
+    ArrayValidation, InstanceType, NumberValidation, ObjectValidation, RootSchema, Schema,
+    SchemaObject, SingleOrVec, SubschemaValidation,
 };
 use serde::Serialize;
 use serde_json::Value;
@@ -32,6 +32,17 @@ pub fn generate_struct_schema(
             properties,
             required,
             additional_properties,
+            ..Default::default()
+        })),
+        ..Default::default()
+    }
+}
+
+pub fn generate_empty_struct_schema() -> SchemaObject {
+    SchemaObject {
+        instance_type: Some(InstanceType::Object.into()),
+        object: Some(Box::new(ObjectValidation {
+            properties: Default::default(),
             ..Default::default()
         })),
         ..Default::default()
@@ -285,4 +296,21 @@ pub fn generate_string_schema() -> SchemaObject {
         instance_type: Some(InstanceType::String.into()),
         ..Default::default()
     }
+}
+
+pub fn generate_array_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
+where
+    T: Configurable + Serialize,
+{
+    // Generate the actual schema for the element type `T`.
+    let element_schema = get_or_generate_schema::<T>(gen)?;
+
+    Ok(SchemaObject {
+        instance_type: Some(InstanceType::Array.into()),
+        array: Some(Box::new(ArrayValidation {
+            items: Some(SingleOrVec::Single(Box::new(element_schema.into()))),
+            ..Default::default()
+        })),
+        ..Default::default()
+    })
 }

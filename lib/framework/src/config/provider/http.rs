@@ -1,9 +1,9 @@
-use std::path::PathBuf;
 use std::time::Duration;
 
 use async_stream::stream;
 use backoff::ExponentialBackoff;
 use bytes::Buf;
+use configurable::{configurable_component, Configurable};
 use futures::{Stream, StreamExt, TryStreamExt};
 use http::{header, Request, Response};
 use hyper::Body;
@@ -14,55 +14,46 @@ use tokio_util::codec::FramedRead;
 use tokio_util::io::StreamReader;
 use url::Url;
 
-use crate::config::{
-    default_interval, provider::ProviderConfig, Builder, GenerateConfig, ProviderDescription,
-    ProxyConfig,
-};
+use crate::config::{provider::ProviderConfig, Builder, ProxyConfig};
 use crate::http::{ChunkedDecoder, HttpClient};
 use crate::tls::{TlsConfig, TlsSettings};
 use crate::SignalHandler;
 use crate::{config, signal};
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+const fn default_interval() -> Duration {
+    Duration::from_secs(60)
+}
+
+#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct RequestConfig {
     #[serde(default)]
     pub headers: IndexMap<String, String>,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(deny_unknown_fields, default)]
+#[configurable_component(provider, name = "http")]
+#[derive(Debug, Clone)]
+#[serde(deny_unknown_fields)]
 pub struct HttpConfig {
-    url: Option<Url>,
-    request: RequestConfig,
-    #[serde(with = "humanize::duration::serde")]
-    interval: Duration,
-    tls: Option<TlsConfig>,
-    proxy: ProxyConfig,
-    #[serde(default)]
-    persist: Option<PathBuf>,
-}
+    /// The URL to download config
+    #[configurable(required, format = "uri", example = "https://exampel.com/config")]
+    url: Url,
 
-impl Default for HttpConfig {
-    fn default() -> Self {
-        Self {
-            url: None,
-            request: RequestConfig::default(),
-            interval: Duration::from_secs(60),
-            tls: None,
-            proxy: Default::default(),
-            persist: None,
-        }
-    }
+    /// The interval between fetch config.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
+    tls: Option<TlsConfig>,
+    /// Configures an HTTP/HTTPS proxy for Vertex to use. By default, the globally
+    /// configured proxy is used.
+    #[serde(default)]
+    proxy: ProxyConfig,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "http")]
 impl ProviderConfig for HttpConfig {
     async fn build(&mut self, signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
-        let url = self
-            .url
-            .take()
-            .ok_or_else(|| vec!["URL is required for http provider".to_owned()])?;
+        let url = self.url.clone();
 
         let tls_options = self.tls.take();
         let poll_interval = self.interval;
@@ -85,43 +76,6 @@ impl ProviderConfig for HttpConfig {
 
     fn provider_type(&self) -> &'static str {
         "http"
-    }
-}
-
-inventory::submit! {
-    ProviderDescription::new::<HttpConfig>("http")
-}
-
-impl GenerateConfig for HttpConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# The URL to download config
-#
-url: http://config.example.com/config
-
-# The interval between fetch config.
-#
-# interval: {}
-
-# Configures the TLS options for outgoing connections.
-#
-# tls:
-{}
-
-# Configures an HTTP/HTTPS proxy for Vertex to use. By default, the globally
-# configured proxy is used.
-#
-# proxy:
-{}
-
-#
-
-        "#,
-            humanize::duration::duration(&default_interval()),
-            TlsConfig::generate_commented_with_indent(2),
-            ProxyConfig::generate_commented_with_indent(2)
-        )
     }
 }
 
@@ -307,6 +261,7 @@ fn poll_http(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use configurable::GenerateConfig;
 
     #[test]
     fn test_generate_config() {

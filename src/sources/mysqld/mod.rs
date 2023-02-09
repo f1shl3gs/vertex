@@ -11,10 +11,11 @@ mod integration_tests;
 use std::borrow::Cow;
 use std::time::Instant;
 
+use configurable::{configurable_component, Configurable};
 use event::{Metric, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_true, ticker_from_duration, DataType, GenerateConfig, Output,
-    SourceConfig, SourceContext, SourceDescription,
+    default_false, default_true, ticker_from_duration, DataType, Output, SourceConfig,
+    SourceContext,
 };
 use framework::{tls::TlsConfig, Source};
 use futures::StreamExt;
@@ -40,16 +41,16 @@ pub enum MysqlError {
     TaskJoin(#[from] tokio::task::JoinError),
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct InfoSchemaConfig {
-    // Since 5.5, Collect InnoDB compressed tables metrics from information_schema.innodb_cmp.
+    /// Since 5.5, Collect InnoDB compressed tables metrics from information_schema.innodb_cmp.
     #[serde(default = "default_true")]
     innodb_cmp: bool,
-    // Since 5.5, Collect InnoDB buffer pool compression metrics from information_schema.innodb_cmpmem.
+    /// Since 5.5, Collect InnoDB buffer pool compression metrics from information_schema.innodb_cmpmem.
     #[serde(default = "default_true")]
     innodb_cmpmem: bool,
-    // Since 5.5, Collect query response time distribution if query_response_time_stats is ON.
+    /// Since 5.5, Collect query response time distribution if query_response_time_stats is ON.
     #[serde(default = "default_true")]
     query_response_time: bool,
 }
@@ -66,35 +67,40 @@ const fn default_slave_status() -> bool {
     true
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "mysqld")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct MysqldConfig {
-    // Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
+    /// Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
     #[serde(default = "default_global_status")]
     global_status: bool,
-    // Since 5.1, Collect from SHOW GLOBAL VARIABLES (Enabled by default)
+    /// Since 5.1, Collect from SHOW GLOBAL VARIABLES (Enabled by default)
     #[serde(default = "default_global_variables")]
     global_variables: bool,
-    // Since 5.1, Collect from SHOW SLAVE STATUS (Enabled by default)
+    /// Since 5.1, Collect from SHOW SLAVE STATUS (Enabled by default)
     #[serde(default = "default_slave_status")]
     slave_status: bool,
 
-    // Since 5.1, collect auto_increment columns and max values from information_schema.
+    /// Since 5.1, collect auto_increment columns and max values from information_schema.
     #[serde(default = "default_false")]
     auto_increment_columns: bool,
-    // Since 5.1, collect the current size of all registered binlog files
+    /// Since 5.1, collect the current size of all registered binlog files
     #[serde(default = "default_false")]
     binlog_size: bool,
 
     #[serde(default = "default_info_schema")]
     info_schema: InfoSchemaConfig,
 
+    /// IP address to MySQL server.
     #[serde(default = "default_host")]
     host: String,
+    /// TCP port to MySQL server
     #[serde(default = "default_port")]
     port: u16,
+    /// Username used to connect to MySQL instance
     #[serde(default)]
     username: Option<String>,
+    /// Password used to connect to MySQL instance
     #[serde(default)]
     password: Option<String>,
     ssl: Option<TlsConfig>,
@@ -136,51 +142,6 @@ impl MysqldConfig {
 
         options
     }
-}
-
-impl GenerateConfig for MysqldConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# IP address to Mysql server.
-host: {}
-
-#
-port: {}
-
-# The interval between scrapes.
-#
-# interval: 15s
-
-# Username used to connect to MySQL instance
-# username: user
-
-# Password used to connect to MySQL instance
-# password: some_password
-
-# TLS options to connect to MySQL server.
-# tls:
-{}
-
-##### Scrape Configuration #####
-
-# Since 5.1, Collect from "SHOW GLOBAL STATUS"
-global_status: {}
-
-# Since 5.1, Collect from "SHOW GLOBAL VARIABLES"
-global_variables: {}
-"#,
-            default_host(),
-            default_port(),
-            TlsConfig::generate_commented_with_indent(2),
-            default_global_status(),
-            default_global_variables(),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<MysqldConfig>("mysqld")
 }
 
 #[async_trait::async_trait]
@@ -230,10 +191,6 @@ impl SourceConfig for MysqldConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "mysqld"
     }
 }
 

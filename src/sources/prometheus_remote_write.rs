@@ -3,62 +3,30 @@ use std::net::SocketAddr;
 
 use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
+use configurable::configurable_component;
 use event::{Bucket, Event, Metric, Quantile};
-use framework::config::{
-    default_false, DataType, GenerateConfig, Output, Resource, SourceConfig, SourceContext,
-    SourceDescription,
-};
+use framework::config::{default_false, DataType, Output, Resource, SourceConfig, SourceContext};
 use framework::source::util::http::{decode, ErrorMessage};
 use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
 use framework::{tls::TlsConfig, Source};
 use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
-use serde::{Deserialize, Serialize};
 
-const SOURCE_NAME: &str = "prometheus_remote_write";
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "prometheus_remote_write")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct PrometheusRemoteWriteConfig {
+    /// The address to accept connections on. The address must include a port
+    #[configurable(required)]
     address: SocketAddr,
+
     tls: Option<TlsConfig>,
     auth: Option<HttpSourceAuthConfig>,
 
+    /// Controls how acknowledgements are handled by this source.
     #[serde(default = "default_false")]
     acknowledgements: bool,
-}
-
-impl GenerateConfig for PrometheusRemoteWriteConfig {
-    fn generate_config() -> String {
-        format!(
-            "\
-# The address to accept connections on. The address must include a port
-#
-address: 0.0.0.0:9090
-
-# Configures the TLS options for incoming connections.
-# tls:
-{}
-
-# Options for HTTP Basic Authentication
-#
-# auth:
-{}
-
-# Controls how acknowledgements are handled by this source
-#
-# acknowledgements: false
-
-",
-            TlsConfig::generate_commented_with_indent(2),
-            HttpSourceAuthConfig::generate_commented_with_indent(2)
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<PrometheusRemoteWriteConfig>(SOURCE_NAME)
 }
 
 #[async_trait::async_trait]
@@ -82,10 +50,6 @@ impl SourceConfig for PrometheusRemoteWriteConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
-    }
-
-    fn source_type(&self) -> &'static str {
-        SOURCE_NAME
     }
 
     fn resources(&self) -> Vec<Resource> {

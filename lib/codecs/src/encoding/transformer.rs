@@ -1,10 +1,11 @@
+use configurable::Configurable;
 use event::log::Value;
 use event::{Event, LogRecord, MaybeAsLogMut};
 use lookup::{parse_path, path, OwnedPath};
 use serde::{Deserialize, Deserializer, Serialize};
 
 /// The format in which a timestamp should be represented.
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[derive(Configurable, Copy, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum TimestampFormat {
     /// Represent the timestamp as a Unix timestamp.
@@ -15,7 +16,7 @@ pub enum TimestampFormat {
 }
 
 /// Transformations to prepare an event for serialization.
-#[derive(Clone, Debug, Default, Serialize, PartialEq)]
+#[derive(Configurable, Clone, Debug, Default, Serialize, PartialEq)]
 pub struct Transformer {
     /// List of fields that will be included in the encoded event.
     #[serde(default, skip_serializing_if = "Option::is_none")]

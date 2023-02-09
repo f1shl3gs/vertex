@@ -15,6 +15,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::FramingError;
 pub use config::{EncodingConfig, EncodingConfigWithFraming, FramingConfig, SinkType};
+use configurable::Configurable;
 pub use encoder::{Encoder, EncodingError};
 pub use format::{
     json::JsonSerializer, logfmt::LogfmtSerializer, native_json::NativeJsonSerializer,
@@ -68,7 +69,7 @@ impl Display for SerializeError {
 }
 
 /// Configuration for building a `Serializer`
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum SerializerConfig {
     /// Configures the `JsonSerializer`

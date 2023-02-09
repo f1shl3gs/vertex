@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 #[test]
 fn generate_example() {
-    #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+    #[derive(Configurable, Clone, Debug, Deserialize, Serialize, Default)]
     pub struct Sub {
         /// offset
         #[configurable(example = "-8")]
@@ -18,6 +18,12 @@ fn generate_example() {
 
     fn default_timeout() -> Duration {
         Duration::from_secs(10)
+    }
+
+    fn default_sub() -> Sub {
+        Sub {
+            offset: "ssss".to_string(),
+        }
     }
 
     #[derive(Clone, Debug, Configurable, Deserialize, Serialize)]
@@ -30,6 +36,7 @@ fn generate_example() {
         struct_arr: Vec<Sub>,
 
         /// sub desc
+        #[serde(default = "default_sub")]
         sub: Sub,
 
         /// Time for NTP round-trip. in seconds.

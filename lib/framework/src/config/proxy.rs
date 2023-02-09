@@ -1,3 +1,4 @@
+use configurable::Configurable;
 use hyper::http::uri::InvalidUri;
 use hyper_proxy::Custom;
 use hyper_proxy::{Intercept, Proxy, ProxyConnector};
@@ -40,7 +41,14 @@ impl NoProxyInterceptor {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+/// Proxy configuration.
+///
+/// Configure to proxy traffic through an HTTP(S) proxy when making external requests.
+///
+/// Similar to common proxy configuration convention, users can set different proxies
+/// to use based on the type of traffic being proxied, as well as set specific hosts that
+/// should not be proxied.
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct ProxyConfig {
     #[serde(

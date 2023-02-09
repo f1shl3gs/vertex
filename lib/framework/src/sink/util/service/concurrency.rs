@@ -1,18 +1,39 @@
 use std::fmt::Formatter;
 
+use configurable::schema::{
+    generate_const_string_schema, generate_number_schema, generate_one_of_schema,
+};
+use configurable::schemars::gen::SchemaGenerator;
+use configurable::schemars::schema::SchemaObject;
+use configurable::{Configurable, GenerateError};
 use serde::de::{Error, Unexpected, Visitor};
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
+/// Configuration for outbound request concurrency.
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]
 pub enum Concurrency {
+    /// A fixed concurrency of 1.
+    ///
+    /// Only one request can be outstanding at any given time.
+    #[default]
     None,
+
+    /// Concurrency will be managed by Vertex's [Adaptive Request Concurrency] feature.
     Adaptive,
+
+    /// A fixed amount of concurrency will be allowed.
     Fixed(usize),
 }
 
-impl Default for Concurrency {
-    fn default() -> Self {
-        Self::None
+impl Configurable for Concurrency {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        let schema = generate_one_of_schema(&[
+            generate_const_string_schema("none".to_string()),
+            generate_const_string_schema("adaptive".to_string()),
+            generate_number_schema::<usize>(),
+        ]);
+
+        Ok(schema)
     }
 }
 
@@ -57,7 +78,7 @@ impl<'de> Deserialize<'de> for Concurrency {
                 if v > 0 {
                     Ok(Concurrency::Fixed(v as usize))
                 } else {
-                    Err(serde::de::Error::invalid_value(
+                    Err(Error::invalid_value(
                         Unexpected::Signed(v),
                         &"positive integer",
                     ))
@@ -71,7 +92,7 @@ impl<'de> Deserialize<'de> for Concurrency {
                 if v > 0 {
                     Ok(Concurrency::Fixed(v as usize))
                 } else {
-                    Err(serde::de::Error::invalid_value(
+                    Err(Error::invalid_value(
                         Unexpected::Unsigned(v),
                         &"positive integer",
                     ))
@@ -84,12 +105,27 @@ impl<'de> Deserialize<'de> for Concurrency {
             {
                 if v == "adaptive" {
                     Ok(Concurrency::Adaptive)
+                } else if v == "none" {
+                    Ok(Concurrency::None)
                 } else {
-                    Err(serde::de::Error::unknown_variant(v, &["adaptive"]))
+                    Err(Error::unknown_variant(v, &["adaptive"]))
                 }
             }
         }
 
         deserializer.deserialize_any(UsizeOrAdaptive)
+    }
+}
+
+impl Serialize for Concurrency {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match self {
+            Concurrency::None => serializer.serialize_str("none"),
+            Concurrency::Adaptive => serializer.serialize_str("adaptive"),
+            Concurrency::Fixed(s) => serializer.serialize_u64(*s as u64),
+        }
     }
 }

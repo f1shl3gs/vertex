@@ -7,11 +7,10 @@ use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
+use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
 use event::{fields, tags, BatchNotifier, BatchStatus, Event, LogRecord};
-use framework::config::{
-    DataType, GenerateConfig, Output, SourceConfig, SourceContext, SourceDescription,
-};
+use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
 use framework::{hostname, Pipeline, ShutdownSignal, Source};
 use futures::Stream;
@@ -24,9 +23,15 @@ use tokio::sync::oneshot;
 
 const POISONED_FAILED_LOCK: &str = "Poisoned lock on failed files set";
 
-#[derive(Debug, Deserialize, Serialize)]
+/// File position to use when reading a new file.
+#[derive(Configurable, Debug, Deserialize, Serialize, Default)]
+#[serde(rename_all = "lowercase")]
 pub enum ReadFromConfig {
+    /// Read from the beginning of the file.
+    #[default]
     Beginning,
+
+    /// Start reading from the current end of the file.
     End,
 }
 
@@ -43,35 +48,79 @@ fn default_file_key() -> String {
     "file".into()
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "tail")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct TailConfig {
+    /// Ignore files with a data modification date older than the specified duration.
     #[serde(default = "default_ignore_older_than")]
     #[serde(with = "humanize::duration::serde_option")]
     ignore_older_than: Option<Duration>,
 
+    /// Overrides the name of the log field used to add the current hostname to each event.
+    ///
+    /// By default, the [global `log_schema.host_key` option][global_host_key] is used.
     host_key: Option<String>,
 
+    /// Overrides the name of the log field used to add the current hostname to each event.
+    ///
+    /// By default, the [global `log_schema.host_key` option][global_host_key] is used.
     #[serde(default = "default_file_key")]
     file_key: String,
 
+    /// Array of file patterns to include. glob is supported.
     include: Vec<PathBuf>,
+
+    /// Array of file patterns to exclude. glob is supported.
+    ///
+    /// Takes precedence over the `include` option. Note: The `exclude` patterns are applied
+    /// _after_ the attempt to glob everything in `include`. This means that all files are
+    /// first matched by `include` and then filtered by the `exclude` patterns. This can be
+    /// impactful if `include` contains directories with contents that are not accessible.
     #[serde(default)]
     exclude: Vec<PathBuf>,
 
-    read_from: Option<ReadFromConfig>,
+    #[serde(default)]
+    read_from: ReadFromConfig,
+
+    /// The maximum size of a line before it will be discarded.
+    ///
+    /// This protects against malformed lines or tailing incorrect files.
     #[serde(default = "default_max_line_bytes", with = "humanize::bytes::serde")]
     max_line_bytes: usize,
+
+    /// An approximate limit on the amount of data read from a single file at a given time.
     #[serde(default = "default_max_read_bytes", with = "humanize::bytes::serde")]
     max_read_bytes: usize,
+
+    /// String sequence used to separate one file line from another.
     #[serde(default = "default_line_delimiter")]
     line_delimiter: String,
 
-    #[serde(default = "default_glob_interval")]
-    #[serde(with = "humanize::duration::serde")]
+    /// Delay between file discovery calls. This controls the interval at which
+    /// Vertex searches for files. Higher value result in greater chances of some
+    /// short living files being missed between searches, but lower value increases
+    /// performance impact of file discovery.
+    #[serde(default = "default_glob_interval", with = "humanize::duration::serde")]
     glob_interval: Duration,
 
+    /// Encoding of the source messages. Takes one of the encoding "label strings"
+    /// defined as part of the "Encoding Standard"
+    /// https://encoding.spec.whatwg.org/#concept-encoding-get
+    ///
+    /// When set, the messages are transcoded from the specified encoding to UTF-8,
+    /// which is the encoding vertex assumes internally for string-like data.
+    /// Enable this transcoding operation if you need your data to be in UTF-8 for
+    /// further processing. At the time of transcoding, any malformed sequences(that's
+    /// can't be mapped to UTF-8) will be replaced with "replacement character (see:
+    /// https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character)
+    /// and warnings will be logged.
     charset: Option<&'static encoding_rs::Encoding>,
+
+    /// Multiline aggregation configuration.
+    ///
+    /// If not specified, multiline aggregation is disabled.
+    #[configurable(skip)]
     multiline: Option<MultilineConfig>,
 }
 
@@ -93,88 +142,6 @@ const fn default_max_line_bytes() -> usize {
 
 fn default_line_delimiter() -> String {
     "\n".into()
-}
-
-impl GenerateConfig for TailConfig {
-    fn generate_config() -> String {
-        format!(
-            r#"
-# Array of file patterns to include. Globbing is support.
-#
-include:
-- /path/to/some-*.log
-
-# Array of file patterns to exclude. Globbing is supported.
-# Takes precedence over the "include" option
-#
-# exlucde:
-# - /path/to/some-exclude.log
-
-# In the absence of a checkpoint, this setting tells Vertex where to
-# start reading files that are present at startup.
-#
-# Availabel options:
-# - beginning:  Read from the beginning of the file.
-# - end:        Start reading from the current end of the file.
-#
-# read_from: beginning
-
-# Ignore files with a data modification date older than the specified
-# duration.
-#
-# ignore_older: 1h
-
-# The maximum number of a bytes a line can contain before being discarded.
-# This protects against malformed lines or tailing incorrect files.
-#
-# max_line_bytes: {}
-
-# An approximate limit on the amount of data read from a single file at
-# a given time.
-#
-# max_read_bytes: {}
-
-# Delay between file discovery calls. This controls the interval at which
-# Vertex searches for files. Higher value result in greater chances of some
-# short living files being missed between searches, but lower value increases
-# performance impact of file discovery.
-#
-# glob_interval: {}
-
-# The key name added to each event representing the current host. This can
-# be globally set via the global "host_key" option.
-#
-# host_key: host
-
-# Encoding of the source messages. Takes one of the encoding "label strings"
-# defined as part of the "Encoding Standard"
-# https://encoding.spec.whatwg.org/#concept-encoding-get
-#
-# When set, the messages are transcoded from the specified encoding to UTF-8,
-# which is the encoding vertex assumes internally for string-like data.
-# Enable this transcoding operation if you need your data to be in UTF-8 for
-# further processing. At the time of transcoding, any malformed sequences(that's
-# can't be mapped to UTF-8) will be replaced with "replacement character (see:
-# https://en.wikipedia.org/wiki/Specials_(Unicode_block)#Replacement_character)
-# and warnings will be logged.
-#
-# charset: utf-16be
-
-# Controls how acknowledgements are handled by this source
-#
-# acknowledgements: false
-
-#
-            "#,
-            humanize::bytes::bytes(default_max_line_bytes()),
-            humanize::bytes::bytes(default_max_read_bytes()),
-            humanize::duration::duration(&default_glob_interval()),
-        )
-    }
-}
-
-inventory::submit! {
-    SourceDescription::new::<TailConfig>("tail")
 }
 
 #[derive(Debug)]
@@ -199,10 +166,6 @@ impl SourceConfig for TailConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
-
-    fn source_type(&self) -> &'static str {
-        "tail"
-    }
 }
 
 fn tail_source(
@@ -217,11 +180,8 @@ fn tail_source(
         .ok_or("glob provider create failed")?;
 
     let read_from = match &config.read_from {
-        Some(read_from) => match read_from {
-            ReadFromConfig::Beginning => ReadFrom::Beginning,
-            ReadFromConfig::End => ReadFrom::End,
-        },
-        None => ReadFrom::default(),
+        ReadFromConfig::Beginning => ReadFrom::Beginning,
+        ReadFromConfig::End => ReadFrom::End,
     };
 
     let ignore_before = config
@@ -494,7 +454,7 @@ mod tests {
             host_key: None,
             include: vec![dir.path().join("*")],
             exclude: vec![],
-            read_from: None,
+            read_from: Default::default(),
             file_key: default_file_key(),
             max_line_bytes: default_max_line_bytes(),
             max_read_bytes: default_max_read_bytes(),

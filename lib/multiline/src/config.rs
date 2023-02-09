@@ -3,8 +3,10 @@ use std::time::Duration;
 
 use humanize::duration::parse_duration;
 use regex::bytes::Regex;
-use serde::de::{Error, MapAccess};
-use serde::{de, Deserializer, Serializer};
+use serde::{
+    de::{Error, MapAccess, Unexpected},
+    Deserialize, Deserializer, Serialize, Serializer,
+};
 
 use super::aggregate::Mode;
 
@@ -16,7 +18,8 @@ const NOINDENT: &str = "noindent";
 const CUSTOM_PARSER: &str = "custom";
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(5);
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum Parser {
     Cri,
     Docker,
@@ -25,7 +28,10 @@ pub enum Parser {
     NoIndent,
 
     Custom {
+        #[serde(with = "serde_regex::bytes")]
         condition_pattern: Regex,
+
+        #[serde(with = "serde_regex::bytes")]
         start_pattern: Regex,
         mode: Mode,
     },
@@ -102,25 +108,14 @@ impl PartialEq for Parser {
 /// ```
 #[derive(Clone, Debug, PartialEq)]
 pub struct MultilineConfig {
+    /// The maximum amount of time to wait for the next additional line.
+    ///
+    /// Once this timeout is reached, the buffered message is guaranteed to be flushed,
+    /// even if incomplete.
     pub timeout: Duration,
+
     pub parser: Parser,
 }
-
-/*
-impl MultilineConfig {
-    pub fn parser<T: Rule>(&self) -> T {
-        match self.parser {
-            Parser::Cri => super::preset::Cri {},
-            Parser::NoIndent => super::preset::NoIndent {},
-            _ => unreachable!(),
-        }
-    }
-
-    pub fn timeout(&self) -> Duration {
-        self.timeout
-    }
-}
-*/
 
 impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
@@ -161,8 +156,8 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                         timeout: DEFAULT_TIMEOUT,
                         parser: Parser::NoIndent,
                     }),
-                    _ => Err(de::Error::invalid_value(
-                        de::Unexpected::Str(v),
+                    _ => Err(Error::invalid_value(
+                        serde::de::Unexpected::Str(v),
                         &r#"cri, docker, go or java"#,
                     )),
                 }
@@ -184,12 +179,12 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                     match key.as_str() {
                         "timeout" => {
                             if timeout.is_some() {
-                                return Err(de::Error::duplicate_field("timeout"));
+                                return Err(Error::duplicate_field("timeout"));
                             }
 
                             let v = parse_duration(&value).map_err(|_err| {
-                                de::Error::invalid_value(
-                                    de::Unexpected::Str(&value),
+                                Error::invalid_value(
+                                    serde::de::Unexpected::Str(&value),
                                     &r#"something like 5s, 10s"#,
                                 )
                             })?;
@@ -198,12 +193,12 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                         }
                         "start_pattern" => {
                             if start_pattern.is_some() {
-                                return Err(de::Error::duplicate_field("start_pattern"));
+                                return Err(Error::duplicate_field("start_pattern"));
                             }
 
                             let re = Regex::new(&value).map_err(|_err| {
-                                de::Error::invalid_value(
-                                    de::Unexpected::Str(&value),
+                                Error::invalid_value(
+                                    Unexpected::Str(&value),
                                     &r#"regex is expected"#,
                                 )
                             })?;
@@ -213,12 +208,12 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
 
                         "condition_pattern" => {
                             if condition_pattern.is_some() {
-                                return Err(de::Error::duplicate_field("condition_pattern"));
+                                return Err(Error::duplicate_field("condition_pattern"));
                             }
 
                             let re = Regex::new(&value).map_err(|_err| {
-                                de::Error::invalid_value(
-                                    de::Unexpected::Str(&value),
+                                Error::invalid_value(
+                                    Unexpected::Str(&value),
                                     &r#"regex is ecpected"#,
                                 )
                             })?;
@@ -228,7 +223,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
 
                         "parser" => {
                             if parser.is_some() {
-                                return Err(de::Error::duplicate_field("parser"));
+                                return Err(Error::duplicate_field("parser"));
                             }
 
                             parser = match value.as_str() {
@@ -239,7 +234,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                                 NOINDENT => Some(NOINDENT),
                                 CUSTOM_PARSER => Some(CUSTOM_PARSER),
                                 _ => {
-                                    return Err(de::Error::unknown_variant(
+                                    return Err(Error::unknown_variant(
                                         "parser",
                                         &["cri", "docker", "go", "java", "custom"],
                                     ));
@@ -249,7 +244,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
 
                         "mode" => {
                             if mode.is_some() {
-                                return Err(de::Error::duplicate_field("mode"));
+                                return Err(Error::duplicate_field("mode"));
                             }
 
                             mode = Some(match value.as_str() {
@@ -258,7 +253,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                                 "halt_before" => Mode::HaltBefore,
                                 "halt_with" => Mode::HaltWith,
                                 _ => {
-                                    return Err(de::Error::unknown_variant(
+                                    return Err(Error::unknown_variant(
                                         "mode",
                                         &[
                                             "continue_through",
@@ -272,7 +267,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                         }
 
                         _ => {
-                            return Err(de::Error::unknown_field(
+                            return Err(Error::unknown_field(
                                 &key,
                                 &[
                                     "parser",
@@ -289,19 +284,19 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
                 let timeout = timeout.unwrap_or(DEFAULT_TIMEOUT);
 
                 match parser {
-                    None => Err(de::Error::missing_field("parser")),
+                    None => Err(Error::missing_field("parser")),
 
                     Some(CUSTOM_PARSER) => {
                         if condition_pattern.is_none() {
-                            return Err(de::Error::missing_field("condition_pattern"));
+                            return Err(Error::missing_field("condition_pattern"));
                         }
 
                         if start_pattern.is_none() {
-                            return Err(de::Error::missing_field("start_pattern"));
+                            return Err(Error::missing_field("start_pattern"));
                         }
 
                         if mode.is_none() {
-                            return Err(de::Error::missing_field("mode"));
+                            return Err(Error::missing_field("mode"));
                         }
 
                         Ok(MultilineConfig {

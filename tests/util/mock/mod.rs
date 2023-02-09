@@ -4,6 +4,7 @@ use std::task::Poll;
 
 use async_trait::async_trait;
 use buffers::Acker;
+use configurable::configurable_component;
 use event::{log::Value, EventContainer, Events, MetricValue};
 use framework::config::{
     DataType, Output, SinkConfig, SinkContext, SourceConfig, SourceContext, TransformConfig,
@@ -20,7 +21,8 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing::{error, info};
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(source, name = "mock")]
+#[derive(Debug)]
 pub struct MockSourceConfig {
     #[serde(skip)]
     receiver: Arc<Mutex<Option<ReceiverStream<Events>>>>,
@@ -112,10 +114,6 @@ impl SourceConfig for MockSourceConfig {
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(self.data_type.unwrap_or(DataType::Metric))]
-    }
-
-    fn source_type(&self) -> &'static str {
-        "mock"
     }
 }
 

@@ -284,9 +284,5 @@ mod test_source {
         fn outputs(&self) -> Vec<Output> {
             vec![Output::default(DataType::Any)]
         }
-
-        fn source_type(&self) -> &'static str {
-            "test-backpressure-source"
-        }
     }
 }
