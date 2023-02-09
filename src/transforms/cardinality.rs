@@ -12,10 +12,12 @@ use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Configurable, Copy, Clone, Debug, Serialize, PartialEq)]
+#[derive(Configurable, Copy, Clone, Debug, Serialize, PartialEq, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum LimitExceededAction {
-    DropEvent,
+    #[default]
+    Drop,
+
     DropTag,
 }
 
@@ -38,7 +40,7 @@ impl<'de> Deserialize<'de> for LimitExceededAction {
                 E: Error,
             {
                 match v {
-                    "drop" => Ok(LimitExceededAction::DropEvent),
+                    "drop" => Ok(LimitExceededAction::Drop),
                     "drop_tag" => Ok(LimitExceededAction::DropTag),
                     _ => Err(serde::de::Error::unknown_variant(v, &["drop", "drop_tag"])),
                 }
@@ -46,12 +48,6 @@ impl<'de> Deserialize<'de> for LimitExceededAction {
         }
 
         deserializer.deserialize_any(Action)
-    }
-}
-
-impl Default for LimitExceededAction {
-    fn default() -> Self {
-        Self::DropEvent
     }
 }
 
@@ -203,7 +199,7 @@ impl FunctionTransform for Cardinality {
                     if !self.try_accept_tag(k, v) {
                         // reject
                         match self.action {
-                            LimitExceededAction::DropEvent => continue 'outer,
+                            LimitExceededAction::Drop => continue 'outer,
                             LimitExceededAction::DropTag => to_delete.push(k.clone()),
                         }
                     }
@@ -279,7 +275,7 @@ mod tests {
     async fn transform_drop() {
         let config = CardinalityConfig {
             limit: 0,
-            action: LimitExceededAction::DropEvent,
+            action: LimitExceededAction::Drop,
         };
 
         let metric = Metric::gauge_with_tags(
