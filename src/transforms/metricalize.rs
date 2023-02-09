@@ -306,13 +306,13 @@ mod tests {
             // name, config, logs, want
             (
                 "sample_counter",
-                MetricConfig{
+                MetricConfig {
                     name: "sample_counter".to_string(),
                     field: "foo".to_string(),
                     tags: Default::default(),
                     typ: MetricType::Counter {
-                        increment_by_value: false
-                    }
+                        increment_by_value: false,
+                    },
                 },
                 vec![fields!("foo" => "bar")],
                 vec![
@@ -322,13 +322,13 @@ mod tests {
             ),
             (
                 "sample_counter_with_increase_by_value",
-                MetricConfig{
+                MetricConfig {
                     name: "test".into(),
                     field: "foo".into(),
                     tags: Default::default(),
                     typ: MetricType::Counter {
-                        increment_by_value: true
-                    }
+                        increment_by_value: true,
+                    },
                 },
                 vec![
                     // This fields can't be extract, it should be ignored
