@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1675961991992,
+  "lastUpdate": 1675961997914,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3727,6 +3727,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.926,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b907077c042e022fb7dabe9d24582eecd3225865",
+          "message": "Merge pull request #747 from f1shl3gs/dependabot/cargo/syn-1.0.107\n\nchore(deps): bump syn from 1.0.104 to 1.0.107",
+          "timestamp": "2023-02-10T00:54:30+08:00",
+          "tree_id": "42e7c8d7186404f724947eb1a36246efb9ec91d6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b907077c042e022fb7dabe9d24582eecd3225865"
+        },
+        "date": 1675961989861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.152,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.668,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.705,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.635,
             "unit": "ns/op"
           }
         ]
