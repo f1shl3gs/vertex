@@ -6,9 +6,8 @@ use std::time::Duration;
 
 use async_trait::async_trait;
 use chrono::SecondsFormat;
-use framework::config::{
-    ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig, ProxyConfig, UriSerde,
-};
+use configurable::configurable_component;
+use framework::config::{ExtensionConfig, ExtensionContext, ProxyConfig, UriSerde};
 use framework::http::HttpClient;
 use framework::tls::{TlsConfig, TlsSettings};
 use framework::{Extension, ShutdownSignal};
@@ -17,42 +16,30 @@ use hyper::Body;
 use nix::net::if_::InterfaceFlags;
 use once_cell::sync::Lazy;
 use parking_lot::Mutex;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use tokio::select;
 
 const fn default_interval() -> Duration {
     Duration::from_secs(60)
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(extension, name = "heartbeat")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
+    /// POST some state of vertex to remote endpoint.
+    /// then we can do much more, e.g. service discovery.
+    #[configurable(required)]
     endpoint: UriSerde,
+
     tls: Option<TlsConfig>,
+
+    /// Duration of each heartbeat sending.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
     #[serde(default)]
     tags: BTreeMap<String, String>,
-}
-
-impl GenerateConfig for Config {
-    fn generate_config() -> String {
-        r#"# POST some state of vertex to remote endpoint.
-# then we can do much more, e.g. service discovery
-endpoint: https://example.com/heartbeat
-
-# duration of each heartbeat sending
-#
-# Optional, default 60s
-# interval: 1m
-"#
-        .to_string()
-    }
-}
-
-inventory::submit! {
-    ExtensionDescription::new::<Config>("heartbeat")
 }
 
 #[async_trait]
@@ -80,10 +67,6 @@ impl ExtensionConfig for Config {
             self.interval,
             cx.shutdown,
         )))
-    }
-
-    fn extension_type(&self) -> &'static str {
-        "heartbeat"
     }
 }
 
@@ -122,7 +105,7 @@ pub fn report_config(config: &framework::config::Config) {
         resources.extend(ext.resources().into_iter().filter_map(|r| match r {
             framework::config::Resource::Port(addr, _) => Some(Resource {
                 name: key.to_string(),
-                component_type: ext.extension_type().to_string(),
+                component_type: ext.component_name().to_string(),
                 address: format!("{}", addr.ip()),
                 port: addr.port(),
             }),
@@ -241,4 +224,14 @@ fn get_advertise_addr() -> std::io::Result<String> {
     } else {
         addrs[0].to_string()
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
+    }
 }

@@ -322,7 +322,7 @@ pub async fn build_pieces(
         .iter()
         .filter(|(name, _)| diff.extensions.contains_new(name))
     {
-        let typetag = extension.extension_type();
+        let typetag = extension.component_name();
         let (shutdown_signal, force_shutdown_tripwire) =
             shutdown_coordinator.register_extension(key);
         let cx = ExtensionContext {
