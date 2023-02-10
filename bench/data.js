@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676030521200,
+  "lastUpdate": 1676030524406,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4137,6 +4137,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.952,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "636207a9a8448f5e799b207ddb488b0b74a3c575",
+          "message": "Merge pull request #753 from f1shl3gs/migrate_sinks_to_configurable\n\nmigrate sink to configurable",
+          "timestamp": "2023-02-10T19:57:03+08:00",
+          "tree_id": "688266134bd97eeef9a8f1e8fb983a944b622247",
+          "url": "https://github.com/f1shl3gs/vertex/commit/636207a9a8448f5e799b207ddb488b0b74a3c575"
+        },
+        "date": 1676030515631,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.807,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.342,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.686,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.741,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.621,
             "unit": "ns/op"
           }
         ]
