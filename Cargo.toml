@@ -366,7 +366,7 @@ tikv-jemalloc-sys = { version = "0.5.3", optional = true, features = ["stats"] }
 # Futrures & Tokio
 tokio = { version = "1.25.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.11", features = ["time", "net", "sync"] }
-tokio-util = { version = "0.7.4", default-features = false, features = ["codec", "time", "net"] }
+tokio-util = { version = "0.7.5", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
 futures = { version = "0.3.26", default-features = false }
 futures-util = { version = "0.3.26", default-features = false }
