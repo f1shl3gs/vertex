@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676037736262,
+  "lastUpdate": 1676037738683,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2546,6 +2546,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 367.83,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4ca35e91a552411e3429e4c035d64f42f97924ac",
+          "message": "Merge pull request #756 from f1shl3gs/remove_generate_config\n\nremove Trait GenerateConfig",
+          "timestamp": "2023-02-10T21:58:01+08:00",
+          "tree_id": "ff00453f70b0144a42bcf071408f6f107cd0a849",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4ca35e91a552411e3429e4c035d64f42f97924ac"
+        },
+        "date": 1676037729778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 89.264,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 187.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 306.66,
             "unit": "ns/op"
           }
         ]
