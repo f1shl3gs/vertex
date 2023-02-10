@@ -1,12 +1,11 @@
 use std::fs::DirBuilder;
 use std::path::PathBuf;
-use std::time::Duration;
 
 use log_schema::LogSchema;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::config::{default_interval, skip_serializing_if_default, ProxyConfig};
+use crate::config::{skip_serializing_if_default, ProxyConfig};
 use crate::timezone;
 
 #[derive(Debug, Error)]
@@ -27,30 +26,45 @@ pub enum DataDirError {
     },
 }
 
+/// Global configuration options.
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(default, deny_unknown_fields)]
 pub struct GlobalOptions {
+    /// The directory used for persisting Vector state data.
+    ///
+    /// This is the directory where Vector will store any state data, such as disk buffers, file
+    /// checkpoints, and more.
+    ///
+    /// Vector must have write permissions to this directory.
     #[serde(default = "default_data_dir")]
     pub data_dir: Option<PathBuf>,
+
+    /// The name of the timezone to apply to timestamp conversions that do not contain an explicit timezone.
+    ///
+    /// The timezone name may be any name in the [TZ database][tzdb], or `local` to indicate system
+    /// local time.
+    ///
+    /// [tzdb]: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
     #[serde(default = "default_timezone")]
     pub timezone: timezone::TimeZone,
+
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub proxy: ProxyConfig,
+
     #[serde(skip_serializing_if = "skip_serializing_if_default")]
     pub log_schema: LogSchema,
+
+    /// Controls how acknowledgements are handled for all sinks by default.
+    ///
+    /// See [End-to-end Acknowledgements][e2e_acks] for more information on how Vector handles event
+    /// acknowledgement.
+    ///
+    /// [e2e_acks]: https://vector.dev/docs/about/under-the-hood/architecture/end-to-end-acknowledgements/
     #[serde(
         default,
         skip_serializing_if = "crate::config::skip_serializing_if_default"
     )]
     pub acknowledgements: bool,
-
-    // How often the sources should report metrics.
-    //
-    // NB: not all source need this, they might report events
-    // as soon as possible once they receive any.
-    #[serde(default = "default_interval")]
-    #[serde(with = "humanize::duration::serde")]
-    pub interval: Duration,
 }
 
 impl Default for GlobalOptions {
@@ -61,7 +75,6 @@ impl Default for GlobalOptions {
             proxy: Default::default(),
             log_schema: Default::default(),
             acknowledgements: false,
-            interval: default_interval(),
         }
     }
 }
@@ -133,14 +146,11 @@ data_dir: foo
 "#;
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
         assert_eq!(global.data_dir.unwrap(), PathBuf::from("foo"));
-        assert_eq!(global.interval, default_interval());
 
         let input = "
 timezone: CET
-interval: 10s
 ";
         let global: GlobalOptions = serde_yaml::from_str(input).unwrap();
         assert_eq!(global.data_dir, default_data_dir());
-        assert_eq!(global.interval, Duration::from_secs(10));
     }
 }

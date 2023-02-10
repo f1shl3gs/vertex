@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::io::BufRead;
+use std::time::Duration;
 
 use bytes::Buf;
 use chrono::Utc;
@@ -7,7 +8,8 @@ use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::{
-    ticker_from_duration, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
+    default_interval, ticker_from_duration, DataType, Output, ProxyConfig, SourceConfig,
+    SourceContext,
 };
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -49,6 +51,10 @@ struct HaproxyConfig {
     #[configurable(required)]
     endpoints: Vec<String>,
 
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
     /// Configures the TLS options for outgoing connections.
     #[serde(default)]
     tls: Option<TlsConfig>,
@@ -71,7 +77,7 @@ impl SourceConfig for HaproxyConfig {
         let auth = self.auth.clone();
         let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         Ok(Box::pin(async move {

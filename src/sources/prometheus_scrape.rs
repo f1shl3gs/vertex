@@ -8,7 +8,7 @@ use chrono::{DateTime, TimeZone, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
 use framework::config::{
-    default_false, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
+    default_false, default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
 };
 use framework::http::{Auth, HttpClient};
 use framework::pipeline::Pipeline;
@@ -27,6 +27,10 @@ struct PrometheusScrapeConfig {
     /// Endpoints to scrape metrics from.
     #[configurable(required, format = "uri", example = "http://example.com/metrics")]
     endpoints: Vec<String>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 
     /// Controls how tag conflicts are handled if the scraped source has tags
     /// that Vertex would add. If true Vertex will not add the new tag if the
@@ -63,7 +67,7 @@ impl SourceConfig for PrometheusScrapeConfig {
             self.auth.clone(),
             cx.proxy,
             self.honor_labels,
-            cx.interval,
+            self.interval,
             self.jitter_seed.unwrap_or_default(),
             cx.shutdown,
             cx.output,

@@ -436,7 +436,6 @@ pub async fn build_pieces(
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, &source.proxy),
             acknowledgements: source.acknowledgements,
-            interval: source.interval.unwrap_or(config.global.interval),
         };
         let server = match source.inner.build(cx).await {
             Ok(server) => server,

@@ -1,13 +1,13 @@
 use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 use std::process::Command;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::Output;
 use framework::{
-    config::{ticker_from_duration, DataType, SourceConfig, SourceContext},
+    config::{default_interval, ticker_from_duration, DataType, SourceConfig, SourceContext},
     Error, Source,
 };
 use futures::StreamExt;
@@ -20,6 +20,10 @@ struct NvidiaSmiConfig {
     /// The nvidia_smi's absolutely path.
     #[serde(default = "default_smi_path")]
     path: PathBuf,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 fn default_smi_path() -> PathBuf {
@@ -31,7 +35,7 @@ fn default_smi_path() -> PathBuf {
 impl SourceConfig for NvidiaSmiConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         Ok(Box::pin(async move {

@@ -4,10 +4,12 @@ mod nodes;
 mod slm;
 mod snapshot;
 
+use std::time::Duration;
+
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -23,6 +25,10 @@ struct Config {
     /// Address of the Elasticsearch node we should connect to.
     #[configurable]
     endpoint: String,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 
     #[serde(default)]
     auth: Option<Auth>,
@@ -41,7 +47,7 @@ struct Config {
 #[typetag::serde(name = "elasticsearch")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let interval = tokio::time::interval(cx.interval);
+        let interval = tokio::time::interval(self.interval);
         let tls_settings = MaybeTlsSettings::from_config(&self.tls, true)?;
         let http_client = HttpClient::new(tls_settings, &cx.proxy)?;
         let es = Elasticsearch {

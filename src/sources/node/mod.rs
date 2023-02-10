@@ -56,12 +56,13 @@ mod zfs;
 
 use std::io::Read;
 use std::str::FromStr;
+use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::{
-    default_false, default_true, DataType, Output, SourceConfig, SourceContext,
+    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
@@ -163,7 +164,7 @@ struct Collectors {
     #[serde(default = "default_true")]
     pub pressure: bool,
 
-    #[serde(default = "default_false")]
+    #[serde(default)]
     pub processes: bool,
 
     #[serde(default = "default_true")]
@@ -281,7 +282,7 @@ impl Default for Collectors {
             os_release: default_true(),
             power_supply: default_powersupply_config(),
             pressure: default_true(),
-            processes: default_false(),
+            processes: false,
             rapl: default_true(),
             schedstat: default_true(),
             sockstat: default_true(),
@@ -314,6 +315,10 @@ pub struct NodeMetricsConfig {
     #[serde(default = "default_sys_path")]
     sys_path: String,
 
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
     #[serde(default = "default_collectors")]
     #[configurable(skip)]
     collectors: Collectors,
@@ -336,6 +341,7 @@ impl Default for NodeMetricsConfig {
         Self {
             proc_path: default_proc_path(),
             sys_path: default_sys_path(),
+            interval: default_interval(),
             collectors: default_collectors(),
         }
     }
@@ -816,7 +822,7 @@ impl NodeMetrics {
 impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
-            interval: cx.interval,
+            interval: self.interval,
             proc_path: default_proc_path(),
             sys_path: default_sys_path(),
             collectors: self.collectors.clone(),
