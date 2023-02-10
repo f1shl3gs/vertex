@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676042138047,
+  "lastUpdate": 1676042142133,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4517,6 +4517,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.301,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2ed552f837986948a92c859dcd45d9138d3d59b4",
+          "message": "Merge pull request #757 from f1shl3gs/remove_interval_from_source_outer\n\nremove interval from SourceOuter",
+          "timestamp": "2023-02-10T23:10:44+08:00",
+          "tree_id": "888716c900c0ba2ea9686171545acc2e1c3c51e9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2ed552f837986948a92c859dcd45d9138d3d59b4"
+        },
+        "date": 1676042133880,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.798,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.162,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.516,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.674,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.715,
             "unit": "ns/op"
           }
         ]
