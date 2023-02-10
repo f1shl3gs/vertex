@@ -220,10 +220,6 @@ impl SinkConfig for KafkaSinkConfig {
     fn input_type(&self) -> DataType {
         DataType::Any
     }
-
-    fn sink_type(&self) -> &'static str {
-        "kafka"
-    }
 }
 
 #[cfg(test)]

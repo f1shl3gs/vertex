@@ -323,8 +323,8 @@ impl<T> SinkOuter<T> {
         }
     }
 
-    pub fn sink_type(&self) -> &'static str {
-        self.inner.sink_type()
+    pub fn component_name(&self) -> &'static str {
+        self.inner.component_name()
     }
 
     pub fn resources(&self, id: &ComponentKey) -> Vec<Resource> {
@@ -533,12 +533,10 @@ impl SinkContext {
 
 #[async_trait]
 #[typetag::serde(tag = "type")]
-pub trait SinkConfig: core::fmt::Debug + Send + Sync {
+pub trait SinkConfig: NamedComponent + Debug + Send + Sync {
     async fn build(&self, cx: SinkContext) -> crate::Result<(crate::Sink, crate::Healthcheck)>;
 
     fn input_type(&self) -> DataType;
-
-    fn sink_type(&self) -> &'static str;
 
     fn resources(&self) -> Vec<Resource> {
         Vec::new()

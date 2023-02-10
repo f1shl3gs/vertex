@@ -143,13 +143,17 @@ fn generate_named_struct_field(
     _type_attrs: &TypeAttrs,
     field: &syn::Field,
 ) -> TokenStream {
-    let field_key = field.ident.clone().expect("filed has a name").to_string();
     let field_typ = &field.ty;
-
     let field_attrs = FieldAttrs::parse(errs, field);
     if field_attrs.skip {
         return quote!();
     }
+
+    let field_key = if let Some(renamed) = field_attrs.rename {
+        renamed.value()
+    } else {
+        field.ident.clone().expect("filed has a name").to_string()
+    };
 
     // If the field is flattened, we store it into a different list of flattened
     // subschemas vs adding it directly as a field via `properties`/`required`.
@@ -328,6 +332,7 @@ fn generate_enum_struct_named_variant_schema(
                 {
                     let tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
                     properties.insert(#tag.to_string(), tag_schema);
+                    required.insert(#tag.to_string());
                 }
             }
         }
@@ -377,21 +382,82 @@ fn generate_enum_variant_schema(
 
         Fields::Named(_named) => generate_enum_struct_named_variant_schema(type_attrs, variant),
 
-        Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(variant),
+        Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(errs, type_attrs, variant),
     };
 
     generate_enum_variant_subschema(errs, variant, variant_schema)
 }
 
-fn generate_enum_unamed_variant_schema(variant: &syn::Variant) -> TokenStream {
+fn generate_enum_unamed_variant_schema(
+    errs: &Errors,
+    type_attrs: &TypeAttrs,
+    variant: &syn::Variant,
+) -> TokenStream {
     let field = variant.fields.iter().next().expect("must exist");
+
+    if type_attrs.untagged {
+        let field_type = &field.ty;
+
+        let field_attrs = FieldAttrs::parse(errs, field);
+        let maybe_description = match &field_attrs.description {
+            Some(desc) => {
+                let desc = &desc.content;
+
+                quote!(
+                    metadata.description = Some(#desc);
+                )
+            }
+            None => quote!(),
+        };
+
+        return quote! {
+            let mut subschema = ::configurable::schema::get_or_generate_schema::<#field_type>(schema_gen)?;
+            let metadata = subschema.metadata();
+
+            #maybe_description
+
+            subschema
+        };
+    }
+
     let field_schema = generate_struct_field(field);
 
-    quote! {
-        {
-            #field_schema
-            subschema
+    let maybe_tag_schema = match &type_attrs.tag {
+        Some(tag_name) => {
+            let tag = match &type_attrs.rename_all {
+                Some(rule) => apply_rename(&variant.ident.to_string(), rule),
+                None => variant.ident.to_string(),
+            };
+
+            quote! {
+                let tag_schema = ::configurable::schema::generate_internal_tagged_variant_schema(
+                    #tag_name.to_string(),
+                    ::configurable::schema::generate_const_string_schema(#tag.to_string())
+                );
+
+                flattened_subschemas.push(tag_schema);
+            }
         }
+        None => quote!(),
+    };
+
+    quote! {
+        let mut flattened_subschemas = ::std::vec::Vec::new();
+
+        let mut subschema = {
+            #field_schema
+
+            subschema
+        };
+
+        #maybe_tag_schema
+
+        ::configurable::schema::convert_to_flattened_schema(
+            &mut subschema,
+            flattened_subschemas
+        );
+
+        subschema
     }
 }
 

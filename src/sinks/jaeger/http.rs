@@ -1,6 +1,7 @@
 use async_trait::async_trait;
 use buffers::Acker;
 use bytes::{Bytes, BytesMut};
+use configurable::Configurable;
 use event::Event;
 use framework::batch::{BatchConfig, RealtimeSizeBasedDefaultBatchSettings};
 use framework::config::ProxyConfig;
@@ -17,9 +18,11 @@ use serde::{Deserialize, Serialize};
 /// Forward traces to jaeger collector's HTTP API.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct HttpSinkConfig {
+    /// The HTTP address to connect to.
+    #[configurable(required)]
     endpoint: String,
 
     #[serde(default)]

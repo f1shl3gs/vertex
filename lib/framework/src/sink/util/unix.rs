@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use backoff::ExponentialBackoff;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
+use configurable::Configurable;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -27,9 +28,11 @@ pub enum UnixError {
     Connect(tokio::io::Error),
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct UnixSinkConfig {
+    /// The unix socket path. This should be the absolute path.
+    #[configurable(required)]
     pub path: PathBuf,
 }
 

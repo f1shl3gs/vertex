@@ -179,6 +179,7 @@ pub struct Merged;
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Unmerged;
 
+/// Configures the sink batching behavior.
 #[derive(Configurable, Clone, Copy, Debug, Default, Deserialize, Serialize)]
 pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
     /// The maximum size of a batch, before it is flushed.

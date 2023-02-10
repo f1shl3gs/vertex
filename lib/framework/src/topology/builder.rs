@@ -524,7 +524,7 @@ pub async fn build_pieces(
         let sink_inputs = &sink.inputs;
         let health_check = sink.health_check();
         let enable_health_check = health_check && config.healthchecks.enabled;
-        let typetag = sink.inner.sink_type();
+        let typetag = sink.inner.component_name();
         let input_type = sink.inner.input_type();
 
         let (tx, rx, acker) = if let Some(buffer) = buffers.remove(name) {

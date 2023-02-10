@@ -426,10 +426,6 @@ mod tests {
         fn input_type(&self) -> DataType {
             DataType::Any
         }
-
-        fn sink_type(&self) -> &'static str {
-            "mock"
-        }
     }
 
     #[test]
