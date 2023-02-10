@@ -81,16 +81,8 @@ pub fn configurable_component_impl(
         #input
 
         impl #impl_generics ::configurable::NamedComponent for #ident #type_generics #where_clause {
-            // const NAME: &'static str = #name;
             fn component_name(&self) -> &'static str {
                 #name
-            }
-        }
-
-        // TODO: this should be removed, once configurable_component used for all config.
-        impl #impl_generics ::configurable::GenerateConfig for #ident #type_generics #where_clause {
-            fn generate_config() -> String {
-                ::configurable::generate_example::<#ident>()
             }
         }
 

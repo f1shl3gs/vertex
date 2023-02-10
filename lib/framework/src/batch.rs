@@ -7,7 +7,6 @@ use event::EventFinalizers;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::config::GenerateConfig;
 use crate::stream::BatcherSettings;
 
 // Provide sensible sink default 10MB with 1s timeout.
@@ -197,25 +196,6 @@ pub struct BatchConfig<D: SinkBatchSettings, S = Unmerged> {
     _d: PhantomData<D>,
     #[serde(skip)]
     _s: PhantomData<S>,
-}
-
-impl<D, S> GenerateConfig for BatchConfig<D, S>
-where
-    D: SinkBatchSettings,
-{
-    fn generate_config() -> String {
-        r#"
-# The maximum size of a batch, before it is flushed
-#
-# max_bytes: 4M
-
-# The maximum size of a batch, before it is flushed.
-#
-# max_events: 1024
-
-"#
-        .into()
-    }
 }
 
 impl<D: SinkBatchSettings> BatchConfig<D, Unmerged> {

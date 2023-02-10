@@ -18,6 +18,6 @@ fn struct_in_struct() {
         boolean: bool,
     }
 
-    let example = configurable::generate_example::<Outer>();
+    let example = configurable::generate_config::<Outer>();
     println!("{}", example)
 }

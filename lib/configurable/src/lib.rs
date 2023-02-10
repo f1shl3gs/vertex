@@ -7,9 +7,8 @@ pub mod format;
 mod named;
 pub mod schema;
 
-pub use component::GenerateConfig;
 pub use errors::GenerateError;
-pub use example::generate_example;
+pub use example::generate_config;
 pub use named::NamedComponent;
 
 pub use crate::configurable::{Configurable, ConfigurableString};

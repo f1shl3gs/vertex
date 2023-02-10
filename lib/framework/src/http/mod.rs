@@ -24,7 +24,6 @@ use thiserror::Error;
 use tower::Service;
 use tracing_futures::Instrument;
 
-use crate::config::GenerateConfig;
 use crate::{
     config::ProxyConfig,
     tls::{tls_connector_builder, MaybeTlsSettings, TlsError},
@@ -273,9 +272,11 @@ pub enum Auth {
     /// [base64]: https://en.wikipedia.org/wiki/Base64
     Basic {
         /// The basic authentication username.
+        #[configurable(required)]
         user: String,
 
         /// The basic authentication password.
+        #[configurable(required)]
         password: String,
     },
 
@@ -284,6 +285,7 @@ pub enum Auth {
     /// The bearer token value (OAuth2, JWT, etc) is passed as-is.
     Bearer {
         /// The bearer authentication token.
+        #[configurable(required)]
         token: String,
     },
 }
@@ -291,28 +293,6 @@ pub enum Auth {
 impl Auth {
     pub fn basic(user: String, password: String) -> Self {
         Self::Basic { user, password }
-    }
-}
-
-impl GenerateConfig for Auth {
-    fn generate_config() -> String {
-        r#"
-# The authentication strategy to use, the available value
-# is "basic" or "bearer". If strategy is set to "bearer",
-# "user" and "password" is ignored, and "token" must be
-# configured.
-strategy: basic
-
-# The basic authentication user name.
-user: username
-
-# The basic authentication password.
-password: password
-
-# The token to use for bearer authentication.
-# token: abcdefg
-"#
-        .into()
     }
 }
 

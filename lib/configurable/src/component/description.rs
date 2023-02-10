@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
-use super::GenerateConfig;
+use crate::{generate_config, Configurable};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Clone, PartialEq)]
@@ -39,11 +39,11 @@ where
     /// type `T` and the component name. As such, if `T` is `SourceComponent`, and the name is
     /// `stdin`, you would say that the component is a "source called `stdin`".
     ///
-    /// The type parameter `C` must be the component's configuration type that implements `GenerateConfig`.
-    pub const fn new<C: GenerateConfig>(component_name: &'static str) -> Self {
+    /// The type parameter `C` must be the component's configuration type that implements `Configurable`.
+    pub const fn new<C: Configurable>(component_name: &'static str) -> Self {
         ComponentDescription {
             component_name,
-            example: || Some(C::generate_config()),
+            example: || Some(generate_config::<C>()),
             component_type: PhantomData,
         }
     }
