@@ -69,10 +69,6 @@ impl SinkConfig for ConsoleSinkConfig {
     fn input_type(&self) -> DataType {
         DataType::Any
     }
-
-    fn sink_type(&self) -> &'static str {
-        "console"
-    }
 }
 
 struct WriteSink<T> {

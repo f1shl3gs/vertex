@@ -9,6 +9,7 @@ use async_trait::async_trait;
 use backoff::ExponentialBackoff;
 use bytes::BytesMut;
 use codecs::encoding::Transformer;
+use configurable::Configurable;
 use event::{Event, EventContainer, EventStatus, Events, Finalizable};
 use futures::{future::BoxFuture, ready, stream::BoxStream, FutureExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -35,10 +36,13 @@ pub enum UdpError {
     ServiceChannelRecv(#[from] oneshot::error::RecvError),
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct UdpSinkConfig {
+    /// The address to connect to. The address must include a port.
+    #[configurable(required)]
     address: String,
+
     send_buffer_bytes: Option<usize>,
 }
 

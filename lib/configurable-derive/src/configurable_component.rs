@@ -57,12 +57,17 @@ pub fn configurable_component_impl(
     derives.push(parse_quote_spanned! {ident.span()=>
         ::configurable::Configurable
     });
-    derives.push(parse_quote_spanned! {input.ident.span()=>
-        ::serde::Serialize
-    });
-    derives.push(parse_quote_spanned! {input.ident.span()=>
-        ::serde::Deserialize
-    });
+    if !struct_attrs.no_ser {
+        derives.push(parse_quote_spanned! {input.ident.span()=>
+            ::serde::Serialize
+        });
+    }
+    if !struct_attrs.no_deser {
+        derives.push(parse_quote_spanned! {input.ident.span()=>
+            ::serde::Deserialize
+        });
+    }
+
     let maybe_description = description.map(|value| {
         quote! {
             #[configurable(description = #value)]
@@ -112,6 +117,9 @@ struct StructAttrs {
     name: Option<syn::LitStr>,
     description: Option<syn::LitStr>,
     component_type: Option<ComponentType>,
+
+    no_ser: bool,
+    no_deser: bool,
 }
 
 impl StructAttrs {
@@ -142,6 +150,10 @@ impl StructAttrs {
                 this.component_type = Some(ComponentType::Transform);
             } else if name.is_ident("sink") {
                 this.component_type = Some(ComponentType::Sink);
+            } else if name.is_ident("no_ser") {
+                this.no_ser = true
+            } else if name.is_ident("no_deser") {
+                this.no_deser = true
             } else {
                 errs.err(
                     &name.span(),

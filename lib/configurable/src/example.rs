@@ -120,7 +120,17 @@ impl Visitor {
             None => obj,
         };
 
-        let obj = extract(obj);
+        if let Some(all_of) = is_all_of(obj) {
+            all_of.iter().for_each(|schema| {
+                if let Schema::Object(obj) = schema {
+                    self.visit_obj(obj)
+                }
+            });
+
+            return;
+        }
+
+        let obj = self.extract(obj);
 
         if obj.properties.is_empty() {
             self.push_value(&Value::Object(Map::new()));
@@ -271,6 +281,30 @@ impl Visitor {
         }
     }
 
+    fn extract<'a>(&'a self, obj: &'a SchemaObject) -> &ObjectValidation {
+        match &obj.object {
+            Some(obj) => obj,
+            None => {
+                // flatten field with enum type goes here
+                if let Some(subschemas) = &obj.subschemas {
+                    if let Some(oneof) = &subschemas.one_of {
+                        // handle first only
+                        if let Some(Schema::Object(first)) = oneof.first() {
+                            return first
+                                .object
+                                .as_ref()
+                                .expect("flattened field cannot be empty");
+                        }
+                    }
+
+                    panic!("subschemas should have a non-empty one_of");
+                } else {
+                    panic!("schema object should have at least one of `object` or `subschemas`");
+                }
+            }
+        }
+    }
+
     // buf
     fn push_value(&self, value: &Value) {
         let mut buf = self.buf.borrow_mut();
@@ -303,6 +337,13 @@ impl Visitor {
     }
 }
 
+fn is_all_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
+    match &obj.subschemas {
+        Some(sub) => sub.all_of.as_ref(),
+        None => None,
+    }
+}
+
 fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
     if let Some(meta) = obj.metadata.as_ref() {
         if meta.deprecated {
@@ -317,30 +358,6 @@ fn get_default_or_example(obj: &SchemaObject) -> Option<&Value> {
     }
 
     None
-}
-
-fn extract(obj: &SchemaObject) -> &ObjectValidation {
-    match &obj.object {
-        Some(obj) => obj,
-        None => {
-            // flatten field with enum type goes here
-            if let Some(subschemas) = &obj.subschemas {
-                if let Some(oneof) = &subschemas.one_of {
-                    // handle first only
-                    if let Some(Schema::Object(first)) = oneof.first() {
-                        return first
-                            .object
-                            .as_ref()
-                            .expect("flattened field cannot be empty");
-                    }
-                }
-
-                panic!("subschemas should have a non-empty one_of");
-            } else {
-                panic!("schema object should have at least one of `object` or `subschemas`");
-            }
-        }
-    }
 }
 
 /// Generate YAML example from a JSON Schema

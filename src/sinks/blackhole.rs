@@ -1,33 +1,21 @@
 use async_trait::async_trait;
 use buffers::Acker;
+use configurable::configurable_component;
 use event::{EventContainer, Events};
 use framework::{
-    config::{DataType, GenerateConfig, SinkConfig, SinkContext, SinkDescription},
+    config::{DataType, SinkConfig, SinkContext},
     Healthcheck, Sink, StreamSink,
 };
 use futures::prelude::stream::BoxStream;
 use futures::FutureExt;
 use futures_util::StreamExt;
-use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[configurable_component(sink, name = "blackhole")]
+#[derive(Clone, Debug, Default)]
 #[serde(deny_unknown_fields)]
 pub struct BlackholeConfig {
+    /// Receive rate, in event per second.
     pub rate: Option<usize>,
-}
-
-impl GenerateConfig for BlackholeConfig {
-    fn generate_config() -> String {
-        r#"
-# Receive 10 event every second
-rate: 10
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SinkDescription::new::<BlackholeConfig>("blackhole")
 }
 
 #[async_trait]
@@ -42,10 +30,6 @@ impl SinkConfig for BlackholeConfig {
 
     fn input_type(&self) -> DataType {
         DataType::Any
-    }
-
-    fn sink_type(&self) -> &'static str {
-        "blackhole"
     }
 }
 

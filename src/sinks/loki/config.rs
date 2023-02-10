@@ -142,10 +142,6 @@ impl SinkConfig for LokiConfig {
     fn input_type(&self) -> DataType {
         DataType::Log
     }
-
-    fn sink_type(&self) -> &'static str {
-        "loki"
-    }
 }
 
 pub fn valid_label_name(label: &Template) -> bool {

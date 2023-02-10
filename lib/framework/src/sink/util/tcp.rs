@@ -10,6 +10,7 @@ use async_trait::async_trait;
 use backoff::ExponentialBackoff;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
+use configurable::Configurable;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, task::noop_waker_ref, SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
@@ -42,10 +43,13 @@ enum TcpError {
     NoAddresses,
 }
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields)]
 pub struct TcpSinkConfig {
+    /// The address to connect to. The address must include a port.
+    #[configurable(required)]
     address: String,
+
     keepalive: Option<TcpKeepaliveConfig>,
     tls: Option<TlsConfig>,
     send_buffer_bytes: Option<usize>,

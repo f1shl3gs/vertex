@@ -17,7 +17,6 @@ use futures::{FutureExt, StreamExt};
 use futures_util::stream;
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
-use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tracing::{error, info};
 
@@ -221,7 +220,8 @@ impl Default for Mode {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "mock")]
+#[derive(Debug)]
 pub struct MockSinkConfig {
     #[serde(skip)]
     sink: Mode,
@@ -275,10 +275,6 @@ impl SinkConfig for MockSinkConfig {
 
     fn input_type(&self) -> DataType {
         DataType::Any
-    }
-
-    fn sink_type(&self) -> &'static str {
-        "mock"
     }
 }
 

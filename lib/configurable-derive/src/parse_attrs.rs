@@ -23,6 +23,7 @@ pub struct FieldAttrs {
     pub flatten: bool,
 
     /// Default fn from serde
+    pub rename: Option<LitStr>,
     pub default: Option<LitStr>,
     pub format: Option<LitStr>,
     pub serde_with: Option<LitStr>,
@@ -56,6 +57,10 @@ impl FieldAttrs {
                             } else if name.is_ident("with") {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.serde_with)
+                                }
+                            } else if name.is_ident("rename") {
+                                if let Some(m) = errs.expect_meta_name_value(m) {
+                                    parse_attr_litstr(errs, m, &mut this.rename)
                                 }
                             } else if name.is_ident("flatten") {
                                 this.flatten = true
@@ -137,7 +142,7 @@ fn parse_attr_description(errs: &Errors, m: &syn::MetaNameValue, slot: &mut Opti
 }
 
 /// Represents a `#[derive(FromArgs)]` type's top-level attributes.
-#[derive(Default)]
+#[derive(Default, Debug)]
 pub struct TypeAttrs {
     pub name: Option<syn::LitStr>,
     pub title: Option<syn::LitStr>,
@@ -147,6 +152,7 @@ pub struct TypeAttrs {
     // serde's attributes
     pub rename_all: Option<syn::LitStr>,
     pub tag: Option<LitStr>,
+    pub untagged: bool,
 }
 
 impl TypeAttrs {
@@ -173,6 +179,8 @@ impl TypeAttrs {
                                 if let Some(m) = errs.expect_meta_name_value(m) {
                                     parse_attr_litstr(errs, m, &mut this.tag)
                                 }
+                            } else if name.is_ident("untagged") {
+                                this.untagged = true
                             }
                         };
                     }

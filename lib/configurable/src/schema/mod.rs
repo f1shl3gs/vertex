@@ -314,3 +314,16 @@ where
         ..Default::default()
     })
 }
+
+pub fn generate_internal_tagged_variant_schema(
+    tag: String,
+    value_schema: SchemaObject,
+) -> SchemaObject {
+    let mut properties = IndexMap::new();
+    properties.insert(tag.clone(), value_schema);
+
+    let mut required = BTreeSet::new();
+    required.insert(tag);
+
+    generate_struct_schema(properties, required, None)
+}

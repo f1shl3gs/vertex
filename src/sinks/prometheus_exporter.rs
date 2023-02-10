@@ -13,11 +13,10 @@ use async_trait::async_trait;
 use buffers::Acker;
 use bytes::{BufMut, BytesMut};
 use chrono::Utc;
+use configurable::configurable_component;
 use event::Metric;
 use event::{Events, MetricValue};
-use framework::config::{
-    DataType, GenerateConfig, Resource, SinkConfig, SinkContext, SinkDescription,
-};
+use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::stream::tripwire_handler;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
@@ -26,18 +25,22 @@ use futures::{FutureExt, StreamExt};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use parking_lot::Mutex;
-use serde::{Deserialize, Serialize};
 use stream_cancel::{Trigger, Tripwire};
 use tokio_stream::wrappers::IntervalStream;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(sink, name = "prometheus_exporter")]
+#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct PrometheusExporterConfig {
     tls: Option<TlsConfig>,
 
+    /// The address the prometheus server will listen at
     #[serde(default = "default_endpoint_address")]
+    #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
     endpoint: SocketAddr,
 
+    /// TTL for metrics, any metrics not received for ttl will be removed
+    /// from cache.
     #[serde(default = "default_ttl")]
     #[serde(with = "humanize::duration::serde")]
     ttl: Duration,
@@ -49,20 +52,6 @@ fn default_endpoint_address() -> SocketAddr {
 
 const fn default_ttl() -> Duration {
     Duration::from_secs(5 * 60)
-}
-
-impl GenerateConfig for PrometheusExporterConfig {
-    fn generate_config() -> String {
-        r#"
-# Which address the prometheus server will listen at
-# endpoint: 0.0.0.0:9100
-"#
-        .into()
-    }
-}
-
-inventory::submit! {
-    SinkDescription::new::<PrometheusExporterConfig>("prometheus_exporter")
 }
 
 #[async_trait]
@@ -77,10 +66,6 @@ impl SinkConfig for PrometheusExporterConfig {
 
     fn input_type(&self) -> DataType {
         DataType::Metric
-    }
-
-    fn sink_type(&self) -> &'static str {
-        "prometheus_exporter"
     }
 
     fn resources(&self) -> Vec<Resource> {

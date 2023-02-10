@@ -11,6 +11,7 @@ use std::sync::{Arc, Mutex};
 use std::task::{Context, Poll};
 use std::time::{Duration, Instant};
 
+use configurable::{configurable_component, Configurable};
 use event::Event;
 use futures::FutureExt;
 use futures_util::future::BoxFuture;
@@ -32,22 +33,18 @@ use crate::sink::util::service::{Concurrency, RequestConfig};
 use crate::sink::util::{EncodedLength, VecBuffer};
 use crate::{Healthcheck, Sink};
 
-#[derive(Copy, Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Copy, Clone, Debug, Deserialize, Serialize, Default)]
 #[serde(rename_all = "lowercase")]
 enum Action {
-    // Above the given limit, additional requests will return with an error
+    /// Above the given limit, additional requests will return with an error
+    #[default]
     Defer,
-    // Above the given limit, additional requests will be silently dropped
+
+    /// Above the given limit, additional requests will be silently dropped
     Drop,
 }
 
-impl Default for Action {
-    fn default() -> Self {
-        Self::Defer
-    }
-}
-
-#[derive(Copy, Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Copy, Clone, Debug, Default, Deserialize, Serialize)]
 struct LimitParams {
     // The scale is the amount a request's dealy increases at higher levels of the variable.
     #[serde(default)]
@@ -88,7 +85,7 @@ impl LimitParams {
     }
 }
 
-#[derive(Copy, Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Copy, Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct TestParams {
     // The number of requests to issue.
@@ -125,7 +122,8 @@ const fn default_concurrency() -> Concurrency {
     Concurrency::Adaptive
 }
 
-#[derive(Debug, Serialize)]
+#[configurable_component(sink, name = "test")]
+#[derive(Debug)]
 struct TestConfig {
     request: RequestConfig,
     params: TestParams,
@@ -149,7 +147,7 @@ impl EncodedLength for Event {
 }
 
 #[async_trait::async_trait]
-#[typetag::serialize(name = "test")]
+#[typetag::serde(name = "test")]
 impl SinkConfig for TestConfig {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let mut batch_settings = BatchSettings::default();
@@ -185,14 +183,6 @@ impl SinkConfig for TestConfig {
 
     fn input_type(&self) -> DataType {
         DataType::Any
-    }
-
-    fn sink_type(&self) -> &'static str {
-        "test"
-    }
-
-    fn typetag_deserialize(&self) {
-        unimplemented!("not intended for use in real configs")
     }
 }
 
@@ -305,7 +295,7 @@ impl RetryLogic for TestRetryLogic {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 struct TestController {
     todo: usize,
     send_done: Option<oneshot::Sender<()>>,
