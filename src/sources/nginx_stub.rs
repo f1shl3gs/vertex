@@ -1,12 +1,13 @@
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
 use std::ops::Sub;
+use std::time::Duration;
 
 use bytes::Bytes;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::Metric;
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
@@ -29,6 +30,10 @@ struct NginxStubConfig {
     /// http://nginx.org/en/docs/http/ngx_http_stub_status_module.html
     #[configurable(required, format = "uri", example = "http://127.0.0.1:8080/nginx_stub")]
     endpoints: Vec<String>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 
     /// Configures the TLS options for outgoing connections.
     tls: Option<TlsConfig>,
@@ -54,7 +59,7 @@ impl SourceConfig for NginxStubConfig {
         }
 
         let mut output = cx.output;
-        let interval = tokio::time::interval(cx.interval);
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
 
         Ok(Box::pin(async move {

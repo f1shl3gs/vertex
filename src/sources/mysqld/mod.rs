@@ -9,13 +9,13 @@ mod slave_status;
 mod integration_tests;
 
 use std::borrow::Cow;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use configurable::{configurable_component, Configurable};
 use event::{Metric, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_true, ticker_from_duration, DataType, Output, SourceConfig,
-    SourceContext,
+    default_false, default_interval, default_true, ticker_from_duration, DataType, Output,
+    SourceConfig, SourceContext,
 };
 use framework::{tls::TlsConfig, Source};
 use futures::StreamExt;
@@ -94,16 +94,23 @@ struct MysqldConfig {
     /// IP address to MySQL server.
     #[serde(default = "default_host")]
     host: String,
+
     /// TCP port to MySQL server
     #[serde(default = "default_port")]
     port: u16,
+
     /// Username used to connect to MySQL instance
     #[serde(default)]
     username: Option<String>,
+
     /// Password used to connect to MySQL instance
     #[serde(default)]
     password: Option<String>,
     ssl: Option<TlsConfig>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 fn default_host() -> String {
@@ -148,7 +155,7 @@ impl MysqldConfig {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let options = self.connect_options();
         let mut output = cx.output;
         let instance = format!("{}:{}", self.host, self.port);

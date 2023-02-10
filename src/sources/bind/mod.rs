@@ -3,14 +3,14 @@ mod client;
 mod tests;
 
 use std::num::ParseFloatError;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use async_trait::async_trait;
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::{Key, Value};
 use event::{tags, Bucket, Metric};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::HttpClient;
 use framework::Source;
 
@@ -29,13 +29,17 @@ struct Config {
     /// Endpoint for the BIND statistics api
     #[configurable(required, format = "uri", example = "http://127.0.0.1:8053")]
     endpoint: String,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 #[async_trait]
 #[typetag::serde(name = "bind")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let mut interval = tokio::time::interval(cx.interval);
+        let mut interval = tokio::time::interval(self.interval);
         let mut shutdown = cx.shutdown;
         let mut output = cx.output;
         let http_client = HttpClient::new(None, &cx.proxy)?;

@@ -1,5 +1,4 @@
-global:
-  interval: 10s
+global: {}
 
 sources:
   metrics:

@@ -1,9 +1,10 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
+use std::time::Duration;
 
 use configurable::configurable_component;
 use event::{tags, Metric, INSTANCE_KEY};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
@@ -19,6 +20,10 @@ struct ZookeeperConfig {
     /// The endpoints to connect to.
     #[configurable(required)]
     endpoint: String,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 struct ZookeeperSource {
@@ -136,7 +141,7 @@ impl ZookeeperSource {
 impl SourceConfig for ZookeeperConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = ZookeeperSource::from(self);
-        Ok(Box::pin(source.run(cx.interval, cx.output, cx.shutdown)))
+        Ok(Box::pin(source.run(self.interval, cx.output, cx.shutdown)))
     }
 
     fn outputs(&self) -> Vec<Output> {

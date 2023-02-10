@@ -14,7 +14,7 @@ use super::{
 };
 use super::{SinkConfig, SourceConfig};
 use crate::config::graph::Graph;
-use crate::config::{default_interval, TransformConfig};
+use crate::config::TransformConfig;
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -72,12 +72,6 @@ impl Builder {
             // if two configs both set 'data_dir' and have conflicting values,
             // we consider this an error.
             errors.push("conflicting values for 'data_dir' found".to_owned());
-        }
-
-        if self.global.interval == default_interval() {
-            self.global.interval = with.global.interval
-        } else {
-            errors.push("conflicting values for 'interval' found".to_owned());
         }
 
         // If the user has multiple config files, we must *merge* log schemas

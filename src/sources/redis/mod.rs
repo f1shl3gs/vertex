@@ -3,12 +3,13 @@ mod client;
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::BufRead;
+use std::time::Duration;
 
 use bytes::{Buf, Bytes};
 use client::{Client, RespErr};
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
@@ -252,6 +253,10 @@ pub struct RedisSourceConfig {
     #[configurable(required, format = "ip-address")]
     endpoint: String,
 
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
     #[serde(default = "default_namespace")]
     namespace: Option<String>,
 
@@ -273,7 +278,7 @@ impl SourceConfig for RedisSourceConfig {
         let src = RedisSource {
             url: self.endpoint.clone(),
             namespace: self.namespace.clone(),
-            interval: cx.interval,
+            interval: self.interval,
             client_name: None,
         };
 

@@ -1,12 +1,14 @@
 mod client;
 
 use std::collections::HashSet;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use chrono::Utc;
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{
+    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
+};
 use framework::http::HttpClient;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
@@ -22,6 +24,10 @@ struct ConsulSourceConfig {
     /// HTTP/HTTPS endpoint to Consul server.
     #[configurable(required, format = "uri", example = "http://localhost:8500")]
     endpoints: Vec<String>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 
     #[serde(default)]
     tls: Option<TlsConfig>,
@@ -39,7 +45,7 @@ impl SourceConfig for ConsulSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let interval = tokio::time::interval(cx.interval);
+        let interval = tokio::time::interval(self.interval);
         let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;

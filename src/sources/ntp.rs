@@ -1,28 +1,33 @@
+use std::time::Duration;
+
 use configurable::configurable_component;
 use event::Metric;
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{
-    config::{DataType, Output, SourceConfig, SourceContext},
+    config::{default_interval, DataType, Output, SourceConfig, SourceContext},
     Source,
 };
 use futures::StreamExt;
 use rsntp;
-use std::time::Duration;
 use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "ntp")]
 #[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 pub struct NtpConfig {
+    /// NTP servers to use.
+    #[configurable(required, format = "hostname", example = "pool.ntp.org")]
+    pub pools: Vec<String>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
+
     /// The NTP client query timeout
     #[serde(default = "default_timeout")]
     #[serde(with = "humanize::duration::serde")]
     pub timeout: Duration,
-
-    /// NTP servers to use.
-    #[configurable(required, format = "hostname", example = "pool.ntp.org")]
-    pub pools: Vec<String>,
 }
 
 const fn default_timeout() -> Duration {
@@ -34,7 +39,7 @@ const fn default_timeout() -> Duration {
 impl SourceConfig for NtpConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ntp = Ntp {
-            interval: cx.interval,
+            interval: self.interval,
             timeout: self.timeout,
             pools: self.pools.clone(),
             pick_state: 0,

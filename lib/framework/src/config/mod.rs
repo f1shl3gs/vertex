@@ -28,24 +28,22 @@ pub use proxy::ProxyConfig;
 pub use uri::*;
 pub use validation::warnings;
 
-use async_trait::async_trait;
 use std::collections::HashSet;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use std::time::Duration;
-// IndexMap preserves insertion order, allowing us to output errors in the same order they are present in the file
+
+use async_trait::async_trait;
+// IndexMap preserves insertion order, allowing us to output errors in the
+// same order they are present in the file.
 use ::serde::{Deserialize, Serialize};
+use buffers::{Acker, BufferType};
+pub use builder::Builder;
+use configurable::NamedComponent;
 use indexmap::IndexMap;
-
-use crate::shutdown::ShutdownSignal;
-
 pub use resource::{Protocol, Resource};
 
-pub use builder::Builder;
-
+use crate::shutdown::ShutdownSignal;
 use crate::{transform::Noop, Extension, Pipeline};
-use buffers::{Acker, BufferType};
-use configurable::NamedComponent;
 pub use global::GlobalOptions;
 pub use helper::{deserialize_regex, serialize_regex, skip_serializing_if_default};
 pub use loading::load_from_paths_with_provider;
@@ -159,10 +157,6 @@ pub struct SourceOuter {
 
     #[serde(default, skip)]
     pub(super) acknowledgements: bool,
-
-    #[serde(default)]
-    #[serde(with = "humanize::duration::serde_option")]
-    pub(super) interval: Option<Duration>,
 }
 
 impl SourceOuter {
@@ -171,7 +165,6 @@ impl SourceOuter {
             inner: Box::new(source),
             proxy: Default::default(),
             acknowledgements: false,
-            interval: None,
         }
     }
 
@@ -411,7 +404,6 @@ pub struct SourceContext {
     pub globals: GlobalOptions,
     pub proxy: ProxyConfig,
     pub acknowledgements: bool,
-    pub interval: Duration,
 }
 
 impl SourceContext {
@@ -429,7 +421,6 @@ impl SourceContext {
             globals: Default::default(),
             proxy: Default::default(),
             acknowledgements: false,
-            interval: default_interval(),
         }
     }
 
@@ -449,7 +440,6 @@ impl SourceContext {
                 output,
                 proxy: Default::default(),
                 acknowledgements: false,
-                interval: default_interval(),
             },
             shutdown,
         )

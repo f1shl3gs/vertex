@@ -1,12 +1,14 @@
 use std::borrow::Cow;
 use std::collections::HashMap;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 
 use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{ticker_from_duration, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{
+    default_interval, ticker_from_duration, DataType, Output, SourceConfig, SourceContext,
+};
 use framework::Source;
 use futures::StreamExt;
 use thiserror::Error;
@@ -25,13 +27,17 @@ struct MemcachedConfig {
     /// The endpoint to Memcached servers.
     #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]
     endpoints: Vec<String>,
+
+    /// Duration between each scrape.
+    #[serde(default = "default_interval", with = "humanize::duration::serde")]
+    interval: Duration,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(cx.interval).take_until(cx.shutdown);
+        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let mut output = cx.output;
 
         let endpoints = self.endpoints.clone();
