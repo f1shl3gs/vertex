@@ -2,13 +2,13 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::sync::atomic::{AtomicBool, Ordering};
 
-use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
+use configurable::configurable_component;
+use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::Extension;
 use futures_util::FutureExt;
 use http::{Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
-use serde::{Deserialize, Serialize};
 
 static READINESS: AtomicBool = AtomicBool::new(false);
 
@@ -20,26 +20,19 @@ fn default_endpoint() -> SocketAddr {
     "0.0.0.0:13133".parse().unwrap()
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(extension, name = "healthcheck")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
-pub struct HealthcheckConfig {
+pub struct Config {
+    /// Which address to listen for.
     #[serde(default = "default_endpoint")]
+    #[configurable(required)]
     pub endpoint: SocketAddr,
-}
-
-impl GenerateConfig for HealthcheckConfig {
-    fn generate_config() -> String {
-        "endpoint: 0.0.0.0:13133".into()
-    }
-}
-
-inventory::submit! {
-    ExtensionDescription::new::<HealthcheckConfig>("healthcheck")
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "healthcheck")]
-impl ExtensionConfig for HealthcheckConfig {
+impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         info!(
             message = "start healthcheck server",
@@ -60,10 +53,6 @@ impl ExtensionConfig for HealthcheckConfig {
 
             Ok(())
         }))
-    }
-
-    fn extension_type(&self) -> &'static str {
-        "healthcheck"
     }
 }
 
@@ -94,4 +83,14 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         .status(status)
         .body(Body::from(body))
         .unwrap())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
+    }
 }

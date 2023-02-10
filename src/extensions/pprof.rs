@@ -2,7 +2,8 @@ use std::convert::Infallible;
 use std::net::SocketAddr;
 
 use bytes::{BufMut, BytesMut};
-use framework::config::{ExtensionConfig, ExtensionContext, ExtensionDescription, GenerateConfig};
+use configurable::configurable_component;
+use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
 use futures::FutureExt;
@@ -12,25 +13,23 @@ use hyper::{
     Body, Request, Response, Server,
 };
 use pprof::protos::Message;
-use serde::{Deserialize, Serialize};
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[configurable_component(extension, name = "pprof")]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
-pub struct PprofConfig {
+pub struct Config {
+    /// Which address the pprof server will listen
+    #[configurable(required)]
     pub listen: SocketAddr,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "pprof")]
-impl ExtensionConfig for PprofConfig {
+impl ExtensionConfig for Config {
     async fn build(&self, cx: ExtensionContext) -> crate::Result<Extension> {
         Ok(Box::pin(run(self.listen, cx.shutdown)))
-    }
-
-    fn extension_type(&self) -> &'static str {
-        "pprof"
     }
 }
 
@@ -98,16 +97,12 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 }
 
-impl GenerateConfig for PprofConfig {
-    fn generate_config() -> String {
-        r#"
-# Which address the pprof server will listen
-listen: 0.0.0.0:10910
-"#
-        .into()
-    }
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-inventory::submit! {
-    ExtensionDescription::new::<PprofConfig>("pprof")
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
+    }
 }

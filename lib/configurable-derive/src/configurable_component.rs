@@ -44,6 +44,7 @@ pub fn configurable_component_impl(
 
     // inventory staff
     let desc_type: syn::Type = match component_type {
+        ComponentType::Extension => parse_quote!(::configurable::component::ExtensionDescription),
         ComponentType::Provider => parse_quote! { ::configurable::component::ProviderDescription },
         ComponentType::Source => parse_quote! { ::configurable::component::SourceDescription },
         ComponentType::Transform => {
@@ -105,6 +106,7 @@ pub fn configurable_component_impl(
 
 #[derive(Clone, Debug, Default)]
 pub enum ComponentType {
+    Extension,
     Provider,
     #[default]
     Source,
@@ -142,6 +144,8 @@ impl StructAttrs {
                 if let Some(m) = errs.expect_meta_name_value(meta) {
                     parse_attr_litstr(errs, m, &mut this.description);
                 }
+            } else if name.is_ident("extension") {
+                this.component_type = Some(ComponentType::Extension)
             } else if name.is_ident("provider") {
                 this.component_type = Some(ComponentType::Provider);
             } else if name.is_ident("source") {
@@ -157,7 +161,7 @@ impl StructAttrs {
             } else {
                 errs.err(
                     &name.span(),
-                    "Expect `name`, `description`, `provider`, `source`, `transforms` or `sink`",
+                    "Expect `name`, `description`, `extension`, `provider`, `source`, `transforms` or `sink`",
                 )
             }
         }
