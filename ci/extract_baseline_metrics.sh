@@ -15,6 +15,6 @@ for VALUE in $MATCHED; do
 done
 
 # shellcheck disable=SC2012
-SIZE=$(ls -all target/release/vertex | awk '{print $5}')
+SIZE=$(ls -all target/release/vertex | awk '{print $5/1024.0}')
 
-echo "[{\"name\": \"Baseline\", \"unit\": \"s\", \"value\": ${DURATION}}, {\"name\": \"Binary size\", \"unit\": \"bytes\", \"value\": ${SIZE}}]"
+echo "[{\"name\": \"Baseline\", \"unit\": \"s\", \"value\": ${DURATION}}, {\"name\": \"Binary size\", \"unit\": \"KiB\", \"value\": ${SIZE}}]"
