@@ -7904,7 +7904,7 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 555605.0,
+            "value": 55560.5,
             "unit": "KiB"
           }
         ]
