@@ -15,12 +15,9 @@ mod validation;
 pub mod watcher;
 
 // re-export
-pub use configurable::{
-    component::{
-        ExampleError, ExtensionDescription, ProviderDescription, SinkDescription,
-        SourceDescription, TransformDescription,
-    },
-    GenerateConfig,
+pub use configurable::component::{
+    ExampleError, ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
+    TransformDescription,
 };
 pub use diff::ConfigDiff;
 pub use format::{Format, FormatHint};

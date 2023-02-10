@@ -1,8 +1,6 @@
 mod description;
-mod generate;
 
 pub use description::{ComponentDescription, ExampleError};
-pub use generate::GenerateConfig;
 
 /// A provider component.
 pub struct ProviderComponent;

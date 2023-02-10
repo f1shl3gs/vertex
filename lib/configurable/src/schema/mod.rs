@@ -10,7 +10,6 @@ use schemars::schema::{
     ArrayValidation, InstanceType, NumberValidation, ObjectValidation, RootSchema, Schema,
     SchemaObject, SingleOrVec, SubschemaValidation,
 };
-use serde::Serialize;
 use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
@@ -63,7 +62,7 @@ pub fn convert_to_flattened_schema(primary: &mut SchemaObject, mut subschema: Ve
 
 pub fn get_or_generate_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     let schema = match T::reference() {
         Some(name) => {
@@ -87,7 +86,7 @@ where
 
 pub fn generate_baseline_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     let schema = T::generate_schema(gen)?;
     // TODO: apply metadata?
@@ -101,7 +100,7 @@ fn get_schema_ref<S: AsRef<str>>(gen: &mut SchemaGenerator, name: S) -> SchemaOb
 
 pub fn generate_root_schema<T>() -> Result<RootSchema, GenerateError>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     let mut schema_gen = SchemaSettings::draft2019_09().into_generator();
     let schema = get_or_generate_schema::<T>(&mut schema_gen)?;
@@ -115,7 +114,7 @@ where
 
 pub fn generate_map_schema<V>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
 where
-    V: Configurable + Serialize,
+    V: Configurable,
 {
     let element_schema = get_or_generate_schema::<V>(gen)?;
 
@@ -133,7 +132,7 @@ where
 /// use in maps.
 pub fn assert_string_schema_for_map<K, M>(gen: &mut SchemaGenerator) -> Result<(), GenerateError>
 where
-    K: ConfigurableString + Serialize,
+    K: ConfigurableString,
 {
     let key_schema = get_or_generate_schema::<K>(gen)?;
     let wrapped_schema = Schema::Object(key_schema);
@@ -300,7 +299,7 @@ pub fn generate_string_schema() -> SchemaObject {
 
 pub fn generate_array_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     // Generate the actual schema for the element type `T`.
     let element_schema = get_or_generate_schema::<T>(gen)?;
