@@ -6918,8 +6918,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56930896,
-            "unit": "bytes"
+            "value": 55596.6,
+            "unit": "KiB"
           }
         ]
       },
@@ -6952,8 +6952,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56933104,
-            "unit": "bytes"
+            "value": 55598.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -6986,8 +6986,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56930272,
-            "unit": "bytes"
+            "value": 55596.0,
+            "unit": "KiB"
           }
         ]
       },
@@ -7020,8 +7020,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56928896,
-            "unit": "bytes"
+            "value": 55594.6,
+            "unit": "KiB"
           }
         ]
       },
@@ -7054,8 +7054,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929288,
-            "unit": "bytes"
+            "value": 55595.0,
+            "unit": "KiB"
           }
         ]
       },
@@ -7088,8 +7088,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56926936,
-            "unit": "bytes"
+            "value": 55592.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7122,8 +7122,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56933688,
-            "unit": "bytes"
+            "value": 55599.3,
+            "unit": "KiB"
           }
         ]
       },
@@ -7156,8 +7156,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56930480,
-            "unit": "bytes"
+            "value": 55596.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7190,8 +7190,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929480,
-            "unit": "bytes"
+            "value": 55595.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7224,8 +7224,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56930624,
-            "unit": "bytes"
+            "value": 55596.3,
+            "unit": "KiB"
           }
         ]
       },
@@ -7258,8 +7258,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929480,
-            "unit": "bytes"
+            "value": 55595.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7292,8 +7292,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929944,
-            "unit": "bytes"
+            "value": 55595.6,
+            "unit": "KiB"
           }
         ]
       },
@@ -7326,8 +7326,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929944,
-            "unit": "bytes"
+            "value": 55595.6,
+            "unit": "KiB"
           }
         ]
       },
@@ -7360,8 +7360,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56927280,
-            "unit": "bytes"
+            "value": 55593.0,
+            "unit": "KiB"
           }
         ]
       },
@@ -7394,8 +7394,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929496,
-            "unit": "bytes"
+            "value": 55595.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7428,8 +7428,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929496,
-            "unit": "bytes"
+            "value": 55595.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7462,8 +7462,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56929496,
-            "unit": "bytes"
+            "value": 55595.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7496,8 +7496,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56912824,
-            "unit": "bytes"
+            "value": 55578.9,
+            "unit": "KiB"
           }
         ]
       },
@@ -7530,8 +7530,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56913616,
-            "unit": "bytes"
+            "value": 55579.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7564,8 +7564,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56913616,
-            "unit": "bytes"
+            "value": 55579.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7598,8 +7598,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56915136,
-            "unit": "bytes"
+            "value": 55581.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7632,8 +7632,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56915136,
-            "unit": "bytes"
+            "value": 55581.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7666,8 +7666,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56914736,
-            "unit": "bytes"
+            "value": 55580.8,
+            "unit": "KiB"
           }
         ]
       },
@@ -7700,8 +7700,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56914736,
-            "unit": "bytes"
+            "value": 55580.8,
+            "unit": "KiB"
           }
         ]
       },
@@ -7734,8 +7734,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56915144,
-            "unit": "bytes"
+            "value": 55581.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -7768,8 +7768,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56913848,
-            "unit": "bytes"
+            "value": 55579.9,
+            "unit": "KiB"
           }
         ]
       },
@@ -7802,8 +7802,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56914632,
-            "unit": "bytes"
+            "value": 55580.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7836,8 +7836,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56915704,
-            "unit": "bytes"
+            "value": 55581.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7870,8 +7870,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56915704,
-            "unit": "bytes"
+            "value": 55581.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7904,8 +7904,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 56939560,
-            "unit": "bytes"
+            "value": 555605.0,
+            "unit": "KiB"
           }
         ]
       },
@@ -7938,8 +7938,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57451168,
-            "unit": "bytes"
+            "value": 56104.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -7972,8 +7972,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57453752,
-            "unit": "bytes"
+            "value": 56107.2,
+            "unit": "KiB"
           }
         ]
       },
@@ -8006,8 +8006,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57456960,
-            "unit": "bytes"
+            "value": 56110.3,
+            "unit": "KiB"
           }
         ]
       },
@@ -8040,8 +8040,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57454288,
-            "unit": "bytes"
+            "value": 56107.7,
+            "unit": "KiB"
           }
         ]
       },
@@ -8074,8 +8074,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57532672,
-            "unit": "bytes"
+            "value": 56184.3,
+            "unit": "KiB"
           }
         ]
       },
@@ -8108,8 +8108,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57531200,
-            "unit": "bytes"
+            "value": 56182.8,
+            "unit": "KiB"
           }
         ]
       },
@@ -8142,8 +8142,8 @@ window.BENCHMARK_DATA = {
           },
           {
             "name": "Binary size",
-            "value": 57644456,
-            "unit": "bytes"
+            "value": 56293.4,
+            "unit": "KiB"
           }
         ]
       },
