@@ -1,9 +1,10 @@
-use serde::{Deserialize, Serialize};
+use configurable::configurable_component;
 
 use crate::config::{provider::ProviderConfig, Builder};
 use crate::SignalHandler;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[configurable_component(provider, name = "file")]
+#[derive(Clone, Debug)]
 pub struct FileConfig {
     path: String,
 }
@@ -13,9 +14,5 @@ pub struct FileConfig {
 impl ProviderConfig for FileConfig {
     async fn build(&mut self, _signal_handler: &mut SignalHandler) -> Result<Builder, Vec<String>> {
         todo!()
-    }
-
-    fn provider_type(&self) -> &'static str {
-        "file"
     }
 }
