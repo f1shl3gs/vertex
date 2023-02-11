@@ -73,10 +73,6 @@ impl ProviderConfig for HttpConfig {
 
         Ok(builder)
     }
-
-    fn provider_type(&self) -> &'static str {
-        "http"
-    }
 }
 
 async fn http_request(

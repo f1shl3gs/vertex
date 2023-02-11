@@ -30,7 +30,7 @@ pub async fn load_from_paths_with_provider(
         builder = provider.build(signal_handler).await?;
         info!(
             message = "Provider configured",
-            provider = ?provider.provider_type()
+            provider = ?provider.component_name()
         );
     }
 
