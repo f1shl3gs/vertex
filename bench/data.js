@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676111228880,
+  "lastUpdate": 1676111345597,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8856,6 +8856,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56361,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "423ccd5d5325e5a2d16043ddc49dda62e5f06cd7",
+          "message": "Merge pull request #759 from f1shl3gs/remove_provider_type\n\nreplace provider_type with NamedComponent",
+          "timestamp": "2023-02-11T18:07:28+08:00",
+          "tree_id": "47d553ed5328bd1e7402e72fa6302ac2b291a4ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/423ccd5d5325e5a2d16043ddc49dda62e5f06cd7"
+        },
+        "date": 1676111337508,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1092,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56369.4,
             "unit": "KiB"
           }
         ]
