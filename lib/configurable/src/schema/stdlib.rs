@@ -5,16 +5,15 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use schemars::gen::SchemaGenerator;
-use schemars::schema::{ArrayValidation, InstanceType, SchemaObject, SingleOrVec};
-use serde::Serialize;
+use schemars::schema::{InstanceType, SchemaObject};
 use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
 use crate::schema::{
-    assert_string_schema_for_map, generate_baseline_schema, generate_bool_schema,
-    generate_map_schema, get_or_generate_schema, make_schema_optional,
+    assert_string_schema_for_map, generate_array_schema, generate_baseline_schema,
+    generate_bool_schema, generate_map_schema, generate_number_schema, generate_string_schema,
+    make_schema_optional,
 };
-use crate::schema::{generate_number_schema, generate_string_schema};
 use crate::{Configurable, GenerateError};
 
 // Numbers.
@@ -22,18 +21,6 @@ macro_rules! impl_configurable_numeric {
 	($($ty:ty),+) => {
 		$(
 			impl Configurable for $ty {
-                // fn metadata() -> Metadata<Self> {
-                //     let mut metadata = Metadata::default();
-                //     let numeric_type = <Self as ConfigurableNumber>::class();
-                //     metadata.add_custom_attribute(CustomAttribute::kv("docs::numeric_type", numeric_type));
-                //
-                //     metadata
-                // }
-
-                // fn validate_metadata(metadata: &Metadata<Self>) -> Result<(), GenerateError> {
-                //     $crate::__ensure_numeric_validation_bounds::<Self>(metadata)
-                // }
-
 				fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
 					Ok(generate_number_schema::<Self>())
 				}
@@ -68,8 +55,8 @@ impl_configurable_numeric!(
 
 impl<K, V> Configurable for BTreeMap<K, V>
 where
-    K: ConfigurableString + Serialize + Ord,
-    V: Configurable + Serialize,
+    K: ConfigurableString + Ord,
+    V: Configurable,
 {
     fn required() -> bool {
         // A map with required fields would be... an object. So if you want that,
@@ -87,8 +74,8 @@ where
 
 impl<K, V> Configurable for HashMap<K, V>
 where
-    K: ConfigurableString + Serialize + Ord,
-    V: Configurable + Serialize,
+    K: ConfigurableString + std::hash::Hash + Eq,
+    V: Configurable,
 {
     fn required() -> bool {
         // A map with required fields would be... an object. So if you want that,
@@ -127,7 +114,7 @@ impl Configurable for bool {
 
 impl<T> Configurable for Option<T>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     fn reference() -> Option<&'static str> {
         match T::reference() {
@@ -151,7 +138,7 @@ where
 // Array
 impl<T> Configurable for Vec<T>
 where
-    T: Configurable + Serialize,
+    T: Configurable,
 {
     fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         generate_array_schema::<T>(gen)
@@ -176,22 +163,6 @@ impl Configurable for PathBuf {
 
         Ok(generate_string_schema())
     }
-}
-
-fn generate_array_schema<T>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
-where
-    T: Configurable + Serialize,
-{
-    let element_schema = get_or_generate_schema::<T>(gen)?;
-
-    Ok(SchemaObject {
-        instance_type: Some(InstanceType::Array.into()),
-        array: Some(Box::new(ArrayValidation {
-            items: Some(SingleOrVec::Single(Box::new(element_schema.into()))),
-            ..Default::default()
-        })),
-        ..Default::default()
-    })
 }
 
 // Additional types that do not map directly to scalars.

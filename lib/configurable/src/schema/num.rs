@@ -1,12 +1,11 @@
-use schemars::schema::InstanceType;
 use std::num::{
     NonZeroI16, NonZeroI32, NonZeroI64, NonZeroI8, NonZeroU16, NonZeroU32, NonZeroU64, NonZeroU8,
     NonZeroUsize,
 };
 
-use serde::Serialize;
+use schemars::schema::InstanceType;
 
-#[derive(Copy, Clone, Serialize)]
+#[derive(Copy, Clone)]
 pub enum NumberClass {
     Signed,
 

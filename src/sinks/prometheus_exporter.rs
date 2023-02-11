@@ -32,8 +32,6 @@ use tokio_stream::wrappers::IntervalStream;
 #[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct PrometheusExporterConfig {
-    tls: Option<TlsConfig>,
-
     /// The address the prometheus server will listen at
     #[serde(default = "default_endpoint_address")]
     #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
@@ -44,6 +42,8 @@ struct PrometheusExporterConfig {
     #[serde(default = "default_ttl")]
     #[serde(with = "humanize::duration::serde")]
     ttl: Duration,
+
+    tls: Option<TlsConfig>,
 }
 
 fn default_endpoint_address() -> SocketAddr {
