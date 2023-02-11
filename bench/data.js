@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676110347434,
+  "lastUpdate": 1676110381414,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4751,6 +4751,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.745,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "423ccd5d5325e5a2d16043ddc49dda62e5f06cd7",
+          "message": "Merge pull request #759 from f1shl3gs/remove_provider_type\n\nreplace provider_type with NamedComponent",
+          "timestamp": "2023-02-11T18:07:28+08:00",
+          "tree_id": "47d553ed5328bd1e7402e72fa6302ac2b291a4ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/423ccd5d5325e5a2d16043ddc49dda62e5f06cd7"
+        },
+        "date": 1676110371383,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.365,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.899,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.551,
             "unit": "ns/op"
           }
         ]
