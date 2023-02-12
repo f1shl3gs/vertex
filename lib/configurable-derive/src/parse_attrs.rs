@@ -1,3 +1,5 @@
+use proc_macro2::{Literal, TokenStream};
+use quote::{ToTokens, TokenStreamExt};
 use syn::spanned::Spanned;
 use syn::{Lit, LitStr};
 
@@ -10,8 +12,15 @@ use crate::errors::Errors;
 #[derive(Debug)]
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
-    pub explicit: bool,
-    pub content: syn::LitStr,
+    explicit: bool,
+    content: syn::LitStr,
+}
+
+impl ToTokens for Description {
+    fn to_tokens(&self, tokens: &mut TokenStream) {
+        let content = self.content.value();
+        tokens.append(Literal::string(content.trim()))
+    }
 }
 
 /// Attributes applied to a field of a `#[configurable(...)]` struct.

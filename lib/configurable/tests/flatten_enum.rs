@@ -1,26 +1,37 @@
 use configurable::example::Visitor;
 use configurable::schema::generate_root_schema;
 use configurable_derive::Configurable;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[allow(dead_code)]
 #[allow(clippy::print_stdout)]
 #[test]
 fn flatten_struct() {
-    #[derive(Configurable, Serialize)]
+    #[derive(Configurable, Serialize, Deserialize)]
+    struct UnixDetail {
+        path: String,
+    }
+
+    #[derive(Configurable, Serialize, Deserialize)]
     #[serde(rename_all = "lowercase", tag = "mode")]
-    enum Inner {
+    enum Protocol {
+        /// unix variant
+        Unix(UnixDetail),
+
+        /// tcp variant
         Tcp { addr: String, tls: String },
+
+        /// udp variant
         Udp { addr: String },
     }
 
-    #[derive(Configurable, Serialize)]
+    #[derive(Configurable, Serialize, Deserialize)]
     struct Config {
-        /// first desc
-        first: String,
+        /// common desc
+        common: String,
 
         #[serde(flatten)]
-        inner: Inner,
+        inner: Protocol,
     }
 
     let root_schema = generate_root_schema::<Config>().expect("generate schema success");
@@ -30,4 +41,6 @@ fn flatten_struct() {
     let visitor = Visitor::new(root_schema);
     let example = visitor.example();
     println!("{}", example);
+
+    let _n = serde_yaml::from_str::<Config>(&example).unwrap();
 }

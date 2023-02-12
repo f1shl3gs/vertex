@@ -90,10 +90,10 @@ fn impl_from_struct(
             );
         }
     };
-    let maybe_description = type_attrs.description.as_ref().map(|desc| {
-        let value = desc.content.value();
-        quote!( metadata.description = Some(#value.to_string()); )
-    });
+    let maybe_description = type_attrs
+        .description
+        .as_ref()
+        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
 
     let mapped_fields = fields
         .named
@@ -171,11 +171,9 @@ fn generate_named_struct_field(
         None
     };
 
-    let maybe_description = field_attrs.description.map(|desc| {
-        let value = desc.content.value();
-
-        quote!( metadata.description = Some(#value.to_string()); )
-    });
+    let maybe_description = field_attrs
+        .description
+        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
 
     let maybe_deprecated = if field_attrs.deprecated {
         quote!( metadata.deprecated = true; )
@@ -268,10 +266,10 @@ fn impl_from_enum(
         .iter()
         .map(|variant| generate_enum_variant_schema(errs, type_attrs, variant));
 
-    let maybe_description = type_attrs.description.as_ref().map(|desc| {
-        let desc = desc.content.value();
-        quote!( metadata.description = Some(#desc.to_string()); )
-    });
+    let maybe_description = type_attrs
+        .description
+        .as_ref()
+        .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
 
     quote! {
         fn generate_schema(schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator)
@@ -316,6 +314,7 @@ fn apply_rename(variant: &str, rule: &syn::LitStr) -> String {
 }
 
 fn generate_enum_struct_named_variant_schema(
+    errs: &Errors,
     type_attrs: &TypeAttrs,
     variant: &syn::Variant,
 ) -> TokenStream {
@@ -327,10 +326,26 @@ fn generate_enum_struct_named_variant_schema(
                 Some(rule) => apply_rename(&ident, rule),
                 None => ident,
             };
+            let mut description: Option<Description> = None;
+            variant.attrs.iter().for_each(|attr| {
+                parse_attr_doc(errs, attr, &mut description);
+            });
+            let maybe_tag_description = match description {
+                Some(description) => {
+                    quote!(
+                        tag_metadata.description = Some( #description.to_string() );
+                    )
+                }
+                None => quote!(),
+            };
 
             quote! {
                 {
-                    let tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
+                    let mut tag_schema = ::configurable::schema::generate_const_string_schema( #ident.to_string() );
+                    let tag_metadata = tag_schema.metadata();
+
+                    #maybe_tag_description
+
                     properties.insert(#tag.to_string(), tag_schema);
                     required.insert(#tag.to_string());
                 }
@@ -380,7 +395,9 @@ fn generate_enum_variant_schema(
             quote! { ::configurable::schema::generate_const_string_schema( #ident.to_string() ) }
         }
 
-        Fields::Named(_named) => generate_enum_struct_named_variant_schema(type_attrs, variant),
+        Fields::Named(_named) => {
+            generate_enum_struct_named_variant_schema(errs, type_attrs, variant)
+        }
 
         Fields::Unnamed(_unnamed) => generate_enum_unamed_variant_schema(errs, type_attrs, variant),
     };
@@ -401,8 +418,6 @@ fn generate_enum_unamed_variant_schema(
         let field_attrs = FieldAttrs::parse(errs, field);
         let maybe_description = match &field_attrs.description {
             Some(desc) => {
-                let desc = &desc.content;
-
                 quote!(
                     metadata.description = Some(#desc);
                 )
@@ -481,8 +496,7 @@ fn generate_named_enum_field(field: &syn::Field) -> TokenStream {
     };
 
     let maybe_description = if let Some(desc) = field_attrs.description {
-        let value = desc.content.value();
-        quote!( metadata.description = Some(#value.to_string()); )
+        quote!( metadata.description = Some( #desc.to_string() ); )
     } else {
         quote!()
     };
@@ -564,8 +578,7 @@ fn generate_enum_variant_subschema(
 
     let maybe_description = match desc {
         Some(desc) => {
-            let desc = desc.content;
-            quote!( metadata.description = Some(#desc.to_string()); )
+            quote!( metadata.description = Some( #desc.to_string() ); )
         }
         None => quote!(),
     };
