@@ -21,7 +21,7 @@ x86_64-unknown-linux-gnu:
 		--features target-$@
 
 build-timing: clean
-	cargo build -p vertex --bin vertex --timings --release
+	cargo build --release --timings
 
 bloat:
 	cargo bloat --release --crates --target x86_64-unknown-linux-gnu -n 200
