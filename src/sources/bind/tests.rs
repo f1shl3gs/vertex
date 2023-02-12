@@ -1,13 +1,19 @@
 use std::future::Future;
 use std::time::Duration;
 
-use crate::sources::bind::{client, statistics_to_metrics};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use http::{Method, Request, Response};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
 use testify::{http::file_send, http::not_found, pick_unused_local_port};
+
+use super::{client, statistics_to_metrics, Config};
+
+#[test]
+fn generate_config() {
+    crate::testing::test_generate_config::<Config>()
+}
 
 async fn v3_handle(req: Request<Body>) -> hyper::Result<Response<Body>> {
     info!(

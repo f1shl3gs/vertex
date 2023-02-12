@@ -121,3 +121,13 @@ impl SourceConfig for Config {
         vec![Output::default(DataType::Log)]
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
+    }
+}

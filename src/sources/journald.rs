@@ -607,6 +607,11 @@ mod tests {
     use tokio_stream::StreamExt;
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<JournaldConfig>()
+    }
+
+    #[test]
     fn test_decode_kv() {
         let (k, v) = decode_kv("_SYSTEMD_UNIT=NetworkManager.service".as_bytes()).unwrap();
         assert_eq!(k, "_SYSTEMD_UNIT");

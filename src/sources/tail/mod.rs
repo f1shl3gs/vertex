@@ -448,6 +448,11 @@ mod tests {
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout};
 
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<TailConfig>()
+    }
+
     fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
         TailConfig {
             ignore_older_than: None,
@@ -524,11 +529,6 @@ mod tests {
 
     async fn sleep_500_millis() {
         tokio::time::sleep(Duration::from_millis(500)).await
-    }
-
-    #[test]
-    fn generate_config() {
-        crate::testing::test_generate_config::<TailConfig>()
     }
 
     #[tokio::test]

@@ -2,6 +2,7 @@ use std::collections::{BTreeMap, HashMap};
 
 use bytes::Buf;
 use configurable::Configurable;
+use framework::config::default_true;
 use framework::http::HttpClient;
 use http::StatusCode;
 use hyper::Body;
@@ -93,11 +94,13 @@ pub struct QueryOptions {
 
     /// AllowStale allows any Consul server (non-leader) to service
     /// a read. This allows for lower latency and higher throughput
+    #[serde(default = "default_true")]
     pub allow_stale: bool,
 
     /// RequireConsistent forces the read to be fully consistent.
     /// This is more expensive but prevents ever performing a stale
     /// read.
+    #[serde(default)]
     pub require_consistent: bool,
 
     /// UseCache requests that the agent cache results locally. See

@@ -43,6 +43,9 @@ pub struct UdpSinkConfig {
     #[configurable(required)]
     address: String,
 
+    /// The size of the socket's send buffer.
+    ///
+    /// If set, the value of the setting is passed via the `SO_SNDBUF` option.
     send_buffer_bytes: Option<usize>,
 }
 

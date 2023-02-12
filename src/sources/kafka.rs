@@ -535,6 +535,11 @@ async fn parse_stream<'a>(
 mod tests {
     use super::*;
 
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<KafkaSourceConfig>()
+    }
+
     const BOOTSTRAP_SERVER: &str = "localhost:9091";
 
     pub(super) fn make_config(

@@ -53,3 +53,13 @@ impl StreamSink for BlackholeSink {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<BlackholeConfig>()
+    }
+}

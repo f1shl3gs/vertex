@@ -15,7 +15,7 @@ use testify::random::{random_maps, random_string};
 use testify::send_lines;
 use testify::wait::wait_for_tcp;
 use vertex::sinks::socket;
-use vertex::sinks::socket::SocketSinkConfig;
+use vertex::sinks::socket::Config;
 use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
 
 use crate::util::trace_init;
@@ -163,8 +163,8 @@ fn random_structured_data(
         .collect()
 }
 
-fn tcp_json_sink(address: String) -> SocketSinkConfig {
-    SocketSinkConfig::new(
+fn tcp_json_sink(address: String) -> Config {
+    Config::new(
         socket::Mode::Tcp(TcpSinkConfig::from_address(address)),
         EncodingConfigWithFraming::new(
             Some(FramingConfig::NewlineDelimited),
