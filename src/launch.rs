@@ -3,21 +3,21 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use argh::FromArgs;
-use exitcode::ExitCode;
-use framework::config::{
+use configurable::component::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
     TransformDescription,
 };
+use exitcode::ExitCode;
 use framework::{config, get_version, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 
-use crate::validate;
 #[cfg(feature = "extensions-healthcheck")]
-use vertex::extensions::healthcheck;
+use crate::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
-use vertex::extensions::heartbeat;
+use crate::extensions::heartbeat;
+use crate::validate;
 
 const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
 
