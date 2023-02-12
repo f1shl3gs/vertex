@@ -13,11 +13,11 @@ use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
 
-use crate::validate;
 #[cfg(feature = "extensions-healthcheck")]
 use crate::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
 use crate::extensions::heartbeat;
+use crate::validate;
 
 const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
 
