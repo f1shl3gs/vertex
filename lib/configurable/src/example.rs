@@ -130,6 +130,17 @@ impl Visitor {
             return;
         }
 
+        if let Some(one_of) = is_one_of(obj) {
+            // always choose the first one
+            if let Schema::Object(first) = one_of.first().expect("oneOf should not be empty") {
+                self.visit_obj(first);
+            } else {
+                panic!("expect object schema")
+            }
+
+            return;
+        }
+
         let obj = self.extract(obj);
 
         if obj.properties.is_empty() {
@@ -340,6 +351,13 @@ impl Visitor {
 fn is_all_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
     match &obj.subschemas {
         Some(sub) => sub.all_of.as_ref(),
+        None => None,
+    }
+}
+
+fn is_one_of(obj: &SchemaObject) -> Option<&Vec<Schema>> {
+    match &obj.subschemas {
+        Some(sub) => sub.one_of.as_ref(),
         None => None,
     }
 }

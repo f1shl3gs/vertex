@@ -17,7 +17,7 @@ use tokio_stream::wrappers::IntervalStream;
 #[configurable_component(source, name = "internal_metrics")]
 #[derive(Debug)]
 #[serde(deny_unknown_fields)]
-struct InternalMetricsConfig {
+struct Config {
     /// Duration between reports
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
@@ -25,7 +25,7 @@ struct InternalMetricsConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_metrics")]
-impl SourceConfig for InternalMetricsConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         Ok(Box::pin(run(self.interval, cx.shutdown, cx.output)))
     }
@@ -110,5 +110,15 @@ impl metrics::Reporter for Reporter {
 
     fn finish_metric(&mut self) {
         self.inflight = None;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<Config>()
     }
 }

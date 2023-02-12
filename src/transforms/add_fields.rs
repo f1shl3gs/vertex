@@ -67,3 +67,13 @@ impl FunctionTransform for AddFields {
         output.push(events)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<AddFieldsConfig>()
+    }
+}

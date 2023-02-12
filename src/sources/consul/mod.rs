@@ -327,6 +327,16 @@ async fn collect_health_state_metric(
     Ok(metrics)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<ConsulSourceConfig>()
+    }
+}
+
 #[cfg(all(test, feature = "integration-tests-consul"))]
 mod integration_tests {
     use super::*;

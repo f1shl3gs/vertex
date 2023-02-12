@@ -436,6 +436,11 @@ mod tests {
     use super::*;
 
     #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<PrometheusExporterConfig>()
+    }
+
+    #[test]
     fn test_metrics_insert() {
         let mut set = BTreeSet::new();
         let m1 = Metric::gauge("foo", "", 0.1);

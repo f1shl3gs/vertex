@@ -206,7 +206,12 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<Str
 
 #[cfg(test)]
 mod tests {
-    use super::parse_version;
+    use super::*;
+
+    #[test]
+    fn generate_config() {
+        crate::testing::test_generate_config::<ZookeeperConfig>()
+    }
 
     #[test]
     fn test_parse_version() {

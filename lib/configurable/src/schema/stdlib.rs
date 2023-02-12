@@ -5,7 +5,7 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use schemars::gen::SchemaGenerator;
-use schemars::schema::{InstanceType, SchemaObject};
+use schemars::schema::{InstanceType, Metadata, SchemaObject};
 use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
@@ -149,6 +149,13 @@ impl Configurable for Duration {
     fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
         Ok(SchemaObject {
             instance_type: Some(InstanceType::String.into()),
+            metadata: Some(
+                Metadata {
+                    examples: vec![Value::String("1m".to_string())],
+                    ..Default::default()
+                }
+                .into(),
+            ),
             ..Default::default()
         })
     }
