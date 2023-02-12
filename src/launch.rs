@@ -15,9 +15,9 @@ use tracing::{error, info, warn};
 
 use crate::validate;
 #[cfg(feature = "extensions-healthcheck")]
-use vertex::extensions::healthcheck;
+use crate::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
-use vertex::extensions::heartbeat;
+use crate::extensions::heartbeat;
 
 const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
 
