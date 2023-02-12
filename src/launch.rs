@@ -3,11 +3,11 @@ use std::path::PathBuf;
 use std::time::Duration;
 
 use argh::FromArgs;
-use exitcode::ExitCode;
-use framework::config::{
+use configurable::component::{
     ExtensionDescription, ProviderDescription, SinkDescription, SourceDescription,
     TransformDescription,
 };
+use exitcode::ExitCode;
 use framework::{config, get_version, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;

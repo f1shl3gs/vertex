@@ -8,28 +8,38 @@ use serde::{Deserialize, Serialize};
 use super::global::default_data_dir;
 use super::provider::ProviderConfig;
 use super::validation;
-use super::{
-    ComponentKey, Config, ExtensionConfig, GlobalOptions, HealthcheckOptions, OutputId, SinkOuter,
-    SourceOuter, TransformOuter,
-};
-use super::{SinkConfig, SourceConfig};
+use super::{ComponentKey, Config, GlobalOptions, HealthcheckOptions, OutputId};
+use crate::config::extension::ExtensionConfig;
 use crate::config::graph::Graph;
-use crate::config::TransformConfig;
+use crate::config::sink::SinkOuter;
+use crate::config::source::SourceOuter;
+use crate::config::transform::TransformOuter;
+use crate::config::{SinkConfig, SourceConfig, TransformConfig};
 
+/// A complete Vertex configuration.
 #[derive(Debug, Default, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct Builder {
     #[serde(default)]
     pub global: GlobalOptions,
+
+    /// All configured sources.
     #[serde(default)]
     pub sources: IndexMap<ComponentKey, SourceOuter>,
+
+    /// All configured transforms.
     #[serde(default)]
     pub transforms: IndexMap<ComponentKey, TransformOuter<String>>,
+
+    /// All configured sinks
     #[serde(default)]
     pub sinks: IndexMap<ComponentKey, SinkOuter<String>>,
+
+    /// All configured extensions
     #[serde(default)]
     pub extensions: IndexMap<ComponentKey, Box<dyn ExtensionConfig>>,
 
+    /// Configured provider.
     pub provider: Option<Box<dyn ProviderConfig>>,
 
     #[serde(default, rename = "health_checks")]

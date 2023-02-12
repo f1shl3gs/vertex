@@ -2,7 +2,9 @@ use std::collections::{HashMap, HashSet, VecDeque};
 
 use indexmap::{set::IndexSet, IndexMap};
 
-use super::{ComponentKey, DataType, Output, OutputId, SinkOuter, SourceOuter, TransformOuter};
+use super::{
+    sink::SinkOuter, ComponentKey, DataType, Output, OutputId, SourceOuter, TransformOuter,
+};
 
 #[derive(Debug, Clone)]
 pub enum Node {
