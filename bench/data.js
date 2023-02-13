@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676320904977,
+  "lastUpdate": 1676321797315,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12529,6 +12529,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1163.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
+          "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
+          "timestamp": "2023-02-14T04:36:32+08:00",
+          "tree_id": "414c67f09a057395a8e5810bc6a6f10258717080",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c96c5d3ababc0a04783211a5d6c94e2122b77861"
+        },
+        "date": 1676321788391,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25371000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1039700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.51,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 54.631,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 365.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1006.5,
             "unit": "ns/op"
           }
         ]
