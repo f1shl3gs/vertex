@@ -419,7 +419,7 @@ dependencies = [
  "thiserror",
  "tokio",
  "tokio-test",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tracing",
  "tracing-fluent-assertions",
  "tracing-subscriber",
@@ -624,7 +624,7 @@ dependencies = [
  "smallvec",
  "syslog_loose",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tracing",
 ]
 
@@ -1288,7 +1288,7 @@ dependencies = [
  "tokio-openssl",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tower",
  "tower-test",
  "tracing",
@@ -2032,7 +2032,7 @@ dependencies = [
  "serde_yaml 0.8.26",
  "thiserror",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tower",
  "tower-http",
  "tracing",
@@ -2075,7 +2075,7 @@ dependencies = [
  "smallvec",
  "thiserror",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tracing",
 ]
 
@@ -2368,7 +2368,7 @@ dependencies = [
  "serde_regex",
  "serde_yaml 0.9.17",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
 ]
 
 [[package]]
@@ -4115,7 +4115,7 @@ dependencies = [
  "hyper",
  "rand 0.8.5",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
 ]
 
 [[package]]
@@ -4315,7 +4315,7 @@ dependencies = [
  "futures-core",
  "pin-project-lite",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
 ]
 
 [[package]]
@@ -4347,9 +4347,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.5"
+version = "0.7.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e267c18a719545b481171952a79f8c25c80361463ba44bc7fa9eba7c742ef4f"
+checksum = "5427d89453009325de0d8f342c9490009f76e999cb7672d77e46267448f7e6b2"
 dependencies = [
  "bytes",
  "futures-core",
@@ -4393,7 +4393,7 @@ dependencies = [
  "prost-derive",
  "tokio",
  "tokio-stream",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tower",
  "tower-layer",
  "tower-service",
@@ -4428,7 +4428,7 @@ dependencies = [
  "rand 0.8.5",
  "slab",
  "tokio",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tower-layer",
  "tower-service",
  "tracing",
@@ -4866,7 +4866,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-test",
- "tokio-util 0.7.5",
+ "tokio-util 0.7.7",
  "tonic",
  "tower",
  "tower-test",
