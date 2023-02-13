@@ -2,6 +2,7 @@
 name = "virt"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [build-dependencies]
 xdrgen = { git="https://github.com/f1shl3gs/rust-xdr", rev = "9775f74" }

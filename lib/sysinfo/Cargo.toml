@@ -2,6 +2,7 @@
 name = "sysinfo"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [target.'cfg(unix)'.dependencies]
 libc = { version = "0.2.139" }
