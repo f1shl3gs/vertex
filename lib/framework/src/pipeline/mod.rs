@@ -410,10 +410,10 @@ impl<T> Stream for ReceiverStream<T> {
 
 #[cfg(test)]
 mod tests {
-    use chrono::{DateTime, Duration, Utc};
-    use rand::{Rng, thread_rng};
-    use event::LogRecord;
     use super::*;
+    use chrono::{DateTime, Duration, Utc};
+    use event::LogRecord;
+    use rand::{thread_rng, Rng};
 
     #[tokio::test]
     async fn emits_lag_time_for_log() {
@@ -421,7 +421,8 @@ mod tests {
             let mut log = LogRecord::from("log message");
             log.insert_field(log_schema::log_schema().timestamp_key(), timestamp);
             log.into()
-        }).await
+        })
+        .await
     }
 
     async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Event) {
@@ -431,9 +432,6 @@ mod tests {
         let _expected = millis as f64 / 1000.0;
 
         let event = make_event(timestamp);
-        sender.send(event)
-            .await
-            .expect("Send should not fail");
-
+        sender.send(event).await.expect("Send should not fail");
     }
 }
