@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676322144215,
+  "lastUpdate": 1676325525959,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9960,6 +9960,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1304,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56295.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "217a7ba72c35ab846c9fef5897f781ff7e5e5b3f",
+          "message": "Merge pull request #765 from f1shl3gs/bump_up_cross_to_0.2.5\n\nbump up cross to 0.2.5",
+          "timestamp": "2023-02-14T05:34:04+08:00",
+          "tree_id": "2af0a00dc60468c60664e0012bf1a704f8fdbc92",
+          "url": "https://github.com/f1shl3gs/vertex/commit/217a7ba72c35ab846c9fef5897f781ff7e5e5b3f"
+        },
+        "date": 1676325515692,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1243,
             "unit": "s"
           },
           {
