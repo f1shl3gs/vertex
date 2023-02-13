@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676320895767,
+  "lastUpdate": 1676320904977,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1304,6 +1304,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 717140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
+          "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
+          "timestamp": "2023-02-14T04:36:32+08:00",
+          "tree_id": "414c67f09a057395a8e5810bc6a6f10258717080",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c96c5d3ababc0a04783211a5d6c94e2122b77861"
+        },
+        "date": 1676320894071,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 939040,
             "unit": "ns/op"
           }
         ]
