@@ -248,7 +248,7 @@ transforms-metricalize = ["async-stream"]
 transforms-route = ["condition"]
 transforms-sample = ["seahash"]
 transforms-substr = []
-transforms-throttle = ["governor"]
+transforms-throttle = []
 
 # sinks
 sinks = [
@@ -426,7 +426,6 @@ evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.25", optional = true }
 glob = { version = "0.3.1" }
-governor = { version = "0.5.1", default-features = false, optional = true, features = ["dashmap", "jitter", "std"] }
 indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
 inventory = { version = "0.3.3" }
 k8s-openapi = { version = "0.17.0", default-features = false, optional = true, features = ["api", "v1_20"] }

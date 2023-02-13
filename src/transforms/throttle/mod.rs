@@ -1,3 +1,6 @@
+mod gcra;
+mod rate_limiter;
+
 use std::num::NonZeroU32;
 use std::pin::Pin;
 use std::time::Duration;
@@ -10,8 +13,10 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
-use governor::{clock, Quota, RateLimiter};
-use thiserror::Error;
+
+use crate::transforms::throttle::rate_limiter::RateLimiter;
+use gcra::Quota;
+use rate_limiter::KeyedRateLimiter;
 
 const fn default_window() -> Duration {
     Duration::from_secs(1)
@@ -29,7 +34,7 @@ struct ThrottleConfig {
 
     /// The number of events allowed for a given bucket per configured window.
     /// Each unique key will have its own threshold.
-    threshold: u32,
+    threshold: NonZeroU32,
 
     /// The time frame in which the configured "threshold" is applied.
     #[serde(default = "default_window", with = "humanize::duration::serde")]
@@ -40,12 +45,7 @@ struct ThrottleConfig {
 #[typetag::serde(name = "throttle")]
 impl TransformConfig for ThrottleConfig {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
-        let throttle = Throttle::new(
-            self.threshold,
-            self.window,
-            clock::MonotonicClock,
-            self.key_field.clone(),
-        )?;
+        let throttle = Throttle::new(self.threshold, self.window, self.key_field.clone());
 
         Ok(Transform::event_task(throttle))
     }
@@ -59,63 +59,41 @@ impl TransformConfig for ThrottleConfig {
     }
 }
 
-#[derive(Debug, Error)]
-enum BuildError {
-    #[error("`rate` must e non-zero")]
-    NonZero,
-}
-
 #[derive(Clone)]
-struct Throttle<C: clock::Clock<Instant = I>, I: clock::Reference> {
+struct Throttle {
     quota: Quota,
     flush_keys_interval: Duration,
     key_field: Option<Template>,
-    clock: C,
 }
 
-impl<C, I> Throttle<C, I>
-where
-    C: clock::Clock<Instant = I>,
-    I: clock::Reference,
-{
-    pub fn new(
-        threshold: u32,
-        window: Duration,
-        clock: C,
-        key_field: Option<Template>,
-    ) -> crate::Result<Self> {
+impl Throttle {
+    pub fn new(threshold: NonZeroU32, window: Duration, key_field: Option<Template>) -> Self {
         let flush_keys_interval = window;
-        let threshold = NonZeroU32::new(threshold).ok_or(BuildError::NonZero)?;
+        let quota = Quota::new(threshold.get(), window);
 
-        let quota = Quota::with_period(Duration::from_secs_f64(
-            window.as_secs_f64() / threshold.get() as f64,
-        ))
-        .ok_or(BuildError::NonZero)?
-        .allow_burst(threshold);
-
-        let throttle = Throttle {
+        Throttle {
             quota,
-            clock,
             flush_keys_interval,
             key_field,
-        };
-
-        Ok(throttle)
+        }
     }
 }
 
-impl<C, I> TaskTransform for Throttle<C, I>
-where
-    C: clock::Clock<Instant = I> + Send + 'static,
-    I: clock::Reference + Send + 'static,
-{
+impl TaskTransform for Throttle {
     fn transform(
         self: Box<Self>,
         mut input_rx: Pin<Box<dyn Stream<Item = Events> + Send>>,
     ) -> Pin<Box<dyn Stream<Item = Events> + Send>> {
         let mut flush_keys = tokio::time::interval(self.flush_keys_interval);
         let mut flush_stream = tokio::time::interval(Duration::from_secs(1));
-        let limiter = RateLimiter::dashmap_with_clock(self.quota, &self.clock);
+        let mut limiter = RateLimiter::new(self.quota);
+        let mut keyed_limiter = KeyedRateLimiter::new(self.quota);
+
+        // TODO
+        // let discarded = metrics::register_counter(
+        //     "events_discarded_total",
+        //     "The total number of discard events",
+        // );
 
         Box::pin(stream! {
             loop {
@@ -139,6 +117,7 @@ where
                                                     drop_event = false
                                                 );
                                                 // TODO: metrics
+                                                //
                                                 // emit!(&TemplateRenderingFailed {
                                                 //     err,
                                                 //     field: Some("key_field"),
@@ -147,21 +126,26 @@ where
                                             }).ok()
                                     });
 
-                                    match limiter.check_key(&key) {
-                                        Ok(()) => output.push_one(event),
-                                        _ => {
-                                            debug!(message = "Rate limit exceeded", ?key);
+                                    let allow = match key.as_ref() {
+                                        Some(key) => keyed_limiter.check(key),
+                                        None => limiter.check()
+                                    };
 
-                                            // TODO: metrics
-                                            //
-                                            // counter!("events_discarded_total", 1, "key" => self.key.to_owned())
-                                            //
-                                            // if let Some(key) = key {
-                                            //     emit!(&ThrottleEventDiscarded{ key });
-                                            // } else {
-                                            //     emit!(&ThrottleEventDiscarded { key: "None".to_string() })
-                                            // }
-                                        }
+                                    if allow {
+                                        output.push_one(event);
+                                    } else {
+                                        debug!(message = "Rate limit exceeded",
+                                            key = &key,
+                                            internal_log_rate_secs = 10,
+                                        );
+
+                                        // TODO: metric
+                                        //
+                                        // let key = match key.as_ref() {
+                                        //     Some(key) => key,
+                                        //     None => "none"
+                                        // };
+                                        // discarded.recorder(&[("key", key)]);
                                     }
                                 }
 
@@ -171,7 +155,7 @@ where
                     }
 
                     _ = flush_keys.tick() => {
-                        limiter.retain_recent();
+                        keyed_limiter.retain_recent();
                         false
                     }
 
@@ -206,7 +190,6 @@ mod tests {
 
     #[tokio::test]
     async fn throttle_events() {
-        let clock = clock::FakeRelativeClock::default();
         let config = serde_yaml::from_str::<ThrottleConfig>(
             r#"
 threshold: 2
@@ -215,15 +198,11 @@ window: 5s
         )
         .unwrap();
 
-        let transform = Transform::event_task(
-            Throttle::new(
-                config.threshold,
-                config.window,
-                clock.clone(),
-                config.key_field,
-            )
-            .unwrap(),
-        );
+        let transform = Transform::event_task(Throttle::new(
+            config.threshold,
+            config.window,
+            config.key_field,
+        ));
         let throttle = transform.into_task();
 
         let (mut tx, rx) = futures::channel::mpsc::channel(10);
@@ -246,14 +225,14 @@ window: 5s
         }
         assert_eq!(2, count);
 
-        clock.advance(Duration::from_secs(2));
+        std::thread::sleep(Duration::from_secs(2));
 
         tx.send(Event::from("")).await.unwrap();
 
         // We should be back to pending, having the second event dropped.
         assert_eq!(Poll::Pending, futures::poll!(out_stream.next()));
 
-        clock.advance(Duration::from_secs(3));
+        std::thread::sleep(Duration::from_secs(3));
 
         tx.send(Event::from("")).await.unwrap();
 
@@ -275,7 +254,6 @@ window: 5s
 
     #[tokio::test]
     async fn throttle_buckets() {
-        let clock = clock::FakeRelativeClock::default();
         let config = serde_yaml::from_str::<ThrottleConfig>(
             r#"
 threshold: 1
@@ -286,10 +264,11 @@ key_field: "{{ bucket }}"
         .unwrap();
 
         assert!(config.key_field.is_some());
-        let throttle = Throttle::new(config.threshold, config.window, clock, config.key_field)
-            .map(Transform::event_task)
-            .unwrap();
-
+        let throttle = Transform::event_task(Throttle::new(
+            config.threshold,
+            config.window,
+            config.key_field,
+        ));
         let throttle = throttle.into_task();
 
         let (mut tx, rx) = futures::channel::mpsc::channel(10);
