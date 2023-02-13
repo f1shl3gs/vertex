@@ -407,3 +407,31 @@ impl<T> Stream for ReceiverStream<T> {
         self.inner.size_hint()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::{DateTime, Duration, Utc};
+    use event::LogRecord;
+    use rand::{thread_rng, Rng};
+
+    #[tokio::test]
+    async fn emits_lag_time_for_log() {
+        emit_and_test(|timestamp| {
+            let mut log = LogRecord::from("log message");
+            log.insert_field(log_schema::log_schema().timestamp_key(), timestamp);
+            log.into()
+        })
+        .await
+    }
+
+    async fn emit_and_test(make_event: impl FnOnce(DateTime<Utc>) -> Event) {
+        let (mut sender, _stream) = Pipeline::new_test();
+        let millis = thread_rng().gen_range(10..10000);
+        let timestamp = Utc::now() - Duration::milliseconds(millis);
+        let _expected = millis as f64 / 1000.0;
+
+        let event = make_event(timestamp);
+        sender.send(event).await.expect("Send should not fail");
+    }
+}
