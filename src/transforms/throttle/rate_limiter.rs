@@ -42,11 +42,8 @@ impl KeyedRateLimiter {
         let state = match self.states.get_mut(key) {
             Some(state) => state,
             None => {
-                let state = GcraState::default();
-                self.states.insert(key.to_owned(), state);
-                self.states
-                    .get_mut(key)
-                    .expect("state should be insert already")
+                self.states.entry(key.to_string())
+                    .or_insert_with(GcraState::default)
             }
         };
 
