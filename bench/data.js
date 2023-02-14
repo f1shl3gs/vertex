@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676363684494,
+  "lastUpdate": 1676363694536,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5453,6 +5453,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.681,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5b7b274f75a8239be0e5cb3465c08934b5523d3b",
+          "message": "Merge pull request #766 from f1shl3gs/simplify_keyed_rate_limiter\n\nsimplify insert path",
+          "timestamp": "2023-02-14T16:28:51+08:00",
+          "tree_id": "ad817566dd48db85b81aecaf13a8ce9df7205482",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5b7b274f75a8239be0e5cb3465c08934b5523d3b"
+        },
+        "date": 1676363686487,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.808,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.152,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.654,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.696,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.677,
             "unit": "ns/op"
           }
         ]
