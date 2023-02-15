@@ -6,5 +6,5 @@ publish = false
 
 [dependencies]
 # std::lazy::OnceCell is still unstable, and this dependencies should be removed once std::lazy::OnceCell become stable
-once_cell = { version = "1.17.0" }
+once_cell = { version = "1.17.1" }
 serde = { version = "1.0.152", default-features = false }
