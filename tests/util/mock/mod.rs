@@ -39,7 +39,7 @@ impl MockSourceConfig {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: None,
-            data_type: Some(DataType::Any),
+            data_type: Some(DataType::All),
             data: None,
         }
     }
@@ -48,7 +48,7 @@ impl MockSourceConfig {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: None,
-            data_type: Some(DataType::Any),
+            data_type: Some(DataType::All),
             data: Some(data.into()),
         }
     }
@@ -60,7 +60,7 @@ impl MockSourceConfig {
         Self {
             receiver: Arc::new(Mutex::new(Some(receiver))),
             event_counter: Some(event_counter),
-            data_type: Some(DataType::Any),
+            data_type: Some(DataType::All),
             data: None,
         }
     }
@@ -143,11 +143,11 @@ impl TransformConfig for MockTransformConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 
     fn outputs(&self) -> Vec<Output> {
-        vec![Output::default(DataType::Any)]
+        vec![Output::default(DataType::All)]
     }
 }
 
@@ -274,7 +274,7 @@ impl SinkConfig for MockSinkConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 }
 

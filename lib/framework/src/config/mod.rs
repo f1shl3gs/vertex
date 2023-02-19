@@ -32,7 +32,8 @@ pub use transform::{TransformConfig, TransformContext};
 pub use uri::*;
 pub use validation::warnings;
 
-use std::fmt::Debug;
+use std::fmt::{Debug, Display, Formatter};
+use std::ops::BitOr;
 use std::path::PathBuf;
 
 // IndexMap preserves insertion order, allowing us to output errors in the
@@ -79,13 +80,51 @@ impl Default for HealthcheckOptions {
     }
 }
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, Clone, PartialEq, Copy)]
-pub enum DataType {
-    Any,
-    Log,
-    Metric,
-    Trace,
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct DataType(u32);
+
+impl Display for DataType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        let mut types = vec![];
+
+        if self.contains(DataType::Log) {
+            types.push("Log")
+        }
+        if self.contains(DataType::Metric) {
+            types.push("Metric")
+        }
+        if self.contains(DataType::Trace) {
+            types.push("Trace")
+        }
+
+        f.write_str(&types.join(","))
+    }
+}
+
+impl BitOr for DataType {
+    type Output = DataType;
+
+    fn bitor(self, rhs: Self) -> Self::Output {
+        DataType(self.0.bitor(rhs.0))
+    }
+}
+
+#[allow(non_upper_case_globals)]
+impl DataType {
+    pub const Log: DataType = DataType(0x01);
+    pub const Metric: DataType = DataType(0x02);
+    pub const Trace: DataType = DataType(0x04);
+    pub const All: DataType = DataType(!0);
+
+    #[inline]
+    pub fn contains(&self, other: Self) -> bool {
+        (self.0 & other.0) == other.0
+    }
+
+    #[inline]
+    pub fn intersects(&self, other: Self) -> bool {
+        (self.0 & other.0) != 0 || other.0 == 0
+    }
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -200,6 +239,32 @@ impl Config {
 mod tests {
     use super::*;
     use std::time::Duration;
+
+    #[test]
+    fn data_type_contains() {
+        let all = DataType::All;
+        assert!(all.contains(DataType::Log));
+        assert!(all.contains(DataType::Metric));
+        assert!(all.contains(DataType::Trace));
+
+        let log = DataType::Log;
+        assert!(log.contains(DataType::Log));
+        assert!(!log.contains(DataType::Metric));
+        assert!(!log.contains(DataType::Trace));
+
+        assert!(!log.contains(DataType::All))
+    }
+
+    #[test]
+    fn data_type_intersects() {
+        let log_and_metric = DataType::Log | DataType::Metric;
+        let metric_and_trace = DataType::Metric | DataType::Trace;
+
+        assert!(log_and_metric.intersects(metric_and_trace));
+        assert!(log_and_metric.intersects(DataType::Log));
+        assert!(log_and_metric.intersects(DataType::Metric));
+        assert!(!log_and_metric.intersects(DataType::Trace))
+    }
 
     #[test]
     #[ignore]

@@ -70,7 +70,7 @@ impl TransformConfig for AddTagsConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 
     fn outputs(&self) -> Vec<Output> {

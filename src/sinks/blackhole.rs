@@ -29,7 +29,7 @@ impl SinkConfig for BlackholeConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 }
 
