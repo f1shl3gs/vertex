@@ -182,7 +182,7 @@ impl SinkConfig for TestConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 }
 

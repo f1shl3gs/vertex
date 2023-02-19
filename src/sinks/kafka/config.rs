@@ -218,7 +218,7 @@ impl SinkConfig for KafkaSinkConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 }
 

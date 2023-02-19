@@ -67,7 +67,7 @@ impl SinkConfig for ConsoleSinkConfig {
     }
 
     fn input_type(&self) -> DataType {
-        DataType::Any
+        DataType::All
     }
 }
 
