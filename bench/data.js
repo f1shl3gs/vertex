@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676827271243,
+  "lastUpdate": 1676827283132,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1420,6 +1420,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 717600,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d3b9c306fa22a9eed9d1ffe8681370e111a0c988",
+          "message": "Merge pull request #770 from f1shl3gs/impl_data_type_with_bitwise_operations\n\nimpl DataType with bitwise operations",
+          "timestamp": "2023-02-20T01:15:04+08:00",
+          "tree_id": "1d4149b4b69650dfdfc11b05bc6bb09e1ee011bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d3b9c306fa22a9eed9d1ffe8681370e111a0c988"
+        },
+        "date": 1676827274257,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 714210,
             "unit": "ns/op"
           }
         ]
