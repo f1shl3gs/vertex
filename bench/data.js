@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676981455458,
+  "lastUpdate": 1676981524632,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12330,6 +12330,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56297.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c7447d4a9f4c5762df04eb8cb2f68d053bc57400",
+          "message": "Merge pull request #777 from f1shl3gs/remove_num_enum_fro_prometheus\n\nremove num_enum from lib/prometheus",
+          "timestamp": "2023-02-21T19:50:18+08:00",
+          "tree_id": "f309f1b628f3332249e417ed9650fdee15094023",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c7447d4a9f4c5762df04eb8cb2f68d053bc57400"
+        },
+        "date": 1676981515654,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1108,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56299.5,
             "unit": "KiB"
           }
         ]
