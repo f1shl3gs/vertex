@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676978421677,
+  "lastUpdate": 1676978432320,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1594,6 +1594,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 713640,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9835243453626ed66d7dfb0b2a4afc140b72ab79",
+          "message": "Merge pull request #771 from f1shl3gs/dependabot/cargo/num_enum-0.5.10\n\nchore(deps): bump num_enum from 0.5.9 to 0.5.10",
+          "timestamp": "2023-02-21T19:12:01+08:00",
+          "tree_id": "a1c1893d468e01cac36891e8ad47e5c0879777b4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9835243453626ed66d7dfb0b2a4afc140b72ab79"
+        },
+        "date": 1676978424476,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719410,
             "unit": "ns/op"
           }
         ]
