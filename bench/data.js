@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676979100242,
+  "lastUpdate": 1676979136280,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11945,6 +11945,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56294.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d594cd686d2b7bd51ead121b3c7d3accdfee7a6b",
+          "message": "Merge pull request #774 from f1shl3gs/dependabot/cargo/async-stream-0.3.4\n\nchore(deps): bump async-stream from 0.3.3 to 0.3.4",
+          "timestamp": "2023-02-21T19:11:34+08:00",
+          "tree_id": "ec58820c703f0c03900e5b023b10fc3d9599707b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d594cd686d2b7bd51ead121b3c7d3accdfee7a6b"
+        },
+        "date": 1676979127901,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1047,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56297.6,
             "unit": "KiB"
           }
         ]
