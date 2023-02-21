@@ -48,7 +48,7 @@ glob = { version = "0.3.1" }
 headers = { version = "0.3.8" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "88909181cae00e859a646162cb2521b40006b526" }
 hostname = { version = "0.3.1" }
-http = { version = "0.2.8", default-features = false }
+http = { version = "0.2.9", default-features = false }
 hyper = { version = "0.14.24", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-openssl = { version = "0.9.2", default-features = false }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
