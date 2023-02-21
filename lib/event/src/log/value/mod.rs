@@ -29,10 +29,10 @@ impl Value {
         match self {
             Value::Timestamp(ts) => timestamp_to_string(ts),
             Value::Bytes(bytes) => String::from_utf8_lossy(bytes).into_owned(),
-            Value::Float(f) => format!("{}", f),
-            Value::Int64(i) => format!("{}", i),
+            Value::Float(f) => format!("{f}"),
+            Value::Int64(i) => format!("{i}"),
             Value::Array(arr) => serde_json::to_string(arr).expect("Cannot serialize array"),
-            Value::Boolean(b) => format!("{}", b),
+            Value::Boolean(b) => format!("{b}"),
             Value::Object(m) => serde_json::to_string(m).expect("Cannot serialize map"),
             Value::Null => "<null>".to_string(),
         }
@@ -58,12 +58,12 @@ impl Value {
     pub fn as_bytes(&self) -> Bytes {
         match self {
             Value::Bytes(b) => b.clone(),
-            Value::Float(f) => Bytes::from(format!("{}", f)),
-            Value::Int64(i) => Bytes::from(format!("{}", i)),
+            Value::Float(f) => Bytes::from(format!("{f}")),
+            Value::Int64(i) => Bytes::from(format!("{i}")),
             Value::Array(arr) => {
                 Bytes::from(serde_json::to_vec(arr).expect("Cannot serialize array"))
             }
-            Value::Boolean(b) => Bytes::from(format!("{}", b)),
+            Value::Boolean(b) => Bytes::from(format!("{b}")),
             Value::Object(m) => Bytes::from(serde_json::to_vec(m).expect("Cannot serialize map")),
             Value::Timestamp(ts) => Bytes::from(timestamp_to_string(ts)),
             Value::Null => Bytes::from("<null>"),
@@ -129,6 +129,7 @@ impl Value {
     }
 
     /// Returns a reference to a field value specified by a path iter.
+    #[allow(clippy::needless_pass_by_value)]
     pub fn insert<'a>(&mut self, path: impl Path<'a>, value: impl Into<Self>) -> Option<Self> {
         let value = value.into();
         let path_iter = path.segment_iter().peekable();
@@ -140,6 +141,7 @@ impl Value {
     ///
     /// A special case worth mentioning: if there is a nested array and an item is removed
     /// from the middle of this array, then it is just replaced by `Value::Null`
+    #[allow(clippy::needless_pass_by_value)]
     pub fn remove<'a>(&mut self, path: impl Path<'a>, prune: bool) -> Option<Self> {
         crud::remove(self, &(), path.segment_iter(), prune).map(|(prev, _is_empty)| prev)
     }

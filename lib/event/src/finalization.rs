@@ -1,21 +1,17 @@
 use std::future::Future;
-use std::iter;
 use std::mem;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::Poll;
 
-use atomig::{Atom, Atomic, Ordering};
+use crossbeam_utils::atomic::AtomicCell;
 use futures::future::FutureExt;
 use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
 use tokio::sync::oneshot;
 use tracing::error;
 
-type ImmutVec<T> = Box<[T]>;
-
 /// The status of an individual event
-#[derive(Atom, Copy, Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u8)]
 pub enum EventStatus {
     /// All copies of this event were dropped without being finalized
@@ -40,6 +36,7 @@ impl EventStatus {
     ///
     /// Passing a new status of `Dropped` is a programming error and
     /// will panic in debug/test builds.
+    #[must_use]
     pub fn update(self, status: Self) -> Self {
         match (self, status) {
             // `Recorded` always overwrites existing status and is never updated
@@ -84,7 +81,7 @@ impl<T: Finalizable> Finalizable for Vec<T> {
 /// Wrapper type for an array of event finalizers. This is the primary public
 /// interface to event finalization metadata.
 #[derive(Clone, Debug, Default)]
-pub struct EventFinalizers(ImmutVec<Arc<EventFinalizer>>);
+pub struct EventFinalizers(Vec<Arc<EventFinalizer>>);
 
 impl Eq for EventFinalizers {}
 
@@ -114,24 +111,33 @@ impl ByteSizeOf for EventFinalizers {
 }
 
 impl EventFinalizers {
+    /// Default empty finalizer set for use in `const` contexts.
+    pub const DEFAULT: Self = Self(Vec::new());
+
     /// Create a new array of event finalizer with the single event.
     pub fn new(finalizer: EventFinalizer) -> Self {
-        Self(vec![Arc::new(finalizer)].into())
+        Self(vec![Arc::new(finalizer)])
     }
 
     /// Add a single finalizer to this array.
     pub fn add(&mut self, finalizer: EventFinalizer) {
-        self.add_generic(iter::once(Arc::new(finalizer)));
+        self.0.push(Arc::new(finalizer));
     }
 
-    /// Merge the given list of finalizers into this array
-    pub fn merge(&mut self, other: Self) {
-        // Box<[T]> is missing IntoIterator; this just adds a `capacity` value
-        let other: Vec<_> = other.0.into();
-        self.add_generic(other.into_iter());
+    /// Returns the number of event finalizers in the collection.
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.0.len()
     }
 
-    fn add_generic<I>(&mut self, items: I)
+    /// Returns `true` if the collection contains no event finalizers.
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    /*
+        fn add_generic<I>(&mut self, items: I)
     where
         I: ExactSizeIterator<Item = Arc<EventFinalizer>>,
     {
@@ -156,10 +162,21 @@ impl EventFinalizers {
             self.0 = result.into();
         }
     }
+    */
+
+    /// Merges the event finalizers from `other` into the collection.
+    pub fn merge(&mut self, other: Self) {
+        if self.0.is_empty() {
+            self.0 = other.0;
+        } else {
+            self.0.extend(other.0.into_iter());
+            self.0.dedup_by(|a, b| Arc::ptr_eq(a, b));
+        }
+    }
 
     /// Update the status of all finalizers in this set.
     pub fn update_status(&self, status: EventStatus) {
-        for finalizer in self.0.iter() {
+        for finalizer in &self.0 {
             finalizer.update_status(status);
         }
     }
@@ -169,18 +186,13 @@ impl EventFinalizers {
     /// the source batch
     pub fn update_sources(&mut self) {
         let finalizers = mem::take(&mut self.0);
-        for finalizer in finalizers.iter() {
+        for finalizer in &finalizers {
             finalizer.update_batch();
         }
     }
-
-    #[cfg(test)]
-    fn count_finalizers(&self) -> usize {
-        self.0.len()
-    }
 }
 
-#[derive(Atom, Copy, Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 #[repr(u8)]
 pub enum BatchStatus {
     /// All events in the batch were accepted (the default)
@@ -197,7 +209,7 @@ impl BatchStatus {
     fn update(self, status: EventStatus) -> Self {
         match (self, status) {
             // `Dropped` and `Delivered` do not change the status.
-            (_, EventStatus::Dropped) | (_, EventStatus::Delivered) => self,
+            (_, EventStatus::Dropped | EventStatus::Delivered) => self,
             // `Failed` overrides `Errored` and `Delivered`
             (Self::Failed, _) | (_, EventStatus::Rejected) => Self::Failed,
             // `Errored` overrides `Delivered`
@@ -211,7 +223,7 @@ impl BatchStatus {
 /// The non-shared data underlying the shared `BatchNotifier`
 #[derive(Debug)]
 struct OwnedBatchNotifier {
-    status: Atomic<BatchStatus>,
+    status: AtomicCell<BatchStatus>,
     notifier: Option<oneshot::Sender<BatchStatus>>,
 }
 
@@ -219,7 +231,7 @@ impl OwnedBatchNotifier {
     /// Sends the status of the notifier back to the source.
     fn send_status(&mut self) {
         if let Some(notifier) = self.notifier.take() {
-            let status = self.status.load(Ordering::Relaxed);
+            let status = self.status.load();
             // Ignore the error case, as it will happen during normal
             // source shutdown and we can't detect that here.
             let _ = notifier.send(status);
@@ -246,7 +258,7 @@ impl BatchNotifier {
     pub fn new_with_receiver() -> (Self, BatchStatusReceiver) {
         let (sender, receiver) = oneshot::channel();
         let notifier = OwnedBatchNotifier {
-            status: Atomic::new(BatchStatus::Delivered),
+            status: AtomicCell::new(BatchStatus::Delivered),
             notifier: Some(sender),
         };
 
@@ -287,9 +299,7 @@ impl BatchNotifier {
         if status != EventStatus::Delivered && status != EventStatus::Dropped {
             self.0
                 .status
-                .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |old_status| {
-                    Some(old_status.update(status))
-                })
+                .fetch_update(|old_status| Some(old_status.update(status)))
                 .unwrap_or_else(|_| unreachable!());
         }
     }
@@ -300,7 +310,7 @@ impl BatchNotifier {
 /// that when the event is dropped.
 #[derive(Debug)]
 pub struct EventFinalizer {
-    status: Atomic<EventStatus>,
+    status: AtomicCell<EventStatus>,
     batch: BatchNotifier,
 }
 
@@ -313,16 +323,14 @@ impl ByteSizeOf for EventFinalizer {
 impl EventFinalizer {
     /// Create a new event in a batch
     pub fn new(batch: BatchNotifier) -> Self {
-        let status = Atomic::new(EventStatus::Dropped);
+        let status = AtomicCell::new(EventStatus::Dropped);
         Self { status, batch }
     }
 
     /// Update this finalizer's status in place with the given `EventStatus`
     pub fn update_status(&self, status: EventStatus) {
         self.status
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |old_status| {
-                Some(old_status.update(status))
-            })
+            .fetch_update(|old_status| Some(old_status.update(status)))
             .unwrap_or_else(|_| unreachable!());
     }
 
@@ -331,9 +339,7 @@ impl EventFinalizer {
     pub fn update_batch(&self) {
         let status = self
             .status
-            .fetch_update(Ordering::Relaxed, Ordering::Relaxed, |_| {
-                Some(EventStatus::Recorded)
-            })
+            .fetch_update(|_| Some(EventStatus::Recorded))
             .unwrap_or_else(|_| unreachable!());
 
         self.batch.update_status(status);
@@ -389,14 +395,14 @@ mod tests {
     fn make_finalizer() -> (EventFinalizers, BatchStatusReceiver) {
         let (batch, receiver) = BatchNotifier::new_with_receiver();
         let finalizers = EventFinalizers::new(EventFinalizer::new(batch));
-        assert_eq!(finalizers.count_finalizers(), 1);
+        assert_eq!(finalizers.len(), 1);
         (finalizers, receiver)
     }
 
     #[test]
     fn defaults() {
         let finalizer = EventFinalizers::default();
-        assert_eq!(finalizer.count_finalizers(), 0);
+        assert_eq!(finalizer.len(), 0);
     }
 
     #[test]
@@ -404,7 +410,7 @@ mod tests {
         let (fin, mut receiver) = make_finalizer();
         assert_eq!(receiver.try_recv(), Err(Empty));
         drop(fin);
-        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered))
+        assert_eq!(receiver.try_recv(), Ok(BatchStatus::Delivered));
     }
 
     #[test]
@@ -413,7 +419,7 @@ mod tests {
         fin.update_status(EventStatus::Rejected);
         assert_eq!(receiver.try_recv(), Err(Empty));
         fin.update_sources();
-        assert_eq!(fin.count_finalizers(), 0);
+        assert_eq!(fin.len(), 0);
         assert_eq!(receiver.try_recv(), Ok(BatchStatus::Failed));
     }
 
@@ -422,8 +428,8 @@ mod tests {
         let (fin1, mut receiver) = make_finalizer();
         let fin2 = fin1.clone();
 
-        assert_eq!(fin1.count_finalizers(), 1);
-        assert_eq!(fin2.count_finalizers(), 1);
+        assert_eq!(fin1.len(), 1);
+        assert_eq!(fin2.len(), 1);
         assert_eq!(fin1, fin2);
 
         assert_eq!(receiver.try_recv(), Err(Empty));
@@ -439,11 +445,11 @@ mod tests {
         let (fin1, mut receiver1) = make_finalizer();
         let (fin2, mut receiver2) = make_finalizer();
 
-        assert_eq!(fin0.count_finalizers(), 0);
+        assert_eq!(fin0.len(), 0);
         fin0.merge(fin1);
-        assert_eq!(fin0.count_finalizers(), 1);
+        assert_eq!(fin0.len(), 1);
         fin0.merge(fin2);
-        assert_eq!(fin0.count_finalizers(), 2);
+        assert_eq!(fin0.len(), 2);
 
         assert_eq!(receiver1.try_recv(), Err(Empty));
         assert_eq!(receiver2.try_recv(), Err(Empty));
@@ -458,7 +464,7 @@ mod tests {
         let fin2 = fin1.clone();
 
         fin1.merge(fin2);
-        assert_eq!(fin1.count_finalizers(), 1);
+        assert_eq!(fin1.len(), 1);
 
         assert_eq!(receiver.try_recv(), Err(Empty));
         drop(fin1);
@@ -474,10 +480,10 @@ mod tests {
         let event4 = event1.clone();
 
         drop(batch);
-        assert_eq!(event1.count_finalizers(), 1);
-        assert_eq!(event2.count_finalizers(), 1);
-        assert_eq!(event3.count_finalizers(), 1);
-        assert_eq!(event4.count_finalizers(), 1);
+        assert_eq!(event1.len(), 1);
+        assert_eq!(event2.len(), 1);
+        assert_eq!(event3.len(), 1);
+        assert_eq!(event4.len(), 1);
         assert_ne!(event1, event2);
         assert_ne!(event1, event3);
         assert_eq!(event1, event4);
@@ -487,7 +493,7 @@ mod tests {
 
         // and merge another
         event2.merge(event3);
-        assert_eq!(event2.count_finalizers(), 2);
+        assert_eq!(event2.len(), 2);
         assert_eq!(receiver.try_recv(), Err(Empty));
         drop(event1);
         assert_eq!(receiver.try_recv(), Err(Empty));

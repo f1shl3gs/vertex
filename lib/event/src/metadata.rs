@@ -5,6 +5,7 @@ use crate::finalization::{EventFinalizers, EventStatus};
 use crate::{BatchNotifier, EventFinalizer};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
+#[allow(clippy::module_name_repetitions)]
 #[derive(Clone, Debug, Default, Deserialize, PartialOrd, PartialEq, Serialize)]
 pub struct EventMetadata {
     #[serde(default, skip)]
