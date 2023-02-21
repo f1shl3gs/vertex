@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676986214660,
+  "lastUpdate": 1676986218126,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6740,6 +6740,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.268,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1ef912d909562b800bb7687f36e84b79f6c1140b",
+          "message": "Merge pull request #778 from f1shl3gs/remove_atomig\n\nremove atomig & fix some pedantic warnings",
+          "timestamp": "2023-02-21T21:25:35+08:00",
+          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1ef912d909562b800bb7687f36e84b79f6c1140b"
+        },
+        "date": 1676986209765,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.545,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.472,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.698,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.649,
             "unit": "ns/op"
           }
         ]
