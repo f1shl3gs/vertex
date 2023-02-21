@@ -3042,7 +3042,6 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "indexmap",
- "num_enum",
  "prost",
  "prost-build",
 ]
