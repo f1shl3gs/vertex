@@ -1,3 +1,6 @@
+#![allow(clippy::cast_sign_loss)]
+#![allow(clippy::cast_possible_wrap)]
+
 mod get;
 mod get_mut;
 mod insert;
@@ -174,31 +177,27 @@ pub fn get_matching_coalesce_key<'a>(
     let mut key = initial_key;
     let mut coalesce_finished = false;
     let matched_key = loop {
-        match map.get_value(key.as_ref()) {
-            Some(_) => {
-                if !coalesce_finished {
-                    skip_remaining_coalesce_segments(path_iter);
-                }
-
-                break key;
+        if map.get_value(key.as_ref()).is_some() {
+            if !coalesce_finished {
+                skip_remaining_coalesce_segments(path_iter);
             }
 
-            None => {
-                if coalesce_finished {
-                    return Err(key);
-                }
+            break key;
+        }
 
-                match path_iter.next() {
-                    Some(BorrowedSegment::CoalesceField(field)) => {
-                        key = field;
-                    }
-                    Some(BorrowedSegment::CoalesceEnd(field)) => {
-                        key = field;
-                        coalesce_finished = true;
-                    }
-                    _ => unreachable!("malformed path. This is a bug"),
-                }
+        if coalesce_finished {
+            return Err(key);
+        }
+
+        match path_iter.next() {
+            Some(BorrowedSegment::CoalesceField(field)) => {
+                key = field;
             }
+            Some(BorrowedSegment::CoalesceEnd(field)) => {
+                key = field;
+                coalesce_finished = true;
+            }
+            _ => unreachable!("malformed path. This is a bug"),
         }
     };
 

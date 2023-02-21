@@ -88,7 +88,7 @@ impl<'a> FieldsIter<'a> {
                         res.push_str(key);
                     }
                 }
-                Some(PathComponent::Index(index)) => write!(&mut res, "[{}]", index).unwrap(),
+                Some(PathComponent::Index(index)) => write!(&mut res, "[{index}]").unwrap(),
             }
 
             if let Some(PathComponent::Key(_)) = path_iter.peek() {

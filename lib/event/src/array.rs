@@ -139,7 +139,7 @@ impl Events {
 
     pub fn for_each_trace(&mut self, update: impl FnMut(&mut Trace)) {
         if let Self::Traces(traces) = self {
-            traces.iter_mut().for_each(update)
+            traces.iter_mut().for_each(update);
         }
     }
 
@@ -181,7 +181,7 @@ impl<'a> EventMutRef<'a> {
     pub fn as_log(self) -> &'a LogRecord {
         match self {
             Self::Log(log) => log,
-            _ => panic!("Failed type coercion, {:?} is not a log reference", self),
+            _ => panic!("Failed type coercion, {self:?} is not a log reference"),
         }
     }
 
@@ -193,7 +193,7 @@ impl<'a> EventMutRef<'a> {
     pub fn into_log(self) -> LogRecord {
         match self {
             Self::Log(log) => log.clone(),
-            _ => panic!("Failed type coercion, {:?} is not a log reference", self),
+            _ => panic!("Failed type coercion, {self:?} is not a log reference"),
         }
     }
 
@@ -205,7 +205,7 @@ impl<'a> EventMutRef<'a> {
     pub fn as_metric(self) -> &'a Metric {
         match self {
             Self::Metric(metric) => metric,
-            _ => panic!("Failed type coercion, {:?} is not a metric reference", self),
+            _ => panic!("Failed type coercion, {self:?} is not a metric reference"),
         }
     }
 
@@ -217,7 +217,7 @@ impl<'a> EventMutRef<'a> {
     pub fn into_metric(self) -> Metric {
         match self {
             Self::Metric(metric) => metric.clone(),
-            _ => panic!("Failed type coercion, {:?} is not a metric reference", self),
+            _ => panic!("Failed type coercion, {self:?} is not a metric reference"),
         }
     }
 

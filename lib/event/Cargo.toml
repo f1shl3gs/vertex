@@ -8,9 +8,9 @@ publish = false
 prost-build = { version = "0.11.6" }
 
 [dependencies]
-atomig = { version = "0.4.0", features = ["derive", "serde"] }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.23", features = ["serde"] }
+crossbeam-utils = { version = "0.8.14", default-features = false }
 futures = { version = "0.3.26", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }

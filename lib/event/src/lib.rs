@@ -1,7 +1,10 @@
+#![deny(warnings)]
+#![deny(clippy::all)]
+// #![deny(clippy::pedantic)]
+
 pub mod array;
 mod finalization;
 pub mod log;
-mod logfmt;
 mod metadata;
 mod metric;
 pub mod proto;
@@ -70,7 +73,11 @@ impl EventDataEq for Event {
 }
 
 impl Event {
-    /// This function panics if self is anything other than an `Event::Metric`
+    /// Return self as a mutable `Metric`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than an `Event::Metric`.
     pub fn as_mut_metric(&mut self) -> &mut Metric {
         match self {
             Event::Metric(metric) => metric,
@@ -78,6 +85,11 @@ impl Event {
         }
     }
 
+    /// Return self as a `Metric`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is self is anything other than an `Event::Metric`.
     pub fn as_metric(&self) -> &Metric {
         match self {
             Event::Metric(metric) => metric,
@@ -85,6 +97,11 @@ impl Event {
         }
     }
 
+    /// Coerces self into `Metric`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than an `Event::Metric`.
     pub fn into_metric(self) -> Metric {
         match self {
             Event::Metric(m) => m,

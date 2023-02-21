@@ -1,9 +1,13 @@
+#![allow(clippy::cast_sign_loss)]
+
+use std::borrow::Borrow;
+use std::collections::BTreeMap;
+
+use lookup::BorrowedSegment;
+
 use super::ValueCollection;
 use crate::log::value::crud::{get_matching_coalesce_key, skip_remaining_coalesce_segments};
 use crate::log::Value;
-use lookup::BorrowedSegment;
-use std::borrow::Borrow;
-use std::collections::BTreeMap;
 
 pub fn insert<'a, T: ValueCollection>(
     value: &mut T,
