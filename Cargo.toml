@@ -416,7 +416,7 @@ colored = { version = "2.0.0", default-features = false }
 
 # External libs
 ahash = { version = "0.8.3", optional = true }
-async-stream = { version = "0.3.3", optional = true }
+async-stream = { version = "0.3.4", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.23", features = ["serde"] }
 chrono-tz = { version = "0.8.1", features = ["serde"] }
