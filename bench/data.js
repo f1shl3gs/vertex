@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1676987460814,
+  "lastUpdate": 1676987483433,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15885,6 +15885,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1180.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1ef912d909562b800bb7687f36e84b79f6c1140b",
+          "message": "Merge pull request #778 from f1shl3gs/remove_atomig\n\nremove atomig & fix some pedantic warnings",
+          "timestamp": "2023-02-21T21:25:35+08:00",
+          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1ef912d909562b800bb7687f36e84b79f6c1140b"
+        },
+        "date": 1676987472425,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 40054000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1583300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 66.963,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 216.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 519.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1414.8,
             "unit": "ns/op"
           }
         ]
