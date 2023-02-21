@@ -75,6 +75,8 @@ impl EventFinalizers {
     /// Merges the event finalizers from `other` into the collection.
     pub fn merge(&mut self, other: Self) {
         self.0.extend(other.0.into_iter());
+
+        self.0.dedup_by(|a, b| Arc::ptr_eq(a, b));
     }
 
     /// Updates the status of all event finalizers in the collection.
@@ -156,6 +158,7 @@ pin_project! {
 
 impl Future for BatchStatusReceiver {
     type Output = BatchStatus;
+
     fn poll(mut self: Pin<&mut Self>, ctx: &mut std::task::Context<'_>) -> Poll<Self::Output> {
         match self.receiver.poll_unpin(ctx) {
             Poll::Pending => Poll::Pending,
@@ -455,7 +458,6 @@ mod tests {
         assert_eq!(receiver2.try_recv(), Ok(BatchStatus::Delivered));
     }
 
-    #[ignore] // The current implementation does not deduplicate finalizers
     #[test]
     fn clone_and_merge_events() {
         let (mut fin1, mut receiver) = make_finalizer();

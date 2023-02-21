@@ -1,5 +1,3 @@
-#![allow(warnings)]
-
 mod finalization;
 pub use finalization::*;
 

@@ -4756,6 +4756,7 @@ dependencies = [
  "event",
  "evmap",
  "exitcode",
+ "finalize",
  "flate2",
  "framework",
  "futures",
