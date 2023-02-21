@@ -1,9 +1,11 @@
-use event::{BatchNotifier, Event, Events, LogRecord};
+use std::collections::HashMap;
+use std::iter;
+
+use event::{Event, Events, LogRecord};
+use finalize::BatchNotifier;
 use futures::{stream, Stream, StreamExt};
 use rand::distributions::Alphanumeric;
 use rand::{thread_rng, Rng};
-use std::collections::HashMap;
-use std::iter;
 
 pub fn random_string(len: usize) -> String {
     thread_rng()
