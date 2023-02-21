@@ -1,12 +1,13 @@
 use std::fmt::{Display, Formatter, Write};
 
 use chrono::{DateTime, Utc};
+use finalize::{BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
 use crate::metadata::EventMetadata;
 use crate::tags::{Key, Tags, Value};
-use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use crate::EventDataEq;
 
 pub const INSTANCE_KEY: Key = Key::from_static_str("instance");
 pub const EXPORTED_INSTANCE_KEY: Key = Key::from_static_str("exported_instance");

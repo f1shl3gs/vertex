@@ -3,7 +3,6 @@
 // #![deny(clippy::pedantic)]
 
 pub mod array;
-mod finalization;
 pub mod log;
 mod metadata;
 mod metric;
@@ -13,10 +12,7 @@ pub mod trace;
 
 // re-export
 pub use array::{EventContainer, Events};
-pub use finalization::{
-    BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,
-    Finalizable,
-};
+pub use finalize::*;
 pub use log::LogRecord;
 pub use metadata::EventMetadata;
 pub use metric::*;
@@ -35,7 +31,7 @@ use crate::log::Logs;
 use crate::tags::{Key, Tags};
 
 #[derive(PartialEq, Debug, Clone, Deserialize, Serialize)]
-#[serde(rename_all = "snake_case")]
+#[serde(rename_all = "lowercase")]
 pub enum Event {
     Log(LogRecord),
     Metric(Metric),
@@ -58,6 +54,18 @@ impl Finalizable for Event {
             Event::Log(log) => log.take_finalizers(),
             Event::Metric(metric) => metric.take_finalizers(),
             Event::Trace(span) => span.take_finalizers(),
+        }
+    }
+}
+
+impl AddBatchNotifier for Event {
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
+        let finalizer = EventFinalizer::new(notifier);
+
+        match self {
+            Self::Log(log) => log.add_finalizer(finalizer),
+            Self::Metric(metric) => metric.add_finalizer(finalizer),
+            Self::Trace(trace) => trace.add_finalizer(finalizer),
         }
     }
 }

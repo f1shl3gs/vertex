@@ -369,7 +369,7 @@ async fn handle_stream<T>(
                                             );
                                             TcpSourceAck::Error
                                         },
-                                        BatchStatus::Failed => {
+                                        BatchStatus::Rejected => {
                                             warn!(
                                                 message = "Error to deliver events to sink",
                                                 internal_log_rate_secs = 5
