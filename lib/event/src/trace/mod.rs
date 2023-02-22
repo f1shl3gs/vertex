@@ -193,8 +193,8 @@ pub enum TraceStateError {
     InvalidList(String),
 }
 
-/// TraceState carries system-specific configuration data, represented as a list
-/// of key-value pairs. TraceState allows multiple tracing systems to
+/// `TraceState` carries system-specific configuration data, represented as a list
+/// of key-value pairs. `TraceState` allows multiple tracing systems to
 /// participate in the same trace.
 ///
 /// Please review the [W3C specification] for details on this field.
@@ -248,6 +248,10 @@ impl TraceState {
     }
 
     /// Creates a new `TraceState` from the given key-value collection.
+    ///
+    /// # Errors
+    ///
+    /// This function returns error if the "key" or "value" is not valid.
     pub fn from_key_value<T, K, V>(trace_state: T) -> Result<Self, TraceStateError>
     where
         T: IntoIterator<Item = (K, V)>,
@@ -294,7 +298,10 @@ impl TraceState {
     /// invalid per the [W3 Spec] an `Err` is returned, else a new `TraceState` with the
     /// updated key/value is returned.
     ///
-    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field
+    /// # Errors
+    ///
+    /// This function returns error if the "key" or "value" is not valid.
+    /// [W3 Spec]: <https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field>
     pub fn insert<K, V>(&self, key: K, value: V) -> Result<TraceState, TraceStateError>
     where
         K: Into<String>,
@@ -308,7 +315,7 @@ impl TraceState {
             return Err(TraceStateError::InvalidValue(value));
         }
 
-        let mut trace_state = self.delete_from_deque(key.clone());
+        let mut trace_state = self.delete_from_deque(&key);
         let kvs = trace_state.0.get_or_insert(VecDeque::with_capacity(1));
 
         kvs.push_front((key, value));
@@ -322,18 +329,21 @@ impl TraceState {
     ///
     /// If the key is not in `TraceState`. The original `TraceState` will be cloned and returned.
     ///
-    /// [W3 Spec]: https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field
+    /// # Errors
+    ///
+    /// This function returns error if the "key" or "value" is not valid.
+    /// [W3 Spec]: <https://www.w3.org/TR/trace-context/#mutating-the-tracestate-field>
     pub fn delete<K: Into<String>>(&self, key: K) -> Result<TraceState, TraceStateError> {
         let key = key.into();
         if !TraceState::valid_key(key.as_str()) {
             return Err(TraceStateError::InvalidKey(key));
         }
 
-        Ok(self.delete_from_deque(key))
+        Ok(self.delete_from_deque(&key))
     }
 
     /// Delete key from trace state's deque. The key MUST be valid
-    fn delete_from_deque(&self, key: String) -> TraceState {
+    fn delete_from_deque(&self, key: &str) -> TraceState {
         let mut owned = self.clone();
         if let Some(kvs) = owned.0.as_mut() {
             if let Some(index) = kvs.iter().position(|x| *x.0 == *key) {
@@ -469,7 +479,7 @@ impl TraceFlags {
     ///
     /// Spans that are not sampled will be ignored by most tracing tools.
     /// See the `sampled` section of the
-    /// [W3C TraceContext specification](https://www.w3.org/TR/trace-context/#sampled-flag)
+    /// [W3C `TraceContext` specification](https://www.w3.org/TR/trace-context/#sampled-flag)
     /// for details.
     pub const SAMPLED: TraceFlags = TraceFlags(0x01);
 
@@ -484,6 +494,7 @@ impl TraceFlags {
     }
 
     /// Returns copy  of the current flags with the `sampled` flag set.
+    #[must_use]
     pub fn with_sampled(&self, sampled: bool) -> Self {
         if sampled {
             *self | TraceFlags::SAMPLED
@@ -566,7 +577,7 @@ impl Trace {
             service: service.into(),
             tags,
             spans,
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -588,11 +599,13 @@ impl Trace {
         self.metadata.add_finalizer(finalizer);
     }
 
+    #[must_use]
     pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
     }
 
+    #[must_use]
     pub fn with_batch_notifier_option(mut self, batch: &Option<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self

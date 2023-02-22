@@ -126,14 +126,15 @@ impl Link {
         Self {
             trace_id,
             span_id,
-            trace_state: "".to_string(),
+            trace_state: String::new(),
             attributes: vec![],
         }
     }
 }
 
 /// For the semantics of status codes see
-/// https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status
+///
+/// <https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status>
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
 pub enum StatusCode {
@@ -213,13 +214,13 @@ impl SpanContext {
         Self {
             trace_id: TraceId::INVALID,
             span_id: SpanId::INVALID,
-            trace_flags: Default::default(),
+            trace_flags: TraceFlags::default(),
             is_remote: false,
-            trace_state: Default::default(),
+            trace_state: TraceState::default(),
         }
     }
 
-    /// Construct a new SpanContext
+    /// Construct a new `SpanContext`
     pub fn new(
         trace_id: TraceId,
         span_id: SpanId,
@@ -292,9 +293,9 @@ impl Span {
             span_context: SpanContext {
                 trace_id: TraceId::INVALID,
                 span_id: SpanId::INVALID,
-                trace_flags: Default::default(),
+                trace_flags: TraceFlags::default(),
                 is_remote: false,
-                trace_state: Default::default(),
+                trace_state: TraceState::default(),
             },
             parent_span_id: SpanId::INVALID,
             name: name.into(),
@@ -320,26 +321,31 @@ impl Span {
         self.span_context.span_id
     }
 
+    #[must_use]
     pub fn with_start_time(mut self, start_time: i64) -> Self {
         self.start_time = start_time;
         self
     }
 
+    #[must_use]
     pub fn with_span_id(mut self, id: SpanId) -> Self {
         self.span_context.span_id = id;
         self
     }
 
+    #[must_use]
     pub fn with_trace_id(mut self, id: TraceId) -> Self {
         self.span_context.trace_id = id;
         self
     }
 
+    #[must_use]
     pub fn with_parent_span_id(mut self, id: SpanId) -> Self {
         self.parent_span_id = id;
         self
     }
 
+    #[must_use]
     pub fn with_end_time(mut self, end_time: i64) -> Self {
         self.end_time = end_time;
         self
@@ -363,7 +369,7 @@ impl Span {
             name: name.into(),
             timestamp,
             attributes: attributes.into(),
-        })
+        });
     }
 
     /// Convenience method to record an exception/error as an `Event`.

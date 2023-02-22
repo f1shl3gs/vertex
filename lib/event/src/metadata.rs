@@ -29,18 +29,21 @@ impl ByteSizeOf for EventMetadata {
 
 impl EventMetadata {
     /// Replace the finalizers array with the given one.
+    #[must_use]
     pub fn with_finalizer(mut self, finalizer: EventFinalizer) -> Self {
         self.finalizers = EventFinalizers::new(finalizer);
         self
     }
 
     /// Replace the finalizer with a new one created from the given batch notifier
+    #[must_use]
     pub fn with_batch_notifier(self, batch: &BatchNotifier) -> Self {
         self.with_finalizer(EventFinalizer::new(batch.clone()))
     }
 
     /// Replace the finalizer with a new one created from the given optional
     /// batch notifier
+    #[must_use]
     pub fn with_batch_notifier_option(self, batch: &Option<BatchNotifier>) -> Self {
         match batch {
             Some(batch) => self.with_finalizer(EventFinalizer::new(batch.clone())),

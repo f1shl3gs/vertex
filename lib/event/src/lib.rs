@@ -1,6 +1,14 @@
 #![deny(warnings)]
 #![deny(clippy::all)]
-// #![deny(clippy::pedantic)]
+#![deny(clippy::pedantic)]
+#![allow(
+    clippy::module_name_repetitions,
+    clippy::uninlined_format_args,
+    clippy::cast_lossless,
+    clippy::must_use_candidate,
+    clippy::cast_possible_wrap,
+    clippy::redundant_closure_for_method_calls
+)]
 
 pub mod array;
 mod finalization;
@@ -121,6 +129,11 @@ impl Event {
         }
     }
 
+    /// Return self as a `LogRecord`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than an `Event::Log`
     pub fn as_log(&self) -> &LogRecord {
         match self {
             Event::Log(l) => l,
@@ -128,6 +141,11 @@ impl Event {
         }
     }
 
+    /// Return self as a mutable `LogRecord`
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than an `Event::Log`.
     pub fn as_mut_log(&mut self) -> &mut LogRecord {
         match self {
             Event::Log(l) => l,
@@ -135,6 +153,11 @@ impl Event {
         }
     }
 
+    /// Return self as a `Trace`.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than a `Event::Trace`
     pub fn as_trace(&self) -> &Trace {
         match self {
             Event::Trace(trace) => trace,
@@ -142,6 +165,11 @@ impl Event {
         }
     }
 
+    /// Return self as a `Trace`.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than a `Event::Trace`
     pub fn into_trace(self) -> Trace {
         match self {
             Event::Trace(trace) => trace,
@@ -149,6 +177,11 @@ impl Event {
         }
     }
 
+    /// Return self as a mutable `Trace`.
+    ///
+    /// # Panics
+    ///
+    /// This function panics if self is anything other than a `Event::Trace`
     pub fn as_mut_trace(&mut self) -> &mut Trace {
         match self {
             Event::Trace(trace) => trace,
@@ -210,6 +243,7 @@ impl Event {
         }
     }
 
+    #[must_use]
     pub fn with_batch_notifier(self, batch: &BatchNotifier) -> Self {
         match self {
             Self::Log(log) => log.with_batch_notifier(batch).into(),
@@ -220,6 +254,7 @@ impl Event {
 
     /// Replace the finalizer with a new one created from the given optional
     /// batch notifier
+    #[must_use]
     pub fn with_batch_notifier_option(self, batch: &Option<BatchNotifier>) -> Self {
         match self {
             Self::Log(log) => log.with_batch_notifier_option(batch).into(),
@@ -307,6 +342,10 @@ pub enum EventRef<'a> {
 
 impl<'a> EventRef<'a> {
     /// Extract the `LogRecord` reference in this.
+    ///
+    /// # Panics
+    ///
+    /// This will panic if this is not a `LogRecord` reference.
     pub fn as_log(self) -> &'a LogRecord {
         match self {
             Self::Log(log) => log,
@@ -314,7 +353,11 @@ impl<'a> EventRef<'a> {
         }
     }
 
-    /// Convert this reference into a new `LogRecord` by cloning
+    /// Convert this reference into a new `LogRecord` by cloning.
+    ///
+    /// # Panics
+    ///
+    /// This will panic if this is not a `LogRecord` reference.
     pub fn into_log(self) -> LogRecord {
         match self {
             Self::Log(log) => log.clone(),
@@ -323,6 +366,10 @@ impl<'a> EventRef<'a> {
     }
 
     /// Convert this reference into a new `Metric` by cloning
+    ///
+    /// # Panics
+    ///
+    /// This will panic if this is not a `Metric` reference.
     pub fn into_metric(self) -> Metric {
         match self {
             Self::Metric(metric) => metric.clone(),

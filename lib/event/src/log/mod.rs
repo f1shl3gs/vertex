@@ -35,7 +35,7 @@ pub struct LogRecord {
 impl From<BTreeMap<String, Value>> for LogRecord {
     fn from(fields: BTreeMap<String, Value>) -> Self {
         Self {
-            tags: Default::default(),
+            tags: Tags::default(),
             fields: Value::Object(fields),
             metadata: EventMetadata::default(),
         }
@@ -95,7 +95,7 @@ impl tracing::field::Visit for LogRecord {
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.insert_field(field.name(), format!("{:?}", value));
+        self.insert_field(field.name(), format!("{value:?}"));
     }
 }
 
@@ -147,7 +147,7 @@ impl LogRecord {
         Self {
             tags,
             fields: fields.into(),
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -156,6 +156,7 @@ impl LogRecord {
         (self.tags, self.fields, self.metadata)
     }
 
+    #[must_use]
     pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
@@ -163,7 +164,7 @@ impl LogRecord {
 
     #[inline]
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<crate::tags::Value>) {
-        self.tags.insert(key, value)
+        self.tags.insert(key, value);
     }
 
     #[inline]
@@ -243,6 +244,7 @@ impl LogRecord {
         &mut self.metadata
     }
 
+    #[must_use]
     pub fn with_batch_notifier_option(mut self, batch: &Option<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self
@@ -250,6 +252,7 @@ impl LogRecord {
 }
 
 #[cfg(test)]
+#[allow(clippy::missing_panics_doc)]
 pub fn fields_from_json(json_value: serde_json::Value) -> BTreeMap<String, Value> {
     match Value::from(json_value) {
         Value::Object(map) => map,

@@ -1,4 +1,8 @@
-include!(concat!(env!("OUT_DIR"), "/event.rs"));
+#[allow(warnings, clippy::all, clippy::pedantic)]
+mod proto_event {
+    include!(concat!(env!("OUT_DIR"), "/event.rs"));
+}
+pub use proto_event::*;
 
 use chrono::TimeZone;
 use std::borrow::Cow;
@@ -239,8 +243,8 @@ impl From<crate::Metric> for WithMetadata<Metric> {
                 .into_iter()
                 .map(|(k, v)| (k.to_string(), TagValue::from(v)))
                 .collect(),
-            description: "".to_string(),
-            unit: "".to_string(),
+            description: String::new(),
+            unit: String::new(),
             timestamp,
             value: Some(value),
         };
@@ -406,7 +410,7 @@ impl From<crate::Events> for Events {
         let events = Some(match events {
             crate::Events::Logs(logs) => events::Events::from_logs(logs),
             crate::Events::Metrics(metrics) => events::Events::from_metrics(metrics),
-            _ => unimplemented!(),
+            crate::Events::Traces(_) => unimplemented!(),
         });
 
         Self { events }
