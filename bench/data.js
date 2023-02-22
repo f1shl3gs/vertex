@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677075557636,
+  "lastUpdate": 1677075571674,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6857,6 +6857,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.649,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f324716c952179e6f06bf4289b350442b12cb114",
+          "message": "Merge pull request #780 from f1shl3gs/revert-779-move_finalize_to_lib/finalize\n\nRevert \"Move finalize to lib/finalize\"",
+          "timestamp": "2023-02-22T22:14:38+08:00",
+          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f324716c952179e6f06bf4289b350442b12cb114"
+        },
+        "date": 1677075562531,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.547,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.546,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.495,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.697,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.626,
             "unit": "ns/op"
           }
         ]
