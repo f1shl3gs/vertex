@@ -538,7 +538,7 @@ fn insert_events_with_failure() {
                 ..config()
             },
             true,
-            BatchStatus::Rejected,
+            BatchStatus::Failed,
         )
         .await
     })

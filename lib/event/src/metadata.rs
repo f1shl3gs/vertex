@@ -1,6 +1,8 @@
-use finalize::{BatchNotifier, EventFinalizer, EventFinalizers, EventStatus};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
+
+use crate::finalization::{EventFinalizers, EventStatus};
+use crate::{BatchNotifier, EventFinalizer};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[allow(clippy::module_name_repetitions)]
@@ -21,7 +23,7 @@ impl ByteSizeOf for EventMetadata {
         // Note we don't count the `str` here because it's allocated
         // somewhere else. We're just moving around the pointer, which
         // is already captured by `ByteSizeOf::size_of`
-        0
+        self.finalizers.allocated_bytes()
     }
 }
 

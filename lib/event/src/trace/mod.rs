@@ -10,16 +10,17 @@ use std::fmt::{Debug, Formatter};
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
-pub use evicted_hash_map::EvictedHashMap;
-pub use evicted_queue::EvictedQueue;
-use finalize::{BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
-pub use generator::RngGenerator;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
-pub use span::*;
 
 use crate::tags::Tags;
-use crate::{EventDataEq, EventMetadata};
+use crate::{
+    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
+};
+pub use evicted_hash_map::EvictedHashMap;
+pub use evicted_queue::EvictedQueue;
+pub use generator::RngGenerator;
+pub use span::*;
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]
