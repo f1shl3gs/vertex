@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677082277603,
+  "lastUpdate": 1677082286729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16467,6 +16467,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1402.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
+          "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
+          "timestamp": "2023-02-22T23:50:02+08:00",
+          "tree_id": "23d2a803d9a28d84247d1ac8a7661e35ec7a1c93",
+          "url": "https://github.com/f1shl3gs/vertex/commit/034ab011748db5bfac7dcb47139e5c17d189b2f8"
+        },
+        "date": 1677082277629,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 34483000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 969590,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.975,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 56.845,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 177.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 414.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1178.5,
             "unit": "ns/op"
           }
         ]
