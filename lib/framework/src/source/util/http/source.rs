@@ -135,7 +135,7 @@ async fn handle_request(
 ) -> Response<Body> {
     match events {
         Ok(mut events) => {
-            let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
+            let receiver = BatchNotifier::maybe_apply_to_events(acknowledgements, &mut events);
 
             match output
                 .send_batch(events)
@@ -177,7 +177,7 @@ async fn handle_batch_status(
                 code: StatusCode::INTERNAL_SERVER_ERROR,
                 message: "Error delivering contents to sink".to_string(),
             }),
-            BatchStatus::Rejected => Err(ErrorMessage {
+            BatchStatus::Failed => Err(ErrorMessage {
                 code: StatusCode::BAD_REQUEST,
                 message: "Contents failed to deliver to sink".to_string(),
             }),
