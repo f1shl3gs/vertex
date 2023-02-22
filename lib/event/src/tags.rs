@@ -106,7 +106,7 @@ impl Hash for Array {
                 // * Positive and negative infinity has to different values
                 // * -0 and +0 hash to different values
                 // * otherwise transmute to u64 and hash
-                f.iter().for_each(|v| {
+                for v in f.iter() {
                     if v.is_finite() {
                         v.is_sign_negative().hash(state);
                         let trunc: u64 = v.trunc().to_bits();
@@ -114,7 +114,7 @@ impl Hash for Array {
                     } else if !v.is_nan() {
                         v.is_sign_negative().hash(state);
                     } //else covered by discriminant hash
-                })
+                }
             }
             Array::String(s) => s.hash(state),
         }
@@ -243,7 +243,7 @@ impl Hash for Value {
                     let trunc: u64 = f.trunc().to_bits();
                     trunc.hash(state);
                 } else if !f.is_nan() {
-                    f.is_sign_negative().hash(state)
+                    f.is_sign_negative().hash(state);
                 } // else covered by discriminant hash
             }
             Value::String(s) => s.hash(state),
@@ -322,7 +322,7 @@ impl From<Vec<&str>> for Value {
     fn from(ss: Vec<&str>) -> Self {
         let array: Array = ss
             .into_iter()
-            .map(|s| s.to_string())
+            .map(ToString::to_string)
             .collect::<Vec<_>>()
             .into();
 
@@ -389,6 +389,7 @@ impl Tags {
         self.0.contains_key(&(key.into()))
     }
 
+    #[must_use]
     pub fn with(&self, key: impl Into<Key>, value: impl Into<Value>) -> Self {
         let mut new = self.clone();
         new.0.insert(key.into(), value.into());
@@ -541,7 +542,7 @@ mod tests {
             Value::Array(Array::String(vec!["foo".into(), "bar".into()])),
         );
 
-        let _ = serde_json::to_string(&map).unwrap();
+        serde_json::to_string(&map).unwrap();
     }
 
     #[test]

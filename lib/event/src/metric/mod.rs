@@ -81,13 +81,13 @@ impl MetricValue {
                 *count += 1;
                 *sum += f;
 
-                buckets.iter_mut().for_each(|b| {
+                for b in buckets.iter_mut() {
                     if f <= b.upper {
                         b.count += 1;
                     }
-                });
+                }
             }
-            _ => unreachable!(),
+            MetricValue::Summary { .. } => {}
         }
     }
 }
@@ -106,17 +106,14 @@ impl ByteSizeOf for MetricSeries {
 
 impl MetricSeries {
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.tags.insert(key, value)
+        self.tags.insert(key, value);
     }
 }
 
 impl ByteSizeOf for MetricValue {
     fn allocated_bytes(&self) -> usize {
-        match self {
-            Self::Sum(_) | Self::Gauge(_) => 0,
-            Self::Histogram { .. } => 0,
-            Self::Summary { .. } => 0,
-        }
+        // TODO: implement
+        0
     }
 }
 
@@ -322,7 +319,7 @@ impl IntoF64 for std::time::Duration {
 impl Metric {
     #[inline]
     pub fn new(
-        name: impl ToString,
+        name: impl Into<String>,
         description: Option<String>,
         tags: Tags,
         ts: DateTime<Utc>,
@@ -330,14 +327,14 @@ impl Metric {
     ) -> Self {
         Self {
             series: MetricSeries {
-                name: name.to_string(),
+                name: name.into(),
                 tags,
             },
             description,
             unit: None,
             timestamp: Some(ts),
             value,
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -374,13 +371,13 @@ impl Metric {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags: Default::default(),
+                tags: Tags::default(),
             },
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
             value: MetricValue::Gauge(v.into_f64()),
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -401,7 +398,7 @@ impl Metric {
             unit: None,
             timestamp: None,
             value: MetricValue::Gauge(value.into_f64()),
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -415,13 +412,13 @@ impl Metric {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags: Default::default(),
+                tags: Tags::default(),
             },
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(v.into()),
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -442,7 +439,7 @@ impl Metric {
             unit: None,
             timestamp: None,
             value: MetricValue::Sum(value.into_f64()),
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
         }
     }
 
@@ -457,12 +454,12 @@ impl Metric {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags: Default::default(),
+                tags: Tags::default(),
             },
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
             value: MetricValue::Histogram {
                 count: count.into(),
                 sum: sum.into_f64(),
@@ -495,7 +492,7 @@ impl Metric {
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
             value: MetricValue::Histogram {
                 count: count.into(),
                 sum: sum.into_f64(),
@@ -521,12 +518,12 @@ impl Metric {
         Self {
             series: MetricSeries {
                 name: name.into(),
-                tags: Default::default(),
+                tags: Tags::default(),
             },
             description: Some(desc.into()),
             unit: None,
             timestamp: None,
-            metadata: Default::default(),
+            metadata: EventMetadata::default(),
             value: MetricValue::Summary {
                 count: count.into(),
                 sum: sum.into_f64(),
@@ -572,6 +569,7 @@ impl Metric {
     }
 
     #[inline]
+    #[must_use]
     pub fn with_timestamp(mut self, ts: Option<DateTime<Utc>>) -> Self {
         self.timestamp = ts;
         self
@@ -588,6 +586,7 @@ impl Metric {
     }
 
     #[inline]
+    #[must_use]
     pub fn with_tags(mut self, tags: Tags) -> Self {
         self.series.tags = tags;
         self
@@ -606,7 +605,7 @@ impl Metric {
 
     #[inline]
     pub fn insert_tag(&mut self, key: impl Into<Key>, value: impl Into<Value>) {
-        self.series.insert_tag(key, value)
+        self.series.insert_tag(key, value);
     }
 
     #[inline]
@@ -615,6 +614,7 @@ impl Metric {
     }
 
     #[inline]
+    #[must_use]
     pub fn with_desc(mut self, desc: Option<String>) -> Self {
         self.description = desc;
         self
@@ -626,12 +626,14 @@ impl Metric {
     }
 
     #[inline]
+    #[must_use]
     pub fn with_batch_notifier(mut self, batch: &BatchNotifier) -> Self {
         self.metadata = self.metadata.with_batch_notifier(batch);
         self
     }
 
     #[inline]
+    #[must_use]
     pub fn with_batch_notifier_option(mut self, batch: &Option<BatchNotifier>) -> Self {
         self.metadata = self.metadata.with_batch_notifier_option(batch);
         self

@@ -125,6 +125,7 @@ impl EventFinalizers {
     }
 
     /// Returns the number of event finalizers in the collection.
+    #[must_use]
     #[inline]
     pub fn len(&self) -> usize {
         self.0.len()
@@ -135,34 +136,6 @@ impl EventFinalizers {
     pub fn is_empty(&self) -> bool {
         self.0.is_empty()
     }
-
-    /*
-        fn add_generic<I>(&mut self, items: I)
-    where
-        I: ExactSizeIterator<Item = Arc<EventFinalizer>>,
-    {
-        if self.0.is_empty() {
-            self.0 = items.collect::<Vec<_>>().into();
-        } else if items.len() > 0 {
-            // this requires a bit of extra work both to avoid cloning
-            // the actual elements and because `self.0` cannot be mutated
-            // in place.
-            let finalizers = mem::replace(&mut self.0, vec![].into());
-            let mut result: Vec<_> = finalizers.into();
-
-            // This is the only step that may cause a (re)allocation.
-            result.reserve_exact(items.len());
-            for entry in items {
-                // Deduplicate by hand, assume the list is trivially small
-                if !result.iter().any(|existing| Arc::ptr_eq(existing, &entry)) {
-                    result.push(entry);
-                }
-            }
-
-            self.0 = result.into();
-        }
-    }
-    */
 
     /// Merges the event finalizers from `other` into the collection.
     pub fn merge(&mut self, other: Self) {

@@ -91,6 +91,11 @@ impl Value {
         }
     }
 
+    /// Returns self as a mutable `BTreeMap<String, Value>`.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if self is anything other than `Value::Object`.
     pub fn as_object_mut_unwrap(&mut self) -> &mut BTreeMap<String, Self> {
         match self {
             Value::Object(ref mut m) => m,
@@ -147,11 +152,13 @@ impl Value {
     }
 
     /// Returns a reference to a field value specified by a path iter.
+    #[allow(clippy::needless_pass_by_value)]
     pub fn get<'a>(&self, path: impl Path<'a>) -> Option<&Self> {
         crud::get(self, path.segment_iter())
     }
 
     /// Get a mutable borrow of the value by path
+    #[allow(clippy::needless_pass_by_value)]
     pub fn get_mut<'a>(&mut self, path: impl Path<'a>) -> Option<&mut Self> {
         crud::get_mut(self, path.segment_iter())
     }
@@ -415,6 +422,6 @@ mod tests {
                     });
                 }
                 _ => panic!("This test should never read Err type folders."),
-            })
+            });
     }
 }

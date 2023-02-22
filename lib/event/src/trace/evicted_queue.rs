@@ -68,6 +68,7 @@ impl<T> EvictedQueue<T> {
     /// recording dropped count if over capacity.
     pub fn push_back(&mut self, value: T) {
         let queue = self.queue.get_or_insert_with(Default::default);
+        #[allow(clippy::cast_possible_truncation)]
         if queue.len() as u32 == self.max_len {
             queue.pop_front();
             self.dropped_count += 1;
@@ -147,7 +148,7 @@ mod tests {
         let mut queue = EvictedQueue::new(capacity);
 
         for i in 0..=capacity {
-            queue.push_back(i)
+            queue.push_back(i);
         }
 
         assert_eq!(queue.dropped_count, 1);

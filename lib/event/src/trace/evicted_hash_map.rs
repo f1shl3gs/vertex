@@ -1,6 +1,6 @@
 use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
-use std::collections::{HashMap, LinkedList};
+use std::collections::{HashMap, VecDeque};
 
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
@@ -12,7 +12,7 @@ use crate::trace::{AnyValue, Key, KeyValue};
 #[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
 pub struct EvictedHashMap {
     map: HashMap<Key, AnyValue>,
-    evict_list: LinkedList<Key>,
+    evict_list: VecDeque<Key>,
     max_len: u32,
     dropped_count: u32,
 }
@@ -73,7 +73,7 @@ impl EvictedHashMap {
     pub fn new(max_len: u32, capacity: usize) -> Self {
         Self {
             map: HashMap::with_capacity(capacity),
-            evict_list: LinkedList::new(),
+            evict_list: VecDeque::new(),
             max_len,
             dropped_count: 0,
         }
@@ -104,6 +104,7 @@ impl EvictedHashMap {
         }
 
         // Verify size not exceeded
+        #[allow(clippy::cast_possible_truncation)]
         if self.evict_list.len() as u32 > self.max_len {
             self.remove_oldest();
             self.dropped_count += 1;
@@ -124,7 +125,7 @@ impl EvictedHashMap {
     /// Inserts a key-value pair into the map.
     pub fn insert_key_value(&mut self, kv: KeyValue) {
         let KeyValue { key, value } = kv;
-        self.insert(key, value)
+        self.insert(key, value);
     }
 
     /// Returns the number of elements in the map.
@@ -194,8 +195,7 @@ impl From<Vec<KeyValue>> for EvictedHashMap {
 
         Self {
             map,
-            evict_list: Default::default(),
-            // TODO: const
+            evict_list: VecDeque::default(),
             max_len: 128,
             dropped_count: 0,
         }
@@ -255,7 +255,7 @@ mod tests {
         let mut map = EvictedHashMap::new(max_len, max_len as usize);
 
         for i in 0..=max_len {
-            map.insert_key_value(Key::new(i.to_string()).bool(true))
+            map.insert_key_value(Key::new(i.to_string()).bool(true));
         }
 
         assert_eq!(map.dropped_count, 1);
