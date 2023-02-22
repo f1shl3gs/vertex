@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677076713735,
+  "lastUpdate": 1677081219919,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -1710,6 +1710,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 909190,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
+          "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
+          "timestamp": "2023-02-22T23:50:02+08:00",
+          "tree_id": "23d2a803d9a28d84247d1ac8a7661e35ec7a1c93",
+          "url": "https://github.com/f1shl3gs/vertex/commit/034ab011748db5bfac7dcb47139e5c17d189b2f8"
+        },
+        "date": 1677081211447,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 722810,
             "unit": "ns/op"
           }
         ]
