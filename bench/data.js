@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677139023919,
+  "lastUpdate": 1677139025003,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7130,6 +7130,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.687,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7d3c072b398b00d6096d926ced9c9fcbfe9bdde",
+          "message": "Merge pull request #784 from f1shl3gs/dependabot/cargo/pprof-0.11.1\n\nchore(deps): bump pprof from 0.11.0 to 0.11.1",
+          "timestamp": "2023-02-23T15:52:20+08:00",
+          "tree_id": "5d92cc9b3e0a47298f5f183fe1675aa8dd4716c8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7d3c072b398b00d6096d926ced9c9fcbfe9bdde"
+        },
+        "date": 1677139016045,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.486,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.565,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.675,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.617,
             "unit": "ns/op"
           }
         ]
