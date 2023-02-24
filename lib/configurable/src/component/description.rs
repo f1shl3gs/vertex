@@ -40,6 +40,7 @@ where
     /// `stdin`, you would say that the component is a "source called `stdin`".
     ///
     /// The type parameter `C` must be the component's configuration type that implements `Configurable`.
+    #[must_use]
     pub const fn new<C: Configurable>(component_name: &'static str) -> Self {
         ComponentDescription {
             component_name,
@@ -51,6 +52,12 @@ where
     /// TODO: deprecate this once we can generate example from JSON Schema
     ///
     /// Returns an example config for a plugin identified by tis type
+    ///
+    /// # Errors
+    ///
+    /// If no component, identified by `T` and the given name, is registered, or if
+    /// there is an error generating the example configuration, an error variant
+    /// will be returned.
     pub fn example(type_str: &str) -> Result<String, ExampleError> {
         inventory::iter::<ComponentDescription<T>>
             .into_iter()

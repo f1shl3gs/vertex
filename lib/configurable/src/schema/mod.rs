@@ -1,19 +1,26 @@
+mod gen;
+mod json_schema;
 mod num;
 mod stdlib;
+mod visit;
 
 use std::collections::BTreeSet;
 
 use indexmap::IndexMap;
 use num::ConfigurableNumber;
-use schemars::gen::{SchemaGenerator, SchemaSettings};
-use schemars::schema::{
-    ArrayValidation, InstanceType, NumberValidation, ObjectValidation, RootSchema, Schema,
-    SchemaObject, SingleOrVec, SubschemaValidation,
-};
 use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
+use crate::schema::json_schema::NumberValidation;
 use crate::{Configurable, GenerateError};
+pub use gen::{SchemaGenerator, SchemaSettings};
+pub use json_schema::{
+    ArrayValidation, InstanceType, Metadata, ObjectValidation, RootSchema, Schema, SchemaObject,
+    SingleOrVec, SubschemaValidation,
+};
+
+pub type Map<K, V> = IndexMap<K, V>;
+pub type Set<V> = BTreeSet<V>;
 
 pub fn generate_struct_schema(
     properties: IndexMap<String, SchemaObject>,
@@ -94,7 +101,7 @@ where
 }
 
 fn get_schema_ref<S: AsRef<str>>(gen: &mut SchemaGenerator, name: S) -> SchemaObject {
-    let ref_path = format!("{}{}", gen.settings().definitions_path, name.as_ref());
+    let ref_path = format!("{}{}", gen.settings().definitions_path(), name.as_ref());
     SchemaObject::new_ref(ref_path)
 }
 
@@ -102,14 +109,10 @@ pub fn generate_root_schema<T>() -> Result<RootSchema, GenerateError>
 where
     T: Configurable,
 {
-    let mut schema_gen = SchemaSettings::draft2019_09().into_generator();
+    let mut schema_gen = SchemaSettings::new().into_generator();
     let schema = get_or_generate_schema::<T>(&mut schema_gen)?;
 
-    Ok(RootSchema {
-        meta_schema: None,
-        schema,
-        definitions: schema_gen.take_definitions(),
-    })
+    Ok(schema_gen.into_root_schema(schema))
 }
 
 pub fn generate_map_schema<V>(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError>
@@ -183,9 +186,14 @@ pub fn generate_number_schema<N>() -> SchemaObject
 where
     N: Configurable + ConfigurableNumber,
 {
+    let minimum = N::get_enforced_min_bound();
+    let maximum = N::get_enforced_max_bound();
+
     let mut schema = SchemaObject {
         instance_type: Some(N::class().as_instance_type().into()),
         number: Some(Box::new(NumberValidation {
+            minimum: Some(minimum),
+            maximum: Some(maximum),
             ..Default::default()
         })),
         ..Default::default()

@@ -1,6 +1,4 @@
-use configurable::schema::generate_array_schema;
-use configurable::schemars::gen::SchemaGenerator;
-use configurable::schemars::schema::SchemaObject;
+use configurable::schema::{generate_array_schema, SchemaGenerator, SchemaObject};
 use configurable::{Configurable, GenerateError};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 

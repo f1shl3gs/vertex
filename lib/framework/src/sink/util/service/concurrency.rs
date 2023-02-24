@@ -1,10 +1,9 @@
 use std::fmt::Formatter;
 
 use configurable::schema::{
-    generate_const_string_schema, generate_number_schema, generate_one_of_schema,
+    generate_const_string_schema, generate_number_schema, generate_one_of_schema, SchemaGenerator,
+    SchemaObject,
 };
-use configurable::schemars::gen::SchemaGenerator;
-use configurable::schemars::schema::SchemaObject;
 use configurable::{Configurable, GenerateError};
 use serde::de::{Error, Unexpected, Visitor};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
