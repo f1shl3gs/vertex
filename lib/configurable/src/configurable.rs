@@ -1,4 +1,5 @@
 use crate::errors::GenerateError;
+use crate::schema;
 
 /// A type that can be represented in a Vertex configuration.
 ///
@@ -33,8 +34,8 @@ where
     /// If an error occurs while generating the schema, an error variant will
     /// be returned describing the issue.
     fn generate_schema(
-        gen: &mut schemars::gen::SchemaGenerator,
-    ) -> Result<schemars::schema::SchemaObject, GenerateError>;
+        gen: &mut schema::SchemaGenerator,
+    ) -> Result<schema::SchemaObject, GenerateError>;
 }
 
 pub trait ConfigurableString: Configurable {}

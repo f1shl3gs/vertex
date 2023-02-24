@@ -1,3 +1,6 @@
+#[deny(warnings)]
+// #![deny(clippy::pedantic)]
+// #![allow(clippy::uninlined_format_args)]
 pub mod component;
 mod configurable;
 mod errors;
@@ -15,7 +18,6 @@ pub use crate::configurable::{Configurable, ConfigurableString};
 
 // re-export
 pub use indexmap::IndexMap;
-pub use schemars;
 
 // Re-export of the `#[configurable_component]` and `#[derive(Configurable)]` proc macros.
 pub use configurable_derive::{configurable_component, Configurable};

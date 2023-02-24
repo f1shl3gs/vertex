@@ -1,7 +1,4 @@
-use schemars::gen::SchemaGenerator;
-use schemars::schema::SchemaObject;
-
-use crate::schema::generate_string_schema;
+use crate::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
 use crate::{Configurable, GenerateError};
 
 impl Configurable for url::Url {

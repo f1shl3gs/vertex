@@ -1,10 +1,9 @@
 use chrono::{DateTime, Local, ParseError, TimeZone as _, Utc};
 use chrono_tz::Tz;
 use configurable::schema::{
-    generate_const_string_schema, generate_one_of_schema, get_or_generate_schema,
+    generate_const_string_schema, generate_one_of_schema, get_or_generate_schema, SchemaGenerator,
+    SchemaObject,
 };
-use configurable::schemars::gen::SchemaGenerator;
-use configurable::schemars::schema::SchemaObject;
 use configurable::{Configurable, GenerateError};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Default)]

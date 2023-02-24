@@ -4,15 +4,13 @@ use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::time::Duration;
 
-use schemars::gen::SchemaGenerator;
-use schemars::schema::{InstanceType, Metadata, SchemaObject};
 use serde_json::Value;
 
 use crate::configurable::ConfigurableString;
 use crate::schema::{
     assert_string_schema_for_map, generate_array_schema, generate_baseline_schema,
     generate_bool_schema, generate_map_schema, generate_number_schema, generate_string_schema,
-    make_schema_optional,
+    make_schema_optional, InstanceType, Metadata, SchemaGenerator, SchemaObject,
 };
 use crate::{Configurable, GenerateError};
 

@@ -642,7 +642,6 @@ dependencies = [
  "inventory",
  "no-proxy",
  "regex",
- "schemars",
  "serde",
  "serde_json",
  "serde_yaml 0.9.17",
@@ -3500,18 +3499,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
-]
-
-[[package]]
-name = "schemars"
-version = "0.8.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a5fb6c61f29e723026dc8e923d94c694313212abbecbbe5f55a7748eec5b307"
-dependencies = [
- "dyn-clone",
- "indexmap",
- "serde",
- "serde_json",
 ]
 
 [[package]]

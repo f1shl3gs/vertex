@@ -1,11 +1,11 @@
 use std::cell::RefCell;
 
-use schemars::schema::{
-    InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject, SingleOrVec,
-};
 use serde_json::{Map, Number, Value};
 
-use crate::schema::generate_root_schema;
+use crate::schema::{
+    generate_root_schema, InstanceType, ObjectValidation, RootSchema, Schema, SchemaObject,
+    SingleOrVec,
+};
 use crate::Configurable;
 
 struct Buf {

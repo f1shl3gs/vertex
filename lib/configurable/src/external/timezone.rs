@@ -1,8 +1,5 @@
-use crate::{
-    schema::generate_string_schema,
-    schemars::{gen::SchemaGenerator, schema::SchemaObject},
-    Configurable, GenerateError,
-};
+use crate::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
+use crate::{Configurable, GenerateError};
 
 impl Configurable for chrono_tz::Tz {
     fn generate_schema(_: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {

@@ -80,9 +80,9 @@ fn impl_from_struct(
 
             return quote!(
                 fn generate_schema(
-                    schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator,
+                    schema_gen: &mut ::configurable::schema::SchemaGenerator,
                 ) -> std::result::Result<
-                    ::configurable::schemars::schema::SchemaObject,
+                    ::configurable::schema::SchemaObject,
                     ::configurable::GenerateError,
                 > {
                     Ok(::configurable::schema::generate_empty_struct_schema())
@@ -101,8 +101,8 @@ fn impl_from_struct(
         .map(|field| generate_named_struct_field(errs, type_attrs, field));
 
     let generate_schema = quote!(
-        fn generate_schema(schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator)
-            -> std::result::Result<::configurable::schemars::schema::SchemaObject, ::configurable::GenerateError>
+        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
+            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
         {
             let mut properties = ::configurable::IndexMap::new();
             let mut required = ::std::collections::BTreeSet::new();
@@ -272,8 +272,8 @@ fn impl_from_enum(
         .map(|desc| quote!( metadata.description = Some(#desc.to_string()); ));
 
     quote! {
-        fn generate_schema(schema_gen: &mut ::configurable::schemars::gen::SchemaGenerator)
-            -> std::result::Result<::configurable::schemars::schema::SchemaObject, ::configurable::GenerateError>
+        fn generate_schema(schema_gen: &mut ::configurable::schema::SchemaGenerator)
+            -> std::result::Result<::configurable::schema::SchemaObject, ::configurable::GenerateError>
         {
             let mut subschemas = ::std::vec::Vec::new();
 

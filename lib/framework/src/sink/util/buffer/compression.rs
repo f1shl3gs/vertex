@@ -1,8 +1,6 @@
 use std::fmt::{Debug, Display, Formatter};
 
-use configurable::schema::generate_string_schema;
-use configurable::schemars::gen::SchemaGenerator;
-use configurable::schemars::schema::SchemaObject;
+use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
 use configurable::{Configurable, GenerateError};
 use serde::de::{Error, MapAccess};
 use serde::ser::SerializeMap;
