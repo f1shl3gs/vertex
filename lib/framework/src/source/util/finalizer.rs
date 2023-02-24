@@ -91,7 +91,6 @@ where
 }
 
 #[pin_project::pin_project]
-#[derive(Debug)]
 struct FinalizerStream<T, S> {
     shutdown: ShutdownSignal,
     new_entries: UnboundedReceiver<(BatchStatusReceiver, T)>,

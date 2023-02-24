@@ -1,0 +1,13 @@
+[package]
+name = "tripwire"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+tracing = "0.1.37"
+
+[dev-dependencies]
+futures = { version = "0.3.26" }
+tokio = { version = "1.25.0", features = ["test-util", "macros", "rt-multi-thread"] }
+tokio-stream = { version = "0.1.11" }

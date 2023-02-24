@@ -12,9 +12,9 @@ use futures::{FutureExt, StreamExt};
 use futures_util::stream::FuturesOrdered;
 use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
-use stream_cancel::{StreamExt as StreamCancelExt, Trigger, Tripwire};
 use tokio::time::timeout;
 use tracing_futures::Instrument;
+use tripwire::{Trigger, Tripwire};
 
 use super::fanout;
 use super::fanout::Fanout;
@@ -575,8 +575,8 @@ pub async fn build_pieces(
             }
         };
 
-        let (trigger, tripwire) = Tripwire::new();
         let component = name.id().to_string();
+        let (trigger, tripwire) = Tripwire::new(format!("sink_{}", component));
         let attrs = Attributes::from([
             ("component", component.into()),
             ("component_type", "sink".into()),
@@ -598,7 +598,7 @@ pub async fn build_pieces(
             sink.run(
                 rx.by_ref()
                     .filter(|events| ready(filter_events_type(events, input_type)))
-                    .take_until_if(tripwire)
+                    .take_until(tripwire)
                     .metric_record(attrs),
             )
             .await

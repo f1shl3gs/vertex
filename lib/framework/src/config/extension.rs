@@ -6,7 +6,7 @@ use configurable::NamedComponent;
 use crate::config::{GlobalOptions, Resource};
 use crate::{Extension, ShutdownSignal};
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct ExtensionContext {
     pub name: String,
     pub global: GlobalOptions,

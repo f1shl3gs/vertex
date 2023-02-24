@@ -45,7 +45,6 @@ impl SourceConfig for MockSourceConfig {
                 tripwire
                     .clone()
                     .unwrap()
-                    .then(crate::stream::tripwire_handler)
                     .boxed(),
             )
             .map(|_| std::mem::drop(out))

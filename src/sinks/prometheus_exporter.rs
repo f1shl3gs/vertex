@@ -17,7 +17,6 @@ use configurable::configurable_component;
 use event::Metric;
 use event::{Events, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
-use framework::stream::tripwire_handler;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::prelude::stream::BoxStream;
@@ -25,8 +24,8 @@ use futures::{FutureExt, StreamExt};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use parking_lot::Mutex;
-use stream_cancel::{Trigger, Tripwire};
 use tokio_stream::wrappers::IntervalStream;
+use tripwire::{Trigger, Tripwire};
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[derive(Clone, Debug)]
@@ -155,7 +154,7 @@ impl PrometheusExporter {
             return;
         }
 
-        let (trigger, tripwire) = Tripwire::new();
+        let (trigger, tripwire) = Tripwire::new("pe");
         let metrics = Arc::clone(&self.metrics);
 
         // Start a gc routine, and flush metrics every ttl. It will keep state clean
@@ -215,7 +214,7 @@ impl PrometheusExporter {
 
             Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                 .serve(new_service)
-                .with_graceful_shutdown(tripwire.then(tripwire_handler))
+                .with_graceful_shutdown(tripwire)
                 .await
                 .map_err(|err| {
                     error!(

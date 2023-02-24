@@ -6,13 +6,12 @@ use std::{
 };
 
 use futures::{future, ready, Future, FutureExt};
-use stream_cancel::{Trigger, Tripwire};
 use tokio::time::{timeout_at, Instant};
+use tripwire::{Trigger, Tripwire};
 
 use crate::config::ComponentKey;
-use crate::stream::tripwire_handler;
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct ShutdownCoordinator {
     begun_triggers: HashMap<ComponentKey, Trigger>,
     force_triggers: HashMap<ComponentKey, Trigger>,
@@ -28,9 +27,9 @@ impl ShutdownCoordinator {
         &mut self,
         name: &ComponentKey,
     ) -> (ShutdownSignal, impl Future<Output = ()>) {
-        let (begun_trigger, begun_tripwire) = Tripwire::new();
-        let (force_trigger, force_tripwire) = Tripwire::new();
-        let (complete_trigger, complete_tripwire) = Tripwire::new();
+        let (begun_trigger, begun_tripwire) = Tripwire::new(format!("{}_begun", name));
+        let (force_trigger, force_tripwire) = Tripwire::new(format!("{}_force", name));
+        let (complete_trigger, complete_tripwire) = Tripwire::new(format!("{}_complete", name));
 
         self.begun_triggers.insert(name.clone(), begun_trigger);
         self.force_triggers.insert(name.clone(), force_trigger);
@@ -38,10 +37,6 @@ impl ShutdownCoordinator {
             .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
-
-        // `force_tripwire` resolves even if canceled when we should *not* be
-        // shutting down. `tripwire_handler` handles cancel by never resolving.
-        let force_tripwire = force_tripwire.then(tripwire_handler);
 
         (shutdown_signal, force_tripwire)
     }
@@ -50,9 +45,9 @@ impl ShutdownCoordinator {
         &mut self,
         name: &ComponentKey,
     ) -> (ShutdownSignal, impl Future<Output = ()>) {
-        let (begun_trigger, begun_tripwire) = Tripwire::new();
-        let (force_trigger, force_tripwire) = Tripwire::new();
-        let (complete_trigger, complete_tripwire) = Tripwire::new();
+        let (begun_trigger, begun_tripwire) = Tripwire::new("");
+        let (force_trigger, force_tripwire) = Tripwire::new("");
+        let (complete_trigger, complete_tripwire) = Tripwire::new("");
 
         self.begun_triggers.insert(name.clone(), begun_trigger);
         self.force_triggers.insert(name.clone(), force_trigger);
@@ -60,10 +55,6 @@ impl ShutdownCoordinator {
             .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
-
-        // `force_tripwire` resolves even if canceled when we should *not* be
-        // shutting down. `tripwire_handler` handles cancel by never resolving.
-        let force_tripwire = force_tripwire.then(tripwire_handler);
 
         (shutdown_signal, force_tripwire)
     }
@@ -207,7 +198,7 @@ impl ShutdownCoordinator {
             .complete_tripwires
             .values()
             .cloned()
-            .map(|tripwire| tripwire.then(tripwire_handler).boxed());
+            .map(|tripwire| tripwire.boxed());
 
         future::join_all(futs)
             .map(|_| info!("All sources have finished"))
@@ -223,7 +214,7 @@ impl ShutdownCoordinator {
         async move {
             // Call `force_trigger.disable()` on drop
             let force_trigger = DisableTrigger::new(force_trigger);
-            let fut = complete_tripwire.then(tripwire_handler);
+            let fut = complete_tripwire;
             if timeout_at(deadline, fut).await.is_ok() {
                 force_trigger.into_inner().disable();
                 true
@@ -276,7 +267,7 @@ impl From<Trigger> for DisableTrigger {
 /// executing and may be cleaned up. It is the responsibility
 /// of each Source to ensure that at least one copy of this handle
 /// remains alive for the entire lifetime of the Source.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ShutdownSignalToken {
     _complete: Arc<Trigger>,
 }
@@ -291,7 +282,7 @@ impl ShutdownSignalToken {
 
 /// Passed to each Source to coordinate the global shutdown process.
 #[pin_project::pin_project]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ShutdownSignal {
     /// This will be triggered when global shutdown has begun, and is a
     /// sign to the Source to begin its shutdown process.
@@ -311,16 +302,14 @@ impl Future for ShutdownSignal {
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         match self.as_mut().project().begin.as_pin_mut() {
             Some(fut) => {
-                let closed = ready!(fut.poll(cx));
+                ready!(fut.poll(cx));
                 let mut pinned = self.project();
                 pinned.begin.set(None);
 
-                if closed {
-                    Poll::Ready(pinned.completed.take().unwrap())
-                } else {
-                    Poll::Pending
-                }
+                Poll::Ready(pinned.completed.take().unwrap())
             }
+            // TODO: This should almost certainly be a panic to avoid deadlocking in the case of a
+            // poll-after-ready situation.
             None => Poll::Pending,
         }
     }
@@ -336,7 +325,7 @@ impl ShutdownSignal {
 
     #[cfg(any(test, feature = "test-util"))]
     pub fn noop() -> Self {
-        let (trigger, tripwire) = Tripwire::new();
+        let (trigger, tripwire) = Tripwire::new("shutdown_signal");
         Self {
             begin: Some(tripwire),
             completed: Some(ShutdownSignalToken::new(trigger)),
@@ -345,8 +334,8 @@ impl ShutdownSignal {
 
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_wired() -> (Trigger, ShutdownSignal, Tripwire) {
-        let (trigger_shutdown, tripwire) = Tripwire::new();
-        let (trigger, shutdown_done) = Tripwire::new();
+        let (trigger_shutdown, tripwire) = Tripwire::new("new_wired");
+        let (trigger, shutdown_done) = Tripwire::new("done");
         let shutdown = ShutdownSignal::new(tripwire, trigger);
 
         (trigger_shutdown, shutdown, shutdown_done)
