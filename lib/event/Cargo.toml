@@ -15,7 +15,7 @@ futures = { version = "0.3.26", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 pin-project = { version = "1.0.12", default-features = false }
-prost = { version = "0.11.6", default-features = false, features = ["std"] }
+prost = { version = "0.11.7", default-features = false, features = ["std"] }
 prost-types = { version = "0.11.6", default-features = false }
 rand = { version = "0.8.5" }
 serde = { version = "1.0.152", features = ["derive"] }
