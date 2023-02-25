@@ -81,6 +81,7 @@ impl SourceConfig for MockSourceConfig {
                 if let Some(until) = shutdown.as_mut() {
                     match until.poll_unpin(cx) {
                         Poll::Ready(_res) => {
+                            info!("source shutdown");
                             shutdown.take();
                             recv.close();
                         }

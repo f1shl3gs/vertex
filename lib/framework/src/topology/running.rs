@@ -255,8 +255,10 @@ impl RunningTopology {
         }
     }
 
-    /// Shutdowns removed and replaced pieces of topology.
-    /// Returns buffers to be reused.
+    /// Shuts down any changed/removed component in the given configuration diff.
+    ///
+    /// If buffers for any of the changed/removed components can be recovered,
+    /// they'll be returned.
     async fn shutdown_diff(
         &mut self,
         diff: &ConfigDiff,
@@ -266,7 +268,7 @@ impl RunningTopology {
         // allow downstream components to terminate naturally by virtue of the flow
         // of events stopping.
         if diff.sources.any_changed_or_removed() {
-            let timeout = Duration::from_secs(5);
+            let timeout = Duration::from_secs(30);
             let mut source_shutdown_handles = Vec::new();
 
             let deadline = Instant::now() + timeout;

@@ -42,10 +42,7 @@ impl SourceConfig for MockSourceConfig {
         Ok(Box::pin(
             future::select(
                 cx.shutdown.map(|_| ()).boxed(),
-                tripwire
-                    .clone()
-                    .unwrap()
-                    .boxed(),
+                tripwire.clone().unwrap().boxed(),
             )
             .map(|_| std::mem::drop(out))
             .unit_error(),

@@ -60,6 +60,10 @@ impl ShutdownCoordinator {
     }
 
     /// Takes ownership of all internal state for the given source from another ShutdownCoordinator.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the other coordinator already had its triggers removed.
     pub fn takeover_source(&mut self, name: &ComponentKey, other: &mut Self) {
         let existing = self.begun_triggers.insert(
             name.clone(),
@@ -212,11 +216,8 @@ impl ShutdownCoordinator {
         deadline: Instant,
     ) -> impl Future<Output = bool> {
         async move {
-            // Call `force_trigger.disable()` on drop
-            let force_trigger = DisableTrigger::new(force_trigger);
-            let fut = complete_tripwire;
-            if timeout_at(deadline, fut).await.is_ok() {
-                force_trigger.into_inner().disable();
+            if timeout_at(deadline, complete_tripwire).await.is_ok() {
+                force_trigger.disable();
                 true
             } else {
                 error!(
@@ -224,41 +225,11 @@ impl ShutdownCoordinator {
                     name
                 );
 
-                force_trigger.into_inner().cancel();
+                force_trigger.cancel();
                 false
             }
         }
         .boxed()
-    }
-}
-
-struct DisableTrigger {
-    trigger: Option<Trigger>,
-}
-
-impl DisableTrigger {
-    fn new(trigger: Trigger) -> Self {
-        Self {
-            trigger: Some(trigger),
-        }
-    }
-
-    fn into_inner(mut self) -> Trigger {
-        self.trigger.take().unwrap()
-    }
-}
-
-impl Drop for DisableTrigger {
-    fn drop(&mut self) {
-        if let Some(trigger) = self.trigger.take() {
-            trigger.disable()
-        }
-    }
-}
-
-impl From<Trigger> for DisableTrigger {
-    fn from(trigger: Trigger) -> Self {
-        Self::new(trigger)
     }
 }
 
@@ -303,13 +274,16 @@ impl Future for ShutdownSignal {
         match self.as_mut().project().begin.as_pin_mut() {
             Some(fut) => {
                 ready!(fut.poll(cx));
+
+                info!("shutdown signal ready");
+
                 let mut pinned = self.project();
                 pinned.begin.set(None);
 
                 Poll::Ready(pinned.completed.take().unwrap())
             }
-            // TODO: This should almost certainly be a panic to avoid deadlocking in the case of a
-            // poll-after-ready situation.
+            // TODO: This should almost certainly be a panic to avoid deadlocking in
+            // the case of a poll-after-ready situation.
             None => Poll::Pending,
         }
     }
