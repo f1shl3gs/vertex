@@ -201,6 +201,7 @@ mod tests {
     use tokio_stream::wrappers::ReceiverStream;
 
     #[test]
+    #[allow(clippy::redundant_clone)]
     fn tripwire_id() {
         let (_tr, tw) = Tripwire::new();
         assert_eq!(tw.id, 1);
