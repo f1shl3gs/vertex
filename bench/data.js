@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677356530869,
+  "lastUpdate": 1677357556283,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14514,6 +14514,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56310.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aaf5609a22b526bc9ed56f31b14e1abf9752a749",
+          "message": "replace `stream-cancel` with lib/tripwire (#788)\n\n* tripwire\r\n\r\n* update\r\n\r\n* update\r\n\r\n* add `#[allow(clippy::redundant_clone)]` for test",
+          "timestamp": "2023-02-26T04:17:27+08:00",
+          "tree_id": "3717fda7dc34f656b82fd7601964d1f0c0c17653",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aaf5609a22b526bc9ed56f31b14e1abf9752a749"
+        },
+        "date": 1677357547872,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1105,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56367.4,
             "unit": "KiB"
           }
         ]
