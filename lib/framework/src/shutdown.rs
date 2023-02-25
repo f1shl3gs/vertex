@@ -6,13 +6,12 @@ use std::{
 };
 
 use futures::{future, ready, Future, FutureExt};
-use stream_cancel::{Trigger, Tripwire};
 use tokio::time::{timeout_at, Instant};
+use tripwire::{Trigger, Tripwire};
 
 use crate::config::ComponentKey;
-use crate::stream::tripwire_handler;
 
-#[derive(Debug, Default)]
+#[derive(Default)]
 pub struct ShutdownCoordinator {
     begun_triggers: HashMap<ComponentKey, Trigger>,
     force_triggers: HashMap<ComponentKey, Trigger>,
@@ -24,10 +23,7 @@ impl ShutdownCoordinator {
     /// of this Source and stores them as needed. Return the ShutdownSignal for
     /// this Source as well as a Tripwire that will be notified if the Source
     /// should be forcibly shutdown
-    pub fn register_source(
-        &mut self,
-        name: &ComponentKey,
-    ) -> (ShutdownSignal, impl Future<Output = ()>) {
+    pub fn register_source(&mut self, name: &ComponentKey) -> (ShutdownSignal, Tripwire) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
@@ -38,18 +34,11 @@ impl ShutdownCoordinator {
             .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
-
-        // `force_tripwire` resolves even if canceled when we should *not* be
-        // shutting down. `tripwire_handler` handles cancel by never resolving.
-        let force_tripwire = force_tripwire.then(tripwire_handler);
 
         (shutdown_signal, force_tripwire)
     }
 
-    pub fn register_extension(
-        &mut self,
-        name: &ComponentKey,
-    ) -> (ShutdownSignal, impl Future<Output = ()>) {
+    pub fn register_extension(&mut self, name: &ComponentKey) -> (ShutdownSignal, Tripwire) {
         let (begun_trigger, begun_tripwire) = Tripwire::new();
         let (force_trigger, force_tripwire) = Tripwire::new();
         let (complete_trigger, complete_tripwire) = Tripwire::new();
@@ -60,15 +49,15 @@ impl ShutdownCoordinator {
             .insert(name.clone(), complete_tripwire);
 
         let shutdown_signal = ShutdownSignal::new(begun_tripwire, complete_trigger);
-
-        // `force_tripwire` resolves even if canceled when we should *not* be
-        // shutting down. `tripwire_handler` handles cancel by never resolving.
-        let force_tripwire = force_tripwire.then(tripwire_handler);
 
         (shutdown_signal, force_tripwire)
     }
 
     /// Takes ownership of all internal state for the given source from another ShutdownCoordinator.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the other coordinator already had its triggers removed.
     pub fn takeover_source(&mut self, name: &ComponentKey, other: &mut Self) {
         let existing = self.begun_triggers.insert(
             name.clone(),
@@ -207,7 +196,7 @@ impl ShutdownCoordinator {
             .complete_tripwires
             .values()
             .cloned()
-            .map(|tripwire| tripwire.then(tripwire_handler).boxed());
+            .map(|tripwire| tripwire.boxed());
 
         future::join_all(futs)
             .map(|_| info!("All sources have finished"))
@@ -221,11 +210,8 @@ impl ShutdownCoordinator {
         deadline: Instant,
     ) -> impl Future<Output = bool> {
         async move {
-            // Call `force_trigger.disable()` on drop
-            let force_trigger = DisableTrigger::new(force_trigger);
-            let fut = complete_tripwire.then(tripwire_handler);
-            if timeout_at(deadline, fut).await.is_ok() {
-                force_trigger.into_inner().disable();
+            if timeout_at(deadline, complete_tripwire).await.is_ok() {
+                force_trigger.disable();
                 true
             } else {
                 error!(
@@ -233,41 +219,11 @@ impl ShutdownCoordinator {
                     name
                 );
 
-                force_trigger.into_inner().cancel();
+                force_trigger.cancel();
                 false
             }
         }
         .boxed()
-    }
-}
-
-struct DisableTrigger {
-    trigger: Option<Trigger>,
-}
-
-impl DisableTrigger {
-    fn new(trigger: Trigger) -> Self {
-        Self {
-            trigger: Some(trigger),
-        }
-    }
-
-    fn into_inner(mut self) -> Trigger {
-        self.trigger.take().unwrap()
-    }
-}
-
-impl Drop for DisableTrigger {
-    fn drop(&mut self) {
-        if let Some(trigger) = self.trigger.take() {
-            trigger.disable()
-        }
-    }
-}
-
-impl From<Trigger> for DisableTrigger {
-    fn from(trigger: Trigger) -> Self {
-        Self::new(trigger)
     }
 }
 
@@ -276,7 +232,7 @@ impl From<Trigger> for DisableTrigger {
 /// executing and may be cleaned up. It is the responsibility
 /// of each Source to ensure that at least one copy of this handle
 /// remains alive for the entire lifetime of the Source.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ShutdownSignalToken {
     _complete: Arc<Trigger>,
 }
@@ -291,7 +247,7 @@ impl ShutdownSignalToken {
 
 /// Passed to each Source to coordinate the global shutdown process.
 #[pin_project::pin_project]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct ShutdownSignal {
     /// This will be triggered when global shutdown has begun, and is a
     /// sign to the Source to begin its shutdown process.
@@ -311,16 +267,17 @@ impl Future for ShutdownSignal {
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         match self.as_mut().project().begin.as_pin_mut() {
             Some(fut) => {
-                let closed = ready!(fut.poll(cx));
+                ready!(fut.poll(cx));
+
+                info!("shutdown signal ready");
+
                 let mut pinned = self.project();
                 pinned.begin.set(None);
 
-                if closed {
-                    Poll::Ready(pinned.completed.take().unwrap())
-                } else {
-                    Poll::Pending
-                }
+                Poll::Ready(pinned.completed.take().unwrap())
             }
+            // TODO: This should almost certainly be a panic to avoid deadlocking in
+            // the case of a poll-after-ready situation.
             None => Poll::Pending,
         }
     }

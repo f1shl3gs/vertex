@@ -1,4 +1,4 @@
-use stream_cancel::Trigger;
+use tripwire::Trigger;
 
 pub struct DisabledTrigger {
     trigger: Option<Trigger>,

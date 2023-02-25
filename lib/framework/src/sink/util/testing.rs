@@ -2,17 +2,16 @@ use std::net::SocketAddr;
 
 use bytes::Bytes;
 use futures::channel::mpsc;
-use futures_util::{FutureExt, SinkExt, TryFutureExt};
+use futures_util::{SinkExt, TryFutureExt};
 use http::{Request, Response, StatusCode};
 use hyper::body::HttpBody;
 use hyper::service::make_service_fn;
 use hyper::{Body, Server};
 use serde::Deserialize;
-use stream_cancel::{Trigger, Tripwire};
 use tower::service_fn;
+use tripwire::{Trigger, Tripwire};
 
 use crate::config::{SinkConfig, SinkContext};
-use crate::stream::tripwire_handler;
 
 pub fn load_sink<T>(config: &str) -> crate::Result<(T, SinkContext)>
 where
@@ -93,7 +92,7 @@ where
     let (trigger, tripwire) = Tripwire::new();
     let server = Server::bind(&addr)
         .serve(service)
-        .with_graceful_shutdown(tripwire.then(tripwire_handler))
+        .with_graceful_shutdown(tripwire)
         .map_err(|err| panic!("Server error: {}", err));
 
     (rx, trigger, server)

@@ -41,6 +41,7 @@ members = [
     "lib/prometheus",
     "lib/testify",
     "lib/tail",
+    "lib/tripwire",
     "lib/log_schema",
     "lib/tracing-limit",
     "lib/sysinfo",
@@ -355,6 +356,7 @@ prometheus = { path = "lib/prometheus", optional = true }
 measurable = { path = "lib/measurable" }
 sysinfo = { path = "lib/sysinfo", optional = true }
 tail = { path = "lib/tail", optional = true }
+tripwire = { path = "lib/tripwire" }
 virt = { path = "lib/virt", optional = true }
 metrics = { path = "lib/metrics" }
 
@@ -373,7 +375,6 @@ futures = { version = "0.3.26", default-features = false }
 futures-util = { version = "0.3.26", default-features = false }
 async-trait = { version = "0.1.64" }
 pin-project = { version = "1.0.12" }
-stream-cancel = { version = "0.8.1" }
 
 # Tracing
 tracing = { version = "0.1.37", default-features = false }

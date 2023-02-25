@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use futures::{future, FutureExt};
 use serde::{Deserialize, Serialize};
-use stream_cancel::{Trigger, Tripwire};
 use tokio::sync::Mutex;
+use tripwire::{Trigger, Tripwire};
 
 use crate::{
     config::{Config, DataType, Output, SourceConfig, SourceContext},
@@ -42,11 +42,7 @@ impl SourceConfig for MockSourceConfig {
         Ok(Box::pin(
             future::select(
                 cx.shutdown.map(|_| ()).boxed(),
-                tripwire
-                    .clone()
-                    .unwrap()
-                    .then(crate::stream::tripwire_handler)
-                    .boxed(),
+                tripwire.clone().unwrap().boxed(),
             )
             .map(|_| std::mem::drop(out))
             .unit_error(),

@@ -255,8 +255,10 @@ impl RunningTopology {
         }
     }
 
-    /// Shutdowns removed and replaced pieces of topology.
-    /// Returns buffers to be reused.
+    /// Shuts down any changed/removed component in the given configuration diff.
+    ///
+    /// If buffers for any of the changed/removed components can be recovered,
+    /// they'll be returned.
     async fn shutdown_diff(
         &mut self,
         diff: &ConfigDiff,
