@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677357556283,
+  "lastUpdate": 1677357564785,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18385,6 +18385,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 983.24,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aaf5609a22b526bc9ed56f31b14e1abf9752a749",
+          "message": "replace `stream-cancel` with lib/tripwire (#788)\n\n* tripwire\r\n\r\n* update\r\n\r\n* update\r\n\r\n* add `#[allow(clippy::redundant_clone)]` for test",
+          "timestamp": "2023-02-26T04:17:27+08:00",
+          "tree_id": "3717fda7dc34f656b82fd7601964d1f0c0c17653",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aaf5609a22b526bc9ed56f31b14e1abf9752a749"
+        },
+        "date": 1677357556273,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 42263000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1021300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.563,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 54.161,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 403.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1161.5,
             "unit": "ns/op"
           }
         ]
