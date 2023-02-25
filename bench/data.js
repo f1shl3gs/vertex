@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677356528412,
+  "lastUpdate": 1677356530869,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12068,6 +12068,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 254730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "aaf5609a22b526bc9ed56f31b14e1abf9752a749",
+          "message": "replace `stream-cancel` with lib/tripwire (#788)\n\n* tripwire\r\n\r\n* update\r\n\r\n* update\r\n\r\n* add `#[allow(clippy::redundant_clone)]` for test",
+          "timestamp": "2023-02-26T04:17:27+08:00",
+          "tree_id": "3717fda7dc34f656b82fd7601964d1f0c0c17653",
+          "url": "https://github.com/f1shl3gs/vertex/commit/aaf5609a22b526bc9ed56f31b14e1abf9752a749"
+        },
+        "date": 1677356522527,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 527.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 52863,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 264030,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 527560,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 266.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 26630,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 133050,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 266020,
             "unit": "ns/op"
           }
         ]
