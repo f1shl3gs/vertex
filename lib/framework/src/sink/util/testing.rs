@@ -89,7 +89,7 @@ where
         }
     });
 
-    let (trigger, tripwire) = Tripwire::new("test_server");
+    let (trigger, tripwire) = Tripwire::new();
     let server = Server::bind(&addr)
         .serve(service)
         .with_graceful_shutdown(tripwire)

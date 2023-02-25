@@ -23,13 +23,10 @@ impl ShutdownCoordinator {
     /// of this Source and stores them as needed. Return the ShutdownSignal for
     /// this Source as well as a Tripwire that will be notified if the Source
     /// should be forcibly shutdown
-    pub fn register_source(
-        &mut self,
-        name: &ComponentKey,
-    ) -> (ShutdownSignal, impl Future<Output = ()>) {
-        let (begun_trigger, begun_tripwire) = Tripwire::new(format!("{}_begun", name));
-        let (force_trigger, force_tripwire) = Tripwire::new(format!("{}_force", name));
-        let (complete_trigger, complete_tripwire) = Tripwire::new(format!("{}_complete", name));
+    pub fn register_source(&mut self, name: &ComponentKey) -> (ShutdownSignal, Tripwire) {
+        let (begun_trigger, begun_tripwire) = Tripwire::new();
+        let (force_trigger, force_tripwire) = Tripwire::new();
+        let (complete_trigger, complete_tripwire) = Tripwire::new();
 
         self.begun_triggers.insert(name.clone(), begun_trigger);
         self.force_triggers.insert(name.clone(), force_trigger);
@@ -41,13 +38,10 @@ impl ShutdownCoordinator {
         (shutdown_signal, force_tripwire)
     }
 
-    pub fn register_extension(
-        &mut self,
-        name: &ComponentKey,
-    ) -> (ShutdownSignal, impl Future<Output = ()>) {
-        let (begun_trigger, begun_tripwire) = Tripwire::new("");
-        let (force_trigger, force_tripwire) = Tripwire::new("");
-        let (complete_trigger, complete_tripwire) = Tripwire::new("");
+    pub fn register_extension(&mut self, name: &ComponentKey) -> (ShutdownSignal, Tripwire) {
+        let (begun_trigger, begun_tripwire) = Tripwire::new();
+        let (force_trigger, force_tripwire) = Tripwire::new();
+        let (complete_trigger, complete_tripwire) = Tripwire::new();
 
         self.begun_triggers.insert(name.clone(), begun_trigger);
         self.force_triggers.insert(name.clone(), force_trigger);
@@ -299,7 +293,7 @@ impl ShutdownSignal {
 
     #[cfg(any(test, feature = "test-util"))]
     pub fn noop() -> Self {
-        let (trigger, tripwire) = Tripwire::new("shutdown_signal");
+        let (trigger, tripwire) = Tripwire::new();
         Self {
             begin: Some(tripwire),
             completed: Some(ShutdownSignalToken::new(trigger)),
@@ -308,8 +302,8 @@ impl ShutdownSignal {
 
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_wired() -> (Trigger, ShutdownSignal, Tripwire) {
-        let (trigger_shutdown, tripwire) = Tripwire::new("new_wired");
-        let (trigger, shutdown_done) = Tripwire::new("done");
+        let (trigger_shutdown, tripwire) = Tripwire::new();
+        let (trigger, shutdown_done) = Tripwire::new();
         let shutdown = ShutdownSignal::new(tripwire, trigger);
 
         (trigger_shutdown, shutdown, shutdown_done)

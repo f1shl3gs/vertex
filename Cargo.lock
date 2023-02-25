@@ -4565,7 +4565,6 @@ dependencies = [
  "futures",
  "tokio",
  "tokio-stream",
- "tracing",
 ]
 
 [[package]]

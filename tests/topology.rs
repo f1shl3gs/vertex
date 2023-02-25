@@ -15,7 +15,6 @@ use futures_util::{stream, StreamExt};
 use log_schema::log_schema;
 use tempfile::tempdir;
 use tokio::time::sleep;
-use tracing::info;
 use util::{sink, source, transform};
 
 use crate::util::{sink_failing_healthcheck, sink_with_data, source_with_data, MockSourceConfig};
@@ -252,11 +251,9 @@ async fn topology_remove_one_source() {
     let event2 = Event::from("that");
     let h_out1 = tokio::spawn(out1.flat_map(into_event_stream).collect::<Vec<_>>());
 
-    info!("send event to in1 and in2");
     in1.send(event1.clone()).await.unwrap();
     in2.send(event2.clone()).await.unwrap_err();
 
-    info!("drop inputs");
     // Drop the inputs to the two sources, which will ensure they drain all items and stop
     // themselves, and also fully stop the topology:
     drop(in1);

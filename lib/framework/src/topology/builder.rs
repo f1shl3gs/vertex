@@ -576,7 +576,7 @@ pub async fn build_pieces(
         };
 
         let component = name.id().to_string();
-        let (trigger, tripwire) = Tripwire::new(format!("sink_{}", component));
+        let (trigger, tripwire) = Tripwire::new();
         let attrs = Attributes::from([
             ("component", component.into()),
             ("component_type", "sink".into()),

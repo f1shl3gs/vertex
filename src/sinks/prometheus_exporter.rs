@@ -154,7 +154,7 @@ impl PrometheusExporter {
             return;
         }
 
-        let (trigger, tripwire) = Tripwire::new("pe");
+        let (trigger, tripwire) = Tripwire::new();
         let metrics = Arc::clone(&self.metrics);
 
         // Start a gc routine, and flush metrics every ttl. It will keep state clean

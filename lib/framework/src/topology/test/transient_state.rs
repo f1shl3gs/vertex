@@ -2,8 +2,8 @@ use std::sync::Arc;
 
 use futures::{future, FutureExt};
 use serde::{Deserialize, Serialize};
-use stream_cancel::{Trigger, Tripwire};
 use tokio::sync::Mutex;
+use tripwire::{Trigger, Tripwire};
 
 use crate::{
     config::{Config, DataType, Output, SourceConfig, SourceContext},
