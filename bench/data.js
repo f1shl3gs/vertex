@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677401065477,
+  "lastUpdate": 1677401094535,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4586,6 +4586,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 285.59,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07132a399a2ad9a171637b8ddf36c2bdcf2261f3",
+          "message": "update humanize to revision bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a (#789)",
+          "timestamp": "2023-02-26T16:40:54+08:00",
+          "tree_id": "6258575697fad4862f2e7651c44810184ff76d9a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/07132a399a2ad9a171637b8ddf36c2bdcf2261f3"
+        },
+        "date": 1677401086299,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 90.041,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 190.59,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 303.62,
             "unit": "ns/op"
           }
         ]
