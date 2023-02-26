@@ -1640,7 +1640,7 @@ checksum = "6456b8a6c8f33fee7d958fcd1b60d55b11940a79e63ae87013e6d22e26034440"
 [[package]]
 name = "humanize"
 version = "0.1.0"
-source = "git+https://github.com/f1shl3gs/humanize?rev=88909181cae00e859a646162cb2521b40006b526#88909181cae00e859a646162cb2521b40006b526"
+source = "git+https://github.com/f1shl3gs/humanize?rev=bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a#bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a"
 dependencies = [
  "serde",
 ]
