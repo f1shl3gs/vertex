@@ -6,7 +6,6 @@ use std::task::{Context, Poll};
 use std::time::Duration;
 
 use async_trait::async_trait;
-use buffers::Acker;
 use bytes::{Buf, Bytes};
 use event::Event;
 use futures::ready;
@@ -125,7 +124,6 @@ where
         request_settings: RequestSettings,
         batch_timeout: Duration,
         client: HttpClient,
-        acker: Acker,
     ) -> Self {
         Self::with_logic(
             sink,
@@ -134,7 +132,6 @@ where
             request_settings,
             batch_timeout,
             client,
-            acker,
         )
     }
 }
@@ -153,7 +150,6 @@ where
         request_settings: RequestSettings,
         batch_timeout: Duration,
         client: HttpClient,
-        acker: Acker,
     ) -> Self {
         let sink = Arc::new(sink);
         let sink1 = Arc::clone(&sink);
@@ -163,7 +159,7 @@ where
         };
 
         let svc = HttpBatchService::new(client, request_builder);
-        let inner = request_settings.batch_sink(retry_logic, svc, batch, batch_timeout, acker);
+        let inner = request_settings.batch_sink(retry_logic, svc, batch, batch_timeout);
         let encoder = sink.build_encoder();
 
         Self {

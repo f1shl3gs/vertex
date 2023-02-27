@@ -1,60 +1,62 @@
 use std::{
-    fmt,
+    mem,
     pin::Pin,
     task::{Context, Poll},
 };
 
-use futures::Stream;
-use pin_project::pin_project;
+use async_recursion::async_recursion;
+use futures::{ready, Stream};
+use tokio::select;
+use tokio_util::sync::ReusableBoxFuture;
 
-use super::{limited_queue::LimitedReceiver, strategy::StrategyResult, PollStrategy};
+use super::limited_queue::LimitedReceiver;
+use crate::variants::disk::{ProductionFilesystem, Reader};
 use crate::{buffer_usage_data::BufferUsageHandle, Bufferable};
 
 /// Adapter for papering over various receiver backends by providing a [`Stream`] interface.
-#[pin_project(project = ProjectedReceiverAdapter)]
+#[derive(Debug)]
 pub enum ReceiverAdapter<T> {
     /// A receiver that uses an in-memory channel.
-    Channel(LimitedReceiver<T>),
+    Memory(LimitedReceiver<T>),
 
     /// A receiver that provides its own [`Stream`] implementation.
-    Opaque(Pin<Box<dyn Stream<Item = T> + Send + Sync>>),
+    Disk(Reader<T, ProductionFilesystem>),
+}
+
+impl<T: Bufferable> From<LimitedReceiver<T>> for ReceiverAdapter<T> {
+    fn from(value: LimitedReceiver<T>) -> Self {
+        Self::Memory(value)
+    }
+}
+
+impl<T: Bufferable> From<Reader<T, ProductionFilesystem>> for ReceiverAdapter<T> {
+    fn from(value: Reader<T, ProductionFilesystem>) -> Self {
+        Self::Disk(value)
+    }
 }
 
 impl<T> ReceiverAdapter<T>
 where
     T: Bufferable,
 {
-    pub fn channel(rx: LimitedReceiver<T>) -> Self {
-        ReceiverAdapter::Channel(rx)
-    }
-
-    pub fn opaque<S>(inner: S) -> Self
-    where
-        S: Stream<Item = T> + Send + Sync + 'static,
-    {
-        ReceiverAdapter::Opaque(Box::pin(inner))
-    }
-}
-
-impl<T> fmt::Debug for ReceiverAdapter<T> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    pub async fn next(&mut self) -> Option<T> {
         match self {
-            Self::Channel(_) => f.debug_tuple("inner").field(&"Channel").finish(),
-            Self::Opaque(_) => f.debug_tuple("inner").field(&"Opaque").finish(),
-        }
-    }
-}
+            ReceiverAdapter::Memory(rx) => rx.next().await,
+            ReceiverAdapter::Disk(reader) => loop {
+                match reader.next().await {
+                    Ok(result) => break result,
+                    Err(err) => {
+                        if err.is_recoverable_error() {
+                            // If we've hit a recoverable error, we'll emit an event to
+                            // indicate as much but we'll still keep trying to read the
+                            // next available record.
+                            continue;
+                        }
 
-impl<T> Stream for ReceiverAdapter<T>
-where
-    T: Bufferable,
-{
-    type Item = T;
-
-    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<T>> {
-        match self.project() {
-            ProjectedReceiverAdapter::Channel(rx) => rx.poll_next(cx),
-            ProjectedReceiverAdapter::Opaque(inner) => inner.as_mut().poll_next(cx),
+                        panic!("Reader encountered unrecoverable error: {err:?}");
+                    }
+                }
+            },
         }
     }
 }
@@ -67,23 +69,19 @@ where
 /// for querying the overflow buffer as well.  The ordering of events when operating in "overflow"
 /// is undefined, as the receiver will try to manage polling both its own buffer, as well as the
 /// overflow buffer, in order to fairly balance throughput.
-#[pin_project]
 #[derive(Debug)]
 pub struct BufferReceiver<T> {
-    #[pin]
     base: ReceiverAdapter<T>,
     overflow: Option<Box<BufferReceiver<T>>>,
-    strategy: PollStrategy,
     instrumentation: Option<BufferUsageHandle>,
 }
 
-impl<T> BufferReceiver<T> {
+impl<T: Bufferable> BufferReceiver<T> {
     /// Creates a new [`BufferReceiver`] wrapping the given channel receiver.
     pub fn new(base: ReceiverAdapter<T>) -> Self {
         Self {
             base,
             overflow: None,
-            strategy: PollStrategy::default(),
             instrumentation: None,
         }
     }
@@ -93,7 +91,6 @@ impl<T> BufferReceiver<T> {
         Self {
             base,
             overflow: Some(Box::new(overflow)),
-            strategy: PollStrategy::default(),
             instrumentation: None,
         }
     }
@@ -111,12 +108,9 @@ impl<T> BufferReceiver<T> {
     pub fn with_instrumentation(&mut self, handle: BufferUsageHandle) {
         self.instrumentation = Some(handle);
     }
-}
 
-impl<T: Bufferable> Stream for BufferReceiver<T> {
-    type Item = T;
-
-    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+    #[async_recursion]
+    pub async fn next(&mut self) -> Option<T> {
         // We want to poll both our base and overflow receivers without waiting for one or the
         // other to entirely drain before checking the other.  This ensures that we're fairly
         // servicing both receivers, and avoiding stalls in one or the other.
@@ -125,25 +119,97 @@ impl<T: Bufferable> Stream for BufferReceiver<T> {
         // occurred, and is over, and items are flowing through the base receiver.  If we waited to
         // entirely drain the overflow receiver, we might cause another small stall of the pipeline
         // attached to the base receiver.
+        let overflow = self.overflow.as_mut().map(Pin::new);
 
-        let this = self.project();
-        let primary = this.base;
-        let secondary = this.overflow.as_mut().map(Pin::new);
-
-        this.strategy
-            .poll_streams(primary, secondary, cx)
-            .map(|result| match result {
-                StrategyResult::Primary(i) => {
-                    if let Some(handle) = this.instrumentation {
-                        handle.increment_sent_event_count_and_byte_size(
-                            i.event_count() as u64,
-                            i.size_of() as u64,
-                        );
-                    }
-                    Some(i)
+        let (item, from_base) = match overflow {
+            None => match self.base.next().await {
+                Some(item) => (item, true),
+                None => return None,
+            },
+            Some(mut overflow) => {
+                select! {
+                    Some(item) = overflow.next() => (item, false),
+                    Some(item) = self.base.next() => (item, true),
+                    else => return None,
                 }
-                StrategyResult::Secondary(i) => Some(i),
-                StrategyResult::Neither => None,
-            })
+            }
+        };
+
+        // If instrumentation is enabled, and we got the item from the base receiver, then and only
+        // then do we track sending the event out.
+        if let Some(handle) = self.instrumentation.as_ref() {
+            if from_base {
+                handle.increment_sent_event_count_and_byte_size(
+                    item.event_count() as u64,
+                    item.size_of() as u64,
+                );
+            }
+        }
+
+        Some(item)
+    }
+
+    pub fn into_stream(self) -> BufferReceiverStream<T> {
+        BufferReceiverStream::new(self)
+    }
+}
+
+enum StreamState<T: Bufferable> {
+    Idle(BufferReceiver<T>),
+    Polling,
+    Closed(BufferReceiver<T>),
+}
+
+pub struct BufferReceiverStream<T: Bufferable> {
+    state: StreamState<T>,
+    recv_fut: ReusableBoxFuture<'static, (Option<T>, BufferReceiver<T>)>,
+}
+
+impl<T: Bufferable> BufferReceiverStream<T> {
+    pub fn new(receiver: BufferReceiver<T>) -> Self {
+        Self {
+            state: StreamState::Idle(receiver),
+            recv_fut: ReusableBoxFuture::new(make_recv_future(None)),
+        }
+    }
+}
+
+impl<T: Bufferable> Stream for BufferReceiverStream<T> {
+    type Item = T;
+
+    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        loop {
+            match mem::replace(&mut self.state, StreamState::Polling) {
+                s @ StreamState::Closed(_) => {
+                    self.state = s;
+                    return Poll::Ready(None);
+                }
+                StreamState::Idle(receiver) => {
+                    self.recv_fut.set(make_recv_future(Some(receiver)));
+                }
+                StreamState::Polling => {
+                    let (result, receiver) = ready!(self.recv_fut.poll(cx));
+                    self.state = if result.is_none() {
+                        StreamState::Closed(receiver)
+                    } else {
+                        StreamState::Idle(receiver)
+                    };
+
+                    return Poll::Ready(result);
+                }
+            }
+        }
+    }
+}
+
+async fn make_recv_future<T: Bufferable>(
+    receiver: Option<BufferReceiver<T>>,
+) -> (Option<T>, BufferReceiver<T>) {
+    match receiver {
+        None => panic!("invalid to poll future in uninitialized state"),
+        Some(mut receiver) => {
+            let result = receiver.next().await;
+            (result, receiver)
+        }
     }
 }

@@ -9,6 +9,8 @@ name = "sized_records"
 harness = false
 
 [dependencies]
+async-recursion = { version = "1.0.2" }
+async-stream = { version = "0.3.3" }
 async-trait = { version = "0.1.64", default-features = false }
 bytes = { version = "1.4.0", default-features = false }
 bytecheck = { version = "0.6.9", default-features = false, features = ["std"] }
@@ -18,6 +20,7 @@ crossbeam-utils = { version = "0.8.14", default-features = false }
 dyn-clone = { version = "1.0.10", default-features = false }
 enumflags2 = { version = "0.7.5", default-features = false }
 event = { path = "../event" }
+finalize = { path = "../finalize" }
 fslock = { version = "0.2.0", default-features = false, features = ["std"] }
 futures = { version = "0.3.26", default-features = false, features = ["std"] }
 memmap2 = { version = "0.5.10", default-features = false }

@@ -1,8 +1,11 @@
 use std::{error, fmt, mem};
 
 use bytes::{Buf, BufMut};
+use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers};
 use measurable::ByteSizeOf;
 
+use crate::variants::disk::common::align16;
+use crate::variants::disk::record::RECORD_HEADER_LEN;
 use crate::{encoding::FixedEncodable, EventCount};
 
 #[derive(Debug)]
@@ -32,6 +35,7 @@ pub struct Record {
     id: u32,
     size: u32,
     event_count: u32,
+    finalizers: EventFinalizers,
 }
 
 impl Record {
@@ -40,6 +44,7 @@ impl Record {
             id,
             size,
             event_count,
+            finalizers: EventFinalizers::DEFAULT,
         }
     }
 
@@ -47,8 +52,25 @@ impl Record {
         mem::size_of::<u32>() * 3
     }
 
-    pub const fn len(&self) -> usize {
+    const fn encoded_len(&self) -> usize {
         Self::header_len() + self.size as usize
+    }
+
+    pub const fn archived_len(&self) -> usize {
+        // We kind of cheat here, because it's not the length of the actual record here, but the all-in length when we
+        // write it to disk, which includes a wrapper type, and an overalignment of 16. If we don't do it here, or
+        // account for it in some way, though, then our logic to figure out if the given record would be allowed based
+        // on the configured `max_record_size` won't reflect reality, since the configuration builder _does_ take the
+        // passed in `max_record_size`, less RECORD_HEADER_LEN, when calculating the number for how many bytes record
+        // encoding can use.
+        let encoded_len = self.encoded_len();
+        align16(RECORD_HEADER_LEN + encoded_len)
+    }
+}
+
+impl AddBatchNotifier for Record {
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
+        self.finalizers.add(EventFinalizer::new(notifier));
     }
 }
 
@@ -73,7 +95,7 @@ impl FixedEncodable for Record {
         B: BufMut,
         Self: Sized,
     {
-        if buffer.remaining_mut() < self.len() {
+        if buffer.remaining_mut() < self.encoded_len() {
             return Err(EncodeError);
         }
 
@@ -85,7 +107,7 @@ impl FixedEncodable for Record {
     }
 
     fn encoded_size(&self) -> Option<usize> {
-        Some(self.len())
+        Some(self.encoded_len())
     }
 
     fn decode<B>(mut buffer: B) -> Result<Self, Self::DecodeError>

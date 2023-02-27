@@ -11,7 +11,7 @@ pub use builder::{build_pieces, Pieces};
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
 
-use buffers::channel::{BufferReceiver, BufferSender};
+use buffers::channel::{BufferReceiverStream, BufferSender};
 use event::Events;
 use futures::{Future, FutureExt};
 use std::panic::AssertUnwindSafe;
@@ -26,8 +26,7 @@ use crate::config::{ComponentKey, Config, ConfigDiff, OutputId};
 
 type BuiltBuffer = (
     BufferSender<Events>,
-    Arc<Mutex<Option<BufferReceiver<Events>>>>,
-    buffers::Acker,
+    Arc<Mutex<Option<BufferReceiverStream<Events>>>>,
 );
 
 type Outputs = HashMap<OutputId, fanout::ControlChannel>;

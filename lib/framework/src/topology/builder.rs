@@ -100,7 +100,7 @@ fn build_task_transform(
     key: &ComponentKey,
 ) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
     let (mut fanout, control) = Fanout::new();
-    let input_rx = crate::utilization::wrap(input_rx);
+    let input_rx = crate::utilization::wrap(input_rx.into_stream());
 
     let filtered = input_rx.filter(move |events| ready(filter_events_type(events, input_type)));
     let stream = t.transform(Box::pin(filtered));
@@ -223,6 +223,7 @@ impl Runner {
             .input_rx
             .take()
             .expect("can't run runner twice")
+            .into_stream()
             .filter(move |event| ready(filter_events_type(event, self.input_type)));
 
         self.timer.start_wait();
@@ -247,6 +248,7 @@ impl Runner {
             .input_rx
             .take()
             .expect("can't run runer twice")
+            .into_stream()
             .filter(move |event| ready(filter_events_type(event, self.input_type)));
         let mut in_flight = FuturesOrdered::new();
         let mut shutting_down = false;
@@ -526,7 +528,7 @@ pub async fn build_pieces(
         let typetag = sink.inner.component_name();
         let input_type = sink.inner.input_type();
 
-        let (tx, rx, acker) = if let Some(buffer) = buffers.remove(name) {
+        let (tx, rx) = if let Some(buffer) = buffers.remove(name) {
             buffer
         } else {
             let buffer_type = match sink.buffer.stages().first().expect("cant ever be empty") {
@@ -551,9 +553,8 @@ pub async fn build_pieces(
                 .await;
 
             match buffer {
-                Ok((tx, rx, acker)) => (tx, Arc::new(Mutex::new(Some(rx))), acker),
+                Ok((tx, rx)) => (tx, Arc::new(Mutex::new(Some(rx.into_stream())))),
                 Err(err) => {
-                    // TODO: handle BufferBuildError properly
                     errors.push(format!("Sink \"{}\": {:?}", name, err));
                     continue;
                 }
@@ -561,7 +562,6 @@ pub async fn build_pieces(
         };
 
         let cx = SinkContext {
-            acker: acker.clone(),
             health_check,
             globals: config.global.clone(),
             proxy: ProxyConfig::merge_with_env(&config.global.proxy, sink.proxy()),
@@ -604,7 +604,7 @@ pub async fn build_pieces(
             .await
             .map(|_| {
                 debug!(message = "Finished");
-                TaskOutput::Sink(rx, acker)
+                TaskOutput::Sink(rx)
             })
         };
 

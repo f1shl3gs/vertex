@@ -1,3 +1,4 @@
+use std::mem;
 use std::ptr::addr_of;
 
 use bytecheck::{CheckBytes, ErrorBox, StructCheckError};
@@ -8,7 +9,10 @@ use rkyv::{
     Archive, Archived, Serialize,
 };
 
+use super::common::align16;
 use super::ser::{try_as_archive, DeserializeError};
+
+pub const RECORD_HEADER_LEN: usize = align16(mem::size_of::<ArchivedRecord<'_>>() + 8);
 
 /// Result of checking if a buffer contained a valid record.
 pub enum RecordStatus {

@@ -37,7 +37,7 @@ impl SinkConfig for JaegerConfig {
         match &self {
             JaegerConfig::Udp(config) => config.build(transformer, encoder),
 
-            JaegerConfig::Http(config) => config.build(cx.proxy, cx.acker),
+            JaegerConfig::Http(config) => config.build(cx.proxy),
         }
     }
 

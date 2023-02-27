@@ -1,5 +1,6 @@
 use std::{future::Future, path::Path, str::FromStr};
 
+use event::{EventStatus, Finalizable};
 use once_cell::sync::Lazy;
 use temp_dir::TempDir;
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
@@ -89,4 +90,12 @@ pub fn install_tracing_helpers() -> AssertionRegistry {
     });
 
     ASSERTION_REGISTRY.clone()
+}
+
+pub(crate) async fn acknowledge(mut event: impl Finalizable) {
+    event
+        .take_finalizers()
+        .update_status(EventStatus::Delivered);
+    // Finalizers are implicitly dropped here, sending the status update.
+    tokio::task::yield_now().await;
 }

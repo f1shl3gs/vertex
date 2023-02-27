@@ -1,8 +1,8 @@
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
-use crate::finalization::{EventFinalizers, EventStatus};
 use crate::{BatchNotifier, EventFinalizer};
+use finalize::{EventFinalizers, EventStatus};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[allow(clippy::module_name_repetitions)]

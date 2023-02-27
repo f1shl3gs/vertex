@@ -9,6 +9,13 @@ use thiserror::Error;
 
 use super::io::{Filesystem, ProductionFilesystem};
 
+// We want to ensure a reasonable time before we `fsync`/flush to disk, and 500ms should provide that for non-critical
+// workloads.
+//
+// Practically, it's far more definitive than `disk_v1` which does not definitely `fsync` at all, at least with how we
+// have it configured.
+pub const DEFAULT_FLUSH_INTERVAL: Duration = Duration::from_millis(500);
+
 // We don't want data files to be bigger than 128MB, but we might end up overshooting slightly.
 pub const DEFAULT_MAX_DATA_FILE_SIZE: u64 = 128 * 1024 * 1024;
 // There's no particular reason that _has_ to be 8MB, it's just a simple default we've chosen here.
@@ -18,6 +25,25 @@ pub const DEFAULT_MAX_RECORD_SIZE: usize = 8 * 1024 * 1024;
 // the "backend" for cloud providers, which is simply a useful default for when we want to look at
 // buffer throughput and estimate how many IOPS will be consumed, etc.
 pub const DEFAULT_WRITE_BUFFER_SIZE: usize = 256 * 1024;
+
+// The alignment used by the record serializer.
+const SERIALIZER_ALIGNMENT: usize = 16;
+const MAX_ALIGNABLE_AMOUNT: usize = usize::MAX - SERIALIZER_ALIGNMENT;
+
+/// Aligns the given amount to 16.
+///
+/// This is required due to the overalignment used in record serialization, such that we can correctly determine minimum
+/// on-disk sizes for various elements, and account for those in size limits, etc.
+pub(crate) const fn align16(amount: usize) -> usize {
+    // The amount must be less than `MAX_ALIGNABLE_AMOUNT` otherwise we'll overflow trying to align it, ending up with a
+    // nonsensical value.
+    assert!(
+        amount <= MAX_ALIGNABLE_AMOUNT,
+        "`amount` must be less than `MAX_ALIGNABLE_AMOUNT`"
+    );
+
+    ((amount + SERIALIZER_ALIGNMENT - 1) / SERIALIZER_ALIGNMENT) * SERIALIZER_ALIGNMENT
+}
 
 // We specifically limit ourselves to 0-31 for file IDs in test, because it lets us more quickly
 // create/consume the file IDs so we can test edge cases like file ID rollover and "writer is
@@ -235,9 +261,7 @@ where
             .unwrap_or(DEFAULT_MAX_DATA_FILE_SIZE);
         let max_record_size = self.max_record_size.unwrap_or(DEFAULT_MAX_RECORD_SIZE);
         let write_buffer_size = self.write_buffer_size.unwrap_or(DEFAULT_WRITE_BUFFER_SIZE);
-        let flush_interval = self
-            .flush_interval
-            .unwrap_or_else(|| Duration::from_millis(500));
+        let flush_interval = self.flush_interval.unwrap_or(DEFAULT_FLUSH_INTERVAL);
         let filesystem = self.filesystem;
 
         // Validate the input parameters.

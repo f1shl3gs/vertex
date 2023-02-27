@@ -135,7 +135,7 @@ async fn handle_request(
 ) -> Response<Body> {
     match events {
         Ok(mut events) => {
-            let receiver = BatchNotifier::maybe_apply_to_events(acknowledgements, &mut events);
+            let receiver = BatchNotifier::maybe_apply_to(acknowledgements, &mut events);
 
             match output
                 .send_batch(events)

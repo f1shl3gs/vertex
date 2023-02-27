@@ -149,7 +149,7 @@ impl EncodedLength for Event {
 #[async_trait::async_trait]
 #[typetag::serde(name = "test")]
 impl SinkConfig for TestConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+    async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let mut batch_settings = BatchSettings::default();
         batch_settings.size.bytes = 9999;
         batch_settings.size.events = 1;
@@ -162,7 +162,6 @@ impl SinkConfig for TestConfig {
                 TestSink::new(self),
                 VecBuffer::new(batch_settings.size),
                 batch_settings.timeout,
-                cx.acker(),
             )
             .with_flat_map(|event| stream::iter(Some(Ok(EncodedEvent::new(event, 0)))))
             .sink_map_err(|err| panic!("Fatal test sink error: {}", err));

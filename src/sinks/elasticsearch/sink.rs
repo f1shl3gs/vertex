@@ -2,7 +2,6 @@ use std::fmt::Debug;
 use std::num::NonZeroUsize;
 
 use async_trait::async_trait;
-use buffers::Acker;
 use codecs::encoding::Transformer;
 use event::log::Value;
 use event::{Event, EventContainer, Events, LogRecord};
@@ -41,7 +40,6 @@ pub struct ElasticsearchSink<S> {
     pub request_builder: ElasticsearchRequestBuilder,
     pub transformer: Transformer,
     pub service: S,
-    pub acker: Acker,
     pub mode: ElasticsearchCommonMode,
     pub id_key_field: Option<String>,
 }
@@ -86,7 +84,7 @@ where
                     }
                 }
             })
-            .into_driver(self.service, self.acker);
+            .into_driver(self.service);
 
         sink.run().await
     }

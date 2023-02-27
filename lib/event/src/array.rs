@@ -1,3 +1,4 @@
+use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use std::{iter, slice, vec};
 
 use measurable::ByteSizeOf;
@@ -57,12 +58,38 @@ impl From<Vec<Metric>> for Events {
     }
 }
 
+impl AddBatchNotifier for Events {
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
+        match self {
+            Events::Logs(array) => array
+                .iter_mut()
+                .for_each(|item| item.add_finalizer(EventFinalizer::new(notifier.clone()))),
+            Events::Metrics(array) => array
+                .iter_mut()
+                .for_each(|item| item.add_finalizer(EventFinalizer::new(notifier.clone()))),
+            Events::Traces(array) => array
+                .iter_mut()
+                .for_each(|item| item.add_finalizer(EventFinalizer::new(notifier.clone()))),
+        }
+    }
+}
+
 impl ByteSizeOf for Events {
     fn allocated_bytes(&self) -> usize {
         match self {
             Self::Logs(logs) => logs.allocated_bytes(),
             Self::Metrics(metrics) => metrics.allocated_bytes(),
             Self::Traces(spans) => spans.allocated_bytes(),
+        }
+    }
+}
+
+impl Finalizable for Events {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        match self {
+            Events::Logs(array) => array.iter_mut().map(Finalizable::take_finalizers).collect(),
+            Events::Metrics(array) => array.iter_mut().map(Finalizable::take_finalizers).collect(),
+            Events::Traces(array) => array.iter_mut().map(Finalizable::take_finalizers).collect(),
         }
     }
 }

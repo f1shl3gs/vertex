@@ -5,7 +5,6 @@ use std::num::NonZeroUsize;
 use std::pin::Pin;
 use std::sync::Arc;
 
-use buffers::{Ackable, Acker};
 use event::Finalizable;
 use futures::Stream;
 use futures_util::{stream::Map, StreamExt};
@@ -177,16 +176,16 @@ pub trait SinkBuilderExt: Stream {
     ///
     /// As it is intended to be a terminal step, we require on `Acker` in order ot be able to
     /// provide acking based on the responses from the underlying service.
-    fn into_driver<S>(self, service: S, acker: Acker) -> Driver<Self, S>
+    fn into_driver<S>(self, service: S) -> Driver<Self, S>
     where
         Self: Sized,
-        Self::Item: Ackable + Finalizable,
+        Self::Item: Finalizable,
         S: Service<Self::Item>,
         S::Error: Debug + 'static,
         S::Future: Send + 'static,
         S::Response: DriverResponse,
     {
-        Driver::new(self, service, acker)
+        Driver::new(self, service)
     }
 }
 

@@ -9,7 +9,7 @@ use buffers::{
     BufferType, EventCount,
 };
 use bytes::{Buf, BufMut};
-use futures::{Sink, SinkExt, Stream, StreamExt};
+use finalize::{AddBatchNotifier, BatchNotifier};
 use measurable::ByteSizeOf;
 use tracing::Span;
 
@@ -25,6 +25,12 @@ impl<const N: usize> Message<N> {
             id,
             _padding: [0; N],
         }
+    }
+}
+
+impl<const N: usize> AddBatchNotifier for Message<N> {
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
+        drop(notifier);
     }
 }
 
@@ -114,7 +120,7 @@ pub async fn setup<const N: usize>(
     variant
         .add_to_builder(&mut builder, data_dir, id)
         .expect("should not fail to add variant to builder");
-    let (tx, rx, _acker) = builder
+    let (tx, rx) = builder
         .build(Span::none())
         .await
         .expect("should not fail to build topology");
@@ -142,32 +148,26 @@ pub fn init_instrumentation() {
 // reads it from the buffer.
 //
 
-pub async fn wtr_measurement<S1, S2, const N: usize>(
-    mut sink: S1,
-    mut stream: S2,
+pub async fn wtr_measurement<const N: usize>(
+    mut sender: BufferSender<Message<N>>,
+    mut receiver: BufferReceiver<Message<N>>,
     messages: Vec<Message<N>>,
-) where
-    S1: Sink<Message<N>, Error = ()> + Send + Unpin,
-    S2: Stream<Item = Message<N>> + Send + Unpin,
-{
+) {
     for msg in messages.into_iter() {
-        sink.send(msg).await.unwrap();
+        sender.send(msg).await.unwrap();
     }
-    drop(sink);
+    drop(sender);
 
-    while stream.next().await.is_some() {}
+    while receiver.next().await.is_some() {}
 }
 
-pub async fn war_measurement<S1, S2, const N: usize>(
-    mut sink: S1,
-    mut stream: S2,
+pub async fn war_measurement<const N: usize>(
+    mut sender: BufferSender<Message<N>>,
+    mut receiver: BufferReceiver<Message<N>>,
     messages: Vec<Message<N>>,
-) where
-    S1: Sink<Message<N>, Error = ()> + Send + Unpin,
-    S2: Stream<Item = Message<N>> + Send + Unpin,
-{
+) {
     for msg in messages.into_iter() {
-        sink.send(msg).await.unwrap();
-        let _ = stream.next().await.unwrap();
+        sender.send(msg).await.unwrap();
+        let _ = receiver.next().await.unwrap();
     }
 }

@@ -1,5 +1,4 @@
 use async_trait::async_trait;
-use buffers::Acker;
 use bytes::{Bytes, BytesMut};
 use configurable::Configurable;
 use event::Event;
@@ -35,11 +34,7 @@ pub struct HttpSinkConfig {
 }
 
 impl HttpSinkConfig {
-    pub fn build(
-        &self,
-        proxy: ProxyConfig,
-        acker: Acker,
-    ) -> framework::Result<(Sink, Healthcheck)> {
+    pub fn build(&self, proxy: ProxyConfig) -> framework::Result<(Sink, Healthcheck)> {
         let request_settings = self.request.unwrap_with(&RequestConfig::default());
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let client = HttpClient::new(tls, &proxy)?;
@@ -52,7 +47,6 @@ impl HttpSinkConfig {
             request_settings,
             batch.timeout,
             client.clone(),
-            acker,
         )
         .sink_map_err(|err| {
             error!(message = "Error sending spans", ?err);

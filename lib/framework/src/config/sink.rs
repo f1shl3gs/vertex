@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 
 use async_trait::async_trait;
-use buffers::{Acker, BufferType};
+use buffers::BufferType;
 use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
@@ -13,7 +13,6 @@ use crate::config::{
 #[derive(Debug, Clone)]
 pub struct SinkContext {
     pub globals: GlobalOptions,
-    pub acker: Acker,
     pub proxy: ProxyConfig,
     pub health_check: bool,
 }
@@ -23,15 +22,10 @@ impl SinkContext {
         &self.proxy
     }
 
-    pub fn acker(&self) -> Acker {
-        self.acker.clone()
-    }
-
     #[cfg(any(test, feature = "test-util"))]
     pub fn new_test() -> Self {
         Self {
             globals: Default::default(),
-            acker: Acker::passthrough(),
             proxy: Default::default(),
             health_check: true,
         }

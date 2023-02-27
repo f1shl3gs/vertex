@@ -1,7 +1,7 @@
 use std::borrow::Cow;
 use std::{
     sync::{
-        atomic::{AtomicU64, AtomicUsize, Ordering},
+        atomic::{AtomicU64, Ordering},
         Arc,
     },
     time::Duration,
@@ -9,8 +9,6 @@ use std::{
 
 use tokio::time::interval;
 use tracing::{Instrument, Span};
-
-use crate::WhenFull;
 
 #[derive(Clone, Debug)]
 pub struct BufferUsageHandle {
@@ -21,9 +19,9 @@ impl BufferUsageHandle {
     /// Creates a no-op [`BufferUsageHandle`] handle.
     ///
     /// No usage data is written or stored.
-    pub(crate) fn noop(when_full: WhenFull) -> Self {
+    pub(crate) fn noop() -> Self {
         BufferUsageHandle {
-            state: Arc::new(BufferUsageData::new(when_full, 0)),
+            state: Arc::new(BufferUsageData::new(0)),
         }
     }
 
@@ -38,96 +36,102 @@ impl BufferUsageHandle {
     /// Limits are exposed as gauges to provide stable values when superimposed on dashboards/graphs
     /// with the "actual" usage amounts.
     pub fn set_buffer_limits(&self, max_bytes: Option<u64>, max_events: Option<usize>) {
-        if let Some(max_bytes) = max_bytes {
-            self.state
-                .max_size_bytes
-                .store(max_bytes, Ordering::Relaxed);
-        }
+        let max_events = max_events
+            .and_then(|n| u64::try_from(n).ok().or(Some(u64::MAX)))
+            .unwrap_or(0);
+        let max_bytes = max_bytes.unwrap_or(0);
 
-        if let Some(max_events) = max_events {
-            self.state
-                .max_size_events
-                .store(max_events, Ordering::Relaxed);
-        }
+        self.state.max_size.set(max_events, max_bytes);
     }
 
     /// Increments the number of events (and their total size) received by this buffer component.
     ///
     /// This represents the events being sent into the buffer.
     pub fn increment_received_event_count_and_byte_size(&self, count: u64, byte_size: u64) {
-        self.state
-            .received_event_count
-            .fetch_add(count, Ordering::Relaxed);
-        self.state
-            .received_byte_size
-            .fetch_add(byte_size, Ordering::Relaxed);
+        self.state.received.increase(count, byte_size);
     }
 
     /// Increments the number of events (and their total size) sent by this buffer component.
     ///
     /// This represents the events being read out of the buffer.
     pub fn increment_sent_event_count_and_byte_size(&self, count: u64, byte_size: u64) {
-        self.state
-            .sent_event_count
-            .fetch_add(count, Ordering::Relaxed);
-        self.state
-            .sent_byte_size
-            .fetch_add(byte_size, Ordering::Relaxed);
+        self.state.sent.increase(count, byte_size);
     }
 
     /// Attempts to increment the count of dropped events for this buffer component.
     ///
     /// If the component itself is not configured to drop events, this call does nothing.
-    pub fn try_increment_dropped_event_count(&self, count: u64) {
-        if let Some(dropped_event_count) = &self.state.dropped_event_count {
-            dropped_event_count.fetch_add(count, Ordering::Relaxed);
+    pub fn increment_dropped_event_count(&self, count: u64, size: u64, intentional: bool) {
+        if intentional {
+            self.state.dropped_intentional.increase(count, size)
+        } else {
+            self.state.dropped.increase(count, size)
         }
+    }
+}
+
+#[derive(Debug, Default)]
+struct CountMetrics {
+    count: AtomicU64,
+    byte_size: AtomicU64,
+}
+
+impl CountMetrics {
+    fn set(&self, count: u64, size: u64) {
+        self.count.store(count, Ordering::SeqCst);
+        self.byte_size.store(size, Ordering::SeqCst);
+    }
+
+    fn count(&self) -> u64 {
+        self.count.load(Ordering::SeqCst)
+    }
+
+    fn byte_size(&self) -> u64 {
+        self.byte_size.load(Ordering::SeqCst)
+    }
+
+    fn increase(&self, count: u64, byte_size: u64) {
+        self.count.fetch_add(count, Ordering::SeqCst);
+        self.byte_size.fetch_add(byte_size, Ordering::SeqCst);
     }
 }
 
 #[derive(Debug)]
 pub struct BufferUsageData {
     idx: usize,
-    received_event_count: AtomicU64,
-    received_byte_size: AtomicU64,
-    sent_event_count: AtomicU64,
-    sent_byte_size: AtomicU64,
-    dropped_event_count: Option<AtomicU64>,
-    max_size_bytes: AtomicU64,
-    max_size_events: AtomicUsize,
+
+    received: CountMetrics,
+    sent: CountMetrics,
+    dropped: CountMetrics,
+    dropped_intentional: CountMetrics,
+    max_size: CountMetrics,
 }
 
 impl BufferUsageData {
-    pub fn new(mode: WhenFull, idx: usize) -> Self {
-        let dropped_event_count = match mode {
-            WhenFull::Block | WhenFull::Overflow => None,
-            WhenFull::DropNewest => Some(AtomicU64::new(0)),
-        };
-
+    pub fn new(idx: usize) -> Self {
         Self {
             idx,
-            received_event_count: AtomicU64::new(0),
-            received_byte_size: AtomicU64::new(0),
-            sent_event_count: AtomicU64::new(0),
-            sent_byte_size: AtomicU64::new(0),
-            dropped_event_count,
-            max_size_bytes: AtomicU64::new(0),
-            max_size_events: AtomicUsize::new(0),
+
+            received: CountMetrics::default(),
+            sent: CountMetrics::default(),
+            dropped: CountMetrics::default(),
+            dropped_intentional: CountMetrics::default(),
+            max_size: CountMetrics::default(),
         }
     }
 
     fn snapshot(&self) -> BufferUsageSnapshot {
         BufferUsageSnapshot {
-            received_event_count: self.received_event_count.load(Ordering::Relaxed),
-            received_byte_size: self.received_byte_size.load(Ordering::Relaxed),
-            sent_event_count: self.sent_event_count.load(Ordering::Relaxed),
-            sent_byte_size: self.sent_byte_size.load(Ordering::Relaxed),
-            dropped_event_count: self
-                .dropped_event_count
-                .as_ref()
-                .map(|inner| inner.load(Ordering::Relaxed)),
-            max_size_bytes: self.max_size_bytes.load(Ordering::Relaxed),
-            max_size_events: self.max_size_events.load(Ordering::Relaxed),
+            received_event_count: self.received.count(),
+            received_byte_size: self.received.byte_size(),
+            sent_event_count: self.sent.count(),
+            sent_byte_size: self.sent.byte_size(),
+            dropped_event_count: self.dropped.count(),
+            dropped_event_byte_size: self.dropped.byte_size(),
+            dropped_event_count_intentional: self.dropped_intentional.count(),
+            dropped_event_byte_size_intentional: self.dropped_intentional.byte_size(),
+            max_size_bytes: self.max_size.byte_size(),
+            max_size_events: self.max_size.count() as usize,
         }
     }
 }
@@ -138,7 +142,10 @@ pub struct BufferUsageSnapshot {
     pub received_byte_size: u64,
     pub sent_event_count: u64,
     pub sent_byte_size: u64,
-    pub dropped_event_count: Option<u64>,
+    pub dropped_event_count: u64,
+    pub dropped_event_byte_size: u64,
+    pub dropped_event_count_intentional: u64,
+    pub dropped_event_byte_size_intentional: u64,
     pub max_size_bytes: u64,
     pub max_size_events: usize,
 }
@@ -164,8 +171,8 @@ impl BufferUsage {
     /// A [`BufferUsageHandle`] is returned that the caller can use to actually update the usage
     /// metrics with.  This handle will only update the usage metrics for the particular stage it
     /// was added for.
-    pub fn add_stage(&mut self, idx: usize, mode: WhenFull) -> BufferUsageHandle {
-        let data = Arc::new(BufferUsageData::new(mode, idx));
+    pub fn add_stage(&mut self, idx: usize) -> BufferUsageHandle {
+        let data = Arc::new(BufferUsageData::new(idx));
         let handle = BufferUsageHandle {
             state: Arc::clone(&data),
         };
@@ -174,6 +181,7 @@ impl BufferUsage {
         handle
     }
 
+    #[allow(clippy::cast_precision_loss)]
     pub fn install(self) {
         let span = self.span;
         let stages = self.stages;
@@ -211,33 +219,27 @@ impl BufferUsage {
                         let index = Cow::from(stage.idx.to_string());
                         let attrs = metrics::Attributes::from([("stage", index)]);
 
-                        match stage.max_size_bytes.load(Ordering::Relaxed) {
+                        match stage.max_size.byte_size() {
                             0 => {}
                             value => max_byte_size.recorder(attrs.clone()).set(value as f64),
                         };
-                        match stage.max_size_events.load(Ordering::Relaxed) {
+                        match stage.max_size.count() {
                             0 => {}
                             value => max_event_size.recorder(attrs.clone()).set(value as f64),
                         };
 
-                        if let Some(dropped_event_count) = &stage.dropped_event_count {
-                            dropped_events
-                                .recorder(attrs.clone())
-                                .inc(dropped_event_count.swap(0, Ordering::Relaxed));
-                        }
+                        dropped_events
+                            .recorder(attrs.clone())
+                            .set(stage.dropped.count());
 
                         received_events
                             .recorder(attrs.clone())
-                            .inc(stage.received_event_count.swap(0, Ordering::Relaxed));
+                            .set(stage.received.count());
                         received_bytes
                             .recorder(attrs.clone())
-                            .inc(stage.received_event_count.swap(0, Ordering::Relaxed));
-                        sent_events
-                            .recorder(attrs.clone())
-                            .inc(stage.sent_event_count.swap(0, Ordering::Relaxed));
-                        sent_bytes
-                            .recorder(attrs)
-                            .inc(stage.sent_byte_size.swap(0, Ordering::Relaxed));
+                            .set(stage.received.byte_size());
+                        sent_events.recorder(attrs.clone()).set(stage.sent.count());
+                        sent_bytes.recorder(attrs).set(stage.sent.byte_size());
                     }
                 }
             }

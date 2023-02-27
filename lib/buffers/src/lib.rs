@@ -1,5 +1,4 @@
 #[deny(clippy::cast_precision_loss)]
-mod acknowledgements;
 mod buffer_usage_data;
 mod config;
 pub mod encoding;
@@ -11,7 +10,6 @@ mod variants;
 mod test;
 
 // re-export
-pub use acknowledgements::{Ackable, Acker};
 pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
 pub use encoding::Encodable;
 pub use topology::{builder, channel};
@@ -21,6 +19,7 @@ use std::fmt::Debug;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
+use finalize::AddBatchNotifier;
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
 
@@ -60,16 +59,42 @@ impl Default for WhenFull {
 ///
 /// This supertrait serves as the base trait for any item that can be pushed into a buffer.
 pub trait Bufferable:
-    ByteSizeOf + Encodable + EventCount + Debug + Send + Sync + Unpin + Sized + 'static
+    AddBatchNotifier
+    + ByteSizeOf
+    + Encodable
+    + EventCount
+    + Debug
+    + Send
+    + Sync
+    + Unpin
+    + Sized
+    + 'static
 {
 }
 
 // Blanket implementation for anything that is already bufferable.
 impl<T> Bufferable for T where
-    T: ByteSizeOf + Encodable + EventCount + Debug + Send + Sync + Unpin + Sized + 'static
+    T: AddBatchNotifier
+        + ByteSizeOf
+        + Encodable
+        + EventCount
+        + Debug
+        + Send
+        + Sync
+        + Unpin
+        + Sized
+        + 'static
 {
 }
 
 pub trait EventCount {
     fn event_count(&self) -> usize;
 }
+
+/// Vector's basic error type, dynamically dispatched and safe to send across
+/// threads.
+pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+
+/// Vector's basic result type, defined in terms of [`Error`] and generic over
+/// `T`.
+pub type Result<T> = std::result::Result<T, Error>;

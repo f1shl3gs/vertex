@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::io::Error;
 use std::num::NonZeroUsize;
 
-use buffers::Acker;
 use bytes::{Bytes, BytesMut};
 use codecs::encoding::Transformer;
 use codecs::Encoder;
@@ -291,7 +290,6 @@ impl RecordFilter {
 
 #[derive(Clone)]
 pub struct LokiSink {
-    acker: Acker,
     request_builder: LokiRequestBuilder,
     pub(super) encoder: EventEncoder,
     batch_settings: BatcherSettings,
@@ -300,13 +298,12 @@ pub struct LokiSink {
 }
 
 impl LokiSink {
-    pub fn new(config: LokiConfig, client: HttpClient, cx: SinkContext) -> crate::Result<Self> {
+    pub fn new(config: LokiConfig, client: HttpClient, _cx: SinkContext) -> crate::Result<Self> {
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
         let encoder = Encoder::<()>::new(serializer);
 
         Ok(Self {
-            acker: cx.acker,
             request_builder: LokiRequestBuilder::new(),
             encoder: EventEncoder {
                 key_partitioner: KeyPartitioner::new(config.tenant),
@@ -353,7 +350,7 @@ impl LokiSink {
                     Ok(req) => Some(req),
                 }
             })
-            .into_driver(service, self.acker)
+            .into_driver(service)
             .run()
             .await
     }

@@ -11,8 +11,6 @@ pub use map::Map;
 
 use std::time::Duration;
 
-use crate::batch::Batch;
-use buffers::Acker;
 use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 use tower::layer::util::Stack;
@@ -22,6 +20,7 @@ use tower::timeout::Timeout;
 use tower::{Layer, Service, ServiceBuilder};
 
 use super::adaptive_concurrency::AdaptiveConcurrencySettings;
+use crate::batch::Batch;
 use crate::sink::util::adaptive_concurrency::service::AdaptiveConcurrencyLimit;
 use crate::sink::util::adaptive_concurrency::AdaptiveConcurrencyLimitLayer;
 use crate::sink::util::retries::{FixedRetryPolicy, RetryLogic};
@@ -188,7 +187,6 @@ impl RequestSettings {
         service: S,
         batch: B,
         batch_timeout: Duration,
-        acker: Acker,
     ) -> BatchedSink<S, B, RL>
     where
         RL: RetryLogic<Response = S::Response>,
@@ -203,7 +201,7 @@ impl RequestSettings {
             .settings(self.clone(), retry_logic)
             .service(service);
 
-        BatchSink::new(service, batch, batch_timeout, acker)
+        BatchSink::new(service, batch, batch_timeout)
     }
 }
 

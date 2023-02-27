@@ -83,7 +83,7 @@ impl SinkConfig for RemoteWriteConfig {
             let buffer = PartitionBuffer::new(MetricsBuffer::new(batch.size));
             let mut normalizer = MetricNormalizer::<PrometheusMetricNormalize>::default();
 
-            PartitionBatchSink::new(service, buffer, batch.timeout, cx.acker)
+            PartitionBatchSink::new(service, buffer, batch.timeout)
                 .with_flat_map(move |event: Event| {
                     let byte_size = event.size_of();
                     stream::iter(normalizer.apply(event.into_metric()).map(|event| {

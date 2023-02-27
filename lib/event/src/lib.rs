@@ -11,7 +11,6 @@
 )]
 
 pub mod array;
-mod finalization;
 pub mod log;
 mod metadata;
 mod metric;
@@ -21,9 +20,9 @@ pub mod trace;
 
 // re-export
 pub use array::{EventContainer, Events};
-pub use finalization::{
-    BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer, EventFinalizers, EventStatus,
-    Finalizable,
+pub use finalize::{
+    AddBatchNotifier, BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer,
+    EventFinalizers, EventStatus, Finalizable,
 };
 pub use log::LogRecord;
 pub use metadata::EventMetadata;
@@ -48,6 +47,18 @@ pub enum Event {
     Log(LogRecord),
     Metric(Metric),
     Trace(Trace),
+}
+
+impl AddBatchNotifier for Event {
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
+        let finalizer = EventFinalizer::new(notifier);
+
+        match self {
+            Event::Log(log) => log.add_finalizer(finalizer),
+            Event::Metric(metric) => metric.add_finalizer(finalizer),
+            Event::Trace(trace) => trace.add_finalizer(finalizer),
+        }
+    }
 }
 
 impl ByteSizeOf for Event {

@@ -4,8 +4,7 @@ use std::{
     task::{Context, Poll},
 };
 
-use buffers::channel::BufferReceiver;
-use buffers::Acker;
+use buffers::channel::BufferReceiverStream;
 use event::Events;
 use futures::future::{BoxFuture, Future, FutureExt};
 use pin_project::pin_project;
@@ -18,7 +17,7 @@ pub enum TaskOutput {
     Source,
     Transform,
     /// Buffer of sink
-    Sink(Utilization<BufferReceiver<Events>>, Acker),
+    Sink(Utilization<BufferReceiverStream<Events>>),
     HealthCheck,
     Extension,
 }

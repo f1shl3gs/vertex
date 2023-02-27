@@ -11,14 +11,18 @@ use std::{
 use crossbeam_queue::SegQueue;
 use parking_lot::Mutex;
 use proptest::{prop_assert, prop_assert_eq, proptest};
+use temp_dir::TempDir;
 use tokio::runtime::Builder;
 
+use crate::encoding::FixedEncodable;
+use crate::test::install_tracing_helpers;
+use crate::variants::disk::record::RECORD_HEADER_LEN;
 use crate::{
     buffer_usage_data::BufferUsageHandle,
     variants::disk::{
         common::MAX_FILE_ID, writer::RecordWriter, Buffer, DiskBufferConfig, WriterError,
     },
-    EventCount, WhenFull,
+    EventCount,
 };
 
 mod action;
@@ -466,22 +470,21 @@ impl ReaderModel {
         self.current_file_bytes_read += bytes_read;
     }
 
-    fn acknowledge_reads(&mut self, amount: usize) {
+    fn acknowledge_read(&mut self) {
         // We check to make sure that we're not about to acknowledge more events than we actually
         // have read but have not yet been acknowledged, because that just should be possible.
         assert!(
-            amount <= self.outstanding_event_acks,
-            "invariant violation: {} events unacked, tried to ack {}",
+            self.outstanding_event_acks > 0,
+            "invariant violation: {} events unacked, tried to ack 1",
             self.outstanding_event_acks,
-            amount
         );
 
         // Update the outstanding count of events which have not yet been acknowledged, and also
         // update the total number of acknowledgements we've gotten but have not yet been consumed,
         // as a record may have multiple events and they all need to be acknowledged before we can
         // actually count the record as fully acknowledged and removed from the buffer, etc.
-        self.outstanding_event_acks -= amount;
-        self.unconsumed_event_acks += amount;
+        self.outstanding_event_acks -= 1;
+        self.unconsumed_event_acks += 1;
     }
 }
 
@@ -561,9 +564,17 @@ impl WriterModel {
         // writing the value anywhere.  `RecordWriter` clears its encoding/serialization buffers on
         // each call to `archive_record` so we don't have to do any pre/post-cleanup to avoid memory
         // growth, etc.
-        self.record_writer
-            .archive_record(1, record)
-            .expect("detached record archiving should not fail") as u64
+        let record_len = record.archived_len();
+
+        match self.record_writer.archive_record(1, record) {
+            Ok(token) => token.serialized_len() as u64,
+            Err(err) => panic!(
+                "unexpected encode error: archived_len={} max_record_size={} error={:?}",
+                record_len,
+                self.ledger.config().max_record_size,
+                err
+            ),
+        }
     }
 
     fn reset(&mut self) {
@@ -666,8 +677,12 @@ impl WriterModel {
             // record can't encode itself due to space limitations, so the differentiation on the
             // front end is more about providing an informative error, but the writer can't really
             // do anything different if they get "failed to encode" vs "record too large".
-            if record.len() > self.ledger.config().max_record_size {
-                return Progress::WriteError(WriterError::FailedToEncode { err: EncodeError });
+            let encoded_len = record
+                .encoded_size()
+                .expect("record used in model must provide this");
+            let encoded_len_limit = self.ledger.config().max_record_size - RECORD_HEADER_LEN;
+            if encoded_len > encoded_len_limit {
+                return Progress::WriteError(WriterError::FailedToEncode(EncodeError));
             }
 
             // Write the record in the same way that the buffer would, which is the only way we can
@@ -752,8 +767,8 @@ impl BufferModel {
         self.reader.read_record()
     }
 
-    fn acknowledge_reads(&mut self, amount: usize) {
-        self.reader.acknowledge_reads(amount);
+    fn acknowledge_read(&mut self) {
+        self.reader.acknowledge_read();
     }
 
     fn close_writer(&mut self) {
@@ -763,19 +778,35 @@ impl BufferModel {
 
 proptest! {
     #[test]
-    fn model_check(config in arb_buffer_config(), actions in arb_actions(0..64)) {
+    fn model_check(mut config in arb_buffer_config(), actions in arb_actions(0..64)) {
         let rt = Builder::new_current_thread()
             .enable_all()
             .build()
             .expect("should not fail to build runtime");
 
+        let _a = install_tracing_helpers();
+        info!(
+            actions = actions.len(),
+            max_buffer_size = config.max_buffer_size,
+            max_data_file_size = config.max_data_file_size,
+            max_record_size = config.max_record_size,
+            "Starting model.",
+        );
+
+        // We generate a new temporary directory and overwrite the data directory in the buffer
+        // configuration. This allows us to use a utility that will generate a random directory each
+        // time -- parallel runs of this test can't clobber each other anymore -- but also ensure
+        // that the directory is cleaned up when the test run is over.
+        let buf_dir = TempDir::with_prefix("vector-buffers-disk-model").expect("creating temp dir should never fail");
+        config.data_dir = buf_dir.path().to_path_buf();
+
         rt.block_on(async move {
-            // This model tries to encapsulate all of the behavior of the disk buffer v2
+            // This model tries to encapsulate all of the behavior of the disk buffer
             // implementation, and has a few major parts that we'll briefly talk about: the model
             // itself, input actions, and the sequencer.
             //
             // At the very top, we have our input actions, which are mapped one-to-one with the
-            // possible actions that can influence the disk buffer: reaading records, writing
+            // possible actions that can influence the disk buffer: reading records, writing
             // records, flushing writes, and acknowledging reads.
             //
             // After that, we have the model itself, which essentially a barebones re-implementation
@@ -810,18 +841,26 @@ proptest! {
             // actions that are coupled to one another, in a lockstep fashion, with the model.
             let mut model = BufferModel::from_config(&config);
 
-            let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
-            let (writer, reader, acker, ledger) =
+            let usage_handle = BufferUsageHandle::noop();
+            let (writer, reader, ledger) =
                 Buffer::<Record>::from_config_inner(config, usage_handle)
                     .await
                     .expect("should not fail to build buffer");
 
-            let mut sequencer = ActionSequencer::new(actions, reader, writer, acker);
+            let mut sequencer = ActionSequencer::new(actions, reader, writer);
 
             let mut closed_writers = false;
 
             loop {
-                // We manully check if the sequencer has any write operations left, either
+                // The model runs in a current-thread tokio runtime,
+                // but the acknowledgement handling runs in a
+                // background task. This yields to any such background
+                // task before returning in order to ensure
+                // acknowledgements are fully accounted for before
+                // doing the next operation.
+                tokio::task::yield_now().await;
+
+                // We manually check if the sequencer has any write operations left, either
                 // in-flight or yet-to-be-triggered, and if none are left, we mark the writer
                 // closed.  This allows us to properly inform the model that reads should start
                 // returning `None` if there's no more flushed records left vs being blocked on
@@ -837,9 +876,9 @@ proptest! {
                 // run against the model.  If it's an action that may be asynchronous/blocked on
                 // progress of another component, we try it later on, which lets us deduplicate some code.
                 if let Some(action) = sequencer.trigger_next_runnable_action() {
-                    if let Action::AcknowledgeRead(amount) = action {
+                    if let Action::AcknowledgeRead = action {
                         // Acknowledgements are based on atomics, so they never wait asynchronously.
-                        model.acknowledge_reads(amount);
+                        model.acknowledge_read();
                     }
                 } else {
                     let mut made_progress = false;
@@ -862,7 +901,7 @@ proptest! {
                                                 Ok(written) => prop_assert_eq!(model_result, Progress::RecordWritten(written), "expected completed write"),
                                                 Err(e) => prop_assert_eq!(model_result, Progress::WriteError(e), "expected write error"),
                                             },
-                                            WriteActionResult::Flush(r) => panic!("got unexpected flush action result for pending write: {:?}", r),
+                                            WriteActionResult::Flush(r) => panic!("got unexpected flush action result for pending write: {r:?}"),
                                         }
                                     },
                                 }
@@ -878,11 +917,11 @@ proptest! {
                                     Poll::Pending => panic!("flush should never be blocked"),
                                     Poll::Ready(sut_result) => match sut_result {
                                         WriteActionResult::Flush(result) => prop_assert!(result.is_ok()),
-                                        WriteActionResult::Write(r) => panic!("got unexpected write action result for pending flush: {:?}", r),
+                                        WriteActionResult::Write(r) => panic!("got unexpected write action result for pending flush: {r:?}"),
                                     },
                                 }
                             },
-                            a => panic!("invalid action for pending write: {:?}", a),
+                            a => panic!("invalid action for pending write: {a:?}"),
                         }
                     }
 
@@ -905,7 +944,7 @@ proptest! {
                                     },
                                 }
                             },
-                            a => panic!("invalid action for pending read: {:?}", a),
+                            a => panic!("invalid action for pending read: {a:?}"),
                         }
                     }
 
