@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677402140186,
+  "lastUpdate": 1677477873915,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14763,6 +14763,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56364.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37ceb97551054b15200474d86eeb2d2c822f58b8",
+          "message": "Merge pull request #793 from f1shl3gs/dependabot/cargo/syn-1.0.109\n\nchore(deps): bump syn from 1.0.108 to 1.0.109",
+          "timestamp": "2023-02-27T13:42:29+08:00",
+          "tree_id": "4dbe44c8846f48493e5a070050eed5c2ca5bd54b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37ceb97551054b15200474d86eeb2d2c822f58b8"
+        },
+        "date": 1677477864940,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1114,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56492.7,
             "unit": "KiB"
           }
         ]
