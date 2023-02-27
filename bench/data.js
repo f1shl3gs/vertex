@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677477873915,
+  "lastUpdate": 1677478132876,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14797,6 +14797,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56492.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15fb92ea16cfa8edd385107fc0d130b5d8739c76",
+          "message": "update buffers (#790)\n\n* update buffers\r\n\r\n* remove unused deps\r\n\r\n* fix tests",
+          "timestamp": "2023-02-27T13:41:57+08:00",
+          "tree_id": "9c4355b5d0325e5dfba965181c05173669d627e0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15fb92ea16cfa8edd385107fc0d130b5d8739c76"
+        },
+        "date": 1677478122118,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1351,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56489.1,
             "unit": "KiB"
           }
         ]
