@@ -1,6 +1,6 @@
 use std::sync::Arc;
 use std::{
-    fmt, io,
+    fmt, io, mem,
     path::PathBuf,
     sync::atomic::{AtomicBool, AtomicU16, AtomicU64, Ordering},
     time::Instant,
@@ -18,12 +18,14 @@ use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
     backed_archive::BackedArchive,
-    common::{DiskBufferConfig, MAX_FILE_ID},
+    common::{align16, DiskBufferConfig, MAX_FILE_ID},
     io::{AsyncFile, WritableMemoryMap},
     ser::SerializeError,
     Filesystem,
 };
 use crate::buffer_usage_data::BufferUsageHandle;
+
+pub const LEDGER_LEN: usize = align16(mem::size_of::<ArchivedLedgerState>());
 
 /// Error that occurred during calls to [`Ledger`].
 #[derive(Debug, Error)]

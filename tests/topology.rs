@@ -8,7 +8,7 @@ use std::time::Duration;
 
 use buffers::{BufferConfig, BufferType, WhenFull};
 use event::array::into_event_stream;
-use event::{Event, EventContainer, Events};
+use event::{Event, EventContainer, Events, LogRecord};
 use framework::config::{Config, SinkOuter};
 use framework::{topology, Pipeline};
 use futures_util::{stream, StreamExt};
@@ -19,10 +19,6 @@ use util::{sink, source, transform};
 
 use crate::util::{sink_failing_healthcheck, sink_with_data, source_with_data, MockSourceConfig};
 use crate::util::{start_topology, trace_init};
-
-fn default_max_size() -> NonZeroU64 {
-    NonZeroU64::new(1024).unwrap()
-}
 
 fn into_message(event: Event) -> String {
     event
@@ -671,8 +667,10 @@ async fn topology_healthcheck_run_for_changes_on_reload() {
 
 #[tokio::test]
 async fn topology_disk_buffer_flushes_on_idle() {
-    let tmpdir = tempdir().unwrap();
-    let event = Event::from("foo");
+    trace_init();
+
+    let tmpdir = tempdir().expect("no tmpdir");
+    let event = Event::Log(LogRecord::from("foo"));
 
     let (mut in1, source1) = source();
     let transform1 = transform("", 0.0);
@@ -689,7 +687,7 @@ async fn topology_disk_buffer_flushes_on_idle() {
     );
     sink1_outer.buffer = BufferConfig {
         stages: vec![BufferType::Disk {
-            max_size: default_max_size(),
+            max_size: NonZeroU64::new(268435488).unwrap(),
             when_full: WhenFull::DropNewest,
         }],
     };

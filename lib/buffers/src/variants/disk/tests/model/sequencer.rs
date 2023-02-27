@@ -1,5 +1,4 @@
-use std::collections::VecDeque;
-use std::{io, mem, task::Poll};
+use std::{collections::VecDeque, io, mem, task::Poll};
 
 use futures::{future::BoxFuture, Future, FutureExt};
 use tokio_test::task::{spawn, Spawn};
@@ -212,7 +211,7 @@ impl ActionSequencer {
             actions,
             read_state: ReadState::Idle(reader),
             write_state: WriteState::Idle(writer),
-            unacked_events: VecDeque::new(),
+            unacked_events: VecDeque::default(),
         }
     }
 
@@ -288,11 +287,7 @@ impl ActionSequencer {
                     Some(a)
                 }
                 Action::AcknowledgeRead => {
-                    drop(
-                        self.unacked_events
-                            .pop_front()
-                            .expect("pop_front unacked events"),
-                    );
+                    drop(self.unacked_events.pop_front().expect("FIXME"));
                     Some(Action::AcknowledgeRead)
                 }
             }

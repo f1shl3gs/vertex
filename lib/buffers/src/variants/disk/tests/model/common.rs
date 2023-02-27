@@ -2,11 +2,10 @@ use std::time::Duration;
 
 use proptest::{arbitrary::any, strategy::Strategy};
 
+use super::{filesystem::TestFilesystem, record::Record};
 use crate::variants::disk::{
     DiskBufferConfig, DiskBufferConfigBuilder, Reader, ReaderError, Writer, WriterError,
 };
-
-use super::{filesystem::TestFilesystem, record::Record};
 
 pub type TestReader = Reader<Record, TestFilesystem>;
 pub type TestWriter = Writer<Record, TestFilesystem>;
@@ -43,7 +42,7 @@ pub fn arb_buffer_config() -> impl Strategy<Value = DiskBufferConfig<TestFilesys
                 .expect("u16 should never be smaller than usize");
 
             let mut path = std::env::temp_dir();
-            path.push("vector-disk-model");
+            path.push("vertex-disk-model");
 
             DiskBufferConfigBuilder::from_path(path)
                 .max_buffer_size(max_buffer_size)

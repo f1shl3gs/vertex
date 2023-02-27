@@ -10,7 +10,7 @@ use super::record::Record;
 
 /// Input action for the model/system under test.
 ///
-/// These actions map directly to methods that can be called from the reader, writer, or acker.
+/// These actions map directly to methods that can be called from the reader or writer.
 ///
 /// One notable difference compared to the real types is that acknowledgements here are only
 /// allowed to acknowledge one read at a time.
@@ -60,7 +60,7 @@ where
 /// test such a sequence.
 pub fn sanitize_raw_actions(actions: Vec<Action>) -> Vec<Action> {
     let mut unread_event_count: usize = 0;
-    let mut unacked_events = 0;
+    let mut unacked_events: usize = 0;
 
     actions
         .into_iter()
@@ -74,7 +74,6 @@ pub fn sanitize_raw_actions(actions: Vec<Action>) -> Vec<Action> {
                     unread_event_count -= 1;
                     unacked_events += 1;
                 }
-
                 Some(Action::ReadRecord)
             }
             Action::AcknowledgeRead => (unacked_events > 0).then(|| {

@@ -2,7 +2,6 @@ use std::{future::Future, path::Path, str::FromStr};
 
 use event::{EventStatus, Finalizable};
 use once_cell::sync::Lazy;
-use temp_dir::TempDir;
 use tracing_fluent_assertions::{AssertionRegistry, AssertionsLayer};
 use tracing_subscriber::{filter::LevelFilter, layer::SubscriberExt, Layer, Registry};
 
@@ -45,7 +44,7 @@ where
     F: FnOnce(&Path) -> Fut,
     Fut: Future<Output = V>,
 {
-    let buf_dir = TempDir::new().expect("creating temp dir should never fail");
+    let buf_dir = tempdir::TempDir::new("").expect("creating temp dir should never fail");
     f(buf_dir.path()).await
 }
 

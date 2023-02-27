@@ -4,16 +4,18 @@ use bytes::{Buf, BufMut};
 use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers};
 use measurable::ByteSizeOf;
 
-use crate::variants::disk::common::align16;
-use crate::variants::disk::record::RECORD_HEADER_LEN;
-use crate::{encoding::FixedEncodable, EventCount};
+use crate::{
+    encoding::FixedEncodable,
+    variants::disk::{record::RECORD_HEADER_LEN, tests::align16},
+    EventCount,
+};
 
 #[derive(Debug)]
 pub struct EncodeError;
 
 impl fmt::Display for EncodeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
@@ -24,13 +26,13 @@ pub struct DecodeError;
 
 impl fmt::Display for DecodeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 
 impl error::Error for DecodeError {}
 
-#[derive(Clone, Debug, PartialEq, Eq)]
+#[derive(Clone, Eq)]
 pub struct Record {
     id: u32,
     size: u32,
@@ -68,9 +70,27 @@ impl Record {
     }
 }
 
+impl fmt::Debug for Record {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("Record")
+            .field("id", &self.id)
+            .field("size", &self.size)
+            .field("event_count", &self.event_count)
+            .field("encoded_len", &self.encoded_len())
+            .field("archived_len", &self.archived_len())
+            .finish()
+    }
+}
+
+impl PartialEq for Record {
+    fn eq(&self, other: &Self) -> bool {
+        self.id == other.id && self.size == other.size && self.event_count == other.event_count
+    }
+}
+
 impl AddBatchNotifier for Record {
-    fn add_batch_notifier(&mut self, notifier: BatchNotifier) {
-        self.finalizers.add(EventFinalizer::new(notifier));
+    fn add_batch_notifier(&mut self, batch: BatchNotifier) {
+        self.finalizers.add(EventFinalizer::new(batch));
     }
 }
 
