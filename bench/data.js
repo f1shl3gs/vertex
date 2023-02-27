@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677478132876,
+  "lastUpdate": 1677478176782,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14831,6 +14831,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56489.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e1a9639e0278b2da51ed8d3e9aee54e00604433",
+          "message": "Merge pull request #792 from f1shl3gs/dependabot/cargo/tempfile-3.4.0\n\nchore(deps): bump tempfile from 3.3.0 to 3.4.0",
+          "timestamp": "2023-02-27T13:42:37+08:00",
+          "tree_id": "c93774d141ba3b3b4b1c9909982c051715459394",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e1a9639e0278b2da51ed8d3e9aee54e00604433"
+        },
+        "date": 1677478166766,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1386,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56483.8,
             "unit": "KiB"
           }
         ]
