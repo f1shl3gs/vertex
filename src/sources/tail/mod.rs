@@ -166,6 +166,10 @@ impl SourceConfig for TailConfig {
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Log)]
     }
+
+    fn acknowledgable(&self) -> bool {
+        true
+    }
 }
 
 fn tail_source(

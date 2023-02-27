@@ -4,7 +4,7 @@ use std::{fmt, task::Poll};
 use buffers::channel::BufferSender;
 use event::Events;
 use futures::{Stream, StreamExt};
-use futures_util::{pending, poll, SinkExt};
+use futures_util::{pending, poll};
 use indexmap::IndexMap;
 use tokio::sync::mpsc;
 use tokio_util::sync::ReusableBoxFuture;
@@ -394,13 +394,13 @@ mod tests {
         WhenFull,
     };
     use event::{Event, EventContainer, Events, LogRecord};
-    use futures::{poll, StreamExt};
+    use futures::poll;
     use tokio::sync::mpsc::UnboundedSender;
     use tokio_test::{assert_pending, assert_ready, task::spawn};
 
     use super::{ControlMessage, Fanout};
     use crate::config::ComponentKey;
-    use crate::testing::collect_ready_events;
+    use crate::testing::{collect_ready, collect_ready_events};
 
     async fn build_sender_pair(capacity: usize) -> (BufferSender<Events>, BufferReceiver<Events>) {
         TopologyBuilder::standalone_memory(
@@ -526,7 +526,7 @@ mod tests {
         fanout.send(clones).await;
 
         for receiver in receivers {
-            assert_eq!(crate::testing::collect_ready(receiver), &[events.clone()]);
+            assert_eq!(collect_ready(receiver.into_stream()), &[events.clone()]);
         }
     }
 
@@ -576,14 +576,18 @@ mod tests {
 
         // Make sure the first two senders got all three events, but the third sender only got the
         // last event:
-        assert_eq!(collect_ready_events(&mut receivers[0]), &events[..]);
-        assert_eq!(collect_ready_events(&mut receivers[1]), &events[..]);
-        assert_eq!(collect_ready_events(&mut receivers[2]), &events[2..]);
+        let expected_events = [&events, &events, &events[2..]];
+        for (i, receiver) in receivers.into_iter().enumerate() {
+            assert_eq!(
+                collect_ready_events(receiver.into_stream()),
+                expected_events[i]
+            );
+        }
     }
 
     #[tokio::test]
     async fn fanout_shrink() {
-        let (mut fanout, control, mut receivers) = fanout_from_senders(&[4, 4]).await;
+        let (mut fanout, control, receivers) = fanout_from_senders(&[4, 4]).await;
         let events = make_events(3);
 
         // Send in the first two events to our initial two senders:
@@ -598,8 +602,11 @@ mod tests {
 
         // Make sure the first sender got all three events, but the second sender only got the first two:
         let expected_events = [&events, &events[..2]];
-        for (i, receiver) in receivers.iter_mut().enumerate() {
-            assert_eq!(collect_ready_events(receiver), expected_events[i]);
+        for (i, receiver) in receivers.into_iter().enumerate() {
+            assert_eq!(
+                collect_ready_events(receiver.into_stream()),
+                expected_events[i]
+            );
         }
     }
 
@@ -728,11 +735,17 @@ mod tests {
         // third sender got all three events:
         let expected_events = [&events[2..], &events, &events];
         for (i, receiver) in receivers.into_iter().enumerate() {
-            assert_eq!(collect_ready_events(receiver), expected_events[i]);
+            assert_eq!(
+                collect_ready_events(receiver.into_stream()),
+                expected_events[i]
+            );
         }
 
         // And make sure our original "first" sender got the first two events:
-        assert_eq!(collect_ready_events(old_first_receiver), &events[..2]);
+        assert_eq!(
+            collect_ready_events(old_first_receiver.into_stream()),
+            &events[..2]
+        );
     }
 
     #[tokio::test]
@@ -764,9 +777,18 @@ mod tests {
 
         // Make sure the original first sender got the first two events, the new first sender got
         // the last event, and the second sender got all three:
-        assert_eq!(collect_ready_events(old_first_receiver), &events[0..2]);
-        assert_eq!(collect_ready_events(&mut receivers[0]), &events[2..]);
-        assert_eq!(collect_ready_events(&mut receivers[1]), &events[..]);
+        assert_eq!(
+            collect_ready_events(old_first_receiver.into_stream()),
+            &events[0..2]
+        );
+
+        let expected_events = [&events[2..], &events];
+        for (i, receiver) in receivers.into_iter().enumerate() {
+            assert_eq!(
+                collect_ready_events(receiver.into_stream()),
+                expected_events[i]
+            );
+        }
     }
 
     fn _make_events(count: usize) -> impl Iterator<Item = LogRecord> {

@@ -1,6 +1,5 @@
 use std::time::Duration;
 
-use buffers::Acker;
 use codecs::encoding::Transformer;
 use codecs::Encoder;
 use event::{Event, EventContainer, Events};
@@ -32,7 +31,6 @@ pub enum BuildError {
 pub struct KafkaSink {
     transformer: Transformer,
     encoder: Encoder<()>,
-    acker: Acker,
     service: KafkaService,
     topic: Template,
     key_field: Option<String>,
@@ -47,7 +45,7 @@ pub fn create_producer(
 }
 
 impl KafkaSink {
-    pub fn new(config: KafkaSinkConfig, acker: Acker) -> crate::Result<Self> {
+    pub fn new(config: KafkaSinkConfig) -> crate::Result<Self> {
         let producer = create_producer(config.to_rdkafka(KafkaRole::Producer)?)?;
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
@@ -57,7 +55,6 @@ impl KafkaSink {
             headers_field: config.headers_field,
             transformer,
             encoder,
-            acker,
             service: KafkaService::new(producer),
             topic: Template::try_from(config.topic)?,
             key_field: config.key_field,
@@ -80,7 +77,7 @@ impl KafkaSink {
         let sink = input
             .flat_map(|events| futures::stream::iter(events.into_events()))
             .filter_map(|event| futures_util::future::ready(request_builder.build_request(event)))
-            .into_driver(service, self.acker);
+            .into_driver(service);
         sink.run().await
     }
 }

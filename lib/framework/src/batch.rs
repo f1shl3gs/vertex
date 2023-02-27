@@ -33,10 +33,11 @@ pub enum BatchError {
 pub struct BatchSize<B> {
     pub bytes: usize,
     pub events: usize,
+
     // this type marker is used to drive type inference, which allows us to
     // call the right Batch::get_settings_defaults without explicitly naming
     // the type in BatchSettings::parse_config
-    _b: PhantomData<B>,
+    _type_marker: PhantomData<B>,
 }
 
 impl<B> Clone for BatchSize<B> {
@@ -44,7 +45,7 @@ impl<B> Clone for BatchSize<B> {
         Self {
             bytes: self.bytes,
             events: self.events,
-            _b: PhantomData,
+            _type_marker: PhantomData,
         }
     }
 }
@@ -56,7 +57,7 @@ impl<B> BatchSize<B> {
         BatchSize {
             bytes: usize::MAX,
             events: usize::MAX,
-            _b: PhantomData,
+            _type_marker: PhantomData,
         }
     }
 }
@@ -70,7 +71,7 @@ impl<B> Default for BatchSize<B> {
 #[derive(Debug)]
 pub struct BatchSettings<B> {
     pub size: BatchSize<B>,
-    pub timeout: std::time::Duration,
+    pub timeout: Duration,
 }
 
 impl<B> Default for BatchSettings<B> {
@@ -79,9 +80,9 @@ impl<B> Default for BatchSettings<B> {
             size: BatchSize {
                 bytes: 10_000_000,
                 events: usize::MAX,
-                _b: PhantomData,
+                _type_marker: PhantomData,
             },
-            timeout: std::time::Duration::from_secs(1),
+            timeout: Duration::from_secs(1),
         }
     }
 }
@@ -272,7 +273,7 @@ impl<D: SinkBatchSettings> BatchConfig<D, Merged> {
             size: BatchSize {
                 bytes: adjusted.max_bytes.unwrap_or(usize::MAX),
                 events: adjusted.max_events.unwrap_or(usize::MAX),
-                _b: PhantomData,
+                _type_marker: PhantomData,
             },
             timeout,
         })

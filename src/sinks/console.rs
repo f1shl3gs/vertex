@@ -106,6 +106,8 @@ where
                             ?err
                         );
 
+                        finalizers.update_status(EventStatus::Errored);
+
                         return Err(());
                     }
                 }

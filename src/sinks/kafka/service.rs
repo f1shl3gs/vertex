@@ -1,6 +1,5 @@
 use std::task::{Context, Poll};
 
-use buffers::Ackable;
 use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::stream::DriverResponse;
@@ -38,14 +37,6 @@ impl DriverResponse for KafkaResponse {
 
     fn events_send(&self) -> (usize, usize, Option<&'static str>) {
         (1, self.event_byte_size, None)
-    }
-}
-
-impl Ackable for KafkaRequest {
-    fn ack_size(&self) -> usize {
-        // rdkafka takes care of batching internally, so a request here is
-        // always 1 event
-        1
     }
 }
 

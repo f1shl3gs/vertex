@@ -1,4 +1,3 @@
-use buffers::Ackable;
 use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::http::{Auth, HttpClient};
@@ -25,12 +24,6 @@ pub struct ElasticsearchRequest {
 impl ByteSizeOf for ElasticsearchRequest {
     fn allocated_bytes(&self) -> usize {
         self.payload.allocated_bytes() + self.finalizers.allocated_bytes()
-    }
-}
-
-impl Ackable for ElasticsearchRequest {
-    fn ack_size(&self) -> usize {
-        self.batch_size
     }
 }
 

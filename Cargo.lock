@@ -128,6 +128,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "async-recursion"
+version = "1.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b015a331cc64ebd1774ba119538573603427eaace0a1950c423ab971f903796"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "async-stream"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -370,6 +381,8 @@ dependencies = [
 name = "buffers"
 version = "0.1.0"
 dependencies = [
+ "async-recursion",
+ "async-stream",
  "async-trait",
  "bytecheck",
  "bytes",
@@ -377,9 +390,9 @@ dependencies = [
  "criterion",
  "crossbeam-queue",
  "crossbeam-utils",
- "dyn-clone",
  "enumflags2",
  "event",
+ "finalize",
  "fslock",
  "futures",
  "measurable",
@@ -388,13 +401,11 @@ dependencies = [
  "num-traits",
  "once_cell",
  "parking_lot 0.12.1",
- "pin-project",
  "proptest",
  "prost",
  "quickcheck",
  "rkyv",
  "serde",
- "temp-dir",
  "tempdir",
  "thiserror",
  "tokio",
@@ -1081,12 +1092,11 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "chrono",
- "crossbeam-utils",
+ "finalize",
  "futures",
  "log_schema",
  "lookup",
  "measurable",
- "pin-project",
  "prost",
  "prost-build",
  "prost-types",
@@ -1139,6 +1149,19 @@ dependencies = [
  "libc",
  "redox_syscall",
  "winapi",
+]
+
+[[package]]
+name = "finalize"
+version = "0.1.0"
+dependencies = [
+ "async-stream",
+ "crossbeam-utils",
+ "futures",
+ "measurable",
+ "pin-project-lite",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -3951,12 +3974,6 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
-
-[[package]]
-name = "temp-dir"
-version = "0.1.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af547b166dd1ea4b472165569fc456cfb6818116f854690b0ff205e636523dab"
 
 [[package]]
 name = "tempdir"

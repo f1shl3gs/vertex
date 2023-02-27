@@ -11,7 +11,10 @@ use super::{
     io::{AsyncFile, Metadata, ProductionFilesystem, ReadableMemoryMap, WritableMemoryMap},
     Buffer, DiskBufferConfigBuilder, Ledger, Reader, Writer,
 };
-use crate::{buffer_usage_data::BufferUsageHandle, Acker, Bufferable, WhenFull};
+use crate::encoding::FixedEncodable;
+use crate::variants::disk::common::align16;
+use crate::variants::disk::record::RECORD_HEADER_LEN;
+use crate::{buffer_usage_data::BufferUsageHandle, Bufferable};
 
 type FilesystemUnderTest = ProductionFilesystem;
 
@@ -171,7 +174,6 @@ pub(crate) async fn create_default_buffer<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
 )
 where
@@ -181,7 +183,7 @@ where
     let config = DiskBufferConfigBuilder::from_path(data_dir)
         .build()
         .expect("creating buffer should not fail");
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
+    let usage_handle = BufferUsageHandle::noop();
     Buffer::from_config_inner(config, usage_handle)
         .await
         .expect("should not fail to create buffer")
@@ -192,7 +194,6 @@ pub(crate) async fn create_default_buffer_with_usage<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
     BufferUsageHandle,
 )
@@ -203,11 +204,11 @@ where
     let config = DiskBufferConfigBuilder::from_path(data_dir)
         .build()
         .expect("creating buffer should not fail");
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
-    let (writer, reader, acker, ledger) = Buffer::from_config_inner(config, usage_handle.clone())
+    let usage_handle = BufferUsageHandle::noop();
+    let (writer, reader, ledger) = Buffer::from_config_inner(config, usage_handle.clone())
         .await
         .expect("should not fail to create buffer");
-    (writer, reader, acker, ledger, usage_handle)
+    (writer, reader, ledger, usage_handle)
 }
 
 pub(crate) async fn create_buffer_with_max_buffer_size<P, R>(
@@ -216,7 +217,6 @@ pub(crate) async fn create_buffer_with_max_buffer_size<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
 )
 where
@@ -229,7 +229,7 @@ where
         .build()
         .expect("creating buffer should not fail");
     config.max_buffer_size = max_buffer_size;
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
+    let usage_handle = BufferUsageHandle::noop();
 
     Buffer::from_config_inner(config, usage_handle)
         .await
@@ -242,7 +242,6 @@ pub(crate) async fn create_buffer_with_max_record_size<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
 )
 where
@@ -253,7 +252,7 @@ where
         .max_record_size(max_record_size)
         .build()
         .expect("creating buffer should not fail");
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
+    let usage_handle = BufferUsageHandle::noop();
 
     Buffer::from_config_inner(config, usage_handle)
         .await
@@ -266,18 +265,20 @@ pub(crate) async fn create_buffer_with_max_data_file_size<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
 )
 where
     P: AsRef<Path>,
     R: Bufferable,
 {
+    let max_record_size = usize::try_from(max_data_file_size).unwrap();
+
     let config = DiskBufferConfigBuilder::from_path(data_dir)
         .max_data_file_size(max_data_file_size)
+        .max_record_size(max_record_size)
         .build()
         .expect("creating buffer should not fail");
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
+    let usage_handle = BufferUsageHandle::noop();
 
     Buffer::from_config_inner(config, usage_handle)
         .await
@@ -290,7 +291,6 @@ pub(crate) async fn create_buffer_with_write_buffer_size<P, R>(
 ) -> (
     Writer<R, FilesystemUnderTest>,
     Reader<R, FilesystemUnderTest>,
-    Acker,
     Arc<Ledger<FilesystemUnderTest>>,
 )
 where
@@ -301,9 +301,30 @@ where
         .write_buffer_size(write_buffer_size)
         .build()
         .expect("creating buffer should not fail");
-    let usage_handle = BufferUsageHandle::noop(WhenFull::Block);
+    let usage_handle = BufferUsageHandle::noop();
 
     Buffer::from_config_inner(config, usage_handle)
         .await
         .expect("should not fail to create buffer")
+}
+
+pub(crate) fn get_corrected_max_record_size<T>(payload: &T) -> usize
+where
+    T: FixedEncodable,
+{
+    let payload_len = payload
+        .encoded_size()
+        .expect("All test record types must return a valid encoded size.");
+    let total = RECORD_HEADER_LEN + payload_len;
+
+    align16(total)
+}
+
+pub(crate) fn get_minimum_data_file_size_for_record_payload<T>(payload: &T) -> u64
+where
+    T: FixedEncodable,
+{
+    // This is just the maximum record size, compensating for the record header length.
+    let max_record_size = get_corrected_max_record_size(payload);
+    u64::try_from(max_record_size).unwrap()
 }

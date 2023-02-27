@@ -5,8 +5,9 @@ use std::sync::Arc;
 use std::task::Poll;
 
 use crossbeam_utils::atomic::AtomicCell;
-use futures::future::FutureExt;
+use futures::FutureExt;
 use measurable::ByteSizeOf;
+use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tracing::error;
 
@@ -58,6 +59,12 @@ impl EventStatus {
     }
 }
 
+/// An object to which we can add a batch notifier.
+pub trait AddBatchNotifier {
+    /// Adds a single shared batch notifier to this type.
+    fn add_batch_notifier(&mut self, notifier: BatchNotifier);
+}
+
 /// An object that can be finalized.
 pub trait Finalizable {
     /// Consumes the finalizers of this Object.
@@ -107,6 +114,18 @@ impl PartialOrd for EventFinalizers {
 impl ByteSizeOf for EventFinalizers {
     fn allocated_bytes(&self) -> usize {
         self.0.iter().fold(0, |acc, arc| acc + arc.size_of())
+    }
+}
+
+impl Finalizable for EventFinalizers {
+    fn take_finalizers(&mut self) -> EventFinalizers {
+        mem::take(self)
+    }
+}
+
+impl FromIterator<EventFinalizers> for EventFinalizers {
+    fn from_iter<T: IntoIterator<Item = EventFinalizers>>(iter: T) -> Self {
+        Self(iter.into_iter().flat_map(|f| f.0.into_iter()).collect())
     }
 }
 
@@ -235,7 +254,7 @@ impl BatchNotifier {
             notifier: Some(sender),
         };
 
-        (Self(Arc::new(notifier)), BatchStatusReceiver(receiver))
+        (Self(Arc::new(notifier)), BatchStatusReceiver { receiver })
     }
 
     /// Optionally call `new_with_receiver` and wrap the result in `Option`s
@@ -251,9 +270,9 @@ impl BatchNotifier {
 
     /// Apply a new batch notifier to a batch of events, and returns
     /// the receiver.
-    pub fn maybe_apply_to_events(
+    pub fn maybe_apply_to<T: AddBatchNotifier>(
         enabled: bool,
-        events: &mut [crate::Event],
+        events: &mut [T],
     ) -> Option<BatchStatusReceiver> {
         enabled.then(|| {
             let (batch, receiver) = Self::new_with_receiver();
@@ -325,15 +344,18 @@ impl Drop for EventFinalizer {
     }
 }
 
-/// A convenience new type wrapper for the one-shot receiver for
-/// an indivadual batch status.
-#[pin_project::pin_project]
-pub struct BatchStatusReceiver(oneshot::Receiver<BatchStatus>);
+pin_project! {
+    /// A convenience new type wrapper for the one-shot receiver for
+    /// an individual batch status.
+    pub struct BatchStatusReceiver {
+        receiver: oneshot::Receiver<BatchStatus>,
+    }
+}
 
 impl Future for BatchStatusReceiver {
     type Output = BatchStatus;
     fn poll(mut self: Pin<&mut Self>, ctx: &mut std::task::Context<'_>) -> Poll<Self::Output> {
-        match self.0.poll_unpin(ctx) {
+        match self.receiver.poll_unpin(ctx) {
             Poll::Pending => Poll::Pending,
             Poll::Ready(Ok(status)) => Poll::Ready(status),
             Poll::Ready(Err(err)) => {
@@ -356,7 +378,7 @@ impl BatchStatusReceiver {
     /// - `TryRecvError::Empty` if no value has been sent yet.
     /// - `TryRecvError::Closed` if the sender has dropped without sending a value
     pub fn try_recv(&mut self) -> Result<BatchStatus, oneshot::error::TryRecvError> {
-        self.0.try_recv()
+        self.receiver.try_recv()
     }
 }
 

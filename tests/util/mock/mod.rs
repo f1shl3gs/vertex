@@ -3,9 +3,8 @@ use std::sync::{Arc, Mutex};
 use std::task::Poll;
 
 use async_trait::async_trait;
-use buffers::Acker;
 use configurable::configurable_component;
-use event::{log::Value, EventContainer, Events, MetricValue};
+use event::{log::Value, EventContainer, Events, Finalizable, MetricValue};
 use framework::config::{
     DataType, Output, SinkConfig, SinkContext, SourceConfig, SourceContext, TransformConfig,
     TransformContext,
@@ -18,6 +17,7 @@ use futures_util::stream;
 use futures_util::stream::BoxStream;
 use log_schema::log_schema;
 use thiserror::Error;
+use tokio::sync::oneshot;
 use tracing::{error, info};
 
 #[configurable_component(source, name = "mock")]
@@ -259,19 +259,27 @@ enum HealthcheckError {
 #[async_trait]
 #[typetag::serde(name = "mock")]
 impl SinkConfig for MockSinkConfig {
-    async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
-        let sink = MockSink {
-            acker: cx.acker(),
-            sink: self.sink.clone(),
-        };
-
-        let healthcheck = if self.healthy {
-            futures::future::ok(())
+    async fn build(&self, _cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
+        // If this sink is set to not be healthy, just send the healthcheck error
+        // immediately over the oneshot.. otherwise, pass the sink so it can send
+        // it only once it has started running, so that tests can request the topology
+        // be healthy before proceeding.
+        let (tx, rx) = oneshot::channel();
+        let health_tx = if self.healthy {
+            Some(tx)
         } else {
-            futures::future::err(HealthcheckError::Unhealthy.into())
+            let _ = tx.send(Err(HealthcheckError::Unhealthy.into()));
+            None
         };
 
-        Ok((framework::Sink::Stream(Box::new(sink)), healthcheck.boxed()))
+        let sink = MockSink {
+            sink: self.sink.clone(),
+            health_tx,
+        };
+
+        let healthcheck = async move { rx.await.unwrap() };
+
+        Ok((Sink::Stream(Box::new(sink)), healthcheck.boxed()))
     }
 
     fn input_type(&self) -> DataType {
@@ -280,25 +288,30 @@ impl SinkConfig for MockSinkConfig {
 }
 
 struct MockSink {
-    acker: Acker,
     sink: Mode,
+    health_tx: Option<oneshot::Sender<framework::Result<()>>>,
 }
 
 #[async_trait]
 impl StreamSink for MockSink {
-    async fn run(self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
+    async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
         match self.sink {
             Mode::Normal(mut sink) => {
+                if let Some(tx) = self.health_tx.take() {
+                    let _ = tx.send(Ok(()));
+                }
+
                 // We have an inner sink, so forward the input normally
-                while let Some(event) = input.next().await {
-                    if let Err(err) = sink.send(event).await {
+                while let Some(mut events) = input.next().await {
+                    let finalizers = events.take_finalizers();
+                    if let Err(err) = sink.send(events).await {
                         error!(
-                            message = "ingesting an event failed at mock sink",
+                            message = "Ingesting events failed at mock sink",
                             %err
-                        );
+                        )
                     }
 
-                    self.acker.ack(1);
+                    drop(finalizers)
                 }
             }
 

@@ -10,8 +10,8 @@ use crate::{
         builder::{TopologyBuilder, TopologyError},
         channel::{BufferReceiver, BufferSender},
     },
-    variants::{DiskBuffer, MemoryBuffer},
-    Acker, Bufferable, WhenFull,
+    variants::{disk::DiskBuffer, memory::MemoryBuffer},
+    Bufferable, WhenFull,
 };
 
 #[derive(Debug, Error)]
@@ -306,7 +306,7 @@ impl BufferConfig {
         data_dir: Option<PathBuf>,
         buffer_id: String,
         span: Span,
-    ) -> Result<(BufferSender<T>, BufferReceiver<T>, Acker), BufferBuildError>
+    ) -> Result<(BufferSender<T>, BufferReceiver<T>), BufferBuildError>
     where
         T: Bufferable + Clone,
     {

@@ -350,7 +350,6 @@ impl SinkConfig for ElasticsearchConfig {
             request_builder: common.request_builder.clone(),
             transformer: self.encoding.clone(),
             service,
-            acker: cx.acker(),
             mode: common.mode.clone(),
             id_key_field: self.id_key.clone(),
         };

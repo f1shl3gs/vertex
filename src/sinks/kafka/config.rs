@@ -211,8 +211,8 @@ fn to_string(value: impl serde::Serialize) -> String {
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SinkConfig for KafkaSinkConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = super::sink::KafkaSink::new(self.clone(), cx.acker())?;
+    async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = super::sink::KafkaSink::new(self.clone())?;
         let hc = health_check(self.clone()).boxed();
         Ok((Sink::Stream(Box::new(sink)), hc))
     }

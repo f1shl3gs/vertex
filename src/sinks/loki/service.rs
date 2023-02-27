@@ -1,7 +1,6 @@
 use bytes::Bytes;
 use std::task::{Context, Poll};
 
-use buffers::Ackable;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient};
@@ -26,12 +25,6 @@ pub struct LokiRequest {
     pub payload: Bytes,
     pub tenant: Option<String>,
     pub events_byte_size: usize,
-}
-
-impl Ackable for LokiRequest {
-    fn ack_size(&self) -> usize {
-        self.batch_size
-    }
 }
 
 impl Finalizable for LokiRequest {

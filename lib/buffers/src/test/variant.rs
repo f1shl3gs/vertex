@@ -12,7 +12,7 @@ use crate::{
         builder::TopologyBuilder,
         channel::{BufferReceiver, BufferSender},
     },
-    variants::{DiskBuffer, MemoryBuffer},
+    variants::{disk::DiskBuffer, memory::MemoryBuffer},
     Bufferable, WhenFull,
 };
 
@@ -42,6 +42,7 @@ pub enum Variant {
 }
 
 impl Variant {
+    #[allow(dead_code)]
     pub async fn create_sender_receiver<T>(&self) -> (BufferSender<T>, BufferReceiver<T>)
     where
         T: Bufferable + Clone,
@@ -68,7 +69,7 @@ impl Variant {
             }
         };
 
-        let (sender, receiver, _acker) = builder
+        let (sender, receiver) = builder
             .build(Span::none())
             .await
             .expect("topology build should not fail");

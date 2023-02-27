@@ -10,11 +10,10 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
-use buffers::Acker;
 use bytes::{BufMut, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
-use event::Metric;
+use event::{EventStatus, Finalizable, Metric};
 use event::{Events, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
@@ -56,8 +55,8 @@ const fn default_ttl() -> Duration {
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
 impl SinkConfig for PrometheusExporterConfig {
-    async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
-        let sink = PrometheusExporter::new(self, cx.acker);
+    async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
+        let sink = PrometheusExporter::new(self);
         let health_check = futures::future::ok(()).boxed();
 
         Ok((Sink::Stream(Box::new(sink)), health_check))
@@ -127,7 +126,6 @@ struct Sets {
 }
 
 struct PrometheusExporter {
-    acker: Acker,
     ttl: i64,
     tls: Option<TlsConfig>,
     endpoint: SocketAddr,
@@ -138,9 +136,8 @@ struct PrometheusExporter {
 }
 
 impl PrometheusExporter {
-    fn new(config: &PrometheusExporterConfig, acker: Acker) -> Self {
+    fn new(config: &PrometheusExporterConfig) -> Self {
         Self {
-            acker,
             shutdown_trigger: None,
             endpoint: config.endpoint,
             metrics: Arc::new(Mutex::new(BTreeMap::new())),
@@ -401,7 +398,9 @@ impl StreamSink for PrometheusExporter {
                 let mut state = self.metrics.lock();
                 let now = Utc::now();
 
-                metrics.into_iter().for_each(|metric| {
+                metrics.into_iter().for_each(|mut metric| {
+                    let finalizers = metric.take_finalizers();
+
                     // Looks a little bit dummy but this should avoid some allocation for state's K.
                     let sets = match state.get_mut(metric.name()) {
                         Some(sets) => sets,
@@ -421,7 +420,7 @@ impl StreamSink for PrometheusExporter {
                         metric,
                         expired_at: timestamp.timestamp() + self.ttl,
                     });
-                    self.acker.ack(1);
+                    finalizers.update_status(EventStatus::Delivered)
                 })
             }
         }

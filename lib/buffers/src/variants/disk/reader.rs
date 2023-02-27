@@ -8,6 +8,7 @@ use std::{
 };
 
 use crc32fast::Hasher;
+use finalize::{BatchNotifier, OrderedFinalizer};
 use rkyv::{archived_root, AlignedVec};
 use thiserror::Error;
 use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
@@ -135,6 +136,17 @@ where
                 | ReaderError::Deserialization { .. }
                 | ReaderError::PartialWrite
         )
+    }
+
+    pub fn is_recoverable_error(&self) -> bool {
+        match self {
+            ReaderError::Io { .. } | ReaderError::EmptyRecord => true,
+            ReaderError::Deserialization { .. }
+            | ReaderError::Checksum { .. }
+            | ReaderError::Decode { .. }
+            | ReaderError::Incompatible { .. }
+            | ReaderError::PartialWrite => false,
+        }
     }
 }
 
@@ -383,6 +395,7 @@ where
     ready_to_read: bool,
     record_acks: OrderedAcknowledgements<u64, u64>,
     data_file_acks: OrderedAcknowledgements<u64, (PathBuf, u64)>,
+    finalizer: OrderedFinalizer<u64>,
     _t: PhantomData<T>,
 }
 
@@ -393,7 +406,7 @@ where
     FS::File: Unpin,
 {
     /// Creates a new [`Reader`] attached to the given [`Ledger`].
-    pub(crate) fn new(ledger: Arc<Ledger<FS>>) -> Self {
+    pub(crate) fn new(ledger: Arc<Ledger<FS>>, finalizer: OrderedFinalizer<u64>) -> Self {
         let ledger_last_reader_record_id = ledger.state().get_last_reader_record_id();
         let next_expected_record_id = ledger_last_reader_record_id.wrapping_add(1);
 
@@ -408,6 +421,7 @@ where
             ready_to_read: false,
             record_acks: OrderedAcknowledgements::from_acked(next_expected_record_id),
             data_file_acks: OrderedAcknowledgements::from_acked(0),
+            finalizer,
             _t: PhantomData,
         }
     }
@@ -1052,7 +1066,7 @@ where
             .reader
             .as_mut()
             .expect("reader should exist after `ensure_ready_for_read`");
-        let record = reader.read_record(token)?;
+        let mut record = reader.read_record(token)?;
 
         let record_events: u64 = record
             .event_count()
@@ -1062,6 +1076,10 @@ where
             .try_into()
             .map_err(|_| ReaderError::EmptyRecord)?;
         self.track_read(record_id, record_bytes, record_events);
+
+        let (batch, receiver) = BatchNotifier::new_with_receiver();
+        record.add_batch_notifier(batch);
+        self.finalizer.add(record_events.get(), receiver);
 
         if self.ready_to_read {
             trace!(
