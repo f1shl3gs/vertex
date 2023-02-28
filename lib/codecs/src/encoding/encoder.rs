@@ -148,8 +148,6 @@ impl Encoder<Framer> {
                 | Serializer::Text(_),
                 _,
             ) => "text/plain",
-            // TODO:
-            (&Serializer::Boxed(_), _) => "text/plain",
         }
     }
 }

@@ -1,20 +1,21 @@
-use bytes::{BufMut, BytesMut};
-use codecs::encoding::SerializeError;
-use event::Event;
-use jaeger::agent::{serialize_batch, BufferClient, UDP_PACKET_MAX_LENGTH};
 use std::io::Write;
 
-#[derive(Clone, Debug)]
-pub struct ThriftSerializer {}
+use bytes::{BufMut, BytesMut};
+use codecs::encoding::{EncodingError, SerializeError};
+use event::Event;
+use jaeger::agent::{serialize_batch, BufferClient, UDP_PACKET_MAX_LENGTH};
 
-impl ThriftSerializer {
+#[derive(Clone, Debug)]
+pub struct ThriftEncoder {}
+
+impl ThriftEncoder {
     pub const fn new() -> Self {
         Self {}
     }
 }
 
-impl tokio_util::codec::Encoder<Event> for ThriftSerializer {
-    type Error = SerializeError;
+impl tokio_util::codec::Encoder<Event> for ThriftEncoder {
+    type Error = EncodingError;
 
     fn encode(&mut self, event: Event, dst: &mut BytesMut) -> Result<(), Self::Error> {
         // TODO: reuse client
@@ -34,7 +35,7 @@ impl tokio_util::codec::Encoder<Event> for ThriftSerializer {
                     internal_log_rate_secs = 10
                 );
 
-                Err(SerializeError::Other(err.into()))
+                Err(EncodingError::Serialize(SerializeError::Other(err.into())))
             }
         }
     }

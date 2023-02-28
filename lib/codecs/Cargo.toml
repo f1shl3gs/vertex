@@ -18,7 +18,6 @@ serde_path_to_error = { version = "0.1.9" }
 bytes = { version = "1.4.0", default-features = false }
 chrono = { version = "0.4.23", default-features = false }
 configurable = { path = "../configurable" }
-dyn-clone = { version = "1.0.10" }
 event = { path = "../event" }
 futures = { version = "0.3.26" }
 futures-util = { version = "0.3.26" }

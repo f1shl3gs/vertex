@@ -138,13 +138,9 @@ impl EncodingConfigWithFraming {
                 SinkType::StreamBased => NewlineDelimitedEncoder::new().into(),
                 SinkType::MessageBased => CharacterDelimitedEncoder::new(b',').into(),
             },
-            (
-                None,
-                Serializer::Logfmt(_)
-                | Serializer::Native(_)
-                | Serializer::Text(_)
-                | Serializer::Boxed(_),
-            ) => NewlineDelimitedEncoder::new().into(),
+            (None, Serializer::Logfmt(_) | Serializer::Native(_) | Serializer::Text(_)) => {
+                NewlineDelimitedEncoder::new().into()
+            }
         };
 
         (framer, serializer)
