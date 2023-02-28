@@ -1,19 +1,18 @@
+mod encoder;
 mod grpc;
 mod http;
-mod serializer;
 mod udp;
 
 use async_trait::async_trait;
-use codecs::encoding::{Serializer, Transformer};
-use codecs::Encoder;
+use codecs::encoding::Transformer;
 use configurable::configurable_component;
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::sink::util::udp::UdpSinkConfig;
 use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
+use self::encoder::ThriftEncoder;
 use self::http::HttpSinkConfig;
-use self::serializer::ThriftSerializer;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct CollectorConfig {}
@@ -32,10 +31,9 @@ enum JaegerConfig {
 impl SinkConfig for JaegerConfig {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let transformer = Transformer::default();
-        let encoder = Encoder::<()>::new(Serializer::Boxed(Box::new(ThriftSerializer::new())));
 
         match &self {
-            JaegerConfig::Udp(config) => config.build(transformer, encoder),
+            JaegerConfig::Udp(config) => config.build(transformer, ThriftEncoder::new()),
 
             JaegerConfig::Http(config) => config.build(cx.proxy),
         }

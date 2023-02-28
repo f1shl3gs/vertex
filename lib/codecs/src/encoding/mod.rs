@@ -94,10 +94,6 @@ impl SerializerConfig {
     }
 }
 
-/// Boxed dynamic serializer, user can implement it as they will,
-/// e.g. protobuf
-pub type BoxedSerializer = Box<dyn format::Serializer>;
-
 /// Serialize structured events as bytes.
 #[derive(Clone, Debug)]
 pub enum Serializer {
@@ -109,8 +105,6 @@ pub enum Serializer {
     Native(NativeJsonSerializer),
     /// Uses a `TextSerializer` for serialization.
     Text(TextSerializer),
-    /// Uses a `BoxedSerializer` for serialization.
-    Boxed(BoxedSerializer),
 }
 
 impl From<TextSerializer> for Serializer {
@@ -125,12 +119,6 @@ impl From<JsonSerializer> for Serializer {
     }
 }
 
-impl From<BoxedSerializer> for Serializer {
-    fn from(s: BoxedSerializer) -> Self {
-        Self::Boxed(s)
-    }
-}
-
 impl tokio_util::codec::Encoder<Event> for Serializer {
     type Error = SerializeError;
 
@@ -140,7 +128,6 @@ impl tokio_util::codec::Encoder<Event> for Serializer {
             Serializer::Logfmt(s) => s.encode(event, buf),
             Serializer::Native(s) => s.encode(event, buf),
             Serializer::Text(s) => s.encode(event, buf),
-            Serializer::Boxed(s) => s.encode(event, buf),
         }
     }
 }
