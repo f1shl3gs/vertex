@@ -36,7 +36,7 @@ chrono-tz = { version = "0.8.1", features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
 console-subscriber = { version = "0.1.8", optional = true }
-dyn-clone = { version = "1.0.10" }
+dyn-clone = { version = "1.0.11" }
 encoding_rs = { version = "0.8.32", features = ["serde"]}
 event = { path = "../event" }
 # TODO: framework should not exit if any error happened
