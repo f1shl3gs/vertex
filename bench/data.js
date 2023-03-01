@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677700408306,
+  "lastUpdate": 1677701284578,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20679,6 +20679,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1402.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "81e4cde5222bb156ede532bb66fb36431ce5cf8d",
+          "message": "add http_check source (#801)",
+          "timestamp": "2023-03-02T03:48:44+08:00",
+          "tree_id": "9993ef9152b3dfa4f5a4fa1e210a679783a98c4e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/81e4cde5222bb156ede532bb66fb36431ce5cf8d"
+        },
+        "date": 1677701275873,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 22873000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1017800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.753,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 45.622,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 156.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 359.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1013.2,
             "unit": "ns/op"
           }
         ]
