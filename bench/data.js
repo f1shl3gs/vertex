@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677687121001,
+  "lastUpdate": 1677687160425,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2116,6 +2116,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 721790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2f28f1e82e5c0fdeff91f2897ceb1264f21caab0",
+          "message": "Merge pull request #800 from f1shl3gs/chrony\n\nadd Chrony source to collect ntp metrics",
+          "timestamp": "2023-03-02T00:08:04+08:00",
+          "tree_id": "ff06e157d4a47407a4a0323ed0710adbb705fecc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2f28f1e82e5c0fdeff91f2897ceb1264f21caab0"
+        },
+        "date": 1677687150185,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 876710,
             "unit": "ns/op"
           }
         ]
