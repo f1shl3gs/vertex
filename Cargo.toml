@@ -162,6 +162,7 @@ sources = [
     "sources-elasticsearch",
     "sources-exec",
     "sources-haproxy",
+    "sources-http_check",
     "sources-internal_logs",
     "sources-internal_metrics",
     "sources-internal_traces",
@@ -196,6 +197,7 @@ sources-demo_logs = []
 sources-exec = ["tokio/process"]
 sources-elasticsearch = []
 sources-haproxy = []
+sources-http_check = []
 sources-internal_logs = []
 sources-internal_metrics = []
 sources-internal_traces = ["tracing-subscriber"]
