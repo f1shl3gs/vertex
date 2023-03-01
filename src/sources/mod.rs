@@ -12,6 +12,8 @@ mod elasticsearch;
 mod exec;
 #[cfg(feature = "sources-haproxy")]
 pub mod haproxy;
+#[cfg(feature = "sources-http_check")]
+mod http_check;
 #[cfg(feature = "sources-internal_logs")]
 mod internal_logs;
 #[cfg(feature = "sources-internal_metrics")]
