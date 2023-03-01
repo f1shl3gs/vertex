@@ -156,6 +156,7 @@ extensions-pprof = ["dep:pprof"]
 # Sources
 sources = [
     "sources-bind",
+    "sources-chrony",
     "sources-consul",
     "sources-demo_logs",
     "sources-elasticsearch",
@@ -189,6 +190,7 @@ sources = [
 ]
 
 sources-bind = []
+sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
