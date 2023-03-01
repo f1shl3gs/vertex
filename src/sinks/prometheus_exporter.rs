@@ -285,7 +285,7 @@ fn handle(
                         if !header {
                             writeln!(
                                 &mut buf,
-                                r#"# HELP {} {}\n# TYPE {} {}"#,
+                                "# HELP {} {}\n# TYPE {} {}",
                                 name, description, name, kind
                             )
                             .unwrap();
