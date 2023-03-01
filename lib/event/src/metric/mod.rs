@@ -276,27 +276,32 @@ pub trait IntoF64 {
     fn into_f64(self) -> f64;
 }
 
-macro_rules! impl_intof64 {
-    ($typ:ident) => {
-        impl IntoF64 for $typ {
-            #[inline]
-            fn into_f64(self) -> f64 {
-                self as f64
+/*
+    ($($ty:ty),+) => {
+        $(
+            impl ToF64 for $ty {
+                fn to_f64(&self) -> Option<f64> {
+                    Some(*self as f64)
+                }
             }
-        }
+        )+
+    }
+*/
+
+macro_rules! impl_intof64 {
+    ($($typ:ty),+) => {
+        $(
+            impl IntoF64 for $typ {
+                #[inline]
+                fn into_f64(self) -> f64 {
+                    self as f64
+                }
+            }
+        )+
     };
 }
 
-impl_intof64!(usize);
-impl_intof64!(i64);
-impl_intof64!(u64);
-impl_intof64!(f64);
-impl_intof64!(u32);
-impl_intof64!(i32);
-impl_intof64!(f32);
-impl_intof64!(i16);
-impl_intof64!(i8);
-impl_intof64!(u8);
+impl_intof64!(usize, u64, i64, f64, u32, i32, f32, u16, i16, u8, i8);
 
 impl IntoF64 for bool {
     #[inline]
