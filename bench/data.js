@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677676457570,
+  "lastUpdate": 1677676492485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15906,6 +15906,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56491.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d33c44652dab3509d84f7b8903d45049d1376056",
+          "message": "Merge pull request #799 from f1shl3gs/dependabot/cargo/prost-build-0.11.8\n\nchore(deps): bump prost-build from 0.11.6 to 0.11.8",
+          "timestamp": "2023-03-01T20:53:19+08:00",
+          "tree_id": "34511cbb1c7072424df7ba97d920cbe1c334def7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d33c44652dab3509d84f7b8903d45049d1376056"
+        },
+        "date": 1677676483199,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1061,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56485.2,
             "unit": "KiB"
           }
         ]
