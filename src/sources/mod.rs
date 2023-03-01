@@ -1,6 +1,7 @@
 #[cfg(feature = "sources-bind")]
 mod bind;
 mod blackbox;
+#[cfg(feature = "sources-chrony")]
 mod chrony;
 #[cfg(feature = "sources-consul")]
 mod consul;
