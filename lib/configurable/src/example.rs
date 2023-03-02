@@ -86,9 +86,12 @@ impl Visitor {
         if let Some(desc) = desc {
             let mut buf = self.buf.borrow_mut();
             buf.append_ident();
-            buf.push('#');
-            buf.push_str(desc.as_str());
-            buf.push('\n');
+            desc.lines()
+                .for_each(|line| {
+                    buf.push_str("#");
+                    buf.push_str(line);
+                    buf.push('\n');
+                });
 
             buf.append_ident();
             buf.push_str("#\n");

@@ -19,7 +19,7 @@ pub struct Description {
 impl ToTokens for Description {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let content = self.content.value();
-        tokens.append(Literal::string(content.trim()))
+        tokens.append(Literal::string(content.trim_end()))
     }
 }
 
@@ -268,7 +268,7 @@ pub fn parse_attr_doc(errors: &Errors, attr: &syn::Attribute, slot: &mut Option<
             let previous = &previous.content;
             let previous_span = previous.span();
 
-            LitStr::new(&(previous.value() + &*lit_str.value()), previous_span)
+            LitStr::new(&(previous.value() + "\n" + &*lit_str.value()), previous_span)
         } else {
             lit_str.clone()
         };
