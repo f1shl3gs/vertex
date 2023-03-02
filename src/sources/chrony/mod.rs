@@ -154,27 +154,19 @@ impl Client {
         let path = format!("/var/run/chrony/vertex-{pid}.sock");
 
         let stream = UnixDatagram::bind(&path)?;
-        info!("binded");
-
         std::fs::set_permissions(&path, Permissions::from_mode(0o777))?;
-
         stream.connect(addr)?;
-        info!("connected");
 
         Ok(Self { stream })
     }
 
     async fn get_tracking_data(&self) -> Result<TrackingResponse, Error> {
-        info!("gtd");
         let req = TrackingRequest::new();
         let data = req.encode()?;
-        info!("data len {}", data.len());
-        let n = self.stream.send(&data).await?;
-        info!("write {} bytes", n);
+        let _n = self.stream.send(&data).await?;
 
         let mut resp = [0u8; BUFFER_SIZE];
-        let n = self.stream.recv(&mut resp).await?;
-        info!("read {} bytes", n);
+        let _n = self.stream.recv(&mut resp).await?;
 
         TrackingResponse::decode(Cursor::new(resp)).map_err(Into::into)
     }
