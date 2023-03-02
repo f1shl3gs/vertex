@@ -26,6 +26,8 @@ fn generate_example() {
         }
     }
 
+    /// line 1
+    /// line 2
     #[derive(Clone, Debug, Configurable, Deserialize, Serialize)]
     #[serde(deny_unknown_fields)]
     pub struct NtpConfig {
