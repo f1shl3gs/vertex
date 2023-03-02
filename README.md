@@ -38,6 +38,7 @@ has already been ported.
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
+| grpc_check              | Check gRPC service                                                | &cross; | &cross; | &cross; |
 | haproxy                 | Scrapes metrics from haproxy                                      | &check; | &cross; | &cross; |
 | http_check              | Expose http endpoint health metrics                               | &check; | &cross  | &cross; |
 | internal_logs           | Collect internal logs                                             | &cross; | &check; | &cross; |
