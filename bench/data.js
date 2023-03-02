@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677778656811,
+  "lastUpdate": 1677778690951,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5305,6 +5305,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 309.12,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4a263b2336237aa7bf27f40feb9e4cb145c578ce",
+          "message": "add grpc_check source (#805)\n\n* add grpc_check source",
+          "timestamp": "2023-03-03T01:34:24+08:00",
+          "tree_id": "2c83ad75eab3329ec1089d40cea9847498b4487f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4a263b2336237aa7bf27f40feb9e4cb145c578ce"
+        },
+        "date": 1677778682088,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 89.579,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 186.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 309.27,
             "unit": "ns/op"
           }
         ]
