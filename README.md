@@ -31,13 +31,15 @@ This sets the stage for easy and consistent processing of your data.
 A lot [prometheus exporter](https://prometheus.io/docs/instrumenting/exporters/#exporters-and-integrations)
 has already been ported.
 
-| Name                    | Description                                                       | Metric  | Log     | Trace   |
+| Name                    | Description                                                       | Metric  |   Log   |  Trace  |
 |-------------------------|-------------------------------------------------------------------|:-------:|:-------:|:-------:|
 | bind                    | Scrapes metrics from Bind server's HTTP API                       | &check; | &cross; | &cross; |
+| chrony                  | Collect ntp metrics from chronyd                                  | &check; | &cross; | &cross  |
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
 | haproxy                 | Scrapes metrics from haproxy                                      | &check; | &cross; | &cross; |
+| http_check              | Expose http endpoint health metrics                               | &check; | &cross  | &cross; |
 | internal_logs           | Collect internal logs                                             | &cross; | &check; | &cross; |
 | internal_metrics        | Collect internal metrics                                          | &check; | &cross; | &cross; |
 | internal_traces         | Collect internal traces                                           | &cross; | &cross; | &check; |
@@ -167,17 +169,25 @@ There are dozens of components, configuration could be very difficult. Therefore
 For example,
 ```shell
 $ ./target/release/vertex sources node
-# The interval between scrapes.
-#
-# interval: 15s
+# The Node source generates metrics about the host system scraped
+# from various sources. This is intended to be used when the collector is
+# deployed as an agent, and replace `node_exporter`.
 
-# Proc path
+# procfs mountpoint.
 #
-proc_path: /proc
+# Optional
+proc_path: "/proc"
 
-# Sys path
+# sysfs mountpoint.
 #
-sys_path: /sys
+# Optional
+sys_path: "/sys"
+
+# Duration between each scrape.
+#
+# Optional
+interval: "15s"
+
 ```
 
 There are more example configurations under `examples/config` to help you know what's Vertex capable of.
