@@ -128,7 +128,7 @@ async fn run(
                 metrics.push(Metric::gauge_with_tags(
                     "http_check_status",
                     "",
-                    status_code as u32,
+                    status_code,
                     tags!(
                         "url" => config.endpoint.to_string(),
                         "method" => config.method.as_str(),
