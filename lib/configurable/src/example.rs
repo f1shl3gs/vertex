@@ -63,12 +63,11 @@ impl Visitor {
         if let Some(metadata) = &root.metadata {
             if let Some(desc) = &metadata.description {
                 let mut buf = self.buf.borrow_mut();
-                desc.lines()
-                    .for_each(|line| {
-                        buf.push('#');
-                        buf.push_str(line);
-                        buf.push('\n');
-                    })
+                desc.lines().for_each(|line| {
+                    buf.push('#');
+                    buf.push_str(line);
+                    buf.push('\n');
+                })
             }
         }
 
@@ -98,12 +97,11 @@ impl Visitor {
         if let Some(desc) = desc {
             let mut buf = self.buf.borrow_mut();
             buf.append_ident();
-            desc.lines()
-                .for_each(|line| {
-                    buf.push_str("#");
-                    buf.push_str(line);
-                    buf.push('\n');
-                });
+            desc.lines().for_each(|line| {
+                buf.push_str("#");
+                buf.push_str(line);
+                buf.push('\n');
+            });
 
             buf.append_ident();
             buf.push_str("#\n");

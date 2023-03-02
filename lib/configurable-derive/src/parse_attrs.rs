@@ -268,7 +268,10 @@ pub fn parse_attr_doc(errors: &Errors, attr: &syn::Attribute, slot: &mut Option<
             let previous = &previous.content;
             let previous_span = previous.span();
 
-            LitStr::new(&(previous.value() + "\n" + &*lit_str.value()), previous_span)
+            LitStr::new(
+                &(previous.value() + "\n" + &*lit_str.value()),
+                previous_span,
+            )
         } else {
             lit_str.clone()
         };
