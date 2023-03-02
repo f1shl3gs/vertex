@@ -59,6 +59,19 @@ impl Visitor {
             &self.root.schema
         };
 
+        // write comment for root
+        if let Some(metadata) = &root.metadata {
+            if let Some(desc) = &metadata.description {
+                let mut buf = self.buf.borrow_mut();
+                desc.lines()
+                    .for_each(|line| {
+                        buf.push('#');
+                        buf.push_str(line);
+                        buf.push('\n');
+                    })
+            }
+        }
+
         // root must be a struct or an enum
         if let Some(subschemas) = &root.subschemas {
             if let Some(oneof) = &subschemas.one_of {
@@ -78,8 +91,7 @@ impl Visitor {
             self.visit_obj(root)
         }
 
-        let buf = self.buf.replace(Buf::new());
-        buf.data
+        self.buf.into_inner().data
     }
 
     fn write_comment(&self, desc: Option<&String>, required: bool) {
