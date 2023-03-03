@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677829358422,
+  "lastUpdate": 1677830461779,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22323,6 +22323,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1189.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5",
+          "message": "Merge pull request #808 from f1shl3gs/disable_tonic_default_features\n\nDisable tonic default features",
+          "timestamp": "2023-03-03T15:34:42+08:00",
+          "tree_id": "5f2d8cb1d2b30dca236b0a1250460886bff08508",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5"
+        },
+        "date": 1677830451704,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 41487000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1513300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 27.059,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 69.908,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 216.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 496.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1432.9,
             "unit": "ns/op"
           }
         ]
