@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1677822745312,
+  "lastUpdate": 1677829109803,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2319,6 +2319,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 794790,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5",
+          "message": "Merge pull request #808 from f1shl3gs/disable_tonic_default_features\n\nDisable tonic default features",
+          "timestamp": "2023-03-03T15:34:42+08:00",
+          "tree_id": "5f2d8cb1d2b30dca236b0a1250460886bff08508",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5"
+        },
+        "date": 1677829100314,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 711740,
             "unit": "ns/op"
           }
         ]
