@@ -11,6 +11,8 @@ mod demo_logs;
 mod elasticsearch;
 #[cfg(feature = "sources-exec")]
 mod exec;
+#[cfg(feature = "sources-grpc_check")]
+mod grpc_check;
 #[cfg(feature = "sources-haproxy")]
 pub mod haproxy;
 #[cfg(feature = "sources-http_check")]
