@@ -455,7 +455,7 @@ smallvec = { version = "1.10.0", optional = true, features = ["union"] }
 snap = { version = "1.1.0", default-features = false, optional = true }
 sqlx = { version = "0.6.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.38" }
-tonic = { version = "0.8.3", optional = true }
+tonic = { version = "0.8.3", default-features = false, features = ["transport"], optional = true }
 tonic-health = { version = "0.8.0", optional = true }
 typetag = { version = "0.2.5" }
 url = { version = "2.3.1", features = ["serde"] }
