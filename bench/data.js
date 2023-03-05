@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678024868171,
+  "lastUpdate": 1678024876261,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2348,6 +2348,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 711740,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6736545290fe426c42cd2a3afe5b076939136fbe",
+          "message": "Merge pull request #809 from f1shl3gs/fix_kafka_sink_config\n\nremove non-support option for rdkafka",
+          "timestamp": "2023-03-05T21:56:27+08:00",
+          "tree_id": "35555aee57c56838ce3111c1725f36bd0ee785c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6736545290fe426c42cd2a3afe5b076939136fbe"
+        },
+        "date": 1678024865232,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 890710,
             "unit": "ns/op"
           }
         ]
