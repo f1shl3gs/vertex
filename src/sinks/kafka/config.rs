@@ -103,12 +103,7 @@ impl KafkaSinkConfig {
                 "socket.timeout.ms",
                 &self.socket_timeout.as_millis().to_string(),
             )
-            .set(
-                "message.timeout.ms",
-                &self.message_timeout.as_millis().to_string(),
-            )
-            .set("statistics.inerval.ms", "1000")
-            .set("queue.min.messages", QUEUE_MIN_MESSAGES.to_string());
+            .set("statistics.interval.ms", "1000");
 
         self.auth.apply(&mut config)?;
 
