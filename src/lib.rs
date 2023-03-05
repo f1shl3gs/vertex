@@ -23,14 +23,6 @@ pub use framework::hostname;
 #[macro_use]
 extern crate tracing;
 
-#[cfg(feature = "mimalloc")]
-#[global_allocator]
-static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
-
-#[cfg(any(feature = "jemalloc", feature = "extensions-jemalloc"))]
-#[global_allocator]
-static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
-
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
