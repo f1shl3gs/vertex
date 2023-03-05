@@ -10,9 +10,11 @@ use rskafka::client::ClientBuilder;
 use thiserror::Error;
 use tower::limit::ConcurrencyLimit;
 
-use super::config::{KafkaSinkConfig, QUEUE_MIN_MESSAGES};
+use super::config::KafkaSinkConfig;
 use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
+
+pub const QUEUE_MIN_MESSAGES: usize = 100000;
 
 #[derive(Debug, Error)]
 pub enum BuildError {
@@ -51,7 +53,7 @@ impl KafkaSink {
     }
 
     async fn run_inner(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
-        let service = ConcurrencyLimit::new(self.service, QUEUE_MIN_MESSAGES as usize);
+        let service = ConcurrencyLimit::new(self.service, QUEUE_MIN_MESSAGES);
         let mut request_builder = KafkaRequestBuilder {
             key_field: self.key_field,
             headers_field: self.headers_field,

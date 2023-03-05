@@ -10,8 +10,6 @@ use rskafka::client::partition::Compression;
 
 use super::sink::health_check;
 
-pub const QUEUE_MIN_MESSAGES: u64 = 100000;
-
 mod compression_serde {
     use std::borrow::Cow;
     use std::ops::Deref;

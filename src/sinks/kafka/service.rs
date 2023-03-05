@@ -10,10 +10,8 @@ use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
-use rskafka::client::partition::{Compression, UnknownTopicHandling};
-use rskafka::client::producer::aggregator::RecordAggregator;
+use rskafka::client::partition::{Compression, PartitionClient, UnknownTopicHandling};
 use rskafka::client::producer::Error;
-use rskafka::client::producer::{BatchProducer, BatchProducerBuilder};
 use rskafka::client::Client;
 use rskafka::record::Record;
 use tokio::sync::Mutex;
@@ -63,7 +61,7 @@ struct PartitionedProducer {
 
     next: AtomicUsize,
     client: Arc<Client>,
-    producers: Vec<BatchProducer<RecordAggregator>>,
+    producers: Vec<PartitionClient>,
     refresh: Pin<Box<Sleep>>,
 }
 
@@ -86,10 +84,8 @@ impl PartitionedProducer {
                     .partition_client(&self.name, *partition, UnknownTopicHandling::Error)
                     .await
                     .map_err(|err| Error::Client(Arc::new(err)))?;
-                let batch_producer = BatchProducerBuilder::new(Arc::new(partition_client))
-                    .with_compression(self.compression)
-                    .build(RecordAggregator::new(1024 * 1024));
-                Ok((*partition, batch_producer))
+
+                Ok((*partition, partition_client))
             }));
 
         let mut producers = Vec::new();
@@ -147,7 +143,10 @@ impl PartitionedProducer {
             timestamp,
         };
 
-        let _offset = producer.produce(record).await?;
+        let _offset = producer
+            .produce(vec![record], self.compression)
+            .await
+            .map_err(Arc::new)?;
 
         Ok(KafkaResponse { event_byte_size })
     }
