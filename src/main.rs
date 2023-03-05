@@ -4,7 +4,7 @@ use vertex::launch::RootCommand;
 #[global_allocator]
 static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
-#[cfg(any(feature = "jemalloc", feature = "extensions-jemalloc"))]
+#[cfg(feature = "jemalloc")]
 #[global_allocator]
 static GLOBAL: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 

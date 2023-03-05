@@ -1,3 +1,6 @@
+#[cfg(not(feature = "jemalloc"))]
+compile_error!("jemalloc-extension requires feature `jemalloc`");
+
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::net::SocketAddr;
