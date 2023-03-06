@@ -70,7 +70,7 @@ smallvec = { version = "1.10.0", features = ["union"] }
 serde = { version = "1.0.152", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.93", default-features = false }
 serde_regex = { path = "../serde_regex" }
-serde_yaml = { version = "0.9.17" }
+serde_yaml = { version = "0.9.19" }
 measurable = { path = "../measurable" }
 snap = { version = "1.1.0", default-features = false }
 socket2 = { version = "0.4.7", default-features = false }
