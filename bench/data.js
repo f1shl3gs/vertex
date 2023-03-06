@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678137532210,
+  "lastUpdate": 1678137799775,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20240,6 +20240,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 55857.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1eff6f7890a7d69c8be0638112ae8d3695931efb",
+          "message": "Merge pull request #820 from f1shl3gs/kafka_metrics\n\nKafka metrics",
+          "timestamp": "2023-03-07T04:54:40+08:00",
+          "tree_id": "29a5747a78fb2e4f7ccda9ccfc1ca9c4d3bf2d7e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1eff6f7890a7d69c8be0638112ae8d3695931efb"
+        },
+        "date": 1678137787540,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1447,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 55989.9,
             "unit": "KiB"
           }
         ]
