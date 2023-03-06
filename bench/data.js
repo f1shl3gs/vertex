@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678087530302,
+  "lastUpdate": 1678087577287,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19346,6 +19346,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57493.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cc5f654fdb753e1103f0f30a1cc1ead1812632e",
+          "message": "Merge pull request #810 from f1shl3gs/dependabot/cargo/typetag-0.2.6\n\nchore(deps): bump typetag from 0.2.5 to 0.2.6",
+          "timestamp": "2023-03-06T14:56:56+08:00",
+          "tree_id": "35f91eca78f0524ac9fadfebe02ce03be4db1095",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1cc5f654fdb753e1103f0f30a1cc1ead1812632e"
+        },
+        "date": 1678087568491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1092,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57490.7,
             "unit": "KiB"
           }
         ]
