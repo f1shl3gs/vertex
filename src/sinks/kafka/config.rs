@@ -1,8 +1,5 @@
-use std::time::Duration;
-
 use codecs::encoding::EncodingConfig;
 use configurable::configurable_component;
-use framework::batch::{BatchConfig, NoDefaultBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
@@ -70,39 +67,15 @@ pub struct KafkaSinkConfig {
     /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
 
-    /// These batching options will `not` override librdkafka_options values
-    #[serde(default)]
-    pub batch: BatchConfig<NoDefaultBatchSettings>,
-
     /// The compression strategy used to compress the encoded event
     /// data before transmission.
     #[serde(default, with = "compression_serde")]
     #[configurable(skip)]
     pub compression: Compression,
 
-    /// Default timeout for network requests
-    #[serde(default = "default_socket_timeout")]
-    #[serde(with = "humanize::duration::serde")]
-    pub socket_timeout: Duration,
-
-    /// Local message timeout
-    #[serde(default = "default_message_timeout")]
-    #[serde(with = "humanize::duration::serde")]
-    pub message_timeout: Duration,
-
     /// The log field name to use for the Kafka headers. If omitted,
     /// no headers will be written.
     pub headers_field: Option<String>,
-}
-
-const fn default_socket_timeout() -> Duration {
-    // default in librdkafka
-    Duration::from_millis(60000)
-}
-
-const fn default_message_timeout() -> Duration {
-    // default in libkafka
-    Duration::from_millis(300000)
 }
 
 #[async_trait::async_trait]
