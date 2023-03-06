@@ -269,8 +269,6 @@ impl Future for ShutdownSignal {
             Some(fut) => {
                 ready!(fut.poll(cx));
 
-                info!("shutdown signal ready");
-
                 let mut pinned = self.project();
                 pinned.begin.set(None);
 

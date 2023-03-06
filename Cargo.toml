@@ -278,7 +278,7 @@ sinks-console = []
 sinks-prometheus_exporter = ["flate2"]
 sinks-prometheus_remote_write = ["snap"]
 sinks-blackhole = []
-sinks-kafka = ["rdkafka"]
+sinks-kafka = ["rskafka"]
 sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
@@ -342,7 +342,7 @@ serde_path_to_error = { version = "0.1.10" }
 tempfile = { version = "3.4.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.26.0", features = ["test-util"] }
+tokio = { version = "1.26.0", features = ["test-util", "time"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -449,6 +449,7 @@ parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 rdkafka = { version = "0.29.0", default-features = false, optional = true, features = ["tokio", "libz", "zstd"] }
 regex = { version = "1.7.1" }
+rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "45375d2b4719402dbb7c18034959fc3d54020f23", optional = true }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.10.0", optional = true, features = ["union"] }
