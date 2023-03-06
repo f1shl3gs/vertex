@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678091151679,
+  "lastUpdate": 1678116078183,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2638,6 +2638,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 724120,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b9d480b8ec68e569b637b62765af39d738279359",
+          "message": "Merge pull request #819 from f1shl3gs/kafka_sink_replace_rdkafka_with_rskafka\n\nKafka sink replace rdkafka with rskafka",
+          "timestamp": "2023-03-06T23:17:30+08:00",
+          "tree_id": "b2b4f68fff7f607ded0996948ddfe489c77d3189",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b9d480b8ec68e569b637b62765af39d738279359"
+        },
+        "date": 1678116069537,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 724530,
             "unit": "ns/op"
           }
         ]
