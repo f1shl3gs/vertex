@@ -3512,6 +3512,7 @@ dependencies = [
 [[package]]
 name = "rskafka"
 version = "0.3.0"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=0363150898691cf453f4916441a167b85a137253#0363150898691cf453f4916441a167b85a137253"
 dependencies = [
  "async-trait",
  "bytes",
