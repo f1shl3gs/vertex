@@ -21,7 +21,7 @@ fn default_topic_filter() -> Regex {
 /// N.B. `Consume lag` metrics is not supported yet, and this feature not
 /// enabled by default in
 /// [Kafka exporter](https://github.com/danielqsj/kafka_exporter)
-#[configurable_component(source, name = "kafka_metrics", )]
+#[configurable_component(source, name = "kafka_metrics")]
 #[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
