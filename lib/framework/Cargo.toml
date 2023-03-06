@@ -53,7 +53,7 @@ hyper = { version = "0.14.24", features = ["client", "runtime", "http1", "http2"
 hyper-openssl = { version = "0.9.2", default-features = false }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
 indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.3" }
+inventory = { version = "0.3.4" }
 listenfd = { version = "1.0.0", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
