@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678087248066,
+  "lastUpdate": 1678087309960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -24329,6 +24329,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1359.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1ccae3095be71a1a7b2b2392f9f642e7c12025d9",
+          "message": "Merge pull request #814 from f1shl3gs/dependabot/cargo/lru-0.10.0\n\nchore(deps): bump lru from 0.9.0 to 0.10.0",
+          "timestamp": "2023-03-06T14:56:17+08:00",
+          "tree_id": "28921290afad7e826c735b2a1bc8fd428a3be632",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1ccae3095be71a1a7b2b2392f9f642e7c12025d9"
+        },
+        "date": 1678087300932,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 37348000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1073600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 57.787,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 180.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 417.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1180.5,
             "unit": "ns/op"
           }
         ]
