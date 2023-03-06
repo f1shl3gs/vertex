@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-inventory = { version = "0.3.2" }
+inventory = { version = "0.3.4" }
 configurable-derive = { path = "../configurable-derive" }
 serde = { version = "1.0.150" }
 serde_json = { version = "1.0.93", default-features = false, features = ["std"] }

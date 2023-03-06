@@ -14,4 +14,4 @@ syn = { version = "1.0.109", default-features = false, features = [ "parsing", "
 
 [dev-dependencies]
 configurable = { path = "../configurable" }
-inventory = "0.3.2"
+inventory = "0.3.4"
