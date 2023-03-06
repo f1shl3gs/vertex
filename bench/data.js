@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678086014963,
+  "lastUpdate": 1678086031597,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9889,6 +9889,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.396,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31536571cea1e5172b94da6bb33b94f977f3a2ac",
+          "message": "Merge pull request #818 from f1shl3gs/dependabot/cargo/inventory-0.3.4\n\nchore(deps): bump inventory from 0.3.3 to 0.3.4",
+          "timestamp": "2023-03-06T14:54:10+08:00",
+          "tree_id": "f6ac622cf5404d65b39e187252e0d69887b40ccd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31536571cea1e5172b94da6bb33b94f977f3a2ac"
+        },
+        "date": 1678086020517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.738,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.856,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 33.266,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 44.799,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 70.447,
             "unit": "ns/op"
           }
         ]
