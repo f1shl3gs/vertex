@@ -78,7 +78,7 @@ impl PartitionedProducer {
             .map_err(|err| Error::Client(Arc::new(err)))?;
 
         let mut tasks =
-            FuturesUnordered::from_iter(topic.partitions.iter().map(|partition| async {
+            FuturesUnordered::from_iter(topic.partitions.keys().map(|partition| async {
                 let partition_client = self
                     .client
                     .partition_client(&self.name, *partition, UnknownTopicHandling::Error)

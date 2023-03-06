@@ -3512,7 +3512,7 @@ dependencies = [
 [[package]]
 name = "rskafka"
 version = "0.3.0"
-source = "git+https://github.com/f1shl3gs/rskafka?rev=45375d2b4719402dbb7c18034959fc3d54020f23#45375d2b4719402dbb7c18034959fc3d54020f23"
+source = "git+https://github.com/f1shl3gs/rskafka?rev=0363150898691cf453f4916441a167b85a137253#0363150898691cf453f4916441a167b85a137253"
 dependencies = [
  "async-trait",
  "bytes",
@@ -4903,6 +4903,7 @@ dependencies = [
  "serde-xml-rs",
  "serde_json",
  "serde_path_to_error",
+ "serde_regex",
  "serde_yaml 0.9.19",
  "smallvec",
  "snap",
