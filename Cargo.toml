@@ -170,6 +170,7 @@ sources = [
     "sources-jaeger",
     "sources-journald",
     "sources-kafka",
+    "sources-kafka_metrics",
     "sources-kmsg",
     "sources-kubernetes_events",
     "sources-kubernetes_logs",
@@ -206,6 +207,7 @@ sources-internal_traces = ["tracing-subscriber"]
 sources-jaeger = ["jaeger", "tonic"]
 sources-journald = []
 sources-kafka = ["rdkafka", "async-stream"]
+sources-kafka_metrics = ["rskafka"]
 sources-kmsg = []
 sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
 sources-kubernetes_events = ["kubernetes"]
@@ -402,6 +404,7 @@ serde = { version = "1.0.152", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.9.19" }
 serde_json = { version = "1.0.94", default-features = false }
 serde-xml-rs = { version = "0.6", default-features = false, optional = true }
+serde_regex = { path = "lib/serde_regex" }
 
 # Netlink
 netlink-sys = { version = "0.8.5", features = ["tokio_socket"], optional = true }
@@ -449,7 +452,7 @@ parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 rdkafka = { version = "0.29.0", default-features = false, optional = true, features = ["tokio", "libz", "zstd"] }
 regex = { version = "1.7.1" }
-rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "45375d2b4719402dbb7c18034959fc3d54020f23", optional = true }
+rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "0363150898691cf453f4916441a167b85a137253", optional = true }
 rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.10.0", optional = true, features = ["union"] }
