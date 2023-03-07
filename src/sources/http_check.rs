@@ -121,13 +121,15 @@ async fn run(
                     "2xx"
                 } else if status_code < 400 {
                     "3xx"
+                } else if status_code < 500 {
+                    "4xx"
                 } else {
                     "5xx"
                 };
 
                 metrics.push(Metric::gauge_with_tags(
                     "http_check_status",
-                    "",
+                    "The check resulted in status_code.",
                     status_code,
                     tags!(
                         "url" => config.endpoint.to_string(),
@@ -179,10 +181,88 @@ async fn scrape(
 
 #[cfg(test)]
 mod tests {
+    use std::convert::Infallible;
+
+    use crate::testing::trace_init;
+    use event::tags::Key;
+    use event::MetricValue;
+    use http::Response;
+    use hyper::service::{make_service_fn, service_fn};
+    use hyper::Server;
+    use testify::collect_ready;
+
     use super::*;
 
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<Config>()
+    }
+
+    async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+        let text = req.uri().path().strip_prefix('/').unwrap();
+
+        let status = text.parse::<u16>().unwrap();
+
+        let resp = Response::builder()
+            .status(status)
+            .body(Body::from(text.to_string()))
+            .expect("build response success");
+
+        Ok(resp)
+    }
+
+    #[tokio::test]
+    async fn check() {
+        trace_init();
+
+        let addr = testify::next_addr();
+        let endpoint = format!("http://{}", addr);
+
+        // start http server
+        tokio::spawn(async move {
+            let service =
+                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+
+            Server::bind(&addr).serve(service).await
+        });
+
+        for (code, class) in [
+            // hyper client cannot handle `100`,
+            // https://github.com/hyperium/hyper/issues/2565
+            //
+            // (100, "1xx"),
+            (101, "1xx"),
+            (200, "2xx"),
+            (203, "2xx"),
+            (301, "3xx"),
+            (404, "4xx"),
+            (502, "5xx"),
+        ] {
+            let (output, receiver) = Pipeline::new_test();
+            let shutdown = ShutdownSignal::noop();
+            let config = Config {
+                endpoint: Url::parse(&format!("{endpoint}/{code}")).unwrap(),
+                method: Default::default(),
+                interval: default_interval(),
+                timeout: Duration::from_secs(100),
+            };
+
+            let task = tokio::spawn(run(config, ProxyConfig::default(), output, shutdown));
+            tokio::time::sleep(Duration::from_secs(1)).await;
+            let events = collect_ready(receiver).await;
+            task.abort();
+
+            assert_eq!(events.len(), 2);
+            let metric = events[1].as_metric();
+            assert_eq!(
+                metric.value,
+                MetricValue::Gauge(code as f64),
+                "code: {code}"
+            );
+            assert_eq!(
+                metric.tags().get(&Key::new("status_class")).unwrap(),
+                &tags::Value::from(class)
+            );
+        }
     }
 }
