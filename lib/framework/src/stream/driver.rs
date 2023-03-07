@@ -177,6 +177,9 @@ where
                                         .inc(bytes as u64);
                                     }
                                 };
+
+                                // suppress "argument not consumed" warning
+                                drop(finalizers);
                             })
                             .instrument(info_span!("request", request_id));
 
