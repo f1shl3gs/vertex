@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678181736265,
+  "lastUpdate": 1678181747772,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -10952,6 +10952,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.03,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "911dc381ec8738df2807966f54933673fea4491c",
+          "message": "Merge pull request #821 from f1shl3gs/add_batch_support_for_kafka_sink\n\nAdd batch support for kafka sink",
+          "timestamp": "2023-03-07T17:30:48+08:00",
+          "tree_id": "48bcfe92eb856b7ba9fc088366d4da9a260af5fd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/911dc381ec8738df2807966f54933673fea4491c"
+        },
+        "date": 1678181738946,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.109,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.312,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.584,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.618,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.174,
             "unit": "ns/op"
           }
         ]
