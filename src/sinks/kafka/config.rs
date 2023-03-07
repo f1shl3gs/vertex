@@ -1,5 +1,8 @@
+use std::time::Duration;
+
 use codecs::encoding::EncodingConfig;
 use configurable::configurable_component;
+use framework::batch::{BatchConfig, SinkBatchSettings};
 use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
@@ -45,6 +48,16 @@ mod compression_serde {
     }
 }
 
+/// Default batch settings when the sink handles batch settings entirely on its own.
+#[derive(Clone, Debug, Default)]
+pub struct KafkaDefaultsBatchSettings;
+
+impl SinkBatchSettings for KafkaDefaultsBatchSettings {
+    const MAX_EVENTS: Option<usize> = Some(100);
+    const MAX_BYTES: Option<usize> = Some(1024 * 1024); // 1M
+    const TIMEOUT: Duration = Duration::from_millis(20);
+}
+
 #[configurable_component(sink, name = "kafka")]
 #[derive(Clone, Debug)]
 pub struct KafkaSinkConfig {
@@ -66,6 +79,9 @@ pub struct KafkaSinkConfig {
 
     /// Configures the encoding specific sink behavior.
     pub encoding: EncodingConfig,
+
+    #[serde(default)]
+    pub batch: BatchConfig<KafkaDefaultsBatchSettings>,
 
     /// The compression strategy used to compress the encoded event
     /// data before transmission.

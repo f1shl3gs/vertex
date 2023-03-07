@@ -4,6 +4,7 @@ pub mod builder;
 mod compressor;
 pub mod encoding;
 pub mod http;
+mod partitioner;
 mod request_builder;
 pub mod retries;
 pub mod service;
@@ -25,6 +26,7 @@ pub use buffer::{
 };
 pub use compressor::Compressor;
 pub use encoding::*;
+pub use partitioner::KeyPartitioner;
 pub use request_builder::{EncodeResult, RequestBuilder};
 
 use thiserror::Error;

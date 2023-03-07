@@ -97,4 +97,14 @@ where
     Ok(tracked.count)
 }
 
+/// NoopEncoder is a no op encoder for Encoder implement, it is very useful
+/// for batching only RequestBuilder.
+pub struct NoopEncoder;
+
+impl<T> Encoder<T> for NoopEncoder {
+    fn encode(&self, _input: T, _writer: &mut dyn Write) -> io::Result<usize> {
+        panic!("NoopEncoder should never be called")
+    }
+}
+
 // TODO: tests

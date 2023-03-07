@@ -2,10 +2,11 @@ use codecs::encoding::Transformer;
 use codecs::Encoder;
 use event::{Event, EventContainer, Events};
 use framework::sink::util::builder::SinkBuilderExt;
+use framework::sink::util::KeyPartitioner;
+use framework::stream::BatcherSettings;
 use framework::template::{Template, TemplateParseError};
 use framework::StreamSink;
 use futures::{stream::BoxStream, StreamExt};
-use log_schema::log_schema;
 use rskafka::client::ClientBuilder;
 use thiserror::Error;
 use tower::limit::ConcurrencyLimit;
@@ -29,6 +30,7 @@ pub struct KafkaSink {
     topic: Template,
     key_field: Option<String>,
     headers_field: Option<String>,
+    batch_settings: BatcherSettings,
 }
 
 impl KafkaSink {
@@ -36,6 +38,7 @@ impl KafkaSink {
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
         let encoder = Encoder::<()>::new(serializer);
+        let batch_settings = config.batch.validate()?.into_batcher_settings()?;
         let client = ClientBuilder::new(config.bootstrap_servers)
             .max_message_size(512 * 1024)
             .client_id("vertex")
@@ -49,6 +52,7 @@ impl KafkaSink {
             service: KafkaService::new(client, config.compression),
             topic: Template::try_from(config.topic)?,
             key_field: config.key_field,
+            batch_settings,
         })
     }
 
@@ -57,15 +61,16 @@ impl KafkaSink {
         let mut request_builder = KafkaRequestBuilder {
             key_field: self.key_field,
             headers_field: self.headers_field,
-            topic_template: self.topic,
-            transformer: self.transformer.clone(),
-            encoder: self.encoder.clone(),
-            log_schema: log_schema(),
+            transformer: self.transformer,
+            encoder: self.encoder,
         };
+        let partitioner = KeyPartitioner::new(Some(self.topic));
 
         let sink = input
             .flat_map(|events| futures::stream::iter(events.into_events()))
-            .filter_map(|event| futures_util::future::ready(request_builder.build_request(event)))
+            .batched_partitioned(partitioner, self.batch_settings)
+            .filter_map(|(topic, batch)| async { Some((topic?, batch)) })
+            .map(|(topic, batch)| request_builder.build(topic, batch))
             .into_driver(service);
         sink.run().await
     }
