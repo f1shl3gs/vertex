@@ -1,27 +1,60 @@
-use std::collections::BTreeMap;
-
 use bytes::BytesMut;
 use chrono::{DateTime, Utc};
+use std::collections::BTreeMap;
+
 use codecs::encoding::Transformer;
 use codecs::Encoder;
-use event::{log::Value, Event, Finalizable};
-use framework::template::Template;
+use event::log::Value;
+use event::{Event, Finalizable};
 use log_schema::LogSchema;
+use rskafka::record::Record;
 use tokio_util::codec::Encoder as _;
 
 use super::service::KafkaRequest;
-use super::service::KafkaRequestMetadata;
 
 pub struct KafkaRequestBuilder {
     pub key_field: Option<String>,
     pub headers_field: Option<String>,
-    pub topic_template: Template,
+
     pub transformer: Transformer,
     pub encoder: Encoder<()>,
-    pub log_schema: &'static LogSchema,
 }
 
 impl KafkaRequestBuilder {
+    pub fn build(&mut self, topic: String, mut events: Vec<Event>) -> KafkaRequest {
+        let finalizers = events.take_finalizers();
+        let log_schema = log_schema::log_schema();
+
+        let records = events
+            .into_iter()
+            .filter_map(|mut event| {
+                let key = get_key(&event, &self.key_field);
+                let mut value = BytesMut::new();
+                let headers = get_headers(&event, &self.headers_field).unwrap_or_default();
+                let timestamp = get_timestamp(&event, log_schema).unwrap_or_else(Utc::now);
+
+                self.transformer.transform(&mut event);
+                self.encoder.encode(event, &mut value).ok()?;
+                let value = Some(value.to_vec());
+
+                Some(Record {
+                    key,
+                    value,
+                    headers,
+                    timestamp,
+                })
+            })
+            .collect::<Vec<_>>();
+
+        KafkaRequest {
+            topic,
+            finalizers,
+            records,
+        }
+    }
+}
+
+/*impl KafkaRequestBuilder {
     pub fn build_request(&mut self, mut event: Event) -> Option<KafkaRequest> {
         let topic = self.topic_template.render_string(&event).ok()?;
         let metadata = KafkaRequestMetadata {
@@ -43,7 +76,7 @@ impl KafkaRequestBuilder {
             event_byte_size,
         })
     }
-}
+}*/
 
 fn get_key(event: &Event, key_field: &Option<String>) -> Option<Vec<u8>> {
     key_field.as_ref().and_then(|key_field| match event {

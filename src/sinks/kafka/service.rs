@@ -4,7 +4,6 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
-use chrono::{DateTime, Utc};
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
@@ -21,18 +20,10 @@ use tower::Service;
 /// Producer should update topic metadata every 10m
 const REFRESH_METADATA_INTERVAL: Duration = Duration::from_secs(10 * 60);
 
-pub struct KafkaRequestMetadata {
-    pub finalizers: EventFinalizers,
-    pub key: Option<Vec<u8>>,
-    pub timestamp: Option<DateTime<Utc>>,
-    pub headers: Option<BTreeMap<String, Vec<u8>>>,
-    pub topic: String,
-}
-
 pub struct KafkaRequest {
-    pub body: Option<Vec<u8>>,
-    pub metadata: KafkaRequestMetadata,
-    pub event_byte_size: usize,
+    pub topic: String,
+    pub finalizers: EventFinalizers,
+    pub records: Vec<Record>,
 }
 
 pub struct KafkaResponse {
@@ -51,7 +42,7 @@ impl DriverResponse for KafkaResponse {
 
 impl Finalizable for KafkaRequest {
     fn take_finalizers(&mut self) -> EventFinalizers {
-        std::mem::take(&mut self.metadata.finalizers)
+        std::mem::take(&mut self.finalizers)
     }
 }
 
@@ -130,25 +121,12 @@ impl PartitionedProducer {
             .get(pick)
             .expect("get producer shall never failed");
 
-        let event_byte_size = req.event_byte_size;
-        let timestamp = req.metadata.timestamp.unwrap_or_else(Utc::now);
-        let headers = req.metadata.headers.unwrap_or_default();
-        let key = req.metadata.key;
-        let value = req.body;
-
-        let record = Record {
-            key,
-            value,
-            headers,
-            timestamp,
-        };
-
         let _offset = producer
-            .produce(vec![record], self.compression)
+            .produce(req.records, self.compression)
             .await
             .map_err(Arc::new)?;
 
-        Ok(KafkaResponse { event_byte_size })
+        Ok(KafkaResponse { event_byte_size: 0 })
     }
 }
 
@@ -172,7 +150,7 @@ impl KafkaService {
         let svc = self.clone();
 
         let fut = async move {
-            let topic = &req.metadata.topic;
+            let topic = &req.topic;
 
             svc.producers
                 .lock()
