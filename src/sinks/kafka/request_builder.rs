@@ -54,30 +54,6 @@ impl KafkaRequestBuilder {
     }
 }
 
-/*impl KafkaRequestBuilder {
-    pub fn build_request(&mut self, mut event: Event) -> Option<KafkaRequest> {
-        let topic = self.topic_template.render_string(&event).ok()?;
-        let metadata = KafkaRequestMetadata {
-            finalizers: event.take_finalizers(),
-            key: get_key(&event, &self.key_field),
-            timestamp: get_timestamp(&event, self.log_schema),
-            headers: get_headers(&event, &self.headers_field),
-            topic,
-        };
-
-        let mut body = BytesMut::new();
-        let event_byte_size = event.size_of();
-        self.encoder.encode(event, &mut body).ok()?;
-        let body = Some(body.to_vec());
-
-        Some(KafkaRequest {
-            body,
-            metadata,
-            event_byte_size,
-        })
-    }
-}*/
-
 fn get_key(event: &Event, key_field: &Option<String>) -> Option<Vec<u8>> {
     key_field.as_ref().and_then(|key_field| match event {
         Event::Log(log) => log

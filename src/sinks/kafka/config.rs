@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use codecs::encoding::EncodingConfig;
 use configurable::configurable_component;
 use framework::batch::{BatchConfig, SinkBatchSettings};
@@ -5,7 +7,6 @@ use framework::config::{DataType, SinkConfig, SinkContext};
 use framework::{Healthcheck, Sink};
 use futures_util::FutureExt;
 use rskafka::client::partition::Compression;
-use std::time::Duration;
 
 use super::sink::health_check;
 
