@@ -1,7 +1,22 @@
 use chrono::{DateTime, Utc};
 use serde::Deserialize;
 
-use super::{Client, Counter, Error, Gauge, TaskManager};
+use super::{Client, Error, Gauge, TaskManager};
+
+#[derive(Deserialize)]
+pub struct Counter {
+    pub name: String,
+    pub counter: u64,
+}
+
+impl From<Counter> for super::Counter {
+    fn from(c: Counter) -> Self {
+        super::Counter {
+            name: c.name,
+            counter: c.counter,
+        }
+    }
+}
 
 #[derive(Deserialize)]
 struct QueriesIn {
@@ -90,16 +105,16 @@ impl Client {
 
         s.server.boot_time = stats.server.boot_time;
         for c in stats.server.queries_in.counters {
-            s.server.incoming_queries.push(c);
+            s.server.incoming_queries.push(c.into());
         }
         for c in stats.server.requests.counters {
-            s.server.incoming_requests.push(c);
+            s.server.incoming_requests.push(c.into());
         }
         for c in stats.server.nsstats {
-            s.server.name_server_stats.push(c);
+            s.server.name_server_stats.push(c.into());
         }
         for c in stats.server.zonestats {
-            s.server.zone_statistics.push(c);
+            s.server.zone_statistics.push(c.into());
         }
         for view in stats.views.views {
             let mut v = super::View {
@@ -113,10 +128,10 @@ impl Client {
                 zone_data: vec![],
             };
             for c in view.rdtype {
-                v.resolver_queries.push(c);
+                v.resolver_queries.push(c.into());
             }
             for c in view.resstat {
-                v.resolver_stats.push(c);
+                v.resolver_stats.push(c.into());
             }
             for zone in view.zones.zones {
                 if zone.rdataclass != "IN" {
