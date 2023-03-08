@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678289776904,
+  "lastUpdate": 1678290165951,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20885,6 +20885,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56066.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "975dea2b1364b81fa71cc5fef20baaecbb8114f9",
+          "message": "Merge pull request #824 from f1shl3gs/dependabot/cargo/serde-1.0.153\n\nchore(deps): bump serde from 1.0.152 to 1.0.153",
+          "timestamp": "2023-03-08T23:15:02+08:00",
+          "tree_id": "27d007a815f406854dae23e8e7b2c4fcbb9fc8aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/975dea2b1364b81fa71cc5fef20baaecbb8114f9"
+        },
+        "date": 1678290155102,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1373,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 56071.2,
             "unit": "KiB"
           }
         ]
