@@ -145,13 +145,15 @@ extensions = [
     "extensions-heartbeat",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
-    "extensions-pprof"
+    "extensions-pprof",
+    "extensions-zpages"
 ]
 
 extensions-heartbeat = ["uuid", "sysinfo", "parking_lot/serde"]
 extensions-healthcheck = []
 extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
 extensions-pprof = ["dep:pprof"]
+extensions-zpages = []
 
 # Sources
 sources = [
