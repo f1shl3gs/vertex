@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678343504448,
+  "lastUpdate": 1678343621684,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6558,6 +6558,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 285.51,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "31ceff5d75d0cb689bb61bc0ae0067d47c29e106",
+          "message": "Merge pull request #825 from f1shl3gs/dependabot/cargo/serde-1.0.154\n\nchore(deps): bump serde from 1.0.153 to 1.0.154",
+          "timestamp": "2023-03-09T14:26:55+08:00",
+          "tree_id": "36a1fdbca36ebb3189b4dcb0252b3e88d997e89e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/31ceff5d75d0cb689bb61bc0ae0067d47c29e106"
+        },
+        "date": 1678343611696,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 104.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 224.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 366.98,
             "unit": "ns/op"
           }
         ]
