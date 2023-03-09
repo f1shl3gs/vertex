@@ -1,10 +1,11 @@
+#![allow(warnings)]
 #![allow(clippy::print_stdout)]
 
 use argh::FromArgs;
 use bytes::Buf;
 use chrono::{DateTime, Local};
 use exitcode::ExitCode;
-use framework::config::{ComponentKey, ProxyConfig};
+use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::tls::TlsSettings;
 use http::{Method, Request};
@@ -169,7 +170,6 @@ struct Row {
     // processed_events_rate: f64,
     // processed_bytes: u64,
     // processed_bytes_rate: f64,
-
     received_events_total: u64,
     received_bytes_total: u64,
     sent_events_total: u64,
@@ -189,25 +189,10 @@ struct PrevStats {
 }
 
 impl Table {
-    fn print(&self, stats: TopStats) {
-
-    }
+    fn print(&self, stats: TopStats) {}
 
     fn rows(&mut self, stats: TopStats) -> Vec<Row> {
         let mut rows = vec![];
-
-        stats.sources
-            .iter()
-            .for_each(|(key, throughput)| {
-                rows.push(Row {
-                    key: key.to_string(),
-                    kind: "source".to_string(),
-                    received_events_total: 0,
-                    received_bytes_total: 0,
-                    sent_events_total: 0,
-                    sent_bytes_total: 0,
-                })
-            })
 
         rows
     }
