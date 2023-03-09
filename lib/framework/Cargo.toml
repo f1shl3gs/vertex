@@ -67,7 +67,7 @@ percent-encoding = { version = "2.2.0", default-features = false }
 pin-project = { version = "1.0.12" }
 regex = { version = "1.7.1" }
 smallvec = { version = "1.10.0", features = ["union"] }
-serde = { version = "1.0.153", default-features = false, features = ["derive", "std"] }
+serde = { version = "1.0.154", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.94", default-features = false }
 serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.9.19" }
