@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678431269289,
+  "lastUpdate": 1678473141764,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6733,6 +6733,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 305.77,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4e251377c30f67396d087c40cf3c8c559b7b7761",
+          "message": "Merge pull request #829 from f1shl3gs/batch_spans\n\nbatch spans",
+          "timestamp": "2023-03-11T02:28:14+08:00",
+          "tree_id": "1db2d41472b0dc5bebc731a813f4c017e7ff68e5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4e251377c30f67396d087c40cf3c8c559b7b7761"
+        },
+        "date": 1678473132668,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 92.425,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 181.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 309.34,
             "unit": "ns/op"
           }
         ]
