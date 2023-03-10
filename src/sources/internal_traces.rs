@@ -7,8 +7,9 @@ use event::{tags, Trace};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
 use futures::StreamExt;
-use futures_util::stream;
 use log_schema::log_schema;
+
+const MAX_CHUNK_SIZE: usize = 128;
 
 pub fn default_service() -> String {
     "vertex".into()
@@ -34,21 +35,18 @@ impl SourceConfig for InternalTracesConfig {
         let version = crate::get_version();
 
         Ok(Box::pin(async move {
-            let mut rx = stream::iter(vec![])
-                .map(Ok)
-                .chain(tokio_stream::wrappers::BroadcastStream::new(
-                    subscription.receiver,
-                ))
+            let mut rx = tokio_stream::wrappers::BroadcastStream::new(subscription.receiver)
                 .filter_map(|span| futures::future::ready(span.ok()))
+                .ready_chunks(MAX_CHUNK_SIZE)
                 .take_until(shutdown);
 
-            while let Some(span) = rx.next().await {
+            while let Some(spans) = rx.next().await {
                 let mut trace = Trace::new(
                     service.clone(),
                     tags!(
                         log_schema().source_type_key() => "internal_traces"
                     ),
-                    vec![span],
+                    spans,
                 );
 
                 trace.insert_tag("hostanme", hostname.clone());
