@@ -1,5 +1,10 @@
+mod launch;
+mod top;
+mod validate;
+
+use launch::RootCommand;
+
 extern crate vertex;
-use vertex::launch::RootCommand;
 
 fn main() {
     let cmd: RootCommand = argh::from_env();

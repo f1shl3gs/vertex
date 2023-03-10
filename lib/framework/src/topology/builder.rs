@@ -67,13 +67,20 @@ fn build_transform(
 }
 
 fn build_sync_transform(
-    t: Box<dyn SyncTransform>,
+    transform: Box<dyn SyncTransform>,
     node: TransformNode,
     input_rx: BufferReceiver<Events>,
 ) -> (Task, HashMap<OutputId, fanout::ControlChannel>) {
     let (outputs, controls) = TransformOutputs::new(node.outputs);
 
-    let runner = Runner::new(node.key.id(), t, input_rx, node.input_type, outputs);
+    let runner = Runner::new(
+        node.key.id(),
+        node.typetag,
+        transform,
+        input_rx,
+        node.input_type,
+        outputs,
+    );
     let transform = if node.concurrency {
         runner.run_concurrently().boxed()
     } else {
@@ -136,6 +143,7 @@ struct Runner {
 impl Runner {
     fn new(
         key: &str,
+        typ: &'static str,
         transform: Box<dyn SyncTransform>,
         input_rx: BufferReceiver<Events>,
         input_type: DataType,
@@ -143,7 +151,8 @@ impl Runner {
     ) -> Self {
         let attrs = Attributes::from([
             ("component", key.to_string().into()),
-            ("component_type", "transform".into()),
+            ("component_kind", "transform".into()),
+            ("component_type", typ.into()),
         ]);
         let send_events = metrics::register_counter(
             "component_sent_events_total",
@@ -394,7 +403,8 @@ pub async fn build_pieces(
         let mut controls = HashMap::new();
 
         for output in source_outputs {
-            let mut rx = builder.add_output(key.id(), output.clone());
+            let mut rx =
+                builder.add_output(key.id(), source.inner.component_name(), output.clone());
             let (mut fanout, control) = Fanout::new();
             let pump = async move {
                 debug!(message = "Source pump starting");
@@ -579,7 +589,8 @@ pub async fn build_pieces(
         let (trigger, tripwire) = Tripwire::new();
         let attrs = Attributes::from([
             ("component", component.into()),
-            ("component_type", "sink".into()),
+            ("component_kind", "sink".into()),
+            ("component_type", typetag.into()),
         ]);
         let sink = async move {
             // Why is this Arc<Mutex<Option<_>>> needed you may ask.

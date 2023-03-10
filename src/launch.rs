@@ -12,12 +12,12 @@ use framework::{config, get_version, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
-
 #[cfg(feature = "extensions-healthcheck")]
-use crate::extensions::healthcheck;
+use vertex::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
-use crate::extensions::heartbeat;
-use crate::validate;
+use vertex::extensions::heartbeat;
+
+use crate::{top, validate};
 
 const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
 
@@ -338,6 +338,7 @@ pub enum SubCommands {
     Extensions(Extensions),
     Providers(Providers),
     Validate(validate::Validate),
+    Top(top::Top),
 }
 
 impl SubCommands {
@@ -352,6 +353,7 @@ impl SubCommands {
                 exitcode::OK => Ok(()),
                 other => Err(other),
             },
+            SubCommands::Top(top) => top.run(),
         }
     }
 }
