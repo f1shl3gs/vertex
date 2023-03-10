@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678429973791,
+  "lastUpdate": 1678431269289,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21530,6 +21530,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 56075.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9520a8d5eb94f6ea4949b94e123d426706faf2e7",
+          "message": "Merge pull request #828 from f1shl3gs/zpages\n\nZpages",
+          "timestamp": "2023-03-10T14:26:56+08:00",
+          "tree_id": "d85f92fd96b00123c146c6b669b808a917afe043",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9520a8d5eb94f6ea4949b94e123d426706faf2e7"
+        },
+        "date": 1678431258337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1380,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57262.5,
             "unit": "KiB"
           }
         ]
