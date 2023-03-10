@@ -290,9 +290,11 @@ impl Table {
             });
 
         if let Some((_max_height, max_width)) = termsize::get() {
-            if let Some(mut n) = max_width.checked_sub(key_width + kind_width + typ_width + received_width + sent_width) {
+            if let Some(mut n) = max_width
+                .checked_sub(key_width + kind_width + typ_width + received_width + sent_width)
+            {
                 let padding = n % 5;
-                n = n / 5;
+                n /= 5;
 
                 key_width += n;
                 kind_width += n;
@@ -379,7 +381,7 @@ mod termsize {
             x: 0,
             y: 0,
         };
-        let r = unsafe { ioctl(STDOUT_FILENO, TIOCGWINSZ.into(), &us) };
+        let r = unsafe { ioctl(STDOUT_FILENO, TIOCGWINSZ, &us) };
         if r == 0 {
             Some((us.rows as usize, us.cols as usize))
         } else {
