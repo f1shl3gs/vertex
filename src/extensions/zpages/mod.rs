@@ -1,4 +1,4 @@
-mod top;
+mod statsz;
 
 use std::convert::Infallible;
 use std::net::SocketAddr;
@@ -13,7 +13,7 @@ use http::{Method, Request, Response, StatusCode};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
 
-pub use top::TopStats;
+pub use statsz::{Metric, Point, Statsz};
 
 fn default_endpoint() -> SocketAddr {
     SocketAddr::from_str("127.0.0.1:56888").expect("default endpoint parse ok")
@@ -45,7 +45,9 @@ impl ExtensionConfig for Config {
 
             if let Err(err) = Server::bind(&addr)
                 .serve(service)
-                .with_graceful_shutdown(shutdown.map(|_token| ()))
+                .with_graceful_shutdown(shutdown.map(|_token| {
+                    info!("zpages done");
+                }))
                 .await
             {
                 warn!(message = "http server error", ?err);
@@ -67,9 +69,9 @@ async fn http_handle(req: Request<Body>) -> framework::Result<Response<Body>> {
     }
 
     match req.uri().path() {
-        "/top" => {
-            let stats = TopStats::snapshot();
-            let data = serde_json::to_vec(&stats)?;
+        "/statsz" => {
+            let stats = Statsz::snapshot();
+            let data = serde_json::to_vec(&stats.metrics)?;
 
             let resp = Response::builder()
                 .header("content-type", "application/json")
