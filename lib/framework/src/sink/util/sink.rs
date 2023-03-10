@@ -340,7 +340,7 @@ where
                 // so this is a weird case that we can ignore for now.
                 let _ = tx.send(());
             })
-            .instrument(info_span!("request", %request_id))
+            .instrument(info_span!("request", %request_id).or_current())
             .boxed()
     }
 

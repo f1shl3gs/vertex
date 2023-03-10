@@ -1,4 +1,4 @@
-mod chunk;
+mod trace;
 
 use std::borrow::Cow;
 use std::{
@@ -6,7 +6,6 @@ use std::{
     task::{Context, Poll},
 };
 
-pub use chunk::ChunkedDecoder;
 use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
@@ -103,6 +102,7 @@ where
         let _enter = span.enter();
 
         default_request_headers(&mut request, &self.user_agent);
+        // trace::inject(&mut request);
 
         let response = self.client.request(request);
 

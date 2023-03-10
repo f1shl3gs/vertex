@@ -14,6 +14,10 @@ use futures_util::{FutureExt, SinkExt};
 use http::Request;
 use serde::{Deserialize, Serialize};
 
+fn default_endpoint() -> String {
+    "http://127.0.0.1:14268/api/traces".to_string()
+}
+
 /// Forward traces to jaeger collector's HTTP API.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
@@ -22,6 +26,7 @@ use serde::{Deserialize, Serialize};
 pub struct HttpSinkConfig {
     /// The HTTP address to connect to.
     #[configurable(required)]
+    #[serde(default = "default_endpoint")]
     endpoint: String,
 
     #[serde(default)]

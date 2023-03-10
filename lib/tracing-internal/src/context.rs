@@ -1,4 +1,3 @@
-use once_cell::sync::Lazy;
 use std::any::{Any, TypeId};
 use std::borrow::Cow;
 use std::cell::RefCell;
@@ -9,6 +8,7 @@ use std::hash::{BuildHasherDefault, Hasher};
 use std::sync::{Arc, Mutex};
 
 use event::trace::{KeyValue, Span, SpanContext};
+use once_cell::sync::Lazy;
 use tracing::span;
 use tracing_core::Dispatch;
 
@@ -28,11 +28,20 @@ pub(crate) struct WithContext(
     pub fn(&Dispatch, &span::Id, f: &mut dyn FnMut(&mut TraceData, &dyn PreSampledTracer)),
 );
 
-impl WithContext {}
+impl WithContext {
+    pub(crate) fn with_context<'a>(
+        &self,
+        dispatch: &'a Dispatch,
+        id: &span::Id,
+        mut f: impl FnMut(&mut TraceData, &dyn PreSampledTracer),
+    ) {
+        (self.0)(dispatch, id, &mut f)
+    }
+}
 
 thread_local! {
-    static CURRENT_CONTEXT: RefCell<TraceContext> = RefCell::new(TraceContext::default());
-    static DEFAULT_CONTEXT: TraceContext = TraceContext::default();
+    static CURRENT_CONTEXT: RefCell<Context> = RefCell::new(Context::default());
+    static DEFAULT_CONTEXT: Context = Context::default();
 }
 
 /// With TypeIds as keys, there's no need to hash them. They are already hashes
@@ -64,11 +73,11 @@ impl Hasher for IdHasher {
 /// Cross-cutting concerns access their data in-process using the same shared
 /// context object.
 #[derive(Clone, Default)]
-pub struct TraceContext {
+pub struct Context {
     entries: HashMap<TypeId, Arc<dyn Any + Sync + Send>, BuildHasherDefault<IdHasher>>,
 }
 
-impl Debug for TraceContext {
+impl Debug for Context {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("TraceContext")
             .field("entries", &self.entries.len())
@@ -76,10 +85,10 @@ impl Debug for TraceContext {
     }
 }
 
-impl TraceContext {
+impl Context {
     /// Create an empty `TraceContext`
     pub fn new() -> Self {
-        TraceContext::default()
+        Context::default()
     }
 
     pub fn current() -> Self {
@@ -128,7 +137,7 @@ impl TraceContext {
     }
 }
 
-fn get_current<F: FnMut(&TraceContext) -> T, T>(mut f: F) -> T {
+fn get_current<F: FnMut(&Context) -> T, T>(mut f: F) -> T {
     CURRENT_CONTEXT
         .try_with(|cx| f(&cx.borrow()))
         .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(cx)))

@@ -1,8 +1,7 @@
 use std::borrow::Cow;
 use std::hash::{Hash, Hasher};
-use std::ops::Sub;
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use chrono::{DateTime, TimeZone, Utc};
 use configurable::configurable_component;
@@ -143,22 +142,15 @@ fn scrape(
                     let mut ticker = IntervalStream::new(interval).take_until(shutdown);
 
                     while ticker.next().await.is_some() {
-                        let start = Utc::now();
+                        let start = Instant::now();
                         let result = scrape_one(&client, auth.as_ref(), &url).await;
-                        let elapsed = Utc::now()
-                            .sub(start)
-                            .num_nanoseconds()
-                            .expect("Nano seconds should not overflow");
+                        let elapsed = start.elapsed();
 
                         let success = result.is_ok();
                         let mut metrics = result.unwrap_or_default();
                         metrics.extend_from_slice(&[
                             Metric::gauge("up", "", success),
-                            Metric::gauge(
-                                "scrape_duration_seconds",
-                                "",
-                                elapsed as f64 / 1000.0 / 1000.0 / 1000.0,
-                            ),
+                            Metric::gauge("scrape_duration_seconds", "", elapsed),
                         ]);
 
                         metrics.iter_mut().for_each(|metric| {
@@ -196,6 +188,9 @@ async fn scrape_one(
     auth: &Option<Auth>,
     url: &Uri,
 ) -> Result<Vec<Metric>, ()> {
+    let span = tracing::info_span!("scrape_metrics", "uri" = ?url);
+    let _enter = span.enter();
+
     let mut req = http::Request::get(url)
         .body(hyper::body::Body::empty())
         .expect("error creating request");
@@ -213,6 +208,8 @@ async fn scrape_one(
                     target = ?url,
                     status_code = ?header.status,
                 );
+
+                span.record("status_code", header.status.as_str());
 
                 return Err(());
             }

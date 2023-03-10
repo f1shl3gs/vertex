@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.42
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+      - "14269:14269"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true

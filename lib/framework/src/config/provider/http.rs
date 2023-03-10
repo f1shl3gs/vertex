@@ -1,8 +1,11 @@
+mod chunk;
+
 use std::time::Duration;
 
 use async_stream::stream;
 use backoff::ExponentialBackoff;
 use bytes::Buf;
+use chunk::ChunkedDecoder;
 use configurable::{configurable_component, Configurable};
 use futures::{Stream, StreamExt, TryStreamExt};
 use http::{header, Request, Response};
@@ -15,7 +18,7 @@ use tokio_util::io::StreamReader;
 use url::Url;
 
 use crate::config::{provider::ProviderConfig, Builder, ProxyConfig};
-use crate::http::{ChunkedDecoder, HttpClient};
+use crate::http::HttpClient;
 use crate::tls::{TlsConfig, TlsSettings};
 use crate::SignalHandler;
 use crate::{config, signal};

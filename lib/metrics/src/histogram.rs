@@ -27,7 +27,7 @@ pub struct Histogram {
 impl Histogram {
     pub fn new(buckets: impl Iterator<Item = f64>) -> Self {
         let buckets = buckets
-            .chain(once(f64::MAX))
+            .chain(once(f64::INFINITY))
             .map(|le| ObservationBucket { le, count: 0 })
             .collect::<Vec<_>>();
 

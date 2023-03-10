@@ -276,18 +276,6 @@ pub trait IntoF64 {
     fn into_f64(self) -> f64;
 }
 
-/*
-    ($($ty:ty),+) => {
-        $(
-            impl ToF64 for $ty {
-                fn to_f64(&self) -> Option<f64> {
-                    Some(*self as f64)
-                }
-            }
-        )+
-    }
-*/
-
 macro_rules! impl_intof64 {
     ($($typ:ty),+) => {
         $(

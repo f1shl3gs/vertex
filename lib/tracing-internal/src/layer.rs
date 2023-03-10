@@ -1,5 +1,6 @@
 use std::any::TypeId;
 use std::fmt::Debug;
+use std::marker;
 use std::marker::PhantomData;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
@@ -12,12 +13,12 @@ use tracing_subscriber::layer::Context;
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::Layer;
 
-use crate::context::{TraceContext, WithContext};
+use crate::context::{Context as TraceContext, WithContext};
 use crate::tracer::{PreSampledTracer, TraceData};
 
 pub struct TracingLayer<S, T> {
     tracer: T,
-    event_location: bool,
+    location: bool,
     tracked_inactivity: bool,
     get_context: WithContext,
     _registry: PhantomData<S>,
@@ -31,7 +32,7 @@ where
     pub fn new(tracer: T) -> Self {
         Self {
             tracer,
-            event_location: true,
+            location: true,
             tracked_inactivity: true,
             get_context: WithContext(Self::get_context),
             _registry: PhantomData,
@@ -115,16 +116,18 @@ where
             span.span_context.trace_id = self.tracer.new_trace_id();
         }
 
-        if let Some(filename) = metadata.file() {
-            span.tags.insert("code.filepath", filename);
-        }
+        if self.location {
+            if let Some(filename) = metadata.file() {
+                span.tags.insert("code.filepath", filename);
+            }
 
-        if let Some(module) = metadata.module_path() {
-            span.tags.insert("code.namespace", module);
-        }
+            if let Some(module) = metadata.module_path() {
+                span.tags.insert("code.namespace", module);
+            }
 
-        if let Some(line) = metadata.line() {
-            span.tags.insert("code.lineno", line)
+            if let Some(line) = metadata.line() {
+                span.tags.insert("code.lineno", line)
+            }
         }
 
         attrs.record(&mut SpanAttributeVisitor(&mut span));
@@ -201,7 +204,7 @@ where
                     span.status.status_code = StatusCode::Error;
                 }
 
-                if self.event_location {
+                if self.location {
                     if let Some(file) = metadata.file() {
                         span.tags.insert("code.filepath", file);
                     }
@@ -247,12 +250,12 @@ where
 
         if let Some(timings) = extensions.get_mut::<Timings>() {
             let now = Instant::now();
-            timings.busy = (now - timings.last).as_nanos() as i64;
+            timings.busy += (now - timings.last).as_nanos() as i64;
             timings.last = now;
         }
     }
 
-    /// Exports an `Span` on close
+    /// Exports a `Span` on close
     fn on_close(&self, id: Id, ctx: Context<'_, S>) {
         let span = ctx.span(&id).expect("Span not found, this is a bug");
         let mut extensions = span.extensions_mut();
@@ -281,8 +284,6 @@ where
             } else if span.span_context.trace_id == TraceId::INVALID {
                 span.span_context.trace_id = self.tracer.new_trace_id()
             }
-
-            // println!("span: {}, parent: {}", span.span_context.span_id.into_i64(), parent_cx.span().span_context().span_id.into_i64());
 
             // Assign end time, build and start span, drop span to exporter
             span = span.with_end_time(now());
