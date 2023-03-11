@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678512854962,
+  "lastUpdate": 1678527694230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6869,6 +6869,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 374.59,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fc9ec2753f1e43c8ab63ce2eda57237d689018d5",
+          "message": "Merge pull request #831 from f1shl3gs/disable_threadpool_for_jaeger\n\ndisable unused `threadpool` feature",
+          "timestamp": "2023-03-11T17:37:37+08:00",
+          "tree_id": "ad8c203c0237d37f5a30a9465b7c8cc5118aef8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fc9ec2753f1e43c8ab63ce2eda57237d689018d5"
+        },
+        "date": 1678527685833,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 90.553,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 187.23,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 306.07,
             "unit": "ns/op"
           }
         ]
