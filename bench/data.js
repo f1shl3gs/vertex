@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678528898958,
+  "lastUpdate": 1678529777634,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22390,6 +22390,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57260.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "996cb962e0d46533bc1de8232265e8ccd2d5fa96",
+          "message": "force notify to use tokio channel",
+          "timestamp": "2023-03-11T17:53:27+08:00",
+          "tree_id": "9699ffafdb7aca7f0de5f36bd8d71c8929e911d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/996cb962e0d46533bc1de8232265e8ccd2d5fa96"
+        },
+        "date": 1678529769565,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1141,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57305.6,
             "unit": "KiB"
           }
         ]
