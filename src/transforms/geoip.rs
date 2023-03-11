@@ -216,7 +216,7 @@ impl FunctionTransform for Geoip {
                             message = "IP Address not parsed correctly",
                             %err,
                             address = value,
-                            internal_log_rate_secs = 30
+                            internal_log_rate_limit = true
                         )
                     }
                 }
@@ -224,7 +224,7 @@ impl FunctionTransform for Geoip {
                 error!(
                     message = "Failed does not exist",
                     field = &self.source,
-                    internal_log_rate_secs = 10
+                    internal_log_rate_limit = true
                 )
             }
 

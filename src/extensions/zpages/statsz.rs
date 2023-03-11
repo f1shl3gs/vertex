@@ -49,7 +49,7 @@ impl Reporter for Statsz {
             Observation::Counter(c) => c as f64,
             Observation::Gauge(g) => g,
             Observation::Histogram(_) => {
-                unimplemented!()
+                return;
             }
         };
 

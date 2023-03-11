@@ -309,7 +309,7 @@ fn view_metrics(views: Vec<client::View>, zone_views: Vec<client::ZoneView>) -> 
                 warn!(
                     message = "Error parsing RTT",
                     ?err,
-                    internal_log_rate_secs = 30,
+                    internal_log_rate_limit = true
                 );
             }
         }

@@ -32,7 +32,7 @@ impl tokio_util::codec::Encoder<Event> for ThriftEncoder {
                 warn!(
                     message = "Encode jaeger batch failed",
                     ?err,
-                    internal_log_rate_secs = 10
+                    internal_log_rate_limit = true
                 );
 
                 Err(EncodingError::Serialize(SerializeError::Other(err.into())))

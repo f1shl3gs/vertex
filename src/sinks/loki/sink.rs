@@ -231,7 +231,7 @@ impl RecordFilter {
                     OutOfOrderAction::RewriteTimestamp => {
                         warn!(
                             message = "Received out-of-order event, rewriting timestamp",
-                            internal_log_rate_secs = 30
+                            internal_log_rate_limit = true
                         );
                         // TODO: metrics
                         // emit!(&LokiOutOfOrderEventRewrite);

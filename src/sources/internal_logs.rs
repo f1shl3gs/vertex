@@ -101,7 +101,7 @@ mod tests {
     async fn receive_logs() {
         let test_id: u8 = rand::random();
         let start = chrono::Utc::now();
-        framework::trace::init(false, false, "debug");
+        framework::trace::init(false, false, "debug", 10);
         framework::trace::reset_early_buffer();
         error!(
             message = "Before source started",

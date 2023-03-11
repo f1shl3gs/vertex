@@ -6,5 +6,5 @@ pub fn trace_init() {
 
     let level = std::env::var("TEST_LOG").unwrap_or_else(|_| "info".to_string());
 
-    framework::trace::init(color, false, &level);
+    framework::trace::init(color, false, &level, 10);
 }
