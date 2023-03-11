@@ -75,7 +75,6 @@ impl Shared {
             .lock()
             .expect("lock waker map success")
             .drain()
-            .into_iter()
             .for_each(|(_key, waker)| waker.wake());
     }
 }
