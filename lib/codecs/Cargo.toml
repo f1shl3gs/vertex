@@ -19,7 +19,7 @@ bytes = { version = "1.4.0", default-features = false }
 chrono = { version = "0.4.24", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
-futures = { version = "0.3.26" }
+futures = { version = "0.3.27" }
 futures-util = { version = "0.3.27" }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
