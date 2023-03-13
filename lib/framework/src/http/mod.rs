@@ -99,7 +99,7 @@ where
         &self,
         mut request: Request<B>,
     ) -> BoxFuture<'static, Result<http::Response<Body>, HttpError>> {
-        let span = tracing::info_span!("http");
+        let span = tracing::info_span!("http", uri = ?request.uri());
         let _enter = span.enter();
 
         default_request_headers(&mut request, &self.user_agent);

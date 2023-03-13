@@ -387,7 +387,7 @@ impl RedisSource {
                     warn!(
                         message = "Redis CLUSTER INFO failed",
                         ?err,
-                        internal_log_rate_secs = 30
+                        internal_log_rate_limit = true
                     );
                 }
             }

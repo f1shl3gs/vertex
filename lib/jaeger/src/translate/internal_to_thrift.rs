@@ -97,7 +97,7 @@ fn links_to_references(links: EvictedQueue<Link>) -> Option<Vec<SpanRef>> {
     let refs = links
         .iter()
         .map(|link| {
-            let trace_id_bytes = link.trace_id.to_bytes();
+            let trace_id_bytes = link.trace_id().to_bytes();
             let (high, low) = trace_id_bytes.split_at(8);
             let trace_id_high = i64::from_be_bytes(high.try_into().unwrap());
             let trace_id_low = i64::from_be_bytes(low.try_into().unwrap());
@@ -106,7 +106,7 @@ fn links_to_references(links: EvictedQueue<Link>) -> Option<Vec<SpanRef>> {
                 SpanRefType::FollowsFrom,
                 trace_id_low,
                 trace_id_high,
-                link.span_id.into_i64(),
+                link.span_id().into_i64(),
             )
         })
         .collect();

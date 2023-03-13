@@ -70,7 +70,7 @@ impl FunctionTransform for Coercer {
                                 message = "Could not convert types",
                                 ?field,
                                 ?err,
-                                internal_log_rate_secs = 30
+                                internal_log_rate_limit = true
                             );
 
                             errors += 1;

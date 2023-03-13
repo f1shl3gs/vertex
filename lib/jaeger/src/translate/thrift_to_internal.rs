@@ -183,9 +183,13 @@ fn references_to_links(refs: Option<Vec<SpanRef>>) -> Vec<Link> {
                 let trace_id = to_trace_id(span_ref.trace_id_high, span_ref.trace_id_low);
 
                 Link {
-                    trace_id,
-                    span_id: span_ref.span_id.into(),
-                    trace_state: "".to_string(),
+                    span_context: SpanContext {
+                        trace_id,
+                        span_id: span_ref.span_id.into(),
+                        trace_flags: Default::default(),
+                        is_remote: false,
+                        trace_state: Default::default(),
+                    },
                     attributes: vec![],
                 }
             })

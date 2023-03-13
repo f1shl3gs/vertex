@@ -63,7 +63,7 @@ impl Decoder {
             warn!(
                 message = "Replaced malformed sequences with replacement character while decoding to utf8",
                 from = self.inner.encoding().name(),
-                internal_log_rate_secs = 10
+                internal_log_rate_limit = true
             );
         }
 
@@ -170,7 +170,7 @@ impl Encoder {
             warn!(
                 message = "Replaced unmappable characters with numeric character references while encoding from utf8",
                 to = %self.inner.encoding().name(),
-                internal_log_rate_secs = 10,
+                internal_log_rate_limit = true
             );
         }
 

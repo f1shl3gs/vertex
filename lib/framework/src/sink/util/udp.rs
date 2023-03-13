@@ -304,7 +304,7 @@ where
                             debug!(
                                 message = "UDP socket error",
                                 %err,
-                                internal_log_rate_secs = 10
+                                internal_log_rate_limit = true
                             );
                             finalizers.update_status(EventStatus::Errored);
                             break;
@@ -328,7 +328,7 @@ async fn udp_send(socket: &mut UdpSocket, buf: &[u8]) -> tokio::io::Result<()> {
             total,
             sent,
             dropped = total - sent,
-            internal_log_rate_secs = 30
+            internal_log_rate_limit = true
         );
 
         // TODO: metrics

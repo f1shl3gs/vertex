@@ -1,7 +1,9 @@
+// mod context;
 mod evicted_hash_map;
 mod evicted_queue;
 pub mod generator;
 mod span;
+// mod tracer;
 
 use std::borrow::Cow;
 use std::collections::VecDeque;
@@ -464,6 +466,12 @@ impl SpanId {
     /// Return the representation of this span id as a byte array.
     pub const fn to_bytes(self) -> [u8; 8] {
         self.0.to_be_bytes()
+    }
+
+    /// Return true is the `span_id` is valid.
+    #[inline]
+    pub fn valid(&self) -> bool {
+        *self != SpanId::INVALID
     }
 
     pub fn into_i64(self) -> i64 {
