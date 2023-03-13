@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678687220610,
+  "lastUpdate": 1678687302321,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12356,6 +12356,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.896,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f77893a74017f6d7489ec8a21b2809a5233c6581",
+          "message": "Merge pull request #832 from f1shl3gs/dependabot/cargo/listenfd-1.0.1\n\nchore(deps): bump listenfd from 1.0.0 to 1.0.1",
+          "timestamp": "2023-03-13T13:51:40+08:00",
+          "tree_id": "b4f87b0eda2704e29bf3cb5a0134a71a301e0d27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f77893a74017f6d7489ec8a21b2809a5233c6581"
+        },
+        "date": 1678687291609,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.256,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.995,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 35.746,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.987,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 71.359,
             "unit": "ns/op"
           }
         ]
