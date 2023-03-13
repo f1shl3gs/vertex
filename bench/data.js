@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678718105021,
+  "lastUpdate": 1678719077428,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23646,6 +23646,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57327.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d2c36927f7ca63e44bde0b481236543c236474ec",
+          "message": "Merge pull request #837 from f1shl3gs/dependabot/cargo/futures-util-0.3.27\n\nchore(deps): bump futures-util from 0.3.26 to 0.3.27",
+          "timestamp": "2023-03-13T22:28:40+08:00",
+          "tree_id": "4b01e1a8e9e0082a2e5a9d267e9e3aa550789ab3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d2c36927f7ca63e44bde0b481236543c236474ec"
+        },
+        "date": 1678719068005,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1112,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57314.6,
             "unit": "KiB"
           }
         ]
