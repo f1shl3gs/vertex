@@ -31,7 +31,7 @@ async-trait = { version = "0.1.66" }
 backoff = { path = "../backoff" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
-chrono = { version = "0.4.23", features = ["serde"] }
+chrono = { version = "0.4.24", features = ["serde"] }
 chrono-tz = { version = "0.8.1", features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }

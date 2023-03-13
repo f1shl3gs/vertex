@@ -431,7 +431,7 @@ colored = { version = "2.0.0", default-features = false }
 ahash = { version = "0.8.3", optional = true }
 async-stream = { version = "0.3.4", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
-chrono = { version = "0.4.23", features = ["serde"] }
+chrono = { version = "0.4.24", features = ["serde"] }
 chrono-tz = { version = "0.8.1", features = ["serde"] }
 encoding_rs = { version = "0.8.32", optional = true, features = ["serde"] }
 evmap = { version = "10.0.2", default-features = false, optional = true }
