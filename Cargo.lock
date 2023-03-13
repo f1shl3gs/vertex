@@ -4579,6 +4579,7 @@ version = "0.1.0"
 dependencies = [
  "event",
  "once_cell",
+ "tokio",
  "tracing",
  "tracing-core",
  "tracing-subscriber",

@@ -107,28 +107,27 @@ impl Display for SpanKind {
 /// different project.
 #[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Link {
-    /// A unique identifier of a trace that this linked span is part of.
-    /// The ID is a 16-byte array.
-    pub trace_id: TraceId,
-
-    /// A unique identifier for the linked span. The ID is an 8-byte array.
-    pub span_id: SpanId,
-
-    /// The trace_state associated with the link.
-    pub trace_state: String,
+    /// The span context of the linked span.
+    pub span_context: SpanContext,
 
     /// `attributes` is a collection of key/value pairs on the link.
     pub attributes: Vec<KeyValue>,
 }
 
 impl Link {
-    pub fn new(trace_id: TraceId, span_id: SpanId) -> Self {
+    pub fn new(span_context: SpanContext, attributes: Vec<KeyValue>) -> Self {
         Self {
-            trace_id,
-            span_id,
-            trace_state: String::new(),
-            attributes: vec![],
+            span_context,
+            attributes,
         }
+    }
+
+    pub fn trace_id(&self) -> TraceId {
+        self.span_context.trace_id
+    }
+
+    pub fn span_id(&self) -> SpanId {
+        self.span_context.span_id
     }
 }
 

@@ -3,6 +3,9 @@ VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 build:
 	cargo build --release
 
+dev:
+	cargo build
+
 clean:
 	rm -rf target
 
