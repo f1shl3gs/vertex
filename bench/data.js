@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678686961373,
+  "lastUpdate": 1678687041399,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12239,6 +12239,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 63.592,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "28d27f54292c9942d8829d8ce739caabd1249061",
+          "message": "Merge pull request #834 from f1shl3gs/dependabot/cargo/chrono-0.4.24\n\nchore(deps): bump chrono from 0.4.23 to 0.4.24",
+          "timestamp": "2023-03-13T13:51:07+08:00",
+          "tree_id": "5261ca9f1bf2016aba5e8290774df88d383247dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/28d27f54292c9942d8829d8ce739caabd1249061"
+        },
+        "date": 1678687030695,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.385,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.209,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 42.055,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.896,
             "unit": "ns/op"
           }
         ]
