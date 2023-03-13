@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 event = { path = "../event" }
 hyper = { version = "0.14.25" }
-futures = { version = "0.3.26" }
+futures = { version = "0.3.27" }
 futures-util = { version = "0.3.27" }
 rand = "0.8.5"
 tokio = { version = "1.26.0" }
