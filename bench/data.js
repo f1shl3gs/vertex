@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678687546572,
+  "lastUpdate": 1678687599377,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12444,6 +12444,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 71.359,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "488d8825e3c3c17532b6b2d0d86da2ea25c9f4ec",
+          "message": "Merge pull request #836 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.52\n\nchore(deps): bump proc-macro2 from 1.0.51 to 1.0.52",
+          "timestamp": "2023-03-13T13:51:54+08:00",
+          "tree_id": "bde2a4c1d244cef91bca511af47d8ed3c7a06b3a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/488d8825e3c3c17532b6b2d0d86da2ea25c9f4ec"
+        },
+        "date": 1678687590091,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.793,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.471,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.141,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.173,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.972,
             "unit": "ns/op"
           }
         ]
