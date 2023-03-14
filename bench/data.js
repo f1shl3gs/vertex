@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678726489296,
+  "lastUpdate": 1678772313463,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7549,6 +7549,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 375.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0415031b4d469ec861916c3c5b63d0a1133e373c",
+          "message": "add 'extension-zpages' so vertex benches will pass (#840)",
+          "timestamp": "2023-03-14T13:34:57+08:00",
+          "tree_id": "987e72a949df1685247bf8a63e06905401398e45",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0415031b4d469ec861916c3c5b63d0a1133e373c"
+        },
+        "date": 1678772305593,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 79.604,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 166.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 272.11,
             "unit": "ns/op"
           }
         ]
