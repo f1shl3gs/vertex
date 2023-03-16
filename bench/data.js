@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1678946809307,
+  "lastUpdate": 1678959781557,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3305,6 +3305,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 901530,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8c80b4c799c9e41cd19181d72e8139518a64e193",
+          "message": "Merge pull request #845 from f1shl3gs/remove_xdrgen\n\nremove xdrgen from virt",
+          "timestamp": "2023-03-16T17:38:59+08:00",
+          "tree_id": "5abebffe4c40a6b0e132fdcaf1e33b4ee15af838",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8c80b4c799c9e41cd19181d72e8139518a64e193"
+        },
+        "date": 1678959772512,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716630,
             "unit": "ns/op"
           }
         ]
