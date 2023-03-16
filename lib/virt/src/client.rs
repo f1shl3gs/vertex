@@ -1,32 +1,25 @@
-use crate::request;
-use crate::request::remote_procedure::{
-    REMOTE_PROC_CONNECT_GET_ALL_DOMAIN_STATS, REMOTE_PROC_CONNECT_GET_VERSION,
-    REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS, REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
-    REMOTE_PROC_DOMAIN_GET_INFO, REMOTE_PROC_DOMAIN_GET_VCPUS, REMOTE_PROC_DOMAIN_GET_XML_DESC,
-    REMOTE_PROC_DOMAIN_MEMORY_STATS, REMOTE_PROC_STORAGE_POOL_GET_INFO,
-};
-use crate::request::{
-    remote_procedure::{
-        REMOTE_PROC_AUTH_LIST, REMOTE_PROC_CONNECT_GET_LIB_VERSION, REMOTE_PROC_CONNECT_OPEN,
-    },
-    virNetMessageError, virNetMessageHeader, virNetMessageStatus, AuthListRequest,
-    AuthListResponse, BlockIoTuneParameters, ConnectOpenRequest, Domain,
-    DomainGetBlockIoTuneRequest, DomainGetBlockIoTuneResponse, DomainGetInfoRequest,
-    DomainGetInfoResponse, DomainGetVcpusRequest, DomainGetVcpusResponse, DomainGetXmlDescRequest,
-    DomainGetXmlDescResponse, DomainInfo, DomainMemoryStatsRequest, DomainMemoryStatsResponse,
-    DomainStatsRecord, GetAllDomainStatsRequest, GetAllDomainStatsResponse, GetLibVersionRequest,
-    GetLibVersionResponse, GetVersionRequest, GetVersionResponse, LibvirtMessage,
-    ListAllStoragePoolsRequest, ListAllStoragePoolsResponse, MemoryStats,
-    StoragePoolGetInfoRequest, StoragePoolGetInfoResponse, VcpuInfo,
-};
-use crate::Error;
 use std::io;
 use std::io::Cursor;
 use std::path::Path;
 use std::sync::atomic::{AtomicU32, Ordering};
+
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::UnixStream;
-use xdr_codec::Unpack;
+
+use crate::error::Error;
+use crate::protocol::{
+    AuthListRequest, AuthListResponse, AuthType, BlockIoTuneParameters,
+    ConnectListStoragePoolsRequest, ConnectListStoragePoolsResponse, Domain,
+    DomainGetXmlDescRequest, DomainGetXmlDescResponse, DomainInfo, DomainMemoryStatsRequest,
+    DomainMemoryStatsResponse, DomainStatsRecord, GetAllDomainStatsRequest,
+    GetAllDomainStatsResponse, GetDomainBlockIoTuneRequest, GetDomainBlockIoTuneResponse,
+    GetDomainInfoRequest, GetDomainInfoResponse, GetDomainVcpusRequest, GetDomainVcpusResponse,
+    GetLibVersionRequest, GetStoragePoolInfoRequest, GetStoragePoolInfoResponse, GetVersionRequest,
+    GetVersionResponse, MemoryStats, OpenRequest, OpenResponse, Procedure, VcpuInfo,
+};
+use crate::protocol::{
+    GetLibVersionResponse, MessageError as ProtocolError, MessageHeader, Pack, Unpack,
+};
 
 #[derive(Debug)]
 pub struct StoragePoolInfo {
@@ -50,49 +43,40 @@ pub struct Client {
 impl Client {
     pub async fn connect(path: impl AsRef<Path>) -> io::Result<Self> {
         let stream = UnixStream::connect(path).await?;
-        let serial = AtomicU32::new(0);
+        let serial = AtomicU32::new(1);
         Ok(Self { serial, stream })
     }
 
     pub async fn version(&mut self) -> Result<String, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_CONNECT_GET_LIB_VERSION,
-            GetLibVersionRequest::new(),
-        );
+        let req = GetLibVersionRequest {};
 
-        let pkt: GetLibVersionResponse = self.do_request(req).await?;
-
-        Ok(pkt.version())
-    }
-
-    pub async fn hyper_version(&mut self) -> Result<String, Error> {
-        let req = self.make_request(REMOTE_PROC_CONNECT_GET_VERSION, GetVersionRequest::new());
-
-        let resp: GetVersionResponse = self.do_request(req).await?;
+        let resp: GetLibVersionResponse = self.send(req).await?;
 
         Ok(resp.version())
     }
 
-    pub async fn auth(&mut self) -> Result<AuthListResponse, Error> {
-        let req = self.make_request(REMOTE_PROC_AUTH_LIST, AuthListRequest::new());
+    pub async fn hyper_version(&mut self) -> Result<String, Error> {
+        let req = GetVersionRequest {};
+        let resp: GetVersionResponse = self.send(req).await?;
+        Ok(resp.version())
+    }
 
-        let pkt: AuthListResponse = self.do_request(req).await?;
-        Ok(pkt)
+    pub async fn auth(&mut self) -> Result<Vec<AuthType>, Error> {
+        let req = AuthListRequest {};
+        let resp: AuthListResponse = self.send(req).await?;
+        Ok(resp.types)
     }
 
     pub async fn open(&mut self) -> Result<(), Error> {
-        let req = self.make_request(REMOTE_PROC_CONNECT_OPEN, ConnectOpenRequest::new());
-        self.do_request(req).await?;
+        let req = OpenRequest::default();
+        let _resp: OpenResponse = self.send(req).await?;
         Ok(())
     }
 
-    pub async fn domain_xml(&mut self, dom: &Domain) -> Result<String, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_GET_XML_DESC,
-            DomainGetXmlDescRequest::new(dom.underlying()),
-        );
-        let resp: DomainGetXmlDescResponse = self.do_request(req).await?;
-        Ok(resp.xml())
+    pub async fn domain_xml(&mut self, domain: &Domain) -> Result<String, Error> {
+        let req = DomainGetXmlDescRequest { domain, flags: 0 };
+        let resp: DomainGetXmlDescResponse = self.send(req).await?;
+        Ok(resp.data)
     }
 
     // Example of params
@@ -168,88 +152,83 @@ impl Client {
     // block.1.capacity
     // block.1.physical
     pub async fn get_all_domain_stats(&mut self) -> Result<Vec<DomainStatsRecord>, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_CONNECT_GET_ALL_DOMAIN_STATS,
-            GetAllDomainStatsRequest::new(127, 80),
-        );
+        let req = GetAllDomainStatsRequest {
+            domains: vec![],
+            stats: 128,
+            flags: 80,
+        };
 
-        let resp: GetAllDomainStatsResponse = self.do_request(req).await?;
-        Ok(resp.stats())
+        let resp: GetAllDomainStatsResponse = self.send(req).await?;
+        Ok(resp.stats)
     }
 
-    pub async fn get_domain_info(&mut self, dom: &Domain) -> Result<DomainInfo, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_GET_INFO,
-            DomainGetInfoRequest::new(dom.underlying()),
-        );
+    pub async fn get_domain_info(&mut self, domain: &Domain) -> Result<DomainInfo, Error> {
+        let req = GetDomainInfoRequest { domain };
 
-        let resp: DomainGetInfoResponse = self.do_request(req).await?;
-        Ok(resp.into())
+        let resp: GetDomainInfoResponse = self.send(req).await?;
+        Ok(resp.info)
     }
 
     pub async fn get_domain_vcpus(
         &mut self,
-        dom: &Domain,
-        maxinfo: i32,
+        domain: &Domain,
+        max_info: i32,
     ) -> Result<Vec<VcpuInfo>, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_GET_VCPUS,
-            DomainGetVcpusRequest::new(dom.underlying(), maxinfo),
-        );
+        let req = GetDomainVcpusRequest {
+            domain,
+            max_info,
+            map_len: 0,
+        };
 
-        let resp: DomainGetVcpusResponse = self.do_request(req).await?;
-        Ok(resp.into())
+        let resp: GetDomainVcpusResponse = self.send(req).await?;
+        Ok(resp.infos)
     }
 
     pub async fn domain_memory_stats(
         &mut self,
-        dom: &Domain,
-        maxinfo: u32,
+        domain: &Domain,
+        max_stats: u32,
         flags: u32,
     ) -> Result<MemoryStats, Error> {
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_MEMORY_STATS,
-            DomainMemoryStatsRequest::new(dom.underlying(), maxinfo, flags),
-        );
+        let req = DomainMemoryStatsRequest {
+            domain,
+            max_stats,
+            flags,
+        };
 
-        let resp: DomainMemoryStatsResponse = self.do_request(req).await?;
-        Ok(resp.into())
+        let resp: DomainMemoryStatsResponse = self.send(req).await?;
+        Ok(resp.stats)
     }
 
     pub async fn block_io_tune(
         &mut self,
-        dom: &Domain,
+        domain: &Domain,
         disk: &str,
     ) -> Result<BlockIoTuneParameters, Error> {
         // first call to get nparams
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
-            DomainGetBlockIoTuneRequest::new(
-                dom.underlying(),
-                Some(request::generated::remote_nonnull_string(disk.to_string())),
-                0,
-            ),
-        );
+        let req = GetDomainBlockIoTuneRequest {
+            domain,
+            disk,
+            nparams: 0,
+            flags: 0,
+        };
 
-        let resp: DomainGetBlockIoTuneResponse = self.do_request(req).await?;
-        let nparams = resp.nparams();
+        let resp: GetDomainBlockIoTuneResponse = self.send(req).await?;
 
         // second call get all params kvs
-        let req = self.make_request(
-            REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE,
-            DomainGetBlockIoTuneRequest::new(
-                dom.underlying(),
-                Some(request::generated::remote_nonnull_string(disk.to_string())),
-                nparams,
-            ),
-        );
+        let req = GetDomainBlockIoTuneRequest {
+            domain,
+            disk,
+            nparams: resp.nparams,
+            flags: 0,
+        };
 
-        let resp: DomainGetBlockIoTuneResponse = self.do_request(req).await?;
-        Ok(resp.into())
+        let resp: GetDomainBlockIoTuneResponse = self.send(req).await?;
+        Ok(resp.block_io_tune_parameters())
     }
 
     pub async fn storage_pools(&mut self) -> Result<Vec<StoragePoolInfo>, Error> {
-        let req = self.make_request(
+        /*        let req = self.make_request(
             REMOTE_PROC_CONNECT_LIST_STORAGE_POOLS,
             ListAllStoragePoolsRequest::new(2), // 2 for active pools
         );
@@ -273,39 +252,54 @@ impl Client {
             })
         }
 
+        Ok(infos)*/
+
+        let resp: ConnectListStoragePoolsResponse = self
+            .send(ConnectListStoragePoolsRequest { maxnames: 2 })
+            .await?;
+        let mut infos = Vec::with_capacity(resp.pools.len());
+
+        for pool in resp.pools {
+            let req = GetStoragePoolInfoRequest { pool: &pool };
+
+            let resp: GetStoragePoolInfoResponse = self.send(req).await?;
+            infos.push(StoragePoolInfo {
+                name: pool.name,
+                state: resp.state as u32,
+                capacity: resp.capacity,
+                allocation: resp.allocation,
+                available: resp.available,
+            });
+        }
+
         Ok(infos)
     }
 
-    fn serial(&self) -> u32 {
-        self.serial.fetch_add(1, Ordering::Relaxed)
+    fn serial_id(&self) -> u32 {
+        self.serial.fetch_add(1, Ordering::SeqCst)
     }
 
-    fn make_request<T>(
-        &self,
-        procedure: request::remote_procedure,
-        payload: T,
-    ) -> request::LibvirtMessage<T> {
-        let serial = self.serial();
-        LibvirtMessage {
-            header: request::virNetMessageHeader {
-                serial,
-                proc_: procedure as i32,
-                ..Default::default()
-            },
-            payload,
-        }
-    }
-
-    async fn do_request<R, P>(&mut self, req: R) -> Result<P, Error>
+    async fn send<R, P>(&mut self, req: R) -> Result<P, Error>
     where
-        R: xdr_codec::Pack<Cursor<Vec<u8>>>,
-        P: xdr_codec::Unpack<Cursor<Vec<u8>>>,
+        R: Pack<Cursor<Vec<u8>>> + Procedure,
+        P: Unpack<Cursor<Vec<u8>>>,
     {
         let (size, buf) = {
             let buf = Vec::new();
             let mut c = Cursor::new(buf);
-            let size = req.pack(&mut c)?;
-            (size, c.into_inner())
+            let header = MessageHeader {
+                serial: self.serial_id(),
+                procedure: R::procedure(),
+                ..Default::default()
+            };
+
+            // serialize header
+            header.pack(&mut c)?;
+            // serialize body
+            req.pack(&mut c)?;
+
+            let buf = c.into_inner();
+            (buf.len(), buf)
         };
 
         let len = size + 4;
@@ -321,63 +315,13 @@ impl Client {
         self.stream.read_exact(&mut buf[0..len as usize]).await?;
         let mut cur = Cursor::new(buf);
 
-        let (header, _) = virNetMessageHeader::unpack(&mut cur)?;
-        if header.status == virNetMessageStatus::VIR_NET_OK {
+        let (header, _sz) = MessageHeader::unpack(&mut cur)?;
+        if header.success() {
             let (pkt, _) = P::unpack(&mut cur)?;
             return Ok(pkt);
         }
 
-        let (err, _) = virNetMessageError::unpack(&mut cur)?;
+        let (err, _) = ProtocolError::unpack(&mut cur)?;
         Err(Error::from(err))
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    #![allow(clippy::print_stdout)] // tests
-
-    use super::*;
-
-    #[tokio::test]
-    #[ignore]
-    async fn connect() {
-        let path = "/run/libvirt/libvirt-sock-ro";
-        let mut cli = Client::connect(path).await.unwrap();
-        // let auth = cli.auth().await.unwrap();
-        cli.open().await.unwrap();
-        let version = cli.version().await.unwrap();
-        println!("libvirt: {}", version);
-        let version = cli.hyper_version().await.unwrap();
-        println!("hyper: {}", version);
-
-        let stats = cli.get_all_domain_stats().await.unwrap();
-        for s in stats {
-            let dom = s.domain();
-            let info = cli.get_domain_info(&dom).await.unwrap();
-            println!("dom: {}", dom.name());
-
-            // vcpu
-            let vcpus = cli
-                .get_domain_vcpus(&dom, info.nr_virt_cpu as i32)
-                .await
-                .unwrap();
-            for vcpu in vcpus {
-                println!("vcpu:{} -> {}", vcpu.number, vcpu.cpu);
-                let (delay, wait) = s.vcpu_delay_and_wait(vcpu.number);
-                println!("vcpu:{}  delay {} wait {}", vcpu.number, delay, wait);
-            }
-
-            let blocks = s.blocks();
-            for block in blocks {
-                println!("block: {}", block.name);
-                let params = cli.block_io_tune(&dom, &block.name).await.unwrap();
-                println!("{:#?}", params);
-            }
-        }
-
-        let pools = cli.storage_pools().await.unwrap();
-        for pool in pools {
-            println!("pool: {}", pool.name);
-        }
     }
 }

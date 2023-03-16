@@ -46,7 +46,7 @@ version = "0.7.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e37cfd5e7657ada45f742d6e99ca5788580b5c529dc78faf11ece6dc702656f"
 dependencies = [
- "memchr 2.5.0",
+ "memchr",
 ]
 
 [[package]]
@@ -220,7 +220,7 @@ dependencies = [
  "hyper",
  "itoa 1.0.1",
  "matchit",
- "memchr 2.5.0",
+ "memchr",
  "mime",
  "percent-encoding",
  "pin-project-lite",
@@ -378,7 +378,7 @@ version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5ffdb39cb703212f3c11973452c2861b972f757b021158f3516ba10f2fa8b2c1"
 dependencies = [
- "memchr 2.5.0",
+ "memchr",
  "once_cell",
  "regex-automata",
  "serde",
@@ -613,7 +613,7 @@ dependencies = [
  "futures-util",
  "log_schema",
  "lookup",
- "memchr 2.5.0",
+ "memchr",
  "serde",
  "serde_json",
  "serde_path_to_error",
@@ -1295,7 +1295,7 @@ dependencies = [
  "log_schema",
  "lookup",
  "measurable",
- "memchr 2.5.0",
+ "memchr",
  "metrics",
  "nix",
  "no-proxy",
@@ -1457,7 +1457,7 @@ dependencies = [
  "futures-macro",
  "futures-sink",
  "futures-task",
- "memchr 2.5.0",
+ "memchr",
  "pin-project-lite",
  "pin-utils",
  "slab",
@@ -2276,7 +2276,7 @@ checksum = "fe2ba61113f9f7a9f0e87c519682d39c43a6f3f79c2cc42c3ba3dda83b1fa334"
 dependencies = [
  "ipnetwork",
  "log",
- "memchr 2.5.0",
+ "memchr",
  "serde",
 ]
 
@@ -2285,15 +2285,6 @@ name = "measurable"
 version = "0.1.0"
 dependencies = [
  "bytes",
-]
-
-[[package]]
-name = "memchr"
-version = "1.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "148fab2e51b4f1cfc66da2a7c32981d1d3c083a803978268bb11fe4b86925e7a"
-dependencies = [
- "libc",
 ]
 
 [[package]]
@@ -2494,15 +2485,6 @@ checksum = "72ef4a56884ca558e5ddb05a1d1e7e1bfd9a68d9ed024c21704cc98872dae1bb"
 
 [[package]]
 name = "nom"
-version = "3.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05aec50c70fd288702bcd93284a8444607f3292dbdf2a30de5ea5dcdbe72287b"
-dependencies = [
- "memchr 1.0.2",
-]
-
-[[package]]
-name = "nom"
 version = "6.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e7413f999671bd4745a7b624bd370a569fb6bc574b23c83a3c5ed2e453f3d5e2"
@@ -2510,7 +2492,7 @@ dependencies = [
  "bitvec",
  "funty",
  "lexical-core",
- "memchr 2.5.0",
+ "memchr",
  "version_check",
 ]
 
@@ -2520,7 +2502,7 @@ version = "7.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d273983c5a657a70a3e8f2a01329822f3b8c8172b73826411a55751e404a0a4a"
 dependencies = [
- "memchr 2.5.0",
+ "memchr",
  "minimal-lexical",
 ]
 
@@ -2656,7 +2638,7 @@ version = "0.30.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ea86265d3d3dcb6a27fc51bd29a4bf387fae9d2986b823079d4986af253eb439"
 dependencies = [
- "memchr 2.5.0",
+ "memchr",
 ]
 
 [[package]]
@@ -3202,7 +3184,7 @@ version = "0.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8533f14c8382aaad0d592c812ac3b826162128b65662331e1127b45c3d18536b"
 dependencies = [
- "memchr 2.5.0",
+ "memchr",
 ]
 
 [[package]]
@@ -3400,7 +3382,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "48aaa5748ba571fb95cd2c85c09f629215d3a6ece942baa100950af03a34f733"
 dependencies = [
  "aho-corasick",
- "memchr 2.5.0",
+ "memchr",
  "regex-syntax",
 ]
 
@@ -3915,7 +3897,7 @@ dependencies = [
  "itoa 1.0.1",
  "libc",
  "log",
- "memchr 2.5.0",
+ "memchr",
  "num-bigint",
  "once_cell",
  "paste",
@@ -4280,7 +4262,7 @@ dependencies = [
  "autocfg",
  "bytes",
  "libc",
- "memchr 2.5.0",
+ "memchr",
  "mio",
  "num_cpus",
  "pin-project-lite",
@@ -4870,7 +4852,7 @@ dependencies = [
  "lru",
  "maxminddb",
  "measurable",
- "memchr 2.5.0",
+ "memchr",
  "metrics",
  "mimalloc",
  "multiline",
@@ -4939,9 +4921,6 @@ name = "virt"
 version = "0.1.0"
 dependencies = [
  "tokio",
- "uuid",
- "xdr-codec",
- "xdrgen",
 ]
 
 [[package]]
@@ -5283,26 +5262,6 @@ name = "wyz"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
-
-[[package]]
-name = "xdr-codec"
-version = "0.4.4"
-source = "git+https://github.com/f1shl3gs/rust-xdr?rev=9775f74#9775f74efdae857a5fbf01f857f2a8a24051c447"
-dependencies = [
- "byteorder",
-]
-
-[[package]]
-name = "xdrgen"
-version = "0.4.4"
-source = "git+https://github.com/f1shl3gs/rust-xdr?rev=9775f74#9775f74efdae857a5fbf01f857f2a8a24051c447"
-dependencies = [
- "bitflags",
- "log",
- "nom 3.2.1",
- "quote",
- "xdr-codec",
-]
 
 [[package]]
 name = "xml-rs"

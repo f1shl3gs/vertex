@@ -98,12 +98,12 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
     // Collect domain metrics
     for stat in cli.get_all_domain_stats().await? {
         let dom = stat.domain();
-        let info = cli.get_domain_info(&dom).await?;
-        let uuid = dom.uuid().to_string();
-        let name = &dom.name();
+        let info = cli.get_domain_info(dom).await?;
+        let uuid = dom.uuid();
+        let name = &dom.name().to_string();
 
         // Report domain info
-        let xml = cli.domain_xml(&dom).await?;
+        let xml = cli.domain_xml(dom).await?;
         let schema::Domain { devices, metadata } = serde_xml_rs::from_str::<schema::Domain>(&xml)
             .map_err(|err| {
             Error::IO(std::io::Error::new(std::io::ErrorKind::InvalidData, err))
@@ -115,7 +115,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Domain metadata",
                 1,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                     "uuid" => uuid,
                     "instance_name" => metadata.instance.name,
                     "flavor" => metadata.instance.flavor.name,
@@ -132,7 +132,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Maximum allowed memory of the domain, in bytes",
                 info.max_mem * 1024,
                 tags!(
-                    DOMAIN_KEY =>name
+                    DOMAIN_KEY => name
                 ),
             ),
             Metric::gauge_with_tags(
@@ -140,7 +140,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Memory usage of the domain, in bytes",
                 info.memory * 1024,
                 tags!(
-                    DOMAIN_KEY =>name
+                    DOMAIN_KEY => name
                 ),
             ),
             Metric::gauge_with_tags(
@@ -148,7 +148,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Number of virtual CPUs for the domain",
                 info.nr_virt_cpu,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::sum_with_tags(
@@ -156,7 +156,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Amount of CPU time used by the domain, in seconds",
                 info.cpu_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -164,13 +164,13 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Virtual domain state. 0: no, 1: running, 2: blocked, 3: paused, 4: shutdown, 5: shutoff, 6: crashed, 7: suspended",
                 info.state as u32,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
         ]);
 
         // Report vcpus
-        match cli.get_domain_vcpus(&dom, info.nr_virt_cpu as i32).await {
+        match cli.get_domain_vcpus(dom, info.nr_virt_cpu as i32).await {
             Ok(vcpus) => {
                 for vcpu in vcpus {
                     let vcpu_num = vcpu.number.to_string();
@@ -182,7 +182,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                             "VCPU state. 0: offline, 1: running, 2: blocked",
                             vcpu.state,
                             tags!(
-                                DOMAIN_KEY =>name,
+                                DOMAIN_KEY => name,
                                 "vcpu" => &vcpu_num,
                             ),
                         ),
@@ -191,7 +191,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                             "Amount of CPU time used by the domain's VCPU, in seconds",
                             vcpu.cpu_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                             tags!(
-                                DOMAIN_KEY =>name,
+                                DOMAIN_KEY => name,
                                 "vcpu" => &vcpu_num
                             ),
                         ),
@@ -200,7 +200,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                             "Real CPU number, or one of the values from virVcpuHostCpuState",
                             vcpu.cpu,
                             tags!(
-                                DOMAIN_KEY =>name,
+                                DOMAIN_KEY => name,
                                 "vcpu" => &vcpu_num
                             ),
                         ),
@@ -209,7 +209,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                             "Vcpu's wait_sum metrics. CONFIG_SCHEDSTATS has to be enabled",
                             wait as f64 / 1000.0 / 1000.0 / 1000.0,
                             tags!(
-                                DOMAIN_KEY =>name,
+                                DOMAIN_KEY => name,
                                 "vcpu" => &vcpu_num,
                             ),
                         ),
@@ -221,7 +221,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 the VM as a steal time",
                             delay as f64 / 1000.0 / 1000.0 / 1000.0,
                             tags!(
-                                DOMAIN_KEY =>name,
+                                DOMAIN_KEY => name,
                                 "vcpu" => &vcpu_num
                             ),
                         ),
@@ -269,7 +269,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Block device metadata info. Device name, source file, serial.",
                     1,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &dev.target.dev,
                         "source_file" => disk_source,
                         "serial" => &dev.serial,
@@ -285,7 +285,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of bytes read from a block device, in bytes.",
                     block.read_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -294,7 +294,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of read requests from a block device",
                     block.read_requests,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -303,7 +303,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Total time spent on reads from a block device, in seconds",
                     block.read_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -312,7 +312,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of bytes written to a block device, in bytes",
                     block.write_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -321,7 +321,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of write requests to a block device",
                     block.write_requests,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -330,7 +330,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Total time spent on writes on a block device, in seconds",
                     block.write_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -339,7 +339,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Total flush requests from a block device",
                     block.flush_requests,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -348,7 +348,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Total time in seconds spent on cache flushing to a block device",
                     block.flush_time as f64 / 1000.0 / 1000.0 / 1000.0, // From ns to s
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -357,7 +357,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Offset of the highest written sector on a block device",
                     block.allocation,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -366,7 +366,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Logical size in bytes of the block device backing image",
                     block.capacity,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
@@ -375,13 +375,13 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Physical size in bytes of the container of the backing image",
                     block.physical,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &block.name,
                     ),
                 ),
             ]);
 
-            match cli.block_io_tune(&dom, &block.name).await {
+            match cli.block_io_tune(dom, &block.name).await {
                 Err(err) => match err {
                     Error::Libvirt(ref lerr) => {
                         // See also: https://github.com/libvirt/libvirt/blob/56fbabf1a1e272c6cc50adcb603996cf8e94ad08/include/libvirt/virterror.h#L209
@@ -403,7 +403,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total throughput limit in bytes per second",
                         params.total_bytes_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -412,7 +412,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Read throughput limit in bytes per second",
                         params.read_bytes_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -421,7 +421,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Write throughput limit in bytes per second",
                         params.write_bytes_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -430,7 +430,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total requests per second limit",
                         params.total_iops_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -439,7 +439,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Read requests per second limit",
                         params.read_iops_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -448,7 +448,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Write requests per second limit",
                         params.write_iops_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -457,7 +457,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total throughput burst limit in bytes per second",
                         params.total_bytes_sec_max,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -466,7 +466,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Read throughput burst limit in bytes per second",
                         params.read_bytes_sec_max,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -475,7 +475,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Write throughput burst limit in bytes per second",
                         params.write_bytes_sec_max,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -484,7 +484,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total requests per second burst limit",
                         params.total_iops_sec_max,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -493,7 +493,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total throughput burst time in seconds",
                         params.total_bytes_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -502,7 +502,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Read throughput burst time in seconds",
                         params.read_bytes_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -511,7 +511,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Write throughput burst time in seconds",
                         params.write_bytes_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -520,7 +520,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Total requests per second burst time in seconds",
                         params.total_iops_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -529,7 +529,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Read requests per second burst time in seconds",
                         params.read_iops_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -538,7 +538,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "Write requests per second burst time in seconds",
                         params.write_bytes_sec_max_length,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -547,7 +547,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                         "The size of IO operations per seconds permitted through a block device",
                         params.size_iops_sec,
                         tags!(
-                            DOMAIN_KEY =>name,
+                            DOMAIN_KEY => name,
                             "target_device" => &block.name,
                         ),
                     ),
@@ -574,7 +574,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Interfaces metadata. Source bridge, target device, interface uuid",
                     1,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "source_bridge" => source_bridge,
                         "target_device" => &iface.name,
                         "virtual_interface" => virtual_interface,
@@ -588,7 +588,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of bytes received on a network interface, in bytes",
                     iface.rx_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -597,7 +597,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packets received on a network interface",
                     iface.rx_packets,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -606,7 +606,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packet receive errors on a network interface",
                     iface.rx_errs,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -615,7 +615,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packets receive drops on a network interface",
                     iface.rx_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -624,7 +624,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of bytes transmitted on a network interface, in bytes",
                     iface.tx_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -633,7 +633,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packets transmitted on a network interface",
                     iface.tx_packets,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -642,7 +642,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packet transmit errors on a network interface",
                     iface.tx_errs,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -651,7 +651,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                     "Number of packets transmit drops on a network interface",
                     iface.tx_bytes,
                     tags!(
-                        DOMAIN_KEY =>name,
+                        DOMAIN_KEY => name,
                         "target_device" => &iface.name,
                     ),
                 ),
@@ -659,7 +659,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
         }
 
         // Collect Memory Stats
-        let stats = cli.domain_memory_stats(&dom, 11, 0).await?;
+        let stats = cli.domain_memory_stats(dom, 11, 0).await?;
         let used_percent = if stats.usable != 0 && stats.available != 0 {
             (stats.available - stats.usable) as f64 / stats.available as f64 / 100.0
         } else {
@@ -673,7 +673,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             When servicing the page fault, if disk IO is required, it is considered a major fault",
                 stats.major_fault,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::sum_with_tags(
@@ -682,7 +682,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
              When servicing the page not fault, if disk IO is required, it is considered a minor fault.",
                 stats.minor_fault,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -692,7 +692,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             is expressed in bytes",
                 stats.unused * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -702,7 +702,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             the guest OS does not initialize all assigned pages. This value is expressed in bytes",
                 stats.available * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -710,7 +710,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Current balloon value (in bytes)",
                 stats.actual_balloon * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -718,7 +718,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "Resident Set Size of the process running the domain. This value is in bytes",
                 stats.rss * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -727,7 +727,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             corresponds to 'Available' in /proc/meminfo",
                 stats.usable * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -736,7 +736,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
             (in bytes). Typically these pages are used for caching files from disk",
                 stats.disk_caches * 1024,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             ),
             Metric::gauge_with_tags(
@@ -744,7 +744,7 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
                 "The amount of memory in percent, that used by domain",
                 used_percent,
                 tags!(
-                    DOMAIN_KEY =>name,
+                    DOMAIN_KEY => name,
                 ),
             )
         ]);
