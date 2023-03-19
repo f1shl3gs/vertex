@@ -99,7 +99,7 @@ integration-tests: integration-test-consul integration-test-haproxy integration-
 
 .PHONY: udeps
 udeps:
-	cargo +nightly udeps
+	cargo +nightly udeps --all-targets
 
 .PHONY: doc-test
 doc-test:
