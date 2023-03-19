@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679243470763,
+  "lastUpdate": 1679244432266,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -31968,6 +31968,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 995.04,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
+          "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
+          "timestamp": "2023-03-20T00:25:27+08:00",
+          "tree_id": "6c2c9330bbbe46597e56509ec6f49220cce168f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09ccfc4d9125cc38446d16273feb2a72287fdc32"
+        },
+        "date": 1679244423597,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 38551000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1028800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.747,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 55.796,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 445.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1282.2,
             "unit": "ns/op"
           }
         ]
