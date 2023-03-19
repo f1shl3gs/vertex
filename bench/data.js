@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679238094208,
+  "lastUpdate": 1679238109437,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -7986,6 +7986,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 283.29,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69bb7a86946856d1bca6a3594127b0948490e0b2",
+          "message": "Remove rkyv (#847)\n\n* remove rkyv\r\n\r\n* add `--all-targets` to udeps",
+          "timestamp": "2023-03-19T22:57:46+08:00",
+          "tree_id": "eb60b864b81a9a38fa8eea9cd238d2c4ac66a484",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69bb7a86946856d1bca6a3594127b0948490e0b2"
+        },
+        "date": 1679238100504,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 91.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 187.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 308.48,
             "unit": "ns/op"
           }
         ]
