@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679239605140,
+  "lastUpdate": 1679243345337,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8025,6 +8025,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 308.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
+          "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
+          "timestamp": "2023-03-20T00:25:27+08:00",
+          "tree_id": "6c2c9330bbbe46597e56509ec6f49220cce168f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/09ccfc4d9125cc38446d16273feb2a72287fdc32"
+        },
+        "date": 1679243336620,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 92.489,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 197.18,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 323.46,
             "unit": "ns/op"
           }
         ]
