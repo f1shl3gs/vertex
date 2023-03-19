@@ -332,9 +332,3 @@ where
 pub(crate) fn get_disk_data_dir_path(base_dir: &Path, buffer_id: &str) -> PathBuf {
     base_dir.join("buffer").join(buffer_id)
 }
-
-pub trait Archive {
-    type Archived;
-
-    fn validate(&self);
-}

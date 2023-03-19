@@ -15,14 +15,13 @@ use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
+    backed_archive::{BackedArchive, Serialize},
     common::{align16, DiskBufferConfig, MAX_FILE_ID},
     io::{AsyncFile, WritableMemoryMap},
     ser::SerializeError,
     Filesystem,
 };
 use crate::buffer_usage_data::BufferUsageHandle;
-use crate::variants::disk::backed_archive::{BackedArchive, Serialize};
-use crate::variants::disk::Archive;
 
 pub const LEDGER_LEN: usize = align16(mem::size_of::<LedgerState>());
 
@@ -148,14 +147,6 @@ impl Serialize for LedgerState {
         buf.extend_from_slice(&reader_last_record_id);
 
         buf
-    }
-}
-
-impl Archive for LedgerState {
-    type Archived = ArchivedLedgerState;
-
-    fn validate(&self) {
-        todo!()
     }
 }
 

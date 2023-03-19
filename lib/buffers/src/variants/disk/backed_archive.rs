@@ -1,9 +1,7 @@
 use std::marker::PhantomData;
-#[cfg(test)]
-use std::pin::Pin;
 
+use super::ledger::{ArchivedLedgerState, LedgerState};
 use super::ser::{DeserializeError, SerializeError};
-use crate::variants::disk::Archive;
 
 /// Backed wrapper for any type that implements [`Archive`][archive].
 ///
@@ -55,7 +53,7 @@ where
     /// If the data in the backing store is not valid for `T`, an error variant will be returned.
     pub fn from_backing(backing: B) -> Result<BackedArchive<B, T>, DeserializeError> {
         // Validate that the input is, well, valid.
-        // let _ = check_archived_root::<T>(backing.as_ref())?;
+        T::validate(backing.as_ref())?;
 
         // Now that we know the buffer fits T, we're good to go!
         Ok(Self {
@@ -117,15 +115,22 @@ where
             _archive: PhantomData,
         })
     }
+}
 
-    /// Gets a reference to the archived value.
-    #[cfg(test)]
-    pub fn get_archive_mut(&mut self) -> Pin<&mut T::Archived> {
-        /*use rkyv::archived_root_mut;
+pub trait Archive {
+    type Archived;
 
-        let pinned = Pin::new(self.backing.as_mut());
-        unsafe { archived_root_mut::<T>(pinned) }*/
+    fn validate(data: &[u8]) -> Result<(), DeserializeError>;
+}
 
-        unimplemented!()
+impl Archive for LedgerState {
+    type Archived = ArchivedLedgerState;
+
+    fn validate(data: &[u8]) -> Result<(), DeserializeError> {
+        if data.len() < 8 + 2 + 2 + 8 {
+            return Err(DeserializeError::TooShort);
+        }
+
+        Ok(())
     }
 }
