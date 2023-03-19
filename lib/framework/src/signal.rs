@@ -1,3 +1,5 @@
+use std::pin::pin;
+
 use tokio::sync::{broadcast, mpsc};
 use tokio_stream::{Stream, StreamExt};
 
@@ -59,7 +61,7 @@ impl SignalHandler {
         let tx = self.tx.clone();
 
         tokio::spawn(async move {
-            tokio::pin!(stream);
+            let mut stream = pin!(stream);
 
             while let Some(value) = stream.next().await {
                 if tx.send(value.into()).await.is_err() {
@@ -85,7 +87,7 @@ impl SignalHandler {
         self.shutdown_txs.push(shutdown_tx);
 
         tokio::spawn(async move {
-            tokio::pin!(stream);
+            let mut stream = pin!(stream);
 
             loop {
                 tokio::select! {

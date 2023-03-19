@@ -332,6 +332,7 @@ mod tests {
     use super::*;
     use codecs::encoding::JsonSerializer;
     use log_schema::log_schema;
+    use std::pin::pin;
     use testify::random::random_lines;
 
     #[test]
@@ -478,7 +479,7 @@ mod tests {
                 async { res }
             });
 
-        tokio::pin!(stream);
+        let mut stream = pin!(stream);
 
         let mut result = Vec::new();
         while let Some(item) = stream.next().await {
