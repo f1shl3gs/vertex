@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679238150763,
+  "lastUpdate": 1679239127114,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -31694,6 +31694,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 996.17,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69bb7a86946856d1bca6a3594127b0948490e0b2",
+          "message": "Remove rkyv (#847)\n\n* remove rkyv\r\n\r\n* add `--all-targets` to udeps",
+          "timestamp": "2023-03-19T22:57:46+08:00",
+          "tree_id": "eb60b864b81a9a38fa8eea9cd238d2c4ac66a484",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69bb7a86946856d1bca6a3594127b0948490e0b2"
+        },
+        "date": 1679239117227,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25960000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1053200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.759,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 45.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 158.97,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 358.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 995.04,
             "unit": "ns/op"
           }
         ]
