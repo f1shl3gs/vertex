@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::pin::pin;
 use std::{fmt, task::Poll};
 
 use buffers::channel::BufferSender;
@@ -128,7 +129,8 @@ impl Fanout {
     }
 
     pub async fn send_stream(&mut self, events: impl Stream<Item = Events>) {
-        tokio::pin!(events);
+        let mut events = pin!(events);
+
         while let Some(event_array) = events.next().await {
             self.send(event_array).await;
         }

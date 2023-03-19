@@ -153,7 +153,7 @@ extensions = [
 extensions-heartbeat = ["uuid", "sysinfo", "parking_lot/serde"]
 extensions-healthcheck = []
 extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
-extensions-pprof = ["dep:pprof"]
+extensions-pprof = ["dep:pprof", "dep:inferno"]
 extensions-zpages = []
 
 # Sources
@@ -338,18 +338,14 @@ prost-build = { version = "0.11.8" }
 assert_cmd = { version = "2.0.10" }
 base64 = { version = "0.21.0" }
 criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
-env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.3.0" }
-proptest = { version = "1.1.0" }
 rand = { version = "0.8.5" }
 serde_path_to_error = { version = "0.1.10" }
 tempfile = { version = "3.4.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
 tokio = { version = "1.26.0", features = ["test-util", "time"] }
-tokio-test = { version = "0.4.2" }
-tower-test = { version = "0.4.0" }
 
 [dependencies]
 # Workspaces
@@ -423,6 +419,8 @@ openssl-probe = { version = "0.1.5", default-features = false }
 
 # Profile
 pprof = { version = "0.11.1", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
+# pin inferno, so rustc will not warning us for inferno using older quick-xml.
+inferno = { version = "0.11.15", default-features = false, features = ["nameattr"], optional = true }
 
 # Cli
 argh = { version = "0.1.10" }

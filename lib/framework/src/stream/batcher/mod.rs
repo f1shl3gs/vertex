@@ -113,6 +113,7 @@ mod tests {
     use crate::stream::BatcherSettings;
     use futures::stream;
     use std::num::NonZeroUsize;
+    use std::pin::pin;
     use std::time::Duration;
 
     #[tokio::test]
@@ -175,7 +176,7 @@ mod tests {
             .into_item_size_config(|x: &u32| *x as usize),
         );
 
-        tokio::pin!(batcher);
+        let mut batcher = pin!(batcher);
         let mut next = batcher.next();
         assert_eq!(futures::poll!(&mut next), Poll::Pending);
         tokio::time::advance(timeout).await;

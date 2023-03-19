@@ -1,4 +1,5 @@
 use std::fmt::{Debug, Formatter};
+use std::pin::pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
 
@@ -58,7 +59,7 @@ where
             self.state = match self.state {
                 State::Ready(_) => return self.inner.poll_ready(cx).map_err(Into::into),
                 State::Waiting(ref mut fut) => {
-                    tokio::pin!(fut);
+                    let fut = pin!(fut);
                     let permit = ready!(fut.poll(cx));
                     State::Ready(permit)
                 }
