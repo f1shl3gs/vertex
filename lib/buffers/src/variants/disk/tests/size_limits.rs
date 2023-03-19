@@ -44,10 +44,10 @@ async fn writer_error_when_record_is_over_the_limit() {
             // First write should always complete because we explicitly set the maximum record size to
             // match the exact size of the first record when it is serialized.
             let first_bytes_written = writer
-                .write_record(first_record)
+                .write_record(first_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(first_bytes_written, SizedRecord, first_write_size);
+            assert_enough_bytes_written!(first_bytes_written, &first_record);
 
             writer.flush().await.expect("flush should not fail");
             assert_buffer_size!(ledger, 1, first_bytes_written as u64);
@@ -83,7 +83,10 @@ async fn writer_waits_when_buffer_is_full() {
             let (mut writer, mut reader, ledger) =
                 create_buffer_with_max_buffer_size(data_dir, 100).await;
             let first_write_size = 92;
+            let first_record = SizedRecord::new(first_write_size);
+
             let second_write_size = 96;
+            let second_record = SizedRecord::new(second_write_size);
 
             assert_buffer_is_empty!(ledger);
 
@@ -91,12 +94,11 @@ async fn writer_waits_when_buffer_is_full() {
             // haven't exceed our total buffer size limit yet, or the size limit of the data file
             // itself.  We do need this write to be big enough to exceed the total buffer size
             // limit, though.
-            let first_record = SizedRecord::new(first_write_size);
             let first_bytes_written = writer
-                .write_record(first_record)
+                .write_record(first_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(first_bytes_written, SizedRecord, first_write_size);
+            assert_enough_bytes_written!(first_bytes_written, &first_record);
 
             writer.flush().await.expect("flush should not fail");
             assert_buffer_size!(ledger, 1, first_bytes_written);
@@ -180,7 +182,7 @@ async fn writer_waits_when_buffer_is_full() {
             assert_buffer_is_empty!(ledger);
 
             let second_bytes_written = second_record_write.await;
-            assert_enough_bytes_written!(second_bytes_written, SizedRecord, second_write_size);
+            assert_enough_bytes_written!(second_bytes_written, &second_record);
 
             writer.flush().await.expect("flush should not fail");
 
@@ -246,7 +248,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded() {
                 .write_record(first_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(first_bytes_written, SizedRecord, first_write_size);
+            assert_enough_bytes_written!(first_bytes_written, &first_record);
 
             writer.flush().await.expect("flush should not fail");
             assert_buffer_size!(ledger, 1, first_bytes_written);
@@ -258,7 +260,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded() {
                 .write_record(second_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(second_bytes_written, SizedRecord, second_write_size);
+            assert_enough_bytes_written!(second_bytes_written, &second_record);
 
             writer.flush().await.expect("flush should not fail");
             writer.close();
@@ -325,7 +327,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded_after_reload() {
                 .write_record(first_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(first_bytes_written, SizedRecord, first_write_size);
+            assert_enough_bytes_written!(first_bytes_written, &first_record);
 
             writer.flush().await.expect("flush should not fail");
             assert_buffer_size!(ledger, 1, first_bytes_written);
@@ -353,7 +355,7 @@ async fn writer_rolls_data_files_when_the_limit_is_exceeded_after_reload() {
                 .write_record(second_record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(second_bytes_written, SizedRecord, second_write_size);
+            assert_enough_bytes_written!(second_bytes_written, &second_record);
 
             writer.flush().await.expect("flush should not fail");
             writer.close();

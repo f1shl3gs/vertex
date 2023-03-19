@@ -135,6 +135,8 @@
 //! when they reach the maximum value for the data type. For record IDs, however, this would mean
 //! reaching 2^64, which will take a really, really, really long time.
 
+#![allow(dead_code)]
+
 use std::fmt::Debug;
 use std::path::Path;
 use std::{error::Error, marker::PhantomData, num::NonZeroU64, path::PathBuf, sync::Arc};
@@ -329,4 +331,10 @@ where
 
 pub(crate) fn get_disk_data_dir_path(base_dir: &Path, buffer_id: &str) -> PathBuf {
     base_dir.join("buffer").join(buffer_id)
+}
+
+pub trait Archive {
+    type Archived;
+
+    fn validate(&self);
 }

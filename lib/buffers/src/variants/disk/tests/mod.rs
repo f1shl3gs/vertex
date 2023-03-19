@@ -130,9 +130,19 @@ macro_rules! assert_reader_writer_file_positions {
 
 #[macro_export]
 macro_rules! assert_enough_bytes_written {
-    ($written:expr, $record_type:ty, $record_payload_size:expr) => {
-        assert!(
-            $written >= $record_payload_size as usize + 8 + std::mem::size_of::<$record_type>()
+    // 8 for length delimit
+    // 4 for Record's checksum
+    // 8 for Record's id
+    // 4 for Record's metadata
+    ($written:expr, $record:expr) => {
+        let encoded_size = $record.encoded_len();
+
+        assert_eq!(
+            $written,
+            8 + 4 + 8 + 4 + encoded_size,
+            "{} == 8 + 4 + 8 + 4 + {}",
+            $written,
+            encoded_size
         );
     };
 }
