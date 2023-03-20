@@ -28,7 +28,7 @@ parking_lot = { version = "0.12.1", default-features = false }
 prost = { version = "0.11.8", default-features = false }
 serde = { version = "1.0.156", default-features = false, features = ["derive"] }
 measurable = { path = "../measurable" }
-thiserror = { version = "1.0.39" }
+thiserror = { version = "1.0.40" }
 tokio = { version = "1.26.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-util = { version = "0.7.7", default-features = false }
 tracing = { version = "0.1.37", default-features = false, features = ["attributes"] }
