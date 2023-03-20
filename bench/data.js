@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679301878503,
+  "lastUpdate": 1679301881871,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14813,6 +14813,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.612,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "25dc439b7c5117886ec0fce17587467c4735cb21",
+          "message": "Merge pull request #854 from f1shl3gs/dependabot/cargo/async-trait-0.1.67\n\nchore(deps): bump async-trait from 0.1.66 to 0.1.67",
+          "timestamp": "2023-03-20T16:34:58+08:00",
+          "tree_id": "a2518f52294a337230f935e5c5a3dd08a29334be",
+          "url": "https://github.com/f1shl3gs/vertex/commit/25dc439b7c5117886ec0fce17587467c4735cb21"
+        },
+        "date": 1679301870347,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.031,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.029,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.798,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.665,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 66.983,
             "unit": "ns/op"
           }
         ]
