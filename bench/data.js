@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679301497179,
+  "lastUpdate": 1679301506853,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8433,6 +8433,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 292.32,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ce5671877e829594b9a6f0e7c58bfff45d2baa44",
+          "message": "Merge pull request #850 from f1shl3gs/dependabot/cargo/typetag-0.2.7\n\nchore(deps): bump typetag from 0.2.6 to 0.2.7",
+          "timestamp": "2023-03-20T16:34:25+08:00",
+          "tree_id": "c000aef71a8fde4fa32f5356227312c121c65711",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ce5671877e829594b9a6f0e7c58bfff45d2baa44"
+        },
+        "date": 1679301497034,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 87.527,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 184.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 300.49,
             "unit": "ns/op"
           }
         ]
