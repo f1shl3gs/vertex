@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679307903185,
+  "lastUpdate": 1679308131757,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -27765,6 +27765,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57612.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "88ac51be7ded1666b7cac6d5208218bdf860bc05",
+          "message": "Clickhouse sink (#859)\n\n* add keys() for Tags\r\n\r\n* add 'acknowledgements()' for SinkConfig\r\n\r\n* add components test helpers\r\n\r\n* add clickhouse sink",
+          "timestamp": "2023-03-20T18:05:10+08:00",
+          "tree_id": "60d5acd8736e6020edb29acca37a45b29f84f8f2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/88ac51be7ded1666b7cac6d5208218bdf860bc05"
+        },
+        "date": 1679308122292,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1177,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57778.1,
             "unit": "KiB"
           }
         ]
