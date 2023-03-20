@@ -1,5 +1,6 @@
 pub mod components;
 mod config;
+mod metrics;
 mod topology;
 mod trace;
 
