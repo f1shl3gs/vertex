@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679302946256,
+  "lastUpdate": 1679302996951,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34101,6 +34101,65 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1231.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d5416170f80465bfe4970d2a953f05ef6e7e2fa",
+          "message": "Merge pull request #853 from f1shl3gs/dependabot/cargo/async-recursion-1.0.4\n\nchore(deps): bump async-recursion from 1.0.2 to 1.0.4",
+          "timestamp": "2023-03-20T16:34:47+08:00",
+          "tree_id": "5846ccfacbe921d54a5e6408b2c050bcdcc45320",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d5416170f80465bfe4970d2a953f05ef6e7e2fa"
+        },
+        "date": 1679302986456,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 41419000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1046300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.464,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/1",
+            "value": 59.918,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 201.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 478.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1419.9,
             "unit": "ns/op"
           }
         ]
