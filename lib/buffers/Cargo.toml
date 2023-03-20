@@ -9,7 +9,7 @@ name = "sized_records"
 harness = false
 
 [dependencies]
-async-recursion = { version = "1.0.2" }
+async-recursion = { version = "1.0.4" }
 async-stream = { version = "0.3.3" }
 async-trait = { version = "0.1.66", default-features = false }
 bytes = { version = "1.4.0", default-features = false }
