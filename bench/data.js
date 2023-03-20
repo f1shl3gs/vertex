@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679301579736,
+  "lastUpdate": 1679301583232,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14667,6 +14667,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.493,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d5416170f80465bfe4970d2a953f05ef6e7e2fa",
+          "message": "Merge pull request #853 from f1shl3gs/dependabot/cargo/async-recursion-1.0.4\n\nchore(deps): bump async-recursion from 1.0.2 to 1.0.4",
+          "timestamp": "2023-03-20T16:34:47+08:00",
+          "tree_id": "5846ccfacbe921d54a5e6408b2c050bcdcc45320",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d5416170f80465bfe4970d2a953f05ef6e7e2fa"
+        },
+        "date": 1679301573870,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.887,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.974,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.135,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 34.318,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.612,
             "unit": "ns/op"
           }
         ]
