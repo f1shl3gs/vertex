@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679293484719,
+  "lastUpdate": 1679293500387,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -8161,6 +8161,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 325.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "efeca4b6f1703116c95fb84f08fc184ca7d2c985",
+          "message": "Merge pull request #858 from f1shl3gs/remove_evmap\n\nremove evmap which is unused",
+          "timestamp": "2023-03-20T14:21:06+08:00",
+          "tree_id": "0427567aae872764aaf6478855d1538975a33ccf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/efeca4b6f1703116c95fb84f08fc184ca7d2c985"
+        },
+        "date": 1679293490149,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 95.655,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 179.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 290.29,
             "unit": "ns/op"
           }
         ]
