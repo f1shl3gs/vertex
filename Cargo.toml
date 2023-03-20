@@ -114,6 +114,7 @@ all-integration-tests = [
     "integration-tests-zookeeper"
 ]
 
+integration-tests-clickhouse = []
 integration-tests-consul = []
 integration-tests-elasticsearch = []
 integration-tests-haproxy = []

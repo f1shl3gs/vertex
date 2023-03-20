@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::collections::btree_map::Entry;
+use std::collections::btree_map::{Entry, Keys};
 use std::collections::BTreeMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
@@ -393,6 +393,10 @@ impl Tags {
     #[inline]
     pub fn contains_key(&self, key: impl Into<Key>) -> bool {
         self.0.contains_key(&(key.into()))
+    }
+
+    pub fn keys(&self) -> Keys<'_, Key, Value> {
+        self.0.keys()
     }
 
     #[must_use]
