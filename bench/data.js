@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679294316061,
+  "lastUpdate": 1679294319184,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -14345,6 +14345,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.469,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1beb10fbf89216850c70401d958055a04a9d3427",
+          "message": "Merge pull request #852 from f1shl3gs/dependabot/cargo/bstr-1.4.0\n\nchore(deps): bump bstr from 1.3.0 to 1.4.0",
+          "timestamp": "2023-03-20T14:33:55+08:00",
+          "tree_id": "b32fc335afc2c4459d913e962b8b2034c15407f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1beb10fbf89216850c70401d958055a04a9d3427"
+        },
+        "date": 1679294309934,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.727,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.558,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.946,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.634,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.479,
             "unit": "ns/op"
           }
         ]
