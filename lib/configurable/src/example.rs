@@ -96,8 +96,8 @@ impl Visitor {
     fn write_comment(&self, desc: Option<&String>, required: bool) {
         if let Some(desc) = desc {
             let mut buf = self.buf.borrow_mut();
-            buf.append_ident();
             desc.lines().for_each(|line| {
+                buf.append_ident();
                 buf.push_str("#");
                 buf.push_str(line);
                 buf.push('\n');
