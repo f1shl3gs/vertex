@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679437794056,
+  "lastUpdate": 1679437801236,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3798,6 +3798,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 717440,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10554c8d2aa22b377bb98c16363f5855e1bd97ec",
+          "message": "Merge pull request #864 from f1shl3gs/source/clickhouse_metrics\n\nadd source/clickhouse_metrics",
+          "timestamp": "2023-03-22T06:26:10+08:00",
+          "tree_id": "b01305ade94fadb4d7fb1f29cab97b2747a6d00d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10554c8d2aa22b377bb98c16363f5855e1bd97ec"
+        },
+        "date": 1679437791668,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 718610,
             "unit": "ns/op"
           }
         ]
