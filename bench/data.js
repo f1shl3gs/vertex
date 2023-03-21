@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679394698657,
+  "lastUpdate": 1679394746799,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3740,6 +3740,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 716990,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ccc68c633f925edf80a929bb2bc43c64c513ea5c",
+          "message": "Merge pull request #862 from f1shl3gs/update_syn_2.0.4\n\nupdate syn to 2.0.4",
+          "timestamp": "2023-03-21T18:27:57+08:00",
+          "tree_id": "582c4181ac79c69ffbfca3495d6724a52f47cbc0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ccc68c633f925edf80a929bb2bc43c64c513ea5c"
+        },
+        "date": 1679394738304,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716160,
             "unit": "ns/op"
           }
         ]
