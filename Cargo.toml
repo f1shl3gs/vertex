@@ -162,6 +162,7 @@ sources = [
     "sources-bind",
     "sources-chrony",
     "sources-consul",
+    "sources-clickhouse_metrics",
     "sources-demo_logs",
     "sources-elasticsearch",
     "sources-grpc_check",
@@ -201,6 +202,7 @@ sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
+sources-clickhouse_metrics = []
 sources-elasticsearch = []
 sources-grpc_check = ["tonic", "tonic-health"]
 sources-haproxy = []

@@ -3,6 +3,8 @@ mod bind;
 mod blackbox;
 #[cfg(feature = "sources-chrony")]
 mod chrony;
+#[cfg(features = "sources-clickhouse_metrics")]
+mod clickhouse_metrics;
 #[cfg(feature = "sources-consul")]
 mod consul;
 #[cfg(feature = "sources-demo_logs")]
