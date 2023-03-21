@@ -23,7 +23,7 @@ use tokio::time::Interval;
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Address of the Elasticsearch node we should connect to.
-    #[configurable]
+    #[configurable(required)]
     endpoint: String,
 
     /// Duration between each scrape.

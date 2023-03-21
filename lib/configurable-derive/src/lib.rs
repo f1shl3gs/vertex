@@ -2,14 +2,17 @@
 
 mod configurable;
 mod configurable_component;
-mod errors;
 mod parse_attrs;
 
 use proc_macro::TokenStream;
 
 #[proc_macro_derive(Configurable, attributes(configurable))]
 pub fn derive_configurable(input: TokenStream) -> TokenStream {
-    configurable::derive_configurable_impl(input)
+    match configurable::derive_configurable_impl(input) {
+        Ok(stream) => stream,
+        Err(err) => err.into_compile_error(),
+    }
+    .into()
 }
 
 #[proc_macro_attribute]
