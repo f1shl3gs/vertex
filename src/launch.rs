@@ -152,6 +152,7 @@ impl RootCommand {
         let color = atty::is(atty::Stream::Stdout);
         #[cfg(not(unix))]
         let color = false;
+        
         framework::trace::init(color, true, &levels);
 
         runtime.block_on(async move {

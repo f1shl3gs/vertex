@@ -19,7 +19,7 @@ pub struct EvictedHashMap {
 
 impl From<HashMap<Key, AnyValue>> for EvictedHashMap {
     fn from(map: HashMap<Key, AnyValue>) -> Self {
-        let evict_list = map.keys().into_iter().cloned().collect();
+        let evict_list = map.keys().cloned().collect();
 
         Self {
             map,

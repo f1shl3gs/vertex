@@ -15,12 +15,15 @@ use tracing::Instrument;
 
 use super::{create_buffer_with_max_data_file_size, create_default_buffer};
 use crate::test::acknowledge;
+use crate::variants::disk::backed_archive::{Archive, BackedArchive};
+use crate::variants::disk::record::{ArchivedRecord, Record};
+use crate::variants::disk::ser::DeserializeError;
 use crate::{
     assert_buffer_size, assert_enough_bytes_written, assert_file_does_not_exist_async,
     assert_file_exists_async, assert_reader_writer_file_positions, await_timeout,
     encoding::{AsMetadata, Encodable},
     test::{install_tracing_helpers, with_temp_dir, SizedRecord, UndecodableRecord},
-    variants::disk::{backed_archive::BackedArchive, record::Record, ReaderError},
+    variants::disk::ReaderError,
     EventCount,
 };
 
@@ -238,20 +241,29 @@ async fn reader_throws_error_when_record_has_scrambled_archive_data() {
             // Create a regular buffer, no customizations required.
             let (mut writer, _, ledger) = create_default_buffer(data_dir.clone()).await;
 
+            let first_bytes = 64;
+            let first_record = SizedRecord::new(first_bytes);
+
+            let second_bytes = 65;
+            let second_record = SizedRecord::new(second_bytes);
+
             // Write two `SizedRecord` records just so we can generate enough data.  We need two
             // records because the writer, on start up, will specifically check the last record and
             // validate it.  If it's not valid, the data file is skipped entirely.  So we'll write
             // two records, and only scramble the first... which will let the reader be the one to
             // discover the error.
             let first_bytes_written = writer
-                .write_record(SizedRecord::new(64))
+                .write_record(first_record.clone())
                 .await
                 .expect("should not fail to write");
+            assert_enough_bytes_written!(first_bytes_written, &first_record);
             writer.flush().await.expect("flush should not fail");
+
             let second_bytes_written = writer
-                .write_record(SizedRecord::new(65))
+                .write_record(second_record.clone())
                 .await
                 .expect("should not fail to write");
+            assert_enough_bytes_written!(second_bytes_written, &second_record);
             writer.flush().await.expect("flush should not fail");
 
             let expected_data_file_len = first_bytes_written as u64 + second_bytes_written as u64;
@@ -298,10 +310,11 @@ async fn reader_throws_error_when_record_has_scrambled_archive_data() {
             let (_writer, mut reader, _ledger) =
                 create_default_buffer::<_, SizedRecord>(data_dir).await;
             let read_result = reader.next().await;
-            assert!(matches!(
-                read_result,
-                Err(ReaderError::Deserialization { .. })
-            ));
+            assert!(
+                matches!(read_result, Err(ReaderError::Checksum { .. })),
+                "got: {:?}",
+                read_result
+            );
         }
     })
     .await;
@@ -431,6 +444,14 @@ async fn writer_detects_when_last_record_has_scrambled_archive_data() {
 
 #[tokio::test]
 async fn writer_detects_when_last_record_has_invalid_checksum() {
+    impl<'a> Archive for Record<'a> {
+        type Archived = ArchivedRecord<'a>;
+
+        fn validate(data: &[u8]) -> Result<(), DeserializeError> {
+            ArchivedRecord::try_new(data).map(|_| ())
+        }
+    }
+
     let assertion_registry = install_tracing_helpers();
     let fut = with_temp_dir(|dir| {
         let data_dir = dir.to_path_buf();
@@ -491,22 +512,19 @@ async fn writer_detects_when_last_record_has_invalid_checksum() {
             assert_eq!(expected_data_file_len, metadata.len());
 
             let std_data_file = data_file.into_std().await;
-            let record_mmap =
+            let mut record_mmap =
                 unsafe { MmapMut::map_mut(&std_data_file).expect("mmap should not fail") };
             drop(std_data_file);
 
-            let mut backed_record = BackedArchive::<_, Record>::from_backing(record_mmap)
-                .expect("archive should not fail");
-            let record = backed_record.get_archive_mut();
-
-            // Just flip the 15th bit.  Should be enough. *shrug*
+            // update checksum to 1234, should be enough.
             {
-                let projected_checksum =
-                    unsafe { record.map_unchecked_mut(|record| &mut record.checksum) };
-                let projected_checksum = projected_checksum.get_mut();
-                let new_checksum = *projected_checksum ^ (1 << 15);
-                *projected_checksum = new_checksum;
+                let buf = record_mmap.as_mut();
+                let checksum = u32::to_ne_bytes(1234);
+                buf[8..12].copy_from_slice(&checksum);
             }
+
+            let backed_record = BackedArchive::<_, Record>::from_backing(record_mmap)
+                .expect("archive should not fail");
 
             // Flush the memory-mapped data file to disk and we're done with our modification.
             backed_record
@@ -560,11 +578,12 @@ async fn writer_detects_when_last_record_wasnt_flushed() {
             assert_file_does_not_exist_async!(&expected_final_write_data_file);
 
             // Write a regular record so something is in the data file.
+            let record = SizedRecord::new(64);
             let bytes_written = writer
-                .write_record(SizedRecord::new(64))
+                .write_record(record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(bytes_written, SizedRecord, 64);
+            assert_enough_bytes_written!(bytes_written, &record);
             writer.flush().await.expect("flush should not fail");
 
             // Now unsafely increment the next writer record ID, which will cause a divergence
@@ -634,11 +653,12 @@ async fn writer_detects_when_last_record_was_flushed_but_id_wasnt_incremented() 
             assert_file_does_not_exist_async!(&expected_final_write_data_file);
 
             // Write a regular record so something is in the data file.
+            let record = SizedRecord::new(64);
             let bytes_written = writer
-                .write_record(SizedRecord::new(64))
+                .write_record(record.clone())
                 .await
                 .expect("write should not fail");
-            assert_enough_bytes_written!(bytes_written, SizedRecord, 64);
+            assert_enough_bytes_written!(bytes_written, &record);
             writer.flush().await.expect("flush should not fail");
             let actual_writer_next_record_id = ledger.state().get_next_writer_record_id();
 

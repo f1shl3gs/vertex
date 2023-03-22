@@ -315,7 +315,7 @@ fn handle_ack(
                 error!(
                     message = "Unable to update consumer offset",
                     %err,
-                    internal_log_rate_secs = 10,
+                    internal_log_rate_limit = true,
                 );
             }
         } else {
@@ -477,7 +477,7 @@ async fn parse_message(
                         error!(
                             message = "Unable to update consumer offset",
                             %err,
-                            internal_log_rate_secs = 10,
+                            internal_log_rate_limit = true
                         )
                     }
                 }

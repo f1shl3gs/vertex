@@ -42,6 +42,7 @@ impl SourceConfig for InternalTracesConfig {
 
             while let Some(spans) = rx.next().await {
                 let trace = Trace::new(
+
                     service.clone(),
                     tags!(
                         "hostanme" => hostname.clone(),

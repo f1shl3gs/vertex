@@ -73,7 +73,7 @@ impl HttpEventEncoder<BytesMut> for JaegerEventEncoder {
                 warn!(
                     message = "Encode batch failed",
                     ?err,
-                    internal_log_rate_secs = 10
+                    internal_log_rate_limit = true
                 );
             })
             .map(|data| BytesMut::from(data.as_slice()))

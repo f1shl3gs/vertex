@@ -267,7 +267,7 @@ impl LogSource {
                     error!(
                         message = "Failed to annotate log with pod metadata",
                         file = line.filename.as_str(),
-                        internal_log_rate_secs = 10
+                        internal_log_rate_limit = true
                     );
                 }
             }
@@ -306,7 +306,7 @@ fn create_log(line: Bytes, file: &str, ingestion_timestamp_field: Option<&str>) 
             warn!(
                 message = "Parse kubernetes container logs failed",
                 ?err,
-                internal_log_rate_secs = 30
+                internal_log_rate_limit = true
             );
             LogRecord::from(line)
         }

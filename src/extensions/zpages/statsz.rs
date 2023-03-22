@@ -48,8 +48,7 @@ impl Reporter for Statsz {
         let value = match observation {
             Observation::Counter(c) => c as f64,
             Observation::Gauge(g) => g,
-            Observation::Histogram(_h) => {
-                // TODO: implement
+            Observation::Histogram(_) => {
                 return;
             }
         };

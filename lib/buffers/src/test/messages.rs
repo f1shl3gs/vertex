@@ -137,7 +137,7 @@ impl FixedEncodable for Message {
 message_wrapper!(SizedRecord: u32, |_| 1);
 
 impl SizedRecord {
-    fn encoded_len(&self) -> usize {
+    pub fn encoded_len(&self) -> usize {
         let payload_len: usize = self
             .0
             .try_into()
@@ -167,6 +167,10 @@ impl FixedEncodable for SizedRecord {
         Ok(())
     }
 
+    fn encoded_size(&self) -> Option<usize> {
+        Some(self.encoded_len())
+    }
+
     fn decode<B>(mut buffer: B) -> Result<Self, Self::DecodeError>
     where
         B: Buf,
@@ -175,10 +179,17 @@ impl FixedEncodable for SizedRecord {
         buffer.advance(buf_len as usize);
         Ok(SizedRecord::new(buf_len))
     }
+}
 
-    fn encoded_size(&self) -> Option<usize> {
-        Some(self.encoded_len())
-    }
+#[test]
+fn sized_record() {
+    let record = SizedRecord::new(12);
+    let encode_len = record.encoded_len();
+
+    let mut buf = Vec::new();
+    record.encode(&mut buf).unwrap();
+
+    assert_eq!(encode_len, buf.len())
 }
 
 #[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -232,7 +243,7 @@ impl FixedEncodable for UndecodableRecord {
 message_wrapper!(MultiEventRecord: u32, |m: &Self| m.0);
 
 impl MultiEventRecord {
-    pub fn encoded_size(&self) -> usize {
+    pub fn encoded_len(&self) -> usize {
         usize::try_from(self.0).unwrap_or(usize::MAX) + std::mem::size_of::<u32>()
     }
 }
@@ -245,7 +256,7 @@ impl FixedEncodable for MultiEventRecord {
     where
         B: BufMut,
     {
-        if buffer.remaining_mut() < self.encoded_size() {
+        if buffer.remaining_mut() < self.encoded_len() {
             return Err(io::Error::new(
                 io::ErrorKind::Other,
                 "not enough capacity to encode record",

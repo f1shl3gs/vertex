@@ -4,10 +4,5 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
-[build-dependencies]
-xdrgen = { git="https://github.com/f1shl3gs/rust-xdr", rev = "9775f74" }
-
 [dependencies]
 tokio = { version = "1.26.0", features = ["net", "rt", "macros", "io-util"] }
-uuid = { version = "1.3.0" }
-xdr-codec = { git="https://github.com/f1shl3gs/rust-xdr", rev = "9775f74", features = ["bytecodec"] }

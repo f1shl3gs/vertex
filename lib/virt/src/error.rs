@@ -1,14 +1,17 @@
-use crate::request::virNetMessageError;
 use std::io;
+
+use crate::protocol;
 
 #[derive(Debug)]
 pub enum Error {
     /// IO error
-    IO(std::io::Error),
+    IO(io::Error),
+
     /// Error during serialization / deserialization
-    Xdr(xdr_codec::Error),
+    Xdr(protocol::Error),
+
     /// Libvirt returned error
-    Libvirt(virNetMessageError),
+    Libvirt(protocol::MessageError),
 }
 
 impl From<io::Error> for Error {
@@ -17,14 +20,14 @@ impl From<io::Error> for Error {
     }
 }
 
-impl From<xdr_codec::Error> for Error {
-    fn from(err: xdr_codec::Error) -> Self {
+impl From<protocol::Error> for Error {
+    fn from(err: protocol::Error) -> Self {
         Self::Xdr(err)
     }
 }
 
-impl From<virNetMessageError> for Error {
-    fn from(err: virNetMessageError) -> Self {
+impl From<protocol::MessageError> for Error {
+    fn from(err: protocol::MessageError) -> Self {
         Self::Libvirt(err)
     }
 }

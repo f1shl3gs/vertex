@@ -96,7 +96,7 @@ impl Decoder for CharacterDelimitedDecoder {
                             message = "Discarding frame larger than max_length",
                             buf_len = buf.len(),
                             max_length = self.max_length,
-                            internal_log_rate_secs = 10
+                            internal_log_rate_limit = true
                         );
                         buf.advance(next + 1);
                     } else {

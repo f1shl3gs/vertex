@@ -3,6 +3,9 @@ VERSION ?= $(shell cat Cargo.toml | grep '^version = ' | grep -Po '\d+.\d+.\d+')
 build:
 	cargo build --release
 
+dev:
+	cargo build
+
 clean:
 	rm -rf target
 
@@ -96,7 +99,7 @@ integration-tests: integration-test-consul integration-test-haproxy integration-
 
 .PHONY: udeps
 udeps:
-	cargo +nightly udeps
+	cargo +nightly udeps --all-targets
 
 .PHONY: doc-test
 doc-test:

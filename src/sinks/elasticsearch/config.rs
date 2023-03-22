@@ -139,7 +139,7 @@ impl DataStreamConfig {
                     message = "Failed to render template for \"data_stream.type\"",
                     %err,
                     drop_event = true,
-                    internal_log_rate_secs = 30,
+                    internal_log_rate_limit = true,
                 );
             })
             .ok()
@@ -153,7 +153,7 @@ impl DataStreamConfig {
                     message = "Failed to render template for \"data_stream.dataset\"",
                     %err,
                     drop_event = true,
-                    internal_log_rate_secs = 30
+                    internal_log_rate_limit = true
                 );
             })
             .ok()
@@ -167,7 +167,7 @@ impl DataStreamConfig {
                     message = "Failed to render template for \"data_stream.namespace\"",
                     %err,
                     drop_event = true,
-                    internal_log_rate_secs = 30
+                    internal_log_rate_limit = true
                 );
             })
             .ok()

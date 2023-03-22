@@ -224,7 +224,7 @@ async fn scrape_one(
                                 message = "Parsing prometheus text failed",
                                 ?err,
                                 target = ?url,
-                                internal_log_rate_secs = 60
+                                internal_log_rate_limit = true
                             );
 
                             return Err(());
@@ -236,7 +236,7 @@ async fn scrape_one(
                         message = "Read target's response failed",
                         ?err,
                         target = ?url,
-                        internal_log_rate_secs = 60
+                        internal_log_rate_limit = true
                     );
 
                     return Err(());
@@ -248,7 +248,7 @@ async fn scrape_one(
                 message = "Request target failed",
                 ?err,
                 target = ?url,
-                internal_log_rate_secs = 60
+                internal_log_rate_limit = true
             );
 
             return Err(());

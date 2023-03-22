@@ -160,14 +160,14 @@ where
             .get_mut::<TraceData>()
             .expect("Missing trace data span extension");
 
-        let follows_context = self
+        let follows_cx = self
             .tracer
             .sampled_context(follows_data)
             .span()
             .span_context()
             .clone();
 
-        let follows_link = Link::new(follows_context.trace_id, follows_context.span_id);
+        let follows_link = Link::new(follows_cx, vec![]);
         let links = &mut data.span.links;
         links.push_back(follows_link);
     }
@@ -290,6 +290,8 @@ where
             span = span.with_parent_span_id(parent_cx.span().span_context().span_id);
 
             self.tracer.export(span);
+        } else {
+            panic!("TraceData should exist")
         }
     }
 
@@ -377,4 +379,81 @@ impl<'a> tracing::field::Visit for SpanEventVisitor<'a> {
             .attributes
             .insert(field.name(), format!("{:?}", value))
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::time::Duration;
+
+    use event::trace::SpanId;
+    use tracing::{info_span, instrument};
+    use tracing_subscriber::layer::SubscriberExt;
+
+    struct TestTracer {
+        next_id: AtomicU64,
+    }
+
+    impl TestTracer {
+        fn new() -> Self {
+            Self {
+                next_id: AtomicU64::new(1),
+            }
+        }
+    }
+
+    impl PreSampledTracer for TestTracer {
+        #[allow(clippy::print_stdout)]
+        fn export(&self, span: Span) {
+            println!(
+                "trace_id: {:?} span_id: {:?} name: {} parent_id: {:?}",
+                span.trace_id(),
+                span.span_id(),
+                span.name,
+                span.parent_span_id
+            );
+
+            assert!(span.span_id().valid());
+            assert_ne!(span.span_context.trace_id, TraceId::INVALID);
+        }
+
+        fn new_trace_id(&self) -> TraceId {
+            let id = self.next_id.fetch_add(1, Ordering::SeqCst);
+            TraceId(u64::MAX as u128 + id as u128)
+        }
+
+        fn new_span_id(&self) -> SpanId {
+            let id = self.next_id.fetch_add(1, Ordering::SeqCst);
+            SpanId(id)
+        }
+    }
+
+    #[instrument]
+    fn sleep(d: Duration) {
+        std::thread::sleep(d)
+    }
+
+    #[test]
+    fn sync_calls() {
+        let trace_layer = TracingLayer::new(TestTracer::new());
+        let subscriber = tracing_subscriber::registry().with(trace_layer);
+
+        tracing::subscriber::with_default(subscriber, || {
+            let span = info_span!("root");
+            let _enter = span.enter();
+
+            {
+                sleep(Duration::from_secs(1))
+            }
+
+            {
+                sleep(Duration::from_millis(500))
+            }
+        });
+    }
+
+    #[tokio::test]
+    async fn spawn_in_loop() {}
 }

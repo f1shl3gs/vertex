@@ -283,14 +283,14 @@ async fn handle_stream<T>(
                         debug!(
                             message = "Connection error, probably a healthcheck",
                             %err,
-                            internal_log_rate_secs = 10
+                            internal_log_rate_limit = true
                         );
                     },
                     _ => {
                         warn!(
                             message = "Connection error",
                             %err,
-                            internal_log_rate_secs = 10
+                            internal_log_rate_limit = true
                         );
                     }
                 }
@@ -365,14 +365,14 @@ async fn handle_stream<T>(
                                         BatchStatus::Errored => {
                                             warn!(
                                                 message = "Error delivering events to sink",
-                                                internal_log_rate_secs = 5
+                                                internal_log_rate_limit = true
                                             );
                                             TcpSourceAck::Error
                                         },
                                         BatchStatus::Failed => {
                                             warn!(
                                                 message = "Error to deliver events to sink",
-                                                internal_log_rate_secs = 5
+                                                internal_log_rate_limit = true
                                             );
                                             TcpSourceAck::Reject
                                         }

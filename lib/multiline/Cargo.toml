@@ -12,11 +12,11 @@ serde_yaml = { version = "0.9.19" }
 [dependencies]
 bytes = { version = "1.4.0", default-features = false }
 configurable = { path = "../configurable" }
-futures = { version = "0.3.26", default-features = false }
+futures = { version = "0.3.27", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 pin-project-lite = { version = "0.2.9" }
 regex = { version = "1.7.1" }
-serde = { version = "1.0.154", default-features = false, features = ["derive"] }
+serde = { version = "1.0.158", default-features = false, features = ["derive"] }
 serde_regex = { path = "../serde_regex" }
 serde_json = { version = "1.0.94" }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec", "time"] }
