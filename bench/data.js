@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679464365373,
+  "lastUpdate": 1679464714905,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -29700,6 +29700,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57774.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fec18f03d63c138bec18bd306934973bc1393915",
+          "message": "Merge pull request #870 from f1shl3gs/dependabot/cargo/regex-1.7.2\n\nchore(deps): bump regex from 1.7.1 to 1.7.2",
+          "timestamp": "2023-03-22T13:24:25+08:00",
+          "tree_id": "7129e3315808050c87cf6935b26d418c6de8efdc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fec18f03d63c138bec18bd306934973bc1393915"
+        },
+        "date": 1679464702991,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1706,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57775.2,
             "unit": "KiB"
           }
         ]
