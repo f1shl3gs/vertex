@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679462922701,
+  "lastUpdate": 1679462951384,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15749,6 +15749,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.548,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fec18f03d63c138bec18bd306934973bc1393915",
+          "message": "Merge pull request #870 from f1shl3gs/dependabot/cargo/regex-1.7.2\n\nchore(deps): bump regex from 1.7.1 to 1.7.2",
+          "timestamp": "2023-03-22T13:24:25+08:00",
+          "tree_id": "7129e3315808050c87cf6935b26d418c6de8efdc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fec18f03d63c138bec18bd306934973bc1393915"
+        },
+        "date": 1679462942067,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.753,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.309,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.781,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.666,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.053,
             "unit": "ns/op"
           }
         ]
