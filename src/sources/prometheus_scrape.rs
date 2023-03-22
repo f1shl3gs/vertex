@@ -151,10 +151,10 @@ fn scrape(
                             Ok(metrics) => {
                                 if metrics.is_empty() {
                                     warn!(
-                                        message = "no metrics found",
+                                        message = "cannot read or parse metrics",
                                         ?instance,
-                                        internal_log_rate_limit = true
-                                    )
+                                        internal_log_rate_limit = 60
+                                    );
                                 }
 
                                 (metrics, true)
