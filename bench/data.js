@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679464231421,
+  "lastUpdate": 1679464289687,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3943,6 +3943,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 722280,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "effa985a9c988d19db3eea1724c56b1898e02242",
+          "message": "Merge pull request #869 from f1shl3gs/dependabot/cargo/syn-2.0.5\n\nchore(deps): bump syn from 2.0.4 to 2.0.5",
+          "timestamp": "2023-03-22T13:47:44+08:00",
+          "tree_id": "291e4bde0e172eca765d2a5d884df1c8bdf001b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/effa985a9c988d19db3eea1724c56b1898e02242"
+        },
+        "date": 1679464280700,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 718520,
             "unit": "ns/op"
           }
         ]
