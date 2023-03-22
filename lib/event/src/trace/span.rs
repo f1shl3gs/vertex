@@ -235,6 +235,13 @@ impl SpanContext {
             trace_state,
         }
     }
+
+    /// Returns `true` if the span context has a valid (non-zero) `trace_id` and
+    /// a valid (non-zero) `span_id`.
+    #[inline]
+    pub fn is_valid(&self) -> bool {
+        self.trace_id != TraceId::INVALID && self.span_id != SpanId::INVALID
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]

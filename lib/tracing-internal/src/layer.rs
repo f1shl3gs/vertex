@@ -12,7 +12,7 @@ use tracing_subscriber::layer::Context;
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::Layer;
 
-use crate::context::{TraceContext, WithContext};
+use crate::context::{Context as TraceContext, WithContext};
 use crate::tracer::{PreSampledTracer, TraceData};
 
 pub struct TracingLayer<S, T> {
@@ -450,7 +450,4 @@ mod tests {
             }
         });
     }
-
-    #[tokio::test]
-    async fn spawn_in_loop() {}
 }

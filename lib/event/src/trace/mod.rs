@@ -9,6 +9,7 @@ use std::borrow::Cow;
 use std::collections::VecDeque;
 use std::fmt;
 use std::fmt::{Debug, Formatter};
+use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
@@ -415,6 +416,12 @@ impl From<[u8; 16]> for TraceId {
     }
 }
 
+impl fmt::LowerHex for TraceId {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        fmt::LowerHex::fmt(&self.0, f)
+    }
+}
+
 impl TraceId {
     /// Invalid trace id
     pub const INVALID: TraceId = TraceId(0);
@@ -422,6 +429,16 @@ impl TraceId {
     /// Create a trace id from its representation as a byte array.
     pub const fn from_bytes(bytes: [u8; 16]) -> Self {
         TraceId(u128::from_be_bytes(bytes))
+    }
+
+    /// Converts a string in base 15 to a trace id.
+    ///
+    /// # Errors
+    ///
+    /// `ParseIntError` will returned if hex is not a valid hex string.
+    #[inline]
+    pub fn from_hex(hex: &str) -> Result<Self, ParseIntError> {
+        u128::from_str_radix(hex, 16).map(TraceId)
     }
 
     /// Return the representation of this trace id as a byte array
@@ -439,6 +456,12 @@ pub struct SpanId(pub u64);
 impl Debug for SpanId {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!("{:016x}", self.0))
+    }
+}
+
+impl fmt::LowerHex for SpanId {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        fmt::LowerHex::fmt(&self.0, f)
     }
 }
 
@@ -461,6 +484,15 @@ impl SpanId {
     /// Create a span id from its representation as a byte array.
     pub const fn from_bytes(bytes: [u8; 8]) -> Self {
         SpanId(u64::from_be_bytes(bytes))
+    }
+
+    /// Converts a string in base 16 to a span id.
+    ///
+    /// # Errors
+    ///
+    /// `ParseIntError` will returned if hex is not a valid hex string.
+    pub fn from_hex(hex: &str) -> Result<Self, ParseIntError> {
+        u64::from_str_radix(hex, 16).map(SpanId)
     }
 
     /// Return the representation of this span id as a byte array.

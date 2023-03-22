@@ -1,12 +1,12 @@
 use event::trace::{Span, SpanContext, SpanId, TraceFlags, TraceId};
 
-use crate::context::TraceContext;
+use crate::context::Context;
 
 /// Per-span data tracked by this crate
 #[derive(Clone, Debug)]
 pub struct TraceData {
     /// The parent `TraceContext` for the current tracing span.
-    pub parent_cx: TraceContext,
+    pub parent_cx: Context,
 
     /// The span data recorded during the current tracing span.
     pub span: Span,
@@ -17,7 +17,7 @@ pub trait PreSampledTracer {
     // Export the span to back end
     fn export(&self, span: Span);
 
-    fn sampled_context(&self, data: &mut TraceData) -> TraceContext {
+    fn sampled_context(&self, data: &mut TraceData) -> Context {
         let parent_cx = &data.parent_cx;
         let span = &mut data.span;
 
@@ -42,7 +42,7 @@ pub trait PreSampledTracer {
     fn new_span_id(&self) -> SpanId;
 }
 
-fn current_trace_state(span: &Span, parent_cx: &TraceContext) -> (TraceId, TraceFlags) {
+fn current_trace_state(span: &Span, parent_cx: &Context) -> (TraceId, TraceFlags) {
     if parent_cx.has_active_span() {
         let span = parent_cx.span();
         let sc = span.span_context();
