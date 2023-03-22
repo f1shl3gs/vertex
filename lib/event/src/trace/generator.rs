@@ -1,6 +1,7 @@
-use rand::{rngs, Rng};
 use std::cell::RefCell;
 use std::fmt;
+
+use rand::{rngs, Rng};
 
 use crate::trace::{SpanId, TraceId};
 

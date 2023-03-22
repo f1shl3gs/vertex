@@ -1,3 +1,5 @@
+mod trace;
+
 use std::borrow::Cow;
 use std::{
     fmt,
@@ -20,6 +22,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tower::Service;
 use tracing_futures::Instrument;
+use tracing_internal::SpanExt;
 
 use crate::{
     config::ProxyConfig,
@@ -94,14 +97,17 @@ where
 
     pub fn send(
         &self,
-        mut request: Request<B>,
+        mut req: Request<B>,
     ) -> BoxFuture<'static, Result<http::Response<Body>, HttpError>> {
-        let span = tracing::info_span!("http", uri = ?request.uri());
+        let span = tracing::info_span!("http", uri = ?req.uri());
         let _enter = span.enter();
 
-        default_request_headers(&mut request, &self.user_agent);
+        default_request_headers(&mut req, &self.user_agent);
 
-        let response = self.client.request(request);
+        // inject tracing data
+        trace::inject(span.context(), &mut req);
+
+        let resp = self.client.request(req);
 
         let fut = async move {
             // Capture the time right before we issue the request.
@@ -109,7 +115,7 @@ where
             let before = std::time::Instant::now();
 
             // Send request and wait for the result.
-            let resp_result = response.await;
+            let resp_result = resp.await;
 
             // Compute the roundtrip time it took to send the request and get
             // the response or error.

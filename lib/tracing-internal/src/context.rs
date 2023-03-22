@@ -1,4 +1,3 @@
-use once_cell::sync::Lazy;
 use std::any::{Any, TypeId};
 use std::borrow::Cow;
 use std::cell::RefCell;
@@ -6,9 +5,11 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::{Debug, Formatter};
 use std::hash::{BuildHasherDefault, Hasher};
+use std::marker::PhantomData;
 use std::sync::{Arc, Mutex};
 
 use event::trace::{KeyValue, Span, SpanContext};
+use once_cell::sync::Lazy;
 use tracing::span;
 use tracing_core::Dispatch;
 
@@ -28,11 +29,22 @@ pub(crate) struct WithContext(
     pub fn(&Dispatch, &span::Id, f: &mut dyn FnMut(&mut TraceData, &dyn PreSampledTracer)),
 );
 
-impl WithContext {}
+impl WithContext {
+    // This function allows a function to be called in the context of
+    // the "remembered" subscriber.
+    pub fn with_context(
+        &self,
+        dispatch: &tracing::Dispatch,
+        id: &span::Id,
+        mut f: impl FnMut(&mut TraceData, &dyn PreSampledTracer),
+    ) {
+        (self.0)(dispatch, id, &mut f)
+    }
+}
 
 thread_local! {
-    static CURRENT_CONTEXT: RefCell<TraceContext> = RefCell::new(TraceContext::default());
-    static DEFAULT_CONTEXT: TraceContext = TraceContext::default();
+    static CURRENT_CONTEXT: RefCell<Context> = RefCell::new(Context::default());
+    static DEFAULT_CONTEXT: Context = Context::default();
 }
 
 /// With TypeIds as keys, there's no need to hash them. They are already hashes
@@ -64,11 +76,11 @@ impl Hasher for IdHasher {
 /// Cross-cutting concerns access their data in-process using the same shared
 /// context object.
 #[derive(Clone, Default)]
-pub struct TraceContext {
+pub struct Context {
     entries: HashMap<TypeId, Arc<dyn Any + Sync + Send>, BuildHasherDefault<IdHasher>>,
 }
 
-impl Debug for TraceContext {
+impl Debug for Context {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("TraceContext")
             .field("entries", &self.entries.len())
@@ -76,14 +88,27 @@ impl Debug for TraceContext {
     }
 }
 
-impl TraceContext {
+impl Context {
     /// Create an empty `TraceContext`
     pub fn new() -> Self {
-        TraceContext::default()
+        Context::default()
     }
 
     pub fn current() -> Self {
         get_current(|cx| cx.clone())
+    }
+
+    /// Returns a clone of the current thread's context with the given value.
+    ///
+    /// This is a more efficient from of `Context::current().with_value(value)`
+    /// as it avoids the intermediate context clone.
+    pub fn current_with_value<T: 'static + Send + Sync>(value: T) -> Self {
+        let mut new_context = Context::current();
+        new_context
+            .entries
+            .insert(TypeId::of::<T>(), Arc::new(value));
+
+        new_context
     }
 
     /// Used to see if a span has been marked as active
@@ -117,6 +142,21 @@ impl TraceContext {
         new_context
     }
 
+    /// Replaces the current context on this thread with this context.
+    ///
+    /// Dropping the returned [`ContextGuard`] will reset the current
+    /// context to the previous value.
+    pub fn attach(self) -> ContextGuard {
+        let previous_cx = CURRENT_CONTEXT
+            .try_with(|current| current.replace(self))
+            .ok();
+
+        ContextGuard {
+            previous_cx,
+            _marker: PhantomData,
+        }
+    }
+
     /// Returns a reference to this context's span, or the default no-op span if
     /// none has been set.
     pub fn span(&self) -> SpanRef<'_> {
@@ -128,7 +168,23 @@ impl TraceContext {
     }
 }
 
-fn get_current<F: FnMut(&TraceContext) -> T, T>(mut f: F) -> T {
+/// A guard that resets the current context to the prior context when dropped.
+#[allow(missing_debug_implementations)]
+pub struct ContextGuard {
+    previous_cx: Option<Context>,
+    // ensure this type is !Send as it relies on thread locals
+    _marker: PhantomData<*const ()>,
+}
+
+impl Drop for ContextGuard {
+    fn drop(&mut self) {
+        if let Some(previous_cx) = self.previous_cx.take() {
+            let _ = CURRENT_CONTEXT.try_with(|current| current.replace(previous_cx));
+        }
+    }
+}
+
+fn get_current<F: FnMut(&Context) -> T, T>(mut f: F) -> T {
     CURRENT_CONTEXT
         .try_with(|cx| f(&cx.borrow()))
         .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(cx)))
@@ -177,5 +233,39 @@ impl SpanRef<'_> {
     /// Returns the `SpanContext` for the given `Span`.
     pub fn span_context(&self) -> &SpanContext {
         &self.0.span_context
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn nested_context() {
+        #[derive(Debug, PartialEq)]
+        struct Foo(&'static str);
+
+        #[derive(Debug, PartialEq)]
+        struct Bar(u64);
+
+        let _outer_guard = Context::new().with_value(Foo("a")).attach();
+
+        // Only value `a` is set
+        let current = Context::current();
+        assert_eq!(current.get(), Some(&Foo("a")));
+        assert_eq!(current.get::<Bar>(), None);
+
+        {
+            let _inner_guard = Context::current_with_value(Bar(42)).attach();
+            // Both values are set in inner context
+            let current = Context::current();
+            assert_eq!(current.get(), Some(&Foo("a")));
+            assert_eq!(current.get(), Some(&Bar(42)));
+        }
+
+        // Resets to only value `a` when inner guard is dropped.
+        let current = Context::current();
+        assert_eq!(current.get(), Some(&Foo("a")));
+        assert_eq!(current.get::<Bar>(), None);
     }
 }
