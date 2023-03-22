@@ -1,6 +1,6 @@
 # Vertex
 
-Vertex is a fork/rewrite/rebranding of [Vector](https://github.com/vectordotdev/vector), and it is inspired 
+Vertex is a rewrite/rebranding of [Vector](https://github.com/vectordotdev/vector), and it is inspired 
 by [OpenTelemetry](https://opentelemetry.io/).
 
 Vertex is used for collecting and processing observability data(metrics, logs and traces). it can be used to
@@ -34,7 +34,8 @@ has already been ported.
 | Name                    | Description                                                       | Metric  |   Log   |  Trace  |
 |-------------------------|-------------------------------------------------------------------|:-------:|:-------:|:-------:|
 | bind                    | Scrapes metrics from Bind server's HTTP API                       | &check; | &cross; | &cross; |
-| chrony                  | Collect ntp metrics from chronyd                                  | &check; | &cross; | &cross  |
+| chrony                  | Collect ntp metrics from chronyd                                  | &check; | &cross; | &cross; |
+| clickhouse_metrics      | Scrapes ClickHouse metrics periodically                           | &check; | &cross; | &cross; |
 | consul                  | Scrapes metrics from consul                                       | &check; | &cross; | &cross; |
 | demo_logs               | Generate logs (useful for debug)                                  | &cross; | &check; | &cross; |
 | exec                    | Execute a command and capture stdout as logs                      | &cross; | &check; | &cross; |
@@ -88,24 +89,27 @@ transforms in your pipeline, and how they are composed is up to you.
 A sink is a destination for events. Each sink's design and transmission method is dicated by
 the downstream service it interacts with.
 
-| Name                     | Description                                                       | Metric  | Log     | Trace   |
-|--------------------------|-------------------------------------------------------------------|:-------:|:-------:|:-------:|
-| blackhole                | Take event and do nothing                                         | &check; | &check; | &check; |
-| console                  | Print data to stdout or stderr                                    | &check; | &check; | &check; |
-| jaeger                   | Send traces to jaeger agent or collector                          | &cross; | &cross; | &check; |
-| kafka                    | Send events to kafka                                              | &cross; | &check; | &cross; |
-| loki                     | Send logs to Loki                                                 | &cross; | &check; | &cross; |
-| prometheus_exporter      | Start a HTTP server and expose metrics                            | &check; | &cross; | &cross; |
-| prometheus_remote_write  | Push metrics to Prometheus                                        | &check; | &cross; | &cross; |
-| socket                   | Push data                                                         | &check; | &check; | &check; |
+| Name                    | Description                              | Metric  |   Log   |  Trace  |
+|-------------------------|------------------------------------------|:-------:|:-------:|:-------:|
+| blackhole               | Take event and do nothing                | &check; | &check; | &check; |
+| clickhouse              | Send logs to ClickHouse                  | &cross; | &check; | &cross; |
+| console                 | Print data to stdout or stderr           | &check; | &check; | &check; |
+| jaeger                  | Send traces to jaeger agent or collector | &cross; | &cross; | &check; |
+| kafka                   | Send events to kafka                     | &cross; | &check; | &cross; |
+| loki                    | Send logs to Loki                        | &cross; | &check; | &cross; |
+| prometheus_exporter     | Start a HTTP server and expose metrics   | &check; | &cross; | &cross; |
+| prometheus_remote_write | Push metrics to Prometheus               | &check; | &cross; | &cross; |
+| socket                  | Push data                                | &check; | &check; | &check; |
 
 #### Extensions
 An extension is
 
-| Name                | Description                                                            |
-|---------------------|------------------------------------------------------------------------|
-| healthcheck         | Start an HTTP server, and return 200 to represent Vertex is health     |
-| pprof               | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs) |
+| Name        | Description                                                                                                                              |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------|
+| healthcheck | Start an HTTP server, and return 200 to represent Vertex is health                                                                       |
+| heartbeat   | Post Vertex's status to an HTTP endpoint periodically, like current config, hostname, os and etc.                                        |
+| pprof       | Start an HTTP server to help user profile Vertex, implement by [pprof-rs](https://github.com/tikv/pprof-rs)                              |
+| zpages      | In-process web pages that display collected data from the process that they are attached to. See [zPages](https://opencensus.io/zpages/) |
 
 ## Build
 Note: Only x86_64-unknown-linux-gnu(or musl) is supported.
