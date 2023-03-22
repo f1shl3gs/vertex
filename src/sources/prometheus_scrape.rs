@@ -1,24 +1,20 @@
 use std::borrow::Cow;
 use std::hash::{Hash, Hasher};
-use std::ops::Sub;
 use std::sync::Arc;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use chrono::{DateTime, TimeZone, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
-use framework::config::{
-    default_false, default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
-};
-use framework::http::{Auth, HttpClient};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::http::{Auth, HttpClient, HttpError};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
-use futures::{FutureExt, StreamExt};
 use http::{StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
-use tokio_stream::wrappers::IntervalStream;
+use thiserror::Error;
 
 #[configurable_component(source, name = "prometheus_scrape")]
 #[derive(Debug)]
@@ -37,10 +33,11 @@ struct PrometheusScrapeConfig {
     /// scraped metric has the tag already. If false, Vertex will rename the
     /// conflicting tag by adding "exported_" to it. This matches Prometheus's
     /// "honor_labels" configuration.
-    #[serde(default = "default_false")]
+    #[serde(default)]
     honor_labels: bool,
 
     tls: Option<TlsConfig>,
+
     auth: Option<Auth>,
 
     /// Global jitterSeed seed is used to spread scrape workload across HA setup.
@@ -60,12 +57,12 @@ impl SourceConfig for PrometheusScrapeConfig {
             })
             .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
         let tls = MaybeTlsSettings::from_config(&self.tls, true)?;
+        let client = HttpClient::new(tls, &cx.proxy)?;
 
         Ok(scrape(
+            client,
             urls,
-            tls,
             self.auth.clone(),
-            cx.proxy,
             self.honor_labels,
             self.interval,
             self.jitter_seed.unwrap_or_default(),
@@ -101,18 +98,16 @@ fn offset<H: Hash>(h: &H, now: i64, interval: Duration, jitter_seed: u64) -> Dur
 }
 
 fn scrape(
-    urls: Vec<http::Uri>,
-    tls: MaybeTlsSettings,
+    client: HttpClient,
+    urls: Vec<Uri>,
     auth: Option<Auth>,
-    proxy: ProxyConfig,
     honor_labels: bool,
-    interval: std::time::Duration,
+    interval: Duration,
     jitter_seed: u64,
     shutdown: ShutdownSignal,
     output: Pipeline,
 ) -> Source {
-    let shutdown = shutdown.shared();
-    let client = HttpClient::new(tls, &proxy).expect("Building HTTP client failed");
+    let shutdown = shutdown;
 
     Box::pin(async move {
         let auth = Arc::new(auth);
@@ -121,10 +116,10 @@ fn scrape(
             .into_iter()
             .map(|url| {
                 let client = client.clone();
-                let shutdown = shutdown.clone();
+                let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
                 let now = chrono::Utc::now().timestamp_nanos();
-                let interval = tokio::time::interval_at(
+                let mut ticker = tokio::time::interval_at(
                     tokio::time::Instant::now() + offset(&url, now, interval, jitter_seed),
                     interval,
                 );
@@ -140,25 +135,39 @@ fn scrape(
                 ));
 
                 tokio::spawn(async move {
-                    let mut ticker = IntervalStream::new(interval).take_until(shutdown);
+                    loop {
+                        tokio::select! {
+                            biased;
 
-                    while ticker.next().await.is_some() {
-                        let start = Utc::now();
+                            _ = &mut shutdown => break,
+                            _ = ticker.tick() => {}
+                        }
+
+                        let start = Instant::now();
                         let result = scrape_one(&client, auth.as_ref(), &url).await;
-                        let elapsed = Utc::now()
-                            .sub(start)
-                            .num_nanoseconds()
-                            .expect("Nano seconds should not overflow");
+                        let elapsed = start.elapsed();
 
-                        let success = result.is_ok();
-                        let mut metrics = result.unwrap_or_default();
+                        let (mut metrics, success) = match result {
+                            Ok(metrics) => {
+                                if metrics.is_empty() {
+                                    warn!(
+                                        message = "no metrics found",
+                                        ?instance,
+                                        internal_log_rate_limit = true
+                                    )
+                                }
+
+                                (metrics, true)
+                            }
+                            Err(err) => {
+                                warn!(message = "scrape metrics failed", ?err, ?instance);
+
+                                (vec![], false)
+                            }
+                        };
                         metrics.extend_from_slice(&[
                             Metric::gauge("up", "", success),
-                            Metric::gauge(
-                                "scrape_duration_seconds",
-                                "",
-                                elapsed as f64 / 1000.0 / 1000.0 / 1000.0,
-                            ),
+                            Metric::gauge("scrape_duration_seconds", "", elapsed),
                         ]);
 
                         metrics.iter_mut().for_each(|metric| {
@@ -191,74 +200,45 @@ fn scrape(
     })
 }
 
+#[derive(Debug, Error)]
+enum ScrapeError {
+    #[error("http error, {0}")]
+    Http(#[from] HttpError),
+
+    #[error("unexpected status code {0}")]
+    UnexpectedStatusCode(StatusCode),
+
+    #[error("parse metrics failed {0}")]
+    Parse(prometheus::Error),
+}
+
 async fn scrape_one(
     client: &HttpClient,
     auth: &Option<Auth>,
     url: &Uri,
-) -> Result<Vec<Metric>, ()> {
+) -> Result<Vec<Metric>, ScrapeError> {
     let mut req = http::Request::get(url)
         .body(hyper::body::Body::empty())
-        .expect("error creating request");
+        .map_err(HttpError::BuildRequest)?;
     if let Some(auth) = auth {
         auth.apply(&mut req);
     }
 
-    let metrics = match client.send(req).await {
-        Ok(resp) => {
-            let (header, body) = resp.into_parts();
+    let resp = client.send(req).await.map_err(ScrapeError::Http)?;
 
-            if header.status != StatusCode::OK {
-                debug!(
-                    message = "Target server returned unexpected HTTP status code",
-                    target = ?url,
-                    status_code = ?header.status,
-                );
+    let (header, body) = resp.into_parts();
+    if header.status != StatusCode::OK {
+        return Err(ScrapeError::UnexpectedStatusCode(header.status));
+    }
 
-                return Err(());
-            }
+    let data = hyper::body::to_bytes(body)
+        .await
+        .map_err(|err| ScrapeError::Http(HttpError::CallRequest(err)))?;
+    let body = String::from_utf8_lossy(&data);
 
-            match hyper::body::to_bytes(body).await {
-                Ok(data) => {
-                    let body = String::from_utf8_lossy(&data);
-                    match prometheus::parse_text(&body) {
-                        Ok(groups) => convert_metrics(groups),
-                        Err(err) => {
-                            debug!(
-                                message = "Parsing prometheus text failed",
-                                ?err,
-                                target = ?url,
-                                internal_log_rate_limit = true
-                            );
+    let metrics = prometheus::parse_text(&body).map_err(ScrapeError::Parse)?;
 
-                            return Err(());
-                        }
-                    }
-                }
-                Err(err) => {
-                    debug!(
-                        message = "Read target's response failed",
-                        ?err,
-                        target = ?url,
-                        internal_log_rate_limit = true
-                    );
-
-                    return Err(());
-                }
-            }
-        }
-        Err(err) => {
-            debug!(
-                message = "Request target failed",
-                ?err,
-                target = ?url,
-                internal_log_rate_limit = true
-            );
-
-            return Err(());
-        }
-    };
-
-    Ok(metrics)
+    Ok(convert_metrics(metrics))
 }
 
 fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {

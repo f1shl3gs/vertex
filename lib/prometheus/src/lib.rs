@@ -273,7 +273,7 @@ fn try_f64_to_u32(f: f64) -> Result<u32, Error> {
     if 0.0 <= f && f <= u32::MAX as f64 {
         Ok(f as u32)
     } else {
-        Err(Error::ValueOutOfRange { value: f })
+        Err(Error::ValueOutOfRange(f))
     }
 }
 
@@ -360,7 +360,7 @@ impl MetricGroupSet {
 
 impl From<proto::MetricType> for MetricKind {
     fn from(kind: proto::MetricType) -> Self {
-        use proto::MetricType::*;
+        use proto::MetricType::{Counter, Gauge, Gaugehistogram, Histogram, Summary};
 
         match kind {
             Counter => MetricKind::Counter,
@@ -567,23 +567,23 @@ rpc_duration_seconds_count 2693
     fn test_f64_to_u32() {
         let value = -1.0;
         let err = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(err, Error::ValueOutOfRange { value });
+        assert_eq!(err, Error::ValueOutOfRange(value));
 
         let value = u32::MAX as f64 + 1.0;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, Error::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange(value));
 
         let value = f64::NAN;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert!(matches!(error, Error::ValueOutOfRange { value } if value.is_nan()));
+        assert!(matches!(error, Error::ValueOutOfRange (value) if value.is_nan()));
 
         let value = f64::INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, Error::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange(value));
 
         let value = f64::NEG_INFINITY;
         let error = try_f64_to_u32(value).unwrap_err();
-        assert_eq!(error, Error::ValueOutOfRange { value });
+        assert_eq!(error, Error::ValueOutOfRange(value));
 
         assert_eq!(try_f64_to_u32(0.0).unwrap(), 0);
         assert_eq!(try_f64_to_u32(u32::MAX as f64).unwrap(), u32::MAX);

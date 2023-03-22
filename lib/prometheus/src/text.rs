@@ -48,7 +48,7 @@ pub fn parse_text(input: &str) -> Result<Vec<MetricGroup>, Error> {
             "gauge" => GroupKind::new(MetricKind::Gauge),
             "summary" => GroupKind::new(MetricKind::Summary),
             "untyped" => GroupKind::new(MetricKind::Untyped),
-            _ => continue,
+            _ => return Err(Error::InvalidType(kind.to_string())),
         };
 
         // parse metric lines
@@ -220,7 +220,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
         let value = parts.next().ok_or(Error::MissingValue)?.parse::<f64>()?;
 
         let timestamp = if let Some(value) = parts.next() {
-            Some(value.parse::<i64>()?)
+            Some(value.parse::<i64>().map_err(Error::InvalidTimestamp)?)
         } else {
             None
         };
@@ -308,7 +308,7 @@ fn parse_labels(line: &str) -> Result<(GroupKey, f64), Error> {
         let value = parts.next().ok_or(Error::MissingValue)?.parse::<f64>()?;
 
         let timestamp = if let Some(value) = parts.next() {
-            Some(value.parse::<i64>()?)
+            Some(value.parse::<i64>().map_err(Error::InvalidTimestamp)?)
         } else {
             None
         };
@@ -520,9 +520,9 @@ mod tests {
             (r#"name{registry=} 1890"#, Err(Error::MissingValue)),
             (
                 r#"name abcd"#,
-                Err(Error::InvalidValue {
-                    err: "abcd".parse::<f64>().unwrap_err(),
-                }),
+                Err(Error::InvalidMetricValue(
+                    "abcd".parse::<f64>().unwrap_err(),
+                )),
             ),
         ];
 
@@ -597,5 +597,34 @@ rpc_duration_seconds_count 2693
         //
         // treat those metrics as Untyped
         assert_eq!(groups.len(), 3);
+    }
+
+    #[test]
+    fn html() {
+        // the returned page from web server could be html
+        let content = r#"<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+
+    <div id="mydiv"></div>
+
+    <script type="text/babel">
+      function Hello() {
+        return <h1>Hello World!</h1>;
+      }
+
+      ReactDOM.render(<Hello />, document.getElementById('mydiv'))
+    </script>
+
+  </body>
+</html>"#;
+
+        let metrics = parse_text(content).unwrap();
+        assert!(metrics.is_empty())
     }
 }
