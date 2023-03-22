@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679456055016,
+  "lastUpdate": 1679456070860,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -3856,6 +3856,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 788450,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "571b0d6a321c8ab5aee0cd93561cbc39932ffd52",
+          "message": "Top (#867)\n\n* move alloc features to main.rs\r\n\r\n* jemalloc-extension require feature jemalloc to compile",
+          "timestamp": "2023-03-22T11:30:47+08:00",
+          "tree_id": "4d63719eb3184483fc7d7bba97fb40be0b936f8a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/571b0d6a321c8ab5aee0cd93561cbc39932ffd52"
+        },
+        "date": 1679456061550,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 721310,
             "unit": "ns/op"
           }
         ]
