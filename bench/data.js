@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679439425699,
+  "lastUpdate": 1679455673742,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -28654,6 +28654,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1566,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57756.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "116f16d1c3601ca69e2cf07385ec478c22c56755",
+          "message": "Merge pull request #865 from f1shl3gs/add_missing_component\n\nadd missing components",
+          "timestamp": "2023-03-22T11:05:12+08:00",
+          "tree_id": "dddaaede26ae5b0809b7fc1d052723627695b911",
+          "url": "https://github.com/f1shl3gs/vertex/commit/116f16d1c3601ca69e2cf07385ec478c22c56755"
+        },
+        "date": 1679455663892,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1131,
             "unit": "s"
           },
           {
