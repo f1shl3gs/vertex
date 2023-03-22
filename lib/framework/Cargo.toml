@@ -31,8 +31,8 @@ async-trait = { version = "0.1.67" }
 backoff = { path = "../backoff" }
 buffers = { path = "../buffers" }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
-chrono = { version = "0.4.24", features = ["serde"] }
-chrono-tz = { version = "0.8.1", features = ["serde"] }
+chrono = { version = "0.4.24", default-features = false }
+chrono-tz = { version = "0.8.1", default-features = false, features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
 console-subscriber = { version = "0.1.8", optional = true }
@@ -64,7 +64,7 @@ notify = { version = "5.1.0", default-features = false, features = ["macos_kqueu
 no-proxy = { version = "0.3.2" }
 num_cpus = { version = "1.15.0" }
 once_cell = { version = "1.17", default-features = false }
-openssl = { version = "0.10.45", default-features = false }
+openssl = { version = "0.10.47", default-features = false }
 percent-encoding = { version = "2.2.0", default-features = false }
 pin-project = { version = "1.0.12" }
 regex = { version = "1.7.2" }
