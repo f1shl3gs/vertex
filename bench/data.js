@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679463079660,
+  "lastUpdate": 1679463245472,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15866,6 +15866,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.053,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0f555e4d39789b174a99abd0075deb5f82f42a0",
+          "message": "Merge pull request #871 from f1shl3gs/dependabot/cargo/sqlx-0.6.3\n\nchore(deps): bump sqlx from 0.6.2 to 0.6.3",
+          "timestamp": "2023-03-22T13:26:28+08:00",
+          "tree_id": "161be925218eb4b5b6f581ec5f4faed26f89812e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0f555e4d39789b174a99abd0075deb5f82f42a0"
+        },
+        "date": 1679463234413,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.694,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.966,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.294,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.749,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 62.461,
             "unit": "ns/op"
           }
         ]
