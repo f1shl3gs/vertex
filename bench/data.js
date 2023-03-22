@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679456013980,
+  "lastUpdate": 1679456048972,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -15476,6 +15476,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.163,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd",
+          "message": "Propgate trace through http request (#868)\n\n* move http chunk encoder to config/provider/http\r\n\r\n* propagate trace data through http request",
+          "timestamp": "2023-03-22T11:29:27+08:00",
+          "tree_id": "c3008cb86e554c955ebb03bef322d6c4518c2f69",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd"
+        },
+        "date": 1679456039930,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.987,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.068,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.497,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.259,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.869,
             "unit": "ns/op"
           }
         ]
