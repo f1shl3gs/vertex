@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679476560608,
+  "lastUpdate": 1679485206897,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30017,6 +30017,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57773.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "59203013b7f50c90d6fb01b5005eccadbbf447e7",
+          "message": "regen Cargo.lock (#874)",
+          "timestamp": "2023-03-22T19:10:20+08:00",
+          "tree_id": "b1585ed48ec053a7422fd0fb1dd3ba8b9d2d19a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/59203013b7f50c90d6fb01b5005eccadbbf447e7"
+        },
+        "date": 1679485195470,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1432,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57321.3,
             "unit": "KiB"
           }
         ]
