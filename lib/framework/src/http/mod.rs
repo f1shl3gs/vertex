@@ -1,12 +1,9 @@
-mod chunk;
-
 use std::borrow::Cow;
 use std::{
     fmt,
     task::{Context, Poll},
 };
 
-pub use chunk::ChunkedDecoder;
 use configurable::Configurable;
 use futures::future::BoxFuture;
 use headers::{Authorization, HeaderMapExt};
