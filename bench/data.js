@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679475113211,
+  "lastUpdate": 1679475128407,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16100,6 +16100,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.742,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f457f4a497aec5889166a2e474393f4ca008949",
+          "message": "Simplify tracing limit (#873)\n\n* simplify tracing-limit\r\n\r\n* refine no metric log",
+          "timestamp": "2023-03-22T16:46:21+08:00",
+          "tree_id": "c3b8d4cbbf8cdb53f6bca49aed7f479c06fea41a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f457f4a497aec5889166a2e474393f4ca008949"
+        },
+        "date": 1679475117079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.655,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.868,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.591,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.815,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 66.624,
             "unit": "ns/op"
           }
         ]
