@@ -1,5 +1,4 @@
 use std::io::BufRead;
-use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
@@ -263,7 +262,7 @@ impl Collector {
         hyper::body::to_bytes(body).await.map_err(Into::into)
     }
 
-    async fn fetch_metrics(&self, uri: &str) -> crate::Result<Vec<(String, i64)>> {
+    async fn fetch_metrics(&self, uri: &str) -> crate::Result<Vec<(String, f64)>> {
         let body = self.fetch(uri).await?;
         let buf = body.reader();
 
@@ -276,7 +275,7 @@ impl Collector {
                         return None;
                     }
 
-                    let v = parts[1].parse::<i64>().ok()?;
+                    let v = parts[1].parse::<f64>().ok()?;
 
                     Some((parts[0].to_string(), v))
                 }
@@ -297,8 +296,7 @@ async fn run(
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(interval);
-
-    let collector = Arc::new(Collector::new(client, auth, endpoint));
+    let collector = &Collector::new(client, auth, endpoint);
 
     loop {
         tokio::select! {
@@ -308,16 +306,12 @@ async fn run(
             _ = ticker.tick() => {}
         }
 
-        let mut tasks = FuturesUnordered::new();
-
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.currently_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.async_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.event_metrics().await }));
-        let c = Arc::clone(&collector);
-        tasks.push(tokio::spawn(async move { c.parts_metrics().await }));
+        let mut tasks = FuturesUnordered::from_iter([
+            collector.currently_metrics(),
+            collector.async_metrics(),
+            collector.event_metrics(),
+            collector.parts_metrics(),
+        ]);
 
         while let Some(Ok(metrics)) = tasks.next().await {
             if let Err(err) = output.send(metrics).await {
@@ -327,8 +321,6 @@ async fn run(
             }
         }
     }
-
-    Ok(())
 }
 
 #[instrument(skip(client, auth))]
