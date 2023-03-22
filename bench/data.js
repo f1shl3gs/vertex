@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679465401507,
+  "lastUpdate": 1679474426293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -29768,6 +29768,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57792.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89dd390bad363d3ec45097dc3f9fa53715da6d9b",
+          "message": "Merge pull request #872 from f1shl3gs/simplify_prometheus_scrape\n\nsimplify prometheus_scrape",
+          "timestamp": "2023-03-22T16:09:37+08:00",
+          "tree_id": "99770cc4aa25476084809a954f3f579a7ce35246",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89dd390bad363d3ec45097dc3f9fa53715da6d9b"
+        },
+        "date": 1679474414683,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1556,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57788.2,
             "unit": "KiB"
           }
         ]
