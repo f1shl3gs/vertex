@@ -53,6 +53,11 @@ pub trait SinkConfig: NamedComponent + Debug + Send + Sync {
     fn resources(&self) -> Vec<Resource> {
         Vec::new()
     }
+
+    /// Gets the acknowledgements configuration for this sink.
+    fn acknowledgements(&self) -> bool {
+        false
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]

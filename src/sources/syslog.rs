@@ -253,7 +253,7 @@ pub fn udp(
                         warn!(
                             message = "Error reading datagram",
                             ?err,
-                            internal_log_rate_secs = 10
+                            internal_log_rate_limit = true
                         );
 
                         None

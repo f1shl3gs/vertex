@@ -62,7 +62,7 @@ pub(super) async fn serve(
                                 warn!(
                                     message = "Decoding batch failed",
                                     ?err,
-                                    internal_log_rate_secs = 10
+                                    internal_log_rate_limit = true
                                 );
                             }
                         }

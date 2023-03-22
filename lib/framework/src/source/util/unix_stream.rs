@@ -1,5 +1,6 @@
 use std::fs::remove_file;
 use std::path::PathBuf;
+use std::pin::pin;
 
 use bytes::Bytes;
 use codecs::decoding::DecodeError;
@@ -38,7 +39,7 @@ where
         info!(message = "Listening", ?path, r#type = "unix");
 
         let stream = UnixListenerStream::new(listener).take_until(shutdown.clone());
-        tokio::pin!(stream);
+        let mut stream = pin!(stream);
 
         while let Some(socket) = stream.next().await {
             let socket = match socket {

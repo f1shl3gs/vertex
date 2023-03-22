@@ -1,12 +1,3 @@
-use std::fmt;
-
-use bytecheck::CheckBytes;
-use rkyv::{
-    check_archived_root,
-    validation::{validators::DefaultValidator, CheckArchiveError},
-    Archive,
-};
-
 /// Error that occurred during serialization.
 #[derive(Debug)]
 pub enum SerializeError<T> {
@@ -47,6 +38,9 @@ pub enum DeserializeError {
     /// The backing store that was given is returned, along with an error string that briefly
     /// describes the error in a more verbose fashion, suitable for debugging.
     InvalidData(String),
+
+    /// The input buffer is too short to read metadata and payload.
+    TooShort,
 }
 
 impl DeserializeError {
@@ -55,42 +49,7 @@ impl DeserializeError {
         match self {
             DeserializeError::InvalidData(s) => format!("invalid data: {}", s),
             DeserializeError::InvalidStructure(s) => format!("invalid structure: {}", s),
+            DeserializeError::TooShort => "data too short for metadata and payload".to_string(),
         }
     }
-}
-
-impl<T, C> From<CheckArchiveError<T, C>> for DeserializeError
-where
-    T: fmt::Display,
-    C: fmt::Display,
-{
-    fn from(e: CheckArchiveError<T, C>) -> Self {
-        match e {
-            CheckArchiveError::ContextError(ce) => {
-                DeserializeError::InvalidStructure(ce.to_string())
-            }
-            CheckArchiveError::CheckBytesError(cbe) => {
-                DeserializeError::InvalidData(cbe.to_string())
-            }
-        }
-    }
-}
-
-/// Tries to deserialize the given buffer as the archival type `T`.
-///
-/// The archived type is assumed to exist starting at index 0 of the buffer.  Additionally, the
-/// archived value is checked for data conformance.
-///
-/// # Errors
-///
-/// If the buffer does not contained an archived `T`, or there was an issue with too little data, or
-/// invalid values, etc, then an error variant will be emitted.  The error will describe the
-/// high-level error, as well as provide a string with a more verbose explanation of the error.
-pub fn try_as_archive<'a, T>(buf: &'a [u8]) -> Result<&'a T::Archived, DeserializeError>
-where
-    T: Archive,
-    T::Archived: for<'b> CheckBytes<DefaultValidator<'b>>,
-{
-    debug_assert!(!buf.is_empty());
-    check_archived_root::<T>(buf).map_err(Into::into)
 }

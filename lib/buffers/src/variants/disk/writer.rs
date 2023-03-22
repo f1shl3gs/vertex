@@ -1,6 +1,5 @@
 use std::{
     cmp::Ordering,
-    convert::Infallible as StdInfallible,
     fmt,
     io::{self, ErrorKind},
     marker::PhantomData,
@@ -10,32 +9,19 @@ use std::{
 
 use bytes::BufMut;
 use crc32fast::Hasher;
-use rkyv::{
-    ser::{
-        serializers::{
-            AlignedSerializer, AllocScratch, AllocScratchError, BufferScratch, CompositeSerializer,
-            CompositeSerializerError, FallbackScratch,
-        },
-        Serializer,
-    },
-    AlignedVec, Infallible,
-};
 use thiserror::Error;
 use tokio::io::{AsyncWrite, AsyncWriteExt};
 
 use super::{
     common::{create_crc32c_hasher, DiskBufferConfig},
-    io::Filesystem,
+    io::{AsyncFile, Filesystem},
     ledger::Ledger,
-    record::{validate_record_archive, Record, RecordStatus},
+    reader::decode_record_payload,
+    record::{Record, RecordStatus, RECORD_HEADER_LEN},
 };
+use crate::variants::disk::record::{validate_record_archive_with_length, ArchivedRecord};
 use crate::{
     encoding::{AsMetadata, Encodable},
-    variants::disk::{
-        io::AsyncFile,
-        reader::decode_record_payload,
-        record::{try_as_record_archive, RECORD_HEADER_LEN},
-    },
     Bufferable,
 };
 
@@ -170,22 +156,6 @@ impl<T: Bufferable + PartialEq> PartialEq for WriterError<T> {
                 Self::InconsistentState { reason: r_reason },
             ) => l_reason == r_reason,
             _ => core::mem::discriminant(self) == core::mem::discriminant(other),
-        }
-    }
-}
-
-impl<T> From<CompositeSerializerError<StdInfallible, AllocScratchError, StdInfallible>>
-    for WriterError<T>
-where
-    T: Bufferable,
-{
-    fn from(e: CompositeSerializerError<StdInfallible, AllocScratchError, StdInfallible>) -> Self {
-        match e {
-            CompositeSerializerError::ScratchSpaceError(sse) => WriterError::FailedToSerialize {
-                reason: format!("insufficient space to serialize encoded record: {sse}"),
-            },
-            // Only our scratch space strategy is fallible, so we should never get here.
-            _ => unreachable!(),
         }
     }
 }
@@ -346,8 +316,8 @@ impl<W: fmt::Debug> fmt::Debug for TrackingBufWriter<W> {
 pub(super) struct RecordWriter<W, T> {
     writer: TrackingBufWriter<W>,
     encode_buf: Vec<u8>,
-    ser_buf: AlignedVec,
-    ser_scratch: AlignedVec,
+    ser_buf: Vec<u8>,
+    ser_scratch: Vec<u8>,
     checksummer: Hasher,
     max_record_size: usize,
     current_data_file_size: u64,
@@ -396,8 +366,8 @@ where
         Self {
             writer: TrackingBufWriter::with_capacity(write_buffer_size, writer),
             encode_buf: Vec::with_capacity(16_384),
-            ser_buf: AlignedVec::with_capacity(16_384),
-            ser_scratch: AlignedVec::with_capacity(16_384),
+            ser_buf: Vec::with_capacity(16_384),
+            ser_scratch: Vec::with_capacity(16_384),
             checksummer: create_crc32c_hasher(),
             max_record_size,
             current_data_file_size,
@@ -470,30 +440,9 @@ where
         let wrapped_record =
             Record::with_checksum(id, metadata, &self.encode_buf, &self.checksummer);
 
-        // Push 8 dummy bytes where our length delimiter will sit.  We'll fix this up after
-        // serialization.  Notably, `AlignedSerializer` will report the serializer position as
-        // the length of its backing store, which now includes our 8 bytes, so we _subtract_
-        // those from the position when figuring out the actual value to write back after.
-        //
-        // We write it this way -- in the serializer buffer, and not as a separate write -- so that
-        // we can do a single write but also so that we always have an aligned buffer.
-        self.ser_buf
-            .extend_from_slice(&[0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-
-        // Now serialize the record, which puts it into its archived form.  This is what powers our
+        // Now serialize the record, which puts it into its archived form. This is what powers our
         // ability to do zero-copy deserialization from disk.
-        let mut serializer = CompositeSerializer::new(
-            AlignedSerializer::new(&mut self.ser_buf),
-            FallbackScratch::new(
-                BufferScratch::new(&mut self.ser_scratch),
-                AllocScratch::new(),
-            ),
-            Infallible,
-        );
-
-        let serialized_len = serializer
-            .serialize_value(&wrapped_record)
-            .map(|_| serializer.pos())?;
+        let serialized_len = wrapped_record.serialize(&mut self.ser_buf)?;
 
         // Sanity check before we do our length math.
         if serialized_len <= 8 || self.ser_buf.len() != serialized_len {
@@ -532,16 +481,6 @@ where
                 serialized_len,
             });
         }
-
-        // Fix up our length delimiter.
-        let archive_len = serialized_len - 8;
-        let wire_archive_len: u64 = archive_len
-            .try_into()
-            .expect("archive len should always fit into a u64");
-        let archive_len_buf = wire_archive_len.to_be_bytes();
-
-        let length_delimiter_dst = &mut self.ser_buf[0..8];
-        length_delimiter_dst.copy_from_slice(&archive_len_buf[..]);
 
         Ok(WriteToken {
             event_count,
@@ -640,7 +579,7 @@ where
         );
 
         // First, decode the archival wrapper. This means skipping the length delimiter.
-        let wrapped_record = try_as_record_archive(&self.ser_buf[8..]).map_err(|_| {
+        let wrapped_record = ArchivedRecord::try_new(&self.ser_buf[8..]).map_err(|_| {
             WriterError::InconsistentState {
                 reason: "failed to decode archived record immediately after archiving it"
                     .to_string(),
@@ -850,7 +789,7 @@ where
         // We have bytes, so we should have an archived record... hopefully!  Go through the motions
         // of verifying it.  If we hit any invalid states, then we should bump to the next data file
         // since the reader will have to stop once it hits the first error in a given file.
-        let should_skip_to_next_file = match validate_record_archive(
+        let should_skip_to_next_file = match validate_record_archive_with_length(
             data_file_mmap.as_ref(),
             &Hasher::new(),
         ) {
@@ -861,9 +800,9 @@ where
                 // and the checksum matching, etc.  We'll attempt to actually decode it now so we
                 // can get the actual item that was written, which we need to understand where the
                 // next writer record ID should be.
-                let record = try_as_record_archive(data_file_mmap.as_ref())
+                let record = ArchivedRecord::try_new(data_file_mmap.as_ref())
                     .expect("record was already validated");
-                let item = decode_record_payload::<T>(record).map_err(|e| {
+                let item = decode_record_payload::<T>(&record).map_err(|e| {
                     WriterError::FailedToValidate {
                         reason: e.to_string(),
                     }

@@ -67,7 +67,7 @@ impl ElasticsearchCommonMode {
                         message = "Failed to render template for \"index\"",
                         %err,
                         drop_event = true,
-                        internal_log_rate_secs = 30,
+                        internal_log_rate_limit = true
                     );
                 })
                 .ok(),

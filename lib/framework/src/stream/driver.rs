@@ -177,6 +177,9 @@ where
                                         .inc(bytes as u64);
                                     }
                                 };
+
+                                // suppress "argument not consumed" warning
+                                drop(finalizers);
                             })
                             .instrument(info_span!("request", request_id));
 
@@ -362,7 +365,7 @@ mod tests {
         let counter = Counter::default();
 
         // Set up our driver input stream, service, etc.
-        let input_requests = (1..=2048).into_iter().collect::<Vec<_>>();
+        let input_requests = (1..=2048).collect::<Vec<_>>();
         let input_total: usize = input_requests.iter().sum();
         let input_stream = stream::iter(
             input_requests

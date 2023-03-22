@@ -560,13 +560,7 @@ impl RunningTopology {
 
     fn spawn_sink(&mut self, key: &ComponentKey, new_pieces: &mut Pieces) {
         let task = new_pieces.tasks.remove(key).unwrap();
-        let span = error_span!(
-            "sink",
-            component_kind = "sink",
-            component_key = %task.key(),
-            component_type = %task.typetag(),
-        );
-        let task = handle_errors(task, self.abort_tx.clone()).instrument(span);
+        let task = handle_errors(task, self.abort_tx.clone());
         let spawned = tokio::spawn(task);
         if let Some(previous) = self.tasks.insert(key.clone(), spawned) {
             drop(previous); // detach and forget

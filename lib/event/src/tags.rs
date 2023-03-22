@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-use std::collections::btree_map::Entry;
+use std::collections::btree_map::{Entry, Keys};
 use std::collections::BTreeMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
@@ -270,13 +270,13 @@ impl Value {
 macro_rules! from_values {
    (
         $(
-            ($t:ty, $val:expr);
+            ($ty:ty, $val:expr);
         )+
    ) => {
        $(
-           impl From<$t> for Value {
-               fn from(t: $t) -> Self {
-                   $val(t)
+           impl From<$ty> for Value {
+               fn from(ty: $ty) -> Self {
+                   $val(ty)
                }
            }
        )+
@@ -290,6 +290,12 @@ from_values!(
     (Cow<'static, str>, Value::String);
     (Array, Value::Array);
 );
+
+impl From<i32> for Value {
+    fn from(v: i32) -> Value {
+        Value::I64(v as i64)
+    }
+}
 
 impl From<&'static str> for Value {
     /// Convenience method for creating a `Value` from a `&'static str`.
@@ -387,6 +393,10 @@ impl Tags {
     #[inline]
     pub fn contains_key(&self, key: impl Into<Key>) -> bool {
         self.0.contains_key(&(key.into()))
+    }
+
+    pub fn keys(&self) -> Keys<'_, Key, Value> {
+        self.0.keys()
     }
 
     #[must_use]
@@ -495,11 +505,11 @@ pub fn skip_serializing_if_empty(attrs: &Tags) -> bool {
 macro_rules! tags {
     // Done without trailing comma
     ( $($x:expr => $y:expr),* ) => ({
-        let mut _attrs = $crate::tags::Tags::new();
+        let mut _tags = $crate::tags::Tags::new();
         $(
-            _attrs.insert($x, $y);
+            _tags.insert($x, $y);
         )*
-        _attrs
+        _tags
     });
     // Done with trailing comma
     ( $($x:expr => $y:expr,)* ) => (

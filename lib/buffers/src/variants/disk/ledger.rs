@@ -6,18 +6,16 @@ use std::{
     time::Instant,
 };
 
-use bytecheck::CheckBytes;
 use bytes::BytesMut;
 use crossbeam_utils::atomic::AtomicCell;
 use finalize::OrderedFinalizer;
 use fslock::LockFile;
 use futures::StreamExt;
-use rkyv::{with::Atomic, Archive, Serialize};
 use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
-    backed_archive::BackedArchive,
+    backed_archive::{BackedArchive, Serialize},
     common::{align16, DiskBufferConfig, MAX_FILE_ID},
     io::{AsyncFile, WritableMemoryMap},
     ser::SerializeError,
@@ -25,7 +23,7 @@ use super::{
 };
 use crate::buffer_usage_data::BufferUsageHandle;
 
-pub const LEDGER_LEN: usize = align16(mem::size_of::<ArchivedLedgerState>());
+pub const LEDGER_LEN: usize = align16(mem::size_of::<LedgerState>());
 
 /// Error that occurred during calls to [`Ledger`].
 #[derive(Debug, Error)]
@@ -77,7 +75,7 @@ pub enum LedgerLoadCreateError {
 
 /// Ledger state.
 ///
-/// Stores the relevant information related to both the reader and writer.  Gets serailized and
+/// Stores the relevant information related to both the reader and writer.  Gets serialized and
 /// stored on disk, and is managed via a memory-mapped file.
 ///
 /// # Warning
@@ -90,20 +88,19 @@ pub enum LedgerLoadCreateError {
 /// Doing so will change the serialized representation.  This will break things.
 ///
 /// Do not do any of the listed things unless you _absolutely_ know what you're doing. :)
-#[derive(Archive, Serialize, Debug)]
-#[archive_attr(derive(CheckBytes, Debug))]
+#[derive(Debug)]
+#[repr(C)]
 pub struct LedgerState {
     /// Next record ID to use when writing a record.
-    #[with(Atomic)]
     writer_next_record_id: AtomicU64,
+
     /// The current data file ID being written to.
-    #[with(Atomic)]
     writer_current_data_file_id: AtomicU16,
+
     /// The current data file ID being read from.
-    #[with(Atomic)]
     reader_current_data_file_id: AtomicU16,
+
     /// The last record ID read by the reader.
-    #[with(Atomic)]
     reader_last_record_id: AtomicU64,
 }
 
@@ -119,6 +116,53 @@ impl Default for LedgerState {
             reader_last_record_id: AtomicU64::new(0),
         }
     }
+}
+
+impl Serialize for LedgerState {
+    fn serialize(&self) -> Vec<u8> {
+        let mut buf = Vec::with_capacity(32);
+
+        let writer_next_record_id = self
+            .writer_next_record_id
+            .load(Ordering::Relaxed)
+            .to_ne_bytes();
+        buf.extend_from_slice(&writer_next_record_id);
+
+        let writer_current_data_file_id = self
+            .writer_current_data_file_id
+            .load(Ordering::Relaxed)
+            .to_ne_bytes();
+        buf.extend_from_slice(&writer_current_data_file_id);
+
+        let reader_current_data_file_id = self
+            .reader_current_data_file_id
+            .load(Ordering::Relaxed)
+            .to_ne_bytes();
+        buf.extend_from_slice(&reader_current_data_file_id);
+
+        let reader_last_record_id = self
+            .reader_last_record_id
+            .load(Ordering::Relaxed)
+            .to_ne_bytes();
+        buf.extend_from_slice(&reader_last_record_id);
+
+        buf
+    }
+}
+
+#[derive(Debug)]
+pub struct ArchivedLedgerState {
+    /// Next record ID to use when writing a record.
+    writer_next_record_id: AtomicU64,
+
+    /// The current data file ID being written to.
+    writer_current_data_file_id: AtomicU16,
+
+    /// The current data file ID being read from.
+    reader_current_data_file_id: AtomicU16,
+
+    /// The last record ID read by the reader.
+    reader_last_record_id: AtomicU64,
 }
 
 impl ArchivedLedgerState {

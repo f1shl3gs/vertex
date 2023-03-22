@@ -325,7 +325,7 @@ where
                     warn!(
                         message = "Unhandled error response",
                         %err,
-                        internal_log_rate_secs = 5
+                        internal_log_rate_limit = true
                     );
 
                     false

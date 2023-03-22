@@ -1,5 +1,4 @@
 use std::io;
-use std::io::Write;
 
 use bytes::BytesMut;
 use codecs::encoding::{Framer, Transformer};
@@ -14,7 +13,7 @@ pub trait Encoder<T> {
 }
 
 impl Encoder<Vec<Event>> for (Transformer, codecs::Encoder<Framer>) {
-    fn encode(&self, mut events: Vec<Event>, writer: &mut dyn Write) -> io::Result<usize> {
+    fn encode(&self, mut events: Vec<Event>, writer: &mut dyn io::Write) -> io::Result<usize> {
         let mut encoder = self.1.clone();
         let mut written = 0;
         let batch_prefix = encoder.batch_prefix();
@@ -54,7 +53,7 @@ impl Encoder<Vec<Event>> for (Transformer, codecs::Encoder<Framer>) {
 }
 
 impl Encoder<Event> for (Transformer, codecs::encoding::Encoder<()>) {
-    fn encode(&self, mut event: Event, writer: &mut dyn Write) -> io::Result<usize> {
+    fn encode(&self, mut event: Event, writer: &mut dyn io::Write) -> io::Result<usize> {
         let mut encoder = self.1.clone();
 
         self.0.transform(&mut event);
@@ -97,4 +96,60 @@ where
     Ok(tracked.count)
 }
 
+/// NoopEncoder is a no op encoder for Encoder implement, it is very useful
+/// for batching only RequestBuilder.
+pub struct NoopEncoder;
+
+impl<T> Encoder<T> for NoopEncoder {
+    fn encode(&self, _input: T, _writer: &mut dyn io::Write) -> io::Result<usize> {
+        panic!("NoopEncoder should never be called")
+    }
+}
+
 // TODO: tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use codecs::encoding::{CharacterDelimitedEncoder, JsonSerializer};
+    use event::log::Value;
+    use std::collections::BTreeMap;
+
+    #[test]
+    fn encode_json() {
+        for (name, input, want) in [
+            ("empty", vec![], (2, "[]")),
+            (
+                "single",
+                vec![Event::Log(
+                    BTreeMap::from([(String::from("key"), Value::from("value"))]).into(),
+                )],
+                (28, r#"[{"fields":{"key":"value"}}]"#),
+            ),
+            (
+                "multiple",
+                vec![
+                    BTreeMap::from([(String::from("key"), Value::from("value1"))]).into(),
+                    BTreeMap::from([(String::from("key"), Value::from("value2"))]).into(),
+                    BTreeMap::from([(String::from("key"), Value::from("value3"))]).into(),
+                ],
+                (
+                    85,
+                    r#"[{"fields":{"key":"value1"}},{"fields":{"key":"value2"}},{"fields":{"key":"value3"}}]"#,
+                ),
+            ),
+        ] {
+            let mut writer = Vec::new();
+            let encoding = (
+                Transformer::default(),
+                codecs::Encoder::<Framer>::new(
+                    CharacterDelimitedEncoder::new(b',').into(),
+                    JsonSerializer::default().into(),
+                ),
+            );
+
+            let written = encoding.encode(input, &mut writer).unwrap();
+            assert_eq!(want.0, written, "test: {name}");
+            assert_eq!(String::from_utf8(writer).unwrap(), want.1, "test: {name}");
+        }
+    }
+}

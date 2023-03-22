@@ -1,4 +1,4 @@
-use event::trace::{Span, SpanContext, SpanId, TraceFlags, TraceId, TraceState};
+use event::trace::{Span, SpanContext, SpanId, TraceFlags, TraceId};
 
 use crate::context::TraceContext;
 
@@ -22,24 +22,17 @@ pub trait PreSampledTracer {
         let span = &mut data.span;
 
         // Gather trace state
-        let (_no_parent, trace_id, _remote_parent, _parent_trace_flags) =
-            current_trace_state(span, parent_cx);
-        let trace_id = if trace_id == TraceId::INVALID {
-            self.new_trace_id()
-        } else {
-            trace_id
-        };
+        let (mut trace_id, parent_trace_flags) = current_trace_state(span, parent_cx);
+        if trace_id == TraceId::INVALID {
+            trace_id = self.new_trace_id();
+        }
 
-        // TODO: Sample or defer to existing sampling decisions
+        // TODO: implement sampling
+        let trace_flags = parent_trace_flags | TraceFlags::SAMPLED;
+        let trace_state = parent_cx.span().span_context().trace_state.clone();
 
-        let span_id = span.span_context.span_id;
-        let span_context = SpanContext::new(
-            trace_id,
-            span_id,
-            TraceFlags::SAMPLED,
-            false,
-            TraceState::default(),
-        );
+        let span_id = span.span_id();
+        let span_context = SpanContext::new(trace_id, span_id, trace_flags, false, trace_state);
 
         parent_cx.with_remote_span_context(span_context)
     }
@@ -49,17 +42,15 @@ pub trait PreSampledTracer {
     fn new_span_id(&self) -> SpanId;
 }
 
-fn current_trace_state(span: &Span, parent_cx: &TraceContext) -> (bool, TraceId, bool, TraceFlags) {
+fn current_trace_state(span: &Span, parent_cx: &TraceContext) -> (TraceId, TraceFlags) {
     if parent_cx.has_active_span() {
         let span = parent_cx.span();
         let sc = span.span_context();
-        (false, sc.trace_id, sc.is_remote, sc.trace_flags)
+        (sc.trace_id, sc.trace_flags)
     } else {
         (
-            true,
             span.trace_id().unwrap_or(TraceId::INVALID),
-            false,
-            Default::default(),
+            TraceFlags::default(),
         )
     }
 }

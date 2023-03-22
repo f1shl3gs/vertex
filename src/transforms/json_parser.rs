@@ -109,7 +109,7 @@ impl FunctionTransform for JsonParser {
                                     field = %self.field,
                                     ?value,
                                     ?err,
-                                    internal_log_rate_secs = 30
+                                    internal_log_rate_limit = true
                                 );
 
                                 self.invalid_events.inc(1);
@@ -136,7 +136,7 @@ impl FunctionTransform for JsonParser {
                                 warn!(
                                     message = "Target field already exists",
                                     target = target_field.as_str(),
-                                    internal_log_rate_secs = 30
+                                    internal_log_rate_limit = true
                                 );
 
                                 // TODO: metrics

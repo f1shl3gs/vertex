@@ -6,3 +6,5 @@ pub mod heartbeat;
 mod jemalloc;
 #[cfg(feature = "extensions-pprof")]
 mod pprof;
+#[cfg(feature = "extensions-zpages")]
+pub mod zpages;

@@ -136,7 +136,7 @@ impl TaskTransform for Throttle {
                                     } else {
                                         debug!(message = "Rate limit exceeded",
                                             key = &key,
-                                            internal_log_rate_secs = 10,
+                                            internal_log_rate_limit = true
                                         );
 
                                         // TODO: metric

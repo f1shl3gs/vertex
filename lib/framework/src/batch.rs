@@ -104,7 +104,7 @@ pub fn err_event_too_large<T>(length: usize, max_length: usize) -> PushResult<T>
         message = "Event larger than batch max_bytes; dropping event.",
         batch_max_bytes = %max_length,
         length = %length,
-        internal_log_rate_secs = 1
+        internal_log_rate_limit = true
     );
 
     metrics::register_counter(

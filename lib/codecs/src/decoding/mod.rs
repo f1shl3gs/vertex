@@ -145,7 +145,7 @@ impl Decoder {
             warn!(
                 message = "Failed framing bytes",
                 ?err,
-                internal_log_rate_secs = 10
+                internal_log_rate_limit = true
             );
             DecodeError::Framing(err)
         })?;

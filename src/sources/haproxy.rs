@@ -143,7 +143,7 @@ async fn scrap(
                     warn!(
                         message = "Parse haproxy response csv failed",
                         ?err,
-                        internal_log_rate_secs = 30
+                        internal_log_rate_limit = true
                     );
                     vec![]
                 }

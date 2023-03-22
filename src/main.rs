@@ -1,4 +1,10 @@
-use vertex::launch::RootCommand;
+mod launch;
+mod top;
+mod validate;
+
+use launch::RootCommand;
+
+extern crate vertex;
 
 #[cfg(feature = "mimalloc")]
 #[global_allocator]

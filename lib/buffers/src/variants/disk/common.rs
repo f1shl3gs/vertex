@@ -3,12 +3,12 @@ use std::{
     time::Duration,
 };
 
-use crate::variants::disk::ledger::LEDGER_LEN;
-use crate::variants::disk::record::RECORD_HEADER_LEN;
 use crc32fast::Hasher;
 use thiserror::Error;
 
 use super::io::{Filesystem, ProductionFilesystem};
+use super::ledger::LEDGER_LEN;
+use super::record::RECORD_HEADER_LEN;
 
 // We want to ensure a reasonable time before we `fsync`/flush to disk, and 500ms should provide that for non-critical
 // workloads.

@@ -93,6 +93,7 @@ benches = [
     "sources-node_metrics",
     "sources-haproxy",
     "sinks-loki",
+    "extensions-zpages"
 ]
 
 # Integration tests
@@ -113,6 +114,7 @@ all-integration-tests = [
     "integration-tests-zookeeper"
 ]
 
+integration-tests-clickhouse = []
 integration-tests-consul = []
 integration-tests-elasticsearch = []
 integration-tests-haproxy = []
@@ -145,19 +147,22 @@ extensions = [
     "extensions-heartbeat",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
-    "extensions-pprof"
+    "extensions-pprof",
+    "extensions-zpages"
 ]
 
 extensions-heartbeat = ["uuid", "sysinfo", "parking_lot/serde"]
 extensions-healthcheck = []
 extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
-extensions-pprof = ["dep:pprof"]
+extensions-pprof = ["dep:pprof", "dep:inferno"]
+extensions-zpages = []
 
 # Sources
 sources = [
     "sources-bind",
     "sources-chrony",
     "sources-consul",
+    "sources-clickhouse_metrics",
     "sources-demo_logs",
     "sources-elasticsearch",
     "sources-grpc_check",
@@ -170,6 +175,7 @@ sources = [
     "sources-jaeger",
     "sources-journald",
     "sources-kafka",
+    "sources-kafka_metrics",
     "sources-kmsg",
     "sources-kubernetes_events",
     "sources-kubernetes_logs",
@@ -196,6 +202,7 @@ sources-chrony = []
 sources-consul = []
 sources-demo_logs = []
 sources-exec = ["tokio/process"]
+sources-clickhouse_metrics = []
 sources-elasticsearch = []
 sources-grpc_check = ["tonic", "tonic-health"]
 sources-haproxy = []
@@ -206,6 +213,7 @@ sources-internal_traces = ["tracing-subscriber"]
 sources-jaeger = ["jaeger", "tonic"]
 sources-journald = []
 sources-kafka = ["rdkafka", "async-stream"]
+sources-kafka_metrics = ["rskafka"]
 sources-kmsg = []
 sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
 sources-kubernetes_events = ["kubernetes"]
@@ -278,7 +286,7 @@ sinks-console = []
 sinks-prometheus_exporter = ["flate2"]
 sinks-prometheus_remote_write = ["snap"]
 sinks-blackhole = []
-sinks-kafka = ["rdkafka"]
+sinks-kafka = ["rskafka"]
 sinks-jaeger = ["jaeger"]
 sinks-pulsar = []
 sinks-elasticsearch = []
@@ -330,21 +338,17 @@ nix = "0.26.2"
 prost-build = { version = "0.11.8" }
 
 [dev-dependencies]
-assert_cmd = { version = "2.0.8" }
+assert_cmd = { version = "2.0.10" }
 base64 = { version = "0.21.0" }
 criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
-env-test-util = { version = "1.0.1" }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.3.0" }
-proptest = { version = "1.1.0" }
 rand = { version = "0.8.5" }
-serde_path_to_error = { version = "0.1.9" }
+serde_path_to_error = { version = "0.1.10" }
 tempfile = { version = "3.4.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.26.0", features = ["test-util"] }
-tokio-test = { version = "0.4.2" }
-tower-test = { version = "0.4.0" }
+tokio = { version = "1.26.0", features = ["test-util", "time"] }
 
 [dependencies]
 # Workspaces
@@ -378,9 +382,9 @@ tokio = { version = "1.26.0", features = ["time", "net", "signal", "fs", "rt-mul
 tokio-stream = { version = "0.1.12", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
-futures = { version = "0.3.26", default-features = false }
-futures-util = { version = "0.3.26", default-features = false }
-async-trait = { version = "0.1.64" }
+futures = { version = "0.3.27", default-features = false }
+futures-util = { version = "0.3.27", default-features = false }
+async-trait = { version = "0.1.67" }
 pin-project = { version = "1.0.12" }
 
 # Tracing
@@ -390,7 +394,7 @@ tracing-subscriber = { version = "0.3.16", optional = true, default-features = f
 tracing-core = { version = "0.1.30" }
 
 # HTTP
-hyper = { version = "0.14.24", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.25", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 http = { version = "0.2.9", default-features = false }
 headers = { version = "0.3.8" }
 
@@ -398,13 +402,14 @@ headers = { version = "0.3.8" }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 
 # Serde
-serde = { version = "1.0.152", default-features = false, features = ["derive"] }
-serde_yaml = { version = "0.9.17" }
-serde_json = { version = "1.0.93", default-features = false }
+serde = { version = "1.0.158", default-features = false, features = ["derive"] }
+serde_yaml = { version = "0.9.19" }
+serde_json = { version = "1.0.94", default-features = false }
 serde-xml-rs = { version = "0.6", default-features = false, optional = true }
+serde_regex = { path = "lib/serde_regex" }
 
 # Netlink
-netlink-sys = { version = "0.8.4", features = ["tokio_socket"], optional = true }
+netlink-sys = { version = "0.8.5", features = ["tokio_socket"], optional = true }
 netlink-packet-sock-diag = { version = "0.4.1", optional = true }
 netlink-packet-core = { version = "0.5.0", optional = true }
 
@@ -417,6 +422,8 @@ openssl-probe = { version = "0.1.5", default-features = false }
 
 # Profile
 pprof = { version = "0.11.1", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
+# pin inferno, so rustc will not warning us for inferno using older quick-xml.
+inferno = { version = "0.11.15", default-features = false, features = ["nameattr"], optional = true }
 
 # Cli
 argh = { version = "0.1.10" }
@@ -426,19 +433,18 @@ colored = { version = "2.0.0", default-features = false }
 ahash = { version = "0.8.3", optional = true }
 async-stream = { version = "0.3.4", optional = true }
 bloom = { version = "0.3.2", default-features = false, optional = true }
-chrono = { version = "0.4.23", features = ["serde"] }
+chrono = { version = "0.4.24", features = ["serde"] }
 chrono-tz = { version = "0.8.1", features = ["serde"] }
 encoding_rs = { version = "0.8.32", optional = true, features = ["serde"] }
-evmap = { version = "10.0.2", default-features = false, optional = true }
 exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.25", optional = true }
 glob = { version = "0.3.1" }
 indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.3" }
+inventory = { version = "0.3.4" }
 k8s-openapi = { version = "0.17.0", default-features = false, optional = true, features = ["api", "v1_20"] }
 kube = { version = "0.80.0", default-features = false, optional = true, features = ["client", "runtime", "openssl-tls"] }
-libc = { version = "0.2.139", optional = true }
-lru = { version = "0.9.0", default-features = false, optional = true }
+libc = { version = "0.2.140", optional = true }
+lru = { version = "0.10.0", default-features = false, optional = true }
 maxminddb = { version = "0.23.0", default-features = false, optional = true }
 memchr = { version = "2.5.0", optional = true, default-features = false }
 # mongodb = { version = "2.1.0", default-features = false, optional = true, features = ["tokio-runtime"] }
@@ -449,14 +455,15 @@ parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 rdkafka = { version = "0.29.0", default-features = false, optional = true, features = ["tokio", "libz", "zstd"] }
 regex = { version = "1.7.1" }
-rsntp = { version = "3.0.1", default-features = false, features = ["tokio"], optional = true }
+rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "0363150898691cf453f4916441a167b85a137253", optional = true }
+rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.10.0", optional = true, features = ["union"] }
 snap = { version = "1.1.0", default-features = false, optional = true }
 sqlx = { version = "0.6.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-thiserror = { version = "1.0.38" }
+thiserror = { version = "1.0.40" }
 tonic = { version = "0.8.3", default-features = false, features = ["transport"], optional = true }
 tonic-health = { version = "0.8.0", optional = true }
-typetag = { version = "0.2.5" }
+typetag = { version = "0.2.7" }
 url = { version = "2.3.1", features = ["serde"] }
 uuid = { version = "1.3", default-features = false, features = ["v4"], optional = true }

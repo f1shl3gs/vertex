@@ -9,20 +9,19 @@ use std::{
 
 use crc32fast::Hasher;
 use finalize::{BatchNotifier, OrderedFinalizer};
-use rkyv::{archived_root, AlignedVec};
 use thiserror::Error;
 use tokio::io::{AsyncBufReadExt, AsyncRead, BufReader};
 
 use super::{
     common::create_crc32c_hasher,
     ledger::Ledger,
-    record::{validate_record_archive, ArchivedRecord, Record, RecordStatus},
+    record::{validate_record_archive, ArchivedRecord, RecordStatus},
     Filesystem,
 };
 use crate::{
     encoding::{AsMetadata, Encodable},
     topology::acks::{EligibleMarker, EligibleMarkerLength, MarkerError, OrderedAcknowledgements},
-    variants::disk::{io::AsyncFile, record::try_as_record_archive},
+    variants::disk::io::AsyncFile,
     Bufferable,
 };
 
@@ -182,7 +181,7 @@ impl<T: Bufferable> PartialEq for ReaderError<T> {
 /// Buffered reader that handles deserialization, checksumming, and decoding of records.
 pub(super) struct RecordReader<R, T> {
     reader: BufReader<R>,
-    aligned_buf: AlignedVec,
+    aligned_buf: Vec<u8>,
     checksummer: Hasher,
     current_record_id: u64,
     _t: PhantomData<T>,
@@ -200,7 +199,7 @@ where
     pub fn new(reader: R) -> Self {
         Self {
             reader: BufReader::with_capacity(256 * 1024, reader),
-            aligned_buf: AlignedVec::new(),
+            aligned_buf: Vec::new(),
             checksummer: create_crc32c_hasher(),
             current_record_id: 0,
             _t: PhantomData,
@@ -359,9 +358,9 @@ where
         // - `try_next_record` is the only method that can hand back a `ReadToken`
         // - we only get a `ReadToken` if there's a valid record in `self.aligned_buf`
         // - `try_next_record` does all the archive checks, checksum validation, etc
-        let record = unsafe { archived_root::<Record<'_>>(&self.aligned_buf) };
+        let record = ArchivedRecord::new(self.aligned_buf.as_slice());
 
-        decode_record_payload(record)
+        decode_record_payload(&record)
     }
 }
 
@@ -845,9 +844,9 @@ where
                 RecordStatus::Valid {
                     id: last_record_id, ..
                 } => {
-                    let record = try_as_record_archive(data_file_mmap.as_ref())
+                    let record = ArchivedRecord::try_new(data_file_mmap.as_ref())
                         .expect("record was already validated");
-                    let item = match decode_record_payload::<T>(record) {
+                    let item = match decode_record_payload::<T>(&record) {
                         Ok(item) => item,
                         // If there's an error decoding the item, just fall back to the slow path,
                         // because this file might actually be where we left off, so we don't want

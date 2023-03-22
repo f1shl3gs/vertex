@@ -2,16 +2,11 @@ use serde::de;
 use std::path::Path;
 
 /// The format used to represent the configuration data.
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Default)]
 pub enum Format {
     JSON,
+    #[default]
     YAML,
-}
-
-impl Default for Format {
-    fn default() -> Self {
-        Format::YAML
-    }
 }
 
 impl Format {

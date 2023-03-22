@@ -93,7 +93,7 @@ where
             warn!(
                 message = "Failed serializing frame",
                 ?err,
-                internal_log_rate_secs = 10
+                internal_log_rate_limit = true
             );
 
             EncodingError::Serialize(err)
@@ -177,7 +177,7 @@ impl tokio_util::codec::Encoder<Event> for Encoder<Framer> {
             warn!(
                 message = "Failed framing bytes",
                 ?err,
-                internal_log_rate_secs = 10
+                internal_log_rate_limit = true
             );
             EncodingError::Framing(err)
         })?;

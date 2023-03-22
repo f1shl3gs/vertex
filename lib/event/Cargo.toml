@@ -9,16 +9,16 @@ prost-build = { version = "0.11.8" }
 
 [dependencies]
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
-chrono = { version = "0.4.23", features = ["serde"] }
+chrono = { version = "0.4.24", features = ["serde"] }
 finalize = { path = "../finalize" }
-futures = { version = "0.3.26", default-features = false, features = ["std"] }
+futures = { version = "0.3.27", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 prost = { version = "0.11.8", default-features = false, features = ["std"] }
 prost-types = { version = "0.11.8", default-features = false }
 rand = { version = "0.8.5" }
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = { version = "1.0.93" }
+serde = { version = "1.0.158", features = ["derive"] }
+serde_json = { version = "1.0.94" }
 measurable = { path = "../measurable" }
 tokio = { version = "1.26.0", default-features = false, features = ["sync"] }
 tracing = { version = "0.1.37", default-features = false }
