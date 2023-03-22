@@ -22,14 +22,11 @@ use std::time::Instant;
 use mock_instant::Instant;
 
 const RATE_LIMIT_FIELD: &str = "internal_log_rate_limit";
-const RATE_LIMIT_SECS_FIELD: &str = "internal_log_rate_secs";
 const MESSAGE_FIELD: &str = "message";
 
 // These fields will cause events to be independently rate limited by the values
 // for these keys
 const COMPONENT_ID_FIELD: &str = "component_id";
-const VRL_LINE_NUMBER: &str = "vrl_line_number";
-const VRL_POSITION: &str = "vrl_position";
 
 #[derive(Eq, PartialEq, Hash, Clone)]
 struct RateKeyIdentifier {
@@ -136,14 +133,18 @@ where
         let mut limit_visitor = LimitVisitor::default();
         event.record(&mut limit_visitor);
 
-        let limit_exists = limit_visitor.limit.unwrap_or(false);
-        if !limit_exists {
-            return self.inner.on_event(event, ctx);
-        }
-
-        let limit = match limit_visitor.limit_secs {
-            Some(secs) => secs, // override the cli limit,
-            None => self.internal_log_rate_limit,
+        let limit = match limit_visitor.seconds {
+            Some(v) => {
+                if v == 0 {
+                    self.internal_log_rate_limit
+                } else {
+                    // override default rate limit
+                    v
+                }
+            }
+            None => {
+                return self.inner.on_event(event, ctx);
+            }
         };
 
         // Visit all of the spans in the scope of this event, looking for specific fields
@@ -317,119 +318,60 @@ impl State {
     }
 }
 
-#[derive(PartialEq, Eq, Clone, Hash)]
-enum TraceValue {
-    String(String),
-    Int(i64),
-    Uint(u64),
-    Bool(bool),
-}
-
-impl From<bool> for TraceValue {
-    fn from(b: bool) -> Self {
-        TraceValue::Bool(b)
-    }
-}
-
-impl From<i64> for TraceValue {
-    fn from(i: i64) -> Self {
-        TraceValue::Int(i)
-    }
-}
-
-impl From<u64> for TraceValue {
-    fn from(u: u64) -> Self {
-        TraceValue::Uint(u)
-    }
-}
-
-impl From<String> for TraceValue {
-    fn from(s: String) -> Self {
-        TraceValue::String(s)
-    }
-}
-
 /// RateLimitedSpanKeys records span keys that we use to rate limit callsites separately by. For
 /// example, if a given trace callsite is called from two different components, then they will be
 /// rate limited separately.
 #[derive(Default, Eq, PartialEq, Hash, Clone)]
 struct RateLimitedSpanKeys {
-    component_id: Option<TraceValue>,
-    vrl_line_number: Option<TraceValue>,
-    vrl_position: Option<TraceValue>,
+    component_id: Option<String>,
 }
 
 impl RateLimitedSpanKeys {
-    fn record(&mut self, field: &Field, value: TraceValue) {
-        match field.name() {
-            COMPONENT_ID_FIELD => self.component_id = Some(value),
-            VRL_LINE_NUMBER => self.vrl_line_number = Some(value),
-            VRL_POSITION => self.vrl_position = Some(value),
-            _ => {}
-        }
-    }
-
     fn merge(&mut self, other: &Self) {
         if let Some(component_id) = &other.component_id {
             self.component_id = Some(component_id.clone());
-        }
-        if let Some(vrl_line_number) = &other.vrl_line_number {
-            self.vrl_line_number = Some(vrl_line_number.clone());
-        }
-        if let Some(vrl_position) = &other.vrl_position {
-            self.vrl_position = Some(vrl_position.clone());
         }
     }
 }
 
 impl Visit for RateLimitedSpanKeys {
-    fn record_i64(&mut self, field: &Field, value: i64) {
-        self.record(field, value.into());
-    }
-
-    fn record_u64(&mut self, field: &Field, value: u64) {
-        self.record(field, value.into());
-    }
-
-    fn record_bool(&mut self, field: &Field, value: bool) {
-        self.record(field, value.into());
-    }
-
     fn record_str(&mut self, field: &Field, value: &str) {
-        self.record(field, value.to_owned().into());
+        if field.name() == COMPONENT_ID_FIELD {
+            self.component_id = Some(value.to_string())
+        }
     }
 
     fn record_debug(&mut self, field: &Field, value: &dyn Debug) {
-        self.record(field, format!("{:?}", value).into());
+        if field.name() == COMPONENT_ID_FIELD {
+            self.component_id = Some(format!("{:?}", value))
+        }
     }
 }
 
 #[derive(Default)]
 struct LimitVisitor {
-    pub limit: Option<bool>,
-    pub limit_secs: Option<u64>,
+    // - None: don't limit this log
+    // - Some(n): n > 0 limit rate
+    // - Some(n): n == 0 use default limit rate
+    pub seconds: Option<u64>,
 }
 
 impl Visit for LimitVisitor {
     fn record_i64(&mut self, field: &Field, value: i64) {
-        if field.name() == RATE_LIMIT_SECS_FIELD {
-            // limit if we have this field
-            self.limit = Some(true);
-            // override the global limit
-            self.limit_secs = Some(u64::try_from(value).unwrap_or_default());
+        if field.name() == RATE_LIMIT_FIELD {
+            self.seconds = Some(u64::try_from(value).unwrap_or_default());
         }
     }
 
     fn record_u64(&mut self, field: &Field, value: u64) {
-        if field.name() == RATE_LIMIT_SECS_FIELD {
-            self.limit = Some(true); // limit if we have this field
-            self.limit_secs = Some(value); // override the cli passed limit
+        if field.name() == RATE_LIMIT_FIELD {
+            self.seconds = Some(value);
         }
     }
 
     fn record_bool(&mut self, field: &Field, value: bool) {
-        if field.name() == RATE_LIMIT_FIELD {
-            self.limit = Some(value)
+        if field.name() == RATE_LIMIT_FIELD && value {
+            self.seconds = Some(0)
         }
     }
 
@@ -547,11 +489,7 @@ mod test {
             .with(RateLimitedLayer::new(recorder).with_default_limit(100));
         tracing::subscriber::with_default(sub, || {
             for _ in 0..21 {
-                info!(
-                    message = "Hello world!",
-                    internal_log_rate_limit = true,
-                    internal_log_rate_secs = 1
-                );
+                info!(message = "Hello world!", internal_log_rate_limit = 1);
                 MockClock::advance(Duration::from_millis(100));
             }
         });
@@ -568,135 +506,6 @@ mod test {
                 "Internal log [Hello world!] is being rate limited.",
                 "Internal log [Hello world!] has been rate limited 9 times.",
                 "Hello world!",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect::<Vec<String>>()
-        );
-    }
-
-    #[test]
-    fn rate_limit_by_span_key() {
-        let events: Arc<Mutex<Vec<String>>> = Default::default();
-
-        let recorder = RecordingLayer::new(Arc::clone(&events));
-        let sub = tracing_subscriber::registry::Registry::default()
-            .with(RateLimitedLayer::new(recorder).with_default_limit(1));
-        tracing::subscriber::with_default(sub, || {
-            for _ in 0..21 {
-                for key in &["foo", "bar"] {
-                    for line_number in &[1, 2] {
-                        let span =
-                            info_span!("span", component_id = &key, vrl_position = &line_number);
-                        let _enter = span.enter();
-                        info!(
-                            message =
-                                format!("Hello {} on line_number {}!", key, line_number).as_str(),
-                            internal_log_rate_limit = true
-                        );
-                    }
-                }
-                MockClock::advance(Duration::from_millis(100));
-            }
-        });
-
-        let events = events.lock().unwrap();
-
-        assert_eq!(
-            *events,
-            vec![
-                "Hello foo on line_number 1!",
-                "Hello foo on line_number 2!",
-                "Hello bar on line_number 1!",
-                "Hello bar on line_number 2!",
-                "Internal log [Hello foo on line_number 1!] is being rate limited.",
-                "Internal log [Hello foo on line_number 2!] is being rate limited.",
-                "Internal log [Hello bar on line_number 1!] is being rate limited.",
-                "Internal log [Hello bar on line_number 2!] is being rate limited.",
-                "Internal log [Hello foo on line_number 1!] has been rate limited 9 times.",
-                "Hello foo on line_number 1!",
-                "Internal log [Hello foo on line_number 2!] has been rate limited 9 times.",
-                "Hello foo on line_number 2!",
-                "Internal log [Hello bar on line_number 1!] has been rate limited 9 times.",
-                "Hello bar on line_number 1!",
-                "Internal log [Hello bar on line_number 2!] has been rate limited 9 times.",
-                "Hello bar on line_number 2!",
-                "Internal log [Hello foo on line_number 1!] is being rate limited.",
-                "Internal log [Hello foo on line_number 2!] is being rate limited.",
-                "Internal log [Hello bar on line_number 1!] is being rate limited.",
-                "Internal log [Hello bar on line_number 2!] is being rate limited.",
-                "Internal log [Hello foo on line_number 1!] has been rate limited 9 times.",
-                "Hello foo on line_number 1!",
-                "Internal log [Hello foo on line_number 2!] has been rate limited 9 times.",
-                "Hello foo on line_number 2!",
-                "Internal log [Hello bar on line_number 1!] has been rate limited 9 times.",
-                "Hello bar on line_number 1!",
-                "Internal log [Hello bar on line_number 2!] has been rate limited 9 times.",
-                "Hello bar on line_number 2!",
-            ]
-            .into_iter()
-            .map(std::borrow::ToOwned::to_owned)
-            .collect::<Vec<String>>()
-        );
-    }
-
-    #[test]
-    fn rate_limit_by_event_key() {
-        let events: Arc<Mutex<Vec<String>>> = Default::default();
-
-        let recorder = RecordingLayer::new(Arc::clone(&events));
-        let sub = tracing_subscriber::registry::Registry::default()
-            .with(RateLimitedLayer::new(recorder).with_default_limit(1));
-        tracing::subscriber::with_default(sub, || {
-            for _ in 0..21 {
-                for key in &["foo", "bar"] {
-                    for line_number in &[1, 2] {
-                        info!(
-                            message =
-                                format!("Hello {} on line_number {}!", key, line_number).as_str(),
-                            internal_log_rate_limit = true,
-                            component_id = &key,
-                            vrl_position = &line_number
-                        );
-                    }
-                }
-                MockClock::advance(Duration::from_millis(100));
-            }
-        });
-
-        let events = events.lock().unwrap();
-
-        assert_eq!(
-            *events,
-            vec![
-                "Hello foo on line_number 1!",
-                "Hello foo on line_number 2!",
-                "Hello bar on line_number 1!",
-                "Hello bar on line_number 2!",
-                "Internal log [Hello foo on line_number 1!] is being rate limited.",
-                "Internal log [Hello foo on line_number 2!] is being rate limited.",
-                "Internal log [Hello bar on line_number 1!] is being rate limited.",
-                "Internal log [Hello bar on line_number 2!] is being rate limited.",
-                "Internal log [Hello foo on line_number 1!] has been rate limited 9 times.",
-                "Hello foo on line_number 1!",
-                "Internal log [Hello foo on line_number 2!] has been rate limited 9 times.",
-                "Hello foo on line_number 2!",
-                "Internal log [Hello bar on line_number 1!] has been rate limited 9 times.",
-                "Hello bar on line_number 1!",
-                "Internal log [Hello bar on line_number 2!] has been rate limited 9 times.",
-                "Hello bar on line_number 2!",
-                "Internal log [Hello foo on line_number 1!] is being rate limited.",
-                "Internal log [Hello foo on line_number 2!] is being rate limited.",
-                "Internal log [Hello bar on line_number 1!] is being rate limited.",
-                "Internal log [Hello bar on line_number 2!] is being rate limited.",
-                "Internal log [Hello foo on line_number 1!] has been rate limited 9 times.",
-                "Hello foo on line_number 1!",
-                "Internal log [Hello foo on line_number 2!] has been rate limited 9 times.",
-                "Hello foo on line_number 2!",
-                "Internal log [Hello bar on line_number 1!] has been rate limited 9 times.",
-                "Hello bar on line_number 1!",
-                "Internal log [Hello bar on line_number 2!] has been rate limited 9 times.",
-                "Hello bar on line_number 2!",
             ]
             .into_iter()
             .map(std::borrow::ToOwned::to_owned)
