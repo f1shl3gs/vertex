@@ -7,7 +7,7 @@ use std::{
 
 use configurable::Configurable;
 use openssl::{
-    pkcs12::{ParsedPkcs12, Pkcs12},
+    pkcs12::{ParsedPkcs12_2, Pkcs12},
     pkey::{PKey, Private},
     ssl::{ConnectConfiguration, SslContextBuilder, SslVerifyMode},
     stack::Stack,
@@ -113,7 +113,7 @@ impl TlsSettings {
         })
     }
 
-    fn identity(&self) -> Option<ParsedPkcs12> {
+    fn identity(&self) -> Option<ParsedPkcs12_2> {
         // This data was test-built previously, so we can just use it
         // here and expect the results will not fail. This can all be
         // reworked when `openssl::pkcs12::ParsedPkcs12` gains the Clone
@@ -121,7 +121,7 @@ impl TlsSettings {
         self.identity.as_ref().map(|identity| {
             Pkcs12::from_der(&identity.0)
                 .expect("Could not build PKCS#12 archive from parsed data")
-                .parse(&identity.1)
+                .parse2(&identity.1)
                 .expect("Could not parse stored PKCS#12 archive")
         })
     }
@@ -133,13 +133,19 @@ impl TlsSettings {
             SslVerifyMode::NONE
         });
         if let Some(identity) = self.identity() {
-            context
-                .set_certificate(&identity.cert)
-                .map_err(TlsError::SetCertificate)?;
-            context
-                .set_private_key(&identity.pkey)
-                .map_err(TlsError::SetPrivateKey)?;
-            if let Some(chain) = identity.chain {
+            if let Some(cert) = &identity.cert {
+                context
+                    .set_certificate(cert)
+                    .map_err(TlsError::SetCertificate)?;
+            }
+
+            if let Some(pkey) = &identity.pkey {
+                context
+                    .set_private_key(pkey)
+                    .map_err(TlsError::SetPrivateKey)?;
+            }
+
+            if let Some(chain) = identity.ca {
                 for cert in chain {
                     context
                         .add_extra_chain_cert(cert)
@@ -231,17 +237,20 @@ impl TlsConfig {
                     ca_stack.push(intermediate).map_err(TlsError::CaStackPush)?;
                 }
 
-                let mut builder = Pkcs12::builder();
-                builder.ca(ca_stack);
-                let pkcs12 = builder
-                    .build("", &name, &key, &crt)
+                let pkcs12 = Pkcs12::builder()
+                    .ca(ca_stack)
+                    .name(&name)
+                    .pkey(&key)
+                    .cert(&crt)
+                    .build2("")
                     .map_err(TlsError::BuildPkcs12)?;
+
                 let identity = pkcs12.to_der().map_err(TlsError::DerExport)?;
 
                 // Build the resulting parsed PKCS#12 archive,
                 // but don't store it, as it cannot be cloned.
                 // This is just for error checking.
-                pkcs12.parse("").map_err(TlsError::Identity)?;
+                pkcs12.parse2("").map_err(TlsError::Identity)?;
 
                 Ok(Some(IdentityStore(identity, "".into())))
             }
@@ -253,7 +262,7 @@ impl TlsConfig {
         let pkcs12 = Pkcs12::from_der(&der).map_err(TlsError::ParsePkcs12)?;
         // Verify password
         let key_pass = self.key_pass.as_deref().unwrap_or("");
-        pkcs12.parse(key_pass).map_err(TlsError::ParsePkcs12)?;
+        pkcs12.parse2(key_pass).map_err(TlsError::ParsePkcs12)?;
         Ok(Some(IdentityStore(der, key_pass.to_string())))
     }
 }
