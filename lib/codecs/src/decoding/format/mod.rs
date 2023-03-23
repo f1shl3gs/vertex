@@ -32,6 +32,9 @@ pub enum DeserializeError {
     /// The error occurred while deserializing it from JSON
     Json(serde_json::Error),
 
+    /// The error occurred while deserializing it from syslog RFC5424.
+    Syslog(syslog::Error),
+
     /// The error occurred while deserializing
     Other(Box<dyn std::error::Error + Send + Sync + 'static>),
 }

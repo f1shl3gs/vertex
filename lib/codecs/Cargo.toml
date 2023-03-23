@@ -5,8 +5,8 @@ edition = "2021"
 publish = false
 
 [features]
-default = []
-syslog = ["syslog_loose"]
+default = ["syslog"]
+syslog = []
 
 [dev-dependencies]
 tokio = { version = "1.26.0", default-features = false, features = ["test-util", "macros"] }
@@ -31,5 +31,3 @@ tracing = { version = "0.1.37" }
 serde = { version = "1.0.158", default-features = false }
 smallvec = { version = "1.10.0" }
 
-# Optional
-syslog_loose = { version = "0.18.0", default-features = false, optional = true }
