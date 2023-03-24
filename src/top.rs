@@ -1,5 +1,3 @@
-#![allow(clippy::print_stdout)]
-
 use std::collections::BTreeMap;
 use std::time::Instant;
 
@@ -12,10 +10,22 @@ use framework::http::HttpClient;
 use framework::tls::TlsSettings;
 use http::{Method, Request, StatusCode};
 use hyper::Body;
+use serde::Deserialize;
 use tokio::time::MissedTickBehavior;
 use tracing::warn;
-use vertex::extensions::zpages;
-use vertex::extensions::zpages::Point;
+
+#[derive(Debug, Deserialize)]
+pub struct Point {
+    pub attrs: BTreeMap<String, String>,
+    pub value: f64,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct Metric {
+    pub name: String,
+    pub description: String,
+    pub points: Vec<Point>,
+}
 
 fn default_interval() -> String {
     "1s".to_string()
@@ -123,7 +133,7 @@ async fn fetch(uri: &str) -> framework::Result<TopStats> {
 
     let body = hyper::body::aggregate(body).await?;
 
-    let metrics: Vec<zpages::Metric> = serde_json::from_reader(body.reader())?;
+    let metrics: Vec<Metric> = serde_json::from_reader(body.reader())?;
     let mut top = BTreeMap::new();
     metrics.iter().for_each(|metric| {
         metric.points.iter().for_each(|point| {
@@ -198,6 +208,7 @@ struct Table {
     prev: Option<PrevStats>,
 }
 
+#[allow(clippy::print_stdout)]
 impl Table {
     fn new(uri: String, interval: String) -> Self {
         Self {

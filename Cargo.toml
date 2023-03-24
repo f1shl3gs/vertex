@@ -92,8 +92,7 @@ common = [
 benches = [
     "sources-node_metrics",
     "sources-haproxy",
-    "sinks-loki",
-    "extensions-zpages"
+    "sinks-loki"
 ]
 
 # Integration tests
