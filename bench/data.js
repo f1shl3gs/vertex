@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679628592622,
+  "lastUpdate": 1679631822560,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -30119,6 +30119,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57321.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "44c03e1c0a03e611271f805179f20fd504094529",
+          "message": "chore(deps): bump syn from 2.0.5 to 2.0.8 (#880)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.5 to 2.0.8.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.5...2.0.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-03-24T12:00:33+08:00",
+          "tree_id": "7107a8603bb06a0bb42436a4b2a34524667980ed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/44c03e1c0a03e611271f805179f20fd504094529"
+        },
+        "date": 1679631812336,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1142,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57301.8,
             "unit": "KiB"
           }
         ]
