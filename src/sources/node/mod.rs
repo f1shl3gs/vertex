@@ -354,7 +354,7 @@ impl Default for NodeMetricsConfig {
 
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct NodeMetrics {
-    interval: std::time::Duration,
+    interval: Duration,
     proc_path: String,
     sys_path: String,
 
@@ -828,8 +828,8 @@ impl SourceConfig for NodeMetricsConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
             interval: self.interval,
-            proc_path: default_proc_path(),
-            sys_path: default_sys_path(),
+            proc_path: self.proc_path.clone(),
+            sys_path: self.sys_path.clone(),
             collectors: self.collectors.clone(),
         };
 
