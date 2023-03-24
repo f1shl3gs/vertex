@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679649787730,
+  "lastUpdate": 1679649808714,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16451,6 +16451,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 64.733,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a",
+          "message": "Build vertex without zpages (#883)\n\n* copy `Metric` and `Point`\r\n\r\n* remove zpages from benches feature",
+          "timestamp": "2023-03-24T17:18:24+08:00",
+          "tree_id": "b8461ba08c2260e70deda1ebdc1c3dbf2472aa11",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a"
+        },
+        "date": 1679649799561,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.509,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.641,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.782,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.067,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.368,
             "unit": "ns/op"
           }
         ]
