@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679663442988,
+  "lastUpdate": 1679664193645,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -38722,6 +38722,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 21.334,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "50acc29d3ff82650cedec356e477960a17ebe0a6",
+          "message": "Fix proc and sys path (#886)\n\n* add color to connect status\r\n\r\n* fix proc and sys path setting",
+          "timestamp": "2023-03-24T21:04:13+08:00",
+          "tree_id": "90310a2b29bbeaf43691142539c61e637aa5bc62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/50acc29d3ff82650cedec356e477960a17ebe0a6"
+        },
+        "date": 1679664184037,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 30787000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1076400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.87,
             "unit": "ns/op"
           }
         ]
