@@ -220,7 +220,7 @@ impl Table {
 
     fn render(&mut self, stats: Option<TopStats>) {
         // Clear the console
-        print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
+        print!("\x1b[2J\x1b[1;1H");
 
         self.print_summary(stats.as_ref());
 
@@ -316,8 +316,7 @@ impl Table {
         }
 
         // header
-        let esc = 27 as char;
-        println!("{esc}[7m{:key_width$}{:kind_width$}{:typ_width$}{:received_width$}{:sent_width$}{esc}[0m",
+        println!("\x1b[7m{:key_width$}{:kind_width$}{:typ_width$}{:received_width$}{:sent_width$}\x1b[0m",
                  "ID", "Kind", "Type", "Received", "Sent");
 
         // sort by received rate for now
@@ -343,9 +342,9 @@ impl Table {
             self.uri,
             self.interval,
             if stats.is_some() {
-                "Connected"
+                "\x1b[32mConnected\x1b[0m"
             } else {
-                "Unconnected"
+                "\x1b[31mUnconnected\x1b[0m"
             }
         );
 
