@@ -124,6 +124,10 @@ check_fmt:
 .PHONY: check
 check: check_shell check_clippy check_fmt
 
+.PHONY: bench-event
+bench-event:
+	cargo bench --manifest-path lib/event/Cargo.toml
+
 .PHONY: bench-vertex
 bench-vertex:
 	cargo bench --no-default-features --features benches
