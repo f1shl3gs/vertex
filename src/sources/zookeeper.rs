@@ -1,4 +1,3 @@
-use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::time::Duration;
 
@@ -8,10 +7,8 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::{Error, Source};
-use futures::StreamExt;
 use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
-use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "zookeeper")]
 #[derive(Clone, Debug)]
@@ -26,127 +23,124 @@ struct ZookeeperConfig {
     interval: Duration,
 }
 
-struct ZookeeperSource {
-    endpoint: String,
-}
-
-impl ZookeeperSource {
-    fn from(conf: &ZookeeperConfig) -> Self {
-        Self {
-            endpoint: conf.endpoint.clone(),
-        }
-    }
-
-    async fn run(
-        self,
-        interval: std::time::Duration,
-        mut output: Pipeline,
-        shutdown: ShutdownSignal,
-    ) -> Result<(), ()> {
-        let interval = tokio::time::interval(interval);
-        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
-
-        let endpoint = Cow::from(self.endpoint.clone());
-        while let Some(_ts) = ticker.next().await {
-            let mut metrics = match fetch_stats(endpoint.as_ref()).await {
-                Ok((version, state, peer_state, stats)) => {
-                    let mut metrics = Vec::with_capacity(stats.len() + 2);
-                    metrics.extend_from_slice(&[
-                        Metric::gauge_with_tags(
-                            "zk_up",
-                            "",
-                            1,
-                            tags!(
-                                INSTANCE_KEY => endpoint.clone()
-                            ),
-                        ),
-                        Metric::gauge_with_tags(
-                            "zk_version",
-                            "",
-                            1,
-                            tags!(
-                                "version" => version,
-                                INSTANCE_KEY => endpoint.clone()
-                            ),
-                        ),
-                        Metric::gauge_with_tags(
-                            "zk_server_state",
-                            "",
-                            1,
-                            tags!(
-                                "state" => state,
-                                INSTANCE_KEY => endpoint.clone()
-                            ),
-                        ),
-                        Metric::gauge_with_tags(
-                            "zk_peer_state",
-                            "",
-                            1,
-                            tags!(
-                                "state" => peer_state,
-                                INSTANCE_KEY => endpoint.clone(),
-                            ),
-                        ),
-                    ]);
-
-                    for (key, value) in stats {
-                        metrics.push(Metric::gauge_with_tags(
-                            key.as_str(),
-                            format!("{} value of mntr", key),
-                            value,
-                            tags!(
-                                INSTANCE_KEY => endpoint.clone()
-                            ),
-                        ));
-                    }
-
-                    metrics
-                }
-                Err(err) => {
-                    warn!(
-                        message = "Fetch zookeeper stats failed",
-                        %err
-                    );
-
-                    vec![Metric::gauge_with_tags(
-                        "zk_up",
-                        "",
-                        0,
-                        tags!(
-                            INSTANCE_KEY => endpoint.clone()
-                        ),
-                    )]
-                }
-            };
-
-            let now = chrono::Utc::now();
-            metrics.iter_mut().for_each(|m| m.timestamp = Some(now));
-
-            if let Err(err) = output.send(metrics).await {
-                error!(
-                    message = "Error sending zookeeper metrics",
-                    %err
-                );
-
-                return Err(());
-            }
-        }
-
-        Ok(())
-    }
-}
-
 #[async_trait::async_trait]
 #[typetag::serde(name = "zookeeper")]
 impl SourceConfig for ZookeeperConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let source = ZookeeperSource::from(self);
-        Ok(Box::pin(source.run(self.interval, cx.output, cx.shutdown)))
+        Ok(Box::pin(run(
+            self.endpoint.clone(),
+            self.interval,
+            cx.output,
+            cx.shutdown,
+        )))
     }
 
     fn outputs(&self) -> Vec<Output> {
         vec![Output::default(DataType::Metric)]
     }
+}
+
+async fn run(
+    endpoint: String,
+    interval: Duration,
+    mut output: Pipeline,
+    mut shutdown: ShutdownSignal,
+) -> Result<(), ()> {
+    let mut ticker = tokio::time::interval(interval);
+
+    loop {
+        tokio::select! {
+            biased;
+
+            _ = &mut shutdown => break,
+            _ = ticker.tick() => {}
+        }
+
+        let mut metrics = match fetch_stats(&endpoint).await {
+            Ok((version, state, peer_state, stats)) => {
+                let mut metrics = Vec::with_capacity(stats.len() + 2);
+                metrics.extend_from_slice(&[
+                    Metric::gauge_with_tags(
+                        "zk_up",
+                        "",
+                        1,
+                        tags!(
+                            INSTANCE_KEY => endpoint.clone()
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
+                        "zk_version",
+                        "",
+                        1,
+                        tags!(
+                            "version" => version,
+                            INSTANCE_KEY => endpoint.clone()
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
+                        "zk_server_state",
+                        "",
+                        1,
+                        tags!(
+                            "state" => state,
+                            INSTANCE_KEY => endpoint.clone()
+                        ),
+                    ),
+                    Metric::gauge_with_tags(
+                        "zk_peer_state",
+                        "",
+                        1,
+                        tags!(
+                            "state" => peer_state,
+                            INSTANCE_KEY => endpoint.clone(),
+                        ),
+                    ),
+                ]);
+
+                for (key, value) in stats {
+                    metrics.push(Metric::gauge_with_tags(
+                        key.as_str(),
+                        format!("{} value of mntr", key),
+                        value,
+                        tags!(
+                            INSTANCE_KEY => endpoint.clone()
+                        ),
+                    ));
+                }
+
+                metrics
+            }
+            Err(err) => {
+                warn!(
+                    message = "Fetch zookeeper stats failed",
+                    %err
+                );
+
+                vec![Metric::gauge_with_tags(
+                    "zk_up",
+                    "",
+                    0,
+                    tags!(
+                        INSTANCE_KEY => endpoint.clone()
+                    ),
+                )]
+            }
+        };
+
+        let now = chrono::Utc::now();
+        metrics.iter_mut().for_each(|m| m.timestamp = Some(now));
+
+        if let Err(err) = output.send(metrics).await {
+            error!(
+                message = "Error sending zookeeper metrics",
+                %err
+            );
+
+            return Err(());
+        }
+    }
+
+    Ok(())
 }
 
 fn parse_version(input: &str) -> String {
