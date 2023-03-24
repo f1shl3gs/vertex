@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679635871589,
+  "lastUpdate": 1679635872864,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4001,6 +4001,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 711510,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "286a2e03edacd66fbea0b64d26c04172b290f7e7",
+          "message": "Fix condition bench (#881)\n\n* fix condition bench\r\n\r\n* add clock feature for chrono",
+          "timestamp": "2023-03-24T13:27:03+08:00",
+          "tree_id": "6caaa992ff2b64af7c3cd242ab5860c187fdb762",
+          "url": "https://github.com/f1shl3gs/vertex/commit/286a2e03edacd66fbea0b64d26c04172b290f7e7"
+        },
+        "date": 1679635862307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719530,
             "unit": "ns/op"
           }
         ]
