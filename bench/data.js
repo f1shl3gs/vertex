@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679649808714,
+  "lastUpdate": 1679649879192,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25462,6 +25462,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 228730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a",
+          "message": "Build vertex without zpages (#883)\n\n* copy `Metric` and `Point`\r\n\r\n* remove zpages from benches feature",
+          "timestamp": "2023-03-24T17:18:24+08:00",
+          "tree_id": "b8461ba08c2260e70deda1ebdc1c3dbf2472aa11",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a"
+        },
+        "date": 1679649867277,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 680.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 68249,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 340000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 667180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 237.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 23351,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 118000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 240160,
             "unit": "ns/op"
           }
         ]
