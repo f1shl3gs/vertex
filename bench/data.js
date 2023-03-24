@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679649740937,
+  "lastUpdate": 1679649760402,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4059,6 +4059,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 905010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a",
+          "message": "Build vertex without zpages (#883)\n\n* copy `Metric` and `Point`\r\n\r\n* remove zpages from benches feature",
+          "timestamp": "2023-03-24T17:18:24+08:00",
+          "tree_id": "b8461ba08c2260e70deda1ebdc1c3dbf2472aa11",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a"
+        },
+        "date": 1679649750714,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 718550,
             "unit": "ns/op"
           }
         ]
