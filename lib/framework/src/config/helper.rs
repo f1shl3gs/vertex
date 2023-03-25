@@ -8,11 +8,7 @@ pub const fn default_true() -> bool {
     true
 }
 
-pub const fn default_false() -> bool {
-    false
-}
-
-pub const fn default_interval() -> std::time::Duration {
+pub const fn default_interval() -> Duration {
     Duration::from_secs(15)
 }
 

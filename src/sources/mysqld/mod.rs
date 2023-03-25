@@ -13,7 +13,7 @@ use std::time::{Duration, Instant};
 use configurable::{configurable_component, Configurable};
 use event::{Metric, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
+    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::{tls::TlsConfig, Source};
 use serde::{Deserialize, Serialize};
@@ -79,10 +79,11 @@ struct MysqldConfig {
     slave_status: bool,
 
     /// Since 5.1, collect auto_increment columns and max values from information_schema.
-    #[serde(default = "default_false")]
+    #[serde(default)]
     auto_increment_columns: bool,
+
     /// Since 5.1, collect the current size of all registered binlog files
-    #[serde(default = "default_false")]
+    #[serde(default)]
     binlog_size: bool,
 
     #[serde(default = "default_info_schema")]
