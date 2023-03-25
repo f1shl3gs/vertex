@@ -67,9 +67,7 @@ use framework::config::{
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
-use futures::StreamExt;
 use serde::{Deserialize, Serialize};
-use tokio_stream::wrappers::IntervalStream;
 use typetag;
 
 use self::errors::{Error, ErrorContext};
@@ -435,9 +433,8 @@ macro_rules! record_gather {
 }
 
 impl NodeMetrics {
-    async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
-        let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
+    async fn run(self, mut shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
+        let mut ticker = tokio::time::interval(self.interval);
 
         let proc_path = Arc::new(self.proc_path);
         let sys_path = Arc::new(self.sys_path);
@@ -451,7 +448,14 @@ impl NodeMetrics {
         let power_supply = self.collectors.power_supply.map(Arc::new);
         let vmstat = self.collectors.vmstat.map(Arc::new);
 
-        while ticker.next().await.is_some() {
+        loop {
+            tokio::select! {
+                biased;
+
+                _ = &mut shutdown => break,
+                _ = ticker.tick() => {}
+            }
+
             let mut tasks = Vec::new();
 
             if self.collectors.arp {

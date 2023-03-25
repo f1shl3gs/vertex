@@ -7,10 +7,9 @@ use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::Output;
 use framework::{
-    config::{default_interval, ticker_from_duration, DataType, SourceConfig, SourceContext},
+    config::{default_interval, DataType, SourceConfig, SourceContext},
     Error, Source,
 };
-use futures::StreamExt;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[configurable_component(source, name = "nvidia_smi")]
@@ -35,11 +34,22 @@ fn default_smi_path() -> PathBuf {
 impl SourceConfig for NvidiaSmiConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
-        let mut output = cx.output;
+        let mut ticker = tokio::time::interval(self.interval);
+        let SourceContext {
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
 
         Ok(Box::pin(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 match gather(&path).await {
                     Ok(metrics) => {
                         if let Err(err) = output.send(metrics).await {

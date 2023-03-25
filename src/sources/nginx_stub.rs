@@ -11,7 +11,7 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
-use futures::{StreamExt, TryFutureExt};
+use futures::TryFutureExt;
 use hyper::{StatusCode, Uri};
 use nom::{
     bytes::complete::{tag, take_while_m_n},
@@ -20,7 +20,6 @@ use nom::{
     sequence::{preceded, terminated, tuple},
 };
 use thiserror::Error;
-use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "nginx_stub")]
 #[derive(Debug)]
@@ -58,12 +57,22 @@ impl SourceConfig for NginxStubConfig {
             )?);
         }
 
-        let mut output = cx.output;
-        let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
+        let SourceContext {
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
+        let mut ticker = tokio::time::interval(self.interval);
 
         Ok(Box::pin(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let mut metrics = futures::future::join_all(sources.iter().map(|s| s.collect()))
                     .await
                     .into_iter()

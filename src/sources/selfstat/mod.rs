@@ -13,8 +13,6 @@ use framework::{
     config::{default_interval, DataType, Output, SourceConfig, SourceContext},
     Source,
 };
-use futures::StreamExt;
-use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "selfstat")]
 #[derive(Copy, Clone, Debug)]
@@ -45,17 +43,23 @@ struct SelfStat {
 }
 
 impl SelfStat {
-    async fn run(self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
-        let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
+    async fn run(self, mut shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {
+        let mut ticker = tokio::time::interval(self.interval);
 
-        while ticker.next().await.is_some() {
+        loop {
+            tokio::select! {
+                biased;
+
+                _ = &mut shutdown => break,
+                _ = ticker.tick() => {}
+            }
+
             match gather().await {
                 Ok(mut metrics) => {
                     let now = Some(chrono::Utc::now());
                     metrics.iter_mut().for_each(|m| m.timestamp = now);
 
-                    if let Err(err) = out.send(metrics).await {
+                    if let Err(err) = output.send(metrics).await {
                         error!(
                             message = "Error sending selfstat metrics",
                             %err

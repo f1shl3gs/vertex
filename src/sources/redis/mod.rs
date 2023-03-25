@@ -13,10 +13,8 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
-use futures::StreamExt;
 use once_cell::sync::Lazy;
 use thiserror::Error;
-use tokio_stream::wrappers::IntervalStream;
 
 static GAUGE_METRICS: Lazy<BTreeMap<&'static str, &'static str>> = Lazy::new(|| {
     let mut m = BTreeMap::new();
@@ -302,11 +300,17 @@ struct RedisSource {
 }
 
 impl RedisSource {
-    async fn run(self, mut output: Pipeline, shutdown: ShutdownSignal) -> Result<(), ()> {
-        let mut ticker =
-            IntervalStream::new(tokio::time::interval(self.interval)).take_until(shutdown);
+    async fn run(self, mut output: Pipeline, mut shutdown: ShutdownSignal) -> Result<(), ()> {
+        let mut ticker = tokio::time::interval(self.interval);
 
-        while ticker.next().await.is_some() {
+        loop {
+            tokio::select! {
+                biased;
+
+                _ = &mut shutdown => break,
+                _ = ticker.tick() => {}
+            }
+
             let mut metrics = match self.collect().await {
                 Err(err) => {
                     warn!(

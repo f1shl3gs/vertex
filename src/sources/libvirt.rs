@@ -4,11 +4,8 @@ use std::time::{Duration, Instant};
 use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, ticker_from_duration, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
-use futures_util::StreamExt;
 use virt::{Client, Error};
 
 const DOMAIN_KEY: Key = Key::from_static_str("domain");
@@ -34,12 +31,23 @@ struct LibvirtSourceConfig {
 #[typetag::serde(name = "libvirt")]
 impl SourceConfig for LibvirtSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
         let sock = self.sock.clone();
-        let mut output = cx.output;
+        let mut ticker = tokio::time::interval(self.interval);
+        let SourceContext {
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
 
         Ok(Box::pin(async move {
-            while let Some(_ts) = ticker.next().await {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let start = Instant::now();
                 let result = gather_v2(&sock).await.map_err(|err| {
                     warn!(message = "Scrape libvirt metrics failed", ?err);
@@ -69,6 +77,7 @@ impl SourceConfig for LibvirtSourceConfig {
                     return Err(());
                 }
             }
+
             Ok(())
         }))
     }

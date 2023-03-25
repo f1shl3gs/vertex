@@ -8,9 +8,7 @@ use framework::{
     config::{default_interval, DataType, Output, SourceConfig, SourceContext},
     Source,
 };
-use futures::StreamExt;
 use rsntp;
-use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "ntp")]
 #[derive(Clone, Debug)]
@@ -70,14 +68,20 @@ impl Ntp {
         self.pools[index].clone()
     }
 
-    async fn run(mut self, shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
-        let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(shutdown);
+    async fn run(mut self, mut shutdown: ShutdownSignal, mut out: Pipeline) -> Result<(), ()> {
+        let mut ticker = tokio::time::interval(self.interval);
 
         let mut client = rsntp::AsyncSntpClient::new();
         client.set_timeout(self.timeout);
 
-        while let Some(_ts) = ticker.next().await {
+        loop {
+            tokio::select! {
+                biased;
+
+                _ = &mut shutdown => break,
+                _ = ticker.tick() => {}
+            }
+
             let addr = self.pick_one();
 
             match client.synchronize(addr).await {

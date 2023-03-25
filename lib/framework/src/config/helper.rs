@@ -3,7 +3,6 @@ mod charset;
 use std::time::Duration;
 
 pub use serde_regex::*;
-use tokio_stream::wrappers::IntervalStream;
 
 pub const fn default_true() -> bool {
     true
@@ -26,11 +25,6 @@ pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
 
 pub const fn default_acknowledgements() -> bool {
     false
-}
-
-pub fn ticker_from_duration(duration: std::time::Duration) -> IntervalStream {
-    let interval = tokio::time::interval(duration);
-    IntervalStream::new(interval)
 }
 
 #[cfg(test)]

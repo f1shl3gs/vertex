@@ -6,11 +6,8 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, ticker_from_duration, DataType, Output, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::Source;
-use futures::StreamExt;
 use thiserror::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
@@ -37,12 +34,23 @@ struct MemcachedConfig {
 #[typetag::serde(name = "memcached")]
 impl SourceConfig for MemcachedConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
-        let mut output = cx.output;
-
+        let mut ticker = tokio::time::interval(self.interval);
         let endpoints = self.endpoints.clone();
+        let SourceContext {
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
+
         Ok(Box::pin(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let mut metrics =
                     futures::future::join_all(endpoints.iter().map(|addr| gather(addr)))
                         .await

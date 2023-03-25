@@ -23,7 +23,6 @@ use futures::{FutureExt, StreamExt};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use parking_lot::Mutex;
-use tokio_stream::wrappers::IntervalStream;
 use tripwire::{Trigger, Tripwire};
 
 #[configurable_component(sink, name = "prometheus_exporter")]
@@ -156,11 +155,18 @@ impl PrometheusExporter {
 
         // Start a gc routine, and flush metrics every ttl. It will keep state clean
         let flush_period = Duration::from_secs(self.ttl as u64);
-        let mut ticker =
-            IntervalStream::new(tokio::time::interval(flush_period)).take_until(tripwire.clone());
+        let mut ticker = tokio::time::interval(flush_period);
 
+        let mut shutdown = tripwire.clone();
         tokio::spawn(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let mut cleaned = 0;
                 let metrics = Arc::clone(&metrics);
                 let mut state = metrics.lock();
