@@ -12,8 +12,6 @@ use framework::config::{
 use framework::http::HttpClient;
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::Source;
-use futures_util::StreamExt;
-use tokio_stream::wrappers::IntervalStream;
 
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
 
@@ -43,23 +41,33 @@ struct ConsulSourceConfig {
 #[typetag::serde(name = "consul")]
 impl SourceConfig for ConsulSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let proxy = cx.proxy.clone();
+        let SourceContext {
+            mut shutdown,
+            mut output,
+            proxy,
+            ..
+        } = cx;
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let interval = tokio::time::interval(self.interval);
-        let mut ticker = IntervalStream::new(interval).take_until(cx.shutdown);
+        let mut ticker = tokio::time::interval(self.interval);
         let http_client = HttpClient::new(tls, &proxy)?;
         let health_summary = self.health_summary;
         let opts = self.query_options.clone();
+
         let clients = self
             .endpoints
             .iter()
             .map(|endpoint| Client::new(endpoint.to_string(), http_client.clone()))
             .collect::<Vec<_>>();
 
-        let mut output = cx.output;
-
         Ok(Box::pin(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let results = futures::future::join_all(
                     clients.iter().map(|cli| gather(cli, health_summary, &opts)),
                 )

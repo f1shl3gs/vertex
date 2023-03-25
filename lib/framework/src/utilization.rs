@@ -6,14 +6,13 @@ use futures::{Stream, StreamExt};
 use futures_util::ready;
 use pin_project::pin_project;
 use tokio::time::interval;
-use tokio_stream::wrappers::IntervalStream;
 
 use crate::stats;
 
 #[pin_project]
 pub struct Utilization<S> {
     timer: Timer,
-    intervals: IntervalStream,
+    intervals: tokio::time::Interval,
     inner: S,
 }
 
@@ -21,7 +20,7 @@ impl<S> Utilization<S> {
     /// Consumes this wrapper and returns the inner stream.
     ///
     /// This can't be constant because destructors can't be run in a const context, and we're
-    /// discarding `IntervalStream`/`Timer` when we call this.
+    /// discarding `Interval`/`Timer` when we call this.
     #[allow(clippy::missing_const_for_fn)]
     pub fn into_inner(self) -> S {
         self.inner
@@ -48,7 +47,7 @@ where
         let this = self.project();
         loop {
             this.timer.start_wait();
-            match this.intervals.poll_next_unpin(cx) {
+            match this.intervals.poll_tick(cx) {
                 Poll::Ready(_) => {
                     this.timer.report();
                     continue;
@@ -73,7 +72,7 @@ where
 pub fn wrap<S>(inner: S) -> Utilization<S> {
     Utilization {
         timer: Timer::new(),
-        intervals: IntervalStream::new(interval(Duration::from_secs(5))),
+        intervals: interval(Duration::from_secs(5)),
         inner,
     }
 }

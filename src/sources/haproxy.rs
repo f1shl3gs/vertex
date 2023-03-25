@@ -8,13 +8,11 @@ use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
 use framework::config::{
-    default_interval, ticker_from_duration, DataType, Output, ProxyConfig, SourceConfig,
-    SourceContext,
+    default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
 };
 use framework::http::{Auth, HttpClient};
 use framework::tls::{MaybeTlsSettings, TlsConfig};
 use framework::{Error, Source};
-use futures::StreamExt;
 use http::{StatusCode, Uri};
 use thiserror::Error;
 
@@ -75,13 +73,24 @@ impl SourceConfig for HaproxyConfig {
             .collect::<Vec<_>>();
 
         let auth = self.auth.clone();
-        let proxy = cx.proxy.clone();
         let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
-        let mut output = cx.output;
+        let mut ticker = tokio::time::interval(self.interval);
+        let SourceContext {
+            proxy,
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
 
         Ok(Box::pin(async move {
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let metrics = futures::future::join_all(
                     endpoints.iter().map(|uri| gather(uri, &tls, &auth, &proxy)),
                 )

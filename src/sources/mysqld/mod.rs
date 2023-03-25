@@ -3,10 +3,9 @@ mod global_variables;
 mod info_schema_innodb_cmp;
 mod info_schema_innodb_cmpmem;
 mod info_schema_query_response_time;
-mod slave_status;
-
 #[cfg(all(test, feature = "integration-tests-mysql"))]
 mod integration_tests;
+mod slave_status;
 
 use std::borrow::Cow;
 use std::time::{Duration, Instant};
@@ -14,11 +13,9 @@ use std::time::{Duration, Instant};
 use configurable::{configurable_component, Configurable};
 use event::{Metric, INSTANCE_KEY};
 use framework::config::{
-    default_false, default_interval, default_true, ticker_from_duration, DataType, Output,
-    SourceConfig, SourceContext,
+    default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::{tls::TlsConfig, Source};
-use futures::StreamExt;
 use serde::{Deserialize, Serialize};
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::{ConnectOptions, MySql, MySqlPool, Pool};
@@ -82,10 +79,11 @@ struct MysqldConfig {
     slave_status: bool,
 
     /// Since 5.1, collect auto_increment columns and max values from information_schema.
-    #[serde(default = "default_false")]
+    #[serde(default)]
     auto_increment_columns: bool,
+
     /// Since 5.1, collect the current size of all registered binlog files
-    #[serde(default = "default_false")]
+    #[serde(default)]
     binlog_size: bool,
 
     #[serde(default = "default_info_schema")]
@@ -155,16 +153,27 @@ impl MysqldConfig {
 #[typetag::serde(name = "mysqld")]
 impl SourceConfig for MysqldConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let mut ticker = ticker_from_duration(self.interval).take_until(cx.shutdown);
+        let mut ticker = tokio::time::interval(self.interval);
         let options = self.connect_options();
-        let mut output = cx.output;
         let instance = format!("{}:{}", self.host, self.port);
+        let SourceContext {
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
 
         Ok(Box::pin(async move {
             let pool = MySqlPool::connect_lazy_with(options);
             let instance = Cow::from(instance);
 
-            while ticker.next().await.is_some() {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
                 let start = Instant::now();
                 let result = gather(instance.as_ref(), pool.clone()).await;
                 let elapsed = start.elapsed().as_secs_f64();

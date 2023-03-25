@@ -22,7 +22,6 @@ use thiserror::Error;
 use tokio::io::{AsyncRead, BufReader};
 use tokio::process::Command;
 use tokio::sync::mpsc::{channel, Sender};
-use tokio_stream::wrappers::IntervalStream;
 use tokio_util::codec::FramedRead;
 
 const EXEC: &str = "exec";
@@ -198,15 +197,21 @@ async fn run_scheduled(
     hostname: Option<String>,
     interval: Duration,
     decoder: codecs::Decoder,
-    shutdown: ShutdownSignal,
+    mut shutdown: ShutdownSignal,
     output: Pipeline,
 ) -> Result<(), ()> {
     debug!(message = "Staring scheduled exec runs");
 
-    let mut ticker =
-        IntervalStream::new(tokio::time::interval(interval)).take_until(shutdown.clone());
+    let mut ticker = tokio::time::interval(interval);
 
-    while ticker.next().await.is_some() {
+    loop {
+        tokio::select! {
+            biased;
+
+            _ = &mut shutdown => break,
+            _ = ticker.tick() => {}
+        }
+
         // Wait for out task to finish, wrapping it in a timeout
         let timeout = tokio::time::timeout(
             interval,

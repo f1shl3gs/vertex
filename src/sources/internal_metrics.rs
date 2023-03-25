@@ -10,9 +10,7 @@ use framework::{
     config::{default_interval, DataType, SourceConfig, SourceContext},
     Source,
 };
-use futures::StreamExt;
 use metrics::{Attributes, Observation};
-use tokio_stream::wrappers::IntervalStream;
 
 #[configurable_component(source, name = "internal_metrics")]
 #[derive(Debug)]
@@ -35,11 +33,21 @@ impl SourceConfig for Config {
     }
 }
 
-async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline) -> Result<(), ()> {
-    let interval = tokio::time::interval(interval);
-    let mut ticker = IntervalStream::new(interval).take_until(shutdown);
+async fn run(
+    interval: Duration,
+    mut shutdown: ShutdownSignal,
+    mut output: Pipeline,
+) -> Result<(), ()> {
+    let mut ticker = tokio::time::interval(interval);
 
     loop {
+        tokio::select! {
+            biased;
+
+            _ = &mut shutdown => break,
+            _ = ticker.tick() => {}
+        }
+
         // Report metrics as soon as possible
         let mut reporter = Reporter::default();
         let reg = metrics::global_registry();
@@ -52,10 +60,6 @@ async fn run(interval: Duration, shutdown: ShutdownSignal, mut output: Pipeline)
             );
 
             return Err(());
-        }
-
-        if ticker.next().await.is_none() {
-            break;
         }
     }
 

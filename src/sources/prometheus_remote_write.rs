@@ -5,7 +5,7 @@ use bytes::Bytes;
 use chrono::{DateTime, TimeZone, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Event, Metric, Quantile};
-use framework::config::{default_false, DataType, Output, Resource, SourceConfig, SourceContext};
+use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
 use framework::source::util::http::{decode, ErrorMessage};
 use framework::source::util::http::{HttpSource, HttpSourceAuthConfig};
 use framework::{tls::TlsConfig, Source};
@@ -25,7 +25,7 @@ struct PrometheusRemoteWriteConfig {
     auth: Option<HttpSourceAuthConfig>,
 
     /// Controls how acknowledgements are handled by this source.
-    #[serde(default = "default_false")]
+    #[serde(default)]
     acknowledgements: bool,
 }
 
