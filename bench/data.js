@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679732047385,
+  "lastUpdate": 1679732243828,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -31873,6 +31873,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57298.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b261553cd0809c72f30d3bdd9b51c668707958c8",
+          "message": "add #[serde(flatten)] to LogRecord's fields (#889)",
+          "timestamp": "2023-03-25T15:54:50+08:00",
+          "tree_id": "9fb0462be2fa59130e3284c80993b08ab7f59a28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b261553cd0809c72f30d3bdd9b51c668707958c8"
+        },
+        "date": 1679732233545,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1107,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57303.2,
             "unit": "KiB"
           }
         ]
