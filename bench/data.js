@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679726641325,
+  "lastUpdate": 1679726642743,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -16890,6 +16890,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.256,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "279f4a40e0d0fabfd243ad45ca7ee64c85e44105",
+          "message": "remove some unnecessary IntervalStream (#888)\n\n* replace IntervalStream with tokio::time::Interval\r\n\r\n* remove default_false",
+          "timestamp": "2023-03-25T14:39:02+08:00",
+          "tree_id": "b0ea803b0d50e2c9a6006363068f274d1a3175e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/279f4a40e0d0fabfd243ad45ca7ee64c85e44105"
+        },
+        "date": 1679726633703,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.699,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.972,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.787,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.849,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.264,
             "unit": "ns/op"
           }
         ]
