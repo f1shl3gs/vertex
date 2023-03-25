@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679731145413,
+  "lastUpdate": 1679731169282,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -39637,6 +39637,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1164.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b261553cd0809c72f30d3bdd9b51c668707958c8",
+          "message": "add #[serde(flatten)] to LogRecord's fields (#889)",
+          "timestamp": "2023-03-25T15:54:50+08:00",
+          "tree_id": "9fb0462be2fa59130e3284c80993b08ab7f59a28",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b261553cd0809c72f30d3bdd9b51c668707958c8"
+        },
+        "date": 1679731159923,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 57.841,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 389.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1087.7,
             "unit": "ns/op"
           }
         ]
