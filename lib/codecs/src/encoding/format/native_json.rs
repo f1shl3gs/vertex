@@ -39,6 +39,6 @@ mod tests {
         let mut buf = BytesMut::new();
 
         serializer.encode(event, &mut buf).unwrap();
-        assert_eq!(buf.freeze(), r#"{"log":{"fields":{"foo":"bar"}}}"#)
+        assert_eq!(buf.freeze(), r#"{"log":{"foo":"bar"}}"#)
     }
 }

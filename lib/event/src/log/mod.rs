@@ -26,6 +26,7 @@ pub struct LogRecord {
     #[serde(skip_serializing_if = "skip_serializing_if_empty")]
     pub tags: Tags,
 
+    #[serde(flatten)]
     pub fields: Value,
 
     #[serde(skip)]

@@ -123,7 +123,7 @@ mod tests {
                 vec![Event::Log(
                     BTreeMap::from([(String::from("key"), Value::from("value"))]).into(),
                 )],
-                (28, r#"[{"fields":{"key":"value"}}]"#),
+                (17, r#"[{"key":"value"}]"#),
             ),
             (
                 "multiple",
@@ -133,8 +133,8 @@ mod tests {
                     BTreeMap::from([(String::from("key"), Value::from("value3"))]).into(),
                 ],
                 (
-                    85,
-                    r#"[{"fields":{"key":"value1"}},{"fields":{"key":"value2"}},{"fields":{"key":"value3"}}]"#,
+                    52,
+                    r#"[{"key":"value1"},{"key":"value2"},{"key":"value3"}]"#,
                 ),
             ),
         ] {
