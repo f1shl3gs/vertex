@@ -40,9 +40,7 @@ remove_label_fields: true
 
     // The final event should have timestamps and labels removed
     let expected = serde_json::to_string(&serde_json::json!({
-        "fields": {
             "message": "hello"
-        }
     }))
     .unwrap();
 
@@ -80,9 +78,7 @@ encoding:
     event.as_mut_log().insert_field("foo", "bar");
     let record = sink.encoder.encode_event(event);
     let want = serde_json::to_string(&serde_json::json!({
-        "fields": {
             "message": "hello",
-        }
     }))
     .unwrap();
 

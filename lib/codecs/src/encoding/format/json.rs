@@ -44,6 +44,6 @@ mod tests {
 
         serializer.encode(event, &mut bytes).unwrap();
         let encoded = bytes.freeze();
-        assert_eq!(encoded, r#"{"fields":{"foo":"bar"}}"#);
+        assert_eq!(encoded, r#"{"foo":"bar"}"#);
     }
 }

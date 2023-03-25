@@ -224,12 +224,11 @@ async fn tcp_syslog() {
         .iter()
         .map(|s| {
             let mut value = serde_json::Value::from_str(s).unwrap();
-            let v = value.as_object_mut().unwrap().get("fields").unwrap();
-            let mut v = v.clone();
-            v.as_object_mut().unwrap().remove("hostname");
-            v.as_object_mut().unwrap().remove("source_ip");
 
-            serde_json::from_value(v).unwrap()
+            value.as_object_mut().unwrap().remove("hostname");
+            value.as_object_mut().unwrap().remove("source_ip");
+
+            serde_json::from_value(value).unwrap()
         })
         .collect();
 
