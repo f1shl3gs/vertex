@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679732243828,
+  "lastUpdate": 1679830641968,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -9929,6 +9929,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 343.72,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a8146727ba9d857e8a285336c8ba81041647eb08",
+          "message": "update openssl to 0.10.48 (#890)",
+          "timestamp": "2023-03-26T19:33:17+08:00",
+          "tree_id": "bde987aa9cb6ba7274cfcb420b97ef135826d886",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a8146727ba9d857e8a285336c8ba81041647eb08"
+        },
+        "date": 1679830632791,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 89.278,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 193.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 310.39,
             "unit": "ns/op"
           }
         ]
