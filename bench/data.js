@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679831539720,
+  "lastUpdate": 1679831865530,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -32088,6 +32088,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57303.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a8146727ba9d857e8a285336c8ba81041647eb08",
+          "message": "update openssl to 0.10.48 (#890)",
+          "timestamp": "2023-03-26T19:33:17+08:00",
+          "tree_id": "bde987aa9cb6ba7274cfcb420b97ef135826d886",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a8146727ba9d857e8a285336c8ba81041647eb08"
+        },
+        "date": 1679831856377,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1217,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57281.9,
             "unit": "KiB"
           }
         ]
