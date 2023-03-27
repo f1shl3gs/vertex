@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679909396502,
+  "lastUpdate": 1679909405698,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -33129,6 +33129,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57285.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "08e6492c29589e2ea7dcf4cbb9dd5ec69ee908ab",
+          "message": "chore(deps): bump proc-macro2 from 1.0.53 to 1.0.54 (#894)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.53 to 1.0.54.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.53...1.0.54)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-03-27T17:02:30+08:00",
+          "tree_id": "949e8e3507d1c4e931f25a51cebe9a1a9384f9b8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/08e6492c29589e2ea7dcf4cbb9dd5ec69ee908ab"
+        },
+        "date": 1679909395838,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1163,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57305.2,
             "unit": "KiB"
           }
         ]
