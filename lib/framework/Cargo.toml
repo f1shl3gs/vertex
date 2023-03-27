@@ -67,7 +67,7 @@ once_cell = { version = "1.17", default-features = false }
 openssl = { version = "0.10.48", default-features = false }
 percent-encoding = { version = "2.2.0", default-features = false }
 pin-project = { version = "1.0.12" }
-regex = { version = "1.7.2" }
+regex = { version = "1.7.3" }
 smallvec = { version = "1.10.0", features = ["union"] }
 serde = { version = "1.0.158", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.94", default-features = false }
