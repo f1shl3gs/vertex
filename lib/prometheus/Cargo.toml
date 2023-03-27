@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 prost = { version = "0.11.8" }
-indexmap = { version = "1.9.2" }
+indexmap = { version = "1.9.3" }
 
 [build-dependencies]
 prost-build = { version = "0.11.8" }

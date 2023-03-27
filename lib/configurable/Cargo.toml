@@ -9,7 +9,7 @@ inventory = { version = "0.3.5" }
 configurable-derive = { path = "../configurable-derive" }
 serde = { version = "1.0.158" }
 serde_json = { version = "1.0.94", default-features = false, features = ["std"] }
-indexmap = { version = "1.9.2", default-features = false, features = ["serde"] }
+indexmap = { version = "1.9.3", default-features = false, features = ["serde"] }
 
 # externals
 url = { version = "2.3.1", default-features = false }
