@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679924188981,
+  "lastUpdate": 1679925218040,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -33378,6 +33378,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57306,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9054b7c71b34f11de3f05bf88d9f7a1d62fb85e",
+          "message": "chore(deps): bump indexmap from 1.9.2 to 1.9.3 (#896)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 1.9.2 to 1.9.3.\r\n- [Release notes](https://github.com/bluss/indexmap/releases)\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/compare/1.9.2...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-03-27T21:28:59+08:00",
+          "tree_id": "2200e231a74e9ed31920bbe6fc1c7fda42048104",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9054b7c71b34f11de3f05bf88d9f7a1d62fb85e"
+        },
+        "date": 1679925208370,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1178,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57305.1,
             "unit": "KiB"
           }
         ]
