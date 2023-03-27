@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679908025832,
+  "lastUpdate": 1679908031306,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -17504,6 +17504,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.322,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2558a2c5f41e87a99fab60ff377aab96ec4650ee",
+          "message": "chore(deps): bump regex from 1.7.2 to 1.7.3 (#895)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.7.2 to 1.7.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.7.2...1.7.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-03-27T17:01:44+08:00",
+          "tree_id": "b38b6d9688675e96687fc9f37fed6e0b40ac77c7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2558a2c5f41e87a99fab60ff377aab96ec4650ee"
+        },
+        "date": 1679908021765,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.552,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.551,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.131,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 34.775,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.596,
             "unit": "ns/op"
           }
         ]
