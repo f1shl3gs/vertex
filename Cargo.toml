@@ -342,7 +342,7 @@ serde_path_to_error = { version = "0.1.10" }
 tempfile = { version = "3.4.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.26.0", features = ["test-util", "time"] }
+tokio = { version = "1.27.0", features = ["test-util", "time"] }
 
 [dependencies]
 # Workspaces
@@ -372,7 +372,7 @@ tikv-jemalloc-ctl = { version = "0.5.0", optional = true }
 tikv-jemalloc-sys = { version = "0.5.3", optional = true, features = ["stats"] }
 
 # Futrures & Tokio
-tokio = { version = "1.26.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.27.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.12", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec", "time", "net"] }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
