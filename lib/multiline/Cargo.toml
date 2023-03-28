@@ -6,7 +6,7 @@ publish = false
 
 [dev-dependencies]
 tokio = { version = "1.27.0", features = ["test-util", "macros"] }
-serde_json = { version = "1.0.94", default-features = false, features = ["std"] }
+serde_json = { version = "1.0.95", default-features = false, features = ["std"] }
 serde_yaml = { version = "0.9.19" }
 
 [dependencies]
@@ -18,5 +18,5 @@ pin-project-lite = { version = "0.2.9" }
 regex = { version = "1.7.3" }
 serde = { version = "1.0.158", default-features = false, features = ["derive"] }
 serde_regex = { path = "../serde_regex" }
-serde_json = { version = "1.0.94" }
+serde_json = { version = "1.0.95" }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec", "time"] }
