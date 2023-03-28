@@ -11,7 +11,6 @@ pub const CONFIGURABLE: &str = "configurable";
 ///
 /// Defaults to the docstring if one is present, or `#[configurable(description = "...")]`
 /// if one is provided.
-#[derive(Debug)]
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
     explicit: bool,
@@ -63,7 +62,7 @@ impl ToTokens for Description {
 }
 
 /// Attributes applied to a field of a `#[configurable(...)]` struct.
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct FieldAttrs {
     pub skip: bool,
     pub required: bool,
@@ -250,7 +249,7 @@ impl FieldAttrs {
 }
 
 /// Represents a `#[derive(FromArgs)]` type's top-level attributes.
-#[derive(Default, Debug)]
+#[derive(Default)]
 pub struct TypeAttrs {
     pub name: Option<syn::LitStr>,
     pub title: Option<syn::LitStr>,
