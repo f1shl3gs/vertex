@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680025140542,
+  "lastUpdate": 1680026232360,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34453,6 +34453,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57360,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e6441b27a2729e3152a6d38442b055740d6cc66",
+          "message": "bump syn to 2.0.11 (#900)",
+          "timestamp": "2023-03-29T01:32:56+08:00",
+          "tree_id": "bae8fb9bf81ea61e5af7ebfa4a43186e8cdc331f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e6441b27a2729e3152a6d38442b055740d6cc66"
+        },
+        "date": 1680026221918,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1194,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57359.1,
             "unit": "KiB"
           }
         ]
