@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1679998826980,
+  "lastUpdate": 1680006382895,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4523,6 +4523,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 944910,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0c8f27fdd1cf61ce92e167170fe7e70aefdf7ec",
+          "message": "bump serde to 1.0.159 (#899)",
+          "timestamp": "2023-03-28T20:22:35+08:00",
+          "tree_id": "2fcc3868c3bed4d8423fd332e77fd0151d4be784",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0c8f27fdd1cf61ce92e167170fe7e70aefdf7ec"
+        },
+        "date": 1680006373780,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 712430,
             "unit": "ns/op"
           }
         ]
