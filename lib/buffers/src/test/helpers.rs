@@ -44,7 +44,7 @@ where
     F: FnOnce(&Path) -> Fut,
     Fut: Future<Output = V>,
 {
-    let buf_dir = tempdir::TempDir::new("").expect("creating temp dir should never fail");
+    let buf_dir = tempfile::tempdir().expect("creating temp dir should never fail");
     f(buf_dir.path()).await
 }
 
