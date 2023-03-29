@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680069350912,
+  "lastUpdate": 1680069362708,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34668,6 +34668,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57359.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "da5ca165ac5098e3730be3cb40edc549bde8ce68",
+          "message": "chore(deps): bump tempfile from 3.4.0 to 3.5.0 (#901)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.4.0 to 3.5.0.\r\n- [Release notes](https://github.com/Stebalien/tempfile/releases)\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/NEWS)\r\n- [Commits](https://github.com/Stebalien/tempfile/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-03-29T13:31:42+08:00",
+          "tree_id": "5cb426a564df6fbfa62fbdfe291e1f6ee53b16c0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/da5ca165ac5098e3730be3cb40edc549bde8ce68"
+        },
+        "date": 1680069353401,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1200,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57362.3,
             "unit": "KiB"
           }
         ]
