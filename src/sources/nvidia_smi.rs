@@ -83,7 +83,7 @@ async fn gather(path: &Path) -> Result<Vec<Metric>, Error> {
     let start = Instant::now();
     let output = Command::new(path).args(["-q", "-x"]).output()?;
     let reader = std::io::Cursor::new(output.stdout);
-    let smi: Smi = serde_xml_rs::from_reader(reader)?;
+    let smi: Smi = quick_xml::de::from_reader(reader)?;
     let elapsed = start.elapsed();
 
     let mut metrics = Vec::with_capacity(smi.gpus.len() * 24 + 1);
@@ -453,7 +453,7 @@ mod tests {
     #[test]
     fn test_deserialize_output() {
         let text = read_to_string("tests/fixtures/nvidia-smi.xml").unwrap();
-        let smi: Smi = serde_xml_rs::from_str(&text).unwrap();
+        let smi: Smi = quick_xml::de::from_str(&text).unwrap();
         assert_eq!(smi.driver_version, "470.82.00");
         assert_eq!(smi.gpus.len(), 1);
         assert_eq!(smi.gpus[0].compute_mode, "Default");

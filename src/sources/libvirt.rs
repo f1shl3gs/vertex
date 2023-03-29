@@ -113,10 +113,8 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
 
         // Report domain info
         let xml = cli.domain_xml(dom).await?;
-        let schema::Domain { devices, metadata } = serde_xml_rs::from_str::<schema::Domain>(&xml)
-            .map_err(|err| {
-            Error::IO(std::io::Error::new(std::io::ErrorKind::InvalidData, err))
-        })?;
+        let schema::Domain { devices, metadata } = quick_xml::de::from_str::<schema::Domain>(&xml)
+            .map_err(|err| Error::IO(std::io::Error::new(std::io::ErrorKind::InvalidData, err)))?;
 
         metrics.extend_from_slice(&[
             Metric::gauge_with_tags(
@@ -795,22 +793,22 @@ async fn gather_v2(path: &str) -> Result<Vec<Metric>, Error> {
 }
 
 mod schema {
-    use serde::{Deserialize, Serialize};
+    use serde::Deserialize;
 
-    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize)]
     pub struct DiskTarget {
         pub dev: String,
         pub bus: String,
     }
 
-    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize)]
     pub struct DiskSource {
         pub file: String,
         #[serde(default)]
         pub name: String,
     }
 
-    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize)]
     pub struct DiskDriver {
         #[serde(rename = "type")]
         pub typ: String,
@@ -820,7 +818,7 @@ mod schema {
         pub discard: String,
     }
 
-    #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+    #[derive(Clone, Debug, Default, Deserialize)]
     pub struct Disk {
         pub device: String,
         #[serde(rename = "type")]
@@ -832,29 +830,29 @@ mod schema {
         pub driver: DiskDriver,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize)]
     pub struct InterfaceSource {
         #[serde(default)]
         pub bridge: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct InterfaceTarget {
         pub dev: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct InterfaceVirtualPortParam {
         #[serde(rename = "interfaceid")]
         pub interface_id: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct InterfaceVirtualPort {
         pub parameters: InterfaceVirtualPortParam,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize)]
     pub struct Interface {
         pub source: InterfaceSource,
         #[serde(default)]
@@ -863,7 +861,7 @@ mod schema {
         pub virtual_port: InterfaceVirtualPort,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize)]
     pub struct Devices {
         #[serde(rename = "disk")]
         pub disks: Vec<Disk>,
@@ -871,37 +869,37 @@ mod schema {
         pub interfaces: Vec<Interface>,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Flavor {
         pub name: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct User {
         pub name: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Project {
         pub name: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Owner {
         pub user: User,
         pub project: Project,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Root {
         #[serde(rename = "type")]
         pub typ: String,
         pub uuid: String,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Instance {
         pub flavor: Flavor,
         pub owner: Owner,
@@ -909,12 +907,12 @@ mod schema {
         pub root: Root,
     }
 
-    #[derive(Debug, Default, Deserialize, Serialize)]
+    #[derive(Debug, Default, Deserialize)]
     pub struct Metadata {
         pub instance: Instance,
     }
 
-    #[derive(Debug, Deserialize, Serialize)]
+    #[derive(Debug, Deserialize)]
     pub struct Domain {
         pub devices: Devices,
         #[serde(default)]

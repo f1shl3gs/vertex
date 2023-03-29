@@ -223,7 +223,7 @@ sources-mysqld = ["sqlx"]
 sources-nginx_stub = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "netlink-packet-core"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-nvidia_smi = ["serde-xml-rs"]
+sources-nvidia_smi = ["dep:quick-xml"]
 sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
@@ -399,7 +399,6 @@ tower = { version = "0.4.13", default-features = false, features = ["buffer", "l
 serde = { version = "1.0.159", default-features = false, features = ["derive"] }
 serde_yaml = { version = "0.9.19" }
 serde_json = { version = "1.0.95", default-features = false }
-serde-xml-rs = { version = "0.6", default-features = false, optional = true }
 serde_regex = { path = "lib/serde_regex" }
 
 # Netlink
@@ -447,6 +446,7 @@ once_cell = { version = "1.17.1" }
 # pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
+quick-xml = { version = "0.28.1", default-features = false, features = ["serialize"], optional = true }
 rdkafka = { version = "0.29.0", default-features = false, optional = true, features = ["tokio", "libz", "zstd"] }
 regex = { version = "1.7.3" }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "0363150898691cf453f4916441a167b85a137253", optional = true }
