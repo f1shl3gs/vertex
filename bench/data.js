@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680078308033,
+  "lastUpdate": 1680078311738,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18791,6 +18791,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.235,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "365253c422d0cda1c191e215ec5fc9ee9190fc7f",
+          "message": "remove serde_xml_rs cause xml-rs is not maintained anymore (#903)\n\n* remove serde_xml_rs\r\n\r\n* style",
+          "timestamp": "2023-03-29T16:19:08+08:00",
+          "tree_id": "e8e065311fe791e9a140f259116dd0c2db498f53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/365253c422d0cda1c191e215ec5fc9ee9190fc7f"
+        },
+        "date": 1680078299046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.656,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.424,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.436,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.163,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.756,
             "unit": "ns/op"
           }
         ]
