@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680083468278,
+  "lastUpdate": 1680083692066,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35308,6 +35308,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1210,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57298.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fef21d7a605ee4fe1a0c946070184ba8142a1ff8",
+          "message": "move atty to dependencies (#904)",
+          "timestamp": "2023-03-29T17:25:31+08:00",
+          "tree_id": "0caa9f5d20dc381dd9b4981d4d611b9234b03ae5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fef21d7a605ee4fe1a0c946070184ba8142a1ff8"
+        },
+        "date": 1680083681377,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1461,
             "unit": "s"
           },
           {
