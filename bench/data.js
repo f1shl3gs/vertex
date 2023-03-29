@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680083692066,
+  "lastUpdate": 1680091786585,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35347,6 +35347,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57298.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4613c51f96c31af815be858e8ec1ad2bb516ad65",
+          "message": "bump rust to 1.68.2 (#905)",
+          "timestamp": "2023-03-29T19:46:50+08:00",
+          "tree_id": "826da13111eaf73fab3d552196b88552bcbb624b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4613c51f96c31af815be858e8ec1ad2bb516ad65"
+        },
+        "date": 1680091776571,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1120,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57324.9,
             "unit": "KiB"
           }
         ]
