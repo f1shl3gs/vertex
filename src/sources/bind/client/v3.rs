@@ -267,7 +267,10 @@ mod tests {
             }
         };
 
-        assert_eq!(stats.server.boot_time, DateTime::parse_from_rfc3339("2021-07-15T05:11:08.926Z").unwrap());
+        assert_eq!(
+            stats.server.boot_time,
+            DateTime::parse_from_rfc3339("2021-07-15T05:11:08.926Z").unwrap()
+        );
         assert_eq!(stats.taskmgr.thread_model.worker_threads, 5);
         assert_eq!(stats.views.views.len(), 2)
     }
