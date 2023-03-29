@@ -325,8 +325,7 @@ harness = false
 path = "benches/haproxy.rs"
 
 [target.'cfg(unix)'.dependencies]
-atty = "0.2.14"
-nix = "0.26.2"
+nix = { version = "0.26.2", default-features = false }
 
 [build-dependencies]
 prost-build = { version = "0.11.8" }
@@ -425,6 +424,10 @@ colored = { version = "2.0.0", default-features = false }
 # External libs
 ahash = { version = "0.8.3", optional = true }
 async-stream = { version = "0.3.4", optional = true }
+# TODO: Remove this, once std::io::IsTerminal merged and stablized.
+# See: https://doc.rust-lang.org/std/io/trait.IsTerminal.html#
+#      https://github.com/rust-lang/rust/issues/98070#issuecomment-1486375244
+atty = { version = "0.2.14", default-features = false }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 chrono = { version = "0.4.24", default-features = false }
 chrono-tz = { version = "0.8.1", default-features = false }
