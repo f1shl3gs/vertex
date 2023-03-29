@@ -1827,7 +1827,7 @@ dependencies = [
  "log",
  "num-format",
  "once_cell",
- "quick-xml",
+ "quick-xml 0.26.0",
  "rgb",
  "str_stack",
 ]
@@ -3160,6 +3160,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "quick-xml"
+version = "0.28.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e5c1a97b1bc42b1d550bfb48d4262153fe400a12bab1511821736f7eac76d7e2"
+dependencies = [
+ "memchr",
+ "serde",
+]
+
+[[package]]
 name = "quickcheck"
 version = "1.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3617,18 +3627,6 @@ checksum = "f3a1a3341211875ef120e117ea7fd5228530ae7e7036a779fdc9117be6b3282c"
 dependencies = [
  "ordered-float",
  "serde",
-]
-
-[[package]]
-name = "serde-xml-rs"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fb3aa78ecda1ebc9ec9847d5d3aba7d618823446a049ba2491940506da6e2782"
-dependencies = [
- "log",
- "serde",
- "thiserror",
- "xml-rs",
 ]
 
 [[package]]
@@ -4856,6 +4854,7 @@ dependencies = [
  "prost",
  "prost-build",
  "prost-types",
+ "quick-xml 0.28.1",
  "rand 0.8.5",
  "rdkafka",
  "regex",
@@ -4863,7 +4862,6 @@ dependencies = [
  "rsntp",
  "seahash",
  "serde",
- "serde-xml-rs",
  "serde_json",
  "serde_path_to_error",
  "serde_regex",
@@ -5168,12 +5166,6 @@ checksum = "23d020b441f92996c80d94ae9166e8501e59c7bb56121189dc9eab3bd8216966"
 dependencies = [
  "memchr",
 ]
-
-[[package]]
-name = "xml-rs"
-version = "0.8.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d2d7d3948613f75c98fd9328cfdcc45acc4d360655289d0a7d4ec931392200a3"
 
 [[package]]
 name = "yaml-rust"

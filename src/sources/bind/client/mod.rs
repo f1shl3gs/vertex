@@ -20,6 +20,7 @@ pub struct Gauge {
 /// Counter represents a single counter value.
 #[derive(Deserialize)]
 pub struct Counter {
+    #[serde(rename = "@name")]
     pub name: String,
     #[serde(alias = "$value")]
     pub counter: u64,
@@ -116,7 +117,7 @@ pub enum Error {
     #[error("read response body failed, {0}")]
     ReadBody(#[from] hyper::Error),
     #[error("decode response failed, {0}")]
-    Decode(#[from] serde_xml_rs::Error),
+    Decode(#[from] quick_xml::de::DeError),
 }
 
 enum Version {
@@ -144,7 +145,7 @@ impl Client {
         }
     }
 
-    async fn fetch<'a, T: serde::Deserialize<'a>>(&self, path: &str) -> Result<T, Error> {
+    async fn fetch<T: serde::de::DeserializeOwned>(&self, path: &str) -> Result<T, Error> {
         let url = format!("{}{}", self.endpoint, path);
         let req = http::Request::get(url).body(Body::empty())?;
         let resp = self.http_client.send(req).await?;
@@ -154,7 +155,7 @@ impl Client {
         }
 
         let body = hyper::body::to_bytes(body).await?;
-        serde_xml_rs::from_reader(body.reader()).map_err(Error::Decode)
+        quick_xml::de::from_reader(body.reader()).map_err(Error::Decode)
     }
 
     async fn probe(&self) -> Result<Version, Error> {

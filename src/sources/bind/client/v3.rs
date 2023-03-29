@@ -1,7 +1,7 @@
 use std::fmt::Formatter;
 
 use chrono::{DateTime, Utc};
-use serde::de::{MapAccess, Visitor};
+use serde::de::MapAccess;
 use serde::{Deserialize, Deserializer};
 
 use super::{Client, Error, Gauge, TaskManager};
@@ -14,7 +14,7 @@ const ZONES_PATH: &str = "/xml/v3/zones";
 
 #[derive(Deserialize)]
 struct Counters {
-    #[serde(rename = "type")]
+    #[serde(rename = "@type")]
     typ: String,
     #[serde(default, rename = "counter")]
     counters: Vec<super::Counter>,
@@ -70,7 +70,7 @@ impl<'de> Deserialize<'de> for View {
             {
                 struct FieldVisitor;
 
-                impl<'de> Visitor<'de> for FieldVisitor {
+                impl<'de> serde::de::Visitor<'de> for FieldVisitor {
                     type Value = Field;
 
                     fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
@@ -82,7 +82,7 @@ impl<'de> Deserialize<'de> for View {
                         E: serde::de::Error,
                     {
                         match v {
-                            "name" => Ok(Field::Name),
+                            "@name" => Ok(Field::Name),
                             "cache" => Ok(Field::Cache),
                             "counters" => Ok(Field::Counters),
                             _ => Err(serde::de::Error::unknown_field(v, FIELDS)),
@@ -255,19 +255,27 @@ mod tests {
     #[test]
     fn decode_server() {
         let data = std::fs::read("tests/fixtures/bind/v3/server").unwrap();
-        let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
+        let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
         let result: Result<Statistics, _> = serde_path_to_error::deserialize(xd);
-        if let Err(err) = result {
-            let inner = err.inner();
-            let path = err.path();
-            panic!("{} {:?}", path, inner)
-        }
+
+        let stats = match result {
+            Ok(s) => s,
+            Err(err) => {
+                let inner = err.inner();
+                let path = err.path();
+                panic!("{} {:?}", path, inner)
+            }
+        };
+
+        assert_eq!(stats.server.boot_time, DateTime::parse_from_rfc3339("2021-07-15T05:11:08.926Z").unwrap());
+        assert_eq!(stats.taskmgr.thread_model.worker_threads, 5);
+        assert_eq!(stats.views.views.len(), 2)
     }
 
     #[test]
     fn decode_zones() {
         let data = std::fs::read("tests/fixtures/bind/v3/zones").unwrap();
-        let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
+        let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
         let result: Result<ZoneStatistics, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {
             let inner = err.inner();

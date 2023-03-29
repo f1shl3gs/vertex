@@ -161,7 +161,7 @@ mod tests {
     #[test]
     fn decode() {
         let data = std::fs::read("tests/fixtures/bind/v2.xml").unwrap();
-        let xd = &mut serde_xml_rs::Deserializer::new_from_reader(data.reader());
+        let xd = &mut quick_xml::de::Deserializer::from_reader(data.reader());
         let result: Result<Isc, _> = serde_path_to_error::deserialize(xd);
         if let Err(err) = result {
             let inner = err.inner();
