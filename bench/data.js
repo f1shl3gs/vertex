@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680074933538,
+  "lastUpdate": 1680074935247,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18674,6 +18674,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.343,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83c126bc3a037d308cef440523fcfd59d0c0db55",
+          "message": "remove tempdir which is not maintained anymore (#902)",
+          "timestamp": "2023-03-29T15:23:43+08:00",
+          "tree_id": "9d66a0f526fe43e4ae3cd06b65bb73f78b5a5ce6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83c126bc3a037d308cef440523fcfd59d0c0db55"
+        },
+        "date": 1680074924929,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.055,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.573,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.906,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.762,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.235,
             "unit": "ns/op"
           }
         ]
