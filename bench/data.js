@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680074935247,
+  "lastUpdate": 1680075853985,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43040,6 +43040,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83c126bc3a037d308cef440523fcfd59d0c0db55",
+          "message": "remove tempdir which is not maintained anymore (#902)",
+          "timestamp": "2023-03-29T15:23:43+08:00",
+          "tree_id": "9d66a0f526fe43e4ae3cd06b65bb73f78b5a5ce6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83c126bc3a037d308cef440523fcfd59d0c0db55"
+        },
+        "date": 1680075844650,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 39563000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 948210,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.229,
             "unit": "ns/op"
           }
         ]
