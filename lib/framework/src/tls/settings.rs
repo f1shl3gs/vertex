@@ -16,6 +16,7 @@ use openssl::{
 use serde::{Deserialize, Serialize};
 
 use super::{MaybeTls, Result, TlsError};
+use crate::config::default_true;
 
 const PEM_START_MARKER: &str = "-----BEGIN ";
 
@@ -34,7 +35,7 @@ impl TlsConfig {
 }
 
 /// Configures the TLS options for incoming/outgoing connections.
-#[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct TlsConfig {
     /// Enables certificate verification.
     ///
@@ -46,11 +47,13 @@ pub struct TlsConfig {
     /// Relevant for both incoming and outgoing connections.
     ///
     /// Do NOT set this to `false` unless you understand the risks of not verifying the validity of certificates.
+    #[serde(default = "default_true")]
     pub verify_certificate: bool,
 
     /// If "true", Vertex will validate the configured remote host name against
     /// the remote host's TLS certificate. Do NOT set this to false unless you
     /// understand the risks of not verifying the remote hostname.
+    #[serde(default = "default_true")]
     pub verify_hostname: bool,
 
     /// Absolute path to an additional CA certificate file, in DER or PEM
@@ -71,6 +74,19 @@ pub struct TlsConfig {
     /// Pass phrase used to unlock the encrypted key file. This has no effect
     /// unless "key_file" is set.
     pub key_pass: Option<String>,
+}
+
+impl Default for TlsConfig {
+    fn default() -> Self {
+        Self {
+            verify_certificate: true,
+            verify_hostname: true,
+            ca_file: None,
+            crt_file: None,
+            key_file: None,
+            key_pass: None,
+        }
+    }
 }
 
 impl TlsConfig {
