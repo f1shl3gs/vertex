@@ -36,23 +36,38 @@ impl TlsConfig {
 /// Configures the TLS options for incoming/outgoing connections.
 #[derive(Configurable, Clone, Debug, Default, Deserialize, Serialize)]
 pub struct TlsConfig {
-    pub verify_certificate: Option<bool>,
+    /// Enables certificate verification.
+    ///
+    /// If enabled, certificates must be valid in terms of not being expired, as well as being issued by a trusted
+    /// issuer. This verification operates in a hierarchical manner, checking that not only the leaf certificate (the
+    /// certificate presented by the client/server) is valid, but also that the issuer of that certificate is valid, and
+    /// so on until reaching a root certificate.
+    ///
+    /// Relevant for both incoming and outgoing connections.
+    ///
+    /// Do NOT set this to `false` unless you understand the risks of not verifying the validity of certificates.
+    pub verify_certificate: bool,
+
     /// If "true", Vertex will validate the configured remote host name against
     /// the remote host's TLS certificate. Do NOT set this to false unless you
     /// understand the risks of not verifying the remote hostname.
-    pub verify_hostname: Option<bool>,
+    pub verify_hostname: bool,
+
     /// Absolute path to an additional CA certificate file, in DER or PEM
     /// format(X.509), or an inline CA certificate in PEM format.
     pub ca_file: Option<PathBuf>,
+
     /// Absolute path to a certificate file used to identify this connection,
     /// in DER or PEM format (X.509) or PKCS#12, or an inline certificate in
     /// PEM format. If this is set and is not a PKCS#12 archive, "key_file"
     /// must also be set.
     pub crt_file: Option<PathBuf>,
+
     /// Absolute path to a private key file used to identify this connection,
     /// in DER or PEM format (PKCS#8), or an inline private key in PEM format.
     /// If this is set, "crt_file" must also be set.
     pub key_file: Option<PathBuf>,
+
     /// Pass phrase used to unlock the encrypted key file. This has no effect
     /// unless "key_file" is set.
     pub key_pass: Option<String>,
@@ -95,19 +110,19 @@ impl TlsSettings {
         let options = options.as_ref().unwrap_or(&default);
 
         if !for_server {
-            if options.verify_certificate == Some(false) {
+            if !options.verify_certificate {
                 warn!(
                     "The `verify_certificate` option is DISABLED, this may lead to security vulnerabilities."
                 );
             }
-            if options.verify_hostname == Some(false) {
+            if !options.verify_hostname {
                 warn!("The `verify_hostname` option is DISABLED, this may lead to security vulnerabilities.");
             }
         }
 
         Ok(Self {
-            verify_certificate: options.verify_certificate.unwrap_or(!for_server),
-            verify_hostname: options.verify_hostname.unwrap_or(!for_server),
+            verify_certificate: !for_server,
+            verify_hostname: !for_server,
             authorities: options.load_authorities()?,
             identity: options.load_identity()?,
         })

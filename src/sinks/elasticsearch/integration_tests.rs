@@ -397,7 +397,7 @@ async fn insert_events_over_https() {
             compression: Compression::None,
             tls: Some(TlsConfig {
                 ca_file: Some(format!("{}/tests/ca/certs/ca.cert.pem", pwd).into()),
-                verify_hostname: Some(false),
+                verify_hostname: false,
                 ..Default::default()
             }),
             ..config()
