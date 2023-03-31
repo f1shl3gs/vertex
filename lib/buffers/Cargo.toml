@@ -20,7 +20,7 @@ enumflags2 = { version = "0.7.5", default-features = false }
 event = { path = "../event" }
 finalize = { path = "../finalize" }
 fslock = { version = "0.2.0", default-features = false, features = ["std"] }
-futures = { version = "0.3.27", default-features = false, features = ["std"] }
+futures = { version = "0.3.28", default-features = false, features = ["std"] }
 memmap2 = { version = "0.5.10", default-features = false }
 metrics = { path = "../metrics" }
 num-traits = { version = "0.2.15", default-features = false }

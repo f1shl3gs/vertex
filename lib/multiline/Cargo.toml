@@ -12,7 +12,7 @@ serde_yaml = { version = "0.9.19" }
 [dependencies]
 bytes = { version = "1.4.0", default-features = false }
 configurable = { path = "../configurable" }
-futures = { version = "0.3.27", default-features = false }
+futures = { version = "0.3.28", default-features = false }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 pin-project-lite = { version = "0.2.9" }
 regex = { version = "1.7.3" }
