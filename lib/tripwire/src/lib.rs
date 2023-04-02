@@ -158,14 +158,17 @@ impl Future for Tripwire {
         // The `Tripwire` can move between tasks on the executor, which could cause
         // a stale waker pointing to the wrong task, preventing `Tripwire` from waking
         // up correctly.
-        //
-        // N.B. it's possible to check for this using the `Waker::will_wake`
-        // function, but we omit that here to keep things simple.
         self.shared
             .wakers
             .lock()
             .expect("lock waker map success")
-            .insert(self.id, cx.waker().clone());
+            .entry(self.id)
+            .and_modify(|prev| {
+                if !prev.will_wake(cx.waker()) {
+                    *prev = cx.waker().clone();
+                }
+            })
+            .or_insert_with(|| cx.waker().clone());
 
         Poll::Pending
     }
