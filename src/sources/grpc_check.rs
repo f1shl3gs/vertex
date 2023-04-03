@@ -6,9 +6,9 @@ use event::{tags, Metric};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::{Pipeline, ShutdownSignal, Source};
 use tonic::Code;
-use tonic_health::proto::health_check_response::ServingStatus;
-use tonic_health::proto::health_client::HealthClient;
-use tonic_health::proto::HealthCheckRequest;
+use tonic_health::pb::health_check_response::ServingStatus;
+use tonic_health::pb::health_client::HealthClient;
+use tonic_health::pb::HealthCheckRequest;
 
 const fn default_timeout() -> Duration {
     Duration::from_secs(5)
@@ -227,7 +227,9 @@ mod tests {
         // wait for grpc service startup
         tokio::time::sleep(Duration::from_secs(1)).await;
 
-        health_reporter.set_serving::<DummyService>().await;
+        health_reporter
+            .set_service_status("dummy", tonic_health::ServingStatus::Serving)
+            .await;
         let metrics = scrape(
             DummyService::NAME.to_string(),
             endpoint.clone(),
@@ -242,7 +244,9 @@ mod tests {
             ServingStatus::Serving.as_str_name()
         );
 
-        health_reporter.set_not_serving::<DummyService>().await;
+        health_reporter
+            .set_service_status("dummy", tonic_health::ServingStatus::NotServing)
+            .await;
         let metrics = scrape(
             DummyService::NAME.to_string(),
             endpoint.clone(),
