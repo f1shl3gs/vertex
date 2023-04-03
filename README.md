@@ -1,23 +1,10 @@
 # Vertex
 
-Vertex is a rewrite/rebranding of [Vector](https://github.com/vectordotdev/vector), and it is inspired 
-by [OpenTelemetry](https://opentelemetry.io/).
+Vertex is a forking/rewrite of [Vector](https://github.com/vectordotdev/vector), and it is inspired 
+by [OpenTelemetry](https://opentelemetry.io/) too.
 
 Vertex is used for collecting and processing observability data(metrics, logs and traces). it can be used to
 replace some part of your monitor infra, like `node_exporter`, `fluent-bit`, `jaeger-agent` and etc.
-
-## Features
-- Hot reload from files or HTTP endpoint
-  - File watch needs `inotify`, so only Linux supported.
-  - HTTP support get or get-and-watch style(like Kubernetes), WebSocket is not supported.
-
-## Concepts
-### Event
-Events represent the individual units of data in Vertex. An event
-could be:
-- log
-- metric
-- trace
 
 ### Components
 Component is the generic term for `sources`, `transforms`, `sinks` and `extensions`. Components
@@ -167,11 +154,57 @@ There are some keywords
 - `type` is used to represent component type
 - `inputs` is an array used to build the Topology(DAG)
 
+### Hot Reload
+- Hot reload from files or HTTP endpoint
+  - File watch needs `inotify`, so only Linux supported.
+  - HTTP support get or get-and-watch style(like Kubernetes), WebSocket is not supported.
+
+
 ### Config example
 There are dozens of components, configuration could be very difficult. Therefore,
-`vertex sources|transforms|sinks|extensions [name]` could be very help
+a decent example  could be very help, you can always run
+`vertex sources|transforms|sinks|extensions` to list available components, and
+`vertex sources|transforms|sinks|extensions [name]` to generate an example.
 
 For example,
+```shell
+# List all sources
+$ ./target/release/vertex sources
+bind
+chrony
+consul
+demo_logs
+elasticsearch
+exec
+grpc_check
+haproxy
+http_check
+internal_logs
+internal_metrics
+internal_traces
+jaeger
+journald
+kafka
+kafka_metrics
+kmsg
+kubernetes_events
+kubernetes_logs
+libvirt
+memcached
+mysqld
+nginx_stub
+node
+ntp
+nvidia_smi
+prometheus_remote_write
+prometheus_scrape
+redis
+selfstat
+syslog
+tail
+zookeeper
+```
+
 ```shell
 $ ./target/release/vertex sources node
 # The Node source generates metrics about the host system scraped
