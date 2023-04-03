@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680500241921,
+  "lastUpdate": 1680500266503,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -45969,6 +45969,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1550.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f7060cb8aa733439326e32fb4f41d41883a09c52",
+          "message": "chore(deps): bump mimalloc from 0.1.34 to 0.1.35 (#914)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.34 to 0.1.35.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.34...v0.1.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-03T13:31:12+08:00",
+          "tree_id": "6c801aa83f0804d8c468e928634997c0ae71ede2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f7060cb8aa733439326e32fb4f41d41883a09c52"
+        },
+        "date": 1680500255039,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.021,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 211.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 471.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1337.2,
             "unit": "ns/op"
           }
         ]
