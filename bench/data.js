@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680500226498,
+  "lastUpdate": 1680500241921,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -45925,6 +45925,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1447.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca3478cbc70199f5b7322a82ab50cfa7f96fffa2",
+          "message": "chore(deps): bump enumflags2 from 0.7.5 to 0.7.6 (#912)\n\nBumps [enumflags2](https://github.com/meithecatte/enumflags2) from 0.7.5 to 0.7.6.\r\n- [Release notes](https://github.com/meithecatte/enumflags2/releases)\r\n- [Commits](https://github.com/meithecatte/enumflags2/compare/v0.7.5...v0.7.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: enumflags2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-03T13:30:59+08:00",
+          "tree_id": "f4c28c59defa0c484e30228078871905555d28e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca3478cbc70199f5b7322a82ab50cfa7f96fffa2"
+        },
+        "date": 1680500229821,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 215.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 528.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1550.7,
             "unit": "ns/op"
           }
         ]
