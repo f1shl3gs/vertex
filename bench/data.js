@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680503019550,
+  "lastUpdate": 1680503030469,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11454,6 +11454,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 326.15,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "32721dfc9dbd77ba25a6e5e48d902ae4b1f01baf",
+          "message": "bump tonic from 0.8.0 to 0.9.0 (#917)",
+          "timestamp": "2023-04-03T14:19:40+08:00",
+          "tree_id": "a409333bfbbc8f1d2c461abfb6a1abd3967b1472",
+          "url": "https://github.com/f1shl3gs/vertex/commit/32721dfc9dbd77ba25a6e5e48d902ae4b1f01baf"
+        },
+        "date": 1680503021044,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 89.042,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 194.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 326.48,
             "unit": "ns/op"
           }
         ]
