@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680462296140,
+  "lastUpdate": 1680500131326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11221,6 +11221,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 382.88,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca3478cbc70199f5b7322a82ab50cfa7f96fffa2",
+          "message": "chore(deps): bump enumflags2 from 0.7.5 to 0.7.6 (#912)\n\nBumps [enumflags2](https://github.com/meithecatte/enumflags2) from 0.7.5 to 0.7.6.\r\n- [Release notes](https://github.com/meithecatte/enumflags2/releases)\r\n- [Commits](https://github.com/meithecatte/enumflags2/compare/v0.7.5...v0.7.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: enumflags2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-03T13:30:59+08:00",
+          "tree_id": "f4c28c59defa0c484e30228078871905555d28e4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca3478cbc70199f5b7322a82ab50cfa7f96fffa2"
+        },
+        "date": 1680500120653,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 96.474,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 188.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 317.39,
             "unit": "ns/op"
           }
         ]
