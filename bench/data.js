@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680500206673,
+  "lastUpdate": 1680500207867,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -19464,6 +19464,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.749,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f7060cb8aa733439326e32fb4f41d41883a09c52",
+          "message": "chore(deps): bump mimalloc from 0.1.34 to 0.1.35 (#914)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.34 to 0.1.35.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.34...v0.1.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-03T13:31:12+08:00",
+          "tree_id": "6c801aa83f0804d8c468e928634997c0ae71ede2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f7060cb8aa733439326e32fb4f41d41883a09c52"
+        },
+        "date": 1680500198329,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.213,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.639,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.102,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 34.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.313,
             "unit": "ns/op"
           }
         ]
