@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680627467876,
+  "lastUpdate": 1680627486937,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -20029,6 +20029,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.157,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "67e6b180fe0ec6e610129f9638e0107c29abfc45",
+          "message": "chore(deps): bump tonic from 0.9.0 to 0.9.1 (#919)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.9.0 to 0.9.1.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.0...v0.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-05T00:51:49+08:00",
+          "tree_id": "f207dd556c66e83718b161ef03898dce184cbf92",
+          "url": "https://github.com/f1shl3gs/vertex/commit/67e6b180fe0ec6e610129f9638e0107c29abfc45"
+        },
+        "date": 1680627474952,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.996,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.702,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 42.858,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.809,
             "unit": "ns/op"
           }
         ]
