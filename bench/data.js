@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680627401577,
+  "lastUpdate": 1680627405970,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -4900,6 +4900,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 720130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a1df4ec569af0d6acb9d7e2fdfcb2c100b7e81e3",
+          "message": "chore(deps): bump proc-macro2 from 1.0.55 to 1.0.56 (#921)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.55 to 1.0.56.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.55...1.0.56)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-05T00:52:36+08:00",
+          "tree_id": "d483206dffe08466423ce7fdf32c866aacf859d1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a1df4ec569af0d6acb9d7e2fdfcb2c100b7e81e3"
+        },
+        "date": 1680627396268,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 712810,
             "unit": "ns/op"
           }
         ]
