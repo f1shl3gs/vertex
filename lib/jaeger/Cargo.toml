@@ -14,4 +14,4 @@ event = { path = "../event" }
 prost = { version = "0.11.8" }
 prost-types = { version = "0.11.8" }
 thrift = { version = "0.17.0", default-features = false, features = ["server"] }
-tonic = { version = "0.9.0", default-features = false }
+tonic = { version = "0.9.1", default-features = false }
