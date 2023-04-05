@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680675156455,
+  "lastUpdate": 1680675162646,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5074,6 +5074,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 895110,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5bfebae107c253108807bdb70946e04c822e34bf",
+          "message": "chore(deps): bump mimalloc from 0.1.35 to 0.1.36 (#923)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.35 to 0.1.36.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.35...v0.1.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-05T14:07:50+08:00",
+          "tree_id": "9583f5cb2180aa456150b9d152ed53ce9ac65543",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5bfebae107c253108807bdb70946e04c822e34bf"
+        },
+        "date": 1680675150470,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 919470,
             "unit": "ns/op"
           }
         ]
