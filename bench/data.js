@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680670809070,
+  "lastUpdate": 1680670810719,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -47961,6 +47961,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1290.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fa6bde1c6449c4d5d92ade06d8958bc4b53108cf",
+          "message": "chore(deps): bump tonic-health from 0.9.0 to 0.9.1 (#920)\n\nBumps [tonic-health](https://github.com/hyperium/tonic) from 0.9.0 to 0.9.1.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.0...v0.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-05T12:55:07+08:00",
+          "tree_id": "e507e37fbe4efb7e01bf78e4e929cfbcb54f2f74",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fa6bde1c6449c4d5d92ade06d8958bc4b53108cf"
+        },
+        "date": 1680670800749,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 55.916,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 451.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1293.2,
             "unit": "ns/op"
           }
         ]
