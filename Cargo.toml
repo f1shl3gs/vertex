@@ -423,7 +423,7 @@ colored = { version = "2.0.0", default-features = false }
 
 # External libs
 ahash = { version = "0.8.3", optional = true }
-async-stream = { version = "0.3.4", optional = true }
+async-stream = { version = "0.3.5", optional = true }
 # TODO: Remove this, once std::io::IsTerminal merged and stablized.
 # See: https://doc.rust-lang.org/std/io/trait.IsTerminal.html#
 #      https://github.com/rust-lang/rust/issues/98070#issuecomment-1486375244
