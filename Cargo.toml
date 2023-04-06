@@ -396,7 +396,7 @@ tower = { version = "0.4.13", default-features = false, features = ["buffer", "l
 
 # Serde
 serde = { version = "1.0.159", default-features = false, features = ["derive"] }
-serde_yaml = { version = "0.9.19" }
+serde_yaml = { version = "0.9.20" }
 serde_json = { version = "1.0.95", default-features = false }
 serde_regex = { path = "lib/serde_regex" }
 
