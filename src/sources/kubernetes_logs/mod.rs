@@ -18,7 +18,6 @@ use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::{FutureExt, StreamExt, TryFutureExt, TryStreamExt};
 use k8s_openapi::api::core::v1::Pod;
-use kube::api::ListParams;
 use kube::runtime::watcher;
 use kube::{Api, Client};
 use log_schema::log_schema;
@@ -202,13 +201,15 @@ impl LogSource {
                 field_selector = ?&field_selector,
             );
 
-            let list_params = ListParams {
-                field_selector,
-                label_selector,
-                ..Default::default()
-            };
+            let mut watch_config = watcher::Config::default();
+            if let Some(fs) = field_selector {
+                watch_config = watch_config.fields(&fs)
+            }
+            if let Some(ls) = label_selector {
+                watch_config = watch_config.labels(&ls)
+            }
 
-            let mut rfl = reflector::reflector(rfl_store, watcher(api, list_params))
+            let mut rfl = reflector::reflector(rfl_store, watcher(api, watch_config))
                 .take_until(rfl_shutdown)
                 .boxed();
 
