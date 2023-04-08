@@ -9,7 +9,6 @@ use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
 use k8s_openapi::api::core::v1::Event;
-use kube::api::ListParams;
 use kube::runtime::{watcher, WatchStreamExt};
 use kube::{Api, Client};
 
@@ -47,7 +46,7 @@ impl SourceConfig for Config {
             let watchers = apis
                 .into_iter()
                 .map(|api| {
-                    watcher(api, ListParams::default())
+                    watcher(api, watcher::Config::default())
                         .applied_objects()
                         .boxed()
                 })
