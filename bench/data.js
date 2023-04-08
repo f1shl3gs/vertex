@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1680859561139,
+  "lastUpdate": 1680961533485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -12173,6 +12173,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 343.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0922c93f7db57e52c69b867708d147b93be44d2",
+          "message": "bump kube from 0.80.0 to 0.81.0 (#928)",
+          "timestamp": "2023-04-08T21:41:59+08:00",
+          "tree_id": "1e7543a2bd429b52009060bb9b5e3b5f716b1414",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0922c93f7db57e52c69b867708d147b93be44d2"
+        },
+        "date": 1680961524262,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 91.55,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 192.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 316.89,
             "unit": "ns/op"
           }
         ]
