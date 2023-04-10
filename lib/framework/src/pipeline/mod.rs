@@ -207,17 +207,6 @@ impl Pipeline {
             .send_event_stream(events)
             .await
     }
-
-    pub async fn send_result_stream<E>(
-        &mut self,
-        stream: impl Stream<Item = Result<Event, E>> + Unpin,
-    ) -> Result<(), StreamSendError<E>> {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_result_stream(stream)
-            .await
-    }
 }
 
 #[derive(Clone, Debug)]
@@ -345,48 +334,6 @@ impl Inner {
         while let Some(events) = stream.next().await {
             self.send_batch(events.into_iter()).await?;
         }
-        Ok(())
-    }
-
-    async fn send_result_stream<E>(
-        &mut self,
-        mut stream: impl Stream<Item = Result<Event, E>> + Unpin,
-    ) -> Result<(), StreamSendError<E>> {
-        let mut to_forward = Vec::with_capacity(CHUNK_SIZE);
-
-        loop {
-            tokio::select! {
-                next = stream.next(), if to_forward.len() <= CHUNK_SIZE => {
-                    match next {
-                        Some(Ok(event)) => {
-                            to_forward.push(event);
-                        },
-                        Some(Err(err)) => {
-                            if !to_forward.is_empty() {
-                                self.send_batch(to_forward).await?;
-                            }
-
-                            return Err(StreamSendError::Stream(err));
-                        },
-                        None => {
-                            if !to_forward.is_empty() {
-                                self.send_batch(to_forward).await?;
-                            }
-
-                            break;
-                        }
-                    }
-                }
-
-                else => {
-                    if !to_forward.is_empty() {
-                        let out = std::mem::replace(&mut to_forward, Vec::with_capacity(CHUNK_SIZE));
-                        self.send_batch(out).await?;
-                    }
-                }
-            }
-        }
-
         Ok(())
     }
 }
