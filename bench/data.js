@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681130298596,
+  "lastUpdate": 1681130300297,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -33064,6 +33064,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 222390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fea2a10c20f2d4d9b2e023a2719d9c1431c1e531",
+          "message": "chore(deps): bump kube from 0.81.0 to 0.82.0 (#932)\n\n* chore(deps): bump kube from 0.81.0 to 0.82.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.81.0 to 0.82.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.81.0...0.82.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update k8s-openapi 0.18.0 too\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-04-10T20:33:22+08:00",
+          "tree_id": "78b1e014a002f0788a15cb8718745540e51eef7a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fea2a10c20f2d4d9b2e023a2719d9c1431c1e531"
+        },
+        "date": 1681130290260,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 542.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 53856,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 269560,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 538610,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 187.95,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 18684,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 93451,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 186920,
             "unit": "ns/op"
           }
         ]
