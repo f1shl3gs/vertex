@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681105686192,
+  "lastUpdate": 1681105696065,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21199,6 +21199,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.856,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d81419135b4c4d383861840cf2ef011a30d2ef5",
+          "message": "chore(deps): bump uuid from 1.3.0 to 1.3.1 (#929)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.0 to 1.3.1.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.0...1.3.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-10T13:43:35+08:00",
+          "tree_id": "08ba0c40d385fb46dc601e73973d05e8dd30554e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d81419135b4c4d383861840cf2ef011a30d2ef5"
+        },
+        "date": 1681105685643,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.922,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.089,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.613,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.383,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.991,
             "unit": "ns/op"
           }
         ]
