@@ -70,8 +70,6 @@ target-x86_64-unknown-linux-musl = [
     "sinks",
     "sources",
     "transforms",
-
-    "rdkafka/cmake_build",
 ]
 
 target-x86_64-unknown-linux-gnu = [
@@ -211,7 +209,7 @@ sources-internal_metrics = []
 sources-internal_traces = ["tracing-subscriber"]
 sources-jaeger = ["jaeger", "tonic"]
 sources-journald = []
-sources-kafka = ["rdkafka", "async-stream"]
+sources-kafka = ["rskafka", "async-stream"]
 sources-kafka_metrics = ["rskafka"]
 sources-kmsg = []
 sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
@@ -450,9 +448,8 @@ once_cell = { version = "1.17.1" }
 parking_lot = { version = "0.12.1", optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 quick-xml = { version = "0.28.1", default-features = false, features = ["serialize"], optional = true }
-rdkafka = { version = "0.29.0", default-features = false, optional = true, features = ["tokio", "libz", "zstd"] }
 regex = { version = "1.7.3" }
-rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "0363150898691cf453f4916441a167b85a137253", optional = true }
+rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
 smallvec = { version = "1.10.0", optional = true, features = ["union"] }

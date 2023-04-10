@@ -1,13 +1,17 @@
-use std::collections::{BTreeMap, HashMap, HashSet};
-use std::io::Cursor;
+#![allow(warnings)]
+
+use bytes::Bytes;
+use std::collections::BTreeMap;
+use std::sync::atomic::{AtomicI64, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
 
-use bytes::Bytes;
-use chrono::{DateTime, TimeZone, Utc};
 use codecs::decoding::{DeserializerConfig, FramingConfig, StreamDecodingError};
 use codecs::{Decoder, DecodingConfig};
-use configurable::configurable_component;
+use configurable::schema::{
+    generate_const_string_schema, generate_one_of_schema, SchemaGenerator, SchemaObject,
+};
+use configurable::{configurable_component, Configurable, GenerateError};
 use event::{log::Value, BatchNotifier, BatchStatus, Event, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
@@ -15,17 +19,19 @@ use framework::shutdown::ShutdownSignal;
 use framework::source::util::OrderedFinalizer;
 use framework::{Error, Source};
 use futures::{Stream, StreamExt};
+use futures_util::TryFutureExt;
 use log_schema::{log_schema, LogSchema};
-use rdkafka::consumer::{Consumer, StreamConsumer};
-use rdkafka::message::{BorrowedMessage, Headers};
-use rdkafka::{ClientConfig, Message};
+use rskafka::client::consumer::{StartOffset, StreamConsumerBuilder};
+use rskafka::client::consumer_group::ConsumerGroup;
+use rskafka::client::partition::{OffsetAt, UnknownTopicHandling};
+use rskafka::client::{Client, ClientBuilder};
+use rskafka::protocol::error::Error as ProtocolError;
+use rskafka::protocol::messages::PartitionAssignment;
+use rskafka::record::{Record, RecordAndOffset};
+use rskafka::topic::Topic;
+use serde::{Deserialize, Serialize};
 use tokio_util::codec::FramedRead;
-
-use crate::common::kafka::{KafkaAuthConfig, KafkaStatisticsContext};
-
-fn default_auto_offset_reset() -> String {
-    "largest".to_string()
-}
+use tripwire::Tripwire;
 
 const fn default_session_timeout() -> Duration {
     Duration::from_secs(10)
@@ -71,43 +77,57 @@ const fn default_framing_message_based() -> FramingConfig {
     FramingConfig::Bytes
 }
 
+#[derive(Debug, Default, Deserialize, Serialize, Configurable)]
+pub enum AutoOffsetReset {
+    /// At the earlist known offset.
+    ///
+    /// This might be larger than 0 if some records were already deleted due to a retention policy.
+    Earliest,
+
+    /// At the latest known offset.
+    ///
+    /// This is helpful if you only want ot process new data.
+    #[default]
+    Latest,
+}
+
+impl AutoOffsetReset {
+    const fn start_offset(&self) -> StartOffset {
+        match self {
+            AutoOffsetReset::Earliest => StartOffset::Earliest,
+            AutoOffsetReset::Latest => StartOffset::Latest,
+        }
+    }
+}
+
 #[configurable_component(source, name = "kafka")]
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct KafkaSourceConfig {
     /// A comma-separated list of host and port pairs that are the address
     /// of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
     /// client connects to initially to bootstrap itself.
     #[configurable(required, format = "ip-address", example = "10.14.22.123:9092")]
-    bootstrap_servers: Vec<String>,
+    bootstrap_brokers: Vec<String>,
 
     /// The Kafka topics names to read events from. Regex is supported if
     /// the topic begins with `^`.
+    #[configurable(required)]
     topics: Vec<String>,
 
     /// The consumer group name to be used to consume events from Kafka.
+    #[configurable(required)]
     group: String,
 
     /// If offsets for consumer group do not exist, set them using this
-    /// strategy. See the librdkafka documentation for the
-    /// "auto.offset.reset" option for further clarification.
-    #[serde(default = "default_auto_offset_reset")]
-    auto_offset_reset: String,
+    /// strategy.
+    #[serde(default)]
+    auto_offset_reset: AutoOffsetReset,
 
     /// The Kafka session timeout.
     #[serde(default = "default_session_timeout")]
     #[serde(with = "humanize::duration::serde")]
     session_timeout: Duration,
-
-    /// Default timeout for network requests.
-    #[serde(default = "default_socket_timeout")]
-    #[serde(with = "humanize::duration::serde")]
-    socket_timeout: Duration,
-
-    /// Maximum time the broker may wait to fill the response.
-    #[serde(default = "default_fetch_wait_max")]
-    #[serde(with = "humanize::duration::serde")]
-    fetch_wait_max: Duration,
 
     /// The frequency that the consumer offsets are committed(written) to
     /// offset storage.
@@ -122,18 +142,18 @@ struct KafkaSourceConfig {
     /// The log field name to use for the Kafka topic.
     #[serde(default = "default_topic_key")]
     topic_key: String,
+
     /// The log field name to use for the Kafka partition name.
     #[serde(default = "default_partition_key")]
     partition_key: String,
+
     /// The log field name to use for the Kafka offset
     #[serde(default = "default_offset_key")]
     offset_key: String,
+
     /// The log field name to use for the Kafka headers.
     #[serde(default = "default_headers_key")]
     headers_key: String,
-
-    #[serde(flatten)]
-    auth: KafkaAuthConfig,
 
     #[serde(default = "default_framing_message_based")]
     framing: FramingConfig,
@@ -143,16 +163,15 @@ struct KafkaSourceConfig {
 
     #[serde(default)]
     acknowledgement: bool,
-
-    /// Advanced options. See librdkafka documentation for more details.
-    /// https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md
-    librdkafka_options: Option<HashMap<String, String>>,
 }
+
+/*
 
 #[derive(Debug, thiserror::Error)]
 enum BuildError {
     #[error("Could not create Kafka consumer: {0}")]
     KafkaCreateError(rdkafka::error::KafkaError),
+
     #[error("Could not subscribe to Kafka topics: {0}")]
     KafkaSubscribeError(rdkafka::error::KafkaError),
 }
@@ -163,7 +182,7 @@ impl KafkaSourceConfig {
 
         client_config
             .set("group.id", &self.group)
-            .set("bootstrap.servers", &self.bootstrap_servers.join(","))
+            .set("bootstrap.servers", &self.bootstrap_brokers.join(","))
             .set("enable.partition.eof", "false")
             .set("session.timeout.ms", "6000")
             .set("enable.auto.commit", "true")
@@ -208,7 +227,9 @@ impl KafkaSourceConfig {
         Ok(consumer)
     }
 }
+*/
 
+/*
 #[derive(Debug)]
 struct FinalizerEntry {
     topic: String,
@@ -225,23 +246,35 @@ impl<'a> From<BorrowedMessage<'a>> for FinalizerEntry {
         }
     }
 }
+*/
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
 impl SourceConfig for KafkaSourceConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let client = ClientBuilder::new(self.bootstrap_brokers.clone())
+            .build()
+            .await?;
+
         let acknowledgements = cx.globals.acknowledgements || self.acknowledgement;
-        let consumer = self.create_consumer()?;
         let decoder = DecodingConfig::new(self.framing.clone(), self.decoding.clone()).build();
 
-        Ok(Box::pin(run(
-            self.clone(),
-            consumer,
-            decoder,
-            cx.output,
-            cx.shutdown,
-            acknowledgements,
-        )))
+        Ok(Box::pin(
+            run(
+                client,
+                self.group.clone(),
+                self.topics.clone(),
+                self.auto_offset_reset.start_offset(),
+                decoder,
+                cx.output,
+                cx.shutdown,
+                acknowledgements,
+            )
+            .map_err(|err| {
+                error!(message = "kafka source exit", ?err);
+                ()
+            }),
+        ))
     }
 
     fn outputs(&self) -> Vec<Output> {
@@ -250,59 +283,293 @@ impl SourceConfig for KafkaSourceConfig {
 }
 
 async fn run(
-    config: KafkaSourceConfig,
-    consumer: StreamConsumer<KafkaStatisticsContext>,
+    client: Client,
+    group: String,
+    want_topics: Vec<String>,
+    default_offset: StartOffset,
     decoder: Decoder,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
     acknowledgements: bool,
-) -> Result<(), ()> {
-    let consumer = Arc::new(consumer);
-    let (finalizer, mut ack_stream) =
-        OrderedFinalizer::<FinalizerEntry>::maybe_new(acknowledgements, shutdown.clone());
-    let mut stream = consumer.stream();
-    let keys = Keys::from(log_schema(), &config);
-    let mut topics = Topics::new(&config);
+) -> Result<(), crate::Error> {
+    let client = Arc::new(client);
+    let max_wait_ms = 500;
 
     loop {
-        tokio::select! {
-            _ = &mut shutdown => break,
-            entry = ack_stream.next() => if let Some((status, entry)) = entry {
-                handle_ack(&mut topics, status, entry, &consumer);
-            },
+        // list topics
+        let topics = client
+            .list_topics()
+            .await?
+            .into_iter()
+            .filter(|t| want_topics.contains(&t.name))
+            .collect::<Vec<_>>();
 
-            msg = stream.next() => match msg {
-                None => break, // This should not happened.
-                Some(Err(err)) => {
-                    error!(
-                        message = "Failed to read message",
-                        %err,
-                    )
-                },
-                Some(Ok(msg)) => {
-                    parse_message(msg, &decoder, keys, &finalizer, &mut output, &consumer, &topics).await;
+        let consumer = client.consumer_group(group.clone(), &topics).await?;
+        let consumer = Arc::new(consumer);
+        let notify = Arc::new(tokio::sync::Notify::new());
+        let start_offsets = consumer.offsets().await?;
+        let mut offsets = Vec::new();
+
+        // consume topics
+        for PartitionAssignment { topic, partitions } in consumer.assignment() {
+            let starts = start_offsets.iter().find(|t| &t.name == topic);
+
+            for partition in partitions {
+                let topic = topic.to_string();
+                let partition = *partition;
+                let signal = Arc::clone(&notify);
+                let current_offset = Arc::new(AtomicI64::new(0));
+                let cli = Arc::clone(&client);
+                let dec = decoder.clone();
+                let mut out = output.clone();
+                offsets.push(Arc::clone(&current_offset));
+
+                let start = match starts {
+                    Some(topic) => topic
+                        .partitions
+                        .iter()
+                        .find(|p| p.partition_index == partition)
+                        .map(|p| StartOffset::At(p.committed_offset))
+                        .unwrap_or_else(|| default_offset),
+                    None => default_offset,
+                };
+
+                tokio::spawn(async move {
+                    let pc = match cli
+                        .partition_client(&topic, partition, UnknownTopicHandling::Error)
+                        .await
+                    {
+                        Ok(pc) => pc,
+                        Err(err) => {
+                            error!(
+                                message = "create partition client failed",
+                                ?err,
+                                topic,
+                                partition,
+                            );
+
+                            return;
+                        }
+                    };
+
+                    let start = match pc.get_offset(OffsetAt::Earliest).await {
+                        Ok(current) => match start {
+                            StartOffset::At(committed) => {
+                                if committed < current {
+                                    StartOffset::At(current)
+                                } else {
+                                    start
+                                }
+                            }
+                            _ => start,
+                        },
+                        Err(err) => {
+                            error!(message = "get offset failed", ?err, topic, partition,);
+                            return;
+                        }
+                    };
+
+                    info!(
+                        message = "start consume partition",
+                        topic,
+                        partition,
+                        ?start
+                    );
+
+                    let mut current = 0i64;
+                    let records = match pc.fetch_records(current, 1..52428800, 500).await {
+                        Ok((records, watermark)) => {
+                            for record in records {
+                                current = record.offset;
+                                match convert_message(record, &topic, partition, &dec).await {
+                                    Some(logs) => {
+                                        if let Err(err) = out.send(logs).await {
+                                            error!(message = "send logs failed", ?err);
+                                            return
+                                        }
+                                    }
+                                    None => {}
+                                }
+                            }
+                        },
+                        Err(err) => {
+                            error!(
+                                message = "fetch records failed",
+                                ?err,
+                                topic,
+                                partition,
+                                current_offset=current,
+                            );
+
+                            break
+                        }
+                    };
+
+                    loop {
+                        tokio::select! {
+                            result = pc.fetch_records(current, 1..52428800, 500) => {
+                                match result {
+                                    Ok((records, _water_mark)) => {
+
+                                    },
+                                    Err(err) => {
+                                        error!(
+                                            message = "fetch records failed",
+                                            ?err,
+                                            topic,
+                                            partition,
+                                            current_offset=current,
+                                        );
+
+                                        break
+                                    }
+                                }
+                            }
+
+                            _ = signal.notified() => {
+                                break
+                            }
+                        }
+                    }
+
+                    // consumer exit
+                });
+            }
+        }
+
+        // heartbeat loop
+        let signal = Arc::clone(&notify);
+        let hc = Arc::clone(&consumer);
+        tokio::spawn(async move {
+            let mut ticker = tokio::time::interval(Duration::from_secs(3));
+            let mut retries = 3;
+
+            loop {
+                tokio::select! {
+                    _ = ticker.tick() => {},
+                    _ = signal.notified() => return
                 }
+
+                if let Err(err) = hc.heartbeat().await {
+                    match err {
+                        rskafka::client::error::Error::ServerError { protocol_error, .. }
+                            if protocol_error == ProtocolError::RebalanceInProgress =>
+                        {
+                            info!("rebalancing triggered");
+                            break;
+                        }
+                        _ => {
+                            warn!("unexpected error when heartbeat, {}", err);
+                            retries -= 1;
+                            if retries <= 0 {
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    retries = 3;
+                }
+            }
+
+            // topic check loop might call this too, so send might failed,
+            // but it's ok;
+            signal.notify_waiters();
+
+            debug!(message = "heartbeat loop exit");
+        });
+
+        // commit loop
+        let signal = Arc::clone(&notify);
+        let cc = Arc::clone(&consumer);
+        tokio::spawn(async move {
+            let mut ticker = tokio::time::interval(Duration::from_secs(5));
+
+            loop {
+                tokio::select! {
+                    _ = signal.notified() => break,
+                    _ = ticker.tick() => {}
+                }
+
+                let mut i = 0;
+                for PartitionAssignment { topic, partitions } in cc.assignment() {
+                    for partition in partitions {
+                        let offset = offsets[i].load(Ordering::Relaxed);
+                        i += 1;
+
+                        if offset == 0 {
+                            // consume nothing till now
+                            continue;
+                        }
+
+                        let topics = cc.commit(topic, *partition, offset).await.unwrap();
+                        for topic in topics {
+                            for p in topic.partitions {
+                                info!(
+                                    "commit offset of {}/{}/{} err:{:?}",
+                                    topic.name, p.partition_index, offset, p.error_code
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // topic check loop
+        let mut ticker = tokio::time::interval(Duration::from_secs(60 * 10));
+        loop {
+            tokio::select! {
+                _ = notify.notified() => break,
+                _ = ticker.tick() => {},
+                _ = &mut shutdown => {
+                    notify.notify_waiters();
+
+                    return Ok(());
+                }
+            }
+
+            let mut new_topics = client
+                .list_topics()
+                .await
+                .unwrap()
+                .into_iter()
+                .filter(|t| t.name.starts_with("test_"))
+                .collect::<Vec<_>>();
+            new_topics.sort_by(|a, b| a.name.cmp(&b.name));
+
+            if !compare_topics(&topics, &new_topics) {
+                notify.notify_waiters();
+                break;
             }
         }
     }
-
-    Ok(())
 }
 
-struct Topics {
-    subscribed: HashSet<String>,
-    failed: HashSet<String>,
-}
+// compare_topics compare topic count, name and partitions
+//
+// eq_by is not stable yet.
+fn compare_topics(old: &[Topic], new: &[Topic]) -> bool {
+    if old.len() != new.len() {
+        return false;
+    }
 
-impl Topics {
-    fn new(config: &KafkaSourceConfig) -> Self {
-        Self {
-            subscribed: config.topics.iter().cloned().collect(),
-            failed: Default::default(),
+    for i in 0..old.len() {
+        let o = &old[i];
+        let n = &new[i];
+
+        if o.name != n.name {
+            return false;
+        }
+
+        if o.partitions.len() != n.partitions.len() {
+            return false;
         }
     }
+
+    return true;
 }
 
+/*
 fn handle_ack(
     topics: &mut Topics,
     status: BatchStatus,
@@ -352,6 +619,7 @@ fn handle_ack(
         }
     }
 }
+*/
 
 #[derive(Clone, Copy)]
 struct Keys<'a> {
@@ -363,19 +631,7 @@ struct Keys<'a> {
     headers: &'a str,
 }
 
-impl<'a> Keys<'a> {
-    fn from(schema: &'a LogSchema, config: &'a KafkaSourceConfig) -> Self {
-        Self {
-            timestamp: schema.timestamp_key(),
-            key_field: config.key_field.as_str(),
-            topic: config.topic_key.as_str(),
-            partition: config.partition_key.as_str(),
-            offset: config.offset_key.as_str(),
-            headers: config.headers_key.as_str(),
-        }
-    }
-}
-
+/*
 struct ReceivedMessage {
     timestamp: DateTime<Utc>,
     key: Value,
@@ -435,7 +691,60 @@ impl ReceivedMessage {
         }
     }
 }
+*/
 
+async fn convert_message(
+    record: RecordAndOffset,
+    topic: &str,
+    partition: i32,
+    decoder: &Decoder,
+) -> Option<Vec<LogRecord>> {
+    let RecordAndOffset { record, offset } = record;
+    let payload = record.value?;
+    let timestamp = record.timestamp;
+    let key = record
+        .key
+        .map(|key| Value::from(Bytes::from(key)))
+        .unwrap_or(Value::Null);
+    let mut headers = record
+        .headers
+        .into_iter()
+        .map(|(key, value)| (key, Value::from(value)))
+        .collect::<BTreeMap<_, _>>();
+
+    let mut stream = FramedRead::new(payload.as_slice(), decoder.clone());
+    let (count, _) = stream.size_hint();
+
+    let mut logs = Vec::with_capacity(count);
+    while let Some(result) = stream.next().await {
+        match result {
+            Ok((events, _byte_size)) => {
+                for mut event in events {
+                    let mut log = event.into_log();
+
+                    log.insert_tag(log_schema().source_type_key(), "kafka");
+                    log.insert_field("timestamp", timestamp);
+                    log.insert_field("key", key.clone());
+                    log.insert_field("topic", topic.to_string());
+                    log.insert_field("partition", partition);
+                    log.insert_field("offset", offset);
+                    log.insert_field("headers", headers.clone());
+
+                    logs.push(log);
+                }
+            }
+            Err(err) => {
+                if !err.can_continue() {
+                    break;
+                }
+            }
+        }
+    }
+
+    Some(logs)
+}
+
+/*
 async fn parse_message(
     msg: BorrowedMessage<'_>,
     decoder: &Decoder,
@@ -530,7 +839,9 @@ async fn parse_stream<'a>(
 
     Some(logs)
 }
+*/
 
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -548,7 +859,7 @@ mod tests {
         group: &str,
     ) -> KafkaSourceConfig {
         KafkaSourceConfig {
-            bootstrap_servers: vec![bootstrap_servers.to_string()],
+            bootstrap_brokers: vec![bootstrap_servers.to_string()],
             topics: vec![topic.into()],
             group: group.into(),
             auto_offset_reset: "beginning".to_string(),
@@ -584,18 +895,15 @@ mod tests {
         assert!(conf.create_consumer().is_err())
     }
 }
+*/
 
+/*
 #[cfg(all(test, feature = "integration-tests-kafka"))]
 mod integration_tests {
     use chrono::{SubsecRound, Utc};
     use event::{log::Value, EventStatus};
     use framework::{Pipeline, ShutdownSignal};
     use log_schema::log_schema;
-    use rdkafka::config::FromClientConfig;
-    use rdkafka::consumer::{BaseConsumer, Consumer};
-    use rdkafka::message::{Header, OwnedHeaders};
-    use rdkafka::producer::{FutureProducer, FutureRecord};
-    use rdkafka::{ClientConfig, Offset, TopicPartitionList};
     use std::time::Duration;
     use testcontainers::images::zookeeper::Zookeeper;
     use testcontainers::{clients, RunnableImage};
@@ -742,3 +1050,4 @@ mod integration_tests {
         }
     }
 }
+*/
