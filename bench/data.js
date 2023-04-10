@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681106769901,
+  "lastUpdate": 1681106821491,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -39681,6 +39681,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57814.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83538e2d226d35403786b3ed029b2ea952509f9f",
+          "message": "chore(deps): bump chrono-tz from 0.8.1 to 0.8.2 (#930)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.1 to 0.8.2.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-10T13:44:02+08:00",
+          "tree_id": "3fd393fcc7c054eaf882f10e4c5fc489ec0430c2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83538e2d226d35403786b3ed029b2ea952509f9f"
+        },
+        "date": 1681106811584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1173,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 57841.1,
             "unit": "KiB"
           }
         ]
