@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681222922737,
+  "lastUpdate": 1681223260583,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -33509,40 +33509,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cfc8095fc4399c4b0013e2a0d6f29f86f85f5937",
-          "message": "Merge pull request #712 from f1shl3gs/dependabot/cargo/typetag-0.2.5\n\nchore(deps): bump typetag from 0.2.4 to 0.2.5",
-          "timestamp": "2023-01-17T02:34:24+08:00",
-          "tree_id": "2edce012eec153aeb52251b96a8146d36b4e457c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cfc8095fc4399c4b0013e2a0d6f29f86f85f5937"
-        },
-        "date": 1673895456621,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1198,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55598.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7f8de1b0269da75a24928b9741533700bd39f5d9",
           "message": "Merge pull request #711 from f1shl3gs/dependabot/cargo/nom-7.1.3\n\nchore(deps): bump nom from 7.1.2 to 7.1.3",
           "timestamp": "2023-01-17T18:55:16+08:00",
@@ -40292,6 +40258,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47082.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "013278eec4fe24af383de6da256adfacdd6d9b4b",
+          "message": "remove enumflags2 (#934)",
+          "timestamp": "2023-04-11T22:01:28+08:00",
+          "tree_id": "eefae8df25bc557a311a7b34ac0c9589f78640ca",
+          "url": "https://github.com/f1shl3gs/vertex/commit/013278eec4fe24af383de6da256adfacdd6d9b4b"
+        },
+        "date": 1681223248805,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1251,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47084.5,
             "unit": "KiB"
           }
         ]
