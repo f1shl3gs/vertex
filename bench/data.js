@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681222029084,
+  "lastUpdate": 1681222922737,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -49424,6 +49424,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.534,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "013278eec4fe24af383de6da256adfacdd6d9b4b",
+          "message": "remove enumflags2 (#934)",
+          "timestamp": "2023-04-11T22:01:28+08:00",
+          "tree_id": "eefae8df25bc557a311a7b34ac0c9589f78640ca",
+          "url": "https://github.com/f1shl3gs/vertex/commit/013278eec4fe24af383de6da256adfacdd6d9b4b"
+        },
+        "date": 1681222912671,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 42873000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 951290,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.794,
             "unit": "ns/op"
           }
         ]
