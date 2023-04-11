@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681195199949,
+  "lastUpdate": 1681195206200,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5306,6 +5306,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 723860,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "faf18491ed00929779a1d109de9e55fa4e1ba069",
+          "message": "Remove rdkafka (#933)\n\n* remove dep:rdkafka\r\n\r\n* impl with rskafka\r\n\r\n* fix kafka tests",
+          "timestamp": "2023-04-11T14:35:33+08:00",
+          "tree_id": "cda40ef1a8178406f79eb112a20705f7bd40f253",
+          "url": "https://github.com/f1shl3gs/vertex/commit/faf18491ed00929779a1d109de9e55fa4e1ba069"
+        },
+        "date": 1681195193398,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 883510,
             "unit": "ns/op"
           }
         ]
