@@ -141,7 +141,9 @@ impl RunningTopology {
                 };
 
                 info!(
-                    message = "Shutting down... Waiting on running components.", remaining_components = ?remaining_components, time_remaining = ?time_remaining
+                    message = "Shutting down... Waiting on running components.",
+                    remaining_components = ?remaining_components,
+                    time_remaining = ?time_remaining
                 );
             }
         };
