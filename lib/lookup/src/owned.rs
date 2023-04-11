@@ -1,4 +1,4 @@
-use configurable::schema::{generate_array_schema, SchemaGenerator, SchemaObject};
+use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
 use configurable::{Configurable, GenerateError};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
@@ -40,8 +40,8 @@ impl OwnedPath {
 }
 
 impl Configurable for OwnedPath {
-    fn generate_schema(gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
-        generate_array_schema::<String>(gen)
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        Ok(generate_string_schema())
     }
 }
 
