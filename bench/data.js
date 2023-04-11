@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681195221510,
+  "lastUpdate": 1681196307647,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -33328,40 +33328,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "49dfea83db53aeefe58e59116dfd484c0852e188",
-          "message": "Merge pull request #710 from f1shl3gs/fix_bench_charts_name\n\nfix bench name",
-          "timestamp": "2023-01-14T22:59:04+08:00",
-          "tree_id": "7abdd153c16fac584f3033b1748d455a947b0c3c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/49dfea83db53aeefe58e59116dfd484c0852e188"
-        },
-        "date": 1673709585299,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1075,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55596.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cfc8095fc4399c4b0013e2a0d6f29f86f85f5937",
           "message": "Merge pull request #712 from f1shl3gs/dependabot/cargo/typetag-0.2.5\n\nchore(deps): bump typetag from 0.2.4 to 0.2.5",
           "timestamp": "2023-01-17T02:34:24+08:00",
@@ -40111,6 +40077,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 57709.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "faf18491ed00929779a1d109de9e55fa4e1ba069",
+          "message": "Remove rdkafka (#933)\n\n* remove dep:rdkafka\r\n\r\n* impl with rskafka\r\n\r\n* fix kafka tests",
+          "timestamp": "2023-04-11T14:35:33+08:00",
+          "tree_id": "cda40ef1a8178406f79eb112a20705f7bd40f253",
+          "url": "https://github.com/f1shl3gs/vertex/commit/faf18491ed00929779a1d109de9e55fa4e1ba069"
+        },
+        "date": 1681196297739,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1158,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47082.8,
             "unit": "KiB"
           }
         ]
