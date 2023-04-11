@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use errors::{ClosedError, StreamSendError};
+use errors::ClosedError;
 #[cfg(any(test, feature = "test-util"))]
 use event::array::into_event_stream;
 use event::{Event, EventContainer, Events};
