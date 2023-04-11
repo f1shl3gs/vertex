@@ -1,7 +1,6 @@
 use std::fmt::{Display, Formatter};
 
 use bytes::{Buf, BufMut};
-use enumflags2::{bitflags, BitFlags, FromBitsError};
 use event::{proto, Event, Events};
 use prost::Message;
 
@@ -70,55 +69,24 @@ impl std::error::Error for DecodeError {}
 ///
 /// This enumeration should never have any flags removed, only added.  This ensures that previously
 /// used flags cannot have their meaning changed/repurposed after-the-fact.
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[bitflags]
-#[repr(u32)]
-#[derive(Copy, Clone, Debug, PartialEq)]
-pub enum EventEncodableMetadataFlags {
-    /// Chained encoding scheme that first tries to decode as `EventArray` and then as `Event`, as a
-    /// way to support gracefully migrating existing v1-based disk buffers to the new
-    /// `EventArray`-based architecture.
-    ///
-    /// All encoding uses the `EventArray` variant, however.
-    DiskBufferV1CompatibilityMode = 0b1,
-}
-
 #[derive(Clone, Copy, Debug, PartialEq)]
-pub struct EventEncodableMetadata(BitFlags<EventEncodableMetadataFlags>);
+pub struct EventEncodableMetadata(u32);
 
 impl EventEncodableMetadata {
-    fn contains(self, flag: EventEncodableMetadataFlags) -> bool {
-        self.0.contains(flag)
-    }
-}
-
-impl From<EventEncodableMetadataFlags> for EventEncodableMetadata {
-    fn from(flag: EventEncodableMetadataFlags) -> Self {
-        Self(BitFlags::from(flag))
-    }
-}
-
-impl From<BitFlags<EventEncodableMetadataFlags>> for EventEncodableMetadata {
-    fn from(flags: BitFlags<EventEncodableMetadataFlags>) -> Self {
-        Self(flags)
-    }
-}
-
-impl TryFrom<u32> for EventEncodableMetadata {
-    type Error = FromBitsError<EventEncodableMetadataFlags>;
-
-    fn try_from(value: u32) -> Result<Self, Self::Error> {
-        BitFlags::try_from(value).map(Self)
-    }
+    const FLAG_VERSION_V1: Self = Self(0b1);
 }
 
 impl AsMetadata for EventEncodableMetadata {
     fn into_u32(self) -> u32 {
-        self.0.bits()
+        self.0
     }
 
     fn from_u32(value: u32) -> Option<Self> {
-        EventEncodableMetadata::try_from(value).ok()
+        if value == 0b1 {
+            Some(Self::FLAG_VERSION_V1)
+        } else {
+            None
+        }
     }
 }
 
@@ -128,11 +96,11 @@ impl Encodable for Events {
     type DecodeError = DecodeError;
 
     fn get_metadata() -> Self::Metadata {
-        EventEncodableMetadataFlags::DiskBufferV1CompatibilityMode.into()
+        EventEncodableMetadata::FLAG_VERSION_V1
     }
 
     fn can_decode(metadata: Self::Metadata) -> bool {
-        metadata.contains(EventEncodableMetadataFlags::DiskBufferV1CompatibilityMode)
+        metadata == EventEncodableMetadata::FLAG_VERSION_V1
     }
 
     fn encode<B>(self, buf: &mut B) -> Result<(), Self::EncodeError>

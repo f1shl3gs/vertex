@@ -16,7 +16,6 @@ bytes = { version = "1.4.0", default-features = false }
 crc32fast = { version = "1.3.2", default-features = false, features = ["std"] }
 crossbeam-queue = { version = "0.3.8", default-features = false, features = ["std"] }
 crossbeam-utils = { version = "0.8.15", default-features = false }
-enumflags2 = { version = "0.7.6", default-features = false }
 event = { path = "../event" }
 finalize = { path = "../finalize" }
 fslock = { version = "0.2.0", default-features = false, features = ["std"] }
