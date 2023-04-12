@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681301868967,
+  "lastUpdate": 1681301943261,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34052,40 +34052,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9224c828b67b2d6d7b78613e0147ed25eab32876",
-          "message": "Merge pull request #714 from f1shl3gs/dependabot/cargo/nix-0.26.2\n\nchore(deps): bump nix from 0.26.1 to 0.26.2",
-          "timestamp": "2023-01-19T05:34:48+08:00",
-          "tree_id": "7226875d983595bf668beab223461a2a392452fb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9224c828b67b2d6d7b78613e0147ed25eab32876"
-        },
-        "date": 1674078963065,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1047,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55595,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2bd2e6cd9c3eda572a47496fd72831532a7a3455",
           "message": "Merge pull request #715 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.17\n\nchore(deps): bump serde_yaml from 0.9.16 to 0.9.17",
           "timestamp": "2023-01-20T18:22:47+08:00",
@@ -40835,6 +40801,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47101.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "afa39c122a3c488f53f5f810ee7c0dff4ee880b4",
+          "message": "chore(deps): bump socket2 from 0.5.1 to 0.5.2 (#935)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.1 to 0.5.2.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/compare/v0.5.1...v0.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-12T19:56:33+08:00",
+          "tree_id": "31238b481d4b3a366b3a208b3bdd2bb446b6a707",
+          "url": "https://github.com/f1shl3gs/vertex/commit/afa39c122a3c488f53f5f810ee7c0dff4ee880b4"
+        },
+        "date": 1681301933378,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1160,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47085.1,
             "unit": "KiB"
           }
         ]
