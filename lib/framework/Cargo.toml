@@ -75,7 +75,7 @@ serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.9.21" }
 measurable = { path = "../measurable" }
 snap = { version = "1.1.0", default-features = false }
-socket2 = { version = "0.5.1", default-features = false }
+socket2 = { version = "0.5.2", default-features = false }
 syslog_loose = { version = "0.18.0", default-features = false }
 thiserror = { version = "1.0.40" }
 tokio = { version = "1.27.0", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
