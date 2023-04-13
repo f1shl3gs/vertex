@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681364714971,
+  "lastUpdate": 1681364717531,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -34595,40 +34595,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f4f3c885a0324f80ba5977b5effc8bfc2239069e",
-          "message": "Merge pull request #717 from f1shl3gs/dependabot/cargo/async-trait-0.1.63\n\nchore(deps): bump async-trait from 0.1.61 to 0.1.63",
-          "timestamp": "2023-01-23T15:28:10+08:00",
-          "tree_id": "ae9ac69f631e62c60d8a19035c21c9ad7a964c1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f4f3c885a0324f80ba5977b5effc8bfc2239069e"
-        },
-        "date": 1674460206601,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1139,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55599.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9d2d444cd09f7b1f51f920ac8d7a3ab417dcbbd8",
           "message": "Merge pull request #718 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.4\n\nchore(deps): bump netlink-sys from 0.8.3 to 0.8.4",
           "timestamp": "2023-01-24T17:01:03+08:00",
@@ -41378,6 +41344,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47083.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b13948e777788a1008666a6158a367501684e23f",
+          "message": "chore(deps): bump quick-xml from 0.28.1 to 0.28.2 (#938)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.28.1 to 0.28.2.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.28.1...v0.28.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-13T13:24:32+08:00",
+          "tree_id": "b38c2fc501da42b83ee0836251a5fe4192ce4d7b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b13948e777788a1008666a6158a367501684e23f"
+        },
+        "date": 1681364706675,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1073,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47102.5,
             "unit": "KiB"
           }
         ]
