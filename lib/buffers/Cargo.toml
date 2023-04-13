@@ -24,7 +24,7 @@ memmap2 = { version = "0.5.10", default-features = false }
 metrics = { path = "../metrics" }
 num-traits = { version = "0.2.15", default-features = false }
 parking_lot = { version = "0.12.1", default-features = false }
-prost = { version = "0.11.8", default-features = false }
+prost = { version = "0.11.9", default-features = false }
 serde = { version = "1.0.160", default-features = false, features = ["derive"] }
 measurable = { path = "../measurable" }
 thiserror = { version = "1.0.40" }
