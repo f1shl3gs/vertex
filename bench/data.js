@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681458682807,
+  "lastUpdate": 1681458690303,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22789,6 +22789,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 69.117,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd",
+          "message": "chore(deps): bump assert_cmd from 2.0.10 to 2.0.11 (#942)\n\nBumps [assert_cmd](https://github.com/assert-rs/assert_cmd) from 2.0.10 to 2.0.11.\r\n- [Release notes](https://github.com/assert-rs/assert_cmd/releases)\r\n- [Changelog](https://github.com/assert-rs/assert_cmd/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/assert-rs/assert_cmd/compare/v2.0.10...v2.0.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: assert_cmd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:40+08:00",
+          "tree_id": "b8e8c7a2704e5daa50d7fd2d5ca647c48000e44e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd"
+        },
+        "date": 1681458679164,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.459,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.673,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.783,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.229,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.635,
             "unit": "ns/op"
           }
         ]
