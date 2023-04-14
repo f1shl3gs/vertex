@@ -49,7 +49,7 @@ headers = { version = "0.3.8" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 hostname = { version = "0.3.1" }
 http = { version = "0.2.9", default-features = false }
-hyper = { version = "0.14.25", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.26", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-openssl = { version = "0.9.2", default-features = false }
 hyper-proxy = { version = "0.9.1", default-features = false, features = ["openssl-tls"] }
 indexmap = { version = "1.9.3", default-features = false, features = ["serde"] }
