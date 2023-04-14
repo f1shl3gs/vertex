@@ -329,7 +329,7 @@ nix = { version = "0.26.2", default-features = false }
 prost-build = { version = "0.11.8" }
 
 [dev-dependencies]
-assert_cmd = { version = "2.0.10" }
+assert_cmd = { version = "2.0.11" }
 base64 = { version = "0.21.0" }
 criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
 framework = { path = "lib/framework", features = ["test-util"] }
