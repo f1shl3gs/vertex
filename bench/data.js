@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681459630383,
+  "lastUpdate": 1681459656436,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35500,40 +35500,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7ef62b7657233e302174acbeabc0221d5a55b69e",
-          "message": "Merge pull request #721 from f1shl3gs/dependabot/cargo/tokio-1.25.0\n\nchore(deps): bump tokio from 1.24.2 to 1.25.0",
-          "timestamp": "2023-01-31T00:07:50+08:00",
-          "tree_id": "8ec529d8eccc71585b02e581546d842d39b92f87",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7ef62b7657233e302174acbeabc0221d5a55b69e"
-        },
-        "date": 1675096141913,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1056,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55595.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "722f7865735b268f1eb537fb773c10b7c8121032",
           "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
           "timestamp": "2023-01-31T03:13:06+08:00",
@@ -42278,6 +42244,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1171,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47099.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd",
+          "message": "chore(deps): bump assert_cmd from 2.0.10 to 2.0.11 (#942)\n\nBumps [assert_cmd](https://github.com/assert-rs/assert_cmd) from 2.0.10 to 2.0.11.\r\n- [Release notes](https://github.com/assert-rs/assert_cmd/releases)\r\n- [Changelog](https://github.com/assert-rs/assert_cmd/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/assert-rs/assert_cmd/compare/v2.0.10...v2.0.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: assert_cmd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:40+08:00",
+          "tree_id": "b8e8c7a2704e5daa50d7fd2d5ca647c48000e44e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd"
+        },
+        "date": 1681459646171,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1119,
             "unit": "s"
           },
           {
