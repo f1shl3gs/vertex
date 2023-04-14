@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681458430879,
+  "lastUpdate": 1681458462224,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22652,6 +22652,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.279,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36e928d2ca0c87dcc9f048a59ce23f88cdfec740",
+          "message": "chore(deps): bump prost-types from 0.11.8 to 0.11.9 (#943)\n\nBumps [prost-types](https://github.com/tokio-rs/prost) from 0.11.8 to 0.11.9.\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.11.8...v0.11.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:30+08:00",
+          "tree_id": "ea892409023aa7c7eca31ba5de5539564b24cc3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36e928d2ca0c87dcc9f048a59ce23f88cdfec740"
+        },
+        "date": 1681458451840,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.067,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.437,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.864,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.897,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 61.489,
             "unit": "ns/op"
           }
         ]
