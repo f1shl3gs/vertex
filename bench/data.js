@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681458462224,
+  "lastUpdate": 1681458476102,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -53679,6 +53679,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1289.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e9092cf110e2e1d1b13af3b4c25b3d72e2456b2b",
+          "message": "chore(deps): bump hyper from 0.14.25 to 0.14.26 (#945)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 0.14.25 to 0.14.26.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/v0.14.26/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v0.14.25...v0.14.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:20+08:00",
+          "tree_id": "3f6807d4f32fa5fffebe4186f344a7a607680da8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e9092cf110e2e1d1b13af3b4c25b3d72e2456b2b"
+        },
+        "date": 1681458462813,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 71.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 230.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 519.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1470.2,
             "unit": "ns/op"
           }
         ]
