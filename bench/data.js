@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681459479013,
+  "lastUpdate": 1681459507110,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -35500,40 +35500,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed",
-          "message": "Merge pull request #724 from f1shl3gs/dependabot/cargo/indoc-2.0.0\n\nchore(deps): bump indoc from 1.0.8 to 2.0.0",
-          "timestamp": "2023-01-31T00:08:08+08:00",
-          "tree_id": "f8cd0fe6211eaf2723043696c86faeb0501bb494",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed"
-        },
-        "date": 1675096135176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1050,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55595.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7ef62b7657233e302174acbeabc0221d5a55b69e",
           "message": "Merge pull request #721 from f1shl3gs/dependabot/cargo/tokio-1.25.0\n\nchore(deps): bump tokio from 1.24.2 to 1.25.0",
           "timestamp": "2023-01-31T00:07:50+08:00",
@@ -42283,6 +42249,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47095.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "36e928d2ca0c87dcc9f048a59ce23f88cdfec740",
+          "message": "chore(deps): bump prost-types from 0.11.8 to 0.11.9 (#943)\n\nBumps [prost-types](https://github.com/tokio-rs/prost) from 0.11.8 to 0.11.9.\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.11.8...v0.11.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:30+08:00",
+          "tree_id": "ea892409023aa7c7eca31ba5de5539564b24cc3c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/36e928d2ca0c87dcc9f048a59ce23f88cdfec740"
+        },
+        "date": 1681459496744,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1171,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47099.4,
             "unit": "KiB"
           }
         ]
