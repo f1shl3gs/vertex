@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681458411216,
+  "lastUpdate": 1681458427487,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -22564,6 +22564,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.445,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "957aeda6c6ff58da47a58122cf70b4245c92c3aa",
+          "message": "chore(deps): bump syn from 2.0.14 to 2.0.15 (#944)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.14 to 2.0.15.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.14...2.0.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-14T15:42:03+08:00",
+          "tree_id": "aa9db412235586be0f49f62414ed37b74e5158d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/957aeda6c6ff58da47a58122cf70b4245c92c3aa"
+        },
+        "date": 1681458417440,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.528,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.348,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.279,
             "unit": "ns/op"
           }
         ]
