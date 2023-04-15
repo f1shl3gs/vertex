@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681569245411,
+  "lastUpdate": 1681569251579,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23120,6 +23120,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.58,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bfc8dc2066165c4173fe76a3140bf6e443449be5",
+          "message": "remove useless shared and clone (#947)",
+          "timestamp": "2023-04-15T22:29:26+08:00",
+          "tree_id": "034aeb1f99989ee716941dd4b583374592fc6ba1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bfc8dc2066165c4173fe76a3140bf6e443449be5"
+        },
+        "date": 1681569240992,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.087,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.859,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.071,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 61.632,
             "unit": "ns/op"
           }
         ]
