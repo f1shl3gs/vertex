@@ -16,7 +16,7 @@ use event::LogRecord;
 use framework::config::{default_true, DataType, Output, SourceConfig, SourceContext};
 use framework::timezone::TimeZone;
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::{FutureExt, StreamExt, TryFutureExt, TryStreamExt};
+use futures_util::{StreamExt, TryFutureExt, TryStreamExt};
 use k8s_openapi::api::core::v1::Pod;
 use kube::runtime::watcher;
 use kube::{Api, Client};
@@ -280,11 +280,7 @@ impl LogSource {
         tokio::spawn(async move { output.send_all_v2(&mut events).await });
 
         tokio::task::spawn_blocking(move || {
-            // These will need to separated when this source is updated to support
-            // end-to-end acknowledgements.
-            let shutdown = shutdown.shared();
-            let shutdown_2 = shutdown.clone();
-            let result = harvester.run(tx, shutdown, shutdown_2, checkpointer);
+            let result = harvester.run(tx, shutdown.clone(), shutdown.clone(), checkpointer);
 
             result.unwrap();
         })
