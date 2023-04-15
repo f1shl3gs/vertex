@@ -1,35 +1,38 @@
-use std::convert::Infallible;
+use std::sync::Arc;
 
+use event::Event;
 use framework::tls::MaybeTlsSettings;
 use framework::{Pipeline, ShutdownSignal};
-use futures_util::future::Shared;
 use futures_util::FutureExt;
-use http::{Request, Response};
+use http::{Method, Request, Response, StatusCode};
+use hyper::body::to_bytes;
+use hyper::server::accept::from_stream;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
+use jaeger::agent::deserialize_binary_batch;
+use tokio::sync::Mutex;
 
 use super::ThriftHttpConfig;
 
 pub async fn serve(
     config: ThriftHttpConfig,
-    shutdown: Shared<ShutdownSignal>,
-    _output: Pipeline,
+    shutdown: ShutdownSignal,
+    output: Pipeline,
 ) -> framework::Result<()> {
+    let output = Arc::new(Mutex::new(output));
     let tls = MaybeTlsSettings::from_config(&config.tls, true)?;
     let listener = tls.bind(&config.endpoint).await?;
 
-    let service = make_service_fn(|_conn| async move {
-        Ok::<_, Infallible>(service_fn(move |req: Request<Body>| async move {
-            let (_header, body) = req.into_parts();
-            let _body = hyper::body::to_bytes(body).await.unwrap();
+    // https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
+    let service = make_service_fn(|_conn| {
+        let output = Arc::clone(&output);
 
-            // TODO: decode body and consume it
+        let svc = service_fn(move |req| handle(Arc::clone(&output), req));
 
-            Ok::<_, Infallible>(Response::new(Body::empty()))
-        }))
+        async move { Ok::<_, hyper::Error>(svc) }
     });
 
-    if let Err(err) = Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
+    if let Err(err) = Server::builder(from_stream(listener.accept_stream()))
         .serve(service)
         .with_graceful_shutdown(shutdown.map(|_| ()))
         .await
@@ -39,5 +42,45 @@ pub async fn serve(
         Err(err.into())
     } else {
         Ok(())
+    }
+}
+
+async fn handle(
+    output: Arc<Mutex<Pipeline>>,
+    req: Request<Body>,
+) -> Result<Response<Body>, hyper::Error> {
+    if req.method() != Method::POST {
+        return Ok::<_, hyper::Error>(
+            Response::builder()
+                .status(StatusCode::METHOD_NOT_ALLOWED)
+                .body(Body::empty())
+                .expect("build METHOD_NOT_ALLOWED should always success"),
+        );
+    }
+
+    if req.uri().path() != "/api/traces" {
+        return Ok(Response::builder()
+            .status(StatusCode::NOT_FOUND)
+            .body(Body::empty())
+            .expect("build NOT_FOUND should always success"));
+    }
+
+    let buf = to_bytes(req.into_body()).await?;
+    match deserialize_binary_batch(buf.to_vec()) {
+        Ok(batch) => {
+            if let Err(err) = output.lock().await.send(Event::from(batch)).await {
+                error!(message = "Error sending batch", ?err);
+                Ok(Response::builder()
+                    .status(StatusCode::SERVICE_UNAVAILABLE)
+                    .body(Body::empty())
+                    .expect("build SERVER_UNAVAILABLE should always success"))
+            } else {
+                Ok(Response::new(Body::empty()))
+            }
+        }
+        Err(err) => Ok(Response::builder()
+            .status(StatusCode::BAD_REQUEST)
+            .body(Body::from(err.to_string()))
+            .expect("build BAD_REQUEST should always success")),
     }
 }

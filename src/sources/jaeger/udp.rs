@@ -3,7 +3,6 @@ use std::net::SocketAddr;
 use bytes::BytesMut;
 use event::Event;
 use framework::{Pipeline, ShutdownSignal};
-use futures_util::future::Shared;
 use jaeger::Batch;
 use tokio::net::UdpSocket;
 
@@ -12,7 +11,7 @@ pub(super) async fn serve(
     address: SocketAddr,
     max_packet_size: usize,
     receive_buffer_size: Option<usize>,
-    shutdown: Shared<ShutdownSignal>,
+    shutdown: ShutdownSignal,
     decode: impl Fn(Vec<u8>) -> std::io::Result<Batch> + Send + Sync + 'static,
     mut output: Pipeline,
 ) -> framework::Result<()> {

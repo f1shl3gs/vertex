@@ -9,7 +9,6 @@ use configurable::{configurable_component, Configurable};
 use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
 use framework::tls::TlsConfig;
 use framework::Source;
-use futures_util::FutureExt;
 use serde::{Deserialize, Serialize};
 
 // See https://www.jaegertracing.io/docs/1.31/getting-started/
@@ -99,32 +98,27 @@ pub struct GrpcServerConfig {
     endpoint: SocketAddr,
 }
 
-/// There a lot APIs for receiving spans
+/// Jaeger components implement various APIs for saving or retrieving trace data.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/
-#[derive(Configurable, Debug, Deserialize, Serialize)]
-struct Protocols {
+#[configurable_component(source, name = "jaeger")]
+#[derive(Debug)]
+struct JaegerConfig {
     thrift_http: Option<ThriftHttpConfig>,
     thrift_compact: Option<ThriftCompactConfig>,
     thrift_binary: Option<ThriftBinaryConfig>,
     grpc: Option<GrpcServerConfig>,
 }
 
-#[configurable_component(source, name = "jaeger")]
-#[derive(Debug)]
-struct JaegerConfig {
-    protocols: Protocols,
-}
-
 #[async_trait]
 #[typetag::serde(name = "jaeger")]
 impl SourceConfig for JaegerConfig {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let shutdown = cx.shutdown.shared();
+        let shutdown = cx.shutdown;
         let source = cx.key.to_string();
         let mut handles = vec![];
 
-        if let Some(config) = &self.protocols.thrift_compact {
+        if let Some(config) = &self.thrift_compact {
             handles.push(tokio::spawn(udp::serve(
                 source.clone(),
                 config.endpoint,
@@ -139,7 +133,7 @@ impl SourceConfig for JaegerConfig {
             )));
         }
 
-        if let Some(config) = &self.protocols.thrift_binary {
+        if let Some(config) = &self.thrift_binary {
             handles.push(tokio::spawn(udp::serve(
                 source,
                 config.endpoint,
@@ -154,7 +148,7 @@ impl SourceConfig for JaegerConfig {
             )));
         }
 
-        if let Some(config) = &self.protocols.grpc {
+        if let Some(config) = &self.grpc {
             handles.push(tokio::spawn(grpc::serve(
                 config.clone(),
                 shutdown.clone(),
@@ -162,12 +156,16 @@ impl SourceConfig for JaegerConfig {
             )));
         }
 
-        if let Some(config) = &self.protocols.thrift_http {
+        if let Some(config) = &self.thrift_http {
             handles.push(tokio::spawn(http::serve(
                 config.clone(),
                 shutdown,
                 cx.output,
             )));
+        }
+
+        if handles.is_empty() {
+            return Err("At least one API should be enabled".into());
         }
 
         Ok(Box::pin(async move {
@@ -185,19 +183,19 @@ impl SourceConfig for JaegerConfig {
     fn resources(&self) -> Vec<Resource> {
         let mut resources = vec![];
 
-        if let Some(config) = &self.protocols.thrift_http {
+        if let Some(config) = &self.thrift_http {
             resources.push(Resource::tcp(config.endpoint));
         }
 
-        if let Some(config) = &self.protocols.thrift_compact {
+        if let Some(config) = &self.thrift_compact {
             resources.push(Resource::udp(config.endpoint));
         }
 
-        if let Some(config) = &self.protocols.thrift_binary {
+        if let Some(config) = &self.thrift_binary {
             resources.push(Resource::udp(config.endpoint))
         }
 
-        if let Some(config) = &self.protocols.grpc {
+        if let Some(config) = &self.grpc {
             resources.push(Resource::tcp(config.endpoint))
         }
 
