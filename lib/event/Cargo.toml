@@ -10,7 +10,7 @@ harness = false
 path = "benches/tags.rs"
 
 [build-dependencies]
-prost-build = { version = "0.11.8" }
+prost-build = { version = "0.11.9" }
 
 [dev-dependencies]
 criterion = { version = "0.4.0", default-features = false }
