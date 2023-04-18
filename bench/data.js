@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681800542159,
+  "lastUpdate": 1681800569455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cfc8095fc4399c4b0013e2a0d6f29f86f85f5937",
-          "message": "Merge pull request #712 from f1shl3gs/dependabot/cargo/typetag-0.2.5\n\nchore(deps): bump typetag from 0.2.4 to 0.2.5",
-          "timestamp": "2023-01-17T02:34:24+08:00",
-          "tree_id": "2edce012eec153aeb52251b96a8146d36b4e457c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cfc8095fc4399c4b0013e2a0d6f29f86f85f5937"
-        },
-        "date": 1673894307165,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 711710,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 721470,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab94addecc4b814012b237af1093898ef1d15a3e",
+          "message": "chore(deps): bump tonic-build from 0.9.1 to 0.9.2 (#950)\n\nBumps [tonic-build](https://github.com/hyperium/tonic) from 0.9.1 to 0.9.2.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.1...v0.9.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-18T14:45:13+08:00",
+          "tree_id": "49d391114136b7b8a48f8e75af33bd4751f13521",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab94addecc4b814012b237af1093898ef1d15a3e"
+        },
+        "date": 1681800559175,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716220,
             "unit": "ns/op"
           }
         ]
