@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681814339578,
+  "lastUpdate": 1681815157583,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -52841,6 +52841,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.521,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1855745e27197ebaa879d89cc356f3f8240c1f86",
+          "message": "chore(deps): bump tonic-health from 0.9.1 to 0.9.2 (#951)\n\nBumps [tonic-health](https://github.com/hyperium/tonic) from 0.9.1 to 0.9.2.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.1...v0.9.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-18T18:33:52+08:00",
+          "tree_id": "fec9e6398679892c9107360a87b432442a11ad73",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1855745e27197ebaa879d89cc356f3f8240c1f86"
+        },
+        "date": 1681815146415,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29023000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 971090,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.076,
             "unit": "ns/op"
           }
         ]
