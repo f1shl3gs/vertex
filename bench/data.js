@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681800687890,
+  "lastUpdate": 1681801539348,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3c9da65103ba22c81c24e70d0b537168534c5b35",
-          "message": "Merge pull request #727 from f1shl3gs/dependabot/cargo/futures-0.3.26\n\nchore(deps): bump futures from 0.3.25 to 0.3.26",
-          "timestamp": "2023-01-31T15:07:42+08:00",
-          "tree_id": "21c6e20af46b39f2d5fb1709752858e806b14435",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3c9da65103ba22c81c24e70d0b537168534c5b35"
-        },
-        "date": 1675150093540,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1037,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55578.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b57c02c9e3d14380c6578e23e1c4d418e334adc2",
           "message": "Merge pull request #729 from f1shl3gs/dependabot/cargo/async-trait-0.1.64\n\nchore(deps): bump async-trait from 0.1.63 to 0.1.64",
           "timestamp": "2023-01-31T15:07:59+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47089.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3c30d4596352bd8677241c0c3ada396f2bddb732",
+          "message": "chore(deps): bump tonic from 0.9.1 to 0.9.2 (#952)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.9.1 to 0.9.2.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.1...v0.9.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-18T14:44:17+08:00",
+          "tree_id": "114c614008d654e1beaddd0d6b0fb0f2f0956276",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3c30d4596352bd8677241c0c3ada396f2bddb732"
+        },
+        "date": 1681801527948,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1094,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47070,
             "unit": "KiB"
           }
         ]
