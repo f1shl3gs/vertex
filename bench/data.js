@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682018327569,
+  "lastUpdate": 1682019250015,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "31dc04d0dc00638ae628508597b1d1b042492942",
-          "message": "Merge pull request #732 from f1shl3gs/bump_bytes_to_1.4.0\n\nupdate bytes to 1.4.0",
-          "timestamp": "2023-02-01T16:33:08+08:00",
-          "tree_id": "049a53009d32abc190fb8264ede0a9370bc3cd92",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31dc04d0dc00638ae628508597b1d1b042492942"
-        },
-        "date": 1675241964304,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1350,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55581.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "00e176fe5227ced54c38f81982be47813096fdb0",
           "message": "Merge pull request #734 from f1shl3gs/dependabot/cargo/tracing-test-0.2.4\n\nchore(deps): bump tracing-test from 0.2.3 to 0.2.4",
           "timestamp": "2023-02-02T13:18:14+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47070,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f8a839523534cccf99624324528fc30a25a07a0",
+          "message": "update to rust 1.69.0 (#954)",
+          "timestamp": "2023-04-21T03:12:11+08:00",
+          "tree_id": "9af41e64cd2901f0040f643c44b4289881a433dc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f8a839523534cccf99624324528fc30a25a07a0"
+        },
+        "date": 1682019239046,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1080,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 47105.6,
             "unit": "KiB"
           }
         ]
