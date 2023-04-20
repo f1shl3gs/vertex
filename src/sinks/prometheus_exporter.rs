@@ -43,7 +43,7 @@ struct PrometheusExporterConfig {
     tls: Option<TlsConfig>,
 }
 
-fn default_endpoint_address() -> SocketAddr {
+const fn default_endpoint_address() -> SocketAddr {
     SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 9100)
 }
 
