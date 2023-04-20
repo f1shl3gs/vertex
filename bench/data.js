@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1681986605974,
+  "lastUpdate": 1681986609825,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "47b6dde91a7f874153fffdb9089939025492821c",
-          "message": "Merge pull request #713 from f1shl3gs/dependabot/cargo/tokio-1.24.2\n\nchore(deps): bump tokio from 1.24.1 to 1.24.2",
-          "timestamp": "2023-01-19T05:34:26+08:00",
-          "tree_id": "79ec739c410c8020ac043b7cb5307893cb15a8bb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/47b6dde91a7f874153fffdb9089939025492821c"
-        },
-        "date": 1674077946507,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 88.648,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 186.41,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 311.14,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 313.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "be06cb3cac917dc2130d75bd0769abfdc529591d",
+          "message": "chore(deps): bump kube from 0.82.1 to 0.82.2 (#953)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.1 to 0.82.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.1...0.82.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-20T18:26:08+08:00",
+          "tree_id": "d4f5c99964692e8fdec840ae98c3beca5cfb3432",
+          "url": "https://github.com/f1shl3gs/vertex/commit/be06cb3cac917dc2130d75bd0769abfdc529591d"
+        },
+        "date": 1681986598557,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 90.381,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 192.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 313.26,
             "unit": "ns/op"
           }
         ]
