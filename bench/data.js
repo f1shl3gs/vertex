@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682075488513,
+  "lastUpdate": 1682075515055,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f4f3c885a0324f80ba5977b5effc8bfc2239069e",
-          "message": "Merge pull request #717 from f1shl3gs/dependabot/cargo/async-trait-0.1.63\n\nchore(deps): bump async-trait from 0.1.61 to 0.1.63",
-          "timestamp": "2023-01-23T15:28:10+08:00",
-          "tree_id": "ae9ac69f631e62c60d8a19035c21c9ad7a964c1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f4f3c885a0324f80ba5977b5effc8bfc2239069e"
-        },
-        "date": 1674459205861,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.063,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.086,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.391,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 41.628,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 63.939,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9d2d444cd09f7b1f51f920ac8d7a3ab417dcbbd8",
           "message": "Merge pull request #718 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.4\n\nchore(deps): bump netlink-sys from 0.8.3 to 0.8.4",
           "timestamp": "2023-01-24T17:01:03+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.422,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a6a8a78988bd54018780f62755498eca65e07d62",
+          "message": "chore(deps): bump regex from 1.7.3 to 1.8.0 (#955)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.7.3 to 1.8.0.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-21T19:06:11+08:00",
+          "tree_id": "e99a3b7d80066bedd2fa2ba1f0dd3c433f0c03ba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a6a8a78988bd54018780f62755498eca65e07d62"
+        },
+        "date": 1682075501764,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.324,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.058,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.907,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.948,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 64.755,
             "unit": "ns/op"
           }
         ]
