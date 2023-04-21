@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682075414855,
+  "lastUpdate": 1682075425494,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f4f3c885a0324f80ba5977b5effc8bfc2239069e",
-          "message": "Merge pull request #717 from f1shl3gs/dependabot/cargo/async-trait-0.1.63\n\nchore(deps): bump async-trait from 0.1.61 to 0.1.63",
-          "timestamp": "2023-01-23T15:28:10+08:00",
-          "tree_id": "ae9ac69f631e62c60d8a19035c21c9ad7a964c1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f4f3c885a0324f80ba5977b5effc8bfc2239069e"
-        },
-        "date": 1674459131873,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 98.491,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 221.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 343.93,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 299.65,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a515d479fa42702e487805af94ecf169e1afdd6d",
+          "message": "chore(deps): bump libc from 0.2.141 to 0.2.142 (#956)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.141 to 0.2.142.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.141...0.2.142)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-21T19:06:37+08:00",
+          "tree_id": "26c6af712b1283cadbae56ffaa80a5c2fc058838",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a515d479fa42702e487805af94ecf169e1afdd6d"
+        },
+        "date": 1682075413817,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 98.048,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 191.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 312.74,
             "unit": "ns/op"
           }
         ]
