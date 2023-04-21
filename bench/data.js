@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682075515055,
+  "lastUpdate": 1682075517182,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -55908,6 +55908,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1113.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a6a8a78988bd54018780f62755498eca65e07d62",
+          "message": "chore(deps): bump regex from 1.7.3 to 1.8.0 (#955)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.7.3 to 1.8.0.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-21T19:06:11+08:00",
+          "tree_id": "e99a3b7d80066bedd2fa2ba1f0dd3c433f0c03ba",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a6a8a78988bd54018780f62755498eca65e07d62"
+        },
+        "date": 1682075501821,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 78.189,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 243,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 546.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1522.2,
             "unit": "ns/op"
           }
         ]
