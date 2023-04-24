@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682343180476,
+  "lastUpdate": 1682344028942,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -53192,6 +53192,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.64,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a64642e61d69d1e29f56d10a90e134763e36f50",
+          "message": "remove openssl (#961)",
+          "timestamp": "2023-04-24T21:27:36+08:00",
+          "tree_id": "968b707972466fb955b805f0a56686fc6fca0277",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a64642e61d69d1e29f56d10a90e134763e36f50"
+        },
+        "date": 1682344017087,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29896000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1041700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.485,
             "unit": "ns/op"
           }
         ]
