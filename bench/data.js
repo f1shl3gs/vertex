@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682343140919,
+  "lastUpdate": 1682343166647,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed",
-          "message": "Merge pull request #724 from f1shl3gs/dependabot/cargo/indoc-2.0.0\n\nchore(deps): bump indoc from 1.0.8 to 2.0.0",
-          "timestamp": "2023-01-31T00:08:08+08:00",
-          "tree_id": "f8cd0fe6211eaf2723043696c86faeb0501bb494",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed"
-        },
-        "date": 1675095174863,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.558,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 21.945,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.983,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.168,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 50.134,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7ef62b7657233e302174acbeabc0221d5a55b69e",
           "message": "Merge pull request #721 from f1shl3gs/dependabot/cargo/tokio-1.25.0\n\nchore(deps): bump tokio from 1.24.2 to 1.25.0",
           "timestamp": "2023-01-31T00:07:50+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 63.312,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a64642e61d69d1e29f56d10a90e134763e36f50",
+          "message": "remove openssl (#961)",
+          "timestamp": "2023-04-24T21:27:36+08:00",
+          "tree_id": "968b707972466fb955b805f0a56686fc6fca0277",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a64642e61d69d1e29f56d10a90e134763e36f50"
+        },
+        "date": 1682343155216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 50.151,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 49.149,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 48.543,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 62.759,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 107.96,
             "unit": "ns/op"
           }
         ]
