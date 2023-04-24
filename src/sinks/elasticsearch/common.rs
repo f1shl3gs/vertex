@@ -4,7 +4,7 @@ use bytes::Bytes;
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::service::RequestConfig;
-use framework::tls::TlsSettings;
+use framework::tls::TlsConfig;
 use framework::HealthcheckError;
 use http::{Request, StatusCode, Uri};
 
@@ -21,7 +21,7 @@ pub struct ElasticsearchCommon {
     pub http_auth: Option<Auth>,
     pub mode: ElasticsearchCommonMode,
     pub request_builder: ElasticsearchRequestBuilder,
-    pub tls_settings: TlsSettings,
+    pub tls: Option<TlsConfig>,
     pub request: RequestConfig,
     pub query_params: HashMap<String, String>,
 }
@@ -80,7 +80,6 @@ impl ElasticsearchCommon {
         let bulk_url = format!("{}/_bulk?{}", base_url, query.finish());
         let bulk_uri = bulk_url.parse::<Uri>().unwrap();
 
-        let tls_settings = TlsSettings::from_options(&config.tls)?;
         let request = config.request.clone();
 
         Ok(Self {
@@ -89,7 +88,7 @@ impl ElasticsearchCommon {
             http_auth,
             mode,
             request_builder,
-            tls_settings,
+            tls: config.tls.clone(),
             request,
             query_params,
         })

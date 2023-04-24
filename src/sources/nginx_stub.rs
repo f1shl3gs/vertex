@@ -9,7 +9,7 @@ use configurable::configurable_component;
 use event::Metric;
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::Source;
 use futures::TryFutureExt;
 use hyper::{StatusCode, Uri};
@@ -45,8 +45,7 @@ struct NginxStubConfig {
 #[typetag::serde(name = "nginx_stub")]
 impl SourceConfig for NginxStubConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let http_client = HttpClient::new(tls, &cx.proxy)?;
+        let http_client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         let mut sources = Vec::with_capacity(self.endpoints.len());
         for endpoint in self.endpoints.iter() {
@@ -371,7 +370,7 @@ mod integration_tests {
             .parse::<Uri>()
             .unwrap();
 
-        let cli = HttpClient::new(None, &proxy.clone()).unwrap();
+        let cli = HttpClient::new(&None, &proxy.clone()).unwrap();
         let mut req = http::Request::get(uri).body(Body::empty()).unwrap();
 
         if let Some(auth) = auth {

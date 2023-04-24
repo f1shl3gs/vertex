@@ -52,8 +52,7 @@ struct ClickhouseClient {
 
 impl ClickhouseClient {
     fn new(host: String) -> Self {
-        let tls_settings = TlsSettings::from_options(&None).unwrap();
-        let client = HttpClient::new(tls_settings, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
         Self { host, client }
     }

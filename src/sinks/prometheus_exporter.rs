@@ -16,7 +16,7 @@ use configurable::configurable_component;
 use event::{EventStatus, Finalizable, Metric};
 use event::{Events, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
 use futures::prelude::stream::BoxStream;
 use futures::{FutureExt, StreamExt};
@@ -208,12 +208,11 @@ impl PrometheusExporter {
         let address = self.endpoint;
         let tls = self.tls.clone();
         tokio::spawn(async move {
-            let tls = MaybeTlsSettings::from_config(&tls, true).map_err(|err| {
-                error!(message = "Server TLS error", ?err);
-            })?;
-            let listener = tls.bind(&address).await.map_err(|err| {
-                error!(message = "Server TLS error", ?err);
-            })?;
+            let listener = MaybeTlsListener::bind(&address, &tls)
+                .await
+                .map_err(|err| {
+                    error!(message = "Server TLS error", ?err);
+                })?;
 
             Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
                 .serve(new_service)

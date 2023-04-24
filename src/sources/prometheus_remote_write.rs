@@ -21,7 +21,9 @@ struct PrometheusRemoteWriteConfig {
     #[configurable(required)]
     address: SocketAddr,
 
+    /// HTTP Server TLS config
     tls: Option<TlsConfig>,
+
     auth: Option<HttpSourceAuthConfig>,
 
     /// Controls how acknowledgements are handled by this source.
@@ -198,7 +200,7 @@ mod tests {
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;
-    use framework::tls::{MaybeTlsSettings, TlsConfig};
+    use framework::tls::TlsConfig;
     use hyper::Body;
     use testify::collect_ready;
 
@@ -262,8 +264,7 @@ mod tests {
         let source = source.build(SourceContext::new_test(tx)).await.unwrap();
         tokio::spawn(source);
 
-        let tls_settings = MaybeTlsSettings::from_config(&tls, false).unwrap();
-        let client = HttpClient::new(tls_settings, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
         let url = format!(
             "{}://localhost:{}/write",
             if tls.is_some() { "https" } else { "http" },
@@ -296,18 +297,6 @@ mod tests {
     #[tokio::test]
     async fn receives_metrics_over_http() {
         receives_metrics(None).await;
-    }
-
-    #[tokio::test]
-    async fn receives_metrics_over_https() {
-        let tls_config = TlsConfig {
-            ca_file: Some("lib/framework/tests/fixtures/tls/Vertex_CA.crt".into()),
-            crt_file: Some("lib/framework/tests/fixtures/tls/localhost.crt".into()),
-            key_file: Some("lib/framework/tests/fixtures/tls/localhost.key".into()),
-            ..TlsConfig::default()
-        };
-
-        receives_metrics(Some(tls_config)).await;
     }
 }
 

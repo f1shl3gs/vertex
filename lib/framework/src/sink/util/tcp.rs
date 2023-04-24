@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::{
     io::ErrorKind,
     net::SocketAddr,
@@ -13,13 +14,11 @@ use codecs::encoding::Transformer;
 use configurable::Configurable;
 use event::{Event, EventContainer, Events};
 use futures::{stream::BoxStream, task::noop_waker_ref, SinkExt, StreamExt};
+use rustls::ClientConfig;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use tokio::{
-    io::{AsyncRead, ReadBuf},
-    net::TcpStream,
-    time::sleep,
-};
+use tokio::{io::AsyncRead, io::ReadBuf, net::TcpStream, time::sleep};
+use tokio_rustls::TlsConnector;
 use tokio_util::codec::Encoder;
 
 use super::{SinkBuildError, SocketMode};
@@ -28,7 +27,7 @@ use crate::dns;
 use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
-use crate::tls::{MaybeTlsSettings, MaybeTlsStream, TlsConfig, TlsError};
+use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
 use crate::OpenGauge;
 use crate::StreamSink;
 use crate::{Healthcheck, Sink};
@@ -95,7 +94,12 @@ impl TcpSinkConfig {
         let uri = self.address.parse::<http::Uri>()?;
         let host = uri.host().ok_or(SinkBuildError::MissingHost)?.to_string();
         let port = uri.port_u16().ok_or(SinkBuildError::MissingPort)?;
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
+        let tls = self
+            .tls
+            .as_ref()
+            .map(|config| config.client_config())
+            .transpose()?;
+
         let connector = TcpConnector::new(host, port, self.keepalive, tls, self.send_buffer_bytes);
         let sink = TcpSink::new(connector.clone(), transformer, encoder);
 
@@ -111,30 +115,30 @@ struct TcpConnector {
     host: String,
     port: u16,
     keepalive: Option<TcpKeepaliveConfig>,
-    tls: MaybeTlsSettings,
+    tls: Option<Arc<ClientConfig>>,
     send_buffer_bytes: Option<usize>,
 }
 
 impl TcpConnector {
-    const fn new(
+    fn new(
         host: String,
         port: u16,
         keepalive: Option<TcpKeepaliveConfig>,
-        tls: MaybeTlsSettings,
+        tls: Option<ClientConfig>,
         send_buffer_bytes: Option<usize>,
     ) -> Self {
         Self {
             host,
             port,
             keepalive,
-            tls,
+            tls: tls.map(Arc::new),
             send_buffer_bytes,
         }
     }
 
     #[cfg(test)]
     fn from_host_port(host: String, port: u16) -> Self {
-        Self::new(host, port, None, None.into(), None)
+        Self::new(host, port, None, None, None)
     }
 
     const fn fresh_backoff() -> ExponentialBackoff {
@@ -153,25 +157,48 @@ impl TcpConnector {
             .ok_or(TcpError::NoAddresses)?;
 
         let addr = SocketAddr::new(ip, self.port);
-        self.tls
-            .connect(&self.host, &addr)
-            .await
-            .map_err(TcpError::Connect)
-            .map(|mut maybe_tls| {
-                if let Some(keepalive) = self.keepalive {
-                    if let Err(err) = maybe_tls.set_keepalive(keepalive) {
-                        warn!(message = "Failed configuring TCP keepalive.", %err);
-                    }
-                }
+        let mut maybe_tls = match &self.tls {
+            Some(config) => {
+                let domain = self
+                    .host
+                    .as_str()
+                    .try_into()
+                    .map_err(|_err| TcpError::Connect(TlsError::InvalidServerName))?;
 
-                if let Some(send_buffer_bytes) = self.send_buffer_bytes {
-                    if let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
-                        warn!(message = "Failed configuring send buffer size on TCP socket.", %err);
-                    }
-                }
+                let stream = TcpStream::connect(addr)
+                    .await
+                    .map_err(|err| TcpError::Connect(TlsError::Connect(err)))?;
+                let stream = TlsConnector::from(config.clone())
+                    .connect(domain, stream)
+                    .await
+                    .map_err(|err| TcpError::Connect(TlsError::Handshake(err)))?;
 
-                maybe_tls
-            })
+                debug!(message = "Negotiated TLS.");
+
+                MaybeTlsStream::Tls(stream)
+            }
+            None => {
+                let stream = TcpStream::connect(addr)
+                    .await
+                    .map_err(|err| TcpError::Connect(TlsError::Connect(err)))?;
+
+                MaybeTlsStream::Raw(stream)
+            }
+        };
+
+        if let Some(keepalive) = self.keepalive {
+            if let Err(err) = maybe_tls.set_keepalive(keepalive) {
+                warn!(message = "Failed configuring TCP keepalive.", %err);
+            }
+        }
+
+        if let Some(send_buffer_bytes) = self.send_buffer_bytes {
+            if let Err(err) = maybe_tls.set_send_buffer_bytes(send_buffer_bytes) {
+                warn!(message = "Failed configuring send buffer size on TCP socket.", %err);
+            }
+        }
+
+        Ok(maybe_tls)
     }
 
     async fn connect_backoff(&self) -> MaybeTlsStream<TcpStream> {

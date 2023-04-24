@@ -106,7 +106,7 @@ impl ProxyConfig {
     }
 
     // overrides current proxy configuration with other configuration
-    // if `self` is the global config and `other` the component config,
+    // if `self` is the global config and `other` is the component config,
     // if both have the `http` proxy set, the one from `other` should be kept
     pub fn merge(&self, other: &Self) -> Self {
         let no_proxy = if other.no_proxy.is_empty() {
@@ -174,7 +174,6 @@ impl ProxyConfig {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use env_test_util::TempEnvVar;
 
     #[test]
     fn merge_simple() {
@@ -243,8 +242,9 @@ mod tests {
             https: Some("https://2.3.4.5:6789".into()),
             ..Default::default()
         };
-        let _http = TempEnvVar::new("HTTP_PROXY").with("http://remote.proxy");
-        let _https = TempEnvVar::new("HTTPS_PROXY");
+        std::env::set_var("HTTP_PROXY", "http://remote.proxy");
+        std::env::remove_var("HTTPS_PROXY");
+
         let result = ProxyConfig::merge_with_env(&global_proxy, &component_proxy);
 
         assert_eq!(result.http, Some("http://1.2.3.4:5678".into()));

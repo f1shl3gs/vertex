@@ -7,7 +7,7 @@ use framework::http::{Auth, HttpClient};
 use framework::sink::util::http::BatchedHttpSink;
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
-use framework::tls::{TlsConfig, TlsSettings};
+use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
 use futures_util::{FutureExt, SinkExt};
 use url::Url;
@@ -65,8 +65,7 @@ impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
-        let tls_settings = TlsSettings::from_options(&self.tls)?;
-        let client = HttpClient::new(tls_settings, &cx.proxy)?;
+        let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         let sink = BatchedHttpSink::with_logic(
             self.clone(),

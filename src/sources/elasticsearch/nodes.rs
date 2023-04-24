@@ -1444,7 +1444,7 @@ mod tests {
         // wait for http server start
         tokio::time::sleep(Duration::from_secs(1)).await;
 
-        let http_client = framework::http::HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let http_client = framework::http::HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {
             endpoint: format!("http://{}", endpoint),
             http_client,

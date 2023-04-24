@@ -10,7 +10,7 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::http::{Auth, HttpClient, HttpError};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::Source;
 use http::{StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
@@ -52,12 +52,11 @@ impl SourceConfig for PrometheusScrapeConfig {
             .endpoints
             .iter()
             .map(|s| {
-                s.parse::<http::Uri>()
+                s.parse::<Uri>()
                     .map_err(crate::sources::BuildError::UriParseError)
             })
-            .collect::<Result<Vec<http::Uri>, crate::sources::BuildError>>()?;
-        let tls = MaybeTlsSettings::from_config(&self.tls, true)?;
-        let client = HttpClient::new(tls, &cx.proxy)?;
+            .collect::<Result<Vec<Uri>, crate::sources::BuildError>>()?;
+        let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         Ok(scrape(
             client,

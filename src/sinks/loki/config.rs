@@ -8,7 +8,7 @@ use framework::config::{DataType, SinkConfig, SinkContext, UriSerde};
 use framework::http::{Auth, HttpClient, MaybeAuth};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::Compression;
-use framework::tls::{TlsConfig, TlsSettings};
+use framework::tls::TlsConfig;
 use framework::Sink;
 use framework::{template::Template, Healthcheck};
 use futures_util::FutureExt;
@@ -109,8 +109,7 @@ pub struct LokiConfig {
 
 impl LokiConfig {
     pub fn build_client(&self, cx: SinkContext) -> crate::Result<HttpClient> {
-        let tls = TlsSettings::from_options(&self.tls)?;
-        let client = HttpClient::new(tls, cx.proxy())?;
+        let client = HttpClient::new(&self.tls, cx.proxy())?;
         Ok(client)
     }
 }

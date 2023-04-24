@@ -19,7 +19,7 @@ use url::Url;
 
 use crate::config::{provider::ProviderConfig, Builder, ProxyConfig};
 use crate::http::HttpClient;
-use crate::tls::{TlsConfig, TlsSettings};
+use crate::tls::TlsConfig;
 use crate::SignalHandler;
 use crate::{config, signal};
 
@@ -80,11 +80,10 @@ impl ProviderConfig for HttpConfig {
 
 async fn http_request(
     url: &Url,
-    tls_options: &Option<TlsConfig>,
+    tls_config: &Option<TlsConfig>,
     proxy: &ProxyConfig,
 ) -> Result<Response<Body>, crate::Error> {
-    let tls_settings = TlsSettings::from_options(tls_options)?;
-    let client = HttpClient::new(tls_settings, proxy)?;
+    let client = HttpClient::new(tls_config, proxy)?;
 
     let req = Request::get(url.as_str())
         .header(header::ACCEPT, "application/yaml")

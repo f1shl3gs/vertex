@@ -99,7 +99,7 @@ fn assert_statistics(s: client::Statistics, want: Vec<&str>) {
 #[tokio::test]
 async fn v2_client() {
     let endpoint = start_server(v2_handle).await;
-    let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+    let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
     let client = super::client::Client::new(endpoint, http_client);
 
     let s = client.stats().await.unwrap();
@@ -149,7 +149,7 @@ async fn v2_client() {
 #[tokio::test]
 async fn v3_client() {
     let endpoint = start_server(v3_handle).await;
-    let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+    let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
     let client = super::client::Client::new(endpoint, http_client);
 
     let s = client.stats().await.unwrap();

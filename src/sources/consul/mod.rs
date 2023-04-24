@@ -10,7 +10,7 @@ use framework::config::{
     default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
 };
 use framework::http::HttpClient;
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::Source;
 
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
@@ -47,9 +47,8 @@ impl SourceConfig for ConsulSourceConfig {
             proxy,
             ..
         } = cx;
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let mut ticker = tokio::time::interval(self.interval);
-        let http_client = HttpClient::new(tls, &proxy)?;
+        let http_client = HttpClient::new(&self.tls, &proxy)?;
         let health_summary = self.health_summary;
         let opts = self.query_options.clone();
 
@@ -351,7 +350,6 @@ mod integration_tests {
     use event::MetricValue;
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
-    use framework::tls::MaybeTlsSettings;
     use http::StatusCode;
     use hyper::Body;
     use serde::{Deserialize, Serialize};
@@ -368,8 +366,7 @@ mod integration_tests {
         let service = docker.run(image);
         let host_port = service.get_host_port_ipv4(8500);
 
-        let tls = MaybeTlsSettings::client_config(&None).unwrap();
-        let client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let endpoint = format!("http://127.0.0.1:{}", host_port);
         let client = Client::new(endpoint, client);
 
@@ -654,8 +651,7 @@ mod integration_tests {
             let service = docker.run(image);
             let host_port = service.get_host_port_ipv4(8500);
 
-            let tls = MaybeTlsSettings::client_config(&None).unwrap();
-            let http_client = HttpClient::new(tls, &ProxyConfig::default()).unwrap();
+            let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
             let endpoint = format!("http://127.0.0.1:{}", host_port);
             for svc in &services {
                 register_service(&endpoint, &http_client, svc)

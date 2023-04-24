@@ -12,7 +12,7 @@ use event::Metric;
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
 use framework::sink::util::sink::Response;
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use hyper::Body;
 use serde::Deserialize;
@@ -48,8 +48,7 @@ struct Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let interval = tokio::time::interval(self.interval);
-        let tls_settings = MaybeTlsSettings::from_config(&self.tls, true)?;
-        let http_client = HttpClient::new(tls_settings, &cx.proxy)?;
+        let http_client = HttpClient::new(&self.tls, &cx.proxy)?;
         let es = Elasticsearch {
             endpoint: self.endpoint.clone(),
             http_client,
@@ -156,7 +155,7 @@ mod tests {
 
     #[tokio::test]
     async fn collect() {
-        let http_client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let http_client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let es = Elasticsearch {
             endpoint: "http://localhost:9200".to_string(),
             http_client,

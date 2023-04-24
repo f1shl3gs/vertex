@@ -7,7 +7,6 @@ use framework::config::{
     default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
 };
 use framework::http::HttpClient;
-use framework::tls::MaybeTls;
 use framework::{Pipeline, ShutdownSignal, Source};
 use http::Request;
 use hyper::Body;
@@ -166,8 +165,7 @@ async fn scrape(
     endpoint: &str,
     proxy: &ProxyConfig,
 ) -> Result<u16, framework::Error> {
-    let tls = MaybeTls::from(None);
-    let client = HttpClient::new(tls, proxy)?;
+    let client = HttpClient::new(&None, proxy)?;
 
     let req = Request::builder()
         .method(method)

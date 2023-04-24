@@ -42,7 +42,7 @@ impl SourceConfig for Config {
         let mut interval = tokio::time::interval(self.interval);
         let mut shutdown = cx.shutdown;
         let mut output = cx.output;
-        let http_client = HttpClient::new(None, &cx.proxy)?;
+        let http_client = HttpClient::new(&None, &cx.proxy)?;
         let client = client::Client::new(self.endpoint.clone(), http_client);
         let endpoint = self.endpoint.clone();
 

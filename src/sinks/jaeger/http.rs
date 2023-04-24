@@ -8,7 +8,7 @@ use framework::http::HttpClient;
 use framework::sink::util::http::{BatchedHttpSink, HttpEventEncoder, HttpRetryLogic, HttpSink};
 use framework::sink::util::service::RequestConfig;
 use framework::sink::util::{Buffer, Compression};
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::{Healthcheck, Sink};
 use futures_util::{FutureExt, SinkExt};
 use http::Request;
@@ -36,8 +36,7 @@ pub struct HttpSinkConfig {
 impl HttpSinkConfig {
     pub fn build(&self, proxy: ProxyConfig) -> framework::Result<(Sink, Healthcheck)> {
         let request_settings = self.request.unwrap_with(&RequestConfig::default());
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let client = HttpClient::new(tls, &proxy)?;
+        let client = HttpClient::new(&self.tls, &proxy)?;
         let batch = self.batch.into_batch_settings()?;
 
         let sink = BatchedHttpSink::with_logic(

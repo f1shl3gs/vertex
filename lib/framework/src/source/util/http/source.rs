@@ -14,7 +14,7 @@ use super::error::ErrorMessage;
 use super::HttpSourceAuthConfig;
 use crate::config::SourceContext;
 use crate::pipeline::Pipeline;
-use crate::tls::{MaybeTlsSettings, TlsConfig};
+use crate::tls::{MaybeTlsListener, TlsConfig};
 use crate::Source;
 
 #[async_trait::async_trait]
@@ -29,17 +29,16 @@ pub trait HttpSource: Clone + Send + Sync + 'static {
     async fn run(
         self,
         address: SocketAddr,
-        method: http::Method,
+        method: Method,
         path: &str,
         tls: &Option<TlsConfig>,
         auth: &Option<HttpSourceAuthConfig>,
         cx: SourceContext,
         acknowledgements: bool,
     ) -> crate::Result<Source> {
-        let tls = MaybeTlsSettings::from_config(tls, true)?;
         let path = path.to_owned();
         let auth = HttpSourceAuth::try_from(auth.as_ref())?;
-        let listener = tls.bind(&address).await?;
+        let listener = MaybeTlsListener::bind(&address, tls).await?;
         let acknowledgements = cx.acknowledgements() || acknowledgements;
         let shutdown = cx.shutdown;
         let output = cx.output;

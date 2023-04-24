@@ -15,7 +15,7 @@ use framework::sink::util::{
     PartitionInnerBuffer,
 };
 use framework::template::Template;
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::{Healthcheck, HealthcheckError, Sink};
 use futures::{future::BoxFuture, stream, FutureExt, SinkExt};
 use http::{StatusCode, Uri};
@@ -62,11 +62,10 @@ pub struct RemoteWriteConfig {
 impl SinkConfig for RemoteWriteConfig {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let endpoint = self.endpoint.parse::<Uri>().map_err(BuildError::UriParse)?;
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
         let batch = self.batch.into_batch_settings()?;
         let request = self.request.unwrap_with(&RequestConfig::default());
 
-        let client = HttpClient::new(tls, cx.proxy())?;
+        let client = HttpClient::new(&self.tls, cx.proxy())?;
         let tenant_id = self.tenant_id.clone();
         let auth = self.auth.clone();
 
@@ -411,7 +410,7 @@ mod integration_tests {
             "http://localhost:{}/prometheus/api/v1/label/__name__/values",
             host_port
         );
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
         let req = http::Request::get(endpoint).body(Body::empty()).unwrap();
 
