@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682330018334,
+  "lastUpdate": 1682330039376,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "429204a7820c8b3c4e56cd43bbdbb42c164deb09",
-          "message": "Merge pull request #720 from f1shl3gs/dependabot/cargo/ahash-0.8.3\n\nchore(deps): bump ahash from 0.8.2 to 0.8.3",
-          "timestamp": "2023-01-26T04:11:21+08:00",
-          "tree_id": "717ed57f6a419b1d51ac516a836e22b30e650795",
-          "url": "https://github.com/f1shl3gs/vertex/commit/429204a7820c8b3c4e56cd43bbdbb42c164deb09"
-        },
-        "date": 1674677760628,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 533.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 53208,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 266200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 531780,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 263.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 26243,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 131230,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 262470,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "02402ff53b962ace61150a547882d882661042d7",
           "message": "Merge pull request #719 from f1shl3gs/dependabot/cargo/num_enum-0.5.9\n\nchore(deps): bump num_enum from 0.5.7 to 0.5.9",
           "timestamp": "2023-01-26T04:11:38+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 187590,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a3bbb26de0ac515e6d967272cef0363647a13c6",
+          "message": "chore(deps): bump typetag from 0.2.7 to 0.2.8 (#958)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.7 to 0.2.8.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.7...0.2.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-24T17:49:01+08:00",
+          "tree_id": "4f86de37971e8d0dc630c128eca04a5b0e40e39d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a3bbb26de0ac515e6d967272cef0363647a13c6"
+        },
+        "date": 1682330027630,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 498.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 49893,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 249180,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 497630,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 198.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19762,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 98810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 197550,
             "unit": "ns/op"
           }
         ]
