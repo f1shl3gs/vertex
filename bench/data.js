@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682076631859,
+  "lastUpdate": 1682329919263,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9d2d444cd09f7b1f51f920ac8d7a3ab417dcbbd8",
-          "message": "Merge pull request #718 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.4\n\nchore(deps): bump netlink-sys from 0.8.3 to 0.8.4",
-          "timestamp": "2023-01-24T17:01:03+08:00",
-          "tree_id": "a37d94167bb751c656625914f0e809d43ac87735",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9d2d444cd09f7b1f51f920ac8d7a3ab417dcbbd8"
-        },
-        "date": 1674551098424,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 88.642,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 189.46,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 313.25,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 312.74,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8fbb16fa21ad445ef0d0325e10e01631e5e4eb7f",
+          "message": "chore(deps): bump mock_instant from 0.2.1 to 0.3.0 (#960)\n\nBumps [mock_instant](https://github.com/museun/mock_instant) from 0.2.1 to 0.3.0.\r\n- [Release notes](https://github.com/museun/mock_instant/releases)\r\n- [Commits](https://github.com/museun/mock_instant/compare/v0.2.1...v0.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mock_instant\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-24T17:48:12+08:00",
+          "tree_id": "4ee89e204f8e465feffc80b67e0b83f12d124b29",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8fbb16fa21ad445ef0d0325e10e01631e5e4eb7f"
+        },
+        "date": 1682329908925,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 91.145,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 195.61,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 314.59,
             "unit": "ns/op"
           }
         ]
