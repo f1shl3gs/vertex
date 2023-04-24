@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682332329389,
+  "lastUpdate": 1682332337881,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "02402ff53b962ace61150a547882d882661042d7",
-          "message": "Merge pull request #719 from f1shl3gs/dependabot/cargo/num_enum-0.5.9\n\nchore(deps): bump num_enum from 0.5.7 to 0.5.9",
-          "timestamp": "2023-01-26T04:11:38+08:00",
-          "tree_id": "bc1aaefe03526f4bb0e77021c6131940f4f52ee7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/02402ff53b962ace61150a547882d882661042d7"
-        },
-        "date": 1674677809646,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.137,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.947,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.247,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 42.499,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 64.094,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a63041eb89989c73fad11259daf1fdc452b34f33",
           "message": "Merge pull request #716 from f1shl3gs/dependabot/cargo/bumpalo-3.12.0\n\nchore(deps): bump bumpalo from 3.7.0 to 3.12.0",
           "timestamp": "2023-01-28T19:36:15+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.251,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c4981d3135057947fcfe200ec531da57d943db2e",
+          "message": "chore(deps): bump tracing-subscriber from 0.3.16 to 0.3.17 (#957)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.16 to 0.3.17.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.16...tracing-subscriber-0.3.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-24T18:27:34+08:00",
+          "tree_id": "e46ce3d11a79c95c4c67385175670e838fe93aa5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c4981d3135057947fcfe200ec531da57d943db2e"
+        },
+        "date": 1682332326394,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.639,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 23.913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.486,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.593,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.344,
             "unit": "ns/op"
           }
         ]
