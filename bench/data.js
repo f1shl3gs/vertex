@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682344028942,
+  "lastUpdate": 1682344194303,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "eca3fb2ac99c3989e28433c3b84f2379af651b44",
-          "message": "Merge pull request #743 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.35.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.2+5.3.0-patched to 0.5.3+5.3.0-patched",
-          "timestamp": "2023-02-07T12:57:51+08:00",
-          "tree_id": "d64ae472c32ee3253ccc81923629d2a0de58fd59",
-          "url": "https://github.com/f1shl3gs/vertex/commit/eca3fb2ac99c3989e28433c3b84f2379af651b44"
-        },
-        "date": 1675747065777,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1023,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55581.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "264a44230309d3694d8f937204e63eab08106810",
           "message": "Merge pull request #742 from f1shl3gs/configurable\n\nConfigurable",
           "timestamp": "2023-02-07T13:13:33+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 47431.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a64642e61d69d1e29f56d10a90e134763e36f50",
+          "message": "remove openssl (#961)",
+          "timestamp": "2023-04-24T21:27:36+08:00",
+          "tree_id": "968b707972466fb955b805f0a56686fc6fca0277",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a64642e61d69d1e29f56d10a90e134763e36f50"
+        },
+        "date": 1682344183501,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1115,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44195,
             "unit": "KiB"
           }
         ]
