@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682330065689,
+  "lastUpdate": 1682330121012,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "429204a7820c8b3c4e56cd43bbdbb42c164deb09",
-          "message": "Merge pull request #720 from f1shl3gs/dependabot/cargo/ahash-0.8.3\n\nchore(deps): bump ahash from 0.8.2 to 0.8.3",
-          "timestamp": "2023-01-26T04:11:21+08:00",
-          "tree_id": "717ed57f6a419b1d51ac516a836e22b30e650795",
-          "url": "https://github.com/f1shl3gs/vertex/commit/429204a7820c8b3c4e56cd43bbdbb42c164deb09"
-        },
-        "date": 1674677734893,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.372,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.723,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.501,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.633,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.077,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "02402ff53b962ace61150a547882d882661042d7",
           "message": "Merge pull request #719 from f1shl3gs/dependabot/cargo/num_enum-0.5.9\n\nchore(deps): bump num_enum from 0.5.7 to 0.5.9",
           "timestamp": "2023-01-26T04:11:38+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.631,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a3bbb26de0ac515e6d967272cef0363647a13c6",
+          "message": "chore(deps): bump typetag from 0.2.7 to 0.2.8 (#958)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.7 to 0.2.8.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.7...0.2.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-24T17:49:01+08:00",
+          "tree_id": "4f86de37971e8d0dc630c128eca04a5b0e40e39d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a3bbb26de0ac515e6d967272cef0363647a13c6"
+        },
+        "date": 1682330106055,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.328,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.371,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 33.116,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.736,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.251,
             "unit": "ns/op"
           }
         ]
