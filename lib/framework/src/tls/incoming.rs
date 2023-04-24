@@ -5,53 +5,49 @@ use std::sync::Arc;
 use std::task::{Context, Poll};
 
 use futures::{future::BoxFuture, stream, FutureExt, Stream};
-use openssl::ssl::{Ssl, SslAcceptor, SslMethod};
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use tokio::{
     io::{self, AsyncRead, AsyncWrite, ReadBuf},
     net::{TcpListener, TcpStream},
 };
-use tokio_openssl::SslStream;
+use tokio_rustls::server::TlsStream;
+use tokio_rustls::TlsAcceptor;
 
-use super::{MaybeTlsSettings, MaybeTlsStream, TlsError, TlsSettings};
+use super::TlsError;
 #[cfg(feature = "sources-utils-tcp-socket")]
 use crate::tcp;
 #[cfg(feature = "sources-utils-tcp-keepalive")]
 use crate::tcp::TcpKeepaliveConfig;
-
-impl TlsSettings {
-    pub(crate) fn acceptor(&self) -> crate::tls::Result<SslAcceptor> {
-        match self.identity {
-            None => Err(TlsError::MissingRequiredIdentity),
-            Some(_) => {
-                let mut acceptor = SslAcceptor::mozilla_intermediate(SslMethod::tls())
-                    .map_err(TlsError::CreateAcceptor)?;
-                self.apply_context(&mut acceptor)?;
-                Ok(acceptor.build())
-            }
-        }
-    }
-}
-
-impl MaybeTlsSettings {
-    pub async fn bind(&self, addr: &SocketAddr) -> crate::tls::Result<MaybeTlsListener> {
-        let listener = TcpListener::bind(addr).await.map_err(TlsError::TcpBind)?;
-
-        let acceptor = match self {
-            Self::Tls(tls) => Some(tls.acceptor()?),
-            Self::Raw(()) => None,
-        };
-
-        Ok(MaybeTlsListener { listener, acceptor })
-    }
-}
+use crate::tls::{MaybeTls, TlsConfig};
 
 pub struct MaybeTlsListener {
     listener: TcpListener,
-    acceptor: Option<SslAcceptor>,
+    acceptor: Option<TlsAcceptor>,
 }
 
 impl MaybeTlsListener {
+    pub async fn bind(addr: &SocketAddr, tls: &Option<TlsConfig>) -> crate::tls::Result<Self> {
+        let listener = TcpListener::bind(addr).await.map_err(TlsError::TcpBind)?;
+
+        let acceptor = match tls {
+            Some(tls) => {
+                let conf = tls.server_config()?;
+                let acceptor = TlsAcceptor::from(Arc::new(conf));
+
+                Self {
+                    listener,
+                    acceptor: Some(acceptor),
+                }
+            }
+            None => MaybeTlsListener {
+                listener,
+                acceptor: None,
+            },
+        };
+
+        Ok(acceptor)
+    }
+
     pub(crate) async fn accept(&mut self) -> crate::tls::Result<MaybeTlsIncomingStream<TcpStream>> {
         self.listener
             .accept()
@@ -121,7 +117,7 @@ impl MaybeTlsListener {
     }
 
     #[cfg(feature = "listenfd")]
-    pub fn local_addr(&self) -> Result<SocketAddr, std::io::Error> {
+    pub fn local_addr(&self) -> Result<SocketAddr, io::Error> {
         self.listener.local_addr()
     }
 }
@@ -143,9 +139,13 @@ pub struct MaybeTlsIncomingStream<S> {
     peer_addr: SocketAddr,
 }
 
+type MaybeTlsStream<S> = MaybeTls<S, TlsStream<S>>;
+
+// TODO: optimize
+#[allow(clippy::large_enum_variant)]
 enum StreamState<S> {
     Accepted(MaybeTlsStream<S>),
-    Accepting(BoxFuture<'static, Result<SslStream<S>, TlsError>>),
+    Accepting(BoxFuture<'static, Result<TlsStream<S>, TlsError>>),
     AcceptError(String),
     Closed,
 }
@@ -163,45 +163,13 @@ impl<S> MaybeTlsIncomingStream<S> {
         feature = "sources-utils-tcp-socket"
     ))]
     pub fn get_ref(&self) -> Option<&S> {
-        use super::MaybeTls;
-
         match &self.state {
             StreamState::Accepted(stream) => Some(match stream {
                 MaybeTls::Raw(s) => s,
-                MaybeTls::Tls(s) => s.get_ref(),
-            }),
-            StreamState::Accepting(_) => None,
-            StreamState::AcceptError(_) => None,
-            StreamState::Closed => None,
-        }
-    }
-
-    #[cfg(feature = "sources-vector")]
-    pub(crate) const fn ssl_stream(&self) -> Option<&SslStream<S>> {
-        use super::MaybeTls;
-
-        match &self.state {
-            StreamState::Accepted(stream) => match stream {
-                MaybeTls::Raw(_) => None,
-                MaybeTls::Tls(s) => Some(s),
-            },
-            StreamState::Accepting(_) | StreamState::AcceptError(_) | StreamState::Closed => None,
-        }
-    }
-
-    #[cfg(all(
-        test,
-        feature = "sinks-socket",
-        feature = "tls-utils",
-        feature = "listenfd"
-    ))]
-    pub fn get_mut(&mut self) -> Option<&mut S> {
-        use super::MaybeTls;
-
-        match &mut self.state {
-            StreamState::Accepted(ref mut stream) => Some(match stream {
-                MaybeTls::Raw(ref mut s) => s,
-                MaybeTls::Tls(s) => s.get_mut(),
+                MaybeTls::Tls(s) => {
+                    let (s, _c) = s.get_ref();
+                    s
+                }
             }),
             StreamState::Accepting(_) => None,
             StreamState::AcceptError(_) => None,
@@ -214,20 +182,11 @@ impl MaybeTlsIncomingStream<TcpStream> {
     pub(super) fn new(
         stream: TcpStream,
         peer_addr: SocketAddr,
-        acceptor: Option<SslAcceptor>,
+        acceptor: Option<TlsAcceptor>,
     ) -> Self {
         let state = match acceptor {
             Some(acceptor) => StreamState::Accepting(
-                async move {
-                    let ssl = Ssl::new(acceptor.context()).map_err(TlsError::SslBuild)?;
-                    let mut stream = SslStream::new(ssl, stream).map_err(TlsError::SslBuild)?;
-                    Pin::new(&mut stream)
-                        .accept()
-                        .await
-                        .map_err(TlsError::Handshake)?;
-                    Ok(stream)
-                }
-                .boxed(),
+                async move { acceptor.accept(stream).await.map_err(TlsError::Handshake) }.boxed(),
             ),
             None => StreamState::Accepted(MaybeTlsStream::Raw(stream)),
         };

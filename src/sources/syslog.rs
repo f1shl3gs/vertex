@@ -18,7 +18,7 @@ use framework::source::util::{
     build_unix_stream_source, SocketListenAddr, TcpNullAcker, TcpSource,
 };
 use framework::tcp::TcpKeepaliveConfig;
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::Source;
 use futures_util::StreamExt;
 use log_schema::log_schema;
@@ -114,7 +114,6 @@ impl SourceConfig for SyslogConfig {
                     max_length: self.max_length,
                     host_key,
                 };
-                let tls = MaybeTlsSettings::from_config(&tls, true)?;
                 let shutdown_timeout = Duration::from_secs(30);
 
                 source.run(

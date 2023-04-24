@@ -1,35 +1,35 @@
-use std::{net::SocketAddr, pin::Pin};
+use std::io;
 
 use tokio::net::TcpStream;
-use tokio_openssl::SslStream;
+use tokio_rustls::client::TlsStream;
 
-use super::{tls_connector, MaybeTlsSettings, MaybeTlsStream};
-use crate::tls::TlsError;
+use super::MaybeTls;
+use crate::tcp::{self, TcpKeepaliveConfig};
 
-impl MaybeTlsSettings {
-    pub async fn connect(
-        &self,
-        host: &str,
-        addr: &SocketAddr,
-    ) -> crate::tls::Result<MaybeTlsStream<TcpStream>> {
-        let stream = TcpStream::connect(addr).await.map_err(TlsError::Connect)?;
+pub type MaybeTlsStream<S> = MaybeTls<S, TlsStream<S>>;
 
-        match self {
-            MaybeTlsSettings::Raw(()) => Ok(MaybeTlsStream::Raw(stream)),
-            MaybeTlsSettings::Tls(_) => {
-                let config = tls_connector(self)?;
-                let ssl = config.into_ssl(host).map_err(TlsError::SslBuild)?;
+impl MaybeTlsStream<TcpStream> {
+    pub fn set_keepalive(&mut self, keepalive: TcpKeepaliveConfig) -> io::Result<()> {
+        let stream = match self {
+            Self::Raw(raw) => raw,
+            Self::Tls(tls) => tls.get_ref().0,
+        };
 
-                let mut stream = SslStream::new(ssl, stream).map_err(TlsError::SslBuild)?;
-                Pin::new(&mut stream)
-                    .connect()
-                    .await
-                    .map_err(TlsError::Handshake)?;
+        if let Some(timeout) = keepalive.timeout {
+            let config = socket2::TcpKeepalive::new().with_time(timeout);
 
-                debug!(message = "Negotiated TLS.");
-
-                Ok(MaybeTlsStream::Tls(stream))
-            }
+            tcp::set_keepalive(stream, &config)?;
         }
+
+        Ok(())
+    }
+
+    pub fn set_send_buffer_bytes(&mut self, bytes: usize) -> io::Result<()> {
+        let stream = match self {
+            Self::Raw(raw) => raw,
+            Self::Tls(tls) => tls.get_ref().0,
+        };
+
+        tcp::set_send_buffer_size(stream, bytes)
     }
 }

@@ -7,7 +7,7 @@ use configurable::configurable_component;
 use event::{tags, Metric};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::stream::FuturesUnordered;
 use http::{Method, Request};
@@ -35,8 +35,7 @@ struct Config {
 #[typetag::serde(name = "clickhouse_metrics")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
-        let client = HttpClient::new(tls, &cx.proxy)?;
+        let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         Ok(Box::pin(run(
             self.interval,

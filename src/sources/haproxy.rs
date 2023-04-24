@@ -7,11 +7,9 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::tags::Key;
 use event::{tags, Metric};
-use framework::config::{
-    default_interval, DataType, Output, ProxyConfig, SourceConfig, SourceContext,
-};
+use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
 use framework::http::{Auth, HttpClient};
-use framework::tls::{MaybeTlsSettings, TlsConfig};
+use framework::tls::TlsConfig;
 use framework::{Error, Source};
 use http::{StatusCode, Uri};
 use thiserror::Error;
@@ -66,6 +64,12 @@ struct HaproxyConfig {
 #[typetag::serde(name = "haproxy")]
 impl SourceConfig for HaproxyConfig {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
+        let SourceContext {
+            proxy,
+            mut output,
+            mut shutdown,
+            ..
+        } = cx;
         let endpoints = self
             .endpoints
             .iter()
@@ -73,14 +77,8 @@ impl SourceConfig for HaproxyConfig {
             .collect::<Vec<_>>();
 
         let auth = self.auth.clone();
-        let tls = MaybeTlsSettings::from_config(&self.tls, false)?;
+        let client = HttpClient::new(&self.tls, &proxy)?;
         let mut ticker = tokio::time::interval(self.interval);
-        let SourceContext {
-            proxy,
-            mut output,
-            mut shutdown,
-            ..
-        } = cx;
 
         Ok(Box::pin(async move {
             loop {
@@ -92,7 +90,7 @@ impl SourceConfig for HaproxyConfig {
                 }
 
                 let metrics = futures::future::join_all(
-                    endpoints.iter().map(|uri| gather(uri, &tls, &auth, &proxy)),
+                    endpoints.iter().map(|uri| gather(&client, uri, &auth)),
                 )
                 .await;
 
@@ -125,14 +123,7 @@ impl SourceConfig for HaproxyConfig {
     }
 }
 
-async fn scrap(
-    uri: &Uri,
-    tls: MaybeTlsSettings,
-    auth: Option<Auth>,
-    proxy: &ProxyConfig,
-) -> Result<Vec<Metric>, Error> {
-    let client = HttpClient::new(tls, proxy)?;
-
+async fn scrap(client: &HttpClient, uri: &Uri, auth: Option<Auth>) -> Result<Vec<Metric>, Error> {
     let mut req = http::Request::get(uri).body(hyper::Body::empty())?;
 
     if let Some(auth) = &auth {
@@ -171,14 +162,9 @@ async fn scrap(
     Ok(metrics)
 }
 
-async fn gather(
-    uri: &Uri,
-    tls: &MaybeTlsSettings,
-    auth: &Option<Auth>,
-    proxy: &ProxyConfig,
-) -> Vec<Metric> {
+async fn gather(client: &HttpClient, uri: &Uri, auth: &Option<Auth>) -> Vec<Metric> {
     let start = std::time::Instant::now();
-    let mut metrics = match scrap(uri, tls.clone(), auth.clone(), proxy).await {
+    let mut metrics = match scrap(client, uri, auth.clone()).await {
         Ok(ms) => ms,
         Err(err) => {
             warn!(
@@ -1163,6 +1149,7 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-haproxy"))]
 mod integration_tests {
     use super::*;
+    use framework::config::ProxyConfig;
     use testcontainers::core::WaitFor;
     use testcontainers::images::generic::GenericImage;
     use testcontainers::RunnableImage;
@@ -1194,16 +1181,16 @@ mod integration_tests {
         let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
             .parse()
             .unwrap();
-        let tls = MaybeTlsSettings::from_config(&None, false).unwrap();
-        let metrics = gather(&uri, &tls, &None, &ProxyConfig::default()).await;
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let metrics = gather(&client, &uri, &None).await;
         assert_eq!(metrics.len(), 2);
 
         // test health gather
         let uri = format!("http://127.0.0.1:{}/stats?stats;csv", host_port)
             .parse()
             .unwrap();
-        let tls = MaybeTlsSettings::from_config(&None, false).unwrap();
-        let metrics = gather(&uri, &tls, &None, &ProxyConfig::default()).await;
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let metrics = gather(&client, &uri, &None).await;
         assert_ne!(metrics.len(), 2);
     }
 }

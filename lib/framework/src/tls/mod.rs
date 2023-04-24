@@ -1,31 +1,18 @@
-use std::{fmt::Debug, net::SocketAddr, path::PathBuf};
-
-use openssl::{
-    error::ErrorStack,
-    ssl::{ConnectConfiguration, SslConnector, SslConnectorBuilder, SslMethod},
-};
-use thiserror::Error;
-use tokio::net::TcpStream;
-use tokio_openssl::SslStream;
-
-use crate::tcp::{self, TcpKeepaliveConfig};
-
-#[cfg(feature = "tls-utils")]
 mod incoming;
 mod maybe_tls;
 mod outgoing;
 mod settings;
 
-#[cfg(all(feature = "tls-utils", feature = "listenfd"))]
+use std::{fmt::Debug, io, path::PathBuf};
+
+#[cfg(feature = "listenfd")]
 pub use incoming::{MaybeTlsIncomingStream, MaybeTlsListener};
 pub use maybe_tls::MaybeTls;
-pub use settings::{MaybeTlsSettings, TlsConfig, TlsSettings};
-#[cfg(any(test, feature = "test-util"))]
-pub use settings::{TEST_PEM_CA_PATH, TEST_PEM_CRT_PATH, TEST_PEM_KEY_PATH};
+pub use outgoing::MaybeTlsStream;
+pub use settings::TlsConfig;
+use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, TlsError>;
-
-pub type MaybeTlsStream<S> = MaybeTls<S, SslStream<S>>;
 
 #[derive(Debug, Error)]
 pub enum TlsError {
@@ -33,140 +20,142 @@ pub enum TlsError {
     FileOpenFailed {
         note: &'static str,
         filename: PathBuf,
-        err: std::io::Error,
+        err: io::Error,
     },
     #[error("Could not read {note} file {filename:?}: {err}")]
     FileReadFailed {
         note: &'static str,
         filename: PathBuf,
-        err: std::io::Error,
+        err: io::Error,
     },
     #[error("Could not build TLS connector: {0}")]
-    BuildConnector(ErrorStack),
+    BuildConnector(io::Error),
     #[error("Could not set TCP TLS identity: {0}")]
-    Identity(ErrorStack),
+    Identity(io::Error),
     #[error("Could not export identity to DER: {0}")]
-    DerExport(ErrorStack),
+    DerExport(io::Error),
     #[error("Identity certificate is missing a key")]
     MissingKey,
     #[error("Certificate file contains no certificates")]
     MissingCertificate,
+    #[error("Certificate and PrivateKey must be set")]
+    MissingCertAndKey,
     #[error("Could not parse certificate in {filename:?}: {err}")]
-    CertificateParse { filename: PathBuf, err: ErrorStack },
+    CertificateParse { filename: PathBuf, err: io::Error },
     #[error("Must specify both TLS key_file and crt_file")]
     MissingCrtKeyFile,
     #[error("Could not parse X509 certificate in {filename:?}: {err}")]
-    X509Parse { filename: PathBuf, err: ErrorStack },
+    X509Parse { filename: PathBuf, err: io::Error },
     #[error("Could not parse private key in {filename:?}: {err}")]
-    PrivateKeyParse { filename: PathBuf, err: ErrorStack },
+    PrivateKeyParse { filename: PathBuf, err: io::Error },
     #[error("Could not build PKCS#12 archive for identity: {0}")]
-    BuildPkcs12(ErrorStack),
+    BuildPkcs12(io::Error),
     #[error("Could not parse identity in {filename:?}: {err}")]
-    IdentityParse { filename: PathBuf, err: ErrorStack },
+    IdentityParse { filename: PathBuf, err: io::Error },
     #[error("TLS configuration requires a certificate when enabled")]
     MissingRequiredIdentity,
     #[error("TLS handshake failed: {0}")]
-    Handshake(openssl::ssl::Error),
+    Handshake(io::Error),
     #[error("Incoming listener failed: {0}")]
-    IncomingListener(tokio::io::Error),
+    IncomingListener(io::Error),
+    #[error("Invalid Server Name")]
+    InvalidServerName,
     #[error("Creating the TLS acceptor failed: {0}")]
-    CreateAcceptor(ErrorStack),
-    #[error("Error building SSL context: {0}")]
-    SslBuild(ErrorStack),
+    CreateAcceptor(io::Error),
+    #[error("Error building TLS config: {0}")]
+    TlsBuild(rustls::Error),
     #[error("Error setting up the TLS certificate: {0}")]
-    SetCertificate(ErrorStack),
+    SetCertificate(io::Error),
     #[error("Error setting up the TLS private key: {0}")]
-    SetPrivateKey(ErrorStack),
+    SetPrivateKey(io::Error),
     #[error("Error setting up the TLS chain certificates: {0}")]
-    AddExtraChainCert(ErrorStack),
+    AddExtraChainCert(io::Error),
     #[error("Error creating a certificate store: {0}")]
-    NewStoreBuilder(ErrorStack),
+    NewStoreBuilder(io::Error),
     #[error("Error adding a certificate to a store: {0}")]
-    AddCertToStore(ErrorStack),
+    AddCertToStore(rustls::Error),
     #[error("Error setting up the verification certificate: {0}")]
-    SetVerifyCert(ErrorStack),
+    SetVerifyCert(io::Error),
     #[error("PKCS#12 parse failed: {0}")]
-    ParsePkcs12(ErrorStack),
+    ParsePkcs12(io::Error),
     #[error("TCP bind failed: {0}")]
-    TcpBind(tokio::io::Error),
+    TcpBind(io::Error),
     #[error("{0}")]
-    Connect(tokio::io::Error),
+    Connect(io::Error),
     #[error("Could not get peer address: {0}")]
-    PeerAddress(std::io::Error),
-    #[error("Security Framework Error: {0}")]
-    #[cfg(target_os = "macos")]
-    SecurityFramework(security_framework::base::Error),
-    #[error("Schannel Error: {0}")]
-    #[cfg(windows)]
-    Schannel(std::io::Error),
-    #[cfg(any(windows, target_os = "macos"))]
-    #[error("Unable to parse X509 from system cert: {0}")]
-    X509SystemParseError(ErrorStack),
+    PeerAddress(io::Error),
+    #[error("Load native certs: {0}")]
+    NativeCerts(io::Error),
     #[error("Creating an empty CA stack failed")]
-    NewCaStack(ErrorStack),
+    NewCaStack(io::Error),
     #[error("Could not push intermediate certificate onto stack")]
-    CaStackPush(ErrorStack),
+    CaStackPush(io::Error),
 }
 
-impl MaybeTlsStream<TcpStream> {
-    pub fn peer_addr(&self) -> std::result::Result<SocketAddr, std::io::Error> {
-        match self {
-            Self::Raw(raw) => raw.peer_addr(),
-            Self::Tls(tls) => tls.get_ref().peer_addr(),
-        }
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::Arc;
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+    use tokio::net::TcpStream;
+    use tokio_rustls::TlsConnector;
+
+    const SERVER_NAME: &str = "localhost";
+    const PASSWORD: &str = "nopass";
+
+    async fn assert_send_and_recv(cc: TlsConfig, sc: TlsConfig) {
+        let send = "foobar";
+        let addr = testify::next_addr();
+        let mut listener = MaybeTlsListener::bind(&addr, &Some(sc)).await.unwrap();
+
+        let cc = cc.client_config().unwrap();
+        tokio::spawn(async move {
+            let connector = TlsConnector::from(Arc::new(cc));
+            let sock = TcpStream::connect(addr).await.unwrap();
+            let mut stream = connector
+                .connect(SERVER_NAME.try_into().unwrap(), sock)
+                .await
+                .unwrap();
+            stream.write_all(send.as_bytes()).await.unwrap();
+            stream.flush().await.unwrap();
+            stream.shutdown().await.unwrap();
+        });
+
+        let mut incoming = listener.accept().await.unwrap();
+        let mut received = String::new();
+        incoming.read_to_string(&mut received).await.unwrap();
+        assert_eq!(send, received);
     }
 
-    pub fn set_keepalive(&mut self, keepalive: TcpKeepaliveConfig) -> std::io::Result<()> {
-        let stream = match self {
-            Self::Raw(raw) => raw,
-            Self::Tls(tls) => tls.get_ref(),
+    #[tokio::test]
+    async fn server() {
+        let ca_path = "tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into();
+        let cert_path: PathBuf = "tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into();
+        let key_path = "tests/fixtures/ca/intermediate/private/localhost.key.pem".into();
+        let nopass_key_path =
+            "tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into();
+
+        let cc = TlsConfig {
+            ca: Some(ca_path),
+            ..Default::default()
         };
 
-        if let Some(timeout) = keepalive.timeout {
-            let config = socket2::TcpKeepalive::new().with_time(timeout);
-
-            tcp::set_keepalive(stream, &config)?;
-        }
-
-        Ok(())
-    }
-
-    pub fn set_send_buffer_bytes(&mut self, bytes: usize) -> std::io::Result<()> {
-        let stream = match self {
-            Self::Raw(raw) => raw,
-            Self::Tls(tls) => tls.get_ref(),
+        let sc = TlsConfig {
+            cert: Some(cert_path.clone()),
+            key: Some(key_path),
+            key_pass: Some(PASSWORD.into()),
+            ..Default::default()
         };
 
-        tcp::set_send_buffer_size(stream, bytes)
-    }
+        // with password
+        assert_send_and_recv(cc.clone(), sc).await;
 
-    pub fn set_receive_buffer_bytes(&mut self, bytes: usize) -> std::io::Result<()> {
-        let stream = match self {
-            Self::Raw(raw) => raw,
-            Self::Tls(tls) => tls.get_ref(),
+        // without password
+        let sc = TlsConfig {
+            cert: Some(cert_path),
+            key: Some(nopass_key_path),
+            ..Default::default()
         };
-
-        tcp::set_receive_buffer_size(stream, bytes)
+        assert_send_and_recv(cc, sc).await;
     }
-}
-
-pub(crate) fn tls_connector_builder(settings: &MaybeTlsSettings) -> Result<SslConnectorBuilder> {
-    let mut builder = SslConnector::builder(SslMethod::tls()).map_err(TlsError::BuildConnector)?;
-    if let Some(settings) = settings.tls() {
-        settings.apply_context(&mut builder)?;
-    }
-    Ok(builder)
-}
-
-fn tls_connector(settings: &MaybeTlsSettings) -> Result<ConnectConfiguration> {
-    let verify_hostname = settings
-        .tls()
-        .map(|settings| settings.verify_hostname)
-        .unwrap_or(true);
-    let configure = tls_connector_builder(settings)?
-        .build()
-        .configure()
-        .map_err(TlsError::BuildConnector)?
-        .verify_hostname(verify_hostname);
-    Ok(configure)
 }

@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use event::Event;
-use framework::tls::MaybeTlsSettings;
+use framework::tls::MaybeTlsListener;
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::FutureExt;
 use http::{Method, Request, Response, StatusCode};
@@ -20,8 +20,7 @@ pub async fn serve(
     output: Pipeline,
 ) -> framework::Result<()> {
     let output = Arc::new(Mutex::new(output));
-    let tls = MaybeTlsSettings::from_config(&config.tls, true)?;
-    let listener = tls.bind(&config.endpoint).await?;
+    let listener = MaybeTlsListener::bind(&config.endpoint, &config.tls).await?;
 
     // https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
     let service = make_service_fn(|_conn| {

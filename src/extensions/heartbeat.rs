@@ -9,7 +9,7 @@ use chrono::SecondsFormat;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext, ProxyConfig, UriSerde};
 use framework::http::HttpClient;
-use framework::tls::{TlsConfig, TlsSettings};
+use framework::tls::TlsConfig;
 use framework::{Extension, ShutdownSignal};
 use http::Request;
 use hyper::Body;
@@ -58,8 +58,7 @@ impl ExtensionConfig for Config {
         status.kernel = sysinfo::kernel().unwrap_or_default();
         status.tags = self.tags.clone();
 
-        let tls = TlsSettings::from_options(&self.tls)?;
-        let client = HttpClient::new(tls, &ProxyConfig::default())?;
+        let client = HttpClient::new(&self.tls, &ProxyConfig::default())?;
 
         Ok(Box::pin(run(
             self.endpoint.clone(),

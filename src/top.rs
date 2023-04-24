@@ -7,7 +7,6 @@ use chrono::Local;
 use exitcode::ExitCode;
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
-use framework::tls::TlsSettings;
 use http::{Method, Request, StatusCode};
 use hyper::Body;
 use serde::Deserialize;
@@ -117,8 +116,7 @@ pub struct Throughput {
 }
 
 async fn fetch(uri: &str) -> framework::Result<TopStats> {
-    let tls = TlsSettings::from_options(&None)?;
-    let client = HttpClient::new(tls, &ProxyConfig::default())?;
+    let client = HttpClient::new(&None, &ProxyConfig::default())?;
 
     let req = Request::builder()
         .method(Method::GET)

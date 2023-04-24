@@ -50,8 +50,7 @@ impl ElasticsearchCommon {
 
         let req = builder.body(Bytes::new())?;
         let proxy = ProxyConfig::default();
-        let client = HttpClient::new(self.tls_settings.clone(), &proxy)
-            .expect("Could not build client to flush");
+        let client = HttpClient::new(&self.tls, &proxy).expect("Could not build client to flush");
         let resp = client.send(req.map(hyper::Body::from)).await?;
 
         match resp.status() {
@@ -77,8 +76,7 @@ impl ElasticsearchCommon {
         builder = builder.header("Content-Type", "application/json");
         let req = builder.body(Bytes::from(r#"{"query":{"query_string":{"query":"*"}}}"#))?;
         let proxy = ProxyConfig::default();
-        let client = HttpClient::new(self.tls_settings.clone(), &proxy)
-            .expect("Could not build client to query");
+        let client = HttpClient::new(&self.tls, &proxy).expect("Could not build client to query");
         let resp = client.send(req.map(hyper::Body::from)).await?;
 
         assert!(resp.is_successful());
@@ -396,8 +394,8 @@ async fn insert_events_over_https() {
             doc_type: Some("log_lines".into()),
             compression: Compression::None,
             tls: Some(TlsConfig {
-                ca_file: Some(format!("{}/tests/ca/certs/ca.cert.pem", pwd).into()),
-                verify_hostname: Some(false),
+                ca: Some(format!("{}/tests/ca/certs/ca.cert.pem", pwd).into()),
+                verify_hostname: false,
                 ..Default::default()
             }),
             ..config()
@@ -429,7 +427,7 @@ async fn create_template_index(common: &ElasticsearchCommon, name: &str) -> crat
         ))
         .unwrap();
     let proxy = ProxyConfig::default();
-    let client = HttpClient::new(common.tls_settings.clone(), &proxy).unwrap();
+    let client = HttpClient::new(&common.tls, &proxy).unwrap();
 
     let resp = client
         .send(req.map(hyper::Body::from))
@@ -457,7 +455,7 @@ async fn create_data_stream(common: &ElasticsearchCommon, name: &str) -> crate::
     builder = builder.header("Content-Type", "application/json");
     let req = builder.body(Bytes::from("")).unwrap();
     let proxy = ProxyConfig::default();
-    let client = HttpClient::new(common.tls_settings.clone(), &proxy).unwrap();
+    let client = HttpClient::new(&common.tls, &proxy).unwrap();
 
     let resp = client
         .send(req.map(hyper::Body::from))

@@ -227,7 +227,7 @@ sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
 sources-redis = []
 sources-selfstat = ["libc"]
-sources-syslog = ["codecs/syslog", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "tls-utils", "smallvec"]
+sources-syslog = ["codecs/syslog", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "smallvec"]
 sources-tail = ["tail", "multiline", "encoding_rs"]
 sources-zookeeper = []
 
@@ -299,7 +299,6 @@ kubernetes = ["k8s-openapi", "kube"]
 # Misc
 sources-utils-tcp-keepalive = []
 sources-utils-tcp-socket = []
-tls-utils = []
 
 bench = [
     "sinks-loki",
@@ -406,9 +405,6 @@ netlink-packet-core = { version = "0.5.0", optional = true }
 # Protobuf
 prost = { version = "0.11.9", default-features = false, features = ["std"] }
 prost-types = { version = "0.11.9", default-features = false }
-
-# TLS
-openssl-probe = { version = "0.1.5", default-features = false }
 
 # Profile
 pprof = { version = "0.11.1", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }

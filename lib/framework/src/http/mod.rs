@@ -15,26 +15,25 @@ use hyper::{
     client,
     client::{Client, HttpConnector},
 };
-use hyper_openssl::HttpsConnector;
 use hyper_proxy::ProxyConnector;
+use hyper_rustls::HttpsConnector;
 use metrics::{exponential_buckets, Attributes};
+use rustls::{ClientConfig, RootCertStore};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 use tower::Service;
 use tracing_futures::Instrument;
 use tracing_internal::SpanExt;
 
-use crate::{
-    config::ProxyConfig,
-    tls::{tls_connector_builder, MaybeTlsSettings, TlsError},
-};
+use crate::config::ProxyConfig;
+use crate::tls::{TlsConfig, TlsError};
 
 #[derive(Debug, Error)]
 pub enum HttpError {
     #[error("Failed to build TLS connector: {0}")]
     BuildTlsConnector(#[from] TlsError),
     #[error("Failed to build HTTPS connector: {0}")]
-    MakeHttpsConnector(#[from] openssl::error::ErrorStack),
+    MakeHttpsConnector(#[from] rustls::Error),
     #[error("Failed to build Proxy connector: {0}")]
     MakeProxyConnector(#[from] InvalidUri),
     #[error("Failed to make HTTP(S) request: {0}")]
@@ -43,7 +42,7 @@ pub enum HttpError {
     BuildRequest(http::Error),
 }
 
-pub type HttpClientFuture = <HttpClient as Service<http::Request<Body>>>::Future;
+pub type HttpClientFuture = <HttpClient as Service<Request<Body>>>::Future;
 
 pub struct HttpClient<B = Body> {
     client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
@@ -57,32 +56,40 @@ where
     B::Error: Into<crate::Error>,
 {
     pub fn new(
-        tls_settings: impl Into<MaybeTlsSettings>,
+        tls_config: &Option<TlsConfig>,
         proxy_config: &ProxyConfig,
     ) -> Result<HttpClient<B>, HttpError> {
-        HttpClient::new_with_custom_client(tls_settings, proxy_config, &mut Client::builder())
+        HttpClient::new_with_custom_client(tls_config, proxy_config, &mut Client::builder())
     }
 
     pub fn new_with_custom_client(
-        tls_settings: impl Into<MaybeTlsSettings>,
+        tls_config: &Option<TlsConfig>,
         proxy_config: &ProxyConfig,
         client_builder: &mut client::Builder,
     ) -> Result<HttpClient<B>, HttpError> {
         let mut http = HttpConnector::new();
         http.enforce_http(false);
 
-        let settings = tls_settings.into();
-        let tls = tls_connector_builder(&settings)?;
-        let mut https = HttpsConnector::with_connector(http, tls)?;
+        let config = match tls_config {
+            Some(config) => config.client_config()?,
+            None => {
+                let certs =
+                    rustls_native_certs::load_native_certs().map_err(TlsError::NativeCerts)?;
+                let mut store = RootCertStore::empty();
+                for cert in certs {
+                    store
+                        .add(&rustls::Certificate(cert.0))
+                        .map_err(TlsError::AddCertToStore)?;
+                }
 
-        let settings = settings.tls().cloned();
-        https.set_callback(move |c, _uri| {
-            if let Some(settings) = &settings {
-                settings.apply_connect_configuration(c);
+                ClientConfig::builder()
+                    .with_safe_defaults()
+                    .with_root_certificates(store)
+                    .with_no_client_auth()
             }
+        };
 
-            Ok(())
-        });
+        let https = hyper_rustls::HttpsConnector::from((http, config));
 
         let mut proxy = ProxyConnector::new(https).unwrap();
         proxy_config.configure(&mut proxy)?;
@@ -195,7 +202,7 @@ fn default_request_headers<B>(request: &mut Request<B>, user_agent: &HeaderValue
 /// Newtype placeholder to provide a formatter for the request and response body.
 struct FormatBody<'a, B>(&'a B);
 
-impl<'a, B: HttpBody> std::fmt::Display for FormatBody<'a, B> {
+impl<'a, B: HttpBody> fmt::Display for FormatBody<'a, B> {
     fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
         let size = self.0.size_hint();
         match (size.lower(), size.upper()) {
@@ -342,6 +349,12 @@ impl Auth {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::tls::MaybeTlsListener;
+    use http::{Method, Response};
+    use hyper::service::{make_service_fn, service_fn};
+    use hyper::Server;
+    use std::convert::Infallible;
+    use std::time::Duration;
 
     #[test]
     fn test_default_request_headers_defaults() {
@@ -371,5 +384,101 @@ mod tests {
             request.headers().get("User-Agent"),
             Some(&HeaderValue::from_static("foo"))
         );
+    }
+
+    async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+        Ok(Response::new(Body::from("Hello World")))
+    }
+
+    #[tokio::test]
+    async fn http_server() {
+        let tls = TlsConfig {
+            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
+            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
+            ..TlsConfig::default()
+        };
+
+        let addr = testify::next_addr();
+        tokio::spawn(async move {
+            // And a MakeService to handle each connection...
+            let make_service =
+                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+
+            // Then bind and serve...
+            let server = Server::bind(&addr).serve(make_service);
+
+            // And run forever...
+            if let Err(e) = server.await {
+                panic!("server error: {}", e);
+            }
+        });
+
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        // HTTPS client
+        let client = HttpClient::new(&Some(tls), &ProxyConfig::default()).unwrap();
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{}", addr))
+            .body(Body::empty())
+            .unwrap();
+
+        let resp = client.send(req).await.unwrap();
+        assert!(resp.status().is_success());
+
+        // HTTP client
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("http://{}", addr))
+            .body(Body::empty())
+            .unwrap();
+
+        let resp = client.send(req).await.unwrap();
+        assert!(resp.status().is_success());
+    }
+
+    #[tokio::test]
+    async fn https_server() {
+        let tls = Some(TlsConfig {
+            cert: Some("tests/fixtures/ca/intermediate/certs/localhost.cert.pem".into()),
+            key: Some("tests/fixtures/ca/intermediate/private/localhost.nopass.key.pem".into()),
+            ..TlsConfig::default()
+        });
+
+        let addr = testify::next_addr();
+        let listener = MaybeTlsListener::bind(&addr, &tls).await.unwrap();
+
+        tokio::spawn(async move {
+            // And a MakeService to handle each connection...
+            let service =
+                make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+
+            // build server
+            let server =
+                Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
+                    .serve(service);
+
+            // And run forever...
+            if let Err(err) = server.await {
+                panic!("server error: {}", err);
+            }
+        });
+
+        tokio::time::sleep(Duration::from_secs(1)).await;
+
+        let tls = Some(TlsConfig {
+            ca: Some("tests/fixtures/ca/intermediate/certs/ca-chain.cert.pem".into()),
+            ..TlsConfig::default()
+        });
+        let client = HttpClient::new(&tls, &ProxyConfig::default()).unwrap();
+        let req = Request::builder()
+            .method(Method::GET)
+            .uri(format!("https://localhost:{}", addr.port()))
+            .body(Body::empty())
+            .unwrap();
+
+        let resp = client.send(req).await.unwrap();
+        assert!(resp.status().is_success());
     }
 }

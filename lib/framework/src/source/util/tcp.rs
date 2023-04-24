@@ -24,7 +24,7 @@ use crate::config::{Resource, SourceContext};
 use crate::pipeline::Pipeline;
 use crate::shutdown::ShutdownSignal;
 use crate::tcp::TcpKeepaliveConfig;
-use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, MaybeTlsSettings, TlsError};
+use crate::tls::{MaybeTlsIncomingStream, MaybeTlsListener, TlsConfig};
 
 #[derive(Configurable, Clone, Copy, Debug, Deserialize, Serialize)]
 #[serde(untagged)]
@@ -77,10 +77,10 @@ where
 async fn make_listener(
     addr: SocketListenAddr,
     mut listenfd: ListenFd,
-    tls: &MaybeTlsSettings,
+    tls: &Option<TlsConfig>,
 ) -> Option<MaybeTlsListener> {
     match addr {
-        SocketListenAddr::SocketAddr(addr) => match tls.bind(&addr).await {
+        SocketListenAddr::SocketAddr(addr) => match MaybeTlsListener::bind(&addr, tls).await {
             Ok(listener) => Some(listener),
             Err(err) => {
                 error!(
@@ -165,7 +165,7 @@ where
         addr: SocketListenAddr,
         keepalive: Option<TcpKeepaliveConfig>,
         shutdown_timeout: Duration,
-        tls: MaybeTlsSettings,
+        tls: Option<TlsConfig>,
         receive_buffer_bytes: Option<usize>,
         cx: SourceContext,
         acknowledgements: bool,
@@ -272,28 +272,15 @@ async fn handle_stream<T>(
                     .recorder(&[("mode", "tcp")])
                     .inc(1);
 
-                match err {
-                    // Specific error that occurs when the other side is only doing
-                    // SYN/SYN-ACK connections for healthcheck.
-                    // https://github.com/timberio/vector/issues/7318
-                    TlsError::Handshake( ref source )
-                        if source.code() == openssl::ssl::ErrorCode::SYSCALL
-                            && source.io_error().is_none() =>
-                    {
-                        debug!(
-                            message = "Connection error, probably a healthcheck",
-                            %err,
-                            internal_log_rate_limit = true
-                        );
-                    },
-                    _ => {
-                        warn!(
-                            message = "Connection error",
-                            %err,
-                            internal_log_rate_limit = true
-                        );
-                    }
-                }
+                // Specific error that occurs when the other side is only doing
+                // SYN/SYN-ACK connections for healthcheck.
+                // https://github.com/timberio/vector/issues/7318
+                warn!(
+                    message = "Connection error",
+                    %err,
+                    internal_log_rate_limit = true
+                );
+
                 return;
             }
         },

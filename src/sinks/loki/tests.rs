@@ -2,12 +2,11 @@ use event::{fields, Event};
 use framework::config::ProxyConfig;
 use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
-use framework::tls::TlsSettings;
 use futures_util::StreamExt;
 
-use crate::sinks::loki::config::LokiConfig;
-use crate::sinks::loki::healthcheck::health_check;
-use crate::sinks::loki::sink::LokiSink;
+use super::config::LokiConfig;
+use super::healthcheck::health_check;
+use super::sink::LokiSink;
 
 #[test]
 fn interpolate_labels() {
@@ -114,9 +113,8 @@ auth:
     let (rx, _trigger, server) = build_test_server(addr);
     tokio::spawn(server);
 
-    let tls = TlsSettings::from_options(&config.tls).expect("Could not create TLS settings");
     let proxy = ProxyConfig::default();
-    let client = HttpClient::new(tls, &proxy).expect("Could not create http client");
+    let client = HttpClient::new(&config.tls, &proxy).expect("Could not create http client");
 
     health_check(config, client)
         .await
