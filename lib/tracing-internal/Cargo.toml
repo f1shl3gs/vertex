@@ -8,7 +8,7 @@ publish = false
 event = { path = "../event" }
 once_cell = { version = "1.17.1" }
 tracing = { version = "0.1.37" }
-tracing-subscriber = { version = "0.3.16" }
+tracing-subscriber = { version = "0.3.17" }
 tracing-core = { version = "0.1.30" }
 
 [dev-dependencies]
