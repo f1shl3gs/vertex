@@ -83,7 +83,7 @@ syslog_loose = { version = "0.18.0", default-features = false }
 thiserror = { version = "1.0.40" }
 tokio = { version = "1.27.0", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-rustls = { version = "0.24.0", default-features = false }
-tokio-stream = { version = "0.1.12", features = ["time", "net"] }
+tokio-stream = { version = "0.1.13", features = ["time", "net"] }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec", "time", "net", "io"] }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
 tracing = { version = "0.1.37", default-features = false }
