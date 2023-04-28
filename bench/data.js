@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682720465219,
+  "lastUpdate": 1682720511109,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3c9da65103ba22c81c24e70d0b537168534c5b35",
-          "message": "Merge pull request #727 from f1shl3gs/dependabot/cargo/futures-0.3.26\n\nchore(deps): bump futures from 0.3.25 to 0.3.26",
-          "timestamp": "2023-01-31T15:07:42+08:00",
-          "tree_id": "21c6e20af46b39f2d5fb1709752858e806b14435",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3c9da65103ba22c81c24e70d0b537168534c5b35"
-        },
-        "date": 1675149131545,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.351,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.216,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.048,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.173,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.723,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b57c02c9e3d14380c6578e23e1c4d418e334adc2",
           "message": "Merge pull request #729 from f1shl3gs/dependabot/cargo/async-trait-0.1.64\n\nchore(deps): bump async-trait from 0.1.63 to 0.1.64",
           "timestamp": "2023-01-31T15:07:59+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 63.848,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1694da30dda33b290fc1642c5a74586257acac8f",
+          "message": "chore(deps): bump tokio from 1.27.0 to 1.28.0 (#963)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.27.0 to 1.28.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.27.0...tokio-1.28.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-29T06:15:46+08:00",
+          "tree_id": "d54e7c3ac7905c9a889fa5f65b92e8eda46db82b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1694da30dda33b290fc1642c5a74586257acac8f"
+        },
+        "date": 1682720495640,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.801,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.329,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 34.123,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 45.945,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 73.529,
             "unit": "ns/op"
           }
         ]
