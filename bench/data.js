@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682672437347,
+  "lastUpdate": 1682672452300,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "722f7865735b268f1eb537fb773c10b7c8121032",
-          "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
-          "timestamp": "2023-01-31T03:13:06+08:00",
-          "tree_id": "ac8a93f56ade88f74b517ca18edecd5684914f20",
-          "url": "https://github.com/f1shl3gs/vertex/commit/722f7865735b268f1eb537fb773c10b7c8121032"
-        },
-        "date": 1675106266935,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.237,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 21.987,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.014,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.401,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.996,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4198c1ca299e06df3f10a48f88d3d4104ef681da",
           "message": "Merge pull request #722 from f1shl3gs/dependabot/cargo/notify-5.1.0\n\nchore(deps): bump notify from 5.0.0 to 5.1.0",
           "timestamp": "2023-01-31T03:42:03+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.265,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "039deef75e0b89933e30841fe5148d28ddb922e7",
+          "message": "chore(deps): bump mimalloc from 0.1.36 to 0.1.37 (#964)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.36 to 0.1.37.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.36...v0.1.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:56:01+08:00",
+          "tree_id": "44df04838a047a29266a3613102d40387317a65d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/039deef75e0b89933e30841fe5148d28ddb922e7"
+        },
+        "date": 1682672440682,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.45,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.096,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.614,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.929,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.58,
             "unit": "ns/op"
           }
         ]
