@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682670734038,
+  "lastUpdate": 1682670741514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7ef62b7657233e302174acbeabc0221d5a55b69e",
-          "message": "Merge pull request #721 from f1shl3gs/dependabot/cargo/tokio-1.25.0\n\nchore(deps): bump tokio from 1.24.2 to 1.25.0",
-          "timestamp": "2023-01-31T00:07:50+08:00",
-          "tree_id": "8ec529d8eccc71585b02e581546d842d39b92f87",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7ef62b7657233e302174acbeabc0221d5a55b69e"
-        },
-        "date": 1675095196739,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.568,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.093,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.003,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.247,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 50.152,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "722f7865735b268f1eb537fb773c10b7c8121032",
           "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
           "timestamp": "2023-01-31T03:13:06+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 107.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
+          "message": "disable elasticsearch integration tests (#968)",
+          "timestamp": "2023-04-28T16:27:34+08:00",
+          "tree_id": "6f62ed6a5e006e0de9b15228e7b65a4205450fb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c83d7af7b1328294c12068f3dd8650e8d9b92594"
+        },
+        "date": 1682670729913,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.381,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 34.031,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.265,
             "unit": "ns/op"
           }
         ]
