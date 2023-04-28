@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682673383947,
+  "lastUpdate": 1682673429986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e89e00086db989d461f75d93cbb1535c0d3154b5",
-          "message": "Merge pull request #750 from f1shl3gs/migrate_sources_to_configurable\n\nMigrate sources to configurable",
-          "timestamp": "2023-02-09T21:55:12+08:00",
-          "tree_id": "94f1d0599f8f9787521f98b7c59af64b0dc0163b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e89e00086db989d461f75d93cbb1535c0d3154b5"
-        },
-        "date": 1675952270331,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1152,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56104.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d898f00528b9554e995fdf123c67dbf5f9272588",
           "message": "Merge pull request #749 from f1shl3gs/dependabot/cargo/serde_json-1.0.93\n\nchore(deps): bump serde_json from 1.0.92 to 1.0.93",
           "timestamp": "2023-02-10T00:54:16+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44195,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1e5743fff873fa6749d28133e1454e492e44cee",
+          "message": "chore(deps): bump tokio-stream from 0.1.12 to 0.1.14 (#967)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.12 to 0.1.14.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Changelog](https://github.com/tokio-rs/tokio/blob/tokio-0.1.14/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.12...tokio-0.1.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:55:37+08:00",
+          "tree_id": "11cac0571170bcb63434d49ca472dd342072c559",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1e5743fff873fa6749d28133e1454e492e44cee"
+        },
+        "date": 1682673419048,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1095,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44195.4,
             "unit": "KiB"
           }
         ]
