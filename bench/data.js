@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682725085444,
+  "lastUpdate": 1682725090447,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3c9da65103ba22c81c24e70d0b537168534c5b35",
-          "message": "Merge pull request #727 from f1shl3gs/dependabot/cargo/futures-0.3.26\n\nchore(deps): bump futures from 0.3.25 to 0.3.26",
-          "timestamp": "2023-01-31T15:07:42+08:00",
-          "tree_id": "21c6e20af46b39f2d5fb1709752858e806b14435",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3c9da65103ba22c81c24e70d0b537168534c5b35"
-        },
-        "date": 1675149180965,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 580.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 57810,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 281370,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 565560,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 281.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 27681,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 138110,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 278940,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c6e2af3aede3e216ea2f76fc2321e3dd2fed0581",
           "message": "Merge pull request #730 from f1shl3gs/update_futures_util_to_0.3.26\n\nupdate futures-util to 0.3.26",
           "timestamp": "2023-01-31T16:53:26+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 205020,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66fd18f064eff94fff5d7e3025713835d38e1ebb",
+          "message": "chore(deps): bump tokio-util from 0.7.7 to 0.7.8 (#966)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.7 to 0.7.8.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.7...tokio-util-0.7.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-29T07:33:44+08:00",
+          "tree_id": "f35a08cfceb490ed0efb600829dc448a344aca21",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66fd18f064eff94fff5d7e3025713835d38e1ebb"
+        },
+        "date": 1682725078524,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 491.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 49194,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 245840,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 491560,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 204.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 20361,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 101760,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 203470,
             "unit": "ns/op"
           }
         ]
