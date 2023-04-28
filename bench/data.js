@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682672411796,
+  "lastUpdate": 1682672415185,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "722f7865735b268f1eb537fb773c10b7c8121032",
-          "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
-          "timestamp": "2023-01-31T03:13:06+08:00",
-          "tree_id": "ac8a93f56ade88f74b517ca18edecd5684914f20",
-          "url": "https://github.com/f1shl3gs/vertex/commit/722f7865735b268f1eb537fb773c10b7c8121032"
-        },
-        "date": 1675106320879,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 545.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 51304,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 264990,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 558610,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 299.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 29489,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 153750,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 297260,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4198c1ca299e06df3f10a48f88d3d4104ef681da",
           "message": "Merge pull request #722 from f1shl3gs/dependabot/cargo/notify-5.1.0\n\nchore(deps): bump notify from 5.0.0 to 5.1.0",
           "timestamp": "2023-01-31T03:42:03+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 185570,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1e5743fff873fa6749d28133e1454e492e44cee",
+          "message": "chore(deps): bump tokio-stream from 0.1.12 to 0.1.14 (#967)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.12 to 0.1.14.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Changelog](https://github.com/tokio-rs/tokio/blob/tokio-0.1.14/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.12...tokio-0.1.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:55:37+08:00",
+          "tree_id": "11cac0571170bcb63434d49ca472dd342072c559",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1e5743fff873fa6749d28133e1454e492e44cee"
+        },
+        "date": 1682672403643,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 523.78,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 52280,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 260790,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 521670,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 186.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 18620,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 93201,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 187330,
             "unit": "ns/op"
           }
         ]
