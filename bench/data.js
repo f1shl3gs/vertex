@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682673464481,
+  "lastUpdate": 1682673587501,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d898f00528b9554e995fdf123c67dbf5f9272588",
-          "message": "Merge pull request #749 from f1shl3gs/dependabot/cargo/serde_json-1.0.93\n\nchore(deps): bump serde_json from 1.0.92 to 1.0.93",
-          "timestamp": "2023-02-10T00:54:16+08:00",
-          "tree_id": "adf0f06fd1135b924bb8a5dc1150a843d70afc20",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d898f00528b9554e995fdf123c67dbf5f9272588"
-        },
-        "date": 1675962880524,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1030,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56107.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "37737916d97f7162db6f48d99c450d141b796cf1",
           "message": "Merge pull request #748 from f1shl3gs/dependabot/cargo/openssl-src-111.25.01.1.1t\n\nchore(deps): bump openssl-src from 111.22.0+1.1.1q to 111.25.0+1.1.1t",
           "timestamp": "2023-02-10T00:54:45+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1095,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44195.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "039deef75e0b89933e30841fe5148d28ddb922e7",
+          "message": "chore(deps): bump mimalloc from 0.1.36 to 0.1.37 (#964)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.36 to 0.1.37.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.36...v0.1.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:56:01+08:00",
+          "tree_id": "44df04838a047a29266a3613102d40387317a65d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/039deef75e0b89933e30841fe5148d28ddb922e7"
+        },
+        "date": 1682673574032,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1183,
             "unit": "s"
           },
           {
