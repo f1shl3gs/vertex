@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682670669971,
+  "lastUpdate": 1682670717568,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed",
-          "message": "Merge pull request #724 from f1shl3gs/dependabot/cargo/indoc-2.0.0\n\nchore(deps): bump indoc from 1.0.8 to 2.0.0",
-          "timestamp": "2023-01-31T00:08:08+08:00",
-          "tree_id": "f8cd0fe6211eaf2723043696c86faeb0501bb494",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7c1fb34bc2e8b6fe74e4f485bba55c58e2edf3ed"
-        },
-        "date": 1675095180764,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 97.479,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 226.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 354.71,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 305.69,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
+          "message": "disable elasticsearch integration tests (#968)",
+          "timestamp": "2023-04-28T16:27:34+08:00",
+          "tree_id": "6f62ed6a5e006e0de9b15228e7b65a4205450fb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c83d7af7b1328294c12068f3dd8650e8d9b92594"
+        },
+        "date": 1682670703919,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 109.19,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 253.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 404.95,
             "unit": "ns/op"
           }
         ]
