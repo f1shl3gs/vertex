@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682671979465,
+  "lastUpdate": 1682672363967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "722f7865735b268f1eb537fb773c10b7c8121032",
-          "message": "Merge pull request #723 from f1shl3gs/dependabot/cargo/netlink-packet-sock-diag-0.4.1\n\nchore(deps): bump netlink-packet-sock-diag from 0.4.0 to 0.4.1",
-          "timestamp": "2023-01-31T03:13:06+08:00",
-          "tree_id": "ac8a93f56ade88f74b517ca18edecd5684914f20",
-          "url": "https://github.com/f1shl3gs/vertex/commit/722f7865735b268f1eb537fb773c10b7c8121032"
-        },
-        "date": 1675106287969,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 869170,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 722370,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c1e5743fff873fa6749d28133e1454e492e44cee",
+          "message": "chore(deps): bump tokio-stream from 0.1.12 to 0.1.14 (#967)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.12 to 0.1.14.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Changelog](https://github.com/tokio-rs/tokio/blob/tokio-0.1.14/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.12...tokio-0.1.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:55:37+08:00",
+          "tree_id": "11cac0571170bcb63434d49ca472dd342072c559",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c1e5743fff873fa6749d28133e1454e492e44cee"
+        },
+        "date": 1682672351954,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 721070,
             "unit": "ns/op"
           }
         ]
