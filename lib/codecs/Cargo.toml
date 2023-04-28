@@ -9,7 +9,7 @@ default = []
 syslog = ["syslog_loose"]
 
 [dev-dependencies]
-tokio = { version = "1.27.0", default-features = false, features = ["test-util", "macros"] }
+tokio = { version = "1.28.0", default-features = false, features = ["test-util", "macros"] }
 futures-util = { version = "0.3.27" }
 serde_yaml = { version = "0.9.21" }
 serde_path_to_error = { version = "0.1.10" }
@@ -25,7 +25,7 @@ log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 memchr = { version = "2.5.0" }
 serde_json = { version = "1.0.96", default-features = false  }
-tokio = { version = "1.27.0" }
+tokio = { version = "1.28.0" }
 tokio-util = { version = "0.7.7", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.38" }
 serde = { version = "1.0.160", default-features = false }
