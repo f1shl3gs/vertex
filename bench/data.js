@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682671640704,
+  "lastUpdate": 1682671979465,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "264a44230309d3694d8f937204e63eab08106810",
-          "message": "Merge pull request #742 from f1shl3gs/configurable\n\nConfigurable",
-          "timestamp": "2023-02-07T13:13:33+08:00",
-          "tree_id": "da8c48d5a20dfa7a7df09992c645828303e1256f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/264a44230309d3694d8f937204e63eab08106810"
-        },
-        "date": 1675748125102,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1071,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 55560.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e89e00086db989d461f75d93cbb1535c0d3154b5",
           "message": "Merge pull request #750 from f1shl3gs/migrate_sources_to_configurable\n\nMigrate sources to configurable",
           "timestamp": "2023-02-09T21:55:12+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1115,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44195,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
+          "message": "disable elasticsearch integration tests (#968)",
+          "timestamp": "2023-04-28T16:27:34+08:00",
+          "tree_id": "6f62ed6a5e006e0de9b15228e7b65a4205450fb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c83d7af7b1328294c12068f3dd8650e8d9b92594"
+        },
+        "date": 1682671965777,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1303,
             "unit": "s"
           },
           {
