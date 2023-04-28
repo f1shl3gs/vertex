@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682672455534,
+  "lastUpdate": 1682672459339,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56616,6 +56616,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1553.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e9f21b6ae2d4dbf3fa9751262c9ae6abb340630",
+          "message": "chore(deps): bump tracing from 0.1.37 to 0.1.38 (#962)\n\nBumps [tracing](https://github.com/tokio-rs/tracing) from 0.1.37 to 0.1.38.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-0.1.37...tracing-0.1.38)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-28T16:56:26+08:00",
+          "tree_id": "8794bff4c324ba8a4365cf4a1b85f8a36c17a0bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e9f21b6ae2d4dbf3fa9751262c9ae6abb340630"
+        },
+        "date": 1682672448079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 56.945,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 187.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 423.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1220.2,
             "unit": "ns/op"
           }
         ]
