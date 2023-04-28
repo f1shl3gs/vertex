@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682670752809,
+  "lastUpdate": 1682671640704,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -53231,6 +53231,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.485,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
+          "message": "disable elasticsearch integration tests (#968)",
+          "timestamp": "2023-04-28T16:27:34+08:00",
+          "tree_id": "6f62ed6a5e006e0de9b15228e7b65a4205450fb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c83d7af7b1328294c12068f3dd8650e8d9b92594"
+        },
+        "date": 1682671629228,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 32612000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1114900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.233,
             "unit": "ns/op"
           }
         ]
