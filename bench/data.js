@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682725045247,
+  "lastUpdate": 1682725082796,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b57c02c9e3d14380c6578e23e1c4d418e334adc2",
-          "message": "Merge pull request #729 from f1shl3gs/dependabot/cargo/async-trait-0.1.64\n\nchore(deps): bump async-trait from 0.1.63 to 0.1.64",
-          "timestamp": "2023-01-31T15:07:59+08:00",
-          "tree_id": "7941502a0cb24a48d0ead84f3bef5cf1c640f7e3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b57c02c9e3d14380c6578e23e1c4d418e334adc2"
-        },
-        "date": 1675149180429,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 236.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 369.78,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 392.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "66fd18f064eff94fff5d7e3025713835d38e1ebb",
+          "message": "chore(deps): bump tokio-util from 0.7.7 to 0.7.8 (#966)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.7 to 0.7.8.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.7...tokio-util-0.7.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-04-29T07:33:44+08:00",
+          "tree_id": "f35a08cfceb490ed0efb600829dc448a344aca21",
+          "url": "https://github.com/f1shl3gs/vertex/commit/66fd18f064eff94fff5d7e3025713835d38e1ebb"
+        },
+        "date": 1682725068325,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 112.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 261.1,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 411.49,
             "unit": "ns/op"
           }
         ]
