@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682741426501,
+  "lastUpdate": 1682742321539,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9224c828b67b2d6d7b78613e0147ed25eab32876",
-          "message": "Merge pull request #714 from f1shl3gs/dependabot/cargo/nix-0.26.2\n\nchore(deps): bump nix from 0.26.1 to 0.26.2",
-          "timestamp": "2023-01-19T05:34:48+08:00",
-          "tree_id": "7226875d983595bf668beab223461a2a392452fb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9224c828b67b2d6d7b78613e0147ed25eab32876"
-        },
-        "date": 1674078923860,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 26928000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 966580,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 20.062,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 45.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 352.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 975.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2bd2e6cd9c3eda572a47496fd72831532a7a3455",
           "message": "Merge pull request #715 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.17\n\nchore(deps): bump serde_yaml from 0.9.16 to 0.9.17",
           "timestamp": "2023-01-20T18:22:47+08:00",
@@ -53229,6 +53170,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.836,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a70b8cbd8c6580d610c446a4b69f073fe5050853",
+          "message": "Add frequency support for pprof (#969)\n\n* add comment for the actual number of worker threads\r\n\r\n* add `frequency` for profiler",
+          "timestamp": "2023-04-29T12:05:05+08:00",
+          "tree_id": "25a3166e88c4ff15f0db64e3c601d290bd4955fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a70b8cbd8c6580d610c446a4b69f073fe5050853"
+        },
+        "date": 1682742309482,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 31370000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 945390,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.889,
             "unit": "ns/op"
           }
         ]
