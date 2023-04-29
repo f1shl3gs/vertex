@@ -1,6 +1,5 @@
 #[cfg(feature = "sources-bind")]
 mod bind;
-mod blackbox;
 #[cfg(feature = "sources-chrony")]
 mod chrony;
 #[cfg(features = "sources-clickhouse_metrics")]
