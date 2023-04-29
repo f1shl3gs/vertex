@@ -1,5 +1,6 @@
-use std::convert::Infallible;
+use std::fmt::Debug;
 use std::net::SocketAddr;
+use std::num::ParseIntError;
 
 use bytes::{BufMut, BytesMut};
 use configurable::configurable_component;
@@ -15,6 +16,7 @@ use hyper::{
 use pprof::protos::Message;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
+const DEFAULT_FREQUENCY: u32 = 1000;
 
 #[configurable_component(extension, name = "pprof")]
 #[derive(Debug)]
@@ -34,7 +36,7 @@ impl ExtensionConfig for Config {
 }
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
+    let service = make_service_fn(|_conn| async { Ok::<_, Error>(service_fn(handle)) });
 
     let server = Server::bind(&addr)
         .serve(service)
@@ -46,34 +48,57 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
     Ok(())
 }
 
-async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+#[derive(Debug, thiserror::Error)]
+enum Error {
+    #[error("invalid seconds value: {0}")]
+    Seconds(ParseIntError),
+    #[error("invalid frequency value: {0}")]
+    Frequency(ParseIntError),
+    #[error("build profiler failed")]
+    BuildProfiler(#[from] pprof::Error),
+}
+
+async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
     let mut seconds = DEFAULT_PROFILE_SECONDS;
+    let mut frequency = DEFAULT_FREQUENCY;
     let mut flamegraph = false;
 
     if let Some(query) = req.uri().query() {
         url::form_urlencoded::parse(query.as_bytes())
-            .into_owned()
-            .for_each(|(k, v)| {
-                if k == "seconds" {
-                    seconds = v.parse().unwrap_or(DEFAULT_PROFILE_SECONDS);
-                } else if k == "flamegraph" && v == "true" {
-                    flamegraph = true;
+            .into_iter()
+            .try_for_each::<_, Result<(), Error>>(|(k, v)| {
+                match k.as_ref() {
+                    "seconds" => seconds = v.parse().map_err(Error::Seconds)?,
+                    "frequency" => frequency = v.parse().map_err(Error::Frequency)?,
+                    "flamegraph" => flamegraph = v == "true",
+                    _ => {}
                 }
-            });
+
+                Ok(())
+            })?;
     }
 
-    let guard = pprof::ProfilerGuard::new(100).unwrap();
+    let guard = pprof::ProfilerGuardBuilder::default()
+        .frequency(frequency as i32)
+        .blocklist(&["libc", "libgcc", "pthread", "vdso"])
+        .build()
+        .map_err(Error::BuildProfiler)?;
 
     tokio::time::sleep(std::time::Duration::from_secs(seconds)).await;
 
     match guard.report().build() {
         Ok(report) => {
             let buf = if flamegraph {
-                let mut buf = BytesMut::with_capacity(4 * 1024).writer();
+                let mut buf = BytesMut::new().writer();
                 report.flamegraph(&mut buf).unwrap();
 
                 buf.into_inner().freeze()
             } else {
+                // Generating protobuf content which can be processed with
+                // `go tool pprof -svg xxx.pb`, which will generate a svg
+                // too.
+                //
+                // Pyroscope will consume this kind of data too.
                 let mut buf = BytesMut::new();
                 let profile = report.pprof().unwrap();
                 profile.encode(&mut buf).unwrap();
