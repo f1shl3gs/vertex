@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682804462035,
+  "lastUpdate": 1682804777430,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2bd2e6cd9c3eda572a47496fd72831532a7a3455",
-          "message": "Merge pull request #715 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.17\n\nchore(deps): bump serde_yaml from 0.9.16 to 0.9.17",
-          "timestamp": "2023-01-20T18:22:47+08:00",
-          "tree_id": "3e59d0ee6440fdf02d53cc968578da34a3ebd5bf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2bd2e6cd9c3eda572a47496fd72831532a7a3455"
-        },
-        "date": 1674211715910,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 41850000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1377400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.707,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 67.462,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 205.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 451.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1290.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f4f3c885a0324f80ba5977b5effc8bfc2239069e",
           "message": "Merge pull request #717 from f1shl3gs/dependabot/cargo/async-trait-0.1.63\n\nchore(deps): bump async-trait from 0.1.61 to 0.1.63",
           "timestamp": "2023-01-23T15:28:10+08:00",
@@ -53209,6 +53150,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.889,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "78820df7c1f0ff60db83114b3465ed45dc3eb29a",
+          "message": "remove unused blackbox (#970)",
+          "timestamp": "2023-04-30T05:19:49+08:00",
+          "tree_id": "6d2a865700346c04dc8c021871bf2d6c4a67f1bd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/78820df7c1f0ff60db83114b3465ed45dc3eb29a"
+        },
+        "date": 1682804762654,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 47715000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1206000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.629,
             "unit": "ns/op"
           }
         ]
