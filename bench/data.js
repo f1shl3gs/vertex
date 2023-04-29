@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682741318559,
+  "lastUpdate": 1682741359080,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c6e2af3aede3e216ea2f76fc2321e3dd2fed0581",
-          "message": "Merge pull request #730 from f1shl3gs/update_futures_util_to_0.3.26\n\nupdate futures-util to 0.3.26",
-          "timestamp": "2023-01-31T16:53:26+08:00",
-          "tree_id": "77fef488e64710ea98aa382b76e5e4ba2ac7caa2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c6e2af3aede3e216ea2f76fc2321e3dd2fed0581"
-        },
-        "date": 1675155443581,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 719190,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 723120,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a70b8cbd8c6580d610c446a4b69f073fe5050853",
+          "message": "Add frequency support for pprof (#969)\n\n* add comment for the actual number of worker threads\r\n\r\n* add `frequency` for profiler",
+          "timestamp": "2023-04-29T12:05:05+08:00",
+          "tree_id": "25a3166e88c4ff15f0db64e3c601d290bd4955fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a70b8cbd8c6580d610c446a4b69f073fe5050853"
+        },
+        "date": 1682741343583,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 825620,
             "unit": "ns/op"
           }
         ]
