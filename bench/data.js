@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682741359080,
+  "lastUpdate": 1682741360612,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56707,6 +56707,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1297.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a70b8cbd8c6580d610c446a4b69f073fe5050853",
+          "message": "Add frequency support for pprof (#969)\n\n* add comment for the actual number of worker threads\r\n\r\n* add `frequency` for profiler",
+          "timestamp": "2023-04-29T12:05:05+08:00",
+          "tree_id": "25a3166e88c4ff15f0db64e3c601d290bd4955fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a70b8cbd8c6580d610c446a4b69f073fe5050853"
+        },
+        "date": 1682741348201,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 55.663,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 185.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 454.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1292.5,
             "unit": "ns/op"
           }
         ]
