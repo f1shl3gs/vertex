@@ -154,6 +154,8 @@ impl RootCommand {
         let color = false;
         framework::trace::init(color, false, &levels, 10);
 
+        // Note: `block_on` will spawn another worker thread too. so actual running
+        // threads is always >= threads + 1.
         runtime.block_on(async move {
             let mut config_paths = config::process_paths(&config_paths).ok_or(exitcode::CONFIG)?;
 
