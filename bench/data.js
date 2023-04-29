@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682742321539,
+  "lastUpdate": 1682742347434,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "904734fb2fd0275ecf2061431817205b9c037e4d",
-          "message": "Merge pull request #752 from f1shl3gs/dependabot/cargo/tokio-util-0.7.5\n\nchore(deps): bump tokio-util from 0.7.4 to 0.7.5",
-          "timestamp": "2023-02-10T19:37:33+08:00",
-          "tree_id": "e20e12244ce35a8d0287954b5d288122c00199ea",
-          "url": "https://github.com/f1shl3gs/vertex/commit/904734fb2fd0275ecf2061431817205b9c037e4d"
-        },
-        "date": 1676030564520,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1279,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56182.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "636207a9a8448f5e799b207ddb488b0b74a3c575",
           "message": "Merge pull request #753 from f1shl3gs/migrate_sinks_to_configurable\n\nmigrate sink to configurable",
           "timestamp": "2023-02-10T19:57:03+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44209.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a70b8cbd8c6580d610c446a4b69f073fe5050853",
+          "message": "Add frequency support for pprof (#969)\n\n* add comment for the actual number of worker threads\r\n\r\n* add `frequency` for profiler",
+          "timestamp": "2023-04-29T12:05:05+08:00",
+          "tree_id": "25a3166e88c4ff15f0db64e3c601d290bd4955fc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a70b8cbd8c6580d610c446a4b69f073fe5050853"
+        },
+        "date": 1682742334403,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1045,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44215.6,
             "unit": "KiB"
           }
         ]
