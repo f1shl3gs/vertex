@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682947875487,
+  "lastUpdate": 1682947878901,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f4f3c885a0324f80ba5977b5effc8bfc2239069e",
-          "message": "Merge pull request #717 from f1shl3gs/dependabot/cargo/async-trait-0.1.63\n\nchore(deps): bump async-trait from 0.1.61 to 0.1.63",
-          "timestamp": "2023-01-23T15:28:10+08:00",
-          "tree_id": "ae9ac69f631e62c60d8a19035c21c9ad7a964c1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f4f3c885a0324f80ba5977b5effc8bfc2239069e"
-        },
-        "date": 1674460348208,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 40937000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1400800,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 26.016,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 63.617,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 209.29,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 488.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1378.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9d2d444cd09f7b1f51f920ac8d7a3ab417dcbbd8",
           "message": "Merge pull request #718 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.4\n\nchore(deps): bump netlink-sys from 0.8.3 to 0.8.4",
           "timestamp": "2023-01-24T17:01:03+08:00",
@@ -53189,6 +53130,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.629,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "615a0597d24f8e9a3caf05a4d06a62334ad4d75c",
+          "message": "pin uuid to 1.3.2 (#974)",
+          "timestamp": "2023-05-01T21:09:37+08:00",
+          "tree_id": "5956ef66dd9c477b859117c16c4f4a591b87557c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/615a0597d24f8e9a3caf05a4d06a62334ad4d75c"
+        },
+        "date": 1682947866964,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 43085000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1075900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.054,
             "unit": "ns/op"
           }
         ]
