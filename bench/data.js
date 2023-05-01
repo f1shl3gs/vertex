@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682946920340,
+  "lastUpdate": 1682946926104,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56843,6 +56843,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1293.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7ac1daa5cb42f75c5562b2c186285ad453f286c",
+          "message": "fix jemalloc profiling (#973)",
+          "timestamp": "2023-05-01T21:10:08+08:00",
+          "tree_id": "2171316930b71942efb0f85814502544169a171c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7ac1daa5cb42f75c5562b2c186285ad453f286c"
+        },
+        "date": 1682946912038,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 67.554,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 223.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 545.31,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1564.4,
             "unit": "ns/op"
           }
         ]
