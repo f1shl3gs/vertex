@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682946913448,
+  "lastUpdate": 1682946920340,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "42cc76dee46e11f609514465f1fd7ce75b86b88b",
-          "message": "Merge pull request #735 from f1shl3gs/dependabot/cargo/uuid-1.3.0\n\nchore(deps): bump uuid from 1.2.2 to 1.3.0",
-          "timestamp": "2023-02-02T13:17:59+08:00",
-          "tree_id": "f3ae0f739cc71140d4612803712f33d9d1c17b88",
-          "url": "https://github.com/f1shl3gs/vertex/commit/42cc76dee46e11f609514465f1fd7ce75b86b88b"
-        },
-        "date": 1675315350063,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.025,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 24.903,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.352,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.361,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.004,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "00e176fe5227ced54c38f81982be47813096fdb0",
           "message": "Merge pull request #734 from f1shl3gs/dependabot/cargo/tracing-test-0.2.4\n\nchore(deps): bump tracing-test from 0.2.3 to 0.2.4",
           "timestamp": "2023-02-02T13:18:14+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.524,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "615a0597d24f8e9a3caf05a4d06a62334ad4d75c",
+          "message": "pin uuid to 1.3.2 (#974)",
+          "timestamp": "2023-05-01T21:09:37+08:00",
+          "tree_id": "5956ef66dd9c477b859117c16c4f4a591b87557c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/615a0597d24f8e9a3caf05a4d06a62334ad4d75c"
+        },
+        "date": 1682946906710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.045,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.183,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.508,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.474,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 68.968,
             "unit": "ns/op"
           }
         ]
