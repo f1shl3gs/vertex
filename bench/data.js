@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1682946875581,
+  "lastUpdate": 1682946901261,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "31dc04d0dc00638ae628508597b1d1b042492942",
-          "message": "Merge pull request #732 from f1shl3gs/bump_bytes_to_1.4.0\n\nupdate bytes to 1.4.0",
-          "timestamp": "2023-02-01T16:33:08+08:00",
-          "tree_id": "049a53009d32abc190fb8264ede0a9370bc3cd92",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31dc04d0dc00638ae628508597b1d1b042492942"
-        },
-        "date": 1675240687379,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.407,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.321,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.771,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.605,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 50.99,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "42cc76dee46e11f609514465f1fd7ce75b86b88b",
           "message": "Merge pull request #735 from f1shl3gs/dependabot/cargo/uuid-1.3.0\n\nchore(deps): bump uuid from 1.2.2 to 1.3.0",
           "timestamp": "2023-02-02T13:17:59+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 71.595,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a7ac1daa5cb42f75c5562b2c186285ad453f286c",
+          "message": "fix jemalloc profiling (#973)",
+          "timestamp": "2023-05-01T21:10:08+08:00",
+          "tree_id": "2171316930b71942efb0f85814502544169a171c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a7ac1daa5cb42f75c5562b2c186285ad453f286c"
+        },
+        "date": 1682946889705,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.263,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.341,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.273,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.342,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.524,
             "unit": "ns/op"
           }
         ]
