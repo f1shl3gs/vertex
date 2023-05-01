@@ -1,9 +1,8 @@
 #[cfg(not(feature = "jemalloc"))]
 compile_error!("jemalloc-extension requires feature `jemalloc`");
 
-use std::collections::HashMap;
-use std::convert::Infallible;
 use std::net::SocketAddr;
+use std::num::ParseIntError;
 use std::time::Duration;
 
 use configurable::configurable_component;
@@ -14,8 +13,9 @@ use futures::FutureExt;
 use http::Request;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Response, Server, StatusCode};
-use thiserror::Error;
 use tikv_jemalloc_ctl::{stats, Access, AsName};
+
+const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
 const OUTPUT: &str = "profile.out";
 const PROF_ACTIVE: &[u8] = b"prof.active\0";
@@ -26,6 +26,8 @@ fn default_listen() -> SocketAddr {
     "0.0.0.0:10911".parse().unwrap()
 }
 
+/// This extension integration `jemalloc-ctl`, you can dump the profiling
+/// data and analyze it with `jeprof`.
 #[configurable_component(extension, name = "jemalloc")]
 #[derive(Debug)]
 #[serde(deny_unknown_fields)]
@@ -43,7 +45,7 @@ impl Default for Config {
     }
 }
 
-#[derive(Debug, Error)]
+#[derive(Debug, thiserror::Error)]
 pub enum BuildError {
     #[error("MALLOC_CONF is not set, {source}")]
     EnvNotSet { source: std::env::VarError },
@@ -70,7 +72,7 @@ impl ExtensionConfig for Config {
 }
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
-    let service = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handler)) });
+    let service = make_service_fn(|_conn| async { Ok::<_, Error>(service_fn(handler)) });
 
     let server = Server::bind(&addr)
         .serve(service)
@@ -85,15 +87,23 @@ async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
     Ok(())
 }
 
-async fn handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
+#[derive(Debug, thiserror::Error)]
+enum Error {
+    #[error("invalid seconds {0}")]
+    Seconds(#[from] ParseIntError),
+    #[error("jemalloc ctl error: {0}")]
+    Jemalloc(#[from] tikv_jemalloc_ctl::Error),
+}
+
+async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
     match (req.method(), req.uri().path()) {
         (&Method::GET, "/stats") => {
-            let allocated = stats::allocated::read().unwrap();
-            let active = stats::active::read().unwrap();
-            let metadata = stats::metadata::read().unwrap();
-            let resident = stats::resident::read().unwrap();
-            let mapped = stats::mapped::read().unwrap();
-            let retained = stats::retained::read().unwrap();
+            let allocated = stats::allocated::read()?;
+            let active = stats::active::read()?;
+            let metadata = stats::metadata::read()?;
+            let resident = stats::resident::read()?;
+            let mapped = stats::mapped::read()?;
+            let retained = stats::retained::read()?;
 
             let body = format!(
                 "allocated: {}\nactive: {}\nmetadata: {}\nresident: {}\nmapped: {}\nretained: {}\n",
@@ -112,32 +122,25 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     }
 }
 
-async fn profiling(req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let params: HashMap<String, String> = req
-        .uri()
-        .query()
-        .map(|v| {
-            url::form_urlencoded::parse(v.as_bytes())
-                .into_owned()
-                .collect()
-        })
-        .unwrap_or_else(HashMap::new);
+async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
+    let mut seconds = DEFAULT_PROFILE_SECONDS;
 
-    let default = Duration::from_secs(30);
-    let wait = match params.get("seconds") {
-        Some(value) => humanize::duration::parse_duration(value).unwrap_or(default),
-        _ => default,
-    };
+    if let Some(query) = req.uri().query() {
+        seconds = url::form_urlencoded::parse(query.as_ref())
+            .into_iter()
+            .find(|(k, _v)| k == "seconds")
+            .map(|(_, v)| v.parse().map_err(Error::Seconds))
+            .transpose()?
+            .unwrap_or(DEFAULT_PROFILE_SECONDS);
+    }
 
-    info!(
-        message = "Starting jemalloc profile",
-        wait = humanize::duration::duration(&wait).as_str()
-    );
     set_prof_active(true);
-    tokio::time::sleep(wait).await;
+    info!(message = "Starting jemalloc profile", seconds);
+    tokio::time::sleep(Duration::from_secs(seconds)).await;
     set_prof_active(false);
+
     dump_profile();
-    let data = std::fs::read_to_string(OUTPUT).expect("Read dumped profile failed");
+    let data = std::fs::read(OUTPUT).expect("Read dumped profile failed");
 
     Ok(Response::new(Body::from(data)))
 }
