@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683029655351,
+  "lastUpdate": 1683029662255,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0b9b0d42c652b1d0b981527bfa24713fdd8854dc",
-          "message": "Merge pull request #736 from f1shl3gs/dependabot/cargo/bstr-1.2.0\n\nchore(deps): bump bstr from 1.1.0 to 1.2.0",
-          "timestamp": "2023-02-02T13:17:38+08:00",
-          "tree_id": "c2d6c849969ba3e661e8f39ae84e4b16e583f5dc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0b9b0d42c652b1d0b981527bfa24713fdd8854dc"
-        },
-        "date": 1675315388179,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.308,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.867,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.956,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 42.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.187,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "da8b332744bceaa3727fc36eccd8ae6d4b8fbd00",
           "message": "Merge pull request #733 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.32\n\nchore(deps): bump encoding_rs from 0.8.31 to 0.8.32",
           "timestamp": "2023-02-02T13:18:33+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 68.961,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe6073a160a818bde1286124ebab8e155aef6d2b",
+          "message": "chore(deps): bump rustls from 0.21.0 to 0.21.1 (#975)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/RELEASE_NOTES.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.0...v/0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-02T20:09:34+08:00",
+          "tree_id": "14ffac293e0243627102f775c3e648bcb4550465",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe6073a160a818bde1286124ebab8e155aef6d2b"
+        },
+        "date": 1683029650249,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.256,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.273,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.543,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.538,
             "unit": "ns/op"
           }
         ]
