@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683029588059,
+  "lastUpdate": 1683029632439,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "00e176fe5227ced54c38f81982be47813096fdb0",
-          "message": "Merge pull request #734 from f1shl3gs/dependabot/cargo/tracing-test-0.2.4\n\nchore(deps): bump tracing-test from 0.2.3 to 0.2.4",
-          "timestamp": "2023-02-02T13:18:14+08:00",
-          "tree_id": "f3a7922a87e1d9b8d58c50b9dd8a847344097606",
-          "url": "https://github.com/f1shl3gs/vertex/commit/00e176fe5227ced54c38f81982be47813096fdb0"
-        },
-        "date": 1675315339519,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716580,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 726140,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fe6073a160a818bde1286124ebab8e155aef6d2b",
+          "message": "chore(deps): bump rustls from 0.21.0 to 0.21.1 (#975)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.0 to 0.21.1.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/RELEASE_NOTES.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.0...v/0.21.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-02T20:09:34+08:00",
+          "tree_id": "14ffac293e0243627102f775c3e648bcb4550465",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fe6073a160a818bde1286124ebab8e155aef6d2b"
+        },
+        "date": 1683029617965,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 871900,
             "unit": "ns/op"
           }
         ]
