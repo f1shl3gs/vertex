@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683103194593,
+  "lastUpdate": 1683103265188,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "da8b332744bceaa3727fc36eccd8ae6d4b8fbd00",
-          "message": "Merge pull request #733 from f1shl3gs/dependabot/cargo/encoding_rs-0.8.32\n\nchore(deps): bump encoding_rs from 0.8.31 to 0.8.32",
-          "timestamp": "2023-02-02T13:18:33+08:00",
-          "tree_id": "a9983bf65fee99cbe1d1a4e2f409b4274bab5070",
-          "url": "https://github.com/f1shl3gs/vertex/commit/da8b332744bceaa3727fc36eccd8ae6d4b8fbd00"
-        },
-        "date": 1675315665998,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.759,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.427,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 32.228,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 43.138,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 65.277,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a6de09e5a8e2758707e9c1cadd5749c6f78ba026",
           "message": "Merge pull request #738 from f1shl3gs/dependabot/cargo/hyper-0.14.24\n\nchore(deps): bump hyper from 0.14.23 to 0.14.24",
           "timestamp": "2023-02-03T20:13:17+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.538,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e546cc651d522f93072cfc87c9cf7ff34f4e9fe6",
+          "message": "cleanup unused dependencies and features (#976)",
+          "timestamp": "2023-05-03T16:35:23+08:00",
+          "tree_id": "c440a261c72c20e4d5b8f797a592af648472a67d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e546cc651d522f93072cfc87c9cf7ff34f4e9fe6"
+        },
+        "date": 1683103250829,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.873,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.843,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.452,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.548,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 68.264,
             "unit": "ns/op"
           }
         ]
