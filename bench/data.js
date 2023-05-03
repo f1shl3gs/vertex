@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683103139945,
+  "lastUpdate": 1683103181897,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56851,6 +56851,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1304.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e546cc651d522f93072cfc87c9cf7ff34f4e9fe6",
+          "message": "cleanup unused dependencies and features (#976)",
+          "timestamp": "2023-05-03T16:35:23+08:00",
+          "tree_id": "c440a261c72c20e4d5b8f797a592af648472a67d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e546cc651d522f93072cfc87c9cf7ff34f4e9fe6"
+        },
+        "date": 1683103169080,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 50.784,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 382.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1089.6,
             "unit": "ns/op"
           }
         ]
