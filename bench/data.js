@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683030663325,
+  "lastUpdate": 1683103136207,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0b9b0d42c652b1d0b981527bfa24713fdd8854dc",
-          "message": "Merge pull request #736 from f1shl3gs/dependabot/cargo/bstr-1.2.0\n\nchore(deps): bump bstr from 1.1.0 to 1.2.0",
-          "timestamp": "2023-02-02T13:17:38+08:00",
-          "tree_id": "c2d6c849969ba3e661e8f39ae84e4b16e583f5dc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0b9b0d42c652b1d0b981527bfa24713fdd8854dc"
-        },
-        "date": 1675315384657,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 112.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 247.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 394.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 330.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e546cc651d522f93072cfc87c9cf7ff34f4e9fe6",
+          "message": "cleanup unused dependencies and features (#976)",
+          "timestamp": "2023-05-03T16:35:23+08:00",
+          "tree_id": "c440a261c72c20e4d5b8f797a592af648472a67d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e546cc651d522f93072cfc87c9cf7ff34f4e9fe6"
+        },
+        "date": 1683103124605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 90.911,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 198.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 330.68,
             "unit": "ns/op"
           }
         ]
