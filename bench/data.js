@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683104245350,
+  "lastUpdate": 1683278128243,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a6de09e5a8e2758707e9c1cadd5749c6f78ba026",
-          "message": "Merge pull request #738 from f1shl3gs/dependabot/cargo/hyper-0.14.24\n\nchore(deps): bump hyper from 0.14.23 to 0.14.24",
-          "timestamp": "2023-02-03T20:13:17+08:00",
-          "tree_id": "8606473a1682c4885261834d8da590619fd3e29b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a6de09e5a8e2758707e9c1cadd5749c6f78ba026"
-        },
-        "date": 1675426665787,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 809360,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 724230,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "27c7b16b706a8255bfcd3b3cd58415ed66f8806e",
+          "message": "chore(deps): bump serde from 1.0.160 to 1.0.162 (#977)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.160 to 1.0.162.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.160...1.0.162)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-05T17:11:49+08:00",
+          "tree_id": "a3435deda08e6fc3f5219540bdaa576b6b3b4a6c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/27c7b16b706a8255bfcd3b3cd58415ed66f8806e"
+        },
+        "date": 1683278116739,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 720510,
             "unit": "ns/op"
           }
         ]
