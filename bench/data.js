@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683561119364,
+  "lastUpdate": 1683561151401,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1a9ace61cbc9979ce17dfe8fbb59ae93f2b45a3f",
-          "message": "Merge pull request #741 from f1shl3gs/dependabot/cargo/serde_json-1.0.92\n\nchore(deps): bump serde_json from 1.0.91 to 1.0.92",
-          "timestamp": "2023-02-06T18:17:06+08:00",
-          "tree_id": "bf76f98e11702ed387d464267929cc0351754112",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1a9ace61cbc9979ce17dfe8fbb59ae93f2b45a3f"
-        },
-        "date": 1675679052764,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 504.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 50335,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 251860,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 503160,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 263.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 26277,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 131380,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 262700,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eca3fb2ac99c3989e28433c3b84f2379af651b44",
           "message": "Merge pull request #743 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.35.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.2+5.3.0-patched to 0.5.3+5.3.0-patched",
           "timestamp": "2023-02-07T12:57:51+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 226100,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0206fc5f4fda31d905403e7c6e1701243bb98b82",
+          "message": "chore(deps): bump libc from 0.2.142 to 0.2.143 (#978)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.142 to 0.2.143.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.142...0.2.143)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-08T23:47:06+08:00",
+          "tree_id": "922487b4c847379171e74ebaf86b878204ed5ab2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0206fc5f4fda31d905403e7c6e1701243bb98b82"
+        },
+        "date": 1683561136638,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 612.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 61242,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 299980,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 603210,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 229.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 23192,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 115900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 232060,
             "unit": "ns/op"
           }
         ]
