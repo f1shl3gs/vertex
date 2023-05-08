@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683561087941,
+  "lastUpdate": 1683561119364,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "23b306fd916563271ba89406ccff371ae0956977",
-          "message": "Merge pull request #740 from f1shl3gs/dependabot/cargo/proptest-1.1.0\n\nchore(deps): bump proptest from 1.0.0 to 1.1.0",
-          "timestamp": "2023-02-06T18:16:47+08:00",
-          "tree_id": "816b6b01a93dc50ee2118f16e5f432acce36315b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/23b306fd916563271ba89406ccff371ae0956977"
-        },
-        "date": 1675679054335,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 88.745,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 186.05,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 307.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 377.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0206fc5f4fda31d905403e7c6e1701243bb98b82",
+          "message": "chore(deps): bump libc from 0.2.142 to 0.2.143 (#978)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.142 to 0.2.143.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.142...0.2.143)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-08T23:47:06+08:00",
+          "tree_id": "922487b4c847379171e74ebaf86b878204ed5ab2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0206fc5f4fda31d905403e7c6e1701243bb98b82"
+        },
+        "date": 1683561104349,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 110.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 240.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 395.95,
             "unit": "ns/op"
           }
         ]
