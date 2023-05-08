@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683561055617,
+  "lastUpdate": 1683561087941,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -56899,6 +56899,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1235.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0206fc5f4fda31d905403e7c6e1701243bb98b82",
+          "message": "chore(deps): bump libc from 0.2.142 to 0.2.143 (#978)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.142 to 0.2.143.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.142...0.2.143)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-08T23:47:06+08:00",
+          "tree_id": "922487b4c847379171e74ebaf86b878204ed5ab2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0206fc5f4fda31d905403e7c6e1701243bb98b82"
+        },
+        "date": 1683561075829,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 46.951,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 411.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1107.3,
             "unit": "ns/op"
           }
         ]
