@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683741624376,
+  "lastUpdate": 1683741670011,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
-          "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
-          "timestamp": "2023-02-14T04:36:32+08:00",
-          "tree_id": "414c67f09a057395a8e5810bc6a6f10258717080",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c96c5d3ababc0a04783211a5d6c94e2122b77861"
-        },
-        "date": 1676322134343,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1304,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56295.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "217a7ba72c35ab846c9fef5897f781ff7e5e5b3f",
           "message": "Merge pull request #765 from f1shl3gs/bump_up_cross_to_0.2.5\n\nbump up cross to 0.2.5",
           "timestamp": "2023-02-14T05:34:04+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44222.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4b57c9f7c1fd5ccc6ba3922c242b4a67d1460846",
+          "message": "chore(deps): bump memmap2 from 0.5.10 to 0.6.0 (#981)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.5.10 to 0.6.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.5.10...v0.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:32:42+08:00",
+          "tree_id": "766fcc5a78505bbeee38b437d3a7357e4b553fcb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4b57c9f7c1fd5ccc6ba3922c242b4a67d1460846"
+        },
+        "date": 1683741656085,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1288,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44222.7,
             "unit": "KiB"
           }
         ]
