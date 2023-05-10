@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683740180055,
+  "lastUpdate": 1683740211248,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "264a44230309d3694d8f937204e63eab08106810",
-          "message": "Merge pull request #742 from f1shl3gs/configurable\n\nConfigurable",
-          "timestamp": "2023-02-07T13:13:33+08:00",
-          "tree_id": "da8c48d5a20dfa7a7df09992c645828303e1256f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/264a44230309d3694d8f937204e63eab08106810"
-        },
-        "date": 1675747034833,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 91.069,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 188.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 304.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 317.15,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98c885de4c4062dbd35ebae6477c32a59812a5d5",
+          "message": "chore(deps): bump console-subscriber from 0.1.8 to 0.1.9 (#982)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.8 to 0.1.9.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.8...console-subscriber-v0.1.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:32:16+08:00",
+          "tree_id": "6df06761fdec5a60ba1c17eb4a343c29be9c560e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/98c885de4c4062dbd35ebae6477c32a59812a5d5"
+        },
+        "date": 1683740199858,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 90.468,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 197.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 320.7,
             "unit": "ns/op"
           }
         ]
