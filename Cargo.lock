@@ -405,7 +405,7 @@ dependencies = [
  "fslock",
  "futures",
  "measurable",
- "memmap2",
+ "memmap2 0.6.0",
  "metrics",
  "num-traits",
  "once_cell",
@@ -2313,6 +2313,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "memmap2"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7f9ff02d2efdc645fca1ee55f45545b996e7da776b5b60c4e170334457551693"
+dependencies = [
+ "libc",
+]
+
+[[package]]
 name = "memoffset"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3951,7 +3960,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1b55cdc318ede251d0957f07afe5fed912119b8c1bc5a7804151826db999e737"
 dependencies = [
  "debugid",
- "memmap2",
+ "memmap2 0.5.10",
  "stable_deref_trait",
  "uuid",
 ]
