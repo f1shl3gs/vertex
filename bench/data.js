@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683740375565,
+  "lastUpdate": 1683741160508,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8964f2b9440c3e3a65e792d9f9ef563f379e0def",
-          "message": "Merge pull request #761 from f1shl3gs/add_generate_config_tests\n\nAdd missing generate_config tests",
-          "timestamp": "2023-02-12T23:12:30+08:00",
-          "tree_id": "b7327d8a49199aceb30b0460d0860b0cf38b8fcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8964f2b9440c3e3a65e792d9f9ef563f379e0def"
-        },
-        "date": 1676216035789,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1091,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56314.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "95706b51220b96330742d6b6cd412e947fb0257a",
           "message": "Merge pull request #762 from f1shl3gs/dependabot/cargo/tokio-util-0.7.7\n\nchore(deps): bump tokio-util from 0.7.5 to 0.7.7",
           "timestamp": "2023-02-13T17:45:29+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1050,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44219.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ddef0b26e42b9f1a459688ecea704d3150e20c3f",
+          "message": "chore(deps): bump quote from 1.0.26 to 1.0.27 (#979)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:31:02+08:00",
+          "tree_id": "e38cbd96e4b1bc0027e6769b957ec29922784715",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ddef0b26e42b9f1a459688ecea704d3150e20c3f"
+        },
+        "date": 1683741148837,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1077,
             "unit": "s"
           },
           {
