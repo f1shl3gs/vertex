@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683741612120,
+  "lastUpdate": 1683741624376,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d",
-          "message": "Merge pull request #763 from f1shl3gs/add_publish_false_for_libs\n\nadd 'publish = false'",
-          "timestamp": "2023-02-13T18:15:41+08:00",
-          "tree_id": "602a53e59f320293f970f9b1c58ce9ef48a9edf0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d"
-        },
-        "date": 1676284632086,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1090,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56316.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
           "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
           "timestamp": "2023-02-14T04:36:32+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1417,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44222.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98c885de4c4062dbd35ebae6477c32a59812a5d5",
+          "message": "chore(deps): bump console-subscriber from 0.1.8 to 0.1.9 (#982)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.8 to 0.1.9.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.8...console-subscriber-v0.1.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:32:16+08:00",
+          "tree_id": "6df06761fdec5a60ba1c17eb4a343c29be9c560e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/98c885de4c4062dbd35ebae6477c32a59812a5d5"
+        },
+        "date": 1683741607955,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1367,
             "unit": "s"
           },
           {
