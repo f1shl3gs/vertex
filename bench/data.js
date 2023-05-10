@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683741594059,
+  "lastUpdate": 1683741612120,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "95706b51220b96330742d6b6cd412e947fb0257a",
-          "message": "Merge pull request #762 from f1shl3gs/dependabot/cargo/tokio-util-0.7.7\n\nchore(deps): bump tokio-util from 0.7.5 to 0.7.7",
-          "timestamp": "2023-02-13T17:45:29+08:00",
-          "tree_id": "d867546d4d67c70efedf9287f8670ef5321bfd6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/95706b51220b96330742d6b6cd412e947fb0257a"
-        },
-        "date": 1676282817762,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1080,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56316.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d",
           "message": "Merge pull request #763 from f1shl3gs/add_publish_false_for_libs\n\nadd 'publish = false'",
           "timestamp": "2023-02-13T18:15:41+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44219.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7fc9f9dbcd4839771386e36767abdeecdba8ccd2",
+          "message": "chore(deps): bump libc from 0.2.143 to 0.2.144 (#980)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.143 to 0.2.144.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.143...0.2.144)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:31:31+08:00",
+          "tree_id": "1ef93789d711307f7da3bbc95e4eb896a9c56be3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7fc9f9dbcd4839771386e36767abdeecdba8ccd2"
+        },
+        "date": 1683741597286,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1417,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44222.4,
             "unit": "KiB"
           }
         ]
