@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683740277574,
+  "lastUpdate": 1683740284886,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e89e00086db989d461f75d93cbb1535c0d3154b5",
-          "message": "Merge pull request #750 from f1shl3gs/migrate_sources_to_configurable\n\nMigrate sources to configurable",
-          "timestamp": "2023-02-09T21:55:12+08:00",
-          "tree_id": "94f1d0599f8f9787521f98b7c59af64b0dc0163b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e89e00086db989d461f75d93cbb1535c0d3154b5"
-        },
-        "date": 1675951230607,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 91.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 188.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 305.93,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 320.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4b57c9f7c1fd5ccc6ba3922c242b4a67d1460846",
+          "message": "chore(deps): bump memmap2 from 0.5.10 to 0.6.0 (#981)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.5.10 to 0.6.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.5.10...v0.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T01:32:42+08:00",
+          "tree_id": "766fcc5a78505bbeee38b437d3a7357e4b553fcb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4b57c9f7c1fd5ccc6ba3922c242b4a67d1460846"
+        },
+        "date": 1683740270744,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 98.657,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 243.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 388,
             "unit": "ns/op"
           }
         ]
