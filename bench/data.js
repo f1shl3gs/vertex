@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683787357179,
+  "lastUpdate": 1683787358592,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "37737916d97f7162db6f48d99c450d141b796cf1",
-          "message": "Merge pull request #748 from f1shl3gs/dependabot/cargo/openssl-src-111.25.01.1.1t\n\nchore(deps): bump openssl-src from 111.22.0+1.1.1q to 111.25.0+1.1.1t",
-          "timestamp": "2023-02-10T00:54:45+08:00",
-          "tree_id": "9a62128035bfd182d5c8d377245561647c3296e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/37737916d97f7162db6f48d99c450d141b796cf1"
-        },
-        "date": 1675961995264,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.784,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.148,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.712,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.734,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.515,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2a77619b50ac7688238d4e94f1c35e9a8db21dc3",
           "message": "Merge pull request #751 from f1shl3gs/migrate_transforms_to_configurable\n\nMigrate transforms to configurable",
           "timestamp": "2023-02-10T01:38:40+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 68.623,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6aac4740a496186bfad8d8f77220c5ae3a70ee01",
+          "message": "chore(deps): bump tokio from 1.28.0 to 1.28.1 (#984)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.0 to 1.28.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.0...tokio-1.28.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T14:35:24+08:00",
+          "tree_id": "fb939c63df3b77c347f355cf5aaa77325b96521b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6aac4740a496186bfad8d8f77220c5ae3a70ee01"
+        },
+        "date": 1683787343037,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.873,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.498,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 33.566,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.994,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 68.756,
             "unit": "ns/op"
           }
         ]
