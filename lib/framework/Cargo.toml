@@ -73,7 +73,7 @@ rustls = { version = "0.21.1", default-features = false, features = ["dangerous_
 rustls-native-certs = { version = "0.6.2", default-features = false }
 rustls-pemfile = { version = "1.0.2", default-features = false }
 smallvec = { version = "1.10.0", features = ["union"] }
-serde = { version = "1.0.162", default-features = false, features = ["derive", "std"] }
+serde = { version = "1.0.163", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.96", default-features = false }
 serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.9.21" }
