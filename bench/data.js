@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683787257742,
+  "lastUpdate": 1683787263066,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57083,6 +57083,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1308.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f2850ccaca28292487778d21b5c687cff130eb0",
+          "message": "chore(deps): bump memmap2 from 0.6.0 to 0.6.1 (#985)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.6.0 to 0.6.1.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.6.0...v0.6.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T14:35:06+08:00",
+          "tree_id": "c8352562eb3d316ac689025d14546c597b30d192",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f2850ccaca28292487778d21b5c687cff130eb0"
+        },
+        "date": 1683787248600,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 65.944,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 207.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 459.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1426.3,
             "unit": "ns/op"
           }
         ]
