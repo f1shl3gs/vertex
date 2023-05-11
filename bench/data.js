@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683788319248,
+  "lastUpdate": 1683788586127,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5b7b274f75a8239be0e5cb3465c08934b5523d3b",
-          "message": "Merge pull request #766 from f1shl3gs/simplify_keyed_rate_limiter\n\nsimplify insert path",
-          "timestamp": "2023-02-14T16:28:51+08:00",
-          "tree_id": "ad817566dd48db85b81aecaf13a8ce9df7205482",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5b7b274f75a8239be0e5cb3465c08934b5523d3b"
-        },
-        "date": 1676364592446,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1057,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56295.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cc15dc9e4ce46a92390478de784ef0165fc046f1",
           "message": "Merge pull request #767 from f1shl3gs/dependabot/cargo/rkyv-0.7.40\n\nchore(deps): bump rkyv from 0.7.39 to 0.7.40",
           "timestamp": "2023-02-14T16:30:30+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44222.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6aac4740a496186bfad8d8f77220c5ae3a70ee01",
+          "message": "chore(deps): bump tokio from 1.28.0 to 1.28.1 (#984)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.0 to 1.28.1.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.0...tokio-1.28.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-11T14:35:24+08:00",
+          "tree_id": "fb939c63df3b77c347f355cf5aaa77325b96521b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6aac4740a496186bfad8d8f77220c5ae3a70ee01"
+        },
+        "date": 1683788571829,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1271,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44222,
             "unit": "KiB"
           }
         ]
