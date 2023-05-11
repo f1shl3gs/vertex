@@ -10,5 +10,5 @@ crossbeam-utils = { version = "0.8.15", default-features = false }
 futures = { version = "0.3.28" }
 measurable = { path = "../measurable" }
 pin-project-lite = { version = "0.2.9" }
-tokio = { version = "1.28.0", default-features = false, features = ["sync", "macros"] }
+tokio = { version = "1.28.1", default-features = false, features = ["sync", "macros"] }
 tracing = { version = "0.1.38" }
