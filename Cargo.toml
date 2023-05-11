@@ -338,7 +338,7 @@ serde_path_to_error = { version = "0.1.10" }
 tempfile = { version = "3.5.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
-tokio = { version = "1.28.0", features = ["test-util", "time"] }
+tokio = { version = "1.28.1", features = ["test-util", "time"] }
 
 [dependencies]
 # Workspaces
@@ -373,7 +373,7 @@ async-trait = { version = "0.1.68" }
 futures = { version = "0.3.28", default-features = false }
 futures-util = { version = "0.3.27", default-features = false }
 pin-project = { version = "1.0.12", default-features = false }
-tokio = { version = "1.28.0", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.28.1", features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.14", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.8", default-features = false, features = ["codec", "time", "net"] }
 
