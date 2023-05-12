@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1683886510168,
+  "lastUpdate": 1683886537692,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1a3c29b5c7425bb5d46be85fb1659bfb150a6eaa",
-          "message": "Merge pull request #768 from f1shl3gs/dependabot/cargo/once_cell-1.17.1\n\nchore(deps): bump once_cell from 1.17.0 to 1.17.1",
-          "timestamp": "2023-02-16T04:29:26+08:00",
-          "tree_id": "c9af24c7e5d1dce5696dafac65428fe81b9ac537",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1a3c29b5c7425bb5d46be85fb1659bfb150a6eaa"
-        },
-        "date": 1676494703229,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1477,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56294.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d3b9c306fa22a9eed9d1ffe8681370e111a0c988",
           "message": "Merge pull request #770 from f1shl3gs/impl_data_type_with_bitwise_operations\n\nimpl DataType with bitwise operations",
           "timestamp": "2023-02-20T01:15:04+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44223,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "af141d320467fa7408bf9a9da8fc66f4ceb2901a",
+          "message": "chore(deps): bump tracing-core from 0.1.30 to 0.1.31 (#986)\n\nBumps [tracing-core](https://github.com/tokio-rs/tracing) from 0.1.30 to 0.1.31.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-core-0.1.30...tracing-core-0.1.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-core\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-12T17:54:25+08:00",
+          "tree_id": "41ea535ff5a199d3241bb1dfdc11b035433e3b8c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/af141d320467fa7408bf9a9da8fc66f4ceb2901a"
+        },
+        "date": 1683886524418,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1039,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44599,
             "unit": "KiB"
           }
         ]
