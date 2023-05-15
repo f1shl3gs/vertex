@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684191615252,
+  "lastUpdate": 1684191672751,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "636207a9a8448f5e799b207ddb488b0b74a3c575",
-          "message": "Merge pull request #753 from f1shl3gs/migrate_sinks_to_configurable\n\nmigrate sink to configurable",
-          "timestamp": "2023-02-10T19:57:03+08:00",
-          "tree_id": "688266134bd97eeef9a8f1e8fb983a944b622247",
-          "url": "https://github.com/f1shl3gs/vertex/commit/636207a9a8448f5e799b207ddb488b0b74a3c575"
-        },
-        "date": 1676030515631,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.807,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.342,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.686,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.741,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.621,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d224e67dc4b5b424d6daffed257e6d639f08a8bc",
           "message": "Merge pull request #755 from f1shl3gs/migrate_extensions_to_configurable\n\nmigrate extensions to configurable",
           "timestamp": "2023-02-10T20:49:29+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.393,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a7d90b0c901973a4ed415ede75d9e1fa7221ccb",
+          "message": "chore(deps): bump syn from 2.0.15 to 2.0.16 (#989)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.15 to 2.0.16.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.15...2.0.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-16T06:55:05+08:00",
+          "tree_id": "b2c19909cf07aa5ce9836276bdb634e3f4cb2d82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a7d90b0c901973a4ed415ede75d9e1fa7221ccb"
+        },
+        "date": 1684191657173,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 34.354,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.098,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.848,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.591,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 70.363,
             "unit": "ns/op"
           }
         ]
