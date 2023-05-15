@@ -66,7 +66,7 @@ num_cpus = { version = "1.15.0" }
 once_cell = { version = "1.17", default-features = false }
 pem = { version = "2.0.1", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.2.0", default-features = false }
-pin-project = { version = "1.0.12" }
+pin-project = { version = "1.1.0" }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
 regex = { version = "1.8.1" }
 rustls = { version = "0.21.1", default-features = false, features = ["dangerous_configuration"] }
