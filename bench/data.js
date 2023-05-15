@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684191586278,
+  "lastUpdate": 1684191615252,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57135,6 +57135,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1231.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff15d750953e5d860d2453b80d4ceb1a9a4f81b9",
+          "message": "chore(deps): bump socket2 from 0.5.2 to 0.5.3 (#988)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.2 to 0.5.3.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-16T06:54:40+08:00",
+          "tree_id": "93b12fb45138be9ff1f54ca890ede8ebf81b78ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff15d750953e5d860d2453b80d4ceb1a9a4f81b9"
+        },
+        "date": 1684191600227,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 72.009,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 232.33,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 525.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1484.9,
             "unit": "ns/op"
           }
         ]
