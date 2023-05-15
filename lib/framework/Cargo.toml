@@ -78,7 +78,7 @@ serde_json = { version = "1.0.96", default-features = false }
 serde_regex = { path = "../serde_regex" }
 serde_yaml = { version = "0.9.21" }
 snap = { version = "1.1.0", default-features = false }
-socket2 = { version = "0.5.2", default-features = false }
+socket2 = { version = "0.5.3", default-features = false }
 syslog_loose = { version = "0.18.0", default-features = false }
 thiserror = { version = "1.0.40" }
 tokio = { version = "1.28.1", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
