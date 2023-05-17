@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684331039633,
+  "lastUpdate": 1684331056072,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2ed552f837986948a92c859dcd45d9138d3d59b4",
-          "message": "Merge pull request #757 from f1shl3gs/remove_interval_from_source_outer\n\nremove interval from SourceOuter",
-          "timestamp": "2023-02-10T23:10:44+08:00",
-          "tree_id": "888716c900c0ba2ea9686171545acc2e1c3c51e9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2ed552f837986948a92c859dcd45d9138d3d59b4"
-        },
-        "date": 1676042113264,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 243.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 369.85,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 370.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "627021d88ed597fdba2a461a220c2055661396b2",
+          "message": "chore(deps): bump notify from 5.1.0 to 6.0.0 (#993)\n\nBumps [notify](https://github.com/notify-rs/notify) from 5.1.0 to 6.0.0.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-17T21:40:07+08:00",
+          "tree_id": "a91281100eb5505bcb9a04cd0fee1eb0208470af",
+          "url": "https://github.com/f1shl3gs/vertex/commit/627021d88ed597fdba2a461a220c2055661396b2"
+        },
+        "date": 1684331043161,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 95.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 188.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 297.78,
             "unit": "ns/op"
           }
         ]
