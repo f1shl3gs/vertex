@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684323189733,
+  "lastUpdate": 1684323191240,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4ca35e91a552411e3429e4c035d64f42f97924ac",
-          "message": "Merge pull request #756 from f1shl3gs/remove_generate_config\n\nremove Trait GenerateConfig",
-          "timestamp": "2023-02-10T21:58:01+08:00",
-          "tree_id": "ff00453f70b0144a42bcf071408f6f107cd0a849",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4ca35e91a552411e3429e4c035d64f42f97924ac"
-        },
-        "date": 1676037729778,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 89.264,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 187.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 306.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 384.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f17805ac8d0663323883312627ea1523510202e8",
+          "message": "chore(deps): bump uuid from 1.3.2 to 1.3.3 (#992)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.2 to 1.3.3.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.2...1.3.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-17T19:27:46+08:00",
+          "tree_id": "fe3f0052301b6601b66e0ba5203ce4f2684cff88",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f17805ac8d0663323883312627ea1523510202e8"
+        },
+        "date": 1684323173009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 102.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 227.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 370.98,
             "unit": "ns/op"
           }
         ]
