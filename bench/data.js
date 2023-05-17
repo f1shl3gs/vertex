@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684323117791,
+  "lastUpdate": 1684323178336,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57139,6 +57139,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1484.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f17805ac8d0663323883312627ea1523510202e8",
+          "message": "chore(deps): bump uuid from 1.3.2 to 1.3.3 (#992)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.2 to 1.3.3.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.2...1.3.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-17T19:27:46+08:00",
+          "tree_id": "fe3f0052301b6601b66e0ba5203ce4f2684cff88",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f17805ac8d0663323883312627ea1523510202e8"
+        },
+        "date": 1684323163811,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 68.081,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 222.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 507.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1488.6,
             "unit": "ns/op"
           }
         ]
