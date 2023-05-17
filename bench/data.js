@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684323191240,
+  "lastUpdate": 1684323224022,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57183,6 +57183,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1488.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "93efe1cf3092ff55d0f285afb21ff6e650b3fb4d",
+          "message": "chore(deps): bump proc-macro2 from 1.0.56 to 1.0.57 (#990)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.56 to 1.0.57.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.56...1.0.57)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-17T19:28:16+08:00",
+          "tree_id": "ecc0f4ca1291da938f6bf3ca419152404a4cd3ff",
+          "url": "https://github.com/f1shl3gs/vertex/commit/93efe1cf3092ff55d0f285afb21ff6e650b3fb4d"
+        },
+        "date": 1684323210247,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 67.482,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 223.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 538.07,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1527.1,
             "unit": "ns/op"
           }
         ]
