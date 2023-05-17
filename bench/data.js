@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684324231887,
+  "lastUpdate": 1684324416514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0dbaa6e682e424ffbf3b3060670e7afd750bdb57",
-          "message": "Merge pull request #775 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.12\n\nchore(deps): bump tokio-stream from 0.1.11 to 0.1.12",
-          "timestamp": "2023-02-21T19:11:23+08:00",
-          "tree_id": "fc727c05739c2eec856a9a74e7ae4f726ade9bc6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0dbaa6e682e424ffbf3b3060670e7afd750bdb57"
-        },
-        "date": 1676979186375,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1093,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56290.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d582dfbe238fe353b65418a044c91c8e213e9498",
           "message": "Merge pull request #776 from f1shl3gs/dependabot/cargo/bstr-1.3.0\n\nchore(deps): bump bstr from 1.2.0 to 1.3.0",
           "timestamp": "2023-02-21T19:11:13+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44599.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f17805ac8d0663323883312627ea1523510202e8",
+          "message": "chore(deps): bump uuid from 1.3.2 to 1.3.3 (#992)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.2 to 1.3.3.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.2...1.3.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-17T19:27:46+08:00",
+          "tree_id": "fe3f0052301b6601b66e0ba5203ce4f2684cff88",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f17805ac8d0663323883312627ea1523510202e8"
+        },
+        "date": 1684324401522,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1287,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44598.7,
             "unit": "KiB"
           }
         ]
