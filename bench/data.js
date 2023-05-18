@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684373381464,
+  "lastUpdate": 1684422597293,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "423ccd5d5325e5a2d16043ddc49dda62e5f06cd7",
-          "message": "Merge pull request #759 from f1shl3gs/remove_provider_type\n\nreplace provider_type with NamedComponent",
-          "timestamp": "2023-02-11T18:07:28+08:00",
-          "tree_id": "47d553ed5328bd1e7402e72fa6302ac2b291a4ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/423ccd5d5325e5a2d16043ddc49dda62e5f06cd7"
-        },
-        "date": 1676110274800,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 98.231,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 176.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 285.83,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 378.48,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d88d86ccac513721dedb96f264603eaaf12db02",
+          "message": "chore(deps): bump proc-macro2 from 1.0.57 to 1.0.58 (#994)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.57 to 1.0.58.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.57...1.0.58)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-18T23:06:18+08:00",
+          "tree_id": "2f05cfc8b99249bea9dc02dd575c8333bf07cb08",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1d88d86ccac513721dedb96f264603eaaf12db02"
+        },
+        "date": 1684422584736,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 95.168,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 197.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 312.91,
             "unit": "ns/op"
           }
         ]
