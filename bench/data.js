@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684372308532,
+  "lastUpdate": 1684373224983,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a6de09e5a8e2758707e9c1cadd5749c6f78ba026",
-          "message": "Merge pull request #738 from f1shl3gs/dependabot/cargo/hyper-0.14.24\n\nchore(deps): bump hyper from 0.14.23 to 0.14.24",
-          "timestamp": "2023-02-03T20:13:17+08:00",
-          "tree_id": "8606473a1682c4885261834d8da590619fd3e29b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a6de09e5a8e2758707e9c1cadd5749c6f78ba026"
-        },
-        "date": 1675427664673,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 42810000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1005500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.251,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 53.757,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 415.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1171.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eca3fb2ac99c3989e28433c3b84f2379af651b44",
           "message": "Merge pull request #743 from f1shl3gs/dependabot/cargo/tikv-jemalloc-sys-0.5.35.3.0-patched\n\nchore(deps): bump tikv-jemalloc-sys from 0.5.2+5.3.0-patched to 0.5.3+5.3.0-patched",
           "timestamp": "2023-02-07T12:57:51+08:00",
@@ -52809,6 +52750,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.621,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "255afc36411d718562b2e2e7cd785e46fe292b62",
+          "message": "chore(deps): bump inventory from 0.3.5 to 0.3.6 (#991)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.5 to 0.3.6.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.5...0.3.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-18T09:07:06+08:00",
+          "tree_id": "e11ee9187dc5b758ba2c3c5b9d7a2570a18e2e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/255afc36411d718562b2e2e7cd785e46fe292b62"
+        },
+        "date": 1684373211690,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27816000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 995150,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.828,
             "unit": "ns/op"
           }
         ]
