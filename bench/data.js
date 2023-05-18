@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684372302349,
+  "lastUpdate": 1684372306330,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c34259ce8a4c97d42897c9567bc370fc79c9e0b8",
-          "message": "Merge pull request #758 from f1shl3gs/style\n\nStyle",
-          "timestamp": "2023-02-11T16:31:27+08:00",
-          "tree_id": "9908a962c8bdda4d9b29233be420feac2d929ea1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c34259ce8a4c97d42897c9567bc370fc79c9e0b8"
-        },
-        "date": 1676104562547,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.124,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.332,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.755,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.369,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.745,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "423ccd5d5325e5a2d16043ddc49dda62e5f06cd7",
           "message": "Merge pull request #759 from f1shl3gs/remove_provider_type\n\nreplace provider_type with NamedComponent",
           "timestamp": "2023-02-11T18:07:28+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.263,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "255afc36411d718562b2e2e7cd785e46fe292b62",
+          "message": "chore(deps): bump inventory from 0.3.5 to 0.3.6 (#991)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.5 to 0.3.6.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.5...0.3.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-18T09:07:06+08:00",
+          "tree_id": "e11ee9187dc5b758ba2c3c5b9d7a2570a18e2e31",
+          "url": "https://github.com/f1shl3gs/vertex/commit/255afc36411d718562b2e2e7cd785e46fe292b62"
+        },
+        "date": 1684372293371,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.825,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.96,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.921,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 30.932,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.498,
             "unit": "ns/op"
           }
         ]
