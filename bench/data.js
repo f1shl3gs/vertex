@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684424119180,
+  "lastUpdate": 1684761634244,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "770a0a314cdbff269c31a78d4559c46d6b585480",
-          "message": "Merge pull request #760 from f1shl3gs/misc\n\nMisc",
-          "timestamp": "2023-02-12T19:18:34+08:00",
-          "tree_id": "cbb3674a635d471b0ac6d7dd19d4ef5361ef0415",
-          "url": "https://github.com/f1shl3gs/vertex/commit/770a0a314cdbff269c31a78d4559c46d6b585480"
-        },
-        "date": 1676200947267,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716260,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 720710,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b22e419d653418adbba167d3c06204376dc1a00",
+          "message": "chore(deps): bump base64 from 0.21.0 to 0.21.1 (#995)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.0 to 0.21.1.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-22T21:16:34+08:00",
+          "tree_id": "c93af74f494f308285d55e2956b4b52d9f1a9d1b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b22e419d653418adbba167d3c06204376dc1a00"
+        },
+        "date": 1684761621776,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 723350,
             "unit": "ns/op"
           }
         ]
