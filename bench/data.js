@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684761634244,
+  "lastUpdate": 1684761702545,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57259,6 +57259,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1226.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6b22e419d653418adbba167d3c06204376dc1a00",
+          "message": "chore(deps): bump base64 from 0.21.0 to 0.21.1 (#995)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.0 to 0.21.1.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-22T21:16:34+08:00",
+          "tree_id": "c93af74f494f308285d55e2956b4b52d9f1a9d1b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6b22e419d653418adbba167d3c06204376dc1a00"
+        },
+        "date": 1684761690708,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 58.837,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 185.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 429.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1226.2,
             "unit": "ns/op"
           }
         ]
