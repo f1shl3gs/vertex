@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684871854176,
+  "lastUpdate": 1684871874065,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1ef912d909562b800bb7687f36e84b79f6c1140b",
-          "message": "Merge pull request #778 from f1shl3gs/remove_atomig\n\nremove atomig & fix some pedantic warnings",
-          "timestamp": "2023-02-21T21:25:35+08:00",
-          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ef912d909562b800bb7687f36e84b79f6c1140b"
-        },
-        "date": 1676987450176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1292,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56298.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bac1ccbcd95209bf06de2d245bea63f35a781425",
           "message": "Merge pull request #779 from f1shl3gs/move_finalize_to_lib/finalize\n\nMove finalize to lib/finalize",
           "timestamp": "2023-02-22T02:08:08+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1471,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44580.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a6ca2b4dc3be598e55f23a10fa6a726a649173d",
+          "message": "chore(deps): bump regex from 1.8.1 to 1.8.2 (#997)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.1 to 1.8.2.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.1...1.8.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T03:36:03+08:00",
+          "tree_id": "8983bb75adb7e503e2d713c505f69dfa3772d628",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a6ca2b4dc3be598e55f23a10fa6a726a649173d"
+        },
+        "date": 1684871862213,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1070,
             "unit": "s"
           },
           {
