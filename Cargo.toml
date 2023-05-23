@@ -442,7 +442,7 @@ once_cell = { version = "1.17.1" }
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
 percent-encoding = { version = "2.2.0", default-features = false }
 quick-xml = { version = "0.28.2", default-features = false, features = ["serialize"], optional = true }
-regex = { version = "1.8.1" }
+regex = { version = "1.8.2" }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
