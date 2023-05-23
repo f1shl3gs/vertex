@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684763181927,
+  "lastUpdate": 1684870785545,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8964f2b9440c3e3a65e792d9f9ef563f379e0def",
-          "message": "Merge pull request #761 from f1shl3gs/add_generate_config_tests\n\nAdd missing generate_config tests",
-          "timestamp": "2023-02-12T23:12:30+08:00",
-          "tree_id": "b7327d8a49199aceb30b0460d0860b0cf38b8fcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8964f2b9440c3e3a65e792d9f9ef563f379e0def"
-        },
-        "date": 1676214982399,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 718260,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 723350,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a6ca2b4dc3be598e55f23a10fa6a726a649173d",
+          "message": "chore(deps): bump regex from 1.8.1 to 1.8.2 (#997)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.1 to 1.8.2.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.1...1.8.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T03:36:03+08:00",
+          "tree_id": "8983bb75adb7e503e2d713c505f69dfa3772d628",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a6ca2b4dc3be598e55f23a10fa6a726a649173d"
+        },
+        "date": 1684870773527,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 726220,
             "unit": "ns/op"
           }
         ]
