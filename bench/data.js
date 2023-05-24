@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684921038932,
+  "lastUpdate": 1684921047037,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57307,6 +57307,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1478.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a84892df93020f84011ec265f65ce060aee63687",
+          "message": "chore(deps): bump proptest from 1.1.0 to 1.2.0 (#998)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.1.0 to 1.2.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.1.0...v1.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:31:17+08:00",
+          "tree_id": "d346f86d80e9bbcad80c5c6a9967e453676fa7e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a84892df93020f84011ec265f65ce060aee63687"
+        },
+        "date": 1684921031890,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 224.34,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 547.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1575.2,
             "unit": "ns/op"
           }
         ]
