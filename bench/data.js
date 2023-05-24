@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684922136314,
+  "lastUpdate": 1684922153891,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57351,6 +57351,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1575.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4920c2c96f8e7a76438f8043c2f6534c3d0a79a",
+          "message": "chore(deps): bump bstr from 1.4.0 to 1.5.0 (#996)\n\nBumps [bstr](https://github.com/BurntSushi/bstr) from 1.4.0 to 1.5.0.\r\n- [Commits](https://github.com/BurntSushi/bstr/compare/1.4.0...1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bstr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:50:41+08:00",
+          "tree_id": "3060daa4c7ed57c80171b59819547c281137c434",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4920c2c96f8e7a76438f8043c2f6534c3d0a79a"
+        },
+        "date": 1684922139664,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 69.685,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 212.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 467.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1314.7,
             "unit": "ns/op"
           }
         ]
