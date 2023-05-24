@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684923086010,
+  "lastUpdate": 1684923419353,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f324716c952179e6f06bf4289b350442b12cb114",
-          "message": "Merge pull request #780 from f1shl3gs/revert-779-move_finalize_to_lib/finalize\n\nRevert \"Move finalize to lib/finalize\"",
-          "timestamp": "2023-02-22T22:14:38+08:00",
-          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f324716c952179e6f06bf4289b350442b12cb114"
-        },
-        "date": 1677076557575,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1069,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56298.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
           "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
           "timestamp": "2023-02-22T23:50:02+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1423,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44580.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4920c2c96f8e7a76438f8043c2f6534c3d0a79a",
+          "message": "chore(deps): bump bstr from 1.4.0 to 1.5.0 (#996)\n\nBumps [bstr](https://github.com/BurntSushi/bstr) from 1.4.0 to 1.5.0.\r\n- [Commits](https://github.com/BurntSushi/bstr/compare/1.4.0...1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bstr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:50:41+08:00",
+          "tree_id": "3060daa4c7ed57c80171b59819547c281137c434",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4920c2c96f8e7a76438f8043c2f6534c3d0a79a"
+        },
+        "date": 1684923403585,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1294,
             "unit": "s"
           },
           {
