@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684922153891,
+  "lastUpdate": 1684922198455,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d",
-          "message": "Merge pull request #763 from f1shl3gs/add_publish_false_for_libs\n\nadd 'publish = false'",
-          "timestamp": "2023-02-13T18:15:41+08:00",
-          "tree_id": "602a53e59f320293f970f9b1c58ce9ef48a9edf0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d"
-        },
-        "date": 1676283623475,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.145,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.253,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.961,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.143,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.371,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
           "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
           "timestamp": "2023-02-14T04:36:32+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 64.282,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4920c2c96f8e7a76438f8043c2f6534c3d0a79a",
+          "message": "chore(deps): bump bstr from 1.4.0 to 1.5.0 (#996)\n\nBumps [bstr](https://github.com/BurntSushi/bstr) from 1.4.0 to 1.5.0.\r\n- [Commits](https://github.com/BurntSushi/bstr/compare/1.4.0...1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bstr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:50:41+08:00",
+          "tree_id": "3060daa4c7ed57c80171b59819547c281137c434",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4920c2c96f8e7a76438f8043c2f6534c3d0a79a"
+        },
+        "date": 1684922181668,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.956,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.943,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.151,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 42.919,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 67.04,
             "unit": "ns/op"
           }
         ]
