@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684921047037,
+  "lastUpdate": 1684921078227,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "95706b51220b96330742d6b6cd412e947fb0257a",
-          "message": "Merge pull request #762 from f1shl3gs/dependabot/cargo/tokio-util-0.7.7\n\nchore(deps): bump tokio-util from 0.7.5 to 0.7.7",
-          "timestamp": "2023-02-13T17:45:29+08:00",
-          "tree_id": "d867546d4d67c70efedf9287f8670ef5321bfd6b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/95706b51220b96330742d6b6cd412e947fb0257a"
-        },
-        "date": 1676281829468,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.155,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.072,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.93,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.34,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.378,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d",
           "message": "Merge pull request #763 from f1shl3gs/add_publish_false_for_libs\n\nadd 'publish = false'",
           "timestamp": "2023-02-13T18:15:41+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.376,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a84892df93020f84011ec265f65ce060aee63687",
+          "message": "chore(deps): bump proptest from 1.1.0 to 1.2.0 (#998)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.1.0 to 1.2.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.1.0...v1.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:31:17+08:00",
+          "tree_id": "d346f86d80e9bbcad80c5c6a9967e453676fa7e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a84892df93020f84011ec265f65ce060aee63687"
+        },
+        "date": 1684921063517,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.432,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.771,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.292,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.676,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 64.282,
             "unit": "ns/op"
           }
         ]
