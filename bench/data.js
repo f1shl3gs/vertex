@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1684922198455,
+  "lastUpdate": 1684922237420,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b907077c042e022fb7dabe9d24582eecd3225865",
-          "message": "Merge pull request #747 from f1shl3gs/dependabot/cargo/syn-1.0.107\n\nchore(deps): bump syn from 1.0.104 to 1.0.107",
-          "timestamp": "2023-02-10T00:54:30+08:00",
-          "tree_id": "42e7c8d7186404f724947eb1a36246efb9ec91d6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b907077c042e022fb7dabe9d24582eecd3225865"
-        },
-        "date": 1675962919533,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27830000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1030900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.605,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 51.137,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 357.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 975.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "37737916d97f7162db6f48d99c450d141b796cf1",
           "message": "Merge pull request #748 from f1shl3gs/dependabot/cargo/openssl-src-111.25.01.1.1t\n\nchore(deps): bump openssl-src from 111.22.0+1.1.1q to 111.25.0+1.1.1t",
           "timestamp": "2023-02-10T00:54:45+08:00",
@@ -52729,6 +52670,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.368,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a84892df93020f84011ec265f65ce060aee63687",
+          "message": "chore(deps): bump proptest from 1.1.0 to 1.2.0 (#998)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.1.0 to 1.2.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.1.0...v1.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-24T17:31:17+08:00",
+          "tree_id": "d346f86d80e9bbcad80c5c6a9967e453676fa7e1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a84892df93020f84011ec265f65ce060aee63687"
+        },
+        "date": 1684922222520,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 45420000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1608600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.727,
             "unit": "ns/op"
           }
         ]
