@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685050957146,
+  "lastUpdate": 1685051562960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
-          "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
-          "timestamp": "2023-02-22T23:50:02+08:00",
-          "tree_id": "23d2a803d9a28d84247d1ac8a7661e35ec7a1c93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/034ab011748db5bfac7dcb47139e5c17d189b2f8"
-        },
-        "date": 1677082269457,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1071,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56312.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8927e5c87c90d8ce9d13856272e34c63e21faa63",
           "message": "Merge pull request #783 from f1shl3gs/dependabot/cargo/syn-1.0.108\n\nchore(deps): bump syn from 1.0.107 to 1.0.108",
           "timestamp": "2023-02-23T15:52:51+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1294,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44580.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f5e3e7c8c243f45a8c9d1d76fcbd650b8d5b2f6",
+          "message": "chore(deps): bump memmap2 from 0.6.1 to 0.6.2 (#999)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.6.1 to 0.6.2.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.6.1...v0.6.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-26T05:20:59+08:00",
+          "tree_id": "34c2965a5ef470c4975ec1882b072dd24f7f69aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f5e3e7c8c243f45a8c9d1d76fcbd650b8d5b2f6"
+        },
+        "date": 1685051546545,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1575,
             "unit": "s"
           },
           {
