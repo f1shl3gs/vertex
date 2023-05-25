@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685049888148,
+  "lastUpdate": 1685049938136,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
-          "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
-          "timestamp": "2023-02-14T04:36:32+08:00",
-          "tree_id": "414c67f09a057395a8e5810bc6a6f10258717080",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c96c5d3ababc0a04783211a5d6c94e2122b77861"
-        },
-        "date": 1676320894071,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 939040,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 726150,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4f5e3e7c8c243f45a8c9d1d76fcbd650b8d5b2f6",
+          "message": "chore(deps): bump memmap2 from 0.6.1 to 0.6.2 (#999)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.6.1 to 0.6.2.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.6.1...v0.6.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-26T05:20:59+08:00",
+          "tree_id": "34c2965a5ef470c4975ec1882b072dd24f7f69aa",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4f5e3e7c8c243f45a8c9d1d76fcbd650b8d5b2f6"
+        },
+        "date": 1685049923436,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 868180,
             "unit": "ns/op"
           }
         ]
