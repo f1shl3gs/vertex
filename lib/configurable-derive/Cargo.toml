@@ -9,5 +9,5 @@ proc-macro = true
 
 [dependencies]
 proc-macro2 = { version = "1.0.59", default-features = false }
-quote = { version = "1.0.27", default-features = false }
+quote = { version = "1.0.28", default-features = false }
 syn = { version = "2.0.16", default-features = false }
