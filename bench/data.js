@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685194064465,
+  "lastUpdate": 1685194181757,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8927e5c87c90d8ce9d13856272e34c63e21faa63",
-          "message": "Merge pull request #783 from f1shl3gs/dependabot/cargo/syn-1.0.108\n\nchore(deps): bump syn from 1.0.107 to 1.0.108",
-          "timestamp": "2023-02-23T15:52:51+08:00",
-          "tree_id": "32c7f9547e3453d5aa2ab8ea086008483360be32",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8927e5c87c90d8ce9d13856272e34c63e21faa63"
-        },
-        "date": 1677140001831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1045,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56305.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a7d3c072b398b00d6096d926ced9c9fcbfe9bdde",
           "message": "Merge pull request #784 from f1shl3gs/dependabot/cargo/pprof-0.11.1\n\nchore(deps): bump pprof from 0.11.0 to 0.11.1",
           "timestamp": "2023-02-23T15:52:20+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44580.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d83cc2ee0f14bfb543e88e414c61e8038a60cc5",
+          "message": "chore(deps): bump proc-macro2 from 1.0.58 to 1.0.59 (#1000)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.58 to 1.0.59.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.58...1.0.59)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-27T21:07:04+08:00",
+          "tree_id": "75795eaefa0a94d7ddaacc1c4879c40f78605cf8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d83cc2ee0f14bfb543e88e414c61e8038a60cc5"
+        },
+        "date": 1685194169591,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1092,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44583.6,
             "unit": "KiB"
           }
         ]
