@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685194181757,
+  "lastUpdate": 1685194474336,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a7d3c072b398b00d6096d926ced9c9fcbfe9bdde",
-          "message": "Merge pull request #784 from f1shl3gs/dependabot/cargo/pprof-0.11.1\n\nchore(deps): bump pprof from 0.11.0 to 0.11.1",
-          "timestamp": "2023-02-23T15:52:20+08:00",
-          "tree_id": "5d92cc9b3e0a47298f5f183fe1675aa8dd4716c8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a7d3c072b398b00d6096d926ced9c9fcbfe9bdde"
-        },
-        "date": 1677140068877,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1131,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56303.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6cdc8c0ce64bdf1f9728d76621c66b504e6d7563",
           "message": "Merge pull request #782 from f1shl3gs/dependabot/cargo/memmap2-0.5.10\n\nchore(deps): bump memmap2 from 0.5.9 to 0.5.10",
           "timestamp": "2023-02-23T15:53:27+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44583.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "caed15e52db8b73856428bcc7f2ae3828be3b578",
+          "message": "chore(deps): bump regex from 1.8.2 to 1.8.3 (#1003)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.2 to 1.8.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.2...1.8.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-27T21:06:52+08:00",
+          "tree_id": "6d84d29ac12e42e0e5f0865ad5b1e92fb6b4c157",
+          "url": "https://github.com/f1shl3gs/vertex/commit/caed15e52db8b73856428bcc7f2ae3828be3b578"
+        },
+        "date": 1685194459141,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1342,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44560.4,
             "unit": "KiB"
           }
         ]
