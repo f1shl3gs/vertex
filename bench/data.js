@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685193106613,
+  "lastUpdate": 1685193110555,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cc15dc9e4ce46a92390478de784ef0165fc046f1",
-          "message": "Merge pull request #767 from f1shl3gs/dependabot/cargo/rkyv-0.7.40\n\nchore(deps): bump rkyv from 0.7.39 to 0.7.40",
-          "timestamp": "2023-02-14T16:30:30+08:00",
-          "tree_id": "65b7b3ade9bcc7a5861951f62814d41dfa979782",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc15dc9e4ce46a92390478de784ef0165fc046f1"
-        },
-        "date": 1676363741432,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 870660,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "caed15e52db8b73856428bcc7f2ae3828be3b578",
+          "message": "chore(deps): bump regex from 1.8.2 to 1.8.3 (#1003)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.2 to 1.8.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.2...1.8.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-27T21:06:52+08:00",
+          "tree_id": "6d84d29ac12e42e0e5f0865ad5b1e92fb6b4c157",
+          "url": "https://github.com/f1shl3gs/vertex/commit/caed15e52db8b73856428bcc7f2ae3828be3b578"
+        },
+        "date": 1685193091844,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 921470,
             "unit": "ns/op"
           }
         ]
