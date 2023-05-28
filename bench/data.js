@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685286982215,
+  "lastUpdate": 1685286983379,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d3b9c306fa22a9eed9d1ffe8681370e111a0c988",
-          "message": "Merge pull request #770 from f1shl3gs/impl_data_type_with_bitwise_operations\n\nimpl DataType with bitwise operations",
-          "timestamp": "2023-02-20T01:15:04+08:00",
-          "tree_id": "1d4149b4b69650dfdfc11b05bc6bb09e1ee011bd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d3b9c306fa22a9eed9d1ffe8681370e111a0c988"
-        },
-        "date": 1676827229313,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 92.171,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 189.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 307.39,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 331.16,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c363511f2f8a49d39b428de1555839b15e4a3e59",
+          "message": "chore(deps): bump base64 from 0.21.1 to 0.21.2 (#1002)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.1 to 0.21.2.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.1...v0.21.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-28T23:11:57+08:00",
+          "tree_id": "d5a3ea19ad422e6c5cf8ae350625a7bbdafa2ab4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c363511f2f8a49d39b428de1555839b15e4a3e59"
+        },
+        "date": 1685286966870,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 112.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 236.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 398.47,
             "unit": "ns/op"
           }
         ]
