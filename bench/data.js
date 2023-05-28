@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685288056555,
+  "lastUpdate": 1685288091006,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "636207a9a8448f5e799b207ddb488b0b74a3c575",
-          "message": "Merge pull request #753 from f1shl3gs/migrate_sinks_to_configurable\n\nmigrate sink to configurable",
-          "timestamp": "2023-02-10T19:57:03+08:00",
-          "tree_id": "688266134bd97eeef9a8f1e8fb983a944b622247",
-          "url": "https://github.com/f1shl3gs/vertex/commit/636207a9a8448f5e799b207ddb488b0b74a3c575"
-        },
-        "date": 1676031609753,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 42070000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 991070,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.188,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 54.356,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 175.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 411.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1173.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d224e67dc4b5b424d6daffed257e6d639f08a8bc",
           "message": "Merge pull request #755 from f1shl3gs/migrate_extensions_to_configurable\n\nmigrate extensions to configurable",
           "timestamp": "2023-02-10T20:49:29+08:00",
@@ -52629,6 +52570,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.657,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c363511f2f8a49d39b428de1555839b15e4a3e59",
+          "message": "chore(deps): bump base64 from 0.21.1 to 0.21.2 (#1002)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.1 to 0.21.2.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.1...v0.21.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-28T23:11:57+08:00",
+          "tree_id": "d5a3ea19ad422e6c5cf8ae350625a7bbdafa2ab4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c363511f2f8a49d39b428de1555839b15e4a3e59"
+        },
+        "date": 1685288078298,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 48979000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1019600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.802,
             "unit": "ns/op"
           }
         ]
