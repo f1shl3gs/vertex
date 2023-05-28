@@ -329,7 +329,7 @@ prost-build = { version = "0.11.9" }
 
 [dev-dependencies]
 assert_cmd = { version = "2.0.11" }
-base64 = { version = "0.21.1" }
+base64 = { version = "0.21.2" }
 criterion = { version = "0.4.0", default-features = false, features = ["async_tokio"] }
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.3.0" }
