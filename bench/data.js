@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685347326187,
+  "lastUpdate": 1685347336575,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d582dfbe238fe353b65418a044c91c8e213e9498",
-          "message": "Merge pull request #776 from f1shl3gs/dependabot/cargo/bstr-1.3.0\n\nchore(deps): bump bstr from 1.2.0 to 1.3.0",
-          "timestamp": "2023-02-21T19:11:13+08:00",
-          "tree_id": "1540bf90f5f17818e2250a54e4921ecb174c251f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d582dfbe238fe353b65418a044c91c8e213e9498"
-        },
-        "date": 1676978089804,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716620,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 720420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15cdc759771a9b32b0b90ae704f005e8f6f83b63",
+          "message": "chore(deps): bump tokio from 1.28.1 to 1.28.2 (#1004)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.1 to 1.28.2.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.1...tokio-1.28.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-29T15:58:07+08:00",
+          "tree_id": "5c73a4355ffd34df0c5b15612d62ced358dc2fbd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15cdc759771a9b32b0b90ae704f005e8f6f83b63"
+        },
+        "date": 1685347323809,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719800,
             "unit": "ns/op"
           }
         ]
