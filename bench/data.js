@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685347336575,
+  "lastUpdate": 1685347369166,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0dbaa6e682e424ffbf3b3060670e7afd750bdb57",
-          "message": "Merge pull request #775 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.12\n\nchore(deps): bump tokio-stream from 0.1.11 to 0.1.12",
-          "timestamp": "2023-02-21T19:11:23+08:00",
-          "tree_id": "fc727c05739c2eec856a9a74e7ae4f726ade9bc6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0dbaa6e682e424ffbf3b3060670e7afd750bdb57"
-        },
-        "date": 1676978142747,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.412,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.578,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.704,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.604,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d582dfbe238fe353b65418a044c91c8e213e9498",
           "message": "Merge pull request #776 from f1shl3gs/dependabot/cargo/bstr-1.3.0\n\nchore(deps): bump bstr from 1.2.0 to 1.3.0",
           "timestamp": "2023-02-21T19:11:13+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.471,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15cdc759771a9b32b0b90ae704f005e8f6f83b63",
+          "message": "chore(deps): bump tokio from 1.28.1 to 1.28.2 (#1004)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.1 to 1.28.2.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.1...tokio-1.28.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-29T15:58:07+08:00",
+          "tree_id": "5c73a4355ffd34df0c5b15612d62ced358dc2fbd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15cdc759771a9b32b0b90ae704f005e8f6f83b63"
+        },
+        "date": 1685347356251,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.287,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.478,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 31.117,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.94,
             "unit": "ns/op"
           }
         ]
