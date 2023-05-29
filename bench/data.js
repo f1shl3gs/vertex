@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685348449268,
+  "lastUpdate": 1685348832700,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4ca35e91a552411e3429e4c035d64f42f97924ac",
-          "message": "Merge pull request #756 from f1shl3gs/remove_generate_config\n\nremove Trait GenerateConfig",
-          "timestamp": "2023-02-10T21:58:01+08:00",
-          "tree_id": "ff00453f70b0144a42bcf071408f6f107cd0a849",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4ca35e91a552411e3429e4c035d64f42f97924ac"
-        },
-        "date": 1676039062789,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 43027000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1399000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 25.311,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 65.162,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 213.69,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 502.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1420.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2ed552f837986948a92c859dcd45d9138d3d59b4",
           "message": "Merge pull request #757 from f1shl3gs/remove_interval_from_source_outer\n\nremove interval from SourceOuter",
           "timestamp": "2023-02-10T23:10:44+08:00",
@@ -52589,6 +52530,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.031,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15cdc759771a9b32b0b90ae704f005e8f6f83b63",
+          "message": "chore(deps): bump tokio from 1.28.1 to 1.28.2 (#1004)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.1 to 1.28.2.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.1...tokio-1.28.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-29T15:58:07+08:00",
+          "tree_id": "5c73a4355ffd34df0c5b15612d62ced358dc2fbd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15cdc759771a9b32b0b90ae704f005e8f6f83b63"
+        },
+        "date": 1685348815165,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 52262000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1602600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.112,
             "unit": "ns/op"
           }
         ]
