@@ -10,5 +10,5 @@ hyper = { version = "0.14.26" }
 futures = { version = "0.3.28" }
 futures-util = { version = "0.3.27" }
 rand = "0.8.5"
-tokio = { version = "1.28.1" }
+tokio = { version = "1.28.2" }
 tokio-util = { version = "0.7.8" }
