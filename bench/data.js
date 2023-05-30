@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685445825393,
+  "lastUpdate": 1685445873097,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d582dfbe238fe353b65418a044c91c8e213e9498",
-          "message": "Merge pull request #776 from f1shl3gs/dependabot/cargo/bstr-1.3.0\n\nchore(deps): bump bstr from 1.2.0 to 1.3.0",
-          "timestamp": "2023-02-21T19:11:13+08:00",
-          "tree_id": "1540bf90f5f17818e2250a54e4921ecb174c251f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d582dfbe238fe353b65418a044c91c8e213e9498"
-        },
-        "date": 1676978149986,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.611,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.369,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.821,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.812,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.392,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d594cd686d2b7bd51ead121b3c7d3accdfee7a6b",
           "message": "Merge pull request #774 from f1shl3gs/dependabot/cargo/async-stream-0.3.4\n\nchore(deps): bump async-stream from 0.3.3 to 0.3.4",
           "timestamp": "2023-02-21T19:11:34+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.94,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d35db6d72a324e350562a16d702df7e647c7bb1",
+          "message": "chore(deps): bump once_cell from 1.17.1 to 1.17.2 (#1007)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.1 to 1.17.2.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.1...v1.17.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-30T19:19:48+08:00",
+          "tree_id": "4e87e44365298d5dfa43b210fcd74c357565598c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d35db6d72a324e350562a16d702df7e647c7bb1"
+        },
+        "date": 1685445861111,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.989,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.286,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.273,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.504,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.134,
             "unit": "ns/op"
           }
         ]
