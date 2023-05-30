@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685449348561,
+  "lastUpdate": 1685449372691,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57547,6 +57547,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1546.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "272f6c6f428ab72ff127f0f2f338b6cc6e4f4366",
+          "message": "chore(deps): bump chrono from 0.4.24 to 0.4.25 (#1006)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.24 to 0.4.25.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.24...v0.4.25)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-30T20:18:07+08:00",
+          "tree_id": "845956a01fa3398a8a1ae8e81d4807ba1dedc72f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/272f6c6f428ab72ff127f0f2f338b6cc6e4f4366"
+        },
+        "date": 1685449360574,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 57.735,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 186.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 456.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1289.7,
             "unit": "ns/op"
           }
         ]
