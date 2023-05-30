@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685445817494,
+  "lastUpdate": 1685445825393,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0dbaa6e682e424ffbf3b3060670e7afd750bdb57",
-          "message": "Merge pull request #775 from f1shl3gs/dependabot/cargo/tokio-stream-0.1.12\n\nchore(deps): bump tokio-stream from 0.1.11 to 0.1.12",
-          "timestamp": "2023-02-21T19:11:23+08:00",
-          "tree_id": "fc727c05739c2eec856a9a74e7ae4f726ade9bc6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0dbaa6e682e424ffbf3b3060670e7afd750bdb57"
-        },
-        "date": 1676978107674,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 711950,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 719800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d35db6d72a324e350562a16d702df7e647c7bb1",
+          "message": "chore(deps): bump once_cell from 1.17.1 to 1.17.2 (#1007)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.1 to 1.17.2.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.1...v1.17.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-30T19:19:48+08:00",
+          "tree_id": "4e87e44365298d5dfa43b210fcd74c357565598c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d35db6d72a324e350562a16d702df7e647c7bb1"
+        },
+        "date": 1685445813118,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 717290,
             "unit": "ns/op"
           }
         ]
