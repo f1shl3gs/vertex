@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685445925614,
+  "lastUpdate": 1685446804998,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2ed552f837986948a92c859dcd45d9138d3d59b4",
-          "message": "Merge pull request #757 from f1shl3gs/remove_interval_from_source_outer\n\nremove interval from SourceOuter",
-          "timestamp": "2023-02-10T23:10:44+08:00",
-          "tree_id": "888716c900c0ba2ea9686171545acc2e1c3c51e9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2ed552f837986948a92c859dcd45d9138d3d59b4"
-        },
-        "date": 1676043031506,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 25420000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 997250,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 20.026,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 45.323,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 353.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 988.83,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c34259ce8a4c97d42897c9567bc370fc79c9e0b8",
           "message": "Merge pull request #758 from f1shl3gs/style\n\nStyle",
           "timestamp": "2023-02-11T16:31:27+08:00",
@@ -52569,6 +52510,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.112,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d35db6d72a324e350562a16d702df7e647c7bb1",
+          "message": "chore(deps): bump once_cell from 1.17.1 to 1.17.2 (#1007)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.1 to 1.17.2.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.1...v1.17.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-30T19:19:48+08:00",
+          "tree_id": "4e87e44365298d5dfa43b210fcd74c357565598c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d35db6d72a324e350562a16d702df7e647c7bb1"
+        },
+        "date": 1685446792581,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 39096000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 931520,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 22.467,
             "unit": "ns/op"
           }
         ]
