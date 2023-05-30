@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685446928022,
+  "lastUpdate": 1685446963201,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "aaf5609a22b526bc9ed56f31b14e1abf9752a749",
-          "message": "replace `stream-cancel` with lib/tripwire (#788)\n\n* tripwire\r\n\r\n* update\r\n\r\n* update\r\n\r\n* add `#[allow(clippy::redundant_clone)]` for test",
-          "timestamp": "2023-02-26T04:17:27+08:00",
-          "tree_id": "3717fda7dc34f656b82fd7601964d1f0c0c17653",
-          "url": "https://github.com/f1shl3gs/vertex/commit/aaf5609a22b526bc9ed56f31b14e1abf9752a749"
-        },
-        "date": 1677357547872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1105,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56367.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "07132a399a2ad9a171637b8ddf36c2bdcf2261f3",
           "message": "update humanize to revision bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a (#789)",
           "timestamp": "2023-02-26T16:40:54+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44586.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d35db6d72a324e350562a16d702df7e647c7bb1",
+          "message": "chore(deps): bump once_cell from 1.17.1 to 1.17.2 (#1007)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.1 to 1.17.2.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.1...v1.17.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-05-30T19:19:48+08:00",
+          "tree_id": "4e87e44365298d5dfa43b210fcd74c357565598c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d35db6d72a324e350562a16d702df7e647c7bb1"
+        },
+        "date": 1685446950709,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1112,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44563.4,
             "unit": "KiB"
           }
         ]
