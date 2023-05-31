@@ -16,7 +16,7 @@ serde_path_to_error = { version = "0.1.10" }
 
 [dependencies]
 bytes = { version = "1.4.0", default-features = false }
-chrono = { version = "0.4.25", default-features = false }
+chrono = { version = "0.4.26", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
 futures = { version = "0.3.28" }
