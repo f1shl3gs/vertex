@@ -1,6 +1,8 @@
+use std::io::IsTerminal;
+
 pub fn trace_init() {
     #[cfg(unix)]
-    let color = atty::is(atty::Stream::Stdout);
+    let color = std::io::stdout().is_terminal();
     // Windows: ANSI colors are not supported by cmd.ext
     // Color is false for everything except unix.
     #[cfg(not(unix))]

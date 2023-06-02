@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fmt::Debug;
+use std::io::IsTerminal;
 use std::marker::PhantomData;
 use std::sync::{Mutex, MutexGuard};
 
@@ -221,7 +222,7 @@ pub fn stop_buffering() {
 #[cfg(any(test, feature = "test-util"))]
 pub fn test_init() {
     #[cfg(unix)]
-    let color = atty::is(atty::Stream::Stdout);
+    let color = std::io::stdout().is_terminal();
     #[cfg(not(unix))]
     let color = false;
 

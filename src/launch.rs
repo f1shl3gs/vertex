@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 use std::time::Duration;
 
@@ -149,7 +150,7 @@ impl RootCommand {
             });
 
         #[cfg(unix)]
-        let color = atty::is(atty::Stream::Stdout);
+        let color = std::io::stdout().is_terminal();
         #[cfg(not(unix))]
         let color = false;
         framework::trace::init(color, false, &levels, 10);

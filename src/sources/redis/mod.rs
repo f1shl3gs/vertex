@@ -530,7 +530,7 @@ async fn cluster_info(cli: &mut Client) -> Result<Vec<Metric>, Error> {
         infos
             .reader()
             .lines()
-            .filter_map(|line| line.ok())
+            .map_while(Result::ok)
             .for_each(|line| {
                 let part = line.split(':').collect::<Vec<_>>();
 
