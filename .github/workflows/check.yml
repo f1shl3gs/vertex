@@ -55,9 +55,11 @@ jobs:
         run: sudo apt-get install -y shellcheck
       - name: Install Protoc
         run: sh ci/install_protoc.sh
-      - name: Check style
-        run:  make check_clippy
+      - name: Install clippy
+        run: rustup component add clippy
       - name: Check shell
-        run:  bash ci/check-scripts.sh
+        run: bash ci/check-scripts.sh
       - name: Check fmt
-        run:  cargo fmt -- --check
+        run: cargo fmt -- --check
+      - name: Check rust
+        run:  make check_clippy
