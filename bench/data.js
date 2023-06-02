@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685691479874,
+  "lastUpdate": 1685691525797,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7e1a9639e0278b2da51ed8d3e9aee54e00604433",
-          "message": "Merge pull request #792 from f1shl3gs/dependabot/cargo/tempfile-3.4.0\n\nchore(deps): bump tempfile from 3.3.0 to 3.4.0",
-          "timestamp": "2023-02-27T13:42:37+08:00",
-          "tree_id": "c93774d141ba3b3b4b1c9909982c051715459394",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e1a9639e0278b2da51ed8d3e9aee54e00604433"
-        },
-        "date": 1677478166766,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1386,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56483.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8d504ec51413f63771d018d0e662e8db95deb0cb",
           "message": "Merge pull request #791 from f1shl3gs/dependabot/cargo/prost-0.11.8\n\nchore(deps): bump prost from 0.11.7 to 0.11.8",
           "timestamp": "2023-02-27T20:10:23+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1075,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44669.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e8290a5e0e94b7b7d6e187c32a42720ae95a538",
+          "message": "bump rust to 1.70.0 & remove dep atty and colored (#1010)\n\n* 1. bump rust to 1.70.0\r\n2. remove dep atty and colored\r\n\r\n* add clippy before run check\r\n\r\n* add rustfmt before run check",
+          "timestamp": "2023-06-02T15:17:03+08:00",
+          "tree_id": "3f728829113f092671fba7782b1d267240133af5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e8290a5e0e94b7b7d6e187c32a42720ae95a538"
+        },
+        "date": 1685691513026,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1132,
             "unit": "s"
           },
           {
