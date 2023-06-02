@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685690582605,
+  "lastUpdate": 1685691479874,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "15fb92ea16cfa8edd385107fc0d130b5d8739c76",
-          "message": "update buffers (#790)\n\n* update buffers\r\n\r\n* remove unused deps\r\n\r\n* fix tests",
-          "timestamp": "2023-02-27T13:41:57+08:00",
-          "tree_id": "9c4355b5d0325e5dfba965181c05173669d627e0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/15fb92ea16cfa8edd385107fc0d130b5d8739c76"
-        },
-        "date": 1677478122118,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1351,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56489.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7e1a9639e0278b2da51ed8d3e9aee54e00604433",
           "message": "Merge pull request #792 from f1shl3gs/dependabot/cargo/tempfile-3.4.0\n\nchore(deps): bump tempfile from 3.3.0 to 3.4.0",
           "timestamp": "2023-02-27T13:42:37+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44586.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a4583e9822f559b1a8152a65aaec9ec15db5c9a",
+          "message": "chore(deps): bump mock_instant from 0.3.0 to 0.3.1 (#1009)\n\nBumps [mock_instant](https://github.com/museun/mock_instant) from 0.3.0 to 0.3.1.\r\n- [Commits](https://github.com/museun/mock_instant/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mock_instant\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-02T15:17:22+08:00",
+          "tree_id": "daafad1c2157fc33dacfa937dd54941a3a509f2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a4583e9822f559b1a8152a65aaec9ec15db5c9a"
+        },
+        "date": 1685691466768,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1075,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44669.1,
             "unit": "KiB"
           }
         ]
