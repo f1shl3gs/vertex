@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685719857722,
+  "lastUpdate": 1685719897991,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1ef912d909562b800bb7687f36e84b79f6c1140b",
-          "message": "Merge pull request #778 from f1shl3gs/remove_atomig\n\nremove atomig & fix some pedantic warnings",
-          "timestamp": "2023-02-21T21:25:35+08:00",
-          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ef912d909562b800bb7687f36e84b79f6c1140b"
-        },
-        "date": 1676986209765,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.545,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.472,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.698,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.649,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f324716c952179e6f06bf4289b350442b12cb114",
           "message": "Merge pull request #780 from f1shl3gs/revert-779-move_finalize_to_lib/finalize\n\nRevert \"Move finalize to lib/finalize\"",
           "timestamp": "2023-02-22T22:14:38+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.124,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10d870b11d0ae0845460b2cd0aa8c367329c399f",
+          "message": "replace once_cell::sync::OnceCell with std::sync::OnceLock (#1011)",
+          "timestamp": "2023-06-02T23:25:54+08:00",
+          "tree_id": "52e0d419ff9a37cba7547b604e0e7db4c2722fa7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10d870b11d0ae0845460b2cd0aa8c367329c399f"
+        },
+        "date": 1685719882921,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.119,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.679,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.439,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 63.405,
             "unit": "ns/op"
           }
         ]
