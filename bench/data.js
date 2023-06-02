@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685690533122,
+  "lastUpdate": 1685690540739,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57639,6 +57639,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1081.2,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e8290a5e0e94b7b7d6e187c32a42720ae95a538",
+          "message": "bump rust to 1.70.0 & remove dep atty and colored (#1010)\n\n* 1. bump rust to 1.70.0\r\n2. remove dep atty and colored\r\n\r\n* add clippy before run check\r\n\r\n* add rustfmt before run check",
+          "timestamp": "2023-06-02T15:17:03+08:00",
+          "tree_id": "3f728829113f092671fba7782b1d267240133af5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e8290a5e0e94b7b7d6e187c32a42720ae95a538"
+        },
+        "date": 1685690525790,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.269,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 218.12,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 507.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1490.7,
             "unit": "ns/op"
           }
         ]
