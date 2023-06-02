@@ -32,7 +32,6 @@ mod utilization;
 
 pub use common::*;
 pub use extension::Extension;
-use once_cell::sync::OnceCell;
 pub use pipeline::Pipeline;
 pub use shutdown::*;
 pub use signal::*;
@@ -45,6 +44,8 @@ pub use transform::{
 
 #[macro_use]
 extern crate tracing;
+
+use std::sync::OnceLock;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
@@ -62,7 +63,7 @@ pub fn get_version() -> String {
     "0.1.0".into()
 }
 
-static WORKER_THREADS: OnceCell<usize> = OnceCell::new();
+static WORKER_THREADS: OnceLock<usize> = OnceLock::new();
 
 pub fn num_workers() -> usize {
     *WORKER_THREADS.get_or_init(num_cpus::get)

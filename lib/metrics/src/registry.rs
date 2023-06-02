@@ -1,7 +1,6 @@
 use std::collections::BTreeMap;
-use std::sync::Arc;
+use std::sync::{Arc, OnceLock};
 
-use once_cell::sync::OnceCell;
 use parking_lot::Mutex;
 
 use crate::attributes::{assert_legal_key, Attributes};
@@ -10,7 +9,7 @@ use crate::Counter;
 use crate::Gauge;
 use crate::Histogram;
 
-static GLOBAL_REGISTRY: OnceCell<Registry> = OnceCell::new();
+static GLOBAL_REGISTRY: OnceLock<Registry> = OnceLock::new();
 
 #[derive(Clone, Default)]
 pub struct Registry {
@@ -144,7 +143,7 @@ pub fn register_histogram(
 }
 
 // RwLock is not used, case most time we don't read SUB_REGISTRIES
-static SUB_REGISTRIES: OnceCell<Mutex<BTreeMap<&'static str, Registry>>> = OnceCell::new();
+static SUB_REGISTRIES: OnceLock<Mutex<BTreeMap<&'static str, Registry>>> = OnceLock::new();
 
 #[derive(Default)]
 pub struct SubRegistry {

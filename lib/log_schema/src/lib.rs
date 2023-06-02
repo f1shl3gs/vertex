@@ -1,7 +1,8 @@
-use once_cell::sync::{Lazy, OnceCell};
+use std::sync::OnceLock;
+
 use serde::{Deserialize, Serialize};
 
-static LOG_SCHEMA: OnceCell<LogSchema> = OnceCell::new();
+static LOG_SCHEMA: OnceLock<LogSchema> = OnceLock::new();
 
 /// Loads `LogSchema` from configurations and sets global schema. Once this is
 /// done, configurations can be correctly loaded using configured log schema
@@ -26,12 +27,14 @@ where
     Ok(())
 }
 
-static LOG_SCHEMA_DEFAULT: Lazy<LogSchema> = Lazy::new(LogSchema::default);
+static LOG_SCHEMA_DEFAULT: OnceLock<LogSchema> = OnceLock::new();
 
 /// Components should use global `LogSchema` returned by this function. The
 /// returned value can differ from `LogSchema::default()` which is unchanging.
 pub fn log_schema() -> &'static LogSchema {
-    LOG_SCHEMA.get().unwrap_or(&LOG_SCHEMA_DEFAULT)
+    LOG_SCHEMA
+        .get()
+        .unwrap_or(LOG_SCHEMA_DEFAULT.get_or_init(LogSchema::default))
 }
 
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -84,22 +87,21 @@ impl LogSchema {
     ///
     /// # Errors
     ///
-    /// This fuction will fail when the `LogSchema` to be merged contains
+    /// This function will fail when the `LogSchema` to be merged contains
     /// conflicting keys
     pub fn merge(&mut self, other: &LogSchema) -> Result<(), Vec<String>> {
         let mut errors = vec![];
+        let default_value = LOG_SCHEMA_DEFAULT.get_or_init(LogSchema::default);
 
-        if *other != *LOG_SCHEMA_DEFAULT {
+        if *other != *default_value {
             // If the set value is the defalt, override it. If it's already overridden, error
-            if self.host_key() != LOG_SCHEMA_DEFAULT.host_key()
-                && self.host_key() != other.host_key()
-            {
+            if self.host_key() != default_value.host_key() && self.host_key() != other.host_key() {
                 errors.push("conflicting values for 'log_schema.host_key' found".to_owned());
             } else {
                 self.host_key = other.host_key.to_string();
             }
 
-            if self.message_key() != LOG_SCHEMA_DEFAULT.message_key()
+            if self.message_key() != default_value.message_key()
                 && self.message_key() != other.message_key()
             {
                 errors.push("conflicting values for 'log_schema.message_key' found".to_owned());
@@ -107,7 +109,7 @@ impl LogSchema {
                 self.message_key = other.message_key.to_string();
             }
 
-            if self.timestamp_key() != LOG_SCHEMA_DEFAULT.timestamp_key()
+            if self.timestamp_key() != default_value.timestamp_key()
                 && self.timestamp_key() != other.timestamp_key()
             {
                 errors.push("conflicting values for 'log_schema.timestamp_key' found".to_owned());
