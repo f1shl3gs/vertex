@@ -364,6 +364,7 @@ impl Table {
 
 mod termsize {
     use libc::{c_ushort, ioctl, STDOUT_FILENO, TIOCGWINSZ};
+    use std::io::IsTerminal;
 
     /// A representation of the size of the current terminal
     #[repr(C)]
@@ -380,7 +381,7 @@ mod termsize {
     /// Gets the current terminal size
     pub fn get() -> Option<(usize, usize)> {
         // http://rosettacode.org/wiki/Terminal_control/Dimensions#Library:_BSD_libc
-        if atty::isnt(atty::Stream::Stdout) {
+        if !std::io::stdout().is_terminal() {
             return None;
         }
         let us = UnixSize {

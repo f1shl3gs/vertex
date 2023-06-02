@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 use std::fmt;
 use std::fs::remove_dir_all;
+use std::io::IsTerminal;
 use std::path::PathBuf;
 
 use argh::FromArgs;
-use colored::*;
 use exitcode::ExitCode;
 use framework::config;
 use framework::config::{load_builder_from_paths, Config, ConfigDiff, ConfigPath};
@@ -43,7 +43,7 @@ pub struct Validate {
 impl Validate {
     pub fn run(&self) -> ExitCode {
         #[cfg(unix)]
-        let color = atty::is(atty::Stream::Stdout);
+        let color = std::io::stdout().is_terminal();
         #[cfg(not(unix))]
         let color = false;
 
@@ -267,9 +267,9 @@ struct Formatter {
     print_space: bool,
     color: bool,
     // Intros
-    error_intro: String,
-    warning_intro: String,
-    success_intro: String,
+    error_intro: &'static str,
+    warning_intro: &'static str,
+    success_intro: &'static str,
 }
 
 impl Formatter {
@@ -278,48 +278,44 @@ impl Formatter {
             max_line_width: 0,
             print_space: false,
             error_intro: if color {
-                format!("{}", "x".red())
+                // red
+                "\x1b[31mx\x1b[0m"
             } else {
-                "x".to_owned()
+                "x"
             },
             warning_intro: if color {
-                format!("{}", "~".yellow())
+                // yellow
+                "\x1b[33m~\x1b[0m"
             } else {
-                "~".to_owned()
+                "~"
             },
             success_intro: if color {
-                format!("{}", "√".green())
+                // green
+                "\x1b[32m√\x1b[0m"
             } else {
-                "√".to_owned()
+                "√"
             },
             color,
         }
     }
 
     /// Final confirmation that validation process was successful.
+    #[allow(clippy::print_stdout)]
     fn validated(&self) {
-        #[allow(clippy::print_stdout)]
-        {
-            println!("{:-^width$}", "", width = self.max_line_width);
-        }
+        println!("{:-^width$}", "", width = self.max_line_width);
+
         if self.color {
             // Coloring needs to be used directly so that print
             // infrastructure correctly determines length of the
             // "Validated". Otherwise, ansi escape coloring is
             // calculated into the length.
-            #[allow(clippy::print_stdout)]
-            {
-                println!(
-                    "{:>width$}",
-                    "Validated".green(),
-                    width = self.max_line_width
-                );
-            }
+            println!(
+                "{:>width$}",
+                "\x1b[32mValidated\x1b[0m", // green
+                width = self.max_line_width
+            );
         } else {
-            #[allow(clippy::print_stdout)]
-            {
-                println!("{:>width$}", "Validated", width = self.max_line_width)
-            }
+            println!("{:>width$}", "Validated", width = self.max_line_width)
         }
     }
 
@@ -354,7 +350,7 @@ impl Formatter {
     where
         I::Item: fmt::Display,
     {
-        self.sub(self.warning_intro.clone(), warnings)
+        self.sub(self.warning_intro, warnings)
     }
 
     /// A list of errors that go with a title.
@@ -362,7 +358,7 @@ impl Formatter {
     where
         I::Item: fmt::Display,
     {
-        self.sub(self.error_intro.clone(), errors)
+        self.sub(self.error_intro, errors)
     }
 
     fn sub<I: IntoIterator>(&mut self, intro: impl AsRef<str>, msgs: I)

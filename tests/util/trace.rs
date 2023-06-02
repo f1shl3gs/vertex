@@ -1,6 +1,8 @@
+use std::io::IsTerminal;
+
 pub fn trace_init() {
     #[cfg(unix)]
-    let color = atty::is(atty::Stream::Stdout);
+    let color = std::io::stdout().is_terminal();
     #[cfg(not(unix))]
     let color = false;
 

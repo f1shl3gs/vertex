@@ -411,14 +411,9 @@ inferno = { version = "0.11.15", default-features = false, features = ["nameattr
 
 # Cli
 argh = { version = "0.1.10" }
-colored = { version = "2.0.0", default-features = false }
 
 # External libs
 ahash = { version = "0.8.3", optional = true }
-# TODO: Remove this, once std::io::IsTerminal merged and stablized.
-# See: https://doc.rust-lang.org/std/io/trait.IsTerminal.html#
-#      https://github.com/rust-lang/rust/issues/98070#issuecomment-1486375244
-atty = { version = "0.2.14", default-features = false }
 bloom = { version = "0.3.2", default-features = false, optional = true }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.26", default-features = false }
