@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685719904520,
+  "lastUpdate": 1685720814967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d",
-          "message": "Merge pull request #763 from f1shl3gs/add_publish_false_for_libs\n\nadd 'publish = false'",
-          "timestamp": "2023-02-13T18:15:41+08:00",
-          "tree_id": "602a53e59f320293f970f9b1c58ce9ef48a9edf0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f67e79aa4e3c07cb0ee60206b3d9ecf9d8ed007d"
-        },
-        "date": 1676284650294,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45675000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1108900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 56.236,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 405.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1163.8,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c96c5d3ababc0a04783211a5d6c94e2122b77861",
           "message": "Merge pull request #764 from f1shl3gs/remove_governor\n\nremove governor",
           "timestamp": "2023-02-14T04:36:32+08:00",
@@ -52449,6 +52390,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.893,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "10d870b11d0ae0845460b2cd0aa8c367329c399f",
+          "message": "replace once_cell::sync::OnceCell with std::sync::OnceLock (#1011)",
+          "timestamp": "2023-06-02T23:25:54+08:00",
+          "tree_id": "52e0d419ff9a37cba7547b604e0e7db4c2722fa7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/10d870b11d0ae0845460b2cd0aa8c367329c399f"
+        },
+        "date": 1685720800855,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 31967000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 981930,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 20.159,
             "unit": "ns/op"
           }
         ]
