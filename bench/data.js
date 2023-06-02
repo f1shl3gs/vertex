@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685690513959,
+  "lastUpdate": 1685690524895,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9835243453626ed66d7dfb0b2a4afc140b72ab79",
-          "message": "Merge pull request #771 from f1shl3gs/dependabot/cargo/num_enum-0.5.10\n\nchore(deps): bump num_enum from 0.5.9 to 0.5.10",
-          "timestamp": "2023-02-21T19:12:01+08:00",
-          "tree_id": "a1c1893d468e01cac36891e8ad47e5c0879777b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9835243453626ed66d7dfb0b2a4afc140b72ab79"
-        },
-        "date": 1676978482861,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.183,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.247,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.553,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 39.192,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 61.286,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c7447d4a9f4c5762df04eb8cb2f68d053bc57400",
           "message": "Merge pull request #777 from f1shl3gs/remove_num_enum_fro_prometheus\n\nremove num_enum from lib/prometheus",
           "timestamp": "2023-02-21T19:50:18+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.466,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7e8290a5e0e94b7b7d6e187c32a42720ae95a538",
+          "message": "bump rust to 1.70.0 & remove dep atty and colored (#1010)\n\n* 1. bump rust to 1.70.0\r\n2. remove dep atty and colored\r\n\r\n* add clippy before run check\r\n\r\n* add rustfmt before run check",
+          "timestamp": "2023-06-02T15:17:03+08:00",
+          "tree_id": "3f728829113f092671fba7782b1d267240133af5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7e8290a5e0e94b7b7d6e187c32a42720ae95a538"
+        },
+        "date": 1685690512040,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.712,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.791,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.179,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.79,
             "unit": "ns/op"
           }
         ]
