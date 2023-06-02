@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685690540739,
+  "lastUpdate": 1685690571369,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c7447d4a9f4c5762df04eb8cb2f68d053bc57400",
-          "message": "Merge pull request #777 from f1shl3gs/remove_num_enum_fro_prometheus\n\nremove num_enum from lib/prometheus",
-          "timestamp": "2023-02-21T19:50:18+08:00",
-          "tree_id": "f309f1b628f3332249e417ed9650fdee15094023",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c7447d4a9f4c5762df04eb8cb2f68d053bc57400"
-        },
-        "date": 1676980512635,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.18,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.238,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 39.185,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 61.268,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1ef912d909562b800bb7687f36e84b79f6c1140b",
           "message": "Merge pull request #778 from f1shl3gs/remove_atomig\n\nremove atomig & fix some pedantic warnings",
           "timestamp": "2023-02-21T21:25:35+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.79,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a4583e9822f559b1a8152a65aaec9ec15db5c9a",
+          "message": "chore(deps): bump mock_instant from 0.3.0 to 0.3.1 (#1009)\n\nBumps [mock_instant](https://github.com/museun/mock_instant) from 0.3.0 to 0.3.1.\r\n- [Commits](https://github.com/museun/mock_instant/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mock_instant\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-02T15:17:22+08:00",
+          "tree_id": "daafad1c2157fc33dacfa937dd54941a3a509f2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a4583e9822f559b1a8152a65aaec9ec15db5c9a"
+        },
+        "date": 1685690558922,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.036,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.407,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.807,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.57,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.124,
             "unit": "ns/op"
           }
         ]
