@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685690508096,
+  "lastUpdate": 1685690513959,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57595,6 +57595,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1081.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2a4583e9822f559b1a8152a65aaec9ec15db5c9a",
+          "message": "chore(deps): bump mock_instant from 0.3.0 to 0.3.1 (#1009)\n\nBumps [mock_instant](https://github.com/museun/mock_instant) from 0.3.0 to 0.3.1.\r\n- [Commits](https://github.com/museun/mock_instant/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mock_instant\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-02T15:17:22+08:00",
+          "tree_id": "daafad1c2157fc33dacfa937dd54941a3a509f2e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2a4583e9822f559b1a8152a65aaec9ec15db5c9a"
+        },
+        "date": 1685690500453,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 46.766,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 168.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 381.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1081.2,
             "unit": "ns/op"
           }
         ]
