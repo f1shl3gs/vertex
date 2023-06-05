@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685962497401,
+  "lastUpdate": 1685963202158,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fa8677c24103f0983fdb3e8df0879212357de3b3",
-          "message": "Merge pull request #794 from f1shl3gs/fix_condition_bench\n\nFix condition bench",
-          "timestamp": "2023-02-28T09:46:33+08:00",
-          "tree_id": "8cda3ef6c5999ab87a9edee47e2ce6dec5c82b93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fa8677c24103f0983fdb3e8df0879212357de3b3"
-        },
-        "date": 1677550082881,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1093,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56480,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "44050604cdce1315dfd7cd2002bd273e3ef3c448",
           "message": "Merge pull request #795 from f1shl3gs/dependabot/cargo/prost-types-0.11.8\n\nchore(deps): bump prost-types from 0.11.6 to 0.11.8",
           "timestamp": "2023-03-01T00:39:21+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44666.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b",
+          "message": "chore(deps): bump once_cell from 1.17.2 to 1.18.0 (#1013)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.2 to 1.18.0.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.2...v1.18.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-05T18:39:06+08:00",
+          "tree_id": "8ac397886354d7eb677369f10323f41321dcfdc4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b"
+        },
+        "date": 1685963186664,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1440,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44666.8,
             "unit": "KiB"
           }
         ]
