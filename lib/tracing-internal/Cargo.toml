@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 event = { path = "../event" }
-once_cell = { version = "1.17.2" }
+once_cell = { version = "1.18.0" }
 tracing = { version = "0.1.38" }
 tracing-subscriber = { version = "0.3.17" }
 tracing-core = { version = "0.1.31" }
