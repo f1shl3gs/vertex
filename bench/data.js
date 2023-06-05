@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685961838353,
+  "lastUpdate": 1685961861391,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57667,6 +57667,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1393.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b",
+          "message": "chore(deps): bump once_cell from 1.17.2 to 1.18.0 (#1013)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.2 to 1.18.0.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.2...v1.18.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-05T18:39:06+08:00",
+          "tree_id": "8ac397886354d7eb677369f10323f41321dcfdc4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b"
+        },
+        "date": 1685961846417,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 61.561,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 204.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 497.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1408.4,
             "unit": "ns/op"
           }
         ]
