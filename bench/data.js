@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1685961786784,
+  "lastUpdate": 1685961822578,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f324716c952179e6f06bf4289b350442b12cb114",
-          "message": "Merge pull request #780 from f1shl3gs/revert-779-move_finalize_to_lib/finalize\n\nRevert \"Move finalize to lib/finalize\"",
-          "timestamp": "2023-02-22T22:14:38+08:00",
-          "tree_id": "8faace947ec9dd64f64756c2e621d829d3ef09e7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f324716c952179e6f06bf4289b350442b12cb114"
-        },
-        "date": 1677075547226,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 909190,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 921910,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b",
+          "message": "chore(deps): bump once_cell from 1.17.2 to 1.18.0 (#1013)\n\nBumps [once_cell](https://github.com/matklad/once_cell) from 1.17.2 to 1.18.0.\r\n- [Changelog](https://github.com/matklad/once_cell/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/matklad/once_cell/compare/v1.17.2...v1.18.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: once_cell\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-05T18:39:06+08:00",
+          "tree_id": "8ac397886354d7eb677369f10323f41321dcfdc4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3a6bd4d99e2c3d7133d5fc3537258a52b55cc69b"
+        },
+        "date": 1685961806896,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 804230,
             "unit": "ns/op"
           }
         ]
