@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686047493664,
+  "lastUpdate": 1686047524296,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
-          "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
-          "timestamp": "2023-02-22T23:50:02+08:00",
-          "tree_id": "23d2a803d9a28d84247d1ac8a7661e35ec7a1c93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/034ab011748db5bfac7dcb47139e5c17d189b2f8"
-        },
-        "date": 1677081292409,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.557,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.477,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.666,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.687,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a7d3c072b398b00d6096d926ced9c9fcbfe9bdde",
           "message": "Merge pull request #784 from f1shl3gs/dependabot/cargo/pprof-0.11.1\n\nchore(deps): bump pprof from 0.11.0 to 0.11.1",
           "timestamp": "2023-02-23T15:52:20+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 56.332,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "822d97e30ca0be31441f4494e6b62b256d90c505",
+          "message": "chore(deps): bump kube from 0.82.2 to 0.83.0 (#1015)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.2 to 0.83.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.2...0.83.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:12+08:00",
+          "tree_id": "0012125cb1350530e99194ab22215670895ba3ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/822d97e30ca0be31441f4494e6b62b256d90c505"
+        },
+        "date": 1686047509350,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.035,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.773,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.734,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.942,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.165,
             "unit": "ns/op"
           }
         ]
