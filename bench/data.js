@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686047437862,
+  "lastUpdate": 1686047441022,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "034ab011748db5bfac7dcb47139e5c17d189b2f8",
-          "message": "Merge pull request #781 from f1shl3gs/add_clippy_pedantic\n\nadd clippy::pedantic for lib/event",
-          "timestamp": "2023-02-22T23:50:02+08:00",
-          "tree_id": "23d2a803d9a28d84247d1ac8a7661e35ec7a1c93",
-          "url": "https://github.com/f1shl3gs/vertex/commit/034ab011748db5bfac7dcb47139e5c17d189b2f8"
-        },
-        "date": 1677081232422,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 97.615,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 178.22,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 282.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 298.07,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "822d97e30ca0be31441f4494e6b62b256d90c505",
+          "message": "chore(deps): bump kube from 0.82.2 to 0.83.0 (#1015)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.2 to 0.83.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.2...0.83.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:12+08:00",
+          "tree_id": "0012125cb1350530e99194ab22215670895ba3ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/822d97e30ca0be31441f4494e6b62b256d90c505"
+        },
+        "date": 1686047425552,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 101.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 230.06,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 377.3,
             "unit": "ns/op"
           }
         ]
