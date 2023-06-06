@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686047441022,
+  "lastUpdate": 1686047446638,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57691,6 +57691,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1408.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "822d97e30ca0be31441f4494e6b62b256d90c505",
+          "message": "chore(deps): bump kube from 0.82.2 to 0.83.0 (#1015)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.2 to 0.83.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.2...0.83.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:12+08:00",
+          "tree_id": "0012125cb1350530e99194ab22215670895ba3ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/822d97e30ca0be31441f4494e6b62b256d90c505"
+        },
+        "date": 1686047434049,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 55.461,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 183.02,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 428.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1242.7,
             "unit": "ns/op"
           }
         ]
