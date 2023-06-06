@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686048418554,
+  "lastUpdate": 1686048463560,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "734b4a393bb74d054663709e8dae60863e93583d",
-          "message": "Merge pull request #796 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.11\n\nchore(deps): bump dyn-clone from 1.0.10 to 1.0.11",
-          "timestamp": "2023-03-01T01:44:34+08:00",
-          "tree_id": "15dad5c65ca87f20a5132a68ebcfc089888bd4a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/734b4a393bb74d054663709e8dae60863e93583d"
-        },
-        "date": 1677607956599,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1433,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56491.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d33c44652dab3509d84f7b8903d45049d1376056",
           "message": "Merge pull request #799 from f1shl3gs/dependabot/cargo/prost-build-0.11.8\n\nchore(deps): bump prost-build from 0.11.6 to 0.11.8",
           "timestamp": "2023-03-01T20:53:19+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44660.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15ef78e877e77ab2732d5e13011f4519fd71f5b1",
+          "message": "chore(deps): bump percent-encoding from 2.2.0 to 2.3.0 (#1017)\n\nBumps [percent-encoding](https://github.com/servo/rust-url) from 2.2.0 to 2.3.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.2.0...v2.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: percent-encoding\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:40+08:00",
+          "tree_id": "6992023fea1f03c942cf91b5a1b2ce933b66e7ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15ef78e877e77ab2732d5e13011f4519fd71f5b1"
+        },
+        "date": 1686048450054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1100,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44665.8,
             "unit": "KiB"
           }
         ]
