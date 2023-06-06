@@ -15,7 +15,7 @@ indexmap = { version = "1.9.3", default-features = false, features = ["serde"] }
 url = { version = "2.3.1", default-features = false }
 no-proxy = { version = "0.3.2", default-features = false }
 encoding_rs = { version = "0.8.32", default-features = false }
-regex = { version = "1.8.3" }
+regex = { version = "1.8.4" }
 chrono-tz = { version = "0.8.2", default-features = false }
 
 [dev-dependencies]
