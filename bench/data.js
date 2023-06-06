@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686047414413,
+  "lastUpdate": 1686047437862,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8927e5c87c90d8ce9d13856272e34c63e21faa63",
-          "message": "Merge pull request #783 from f1shl3gs/dependabot/cargo/syn-1.0.108\n\nchore(deps): bump syn from 1.0.107 to 1.0.108",
-          "timestamp": "2023-02-23T15:52:51+08:00",
-          "tree_id": "32c7f9547e3453d5aa2ab8ea086008483360be32",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8927e5c87c90d8ce9d13856272e34c63e21faa63"
-        },
-        "date": 1677138988570,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 719370,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 720300,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15ef78e877e77ab2732d5e13011f4519fd71f5b1",
+          "message": "chore(deps): bump percent-encoding from 2.2.0 to 2.3.0 (#1017)\n\nBumps [percent-encoding](https://github.com/servo/rust-url) from 2.2.0 to 2.3.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.2.0...v2.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: percent-encoding\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:40+08:00",
+          "tree_id": "6992023fea1f03c942cf91b5a1b2ce933b66e7ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15ef78e877e77ab2732d5e13011f4519fd71f5b1"
+        },
+        "date": 1686047424372,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 722860,
             "unit": "ns/op"
           }
         ]
