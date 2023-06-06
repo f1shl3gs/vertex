@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686048724609,
+  "lastUpdate": 1686048938902,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "cc15dc9e4ce46a92390478de784ef0165fc046f1",
-          "message": "Merge pull request #767 from f1shl3gs/dependabot/cargo/rkyv-0.7.40\n\nchore(deps): bump rkyv from 0.7.39 to 0.7.40",
-          "timestamp": "2023-02-14T16:30:30+08:00",
-          "tree_id": "65b7b3ade9bcc7a5861951f62814d41dfa979782",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cc15dc9e4ce46a92390478de784ef0165fc046f1"
-        },
-        "date": 1676365253128,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45314000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1730600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 26.578,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 70.649,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 235.28,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 520.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1494.7,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1a3c29b5c7425bb5d46be85fb1659bfb150a6eaa",
           "message": "Merge pull request #768 from f1shl3gs/dependabot/cargo/once_cell-1.17.1\n\nchore(deps): bump once_cell from 1.17.0 to 1.17.1",
           "timestamp": "2023-02-16T04:29:26+08:00",
@@ -52389,6 +52330,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.835,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "15ef78e877e77ab2732d5e13011f4519fd71f5b1",
+          "message": "chore(deps): bump percent-encoding from 2.2.0 to 2.3.0 (#1017)\n\nBumps [percent-encoding](https://github.com/servo/rust-url) from 2.2.0 to 2.3.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.2.0...v2.3.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: percent-encoding\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-06T18:26:40+08:00",
+          "tree_id": "6992023fea1f03c942cf91b5a1b2ce933b66e7ee",
+          "url": "https://github.com/f1shl3gs/vertex/commit/15ef78e877e77ab2732d5e13011f4519fd71f5b1"
+        },
+        "date": 1686048922748,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 45263000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1409500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.415,
             "unit": "ns/op"
           }
         ]
