@@ -95,7 +95,7 @@ tracing-subscriber = { version = "0.3.17", default-features = false, features = 
 tripwire = { path = "../tripwire" }
 twox-hash = { version = "1.6.3", default-features = false }
 typetag = { version = "0.2.8" }
-url = { version = "2.3.1", features = ["serde"] }
+url = { version = "2.4.0", features = ["serde"] }
 
 [target.'cfg(unix)'.dependencies]
 nix = { version = "0.26.2" }
