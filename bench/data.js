@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686106391338,
+  "lastUpdate": 1686106419053,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8927e5c87c90d8ce9d13856272e34c63e21faa63",
-          "message": "Merge pull request #783 from f1shl3gs/dependabot/cargo/syn-1.0.108\n\nchore(deps): bump syn from 1.0.107 to 1.0.108",
-          "timestamp": "2023-02-23T15:52:51+08:00",
-          "tree_id": "32c7f9547e3453d5aa2ab8ea086008483360be32",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8927e5c87c90d8ce9d13856272e34c63e21faa63"
-        },
-        "date": 1677139078567,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 34.302,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 33.645,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 35.857,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 46.038,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 71.699,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6cdc8c0ce64bdf1f9728d76621c66b504e6d7563",
           "message": "Merge pull request #782 from f1shl3gs/dependabot/cargo/memmap2-0.5.10\n\nchore(deps): bump memmap2 from 0.5.9 to 0.5.10",
           "timestamp": "2023-02-23T15:53:27+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.947,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "320bb3a516f8bec8236009031696242c98d5863e",
+          "message": "chore(deps): bump url from 2.3.1 to 2.4.0 (#1016)\n\nBumps [url](https://github.com/servo/rust-url) from 2.3.1 to 2.4.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.3.1...v2.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T10:48:23+08:00",
+          "tree_id": "384f2fd83e5422ba0ec08ac0f7445a1210679136",
+          "url": "https://github.com/f1shl3gs/vertex/commit/320bb3a516f8bec8236009031696242c98d5863e"
+        },
+        "date": 1686106406158,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.098,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 24.419,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.273,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 52.37,
             "unit": "ns/op"
           }
         ]
