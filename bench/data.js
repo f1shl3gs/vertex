@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686107685319,
+  "lastUpdate": 1686144148801,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "84ab0351b28f2a884ff8ac34f4cc30a4c9cb8b04",
-          "message": "Merge pull request #785 from f1shl3gs/dependabot/cargo/prost-0.11.7\n\nchore(deps): bump prost from 0.11.6 to 0.11.7",
-          "timestamp": "2023-02-24T14:03:59+08:00",
-          "tree_id": "0881d803ffc2a1e429f8456ed688db0857e23596",
-          "url": "https://github.com/f1shl3gs/vertex/commit/84ab0351b28f2a884ff8ac34f4cc30a4c9cb8b04"
-        },
-        "date": 1677218851042,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716190,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 712810,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bf1e8149311c04bb824142dfe0326472079116e7",
+          "message": "chore(deps): bump tempfile from 3.5.0 to 3.6.0 (#1019)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.5.0 to 3.6.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.5.0...v3.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T21:18:25+08:00",
+          "tree_id": "ec34defdf44c0ce46dde50ea364f93d7ea95cb0c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bf1e8149311c04bb824142dfe0326472079116e7"
+        },
+        "date": 1686144135765,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 781360,
             "unit": "ns/op"
           }
         ]
