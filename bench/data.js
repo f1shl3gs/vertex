@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686106349503,
+  "lastUpdate": 1686106365405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a7d3c072b398b00d6096d926ced9c9fcbfe9bdde",
-          "message": "Merge pull request #784 from f1shl3gs/dependabot/cargo/pprof-0.11.1\n\nchore(deps): bump pprof from 0.11.0 to 0.11.1",
-          "timestamp": "2023-02-23T15:52:20+08:00",
-          "tree_id": "5d92cc9b3e0a47298f5f183fe1675aa8dd4716c8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a7d3c072b398b00d6096d926ced9c9fcbfe9bdde"
-        },
-        "date": 1677139049970,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716110,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 722860,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "320bb3a516f8bec8236009031696242c98d5863e",
+          "message": "chore(deps): bump url from 2.3.1 to 2.4.0 (#1016)\n\nBumps [url](https://github.com/servo/rust-url) from 2.3.1 to 2.4.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.3.1...v2.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T10:48:23+08:00",
+          "tree_id": "384f2fd83e5422ba0ec08ac0f7445a1210679136",
+          "url": "https://github.com/f1shl3gs/vertex/commit/320bb3a516f8bec8236009031696242c98d5863e"
+        },
+        "date": 1686106351305,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 747560,
             "unit": "ns/op"
           }
         ]
