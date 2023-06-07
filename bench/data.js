@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686144269846,
+  "lastUpdate": 1686144279136,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "867e7c39a195f3b5dd1fca5fad5ecd4df08f52e6",
-          "message": "Merge pull request #786 from f1shl3gs/dependabot/cargo/kube-0.79.0\n\nchore(deps): bump kube from 0.78.0 to 0.79.0",
-          "timestamp": "2023-02-24T14:04:29+08:00",
-          "tree_id": "30bf6b9acd2323eb0b04528c29579d4960883715",
-          "url": "https://github.com/f1shl3gs/vertex/commit/867e7c39a195f3b5dd1fca5fad5ecd4df08f52e6"
-        },
-        "date": 1677218952983,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.802,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.541,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.366,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.712,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b7f79932df5109e88b3e2d45d0702404424c026",
           "message": "Merge pull request #787 from f1shl3gs/vendor_schemar\n\nvendor schemars",
           "timestamp": "2023-02-24T23:28:09+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 59.265,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9747cf3312d306a72a0d106cd1fff5dccc87a35",
+          "message": "chore(deps): bump libc from 0.2.144 to 0.2.146 (#1020)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.144 to 0.2.146.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.144...0.2.146)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T21:18:47+08:00",
+          "tree_id": "37845d0530cddede9d4da5a6354d068522ad527f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9747cf3312d306a72a0d106cd1fff5dccc87a35"
+        },
+        "date": 1686144262233,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.545,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.428,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.806,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 64.747,
             "unit": "ns/op"
           }
         ]
