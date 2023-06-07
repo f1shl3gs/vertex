@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686048938902,
+  "lastUpdate": 1686106349503,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6cdc8c0ce64bdf1f9728d76621c66b504e6d7563",
-          "message": "Merge pull request #782 from f1shl3gs/dependabot/cargo/memmap2-0.5.10\n\nchore(deps): bump memmap2 from 0.5.9 to 0.5.10",
-          "timestamp": "2023-02-23T15:53:27+08:00",
-          "tree_id": "60b743924be090df7bf50afeaf5a5c5f7bc3eb6c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6cdc8c0ce64bdf1f9728d76621c66b504e6d7563"
-        },
-        "date": 1677139014869,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 90.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 185.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 302.5,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 396.97,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "320bb3a516f8bec8236009031696242c98d5863e",
+          "message": "chore(deps): bump url from 2.3.1 to 2.4.0 (#1016)\n\nBumps [url](https://github.com/servo/rust-url) from 2.3.1 to 2.4.0.\r\n- [Release notes](https://github.com/servo/rust-url/releases)\r\n- [Commits](https://github.com/servo/rust-url/compare/v2.3.1...v2.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: url\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T10:48:23+08:00",
+          "tree_id": "384f2fd83e5422ba0ec08ac0f7445a1210679136",
+          "url": "https://github.com/f1shl3gs/vertex/commit/320bb3a516f8bec8236009031696242c98d5863e"
+        },
+        "date": 1686106336831,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 91.378,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 197.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 333.53,
             "unit": "ns/op"
           }
         ]
