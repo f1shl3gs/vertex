@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686145155975,
+  "lastUpdate": 1686145205145,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "81e4cde5222bb156ede532bb66fb36431ce5cf8d",
-          "message": "add http_check source (#801)",
-          "timestamp": "2023-03-02T03:48:44+08:00",
-          "tree_id": "9993ef9152b3dfa4f5a4fa1e210a679783a98c4e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/81e4cde5222bb156ede532bb66fb36431ce5cf8d"
-        },
-        "date": 1677701783919,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1400,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56681.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44672.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9747cf3312d306a72a0d106cd1fff5dccc87a35",
+          "message": "chore(deps): bump libc from 0.2.144 to 0.2.146 (#1020)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.144 to 0.2.146.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.144...0.2.146)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-07T21:18:47+08:00",
+          "tree_id": "37845d0530cddede9d4da5a6354d068522ad527f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9747cf3312d306a72a0d106cd1fff5dccc87a35"
+        },
+        "date": 1686145191985,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1108,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44678.8,
             "unit": "KiB"
           }
         ]
