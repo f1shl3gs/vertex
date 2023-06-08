@@ -9,6 +9,7 @@ use serde::{
 };
 
 use super::aggregate::Mode;
+use super::serde_regex;
 
 const CRI_PARSER: &str = "cri";
 const DOCKER_PARSER: &str = "docker";
@@ -28,10 +29,10 @@ pub enum Parser {
     NoIndent,
 
     Custom {
-        #[serde(with = "serde_regex::bytes")]
+        #[serde(with = "serde_regex")]
         condition_pattern: Regex,
 
-        #[serde(with = "serde_regex::bytes")]
+        #[serde(with = "serde_regex")]
         start_pattern: Regex,
         mode: Mode,
     },

@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
-use framework::config::{default_true, deserialize_regex, serialize_regex};
+use framework::config::{default_true, serde_regex};
 
 const USER_HZ: f64 = 100.0;
 
@@ -34,17 +34,11 @@ pub struct CPUConfig {
     pub info: bool,
 
     #[serde(default = "default_flags_include")]
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub flags_include: regex::Regex,
 
     #[serde(default = "default_bugs_include")]
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub bugs_include: regex::Regex,
 }
 

@@ -4,7 +4,7 @@
 use std::borrow::Cow;
 
 use event::{tags, tags::Key, Metric};
-use framework::config::{deserialize_regex, serialize_regex};
+use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
@@ -16,10 +16,7 @@ const DEVICE_KEY: Key = Key::from_static_str("device");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DiskStatsConfig {
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     #[serde(default = "default_ignored")]
     pub ignored: regex::Regex,
 }

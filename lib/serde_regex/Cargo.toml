@@ -1,9 +1,0 @@
-[package]
-name = "serde_regex"
-version = "0.1.0"
-edition = "2021"
-publish = false
-
-[dependencies]
-regex = { version = "1.8.4" }
-serde = { version = "1.0.163", default-features = false, features = ["derive"] }

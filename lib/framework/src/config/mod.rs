@@ -48,7 +48,6 @@ pub use crate::config::sink::SinkOuter;
 use crate::config::source::SourceOuter;
 use crate::config::transform::TransformOuter;
 pub use global::GlobalOptions;
-pub use helper::{deserialize_regex, serialize_regex, skip_serializing_if_default};
 pub use loading::load_from_paths_with_provider;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]

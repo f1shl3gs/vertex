@@ -1,6 +1,6 @@
 use super::{Error, ErrorContext};
 use event::Metric;
-use framework::config::{deserialize_regex, serialize_regex};
+use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -9,10 +9,7 @@ use tokio::io::AsyncBufReadExt;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
     #[serde(default = "default_fields")]
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     fields: regex::Regex,
 }
 

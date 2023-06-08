@@ -11,9 +11,10 @@ use futures::StreamExt;
 use pin_project_lite::pin_project;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use serde_regex::{deserialize_bytes_regex, serialize_bytes_regex};
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
+
+use super::serde_regex;
 
 /// The mode of operation of the line aggregator
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -378,15 +379,9 @@ impl<C> Aggregate<C> {
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 pub struct RegexRule {
-    #[serde(
-        deserialize_with = "deserialize_bytes_regex",
-        serialize_with = "serialize_bytes_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub start_pattern: regex::bytes::Regex,
-    #[serde(
-        deserialize_with = "deserialize_bytes_regex",
-        serialize_with = "serialize_bytes_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub condition_pattern: regex::bytes::Regex,
 
     pub mode: Mode,

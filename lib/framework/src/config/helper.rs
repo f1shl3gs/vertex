@@ -2,8 +2,6 @@ mod charset;
 
 use std::time::Duration;
 
-pub use serde_regex::*;
-
 pub const fn default_true() -> bool {
     true
 }
@@ -23,6 +21,21 @@ pub const fn default_acknowledgements() -> bool {
     false
 }
 
+pub mod serde_regex {
+    use serde::{Deserializer, Serializer};
+
+    pub fn deserialize<'de, D: Deserializer<'de>>(
+        deserializer: D,
+    ) -> Result<regex::Regex, D::Error> {
+        let s: String = serde::Deserialize::deserialize(deserializer)?;
+        regex::Regex::new(&s).map_err(serde::de::Error::custom)
+    }
+
+    pub fn serialize<S: Serializer>(re: &regex::Regex, s: S) -> Result<S::Ok, S::Error> {
+        s.serialize_str(re.as_str())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -30,10 +43,7 @@ mod tests {
 
     #[derive(Deserialize, Serialize)]
     struct RE {
-        #[serde(
-            deserialize_with = "deserialize_regex",
-            serialize_with = "serialize_regex"
-        )]
+        #[serde(with = "serde_regex")]
         re: ::regex::Regex,
     }
 

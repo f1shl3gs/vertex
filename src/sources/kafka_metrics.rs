@@ -3,11 +3,13 @@ use std::time::{Duration, Instant};
 use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{tags, Metric};
-use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
+use framework::config::{
+    default_interval, serde_regex, DataType, Output, SourceConfig, SourceContext,
+};
 use framework::{Pipeline, ShutdownSignal, Source};
 use futures_util::stream::FuturesUnordered;
 use futures_util::StreamExt;
-use regex::bytes::Regex;
+use regex::Regex;
 use rskafka::client::partition::{OffsetAt, UnknownTopicHandling};
 use rskafka::client::{Client, ClientBuilder};
 
@@ -36,7 +38,7 @@ struct Config {
     interval: Duration,
 
     /// Regex that determines which topics to collect.
-    #[serde(with = "serde_regex::bytes", default = "default_topic_filter")]
+    #[serde(with = "serde_regex", default = "default_topic_filter")]
     topic_filter: Regex,
 }
 
@@ -130,9 +132,7 @@ async fn scrape(client: &Client, topic_filter: &Regex) -> framework::Result<Vec<
     }));
 
     let topics = client.list_topics().await?;
-    let topics = topics
-        .iter()
-        .filter(|t| topic_filter.is_match(t.name.as_bytes()));
+    let topics = topics.iter().filter(|t| topic_filter.is_match(&t.name));
 
     let mut tasks = FuturesUnordered::from_iter(topics.map(|topic| async move {
         let mut metrics = vec![Metric::gauge_with_tags(
