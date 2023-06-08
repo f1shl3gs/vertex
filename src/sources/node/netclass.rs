@@ -1,5 +1,5 @@
 use event::{tags, Metric};
-use framework::config::{deserialize_regex, serialize_regex};
+use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
 use super::{read_to_string, Error, ErrorContext};
@@ -8,10 +8,7 @@ use super::{read_to_string, Error, ErrorContext};
 pub struct NetClassConfig {
     // Regexp of net devices to ignore for netclass collector
     #[serde(default = "default_ignores")]
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub ignores: regex::Regex,
 }
 

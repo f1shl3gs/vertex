@@ -1316,7 +1316,6 @@ dependencies = [
  "rustls-pemfile",
  "serde",
  "serde_json",
- "serde_regex",
  "serde_yaml",
  "smallvec",
  "snap",
@@ -2399,7 +2398,6 @@ dependencies = [
  "regex",
  "serde",
  "serde_json",
- "serde_regex",
  "serde_yaml",
  "tokio",
  "tokio-util",
@@ -3635,14 +3633,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "serde_regex"
-version = "0.1.0"
-dependencies = [
- "regex",
- "serde",
-]
-
-[[package]]
 name = "serde_with"
 version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4791,7 +4781,6 @@ dependencies = [
  "serde",
  "serde_json",
  "serde_path_to_error",
- "serde_regex",
  "serde_yaml",
  "smallvec",
  "snap",

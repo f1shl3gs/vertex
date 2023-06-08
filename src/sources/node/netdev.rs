@@ -1,6 +1,6 @@
 use super::{read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
-use framework::config::{deserialize_regex, serialize_regex};
+use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::num::ParseIntError;
@@ -8,16 +8,10 @@ use std::num::ParseIntError;
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum NetdevConfig {
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     Include(Regex),
 
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     Exclude(Regex),
 
     All,

@@ -1,6 +1,6 @@
 use super::{read_to_string, Error};
 use event::{tags, Metric};
-use framework::config::{deserialize_regex, serialize_regex};
+use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 
@@ -267,10 +267,7 @@ async fn parse_power_supply(path: PathBuf) -> Result<PowerSupply, Error> {
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PowerSupplyConfig {
-    #[serde(
-        deserialize_with = "deserialize_regex",
-        serialize_with = "serialize_regex"
-    )]
+    #[serde(with = "serde_regex")]
     pub ignored: regex::Regex,
 }
 
