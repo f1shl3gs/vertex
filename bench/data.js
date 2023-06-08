@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686244129332,
+  "lastUpdate": 1686244196063,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8b7f79932df5109e88b3e2d45d0702404424c026",
-          "message": "Merge pull request #787 from f1shl3gs/vendor_schemar\n\nvendor schemars",
-          "timestamp": "2023-02-24T23:28:09+08:00",
-          "tree_id": "b4f07b8f65866b719577798f5a0ebd705b9368c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b7f79932df5109e88b3e2d45d0702404424c026"
-        },
-        "date": 1677252761945,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.997,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.475,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.864,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 59.336,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aaf5609a22b526bc9ed56f31b14e1abf9752a749",
           "message": "replace `stream-cancel` with lib/tripwire (#788)\n\n* tripwire\r\n\r\n* update\r\n\r\n* update\r\n\r\n* add `#[allow(clippy::redundant_clone)]` for test",
           "timestamp": "2023-02-26T04:17:27+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 64.747,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "50c2c7425d65969b4bbbe427e70c37a3d37dad5e",
+          "message": "remove lib/serde_regex (#1021)",
+          "timestamp": "2023-06-09T01:05:08+08:00",
+          "tree_id": "f3aede8963e3a46d77147d8ca2426411019ebfb0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/50c2c7425d65969b4bbbe427e70c37a3d37dad5e"
+        },
+        "date": 1686244182993,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.137,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.892,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.436,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 33.813,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.954,
             "unit": "ns/op"
           }
         ]
