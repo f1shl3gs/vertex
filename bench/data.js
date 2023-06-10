@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686404422213,
+  "lastUpdate": 1686404452534,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "44050604cdce1315dfd7cd2002bd273e3ef3c448",
-          "message": "Merge pull request #795 from f1shl3gs/dependabot/cargo/prost-types-0.11.8\n\nchore(deps): bump prost-types from 0.11.6 to 0.11.8",
-          "timestamp": "2023-03-01T00:39:21+08:00",
-          "tree_id": "9cd6730b27e349084ad7cf340ee0ca43b1a27a74",
-          "url": "https://github.com/f1shl3gs/vertex/commit/44050604cdce1315dfd7cd2002bd273e3ef3c448"
-        },
-        "date": 1677602687817,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.224,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.82,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 29.742,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.561,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 62.02,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "734b4a393bb74d054663709e8dae60863e93583d",
           "message": "Merge pull request #796 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.11\n\nchore(deps): bump dyn-clone from 1.0.10 to 1.0.11",
           "timestamp": "2023-03-01T01:44:34+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.9,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3d10c847a47de5f17ec33de089ddd4b6dd115444",
+          "message": "remove features common (#1025)",
+          "timestamp": "2023-06-10T21:35:48+08:00",
+          "tree_id": "5186384346141908611031c7a528de17005085d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3d10c847a47de5f17ec33de089ddd4b6dd115444"
+        },
+        "date": 1686404440003,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.077,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.376,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.817,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 35.044,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.352,
             "unit": "ns/op"
           }
         ]
