@@ -52,8 +52,6 @@ members = [
 
 [features]
 default = [
-    "common",
-
     "extensions",
     "sources",
     "transforms",
@@ -63,8 +61,6 @@ default = [
 ]
 
 target-x86_64-unknown-linux-musl = [
-    "common",
-
     "extensions",
     "sinks",
     "sources",
@@ -72,18 +68,12 @@ target-x86_64-unknown-linux-musl = [
 ]
 
 target-x86_64-unknown-linux-gnu = [
-    "common",
-
     "extensions",
     "sinks",
     "sources",
     "transforms",
 
     "extensions-pprof"
-]
-
-common = [
-  "disk-buffer"
 ]
 
 benches = [
@@ -127,9 +117,6 @@ integration-tests-redis = []
 integration-tests-zookeeper = []
 
 # Common
-disk-buffer = [
-  "dep:buffers"
-]
 tokio-console = ["framework/tokio-console", "tokio/tracing"]
 
 # Allocator
