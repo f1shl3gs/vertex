@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686568613166,
+  "lastUpdate": 1686569499665,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5",
-          "message": "Merge pull request #808 from f1shl3gs/disable_tonic_default_features\n\nDisable tonic default features",
-          "timestamp": "2023-03-03T15:34:42+08:00",
-          "tree_id": "5f2d8cb1d2b30dca236b0a1250460886bff08508",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9edbe1fb2efde1cd0cf6cc5a009c4e4668d037a5"
-        },
-        "date": 1677830533830,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1391,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57496.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6736545290fe426c42cd2a3afe5b076939136fbe",
           "message": "Merge pull request #809 from f1shl3gs/fix_kafka_sink_config\n\nremove non-support option for rdkafka",
           "timestamp": "2023-03-05T21:56:27+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44667.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "184b91d34be296292f4c6bf967a7642b0e966dd8",
+          "message": "chore(deps): bump tokio-rustls from 0.24.0 to 0.24.1 (#1026)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.24.0 to 0.24.1.\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-12T19:11:00+08:00",
+          "tree_id": "f907dcb1dce99b78371e0996a17584ccc18e1371",
+          "url": "https://github.com/f1shl3gs/vertex/commit/184b91d34be296292f4c6bf967a7642b0e966dd8"
+        },
+        "date": 1686569485172,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1071,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44675.2,
             "unit": "KiB"
           }
         ]
