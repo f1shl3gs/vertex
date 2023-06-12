@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686568561067,
+  "lastUpdate": 1686568582804,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -57955,6 +57955,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1344.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "184b91d34be296292f4c6bf967a7642b0e966dd8",
+          "message": "chore(deps): bump tokio-rustls from 0.24.0 to 0.24.1 (#1026)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.24.0 to 0.24.1.\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-12T19:11:00+08:00",
+          "tree_id": "f907dcb1dce99b78371e0996a17584ccc18e1371",
+          "url": "https://github.com/f1shl3gs/vertex/commit/184b91d34be296292f4c6bf967a7642b0e966dd8"
+        },
+        "date": 1686568567381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 66.475,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 219.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 513.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1505.2,
             "unit": "ns/op"
           }
         ]
