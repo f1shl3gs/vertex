@@ -80,7 +80,7 @@ socket2 = { version = "0.5.3", default-features = false }
 syslog_loose = { version = "0.18.0", default-features = false }
 thiserror = { version = "1.0.40" }
 tokio = { version = "1.28.2", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
-tokio-rustls = { version = "0.24.0", default-features = false }
+tokio-rustls = { version = "0.24.1", default-features = false }
 tokio-stream = { version = "0.1.14", features = ["time", "net"] }
 tokio-util = { version = "0.7.8", default-features = false, features = ["codec", "time", "net", "io"] }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
