@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686405500448,
+  "lastUpdate": 1686568542831,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "734b4a393bb74d054663709e8dae60863e93583d",
-          "message": "Merge pull request #796 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.11\n\nchore(deps): bump dyn-clone from 1.0.10 to 1.0.11",
-          "timestamp": "2023-03-01T01:44:34+08:00",
-          "tree_id": "15dad5c65ca87f20a5132a68ebcfc089888bd4a8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/734b4a393bb74d054663709e8dae60863e93583d"
-        },
-        "date": 1677606496386,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 717290,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 855400,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "184b91d34be296292f4c6bf967a7642b0e966dd8",
+          "message": "chore(deps): bump tokio-rustls from 0.24.0 to 0.24.1 (#1026)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.24.0 to 0.24.1.\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-12T19:11:00+08:00",
+          "tree_id": "f907dcb1dce99b78371e0996a17584ccc18e1371",
+          "url": "https://github.com/f1shl3gs/vertex/commit/184b91d34be296292f4c6bf967a7642b0e966dd8"
+        },
+        "date": 1686568525921,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 857910,
             "unit": "ns/op"
           }
         ]
