@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 async-stream = { version = "0.3.5" }
-crossbeam-utils = { version = "0.8.15", default-features = false }
+crossbeam-utils = { version = "0.8.16", default-features = false }
 futures = { version = "0.3.28" }
 measurable = { path = "../measurable" }
 pin-project-lite = { version = "0.2.9" }
