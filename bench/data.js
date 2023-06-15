@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686842110898,
+  "lastUpdate": 1686842204598,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5bdcad4f1d92817591f37ed23a372514532c5d61",
-          "message": "Merge pull request #815 from f1shl3gs/dependabot/cargo/thiserror-1.0.39\n\nchore(deps): bump thiserror from 1.0.38 to 1.0.39",
-          "timestamp": "2023-03-06T14:55:20+08:00",
-          "tree_id": "0aef2dd14eb387956d3e0b6b75f3cc0d1f976e7e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5bdcad4f1d92817591f37ed23a372514532c5d61"
-        },
-        "date": 1678087239713,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1106,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57491.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1ccae3095be71a1a7b2b2392f9f642e7c12025d9",
           "message": "Merge pull request #814 from f1shl3gs/dependabot/cargo/lru-0.10.0\n\nchore(deps): bump lru from 0.9.0 to 0.10.0",
           "timestamp": "2023-03-06T14:56:17+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44675.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef8808ccebb854ded50d0d8b607cd91f0fe4200a",
+          "message": "chore(deps): bump rustls-native-certs from 0.6.2 to 0.6.3 (#1031)\n\nBumps [rustls-native-certs](https://github.com/ctz/rustls-native-certs) from 0.6.2 to 0.6.3.\r\n- [Commits](https://github.com/ctz/rustls-native-certs/compare/v/0.6.2...v/0.6.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-native-certs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-15T22:51:35+08:00",
+          "tree_id": "ebc613dfa6177fb4d84c418f264d10e199f8bcf9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef8808ccebb854ded50d0d8b607cd91f0fe4200a"
+        },
+        "date": 1686842186213,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1318,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44676.9,
             "unit": "KiB"
           }
         ]
