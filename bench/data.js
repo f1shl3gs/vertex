@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686835527344,
+  "lastUpdate": 1686835531897,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "81e4cde5222bb156ede532bb66fb36431ce5cf8d",
-          "message": "add http_check source (#801)",
-          "timestamp": "2023-03-02T03:48:44+08:00",
-          "tree_id": "9993ef9152b3dfa4f5a4fa1e210a679783a98c4e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/81e4cde5222bb156ede532bb66fb36431ce5cf8d"
-        },
-        "date": 1677700342930,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 89.711,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 190.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 315.63,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 358.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b07b1dec239b7947f39aef44b15bd4929cab31cf",
+          "message": "chore(deps): bump rustls from 0.21.1 to 0.21.2 (#1030)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.1 to 0.21.2.\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/RELEASE_NOTES.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.1...v/0.21.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-15T21:21:42+08:00",
+          "tree_id": "88d246ac560f17c4344d6c5aa25ad455509a9a19",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b07b1dec239b7947f39aef44b15bd4929cab31cf"
+        },
+        "date": 1686835516879,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 96.312,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 184.81,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 293.08,
             "unit": "ns/op"
           }
         ]
