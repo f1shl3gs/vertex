@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686804805523,
+  "lastUpdate": 1686804815747,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58047,6 +58047,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1327.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0aee2dc506f62fd19af00d286d5e5bb441a39b34",
+          "message": "chore(deps): bump quick-xml from 0.28.2 to 0.29.0 (#1028)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.28.2 to 0.29.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.28.2...v0.29.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-15T12:48:35+08:00",
+          "tree_id": "afa8a04bf6f38120d59dd98efd368250e6302b73",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0aee2dc506f62fd19af00d286d5e5bb441a39b34"
+        },
+        "date": 1686804802252,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 58.226,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 192.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 424.3,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1245,
             "unit": "ns/op"
           }
         ]
