@@ -421,7 +421,7 @@ once_cell = { version = "1.18.0" }
 # pulsar = { version = "4.1.1", default-features = false, optional = true, features = ["tokio-runtime", "compression"] }
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
 percent-encoding = { version = "2.3.0", default-features = false }
-quick-xml = { version = "0.28.2", default-features = false, features = ["serialize"], optional = true }
+quick-xml = { version = "0.29.0", default-features = false, features = ["serialize"], optional = true }
 regex = { version = "1.8.4" }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
