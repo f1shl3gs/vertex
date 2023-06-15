@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686804786029,
+  "lastUpdate": 1686804787977,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "51254d869ef1849a875310a5eb0998813eb5159b",
-          "message": "Merge pull request #798 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.15\n\nchore(deps): bump crossbeam-utils from 0.8.14 to 0.8.15",
-          "timestamp": "2023-03-01T20:53:40+08:00",
-          "tree_id": "22afce36c85592331ef974c469e8b263f9dc7fdc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/51254d869ef1849a875310a5eb0998813eb5159b"
-        },
-        "date": 1677675486326,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 108.39,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 236.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 379.62,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 375.27,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0aee2dc506f62fd19af00d286d5e5bb441a39b34",
+          "message": "chore(deps): bump quick-xml from 0.28.2 to 0.29.0 (#1028)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.28.2 to 0.29.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.28.2...v0.29.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-15T12:48:35+08:00",
+          "tree_id": "afa8a04bf6f38120d59dd98efd368250e6302b73",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0aee2dc506f62fd19af00d286d5e5bb441a39b34"
+        },
+        "date": 1686804771059,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 100.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 232.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 399.98,
             "unit": "ns/op"
           }
         ]
