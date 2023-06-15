@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686840937072,
+  "lastUpdate": 1686840940597,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5396ccc75f5efa2ac49f8e7a405a56b569273181",
-          "message": "chore(deps): bump tokio from 1.25.0 to 1.26.0 (#802)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.25.0 to 1.26.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.25.0...tokio-1.26.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-02T18:40:00+08:00",
-          "tree_id": "79b168821f326758a8d7ccb014b3346ae261c504",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5396ccc75f5efa2ac49f8e7a405a56b569273181"
-        },
-        "date": 1677753815946,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 91.875,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 186.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 312.22,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 293.08,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ef8808ccebb854ded50d0d8b607cd91f0fe4200a",
+          "message": "chore(deps): bump rustls-native-certs from 0.6.2 to 0.6.3 (#1031)\n\nBumps [rustls-native-certs](https://github.com/ctz/rustls-native-certs) from 0.6.2 to 0.6.3.\r\n- [Commits](https://github.com/ctz/rustls-native-certs/compare/v/0.6.2...v/0.6.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-native-certs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-15T22:51:35+08:00",
+          "tree_id": "ebc613dfa6177fb4d84c418f264d10e199f8bcf9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ef8808ccebb854ded50d0d8b607cd91f0fe4200a"
+        },
+        "date": 1686840925275,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 100.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 221.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 369.57,
             "unit": "ns/op"
           }
         ]
