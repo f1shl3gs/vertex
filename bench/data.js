@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686921708247,
+  "lastUpdate": 1686921922408,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1ccae3095be71a1a7b2b2392f9f642e7c12025d9",
-          "message": "Merge pull request #814 from f1shl3gs/dependabot/cargo/lru-0.10.0\n\nchore(deps): bump lru from 0.9.0 to 0.10.0",
-          "timestamp": "2023-03-06T14:56:17+08:00",
-          "tree_id": "28921290afad7e826c735b2a1bc8fd428a3be632",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ccae3095be71a1a7b2b2392f9f642e7c12025d9"
-        },
-        "date": 1678087333266,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1103,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57493.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1cc5f654fdb753e1103f0f30a1cc1ead1812632e",
           "message": "Merge pull request #810 from f1shl3gs/dependabot/cargo/typetag-0.2.6\n\nchore(deps): bump typetag from 0.2.5 to 0.2.6",
           "timestamp": "2023-03-06T14:56:56+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44676.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "86e2655c960fbf6a59886a2b65a2408a08b80acf",
+          "message": "chore(deps): bump notify from 6.0.0 to 6.0.1 (#1032)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.0.0 to 6.0.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.0.0...notify-6.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-16T21:00:34+08:00",
+          "tree_id": "e0b9c40fa2fc59cfbd4527c3b5c396ac212aacbb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/86e2655c960fbf6a59886a2b65a2408a08b80acf"
+        },
+        "date": 1686921907337,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1306,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44675.9,
             "unit": "KiB"
           }
         ]
