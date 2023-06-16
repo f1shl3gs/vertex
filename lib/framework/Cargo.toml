@@ -59,7 +59,7 @@ measurable = { path = "../measurable" }
 memchr = { version = "2.5.0", default-features = false}
 metrics = { path = "../metrics" }
 # wired feature requirement, see: https://docs.rs/notify/latest/notify/#crossbeam-channel--tokio
-notify = { version = "6.0.0", default-features = false, features = ["macos_kqueue"] }
+notify = { version = "6.0.1", default-features = false, features = ["macos_kqueue"] }
 no-proxy = { version = "0.3.2" }
 num_cpus = { version = "1.15.0" }
 once_cell = { version = "1.18", default-features = false }
