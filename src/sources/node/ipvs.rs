@@ -91,7 +91,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
         }
 
         let key = kv.join("-");
-        let mut status = sums
+        let status = sums
             .entry(key.clone())
             .or_insert_with(IPVSBackendStatus::default);
 
