@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1686924243709,
+  "lastUpdate": 1686924284085,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58167,6 +58167,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1498,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9dcabe6014b8f194aa070bb73eb3a7f5e7b1aa4a",
+          "message": "remove unnecessary `mut` (#1034)",
+          "timestamp": "2023-06-16T21:59:49+08:00",
+          "tree_id": "82eb2326fd3dc1e0e2165e44da9c5e9d61f65c70",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9dcabe6014b8f194aa070bb73eb3a7f5e7b1aa4a"
+        },
+        "date": 1686924268216,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 62.097,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 206.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 521.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1523.8,
             "unit": "ns/op"
           }
         ]
