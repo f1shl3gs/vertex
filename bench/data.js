@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687758464514,
+  "lastUpdate": 1687758486827,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "31536571cea1e5172b94da6bb33b94f977f3a2ac",
-          "message": "Merge pull request #818 from f1shl3gs/dependabot/cargo/inventory-0.3.4\n\nchore(deps): bump inventory from 0.3.3 to 0.3.4",
-          "timestamp": "2023-03-06T14:54:10+08:00",
-          "tree_id": "f6ac622cf5404d65b39e187252e0d69887b40ccd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31536571cea1e5172b94da6bb33b94f977f3a2ac"
-        },
-        "date": 1678085878178,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 95.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 177.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 290.72,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 439.96,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5302184432482f6132ef756e53edc56dd37840a6",
+          "message": "chore(deps): bump memmap2 from 0.7.0 to 0.7.1 (#1040)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.7.0 to 0.7.1.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.7.0...v0.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T13:38:55+08:00",
+          "tree_id": "c03066e3e8bc777928194fde44c1b7fd6804ab43",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5302184432482f6132ef756e53edc56dd37840a6"
+        },
+        "date": 1687758470810,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 108.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 228.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 364.19,
             "unit": "ns/op"
           }
         ]
