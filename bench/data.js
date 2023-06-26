@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687758268250,
+  "lastUpdate": 1687758288785,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6736545290fe426c42cd2a3afe5b076939136fbe",
-          "message": "Merge pull request #809 from f1shl3gs/fix_kafka_sink_config\n\nremove non-support option for rdkafka",
-          "timestamp": "2023-03-05T21:56:27+08:00",
-          "tree_id": "35555aee57c56838ce3111c1725f36bd0ee785c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6736545290fe426c42cd2a3afe5b076939136fbe"
-        },
-        "date": 1678024865232,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 890710,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 887630,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "44ed3327dd0a76f89aa4433ee41f7c2f318814d1",
+          "message": "chore(deps): bump serde_yaml from 0.9.21 to 0.9.22 (#1038)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.21 to 0.9.22.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.21...0.9.22)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T13:38:45+08:00",
+          "tree_id": "3cf516c961a5d832a500df78275adced7613e15a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/44ed3327dd0a76f89aa4433ee41f7c2f318814d1"
+        },
+        "date": 1687758271874,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 895260,
             "unit": "ns/op"
           }
         ]
