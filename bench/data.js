@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687758333604,
+  "lastUpdate": 1687758347533,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58259,6 +58259,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1530.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43c1b64d476c2182052a0ca25aa46d143abe3c24",
+          "message": "chore(deps): bump syn from 2.0.18 to 2.0.20 (#1037)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.18 to 2.0.20.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.18...2.0.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T13:38:31+08:00",
+          "tree_id": "f09c4c3e193e65ccab27aa9cd436c8ad6464003e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43c1b64d476c2182052a0ca25aa46d143abe3c24"
+        },
+        "date": 1687758330293,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 73.063,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 250.04,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 572.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1560.1,
             "unit": "ns/op"
           }
         ]
