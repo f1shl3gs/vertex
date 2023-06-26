@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687758299238,
+  "lastUpdate": 1687758303119,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6736545290fe426c42cd2a3afe5b076939136fbe",
-          "message": "Merge pull request #809 from f1shl3gs/fix_kafka_sink_config\n\nremove non-support option for rdkafka",
-          "timestamp": "2023-03-05T21:56:27+08:00",
-          "tree_id": "35555aee57c56838ce3111c1725f36bd0ee785c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6736545290fe426c42cd2a3afe5b076939136fbe"
-        },
-        "date": 1678024859811,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.467,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.117,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.979,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 34.169,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.915,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dc584951ba36e62802f7ad888b4d9ba375c047f6",
           "message": "Merge pull request #816 from f1shl3gs/dependabot/cargo/async-trait-0.1.66\n\nchore(deps): bump async-trait from 0.1.64 to 0.1.66",
           "timestamp": "2023-03-06T14:54:54+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 56.474,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "43c1b64d476c2182052a0ca25aa46d143abe3c24",
+          "message": "chore(deps): bump syn from 2.0.18 to 2.0.20 (#1037)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.18 to 2.0.20.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.18...2.0.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T13:38:31+08:00",
+          "tree_id": "f09c4c3e193e65ccab27aa9cd436c8ad6464003e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/43c1b64d476c2182052a0ca25aa46d143abe3c24"
+        },
+        "date": 1687758289180,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 21.897,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.833,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 30.217,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.068,
             "unit": "ns/op"
           }
         ]
