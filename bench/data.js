@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687759620671,
+  "lastUpdate": 1687759758762,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "44050604cdce1315dfd7cd2002bd273e3ef3c448",
-          "message": "Merge pull request #795 from f1shl3gs/dependabot/cargo/prost-types-0.11.8\n\nchore(deps): bump prost-types from 0.11.6 to 0.11.8",
-          "timestamp": "2023-03-01T00:39:21+08:00",
-          "tree_id": "9cd6730b27e349084ad7cf340ee0ca43b1a27a74",
-          "url": "https://github.com/f1shl3gs/vertex/commit/44050604cdce1315dfd7cd2002bd273e3ef3c448"
-        },
-        "date": 1677603601017,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28688000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1033000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.733,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 51.563,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 157.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 354.11,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 974.69,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "734b4a393bb74d054663709e8dae60863e93583d",
           "message": "Merge pull request #796 from f1shl3gs/dependabot/cargo/dyn-clone-1.0.11\n\nchore(deps): bump dyn-clone from 1.0.10 to 1.0.11",
           "timestamp": "2023-03-01T01:44:34+08:00",
@@ -51949,6 +51890,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.577,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "44ed3327dd0a76f89aa4433ee41f7c2f318814d1",
+          "message": "chore(deps): bump serde_yaml from 0.9.21 to 0.9.22 (#1038)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.21 to 0.9.22.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.21...0.9.22)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T13:38:45+08:00",
+          "tree_id": "3cf516c961a5d832a500df78275adced7613e15a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/44ed3327dd0a76f89aa4433ee41f7c2f318814d1"
+        },
+        "date": 1687759744847,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 50591000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1413300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.166,
             "unit": "ns/op"
           }
         ]
