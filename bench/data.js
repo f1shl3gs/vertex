@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687783946101,
+  "lastUpdate": 1687783998640,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "31536571cea1e5172b94da6bb33b94f977f3a2ac",
-          "message": "Merge pull request #818 from f1shl3gs/dependabot/cargo/inventory-0.3.4\n\nchore(deps): bump inventory from 0.3.3 to 0.3.4",
-          "timestamp": "2023-03-06T14:54:10+08:00",
-          "tree_id": "f6ac622cf5404d65b39e187252e0d69887b40ccd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31536571cea1e5172b94da6bb33b94f977f3a2ac"
-        },
-        "date": 1678085916821,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 841230,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 748270,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "59d882f229252eb144f0b22ed5647c7ed01859ff",
+          "message": "chore(deps): bump libc from 0.2.146 to 0.2.147 (#1036)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.146 to 0.2.147.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.146...0.2.147)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T20:48:44+08:00",
+          "tree_id": "c7af35031e70d9a0a6aa64dc1fb284b029bfb3f2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/59d882f229252eb144f0b22ed5647c7ed01859ff"
+        },
+        "date": 1687783985756,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 747810,
             "unit": "ns/op"
           }
         ]
