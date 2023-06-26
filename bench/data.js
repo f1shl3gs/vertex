@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687784045034,
+  "lastUpdate": 1687785114384,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "911dc381ec8738df2807966f54933673fea4491c",
-          "message": "Merge pull request #821 from f1shl3gs/add_batch_support_for_kafka_sink\n\nAdd batch support for kafka sink",
-          "timestamp": "2023-03-07T17:30:48+08:00",
-          "tree_id": "48bcfe92eb856b7ba9fc088366d4da9a260af5fd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/911dc381ec8738df2807966f54933673fea4491c"
-        },
-        "date": 1678182779464,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1111,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56066.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "01a0a45148b6a1f0c749530d3129b97e4b228cac",
           "message": "Merge pull request #823 from f1shl3gs/misc\n\nMisc",
           "timestamp": "2023-03-07T22:43:05+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44670.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "afd1e9dc3dc2fe5e8bcb9d09ccff02c33098ce62",
+          "message": "chore(deps): bump indexmap from 1.9.3 to 2.0.0 (#1041)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 1.9.3 to 2.0.0.\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/compare/1.9.3...2.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-26T20:48:55+08:00",
+          "tree_id": "cd150d62baec674a667a2538075647c1a4d9ecc5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/afd1e9dc3dc2fe5e8bcb9d09ccff02c33098ce62"
+        },
+        "date": 1687785100548,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1216,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44719.6,
             "unit": "KiB"
           }
         ]
