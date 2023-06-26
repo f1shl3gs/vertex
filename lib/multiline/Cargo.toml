@@ -7,7 +7,7 @@ publish = false
 [dev-dependencies]
 tokio = { version = "1.28.2", features = ["test-util", "macros"] }
 serde_json = { version = "1.0.97", default-features = false, features = ["std"] }
-serde_yaml = { version = "0.9.21" }
+serde_yaml = { version = "0.9.22" }
 
 [dependencies]
 bytes = { version = "1.4.0", default-features = false }
