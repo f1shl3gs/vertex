@@ -8,7 +8,7 @@ publish = false
 inventory = { version = "0.3.6", default-features = false }
 configurable-derive = { path = "../configurable-derive" }
 serde = { version = "1.0.164", default-features = false }
-serde_json = { version = "1.0.97", default-features = false, features = ["std"] }
+serde_json = { version = "1.0.99", default-features = false, features = ["std"] }
 indexmap = { version = "2.0.0", default-features = false, features = ["serde"] }
 
 # externals
