@@ -47,7 +47,7 @@ headers = { version = "0.3.8" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 hostname = { version = "0.3.1" }
 http = { version = "0.2.9", default-features = false }
-hyper = { version = "0.14.26", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
+hyper = { version = "0.14.27", features = ["client", "runtime", "http1", "http2", "server", "stream"] }
 hyper-proxy = { git = "https://github.com/f1shl3gs/hyper-proxy", rev = "0f27fe6d46a7645c8878438100ac4ce32be2d8e0", default-features = false, features = ["rustls"] }
 hyper-rustls = { version = "0.24.0", default-features = false }
 indexmap = { version = "2.0.0", default-features = false, features = ["serde"] }
