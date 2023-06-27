@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687853706671,
+  "lastUpdate": 1687853882997,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "42668a253ebe1ccc762938caa31c5349a3f1b488",
-          "message": "Merge pull request #827 from f1shl3gs/dependabot/cargo/libc-0.2.140\n\nchore(deps): bump libc from 0.2.139 to 0.2.140",
-          "timestamp": "2023-03-10T13:24:50+08:00",
-          "tree_id": "1b052d768bbbf595ab27c8dbf07d2f7c7a39af90",
-          "url": "https://github.com/f1shl3gs/vertex/commit/42668a253ebe1ccc762938caa31c5349a3f1b488"
-        },
-        "date": 1678427626505,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1466,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 56075.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9520a8d5eb94f6ea4949b94e123d426706faf2e7",
           "message": "Merge pull request #828 from f1shl3gs/zpages\n\nZpages",
           "timestamp": "2023-03-10T14:26:56+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44700.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0823e89e6a815e46079f9348d75596fb0f86b4da",
+          "message": "chore(deps): bump hyper from 0.14.26 to 0.14.27 (#1044)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 0.14.26 to 0.14.27.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/v0.14.27/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v0.14.26...v0.14.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-27T15:50:07+08:00",
+          "tree_id": "5fa9d350dedcf26e9b01628a564841b963f2af3b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0823e89e6a815e46079f9348d75596fb0f86b4da"
+        },
+        "date": 1687853865508,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1477,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44637.9,
             "unit": "KiB"
           }
         ]
