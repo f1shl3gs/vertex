@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687853882997,
+  "lastUpdate": 1687864208259,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9520a8d5eb94f6ea4949b94e123d426706faf2e7",
-          "message": "Merge pull request #828 from f1shl3gs/zpages\n\nZpages",
-          "timestamp": "2023-03-10T14:26:56+08:00",
-          "tree_id": "d85f92fd96b00123c146c6b669b808a917afe043",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9520a8d5eb94f6ea4949b94e123d426706faf2e7"
-        },
-        "date": 1678431258337,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1380,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57262.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e251377c30f67396d087c40cf3c8c559b7b7761",
           "message": "Merge pull request #829 from f1shl3gs/batch_spans\n\nbatch spans",
           "timestamp": "2023-03-11T02:28:14+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44637.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2d15942e0146dc79867745b2ea68b0be52a51c40",
+          "message": "update sqlx to 0.7.0-alpha.3 (#1045)",
+          "timestamp": "2023-06-27T18:47:14+08:00",
+          "tree_id": "63d5097c67c44b49ec9bf195c2095f1d400ed856",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2d15942e0146dc79867745b2ea68b0be52a51c40"
+        },
+        "date": 1687864193269,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1196,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44358.6,
             "unit": "KiB"
           }
         ]
