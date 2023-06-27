@@ -143,9 +143,7 @@ impl MysqldConfig {
             options = options.password(password);
         }
 
-        options.disable_statement_logging();
-
-        options
+        options.disable_statement_logging()
     }
 }
 
