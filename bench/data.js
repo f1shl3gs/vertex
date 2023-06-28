@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687864208259,
+  "lastUpdate": 1687932681642,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e251377c30f67396d087c40cf3c8c559b7b7761",
-          "message": "Merge pull request #829 from f1shl3gs/batch_spans\n\nbatch spans",
-          "timestamp": "2023-03-11T02:28:14+08:00",
-          "tree_id": "1db2d41472b0dc5bebc731a813f4c017e7ff68e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e251377c30f67396d087c40cf3c8c559b7b7761"
-        },
-        "date": 1678474477204,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1333,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57262.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6ed6066383e10ed07b5264f40094093512d7ba92",
           "message": "Merge pull request #830 from f1shl3gs/remove_useless_into_iter\n\nremove useless into_iter",
           "timestamp": "2023-03-11T13:09:14+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44358.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ffe395ebc02a5ca374589f7d4b0c2d7e3d54a783",
+          "message": "chore(deps): bump uuid from 1.3.4 to 1.4.0 (#1047)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.4 to 1.4.0.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.4...1.4.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-28T13:45:14+08:00",
+          "tree_id": "b5580a83392ab43a01de4cac12b8b82f956e5cf2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ffe395ebc02a5ca374589f7d4b0c2d7e3d54a783"
+        },
+        "date": 1687932665071,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1380,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44352.6,
             "unit": "KiB"
           }
         ]
