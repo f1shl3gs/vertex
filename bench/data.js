@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687932681642,
+  "lastUpdate": 1687932704999,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6ed6066383e10ed07b5264f40094093512d7ba92",
-          "message": "Merge pull request #830 from f1shl3gs/remove_useless_into_iter\n\nremove useless into_iter",
-          "timestamp": "2023-03-11T13:09:14+08:00",
-          "tree_id": "b72d9f69107e77977c50d9c2ee9ee8a5edc8fd00",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ed6066383e10ed07b5264f40094093512d7ba92"
-        },
-        "date": 1678512846385,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1263,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57262.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fc9ec2753f1e43c8ab63ce2eda57237d689018d5",
           "message": "Merge pull request #831 from f1shl3gs/disable_threadpool_for_jaeger\n\ndisable unused `threadpool` feature",
           "timestamp": "2023-03-11T17:37:37+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44352.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "61909a8cfb6657b6d58603df71c473741828c8ee",
+          "message": "chore(deps): bump tokio from 1.28.2 to 1.29.0 (#1046)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.28.2 to 1.29.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.28.2...tokio-1.29.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-28T13:45:35+08:00",
+          "tree_id": "7be30bdd22e2a0b14244a8bff0e88d76beb11250",
+          "url": "https://github.com/f1shl3gs/vertex/commit/61909a8cfb6657b6d58603df71c473741828c8ee"
+        },
+        "date": 1687932688327,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1380,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44576.9,
             "unit": "KiB"
           }
         ]
