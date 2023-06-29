@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1687932704999,
+  "lastUpdate": 1688048103728,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36219,40 +36219,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fc9ec2753f1e43c8ab63ce2eda57237d689018d5",
-          "message": "Merge pull request #831 from f1shl3gs/disable_threadpool_for_jaeger\n\ndisable unused `threadpool` feature",
-          "timestamp": "2023-03-11T17:37:37+08:00",
-          "tree_id": "ad8c203c0237d37f5a30a9465b7c8cc5118aef8d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fc9ec2753f1e43c8ab63ce2eda57237d689018d5"
-        },
-        "date": 1678528890093,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1200,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57260.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44576.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "76f2e4912c5c61417c7b3d888551aa83f8d0e1dd",
+          "message": "chore(deps): bump chrono-tz from 0.8.2 to 0.8.3 (#1050)\n\nBumps [chrono-tz](https://github.com/chronotope/chrono-tz) from 0.8.2 to 0.8.3.\r\n- [Release notes](https://github.com/chronotope/chrono-tz/releases)\r\n- [Changelog](https://github.com/chronotope/chrono-tz/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono-tz/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono-tz\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-29T21:54:01+08:00",
+          "tree_id": "faf568aa72eae713994cf588dae1c06a089fec77",
+          "url": "https://github.com/f1shl3gs/vertex/commit/76f2e4912c5c61417c7b3d888551aa83f8d0e1dd"
+        },
+        "date": 1688048090259,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1106,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44579.7,
             "unit": "KiB"
           }
         ]
