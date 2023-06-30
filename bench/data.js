@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688103765419,
+  "lastUpdate": 1688103823436,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f77893a74017f6d7489ec8a21b2809a5233c6581",
-          "message": "Merge pull request #832 from f1shl3gs/dependabot/cargo/listenfd-1.0.1\n\nchore(deps): bump listenfd from 1.0.0 to 1.0.1",
-          "timestamp": "2023-03-13T13:51:40+08:00",
-          "tree_id": "b4f87b0eda2704e29bf3cb5a0134a71a301e0d27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f77893a74017f6d7489ec8a21b2809a5233c6581"
-        },
-        "date": 1678688301608,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1212,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57330.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "488d8825e3c3c17532b6b2d0d86da2ea25c9f4ec",
           "message": "Merge pull request #836 from f1shl3gs/dependabot/cargo/proc-macro2-1.0.52\n\nchore(deps): bump proc-macro2 from 1.0.51 to 1.0.52",
           "timestamp": "2023-03-13T13:51:54+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44587.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "89146b807efff212b192842aee9358a13969c46d",
+          "message": "chore(deps): bump num_cpus from 1.15.0 to 1.16.0 (#1053)\n\nBumps [num_cpus](https://github.com/seanmonstar/num_cpus) from 1.15.0 to 1.16.0.\r\n- [Release notes](https://github.com/seanmonstar/num_cpus/releases)\r\n- [Changelog](https://github.com/seanmonstar/num_cpus/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/seanmonstar/num_cpus/compare/v1.15.0...v1.16.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: num_cpus\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-06-30T13:19:10+08:00",
+          "tree_id": "5765e2a23d93b6ec8e75c8a6dfa5634dda1c5328",
+          "url": "https://github.com/f1shl3gs/vertex/commit/89146b807efff212b192842aee9358a13969c46d"
+        },
+        "date": 1688103807407,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1295,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44587.6,
             "unit": "KiB"
           }
         ]
