@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688360219353,
+  "lastUpdate": 1688360577243,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "614f904831ee93e487a9bf901cfe42aa5f7ffca8",
-          "message": "Misc (#839)\n\n* refine tracing limit",
-          "timestamp": "2023-03-14T00:29:17+08:00",
-          "tree_id": "a312b4425ab1d5f48a40eb40342ed84ab4a84252",
-          "url": "https://github.com/f1shl3gs/vertex/commit/614f904831ee93e487a9bf901cfe42aa5f7ffca8"
-        },
-        "date": 1678726480683,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1277,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57379.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0415031b4d469ec861916c3c5b63d0a1133e373c",
           "message": "add 'extension-zpages' so vertex benches will pass (#840)",
           "timestamp": "2023-03-14T13:34:57+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44577.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "72eebc9ef542a92f0128029b91ad4551fd7ac406",
+          "message": "chore(deps): bump pin-project from 1.1.1 to 1.1.2 (#1058)\n\nBumps [pin-project](https://github.com/taiki-e/pin-project) from 1.1.1 to 1.1.2.\r\n- [Release notes](https://github.com/taiki-e/pin-project/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project/compare/v1.1.1...v1.1.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-03T12:35:59+08:00",
+          "tree_id": "06bacca842a6c3be1c49be2d9e54804e2be50981",
+          "url": "https://github.com/f1shl3gs/vertex/commit/72eebc9ef542a92f0128029b91ad4551fd7ac406"
+        },
+        "date": 1688360561291,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1320,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44580.8,
             "unit": "KiB"
           }
         ]
