@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688360577243,
+  "lastUpdate": 1688381702265,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0415031b4d469ec861916c3c5b63d0a1133e373c",
-          "message": "add 'extension-zpages' so vertex benches will pass (#840)",
-          "timestamp": "2023-03-14T13:34:57+08:00",
-          "tree_id": "987e72a949df1685247bf8a63e06905401398e45",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0415031b4d469ec861916c3c5b63d0a1133e373c"
-        },
-        "date": 1678773487745,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1160,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57379.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9990549d83aace6b329199f6037e3718f229ac9f",
           "message": "Merge pull request #843 from f1shl3gs/dependabot/cargo/serde-1.0.156\n\nchore(deps): bump serde from 1.0.155 to 1.0.156",
           "timestamp": "2023-03-16T00:03:02+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1320,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44580.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9222097a812fd74c8a7bf1e2eda3c312e39ca612",
+          "message": "chore(deps): bump serde_path_to_error from 0.1.11 to 0.1.12 (#1059)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\r\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_path_to_error\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-03T18:32:55+08:00",
+          "tree_id": "6433d688bd90aed89f8b5b777aa3f3448bac7139",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9222097a812fd74c8a7bf1e2eda3c312e39ca612"
+        },
+        "date": 1688381688858,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1174,
             "unit": "s"
           },
           {
