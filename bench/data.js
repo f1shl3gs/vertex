@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688360215566,
+  "lastUpdate": 1688360219353,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2b3735bd7f7b3d4608fdc268b7089457ffb6583c",
-          "message": "Merge pull request #835 from f1shl3gs/dependabot/cargo/futures-0.3.27\n\nchore(deps): bump futures from 0.3.26 to 0.3.27",
-          "timestamp": "2023-03-14T00:03:51+08:00",
-          "tree_id": "2d7087c0daa3aedb9ed6694e54aeae7e5568ddf5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b3735bd7f7b3d4608fdc268b7089457ffb6583c"
-        },
-        "date": 1678725203025,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1481,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57315.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "614f904831ee93e487a9bf901cfe42aa5f7ffca8",
           "message": "Misc (#839)\n\n* refine tracing limit",
           "timestamp": "2023-03-14T00:29:17+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44578.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "693c83a24319ecd7e24c353dd083a6336589bc12",
+          "message": "chore(deps): bump async-trait from 0.1.68 to 0.1.69 (#1056)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.68 to 0.1.69.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.68...0.1.69)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-03T12:35:47+08:00",
+          "tree_id": "0af9b86e3fce138645ad55a59d70711f600b0cc4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/693c83a24319ecd7e24c353dd083a6336589bc12"
+        },
+        "date": 1688360205761,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1102,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44577.6,
             "unit": "KiB"
           }
         ]
