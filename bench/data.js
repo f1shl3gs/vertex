@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688448952123,
+  "lastUpdate": 1688448980048,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "69bb7a86946856d1bca6a3594127b0948490e0b2",
-          "message": "Remove rkyv (#847)\n\n* remove rkyv\r\n\r\n* add `--all-targets` to udeps",
-          "timestamp": "2023-03-19T22:57:46+08:00",
-          "tree_id": "eb60b864b81a9a38fa8eea9cd238d2c4ac66a484",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69bb7a86946856d1bca6a3594127b0948490e0b2"
-        },
-        "date": 1679239593588,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1460,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57333,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
           "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
           "timestamp": "2023-03-20T00:25:27+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44552.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2962fb93ce0bc1394557abee965e3e0300503268",
+          "message": "chore(deps): bump console-subscriber from 0.1.9 to 0.1.10 (#1061)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.9 to 0.1.10.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.9...console-subscriber-v0.1.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-04T13:11:37+08:00",
+          "tree_id": "f2e72caea6306eadc0116178f14cffb9cb3fc409",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2962fb93ce0bc1394557abee965e3e0300503268"
+        },
+        "date": 1688448964708,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1241,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44585.1,
             "unit": "KiB"
           }
         ]
