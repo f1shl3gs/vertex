@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688448980048,
+  "lastUpdate": 1688496865319,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
-          "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
-          "timestamp": "2023-03-20T00:25:27+08:00",
-          "tree_id": "6c2c9330bbbe46597e56509ec6f49220cce168f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09ccfc4d9125cc38446d16273feb2a72287fdc32"
-        },
-        "date": 1679244725169,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1335,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57632.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b86f4fbbab8aac80b7fee01e379b0fe73492ebce",
           "message": "Merge pull request #855 from f1shl3gs/dependabot/cargo/rsntp-3.0.2\n\nchore(deps): bump rsntp from 3.0.1 to 3.0.2",
           "timestamp": "2023-03-20T14:20:52+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44585.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "790403a150aa571e87a358717b32c53e7d8b4fc5",
+          "message": "update criterion (#1065)",
+          "timestamp": "2023-07-05T02:33:04+08:00",
+          "tree_id": "e863641287e802f14b44f288305fd5a94b2897be",
+          "url": "https://github.com/f1shl3gs/vertex/commit/790403a150aa571e87a358717b32c53e7d8b4fc5"
+        },
+        "date": 1688496851665,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1130,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44575,
             "unit": "KiB"
           }
         ]
