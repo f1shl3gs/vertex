@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688381747050,
+  "lastUpdate": 1688448318843,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "21914811afe6e766e6c8c313f5e623ee2174b344",
-          "message": "Merge pull request #844 from f1shl3gs/dependabot/cargo/assert_cmd-2.0.9\n\nchore(deps): bump assert_cmd from 2.0.8 to 2.0.9",
-          "timestamp": "2023-03-16T13:36:08+08:00",
-          "tree_id": "5d6a992f0e0b6bdc08a5bec2624b4ef057123eb0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/21914811afe6e766e6c8c313f5e623ee2174b344"
-        },
-        "date": 1678946797557,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1545,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57381.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8c80b4c799c9e41cd19181d72e8139518a64e193",
           "message": "Merge pull request #845 from f1shl3gs/remove_xdrgen\n\nremove xdrgen from virt",
           "timestamp": "2023-03-16T17:38:59+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44583.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0ca9b1957135b135b75f91ada3ea29585b6a2d1d",
+          "message": "chore(deps): bump pprof from 0.11.1 to 0.12.0 (#1062)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.11.1 to 0.12.0.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-04T13:04:23+08:00",
+          "tree_id": "4179a6e477ce1fb4092d630a4753f3274cb289b3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0ca9b1957135b135b75f91ada3ea29585b6a2d1d"
+        },
+        "date": 1688448304539,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1102,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44586.1,
             "unit": "KiB"
           }
         ]
