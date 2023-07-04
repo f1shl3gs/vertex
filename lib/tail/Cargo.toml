@@ -13,7 +13,7 @@ test = false
 quickcheck = "1.0.3"
 tokio = { version = "1.29.1", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
 tempfile = { version = "3.6.0" }
-criterion = { version = "0.4.0" }
+criterion = { version = "0.5.1", default-features = false }
 tracing-test = { version = "0.2.4" }
 
 [dependencies]
