@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688448318843,
+  "lastUpdate": 1688448632393,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c80b4c799c9e41cd19181d72e8139518a64e193",
-          "message": "Merge pull request #845 from f1shl3gs/remove_xdrgen\n\nremove xdrgen from virt",
-          "timestamp": "2023-03-16T17:38:59+08:00",
-          "tree_id": "5abebffe4c40a6b0e132fdcaf1e33b4ee15af838",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c80b4c799c9e41cd19181d72e8139518a64e193"
-        },
-        "date": 1678961028960,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1200,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57359.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "961bc6cdbf871df94636fce4ae67cb8bcadacd00",
           "message": "Merge pull request #841 from f1shl3gs/dependabot/cargo/quote-1.0.26\n\nchore(deps): bump quote from 1.0.23 to 1.0.26",
           "timestamp": "2023-03-17T00:10:15+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44586.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b10aed056eb4363eb2d9ce4a735976a7e190c20a",
+          "message": "chore(deps): bump sqlx from 0.7.0-alpha.3 to 0.7.0 (#1060)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.0-alpha.3 to 0.7.0.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/compare/v0.7.0-alpha.3...v0.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-04T13:10:39+08:00",
+          "tree_id": "7c94060377af33bcbe93347b360fa2c1765ec041",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b10aed056eb4363eb2d9ce4a735976a7e190c20a"
+        },
+        "date": 1688448618260,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1051,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44579.7,
             "unit": "KiB"
           }
         ]
