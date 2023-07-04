@@ -15,4 +15,4 @@ regex = { version = "1.8.4" }
 serde = { version = "1.0.166" }
 
 [dev-dependencies]
-criterion = { version = "0.4.0", default-features = false }
+criterion = { version = "0.5.1", default-features = false }
