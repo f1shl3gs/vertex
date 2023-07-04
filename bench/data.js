@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688496865319,
+  "lastUpdate": 1688496985515,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b86f4fbbab8aac80b7fee01e379b0fe73492ebce",
-          "message": "Merge pull request #855 from f1shl3gs/dependabot/cargo/rsntp-3.0.2\n\nchore(deps): bump rsntp from 3.0.1 to 3.0.2",
-          "timestamp": "2023-03-20T14:20:52+08:00",
-          "tree_id": "036515a0c1c6b59a6c85cdfb175f88ee954791ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b86f4fbbab8aac80b7fee01e379b0fe73492ebce"
-        },
-        "date": 1679294614201,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1141,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57610.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "efeca4b6f1703116c95fb84f08fc184ca7d2c985",
           "message": "Merge pull request #858 from f1shl3gs/remove_evmap\n\nremove evmap which is unused",
           "timestamp": "2023-03-20T14:21:06+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1130,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44575,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "922ebc7ceff7e24b998e382abff91f217afe73cd",
+          "message": "fix README.md (#1066)",
+          "timestamp": "2023-07-05T02:35:32+08:00",
+          "tree_id": "b12d2009a80b0fa37cb55004c63d8130c16891d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/922ebc7ceff7e24b998e382abff91f217afe73cd"
+        },
+        "date": 1688496971027,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1080,
             "unit": "s"
           },
           {
