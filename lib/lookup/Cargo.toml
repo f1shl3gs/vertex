@@ -13,8 +13,8 @@ required-features = []
 
 [dependencies]
 configurable = { path = "../configurable" }
-serde = { version = "1.0.159", default-features = false }
+serde = { version = "1.0.166", default-features = false }
 
 [dev-dependencies]
-serde_json = { version = "1.0.99" }
+serde_json = { version = "1.0.100" }
 criterion = { version = "0.5.1", default-features = false, features = ["html_reports"] }
