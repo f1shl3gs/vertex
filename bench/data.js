@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688539997521,
+  "lastUpdate": 1688568026950,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "490ba49db76c3e8da998d30f6adf61625efb4b09",
-          "message": "Merge pull request #851 from f1shl3gs/dependabot/cargo/serde-1.0.157\n\nchore(deps): bump serde from 1.0.156 to 1.0.157",
-          "timestamp": "2023-03-20T16:34:35+08:00",
-          "tree_id": "c5956d0d6a8b89611d45c5a1917944b815fd0c55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/490ba49db76c3e8da998d30f6adf61625efb4b09"
-        },
-        "date": 1679302670018,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1157,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57630.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "25dc439b7c5117886ec0fce17587467c4735cb21",
           "message": "Merge pull request #854 from f1shl3gs/dependabot/cargo/async-trait-0.1.67\n\nchore(deps): bump async-trait from 0.1.66 to 0.1.67",
           "timestamp": "2023-03-20T16:34:58+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1314,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44572.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9f1edbb54882be15c8864e6ba383530e22dfcac7",
+          "message": "Add `lib/lookup` to workspace.members (#1071)\n\n* add `lib/lookup` to workspace.members\r\n\r\n* update dependencies\r\n\r\n* sort workspace.members",
+          "timestamp": "2023-07-05T22:19:04+08:00",
+          "tree_id": "3a919e5da23dc62ccb56c22a833d2ed803e35ab6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9f1edbb54882be15c8864e6ba383530e22dfcac7"
+        },
+        "date": 1688568013190,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1128,
             "unit": "s"
           },
           {
