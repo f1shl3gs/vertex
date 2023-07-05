@@ -20,7 +20,7 @@ tracing-test = { version = "0.2.4" }
 serde = { version = "1.0.166", default-features = false, features = ["derive"] }
 chrono = { version = "0.4.26", default-features = false }
 dashmap = { version = "5.2", default-features = false }
-serde_json = { version = "1.0.99" }
+serde_json = { version = "1.0.100" }
 bytes = { version = "1.4.0" }
 bstr = { version = "1.5.0", default-features = false }
 tokio = { version = "1.29.1", default-features = false, features = ["rt", "macros"] }
