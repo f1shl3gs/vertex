@@ -355,7 +355,7 @@ tikv-jemalloc-sys = { version = "0.5.3", optional = true, features = ["stats"] }
 
 # Futrures & Tokio
 async-stream = { version = "0.3.5", optional = true }
-async-trait = { version = "0.1.69" }
+async-trait = { version = "0.1.70" }
 futures = { version = "0.3.28", default-features = false }
 futures-util = { version = "0.3.27", default-features = false }
 pin-project = { version = "1.1.2", default-features = false }
