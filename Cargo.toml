@@ -36,6 +36,7 @@ members = [
     "lib/event",
     "lib/finalize",
     "lib/framework",
+    "lib/lookup",
     "lib/multiline",
     "lib/metrics",
     "lib/prometheus",
