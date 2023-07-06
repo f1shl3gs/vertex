@@ -1,6 +1,5 @@
 use std::io::{self, BufRead};
 
-use bstr::Finder;
 use bytes::BytesMut;
 use tracing::warn;
 
@@ -38,7 +37,6 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
 ) -> io::Result<Option<usize>> {
     let mut total_read = 0;
     let mut discarding = false;
-    let delim_finder = Finder::new(delim);
     let delim_len = delim.len();
 
     loop {
@@ -49,7 +47,7 @@ pub fn read_until_with_max_size<R: BufRead + ?Sized>(
         };
 
         let (done, used) = {
-            match delim_finder.find(available) {
+            match available.windows(delim_len).position(|w| w == delim) {
                 Some(i) => {
                     if !discarding {
                         buf.extend_from_slice(&available[..i]);
