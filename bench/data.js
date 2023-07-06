@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688627138960,
+  "lastUpdate": 1688627176726,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "88ac51be7ded1666b7cac6d5208218bdf860bc05",
-          "message": "Clickhouse sink (#859)\n\n* add keys() for Tags\r\n\r\n* add 'acknowledgements()' for SinkConfig\r\n\r\n* add components test helpers\r\n\r\n* add clickhouse sink",
-          "timestamp": "2023-03-20T18:05:10+08:00",
-          "tree_id": "60d5acd8736e6020edb29acca37a45b29f84f8f2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/88ac51be7ded1666b7cac6d5208218bdf860bc05"
-        },
-        "date": 1679308122292,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1177,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57778.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2c1802bbc648882ebef8267c38641a29f039406c",
           "message": "Merge pull request #860 from f1shl3gs/dependabot/cargo/serde-1.0.158\n\nchore(deps): bump serde from 1.0.157 to 1.0.158",
           "timestamp": "2023-03-21T15:52:03+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44834.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "564be20a47444296902324476059ad6da1d1bb8f",
+          "message": "chore(deps): bump regex from 1.8.4 to 1.9.0 (#1077)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.4 to 1.9.0.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.4...1.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-06T14:40:53+08:00",
+          "tree_id": "7aeda00f377b73f15180e595306a4f7339dcc0e3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/564be20a47444296902324476059ad6da1d1bb8f"
+        },
+        "date": 1688627160387,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1320,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44843,
             "unit": "KiB"
           }
         ]
