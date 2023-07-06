@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688679826908,
+  "lastUpdate": 1688686816101,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "116f16d1c3601ca69e2cf07385ec478c22c56755",
-          "message": "Merge pull request #865 from f1shl3gs/add_missing_component\n\nadd missing components",
-          "timestamp": "2023-03-22T11:05:12+08:00",
-          "tree_id": "dddaaede26ae5b0809b7fc1d052723627695b911",
-          "url": "https://github.com/f1shl3gs/vertex/commit/116f16d1c3601ca69e2cf07385ec478c22c56755"
-        },
-        "date": 1679455663892,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1131,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57756.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "571b0d6a321c8ab5aee0cd93561cbc39932ffd52",
           "message": "Top (#867)\n\n* move alloc features to main.rs\r\n\r\n* jemalloc-extension require feature jemalloc to compile",
           "timestamp": "2023-03-22T11:30:47+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44861,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "22842e37d436a6b20f33f7f7db9c501c5736766c",
+          "message": "remove bstr (#1079)",
+          "timestamp": "2023-07-07T07:14:30+08:00",
+          "tree_id": "97994b3effe40a191b28cbe5bf428a368bf702db",
+          "url": "https://github.com/f1shl3gs/vertex/commit/22842e37d436a6b20f33f7f7db9c501c5736766c"
+        },
+        "date": 1688686799355,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1360,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44838.3,
             "unit": "KiB"
           }
         ]
