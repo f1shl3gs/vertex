@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688668946156,
+  "lastUpdate": 1688679826908,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10554c8d2aa22b377bb98c16363f5855e1bd97ec",
-          "message": "Merge pull request #864 from f1shl3gs/source/clickhouse_metrics\n\nadd source/clickhouse_metrics",
-          "timestamp": "2023-03-22T06:26:10+08:00",
-          "tree_id": "b01305ade94fadb4d7fb1f29cab97b2747a6d00d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10554c8d2aa22b377bb98c16363f5855e1bd97ec"
-        },
-        "date": 1679439414591,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1566,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57756.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "116f16d1c3601ca69e2cf07385ec478c22c56755",
           "message": "Merge pull request #865 from f1shl3gs/add_missing_component\n\nadd missing components",
           "timestamp": "2023-03-22T11:05:12+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44859.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3dda3b823e9eb32b45d07ea6cd3da9cbd4829cde",
+          "message": "chore(deps): bump bstr from 1.5.0 to 1.6.0 (#1075)\n\nBumps [bstr](https://github.com/BurntSushi/bstr) from 1.5.0 to 1.6.0.\r\n- [Commits](https://github.com/BurntSushi/bstr/compare/1.5.0...1.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bstr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-07T05:22:45+08:00",
+          "tree_id": "215cb1674eb9d0d88aabb2ab4c99078f2dea6ab1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3dda3b823e9eb32b45d07ea6cd3da9cbd4829cde"
+        },
+        "date": 1688679812443,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1101,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44861,
             "unit": "KiB"
           }
         ]
