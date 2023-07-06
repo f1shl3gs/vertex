@@ -428,7 +428,7 @@ regex = { version = "1.8.4" }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 seahash = { version = "4.1.0", default-features = false, optional = true }
-smallvec = { version = "1.10.0", optional = true, features = ["union"] }
+smallvec = { version = "1.11.0", optional = true, features = ["union"] }
 snap = { version = "1.1.0", default-features = false, optional = true }
 sqlx = { version = "0.7.0", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.41" }
