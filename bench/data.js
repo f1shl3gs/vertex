@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688626975411,
+  "lastUpdate": 1688627138960,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2d5416170f80465bfe4970d2a953f05ef6e7e2fa",
-          "message": "Merge pull request #853 from f1shl3gs/dependabot/cargo/async-recursion-1.0.4\n\nchore(deps): bump async-recursion from 1.0.2 to 1.0.4",
-          "timestamp": "2023-03-20T16:34:47+08:00",
-          "tree_id": "5846ccfacbe921d54a5e6408b2c050bcdcc45320",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2d5416170f80465bfe4970d2a953f05ef6e7e2fa"
-        },
-        "date": 1679303259552,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1485,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57612.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "88ac51be7ded1666b7cac6d5208218bdf860bc05",
           "message": "Clickhouse sink (#859)\n\n* add keys() for Tags\r\n\r\n* add 'acknowledgements()' for SinkConfig\r\n\r\n* add components test helpers\r\n\r\n* add clickhouse sink",
           "timestamp": "2023-03-20T18:05:10+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44849.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "08711ba2a4c9ac22b7f636bd10ef41f41d10424e",
+          "message": "chore(deps): bump serde_path_to_error from 0.1.12 to 0.1.13 (#1076)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.12 to 0.1.13.\r\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\r\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.12...0.1.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_path_to_error\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-06T14:42:50+08:00",
+          "tree_id": "e032e3f026030bf9eb998575844bb2fdc4f019a9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/08711ba2a4c9ac22b7f636bd10ef41f41d10424e"
+        },
+        "date": 1688627125196,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1115,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44834.4,
             "unit": "KiB"
           }
         ]
