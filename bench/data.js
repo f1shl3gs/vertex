@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1688722879295,
+  "lastUpdate": 1688722974351,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd",
-          "message": "Propgate trace through http request (#868)\n\n* move http chunk encoder to config/provider/http\r\n\r\n* propagate trace data through http request",
-          "timestamp": "2023-03-22T11:29:27+08:00",
-          "tree_id": "c3008cb86e554c955ebb03bef322d6c4518c2f69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd"
-        },
-        "date": 1679457310311,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1286,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57769.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d0f555e4d39789b174a99abd0075deb5f82f42a0",
           "message": "Merge pull request #871 from f1shl3gs/dependabot/cargo/sqlx-0.6.3\n\nchore(deps): bump sqlx from 0.6.2 to 0.6.3",
           "timestamp": "2023-03-22T13:26:28+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44849.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d73108dbe9041dae9a9349177f5da8431caf1431",
+          "message": "chore(deps): bump serde from 1.0.166 to 1.0.167 (#1081)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.166 to 1.0.167.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.166...v1.0.167)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-07T17:20:50+08:00",
+          "tree_id": "00a76568039390011ffc5d07c6799eee1ff6aa6e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d73108dbe9041dae9a9349177f5da8431caf1431"
+        },
+        "date": 1688722960196,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1140,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44870.2,
             "unit": "KiB"
           }
         ]
