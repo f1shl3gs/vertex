@@ -384,8 +384,8 @@ serde_json = { version = "1.0.100", default-features = false }
 
 # Netlink
 netlink-sys = { version = "0.8.5", features = ["tokio_socket"], optional = true }
-netlink-packet-sock-diag = { version = "0.4.1", optional = true }
-netlink-packet-core = { version = "0.5.0", optional = true }
+netlink-packet-sock-diag = { version = "0.4.2", optional = true }
+netlink-packet-core = { version = "0.7.0", optional = true }
 
 # Protobuf
 prost = { version = "0.11.9", default-features = false, features = ["std"] }

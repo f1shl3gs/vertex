@@ -120,7 +120,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
             let pkt = <NetlinkMessage<SockDiagMessage>>::deserialize(bytes).unwrap();
 
             match pkt.payload {
-                NetlinkPayload::Noop | NetlinkPayload::Ack(_) => {}
+                NetlinkPayload::Noop => {}
                 NetlinkPayload::InnerMessage(SockDiagMessage::InetResponse(resp)) => {
                     match resp.header.state {
                         TCP_ESTABLISHED => stats.established += 1,
@@ -137,7 +137,7 @@ async fn fetch_tcp_stats(family: u8) -> Statistics {
                         _ => {}
                     }
                 }
-                NetlinkPayload::Done => {
+                NetlinkPayload::Done(_msg) => {
                     break 'RECV;
                 }
                 NetlinkPayload::Error(err) => {
