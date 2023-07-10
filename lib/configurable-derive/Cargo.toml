@@ -8,6 +8,6 @@ publish = false
 proc-macro = true
 
 [dependencies]
-proc-macro2 = { version = "1.0.63", default-features = false }
+proc-macro2 = { version = "1.0.64", default-features = false }
 quote = { version = "1.0.29", default-features = false }
 syn = { version = "2.0.25", default-features = false }
