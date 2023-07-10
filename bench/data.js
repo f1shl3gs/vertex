@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689000814015,
+  "lastUpdate": 1689001744050,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4f457f4a497aec5889166a2e474393f4ca008949",
-          "message": "Simplify tracing limit (#873)\n\n* simplify tracing-limit\r\n\r\n* refine no metric log",
-          "timestamp": "2023-03-22T16:46:21+08:00",
-          "tree_id": "c3b8d4cbbf8cdb53f6bca49aed7f479c06fea41a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4f457f4a497aec5889166a2e474393f4ca008949"
-        },
-        "date": 1679476168663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1136,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57773.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "59203013b7f50c90d6fb01b5005eccadbbf447e7",
           "message": "regen Cargo.lock (#874)",
           "timestamp": "2023-03-22T19:10:20+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44864.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f79f428dc054651f1038d058aa12ac222fa5e14f",
+          "message": "chore(deps): bump netlink-packet-core from 0.5.0 to 0.7.0 (#1087)\n\n* chore(deps): bump netlink-packet-core from 0.5.0 to 0.7.0\r\n\r\nBumps [netlink-packet-core](https://github.com/rust-netlink/netlink-packet-core) from 0.5.0 to 0.7.0.\r\n- [Release notes](https://github.com/rust-netlink/netlink-packet-core/releases)\r\n- [Changelog](https://github.com/rust-netlink/netlink-packet-core/blob/main/CHANGELOG)\r\n- [Commits](https://github.com/rust-netlink/netlink-packet-core/compare/v0.5.0...v0.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: netlink-packet-core\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update netlink-packet-sock-diag\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-07-10T22:46:59+08:00",
+          "tree_id": "55828546273cb0b31b25a2618ff5e58f8118f79c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f79f428dc054651f1038d058aa12ac222fa5e14f"
+        },
+        "date": 1689001729853,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1166,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44864.3,
             "unit": "KiB"
           }
         ]
