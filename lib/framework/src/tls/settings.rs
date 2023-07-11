@@ -111,7 +111,7 @@ impl TlsConfig {
                 let key = load_private_key(key_file, self.key_pass.as_deref())?;
 
                 builder
-                    .with_single_cert(certs, key)
+                    .with_client_auth_cert(certs, key)
                     .map_err(TlsError::TlsBuild)?
             }
             (Some(_), None) => return Err(TlsError::MissingKey),
