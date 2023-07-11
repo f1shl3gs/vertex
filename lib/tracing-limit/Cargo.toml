@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 tracing-subscriber = { version = "0.3.17", default-features = false }
 tracing-core = { version = "0.1.31", default-features = false }
-dashmap = { version = "5.2.0", default-features = false }
+dashmap = { version = "5.5.0", default-features = false }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false }
