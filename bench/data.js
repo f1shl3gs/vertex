@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689052385834,
+  "lastUpdate": 1689076466997,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1a5f055284ada49f592de04f3dcc8ddeed0a3466",
-          "message": "fix condition bench (#879)",
-          "timestamp": "2023-03-24T11:07:21+08:00",
-          "tree_id": "9c7bd85088a583fb4980fcd0ccd59ff3a92bcac2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1a5f055284ada49f592de04f3dcc8ddeed0a3466"
-        },
-        "date": 1679628582578,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1104,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57321.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44866.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6686e314ea140c071a794e5ccfd292c3603235c7",
+          "message": "chore(deps): bump rustls from 0.21.3 to 0.21.5 (#1090)\n\n* chore(deps): bump rustls from 0.21.3 to 0.21.5\r\n\r\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.3 to 0.21.5.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.3...v/0.21.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecated method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-07-11T19:28:14+08:00",
+          "tree_id": "54aa8856e870442fadd20bc6645a2323c5ac338c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6686e314ea140c071a794e5ccfd292c3603235c7"
+        },
+        "date": 1689076451006,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1373,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44870.1,
             "unit": "KiB"
           }
         ]
