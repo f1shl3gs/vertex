@@ -1,13 +1,11 @@
 use std::time::Duration;
 
+use crate::testing::{ContainerBuilder, WaitFor};
 use event::Event;
 use framework::config::{ProxyConfig, SinkConfig, SinkContext};
 use framework::http::HttpClient;
 use hyper::Body;
 use serde::{Deserialize, Serialize};
-use testcontainers::core::WaitFor;
-use testcontainers::images::generic::GenericImage;
-use testcontainers::RunnableImage;
 use testify::random::random_string;
 
 use super::config::LokiConfig;
@@ -17,16 +15,12 @@ const LOKI_PORT: u16 = 3100;
 #[tokio::test]
 async fn write_and_query() {
     // 1. setup Loki all-in-one container
-    let image = RunnableImage::from(GenericImage::new("grafana/loki", "1.4.1").with_wait_for(
-        WaitFor::StdErrMessage {
-            message: "Starting Loki".to_string(),
-        },
-    ))
-    .with_mapped_port((LOKI_PORT, LOKI_PORT));
-
-    let client = testcontainers::clients::Cli::default();
-    let service = client.run(image);
-    let port = service.get_host_port_ipv4(LOKI_PORT);
+    let container = ContainerBuilder::new("grafana/loki:1.4.1")
+        .port(LOKI_PORT)
+        .run()
+        .unwrap();
+    container.wait(WaitFor::Stderr("Starting Loki")).unwrap();
+    let address = container.get_host_port(LOKI_PORT).unwrap();
 
     // 2. setup loki service
     let label_value = random_string(8);
@@ -35,11 +29,11 @@ async fn write_and_query() {
 compression: none
 encoding:
   codec: json
-endpoint: http://localhost:{}
+endpoint: http://{}
 labels:
   foo: {}
     "#,
-        port, &label_value
+        address, &label_value
     );
 
     let config: LokiConfig = serde_yaml::from_str(&config).unwrap();
@@ -56,7 +50,7 @@ labels:
     tokio::time::sleep(Duration::from_secs(2)).await;
 
     // 3. Query label values
-    let endpoint = format!("http://localhost:{}/loki/api/v1/label/foo/values", port);
+    let endpoint = format!("http://{}/loki/api/v1/label/foo/values", address);
     let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
     let req = http::Request::get(endpoint).body(Body::empty()).unwrap();
     let resp = client.send(req).await.unwrap();

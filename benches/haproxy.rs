@@ -5,7 +5,7 @@ use criterion::{
 };
 
 pub fn parse_haproxy_csv(c: &mut Criterion) {
-    let input = include_str!("../tests/fixtures/haproxy/stats.csv");
+    let input = include_str!("../tests/haproxy/stats.csv");
 
     let mut group: BenchmarkGroup<WallTime> = c.benchmark_group("haproxy");
 

@@ -1,0 +1,9 @@
+version: "3.6"
+
+services:
+  nginx:
+    image: nginx:1.21.3
+    volumes:
+      - tests/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - tests/nginx/nginx_auth_basic.conf:/etc/nginx/nginx_auth_basic.conf:ro
+
