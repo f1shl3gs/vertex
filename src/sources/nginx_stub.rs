@@ -8,11 +8,10 @@ use chrono::Utc;
 use configurable::configurable_component;
 use event::Metric;
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
-use framework::http::{Auth, HttpClient};
+use framework::http::{Auth, HttpClient, HttpError};
 use framework::tls::TlsConfig;
 use framework::Source;
-use futures::TryFutureExt;
-use hyper::{StatusCode, Uri};
+use hyper::{Body, StatusCode, Uri};
 use nom::{
     bytes::complete::{tag, take_while_m_n},
     combinator::{all_consuming, map_res},
@@ -110,8 +109,14 @@ enum BuildError {
 
 #[derive(Debug, Error)]
 enum NginxError {
-    #[error("Invalid response status: {0}")]
+    #[error("build http request failed: {0}")]
+    Http(#[from] http::Error),
+    #[error("send http request failed: {0}")]
+    Request(#[from] HttpError),
+    #[error("invalid response status: {0}")]
     InvalidResponseStatus(StatusCode),
+    #[error("failed to parse nginx stub status, kind: {0:?}")]
+    ParseError(ErrorKind),
 }
 
 #[derive(Debug)]
@@ -180,9 +185,7 @@ impl NginxStub {
     }
 
     async fn collect_metrics(&self) -> crate::Result<Vec<Metric>> {
-        let resp = self.get_nginx_resp().await?;
-
-        let status = NginxStubStatus::try_from(String::from_utf8_lossy(&resp).as_ref())?;
+        let status = get_stub_status(&self.client, &self.endpoint, self.auth.as_ref()).await?;
 
         Ok(vec![
             Metric::gauge_with_tags(
@@ -223,26 +226,28 @@ impl NginxStub {
             ),
         ])
     }
-
-    async fn get_nginx_resp(&self) -> crate::Result<Bytes> {
-        let mut req = http::Request::get(&self.endpoint).body(hyper::Body::empty())?;
-        if let Some(auth) = &self.auth {
-            auth.apply(&mut req);
-        }
-
-        let resp = self.client.send(req).await?;
-        let (parts, body) = resp.into_parts();
-        match parts.status {
-            StatusCode::OK => hyper::body::to_bytes(body).err_into().await,
-            status => Err(Box::new(NginxError::InvalidResponseStatus(status))),
-        }
-    }
 }
 
-#[derive(Debug, Error, PartialEq)]
-enum ParseError {
-    #[error("failed to parse nginx stub status, kind: {0:?}")]
-    NginxStubStatusParseError(ErrorKind),
+async fn get_stub_status(
+    cli: &HttpClient,
+    uri: &str,
+    auth: Option<&Auth>,
+) -> Result<NginxStubStatus, NginxError> {
+    let mut req = http::Request::get(uri).body(Body::empty())?;
+    if let Some(auth) = auth {
+        auth.apply(&mut req);
+    }
+
+    let resp = cli.send(req).await?;
+    let (parts, body) = resp.into_parts();
+    let body: Bytes = match parts.status {
+        StatusCode::OK => hyper::body::to_bytes(body)
+            .await
+            .map_err(|err| NginxError::Request(HttpError::from(err)))?,
+        status => return Err(NginxError::InvalidResponseStatus(status)),
+    };
+
+    NginxStubStatus::try_from(String::from_utf8_lossy(&body).as_ref())
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -264,7 +269,7 @@ fn get_u64(input: &str) -> nom::IResult<&str, u64, nom::error::Error<&str>> {
 }
 
 impl<'a> TryFrom<&'a str> for NginxStubStatus {
-    type Error = ParseError;
+    type Error = NginxError;
 
     // The `ngx_http_stub_status_module` response:
     // https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_stub_status_module.c#L137-L145
@@ -293,7 +298,7 @@ impl<'a> TryFrom<&'a str> for NginxStubStatus {
             }
 
             Err(err) => match err {
-                nom::Err::Error(err) => Err(ParseError::NginxStubStatusParseError(err.code)),
+                nom::Err::Error(err) => Err(NginxError::ParseError(err.code)),
 
                 nom::Err::Incomplete(_) | nom::Err::Failure(_) => unreachable!(),
             },
@@ -334,74 +339,60 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-nginx_stub"))]
 mod integration_tests {
+    use std::env::current_dir;
 
-    use super::NginxStubStatus;
+    use super::get_stub_status;
+    use crate::testing::ContainerBuilder;
     use framework::config::ProxyConfig;
     use framework::http::{Auth, HttpClient};
-    use hyper::{Body, StatusCode, Uri};
-    use std::convert::TryInto;
-    use testcontainers::core::WaitFor;
-    use testcontainers::images::generic::GenericImage;
-    use testcontainers::RunnableImage;
 
-    async fn test_nginx(path: &'static str, auth: Option<Auth>, proxy: ProxyConfig) {
-        let pwd = std::env::current_dir().unwrap();
-        let client = testcontainers::clients::Cli::default();
-        let image = RunnableImage::from(GenericImage::new("nginx", "1.21.3").with_wait_for(
-            WaitFor::StdOutMessage {
-                message: "worker process".to_string(),
-            },
-        ))
-        .with_volume((
-            format!("{}/tests/fixtures/nginx/nginx.conf", pwd.to_string_lossy()),
-            "/etc/nginx/nginx.conf".to_string(),
-        ))
-        .with_volume((
-            format!(
-                "{}/tests/fixtures/nginx/nginx_auth_basic.conf",
-                pwd.to_string_lossy()
-            ),
-            "/etc/nginx/nginx_auth_basic.conf".to_string(),
-        ));
-
-        let service = client.run(image);
-        let host_port = service.get_host_port_ipv4(80);
-        let uri = format!("http://127.0.0.1:{}{}", host_port, path)
-            .parse::<Uri>()
+    #[tokio::test]
+    async fn new_test_nginx() {
+        let pwd = current_dir().unwrap();
+        let container = ContainerBuilder::new("nginx:1.21.3")
+            .port(80)
+            .with_volume(
+                format!("{}/tests/nginx/nginx.conf", pwd.to_string_lossy()),
+                "/etc/nginx/nginx.conf".to_string(),
+            )
+            .with_volume(
+                format!(
+                    "{}/tests/nginx/nginx_auth_basic.conf",
+                    pwd.to_string_lossy()
+                ),
+                "/etc/nginx/nginx_auth_basic.conf".to_string(),
+            )
+            .run()
             .unwrap();
 
-        let cli = HttpClient::new(&None, &proxy.clone()).unwrap();
-        let mut req = http::Request::get(uri).body(Body::empty()).unwrap();
+        container
+            .wait(crate::testing::WaitFor::Stdout(" start worker processes"))
+            .unwrap();
 
-        if let Some(auth) = auth {
-            auth.apply(&mut req);
-        }
+        let address = container.get_host_port(80).unwrap();
 
-        let resp = cli.send(req).await.unwrap();
+        let cli = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
-        let (parts, body) = resp.into_parts();
-        assert_eq!(parts.status, StatusCode::OK);
-        let s = hyper::body::to_bytes(body).await.unwrap();
+        // without auth
+        let status = get_stub_status(&cli, &format!("http://{}/basic_status", address), None)
+            .await
+            .unwrap();
+        assert_eq!(status.requests, 1);
+        assert_eq!(status.active, 1);
 
-        let s = std::str::from_utf8(&s).unwrap();
-        let _status: NginxStubStatus = s.try_into().unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_nginx_stub_status() {
-        test_nginx("/basic_status", None, ProxyConfig::default()).await
-    }
-
-    #[tokio::test]
-    async fn test_nginx_stub_status_with_auth() {
-        test_nginx(
-            "/basic_status_auth",
-            Some(Auth::Basic {
+        // with auth
+        let status = get_stub_status(
+            &cli,
+            &format!("http://{}/basic_status_auth", address),
+            Some(&Auth::Basic {
                 user: "tom".to_string(),
                 password: "123456".to_string(),
             }),
-            ProxyConfig::default(),
         )
         .await
+        .unwrap();
+        assert_eq!(status.requests, 2);
+        assert_eq!(status.active, 1);
+        assert_eq!(status.accepts, 1);
     }
 }

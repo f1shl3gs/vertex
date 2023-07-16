@@ -1056,7 +1056,7 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-redis"))]
 mod integration_tests {
     use super::*;
-    use testcontainers::images::redis::Redis;
+    use crate::testing::{ContainerBuilder, WaitFor};
 
     const REDIS_PORT: u16 = 6379;
 
@@ -1071,10 +1071,14 @@ mod integration_tests {
 
     #[tokio::test]
     async fn dump_config() {
-        let client = testcontainers::clients::Cli::default();
-        let service = client.run(Redis::default());
-        let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("localhost:{}", host_port);
+        let container = ContainerBuilder::new("redis:5.0")
+            .port(REDIS_PORT)
+            .run()
+            .unwrap();
+        container
+            .wait(WaitFor::Stdout("Ready to accept connections"))
+            .unwrap();
+        let url = container.get_host_port(REDIS_PORT).unwrap();
 
         let mut cli = Client::connect(url).await.unwrap();
         let resp: Vec<String> = cli.query(&["config", "get", "*"]).await.unwrap();
@@ -1084,10 +1088,14 @@ mod integration_tests {
 
     #[tokio::test]
     async fn test_slowlog() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("localhost:{}", host_port);
+        let container = ContainerBuilder::new("redis:5.0")
+            .port(REDIS_PORT)
+            .run()
+            .unwrap();
+        container
+            .wait(WaitFor::Stdout("Ready to accept connections"))
+            .unwrap();
+        let url = container.get_host_port(REDIS_PORT).unwrap();
         let mut cli = Client::connect(url).await.unwrap();
 
         write_testdata(&mut cli).await;
@@ -1098,10 +1106,14 @@ mod integration_tests {
 
     #[tokio::test]
     async fn test_latency_latest() {
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(Redis::default());
-        let host_port = service.get_host_port_ipv4(REDIS_PORT);
-        let url = format!("localhost:{}", host_port);
+        let container = ContainerBuilder::new("redis:5.0")
+            .port(REDIS_PORT)
+            .run()
+            .unwrap();
+        container
+            .wait(WaitFor::Stdout("Ready to accept connections"))
+            .unwrap();
+        let url = container.get_host_port(REDIS_PORT).unwrap();
         let mut cli = Client::connect(url).await.unwrap();
 
         write_testdata(&mut cli).await;

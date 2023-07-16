@@ -218,19 +218,17 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
     use super::fetch_stats;
-    use testcontainers::images::zookeeper::Zookeeper;
-    use testcontainers::RunnableImage;
+    use crate::testing::{ContainerBuilder, WaitFor};
 
     #[tokio::test]
     async fn test_fetch_stats() {
-        let client = testcontainers::clients::Cli::default();
-        let image = RunnableImage::from(Zookeeper::default())
-            // .with_env_var(("ALLOW_ANONYMOUS_LOGIN", "yes"))
-            .with_env_var(("ZOO_4LW_COMMANDS_WHITELIST", "*"));
-
-        let service = client.run(image);
-        let host_port = service.get_host_port_ipv4(2181);
-        let addr = format!("127.0.0.1:{}", host_port);
+        let container = ContainerBuilder::new("zookeeper:3.6.2")
+            .port(2181)
+            .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
+            .run()
+            .unwrap();
+        container.wait(WaitFor::Stdout("- Started ")).unwrap();
+        let addr = container.get_host_port(2181).unwrap();
 
         let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
         assert_eq!(version, "3.6.2--803c7f1a12f85978cb049af5e4ef23bd8b688715");
