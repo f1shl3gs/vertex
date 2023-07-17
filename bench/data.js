@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689623583118,
+  "lastUpdate": 1689624857560,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a6f4bfa5c6f0c1b44ea2861d3cc4236ea8b5577",
-          "message": "chore(deps): bump async-trait from 0.1.67 to 0.1.68 (#893)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.67 to 0.1.68.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.67...0.1.68)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-27T17:02:11+08:00",
-          "tree_id": "32f035affd88367456d4fde0b7d089b90fa107ef",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a6f4bfa5c6f0c1b44ea2861d3cc4236ea8b5577"
-        },
-        "date": 1679909840228,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1541,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57306,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a9054b7c71b34f11de3f05bf88d9f7a1d62fb85e",
           "message": "chore(deps): bump indexmap from 1.9.2 to 1.9.3 (#896)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 1.9.2 to 1.9.3.\r\n- [Release notes](https://github.com/bluss/indexmap/releases)\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/compare/1.9.2...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-03-27T21:28:59+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44869.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ff9dea02cfd8eb87350e51d341ae65ef57ae4cf8",
+          "message": "chore(deps): bump quote from 1.0.29 to 1.0.31 (#1106)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.29 to 1.0.31.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.29...1.0.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-18T03:52:15+08:00",
+          "tree_id": "3a13bec51bf929861ce35b647e11447654ef8096",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ff9dea02cfd8eb87350e51d341ae65ef57ae4cf8"
+        },
+        "date": 1689624843462,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1157,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44870.4,
             "unit": "KiB"
           }
         ]
