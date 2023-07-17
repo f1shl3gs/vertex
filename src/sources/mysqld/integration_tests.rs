@@ -1,26 +1,31 @@
-use super::{
-    global_status, global_variables, info_schema_innodb_cmp, info_schema_innodb_cmpmem,
-    info_schema_query_response_time, slave_status,
-};
+use std::net::SocketAddr;
 
-use crate::sources::mysqld::get_mysql_version;
 use sqlx::mysql::{MySqlConnectOptions, MySqlSslMode};
 use sqlx::MySqlPool;
-use testcontainers::core::WaitFor;
-use testcontainers::images::generic::GenericImage;
+
+use super::{
+    get_mysql_version, global_status, global_variables, info_schema_innodb_cmp,
+    info_schema_innodb_cmpmem, info_schema_query_response_time, slave_status,
+};
+use crate::testing::{ContainerBuilder, WaitFor};
 
 #[tokio::test]
 async fn gather() {
-    let client = testcontainers::clients::Cli::default();
     // The official MySQL image does not contains response_time plugin,
     // while percona provide it
-    let image = GenericImage::new("percona", "5.7.35")
-        .with_env_var("MYSQL_ROOT_PASSWORD", "password")
-        .with_wait_for(WaitFor::StdErrMessage {
-            message: "ready for connections".to_string(),
-        });
-    let service = client.run(image);
-    let host_port = service.get_host_port_ipv4(3306);
+    let container = ContainerBuilder::new("percona:5.7.35")
+        .with_env("MYSQL_ROOT_PASSWORD", "password")
+        .port(3306)
+        .run()
+        .unwrap();
+    container
+        .wait(WaitFor::Stderr("ready for connections"))
+        .unwrap();
+    let addr = container
+        .get_host_port(3306)
+        .unwrap()
+        .parse::<SocketAddr>()
+        .unwrap();
 
     std::thread::sleep(std::time::Duration::from_secs(15));
 
@@ -29,7 +34,7 @@ async fn gather() {
             .host("127.0.0.1")
             .username("root")
             .password("password")
-            .port(host_port)
+            .port(addr.port())
             .ssl_mode(MySqlSslMode::Disabled),
     )
     .await

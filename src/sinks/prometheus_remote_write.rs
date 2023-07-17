@@ -369,31 +369,29 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-prometheus_remote_write"))]
 mod integration_tests {
-    use crate::sinks::prometheus_remote_write::RemoteWriteConfig;
+    use std::time::Duration;
+
+    use super::RemoteWriteConfig;
+    use crate::testing::{ContainerBuilder, WaitFor};
     use event::Metric;
     use framework::config::{ProxyConfig, SinkConfig, SinkContext};
     use framework::http::HttpClient;
     use hyper::Body;
     use serde::{Deserialize, Serialize};
-    use std::time::Duration;
-    use testcontainers::core::WaitFor;
-    use testcontainers::images::generic::GenericImage;
 
     #[tokio::test]
     async fn cortex_write_and_query() {
         // 1. Setup Cortex
-        let image = GenericImage::new("ubuntu/cortex", "latest")
-            .with_env_var("TZ", "UTC")
-            .with_wait_for(WaitFor::StdErrMessage {
-                message: "Cortex started".to_string(),
-            });
-
-        let docker = testcontainers::clients::Cli::default();
-        let service = docker.run(image);
-        let host_port = service.get_host_port_ipv4(9009);
+        let container = ContainerBuilder::new("ubuntu/cortex:latest")
+            .with_env("TZ", "UTC")
+            .port(9009)
+            .run()
+            .unwrap();
+        container.wait(WaitFor::Stderr("Cortex started")).unwrap();
+        let address = container.get_host_port(9009).unwrap();
 
         // 2. Setup sink
-        let config = format!("endpoint: http://localhost:{}/api/v1/push", host_port);
+        let config = format!("endpoint: http://{}/api/v1/push", address);
         let config: RemoteWriteConfig = serde_yaml::from_str(&config).unwrap();
         let cx = SinkContext::new_test();
 
@@ -406,10 +404,7 @@ mod integration_tests {
         tokio::time::sleep(Duration::from_secs(2)).await;
 
         // 3. Query label values
-        let endpoint = format!(
-            "http://localhost:{}/prometheus/api/v1/label/__name__/values",
-            host_port
-        );
+        let endpoint = format!("http://{}/prometheus/api/v1/label/__name__/values", address);
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
 
         let req = http::Request::get(endpoint).body(Body::empty()).unwrap();

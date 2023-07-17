@@ -80,7 +80,6 @@ integration-test-consul:
 .PHONY: integration-test-prometheus_remote_write
 integration-test-prometheus_remote_write:
 	cargo test -p vertex --lib sinks::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
-	cargo test -p vertex --lib sources::prometheus_remote_write::integration_tests --features all-integration-tests --no-fail-fast
 
 .PHONY: integration-test-loki
 integration-test-loki:

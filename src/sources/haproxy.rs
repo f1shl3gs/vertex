@@ -1117,7 +1117,7 @@ mod tests {
 
     #[test]
     fn test_parse_csv_resp() {
-        let content = include_str!("../../tests/fixtures/haproxy/stats.csv");
+        let content = include_str!("../../tests/haproxy/stats.csv");
         let reader = BufReader::new(io::Cursor::new(content));
         let metrics = parse_csv(reader).unwrap();
 
@@ -1149,35 +1149,24 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-haproxy"))]
 mod integration_tests {
     use super::*;
+    use crate::testing::ContainerBuilder;
     use framework::config::ProxyConfig;
-    use testcontainers::core::WaitFor;
-    use testcontainers::images::generic::GenericImage;
-    use testcontainers::RunnableImage;
 
     #[tokio::test]
     async fn test_gather() {
         let pwd = std::env::current_dir().unwrap();
-        let port = testify::pick_unused_local_port();
-        let client = testcontainers::clients::Cli::default();
-        let image = RunnableImage::from(
-            GenericImage::new("haproxy", "2.4.7")
-                .with_wait_for(WaitFor::StdOutMessage {
-                    message: "remaining in queue".to_string(),
-                })
-                .with_volume(
-                    format!(
-                        "{}/tests/fixtures/haproxy/haproxy.cfg",
-                        pwd.to_string_lossy()
-                    ),
-                    "/usr/local/etc/haproxy/haproxy.cfg",
-                ),
-        )
-        .with_mapped_port((port, 8404));
-        let service = client.run(image);
-        let host_port = service.get_host_port_ipv4(8404);
+        let container = ContainerBuilder::new("haproxy:2.4.7")
+            .port(8404)
+            .with_volume(
+                format!("{}/tests/haproxy/haproxy.cfg", pwd.to_string_lossy()),
+                "/usr/local/etc/haproxy/haproxy.cfg".to_string(),
+            )
+            .run()
+            .unwrap();
+        let addr = container.get_host_port(8404).unwrap();
 
         // test unhealth gather
-        let uncorrect_port = host_port - 1; // dummy, but ok
+        let uncorrect_port = 111; // dummy, but ok
         let uri = format!("http://127.0.0.1:{}/stats?stats;csv", uncorrect_port)
             .parse()
             .unwrap();
@@ -1186,9 +1175,7 @@ mod integration_tests {
         assert_eq!(metrics.len(), 2);
 
         // test health gather
-        let uri = format!("http://127.0.0.1:{}/stats?stats;csv", host_port)
-            .parse()
-            .unwrap();
+        let uri = format!("http://{}/stats?stats;csv", addr).parse().unwrap();
         let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let metrics = gather(&client, &uri, &None).await;
         assert_ne!(metrics.len(), 2);

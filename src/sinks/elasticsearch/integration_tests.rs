@@ -17,8 +17,6 @@ use futures_util::stream;
 use http::{Request, StatusCode};
 use log_schema::log_schema;
 use serde_json::json;
-use testcontainers::core::WaitFor;
-use testcontainers::images::generic::GenericImage;
 use testify::random::{random_events_with_stream, random_string};
 use tokio::time::sleep;
 
@@ -27,7 +25,7 @@ use super::config::{
     BulkConfig, ElasticsearchAuth, ElasticsearchConfig, ElasticsearchMode,
     DATA_STREAM_TIMESTAMP_KEY,
 };
-use crate::testing::trace_init;
+use crate::testing::{trace_init, ContainerBuilder, WaitFor};
 
 impl ElasticsearchCommon {
     async fn flush_request(&self) -> crate::Result<()> {
@@ -340,49 +338,48 @@ fn insert_events_over_http() {
 
 #[tokio::test]
 async fn insert_events_over_https() {
-    let tag = "7.17.5";
     let pwd = std::env::current_dir()
         .unwrap()
         .to_string_lossy()
         .to_string();
-    let image = GenericImage::new("elasticsearch", tag)
-        .with_env_var("discovery.type", "single-node")
-        .with_env_var("ingest.geoip.downloader.enabled", "false")
-        .with_env_var("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
-        .with_env_var("ELASTIC_PASSWORD", "password")
+    let container = ContainerBuilder::new("elasticsearch:7.17.5")
+        .with_env("discovery.type", "single-node")
+        .with_env("ingest.geoip.downloader.enabled", "false")
+        .with_env("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
+        .with_env("ELASTIC_PASSWORD", "password")
         // setup tls
         .with_volume(
             format!("{}/tests/ca", pwd),
-            "/usr/share/elasticsearch/config/certs",
+            "/usr/share/elasticsearch/config/certs".to_string(),
         )
-        .with_env_var("xpack.security.enabled", "true")
-        .with_env_var("xpack.security.http.ssl.enabled", "true")
-        .with_env_var(
+        .with_env("xpack.security.enabled", "true")
+        .with_env("xpack.security.http.ssl.enabled", "true")
+        .with_env(
             "xpack.security.http.ssl.certificate",
             "certs/intermediate_server/certs/elasticsearch-secure-chain.cert.pem",
         )
-        .with_env_var(
+        .with_env(
             "xpack.security.http.ssl.key",
             "certs/intermediate_server/private/elasticsearch-secure.key.pem",
         )
-        .with_env_var("xpack.security.transport.ssl.enabled", "true")
-        .with_env_var(
+        .with_env("xpack.security.transport.ssl.enabled", "true")
+        .with_env(
             "xpack.security.transport.ssl.certificate",
             "certs/intermediate_server/certs/elasticsearch-secure-chain.cert.pem",
         )
-        .with_env_var(
+        .with_env(
             "xpack.security.transport.ssl.key",
             "certs/intermediate_server/private/elasticsearch-secure.key.pem",
         )
-        .with_wait_for(WaitFor::StdOutMessage {
-            message: "Active license is now [BASIC]; Security is enabled".to_string(),
-        });
-
-    let cli = testcontainers::clients::Cli::default();
-    let container = cli.run(image);
-    let host_port = container.get_host_port_ipv4(9200);
-
-    let endpoint = format!("https://localhost:{}", host_port);
+        .run()
+        .unwrap();
+    container
+        .wait(WaitFor::Stdout(
+            "Active license is now [BASIC]; Security is enabled",
+        ))
+        .unwrap();
+    let address = container.get_host_port(9200).unwrap();
+    let endpoint = format!("https://{}", address);
 
     run_insert_tests(
         ElasticsearchConfig {
@@ -475,24 +472,24 @@ where
 {
     trace_init();
 
-    let tag = "7.17.5";
-    let image = GenericImage::new("elasticsearch", tag)
-        .with_env_var("discovery.type", "single-node")
-        .with_env_var("ingest.geoip.downloader.enabled", "false")
-        .with_env_var("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
-        .with_wait_for(WaitFor::StdOutMessage {
-            message: "Cluster health status changed from [YELLOW] to [GREEN]".to_string(),
-        });
-
-    let cli = testcontainers::clients::Cli::default();
-    let container = cli.run(image);
-    let host_port = container.get_host_port_ipv4(9200);
+    let container = ContainerBuilder::new("elasticsearch:7.17.5")
+        .with_env("discovery.type", "single-node")
+        .with_env("ingest.geoip.downloader.enabled", "false")
+        .with_env("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
+        .run()
+        .unwrap();
+    container
+        .wait(WaitFor::Stdout(
+            "Cluster health status changed from [YELLOW] to [GREEN]",
+        ))
+        .unwrap();
+    let address = container.get_host_port(9200).unwrap();
 
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
         .build()
         .expect("Build async runtime failed");
-    rt.block_on(f(format!("http://localhost:{}", host_port)));
+    rt.block_on(f(format!("http://{}", address)));
 }
 
 #[test]

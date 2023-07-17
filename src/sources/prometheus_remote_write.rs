@@ -299,15 +299,3 @@ mod tests {
         receives_metrics(None).await;
     }
 }
-
-#[cfg(all(test, feature = "integration-tests-prometheus_remote_write"))]
-mod integration_tests {
-    #[tokio::test]
-    async fn receive() {
-        // testcontainers do not support pass custom args,
-        // so `--add-host=host.docker.internal:host-gateway` can't be added,
-        // and prometheus cannot access to host service(our test)
-        //
-        // docker run --rm --add-host=host.docker.internal:host-gateway -p 9090:9090 -v /home/f1shl3gs/Workspaces/clion/vertex/tests/prometheus/remote_write.yml:/opt/bitnami/prometheus/conf/prometheus.yml bitnami/prometheus:2.32.1
-    }
-}
