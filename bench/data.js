@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689584264251,
+  "lastUpdate": 1689584277173,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b261553cd0809c72f30d3bdd9b51c668707958c8",
-          "message": "add #[serde(flatten)] to LogRecord's fields (#889)",
-          "timestamp": "2023-03-25T15:54:50+08:00",
-          "tree_id": "9fb0462be2fa59130e3284c80993b08ab7f59a28",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b261553cd0809c72f30d3bdd9b51c668707958c8"
-        },
-        "date": 1679732233545,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1107,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57303.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a8146727ba9d857e8a285336c8ba81041647eb08",
           "message": "update openssl to 0.10.48 (#890)",
           "timestamp": "2023-03-26T19:33:17+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44857.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ca062a5509b8aaf4ee3f8d99747dfe2bd2119927",
+          "message": "chore(deps): bump dyn-clone from 1.0.11 to 1.0.12 (#1098)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.11 to 1.0.12.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.11...1.0.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-17T16:28:36+08:00",
+          "tree_id": "a3ca1f88f9efaed3906b0e0ad40b449844a6dfed",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ca062a5509b8aaf4ee3f8d99747dfe2bd2119927"
+        },
+        "date": 1689584261310,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1319,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44857.5,
             "unit": "KiB"
           }
         ]
