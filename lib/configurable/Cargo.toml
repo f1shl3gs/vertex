@@ -20,4 +20,4 @@ chrono-tz = { version = "0.8.3", default-features = false }
 
 [dev-dependencies]
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
-serde_yaml = { version = "0.9.22" }
+serde_yaml = { version = "0.9.23" }
