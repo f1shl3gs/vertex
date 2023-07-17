@@ -322,7 +322,7 @@ criterion = { version = "0.5.1", default-features = false, features = ["async_to
 framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.0" }
 rand = { version = "0.8.5" }
-serde_path_to_error = { version = "0.1.13" }
+serde_path_to_error = { version = "0.1.14" }
 tempfile = { version = "3.6.0" }
 testcontainers = { version = "0.14.0" }
 testify = { path = "lib/testify" }
