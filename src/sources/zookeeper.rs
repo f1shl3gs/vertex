@@ -150,6 +150,7 @@ fn parse_version(input: &str) -> String {
     version.to_string()
 }
 
+#[allow(clippy::print_stderr)]
 async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
     let socket = TcpStream::connect(addr).await?;
     let (reader, mut writer) = tokio::io::split(socket);
@@ -165,6 +166,7 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<Str
     let mut peer_state = String::new();
     let mut stats = BTreeMap::new();
     while let Some(line) = lines.next_line().await? {
+        eprintln!("Line: {}", line);
         let (key, value) = match line.split_once('\t') {
             Some(pair) => pair,
             None => {

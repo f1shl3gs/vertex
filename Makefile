@@ -59,7 +59,7 @@ integration-test-redis:
 
 .PHONY: integration-test-zookeeper
 integration-test-zookeeper:
-	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast
+	cargo test -p vertex --lib sources::zookeeper::integration_tests --features all-integration-tests --no-fail-fast -- --nocapture
 
 .PHONY: integration-test-memcached
 integration-test-memcached:
