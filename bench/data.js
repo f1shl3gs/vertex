@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689584277173,
+  "lastUpdate": 1689584441415,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a8146727ba9d857e8a285336c8ba81041647eb08",
-          "message": "update openssl to 0.10.48 (#890)",
-          "timestamp": "2023-03-26T19:33:17+08:00",
-          "tree_id": "bde987aa9cb6ba7274cfcb420b97ef135826d886",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a8146727ba9d857e8a285336c8ba81041647eb08"
-        },
-        "date": 1679831856377,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1217,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57281.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44857.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0341e341af1acaf91f6ea168d574552ee12735df",
+          "message": "chore(deps): bump kube from 0.83.0 to 0.84.0 (#1097)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.83.0 to 0.84.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.83.0...0.84.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-17T16:28:47+08:00",
+          "tree_id": "e5aea6226da86e595bb93fc68a9f62d9991a2ecc",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0341e341af1acaf91f6ea168d574552ee12735df"
+        },
+        "date": 1689584423423,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1430,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44863.1,
             "unit": "KiB"
           }
         ]
