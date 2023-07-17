@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689614235110,
+  "lastUpdate": 1689623511756,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f3d4ceb979b13668a3160d7d0f10de9f3ca9c5f0",
-          "message": "chore(deps): bump syn from 2.0.8 to 2.0.10 (#892)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.8 to 2.0.10.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.8...2.0.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-27T17:01:26+08:00",
-          "tree_id": "9e51565ce309de01a1ac5a602e3c451b81551c4e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4ceb979b13668a3160d7d0f10de9f3ca9c5f0"
-        },
-        "date": 1679909384773,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1404,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57285.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08e6492c29589e2ea7dcf4cbb9dd5ec69ee908ab",
           "message": "chore(deps): bump proc-macro2 from 1.0.53 to 1.0.54 (#894)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.53 to 1.0.54.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.53...1.0.54)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-03-27T17:02:30+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44863.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ac1edc7229fe3f6cf671d108fbb72b03d67a91d6",
+          "message": "chore(deps): bump serde_yaml from 0.9.22 to 0.9.23 (#1095)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.22 to 0.9.23.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.22...0.9.23)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-18T03:30:32+08:00",
+          "tree_id": "4ec31c427a9d56f528b1e5710a8e68944b74b3fe",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ac1edc7229fe3f6cf671d108fbb72b03d67a91d6"
+        },
+        "date": 1689623496928,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1119,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44870,
             "unit": "KiB"
           }
         ]
