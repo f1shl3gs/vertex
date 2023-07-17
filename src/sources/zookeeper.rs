@@ -150,7 +150,6 @@ fn parse_version(input: &str) -> String {
     version.to_string()
 }
 
-#[allow(clippy::print_stderr)]
 async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<String, f64>), Error> {
     let socket = TcpStream::connect(addr).await?;
     let (reader, mut writer) = tokio::io::split(socket);
@@ -166,7 +165,6 @@ async fn fetch_stats(addr: &str) -> Result<(String, String, String, BTreeMap<Str
     let mut peer_state = String::new();
     let mut stats = BTreeMap::new();
     while let Some(line) = lines.next_line().await? {
-        eprintln!("Line: {}", line);
         let (key, value) = match line.split_once('\t') {
             Some(pair) => pair,
             None => {
@@ -220,7 +218,8 @@ mod tests {
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
     use super::fetch_stats;
-    use crate::testing::{ContainerBuilder, WaitFor};
+    use crate::testing::ContainerBuilder;
+    use std::time::Duration;
 
     #[tokio::test]
     async fn test_fetch_stats() {
@@ -229,7 +228,8 @@ mod integration_tests {
             .with_env("ZOO_4LW_COMMANDS_WHITELIST", "*")
             .run()
             .unwrap();
-        container.wait(WaitFor::Stdout("- Started ")).unwrap();
+        std::thread::sleep(Duration::from_secs(5));
+        // container.wait(WaitFor::Stdout("- Started ")).unwrap();
         let addr = container.get_host_port(2181).unwrap();
 
         let (version, state, _peer_state, stats) = fetch_stats(addr.as_str()).await.unwrap();
