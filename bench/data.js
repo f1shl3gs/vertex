@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689333110675,
+  "lastUpdate": 1689583708198,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a",
-          "message": "Build vertex without zpages (#883)\n\n* copy `Metric` and `Point`\r\n\r\n* remove zpages from benches feature",
-          "timestamp": "2023-03-24T17:18:24+08:00",
-          "tree_id": "b8461ba08c2260e70deda1ebdc1c3dbf2472aa11",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a"
-        },
-        "date": 1679650878902,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1126,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57301.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "adee443f01765f34dfa48ea0a6b0ecef0d5e90aa",
           "message": "update to 1.68.1 (#884)",
           "timestamp": "2023-03-24T17:40:57+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44861.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b9317c7cac03c1a1c357e8421b22e39bba81a9f",
+          "message": "chore(deps): bump serde_path_to_error from 0.1.13 to 0.1.14 (#1104)\n\nBumps [serde_path_to_error](https://github.com/dtolnay/path-to-error) from 0.1.13 to 0.1.14.\r\n- [Release notes](https://github.com/dtolnay/path-to-error/releases)\r\n- [Commits](https://github.com/dtolnay/path-to-error/compare/0.1.13...0.1.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_path_to_error\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-17T16:27:46+08:00",
+          "tree_id": "397a67abb1ce5087e06748956fa77ad92c982b53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b9317c7cac03c1a1c357e8421b22e39bba81a9f"
+        },
+        "date": 1689583694076,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1081,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44859.9,
             "unit": "KiB"
           }
         ]
