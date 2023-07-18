@@ -74,7 +74,7 @@ rustls-pemfile = { version = "1.0.3", default-features = false }
 smallvec = { version = "1.11.0", features = ["union"] }
 serde = { version = "1.0.171", default-features = false, features = ["derive", "std"] }
 serde_json = { version = "1.0.103", default-features = false }
-serde_yaml = { version = "0.9.23" }
+serde_yaml = { version = "0.9.24" }
 snap = { version = "1.1.0", default-features = false }
 socket2 = { version = "0.5.3", default-features = false }
 syslog_loose = { version = "0.18.0", default-features = false }

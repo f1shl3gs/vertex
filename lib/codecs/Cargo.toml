@@ -11,7 +11,7 @@ syslog = ["syslog_loose"]
 [dev-dependencies]
 tokio = { version = "1.29.1", default-features = false, features = ["test-util", "macros"] }
 futures-util = { version = "0.3.27" }
-serde_yaml = { version = "0.9.23" }
+serde_yaml = { version = "0.9.24" }
 serde_path_to_error = { version = "0.1.14" }
 
 [dependencies]
