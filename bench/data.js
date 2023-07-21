@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689969924191,
+  "lastUpdate": 1689969930279,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7489174f1c122a298543ca8611c9bc56424061b7",
-          "message": "Merge pull request #817 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.5\n\nchore(deps): bump netlink-sys from 0.8.4 to 0.8.5",
-          "timestamp": "2023-03-06T14:54:33+08:00",
-          "tree_id": "e6d7760915df25760d65b5c85dd006d1f82f9774",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7489174f1c122a298543ca8611c9bc56424061b7"
-        },
-        "date": 1678086030526,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.851,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 42.878,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 68.493,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5bdcad4f1d92817591f37ed23a372514532c5d61",
           "message": "Merge pull request #815 from f1shl3gs/dependabot/cargo/thiserror-1.0.39\n\nchore(deps): bump thiserror from 1.0.38 to 1.0.39",
           "timestamp": "2023-03-06T14:55:20+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.017,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "26a961e6bd3f214578dfbac2dd14c623c32d716c",
+          "message": "fix lib/condition bench (#1115)",
+          "timestamp": "2023-07-22T04:01:01+08:00",
+          "tree_id": "7156271b777fe8defbede06615afd346d2f45276",
+          "url": "https://github.com/f1shl3gs/vertex/commit/26a961e6bd3f214578dfbac2dd14c623c32d716c"
+        },
+        "date": 1689969913275,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.509,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.688,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.178,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 40.614,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 49.796,
             "unit": "ns/op"
           }
         ]
