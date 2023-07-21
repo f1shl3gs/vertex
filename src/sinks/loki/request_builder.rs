@@ -117,7 +117,7 @@ impl From<Vec<LokiRecord>> for LokiBatch {
     }
 }
 
-#[derive(Clone, Default)]
+#[derive(Clone)]
 pub struct LokiBatchEncoder;
 
 impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {

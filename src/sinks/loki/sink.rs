@@ -24,7 +24,6 @@ use super::config::{LokiConfig, OutOfOrderAction};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use super::service::{LokiRequest, LokiService};
 
-#[derive(Default)]
 struct RecordPartitionner;
 
 impl Partitioner for RecordPartitionner {
@@ -42,9 +41,9 @@ pub struct LokiRequestBuilder {
 }
 
 impl LokiRequestBuilder {
-    fn new() -> Self {
+    const fn new() -> Self {
         Self {
-            encoder: LokiBatchEncoder::default(),
+            encoder: LokiBatchEncoder,
         }
     }
 }
@@ -299,7 +298,7 @@ impl LokiSink {
                 let res = filter.filter_record(record);
                 async { res }
             })
-            .batched_partitioned(RecordPartitionner::default(), self.batch_settings)
+            .batched_partitioned(RecordPartitionner, self.batch_settings)
             .request_builder(NonZeroUsize::new(1), self.request_builder)
             .filter_map(|req| async move {
                 match req {
