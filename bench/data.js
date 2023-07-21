@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689970840315,
+  "lastUpdate": 1689971063874,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "51254d869ef1849a875310a5eb0998813eb5159b",
-          "message": "Merge pull request #798 from f1shl3gs/dependabot/cargo/crossbeam-utils-0.8.15\n\nchore(deps): bump crossbeam-utils from 0.8.14 to 0.8.15",
-          "timestamp": "2023-03-01T20:53:40+08:00",
-          "tree_id": "22afce36c85592331ef974c469e8b263f9dc7fdc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/51254d869ef1849a875310a5eb0998813eb5159b"
-        },
-        "date": 1677676448107,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27420000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 978290,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.785,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 46.573,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 158.32,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 357.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1000.1,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d33c44652dab3509d84f7b8903d45049d1376056",
           "message": "Merge pull request #799 from f1shl3gs/dependabot/cargo/prost-build-0.11.8\n\nchore(deps): bump prost-build from 0.11.6 to 0.11.8",
           "timestamp": "2023-03-01T20:53:19+08:00",
@@ -51909,6 +51850,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.894,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "26a961e6bd3f214578dfbac2dd14c623c32d716c",
+          "message": "fix lib/condition bench (#1115)",
+          "timestamp": "2023-07-22T04:01:01+08:00",
+          "tree_id": "7156271b777fe8defbede06615afd346d2f45276",
+          "url": "https://github.com/f1shl3gs/vertex/commit/26a961e6bd3f214578dfbac2dd14c623c32d716c"
+        },
+        "date": 1689971050102,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 44432000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1134900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.662,
             "unit": "ns/op"
           }
         ]
