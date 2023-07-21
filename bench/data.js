@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689918966620,
+  "lastUpdate": 1689960453139,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "83c126bc3a037d308cef440523fcfd59d0c0db55",
-          "message": "remove tempdir which is not maintained anymore (#902)",
-          "timestamp": "2023-03-29T15:23:43+08:00",
-          "tree_id": "9d66a0f526fe43e4ae3cd06b65bb73f78b5a5ce6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83c126bc3a037d308cef440523fcfd59d0c0db55"
-        },
-        "date": 1680076023929,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1140,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57362.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "365253c422d0cda1c191e215ec5fc9ee9190fc7f",
           "message": "remove serde_xml_rs cause xml-rs is not maintained anymore (#903)\n\n* remove serde_xml_rs\r\n\r\n* style",
           "timestamp": "2023-03-29T16:19:08+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44845.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "13bd6b9ff1935a37bd172e6278ace904f6b0bc85",
+          "message": "update rust to 1.71.0 (#1114)",
+          "timestamp": "2023-07-22T01:05:49+08:00",
+          "tree_id": "639158bdf264a99242d376e0061eec65f350f2b9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/13bd6b9ff1935a37bd172e6278ace904f6b0bc85"
+        },
+        "date": 1689960439467,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1140,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44323.8,
             "unit": "KiB"
           }
         ]
