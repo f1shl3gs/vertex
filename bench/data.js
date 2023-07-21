@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1689918631040,
+  "lastUpdate": 1689918672754,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7e6441b27a2729e3152a6d38442b055740d6cc66",
-          "message": "bump syn to 2.0.11 (#900)",
-          "timestamp": "2023-03-29T01:32:56+08:00",
-          "tree_id": "bae8fb9bf81ea61e5af7ebfa4a43186e8cdc331f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e6441b27a2729e3152a6d38442b055740d6cc66"
-        },
-        "date": 1680026221918,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1194,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57359.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44844.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9ff8f7e075b0c6cecadc47addb7763db12b01ba1",
+          "message": "chore(deps): bump tempfile from 3.6.0 to 3.7.0 (#1110)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.6.0 to 3.7.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.6.0...v3.7.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-21T13:27:44+08:00",
+          "tree_id": "61880771f21249039cc83dd9436acd36c6066840",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9ff8f7e075b0c6cecadc47addb7763db12b01ba1"
+        },
+        "date": 1689918656323,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1237,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44845.6,
             "unit": "KiB"
           }
         ]
