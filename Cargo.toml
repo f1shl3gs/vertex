@@ -323,7 +323,7 @@ framework = { path = "lib/framework", features = ["test-util"] }
 pretty_assertions = { version = "1.4.0" }
 rand = { version = "0.8.5" }
 serde_path_to_error = { version = "0.1.14" }
-tempfile = { version = "3.6.0" }
+tempfile = { version = "3.7.0" }
 testify = { path = "lib/testify" }
 tokio = { version = "1.29.1", features = ["test-util", "time"] }
 
