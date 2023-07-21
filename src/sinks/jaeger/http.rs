@@ -42,7 +42,7 @@ impl HttpSinkConfig {
         let sink = BatchedHttpSink::with_logic(
             self.clone(),
             Buffer::new(batch.size, Compression::None),
-            HttpRetryLogic::default(),
+            HttpRetryLogic,
             request_settings,
             batch.timeout,
             client.clone(),

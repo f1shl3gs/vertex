@@ -51,7 +51,7 @@ where
         (
             Self {
                 sender: Some(tx),
-                _phantom: PhantomData::default(),
+                _phantom: PhantomData,
             },
             FinalizerStream {
                 shutdown,
@@ -197,7 +197,7 @@ pub struct EmptyStream<T>(PhantomData<T>);
 
 impl<T> Default for EmptyStream<T> {
     fn default() -> Self {
-        Self(PhantomData::default())
+        Self(PhantomData)
     }
 }
 

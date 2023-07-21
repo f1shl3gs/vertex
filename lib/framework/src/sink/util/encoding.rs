@@ -143,7 +143,7 @@ mod tests {
                 Transformer::default(),
                 codecs::Encoder::<Framer>::new(
                     CharacterDelimitedEncoder::new(b',').into(),
-                    JsonSerializer::default().into(),
+                    JsonSerializer.into(),
                 ),
             );
 

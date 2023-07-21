@@ -4,7 +4,7 @@ use event::Event;
 use tokio_util::codec::Encoder;
 
 /// Serializer that converts an `Event` to bytes using the JSON format.
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Debug)]
 pub struct JsonSerializer;
 
 impl JsonSerializer {
