@@ -348,7 +348,7 @@ impl fmt::Display for Value {
     }
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize, Hash, PartialEq, PartialOrd, Eq)]
+#[derive(Clone, Debug, Default, Serialize, Hash, PartialEq, PartialOrd, Eq)]
 pub struct Tags(BTreeMap<Key, Value>);
 
 impl Tags {

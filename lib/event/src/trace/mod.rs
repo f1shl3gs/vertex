@@ -26,7 +26,7 @@ pub use generator::RngGenerator;
 pub use span::*;
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize)]
 pub struct Key(Cow<'static, str>);
 
 impl Key {
@@ -92,7 +92,7 @@ impl From<Key> for String {
     }
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub enum AnyValue {
     String(Cow<'static, str>),
     Float(f64),
@@ -147,7 +147,7 @@ impl ToString for AnyValue {
     }
 }
 
-#[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub struct KeyValue {
     pub key: Key,
     pub value: AnyValue,
@@ -401,7 +401,7 @@ impl FromStr for TraceState {
 /// A 16-type value which identifies a given trace.
 ///
 /// The id is valid if it contains at least one non-zero byte.
-#[derive(Clone, Copy, Deserialize, Hash, PartialEq, PartialOrd, Serialize, Eq)]
+#[derive(Clone, Copy, Hash, PartialEq, PartialOrd, Serialize, Eq)]
 pub struct TraceId(pub u128);
 
 impl Debug for TraceId {
@@ -579,7 +579,7 @@ impl fmt::LowerHex for TraceFlags {
     }
 }
 
-#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
 pub struct Trace {
     pub service: Cow<'static, str>,
 

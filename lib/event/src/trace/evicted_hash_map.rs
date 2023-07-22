@@ -3,13 +3,13 @@ use std::collections::hash_map::Entry;
 use std::collections::{HashMap, VecDeque};
 
 use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use crate::trace::{AnyValue, Key, KeyValue};
 
 /// A hash map with a capped number of attributes that retains
 /// the most recently set entries.
-#[derive(Clone, Debug, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct EvictedHashMap {
     map: HashMap<Key, AnyValue>,
     evict_list: VecDeque<Key>,

@@ -1,22 +1,22 @@
 use std::collections::BTreeMap;
 
 use metrics::{global_registry, Attributes, Observation, Reporter};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
 pub struct Point {
     pub attrs: BTreeMap<String, String>,
     pub value: f64,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
 pub struct Metric {
     pub name: String,
     pub description: String,
     pub points: Vec<Point>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
 pub struct Statsz {
     pub metrics: Vec<Metric>,
 
