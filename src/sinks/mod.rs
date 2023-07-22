@@ -20,8 +20,6 @@ mod prometheus_remote_write;
 mod pulsar;
 #[cfg(feature = "sinks-socket")]
 pub mod socket;
-#[cfg(feature = "sinks-vertex")]
-mod vertex;
 
 use thiserror::Error;
 

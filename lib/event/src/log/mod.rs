@@ -8,7 +8,7 @@ use chrono::Utc;
 use log_schema::log_schema;
 use lookup::Path;
 use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use tracing::field::Field;
 pub use value::Value;
 
@@ -21,7 +21,7 @@ use value::keys::{all_fields, keys};
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;
 
-#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, PartialEq, PartialOrd, Serialize)]
 pub struct LogRecord {
     #[serde(skip_serializing_if = "skip_serializing_if_empty")]
     pub tags: Tags,

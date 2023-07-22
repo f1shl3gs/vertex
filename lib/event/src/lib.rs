@@ -36,12 +36,12 @@ use bytes::Bytes;
 use chrono::Utc;
 use log_schema::log_schema;
 use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 
 use crate::log::Logs;
 use crate::tags::{Key, Tags};
 
-#[derive(PartialEq, Debug, Clone, Deserialize, Serialize)]
+#[derive(PartialEq, Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Event {
     Log(LogRecord),

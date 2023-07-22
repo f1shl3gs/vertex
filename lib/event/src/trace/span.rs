@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{EvictedHashMap, EvictedQueue, KeyValue, SpanId, TraceFlags, TraceId, TraceState};
 
-#[derive(Clone, Debug, PartialOrd, PartialEq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub struct Event {
     /// name of the event.
     pub name: Cow<'static, str>,
@@ -105,7 +105,7 @@ impl Display for SpanKind {
 /// operations, where a single batch handler processes multiple requests
 /// from different traces or when the handler receives a request from a
 /// different project.
-#[derive(Clone, Debug, PartialEq, PartialOrd, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
 pub struct Link {
     /// The span context of the linked span.
     pub span_context: SpanContext,
@@ -184,7 +184,7 @@ impl Default for Status {
 ///
 /// Spans that do not have the `sampled` flag set in their [`TraceFlags`] will
 /// be ignored by most tracing tools.
-#[derive(Clone, Debug, PartialEq, PartialOrd, Hash, Eq, Deserialize, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Hash, Eq, Serialize)]
 pub struct SpanContext {
     /// A unique identifier for a trace. All spans from the same trace share the same
     /// `trace_id`.
@@ -244,7 +244,7 @@ impl SpanContext {
     }
 }
 
-#[derive(Clone, Debug, Deserialize, PartialEq, PartialOrd, Serialize)]
+#[derive(Clone, Debug, PartialEq, PartialOrd, Serialize)]
 pub struct Span {
     pub span_context: SpanContext,
 

@@ -1,7 +1,7 @@
-use bytes::BytesMut;
-use chrono::{DateTime, Utc};
 use std::collections::BTreeMap;
 
+use bytes::BytesMut;
+use chrono::{DateTime, Utc};
 use codecs::encoding::Transformer;
 use codecs::Encoder;
 use event::log::Value;

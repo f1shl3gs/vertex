@@ -1,6 +1,6 @@
-use bytes::Bytes;
 use std::task::{Context, Poll};
 
+use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::config::UriSerde;
 use framework::http::{Auth, HttpClient};

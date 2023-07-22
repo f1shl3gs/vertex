@@ -3,10 +3,11 @@ pub mod metrics;
 pub mod partition;
 pub mod vec;
 
+use std::io::Write;
+
 use bytes::{BufMut, BytesMut};
 pub use compression::*;
 use flate2::write::{GzEncoder, ZlibEncoder};
-use std::io::Write;
 
 use crate::batch::{err_event_too_large, Batch, BatchSize, PushResult};
 
