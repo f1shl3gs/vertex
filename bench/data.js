@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690038842402,
+  "lastUpdate": 1690039186290,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d33c44652dab3509d84f7b8903d45049d1376056",
-          "message": "Merge pull request #799 from f1shl3gs/dependabot/cargo/prost-build-0.11.8\n\nchore(deps): bump prost-build from 0.11.6 to 0.11.8",
-          "timestamp": "2023-03-01T20:53:19+08:00",
-          "tree_id": "34511cbb1c7072424df7ba97d920cbe1c334def7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d33c44652dab3509d84f7b8903d45049d1376056"
-        },
-        "date": 1677676861406,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 40381000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1647500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 25.131,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 67.694,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 225.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 496.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1364.7,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2f28f1e82e5c0fdeff91f2897ceb1264f21caab0",
           "message": "Merge pull request #800 from f1shl3gs/chrony\n\nadd Chrony source to collect ntp metrics",
           "timestamp": "2023-03-02T00:08:04+08:00",
@@ -51889,6 +51830,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.662,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "532214b6eff7641260f184189878f9b7681360b1",
+          "message": "cleanup (#1116)",
+          "timestamp": "2023-07-22T22:53:37+08:00",
+          "tree_id": "51e858d6b195651549bc0e4f4434e144b589bd33",
+          "url": "https://github.com/f1shl3gs/vertex/commit/532214b6eff7641260f184189878f9b7681360b1"
+        },
+        "date": 1690039169491,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 39435000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1535700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 28.095,
             "unit": "ns/op"
           }
         ]
