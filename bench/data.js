@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690072114954,
+  "lastUpdate": 1690072125103,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1ccae3095be71a1a7b2b2392f9f642e7c12025d9",
-          "message": "Merge pull request #814 from f1shl3gs/dependabot/cargo/lru-0.10.0\n\nchore(deps): bump lru from 0.9.0 to 0.10.0",
-          "timestamp": "2023-03-06T14:56:17+08:00",
-          "tree_id": "28921290afad7e826c735b2a1bc8fd428a3be632",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1ccae3095be71a1a7b2b2392f9f642e7c12025d9"
-        },
-        "date": 1678086253340,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.114,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.274,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 28.892,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.052,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.397,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "251fb05709b70c4c628957c9816045b10c1cd813",
           "message": "Merge pull request #811 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.19\n\nchore(deps): bump serde_yaml from 0.9.17 to 0.9.19",
           "timestamp": "2023-03-06T14:56:39+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.352,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9bbd944319a0ee8e8031b5e940fe7baa90958218",
+          "message": "Transform/samples (#1117)\n\n* remove seahash\r\n\r\n* add tests",
+          "timestamp": "2023-07-23T08:24:20+08:00",
+          "tree_id": "250cda772ba12f5eb60b2ac62ab935440b777d62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9bbd944319a0ee8e8031b5e940fe7baa90958218"
+        },
+        "date": 1690072111287,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.111,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.776,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.441,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 45.054,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.799,
             "unit": "ns/op"
           }
         ]
