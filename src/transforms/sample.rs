@@ -1,3 +1,4 @@
+use ahash::RandomState;
 use configurable::configurable_component;
 use event::{Event, EventContainer, Events};
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
@@ -47,6 +48,7 @@ struct Sample {
     rate: u64,
     count: u64,
     key_field: Option<String>,
+    state: RandomState,
 
     // metrics
     discards_events: Counter,
@@ -54,10 +56,17 @@ struct Sample {
 
 impl Sample {
     pub fn new(rate: u64, key_field: Option<String>) -> Self {
+        let state = RandomState::with_seeds(
+            0x16f11fe89b0d677c,
+            0xb480a793d8e6c86c,
+            0x6fe2e5aaf078ebc9,
+            0x14f994a4c5259381,
+        );
         Self {
             rate,
             count: 0,
             key_field,
+            state,
             discards_events: metrics::register_counter(
                 "events_discarded_total",
                 "The total number of events discarded by this component.",
@@ -79,7 +88,7 @@ impl FunctionTransform for Sample {
                     .map(|v| v.to_string_lossy());
 
                 let num = if let Some(value) = value {
-                    seahash::hash(value.as_bytes())
+                    self.state.hash_one(value.as_bytes())
                 } else {
                     self.count
                 };
@@ -99,10 +108,76 @@ impl FunctionTransform for Sample {
 
 #[cfg(test)]
 mod tests {
-    use super::SampleConfig;
+    use super::{Sample, SampleConfig};
+    use event::{Event, LogRecord};
+    use framework::{FunctionTransform, OutputBuffer};
+    use log_schema::log_schema;
+    use testify::random::random_lines;
 
     #[test]
     fn generate_config() {
         crate::testing::test_generate_config::<SampleConfig>()
+    }
+
+    fn assert_approx_eq(a: f64, b: f64, delta: f64) {
+        if !(a - b < delta || b - a < delta) {
+            panic!("{} not approx equal to {}", a, b);
+        }
+    }
+
+    fn random_events(n: usize) -> Vec<Event> {
+        random_lines(10)
+            .take(n)
+            .map(|l| Event::Log(LogRecord::from(l)))
+            .collect()
+    }
+
+    #[test]
+    fn hash_samples_at_roughly_the_configured_rate() {
+        let num = 10000;
+
+        for rate in [2, 5, 10, 20, 50, 100] {
+            let events = random_events(num);
+            let mut sampler = Sample::new(rate, Some(log_schema().message_key().into()));
+            let passed = events
+                .into_iter()
+                .filter_map(|event| {
+                    let mut buf = OutputBuffer::with_capacity(1);
+                    sampler.transform(&mut buf, event.into());
+                    buf.into_events().next()
+                })
+                .count();
+            let ideal = 1.0 / rate as f64;
+            let actual = passed as f64 / num as f64;
+            assert_approx_eq(ideal, actual, ideal * 0.5);
+        }
+    }
+
+    #[test]
+    fn hash_consistently_samples_the_same_events() {
+        let events = random_events(1000);
+        let mut sampler = Sample::new(2, Some(log_schema().message_key().into()));
+
+        let first_run = events
+            .clone()
+            .into_iter()
+            .filter_map(|event| {
+                let mut buf = OutputBuffer::with_capacity(1);
+                sampler.transform(&mut buf, event.into());
+                buf.into_events().next()
+            })
+            .collect::<Vec<_>>();
+
+        let second_run = events
+            .clone()
+            .into_iter()
+            .filter_map(|event| {
+                let mut buf = OutputBuffer::with_capacity(1);
+                sampler.transform(&mut buf, event.into());
+                buf.into_events().next()
+            })
+            .collect::<Vec<_>>();
+
+        assert_eq!(first_run, second_run);
     }
 }
