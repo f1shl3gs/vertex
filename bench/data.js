@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690073596181,
+  "lastUpdate": 1690175316483,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "251fb05709b70c4c628957c9816045b10c1cd813",
-          "message": "Merge pull request #811 from f1shl3gs/dependabot/cargo/serde_yaml-0.9.19\n\nchore(deps): bump serde_yaml from 0.9.17 to 0.9.19",
-          "timestamp": "2023-03-06T14:56:39+08:00",
-          "tree_id": "a620c544b576d3f7a05839f517a79a53866b4c43",
-          "url": "https://github.com/f1shl3gs/vertex/commit/251fb05709b70c4c628957c9816045b10c1cd813"
-        },
-        "date": 1678086279313,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 862220,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 869730,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebe5533ac4366d318c5ef1e6b37937c868f24fe1",
+          "message": "chore(deps): bump async-trait from 0.1.71 to 0.1.72 (#1124)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.71 to 0.1.72.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.71...0.1.72)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:05:21+08:00",
+          "tree_id": "1125acb21c4ae25ea4c85725aeb7e28826dcc8d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebe5533ac4366d318c5ef1e6b37937c868f24fe1"
+        },
+        "date": 1690175302793,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 725860,
             "unit": "ns/op"
           }
         ]
