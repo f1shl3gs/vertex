@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690176550295,
+  "lastUpdate": 1690176564477,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43016,65 +43016,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "5396ccc75f5efa2ac49f8e7a405a56b569273181",
-          "message": "chore(deps): bump tokio from 1.25.0 to 1.26.0 (#802)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.25.0 to 1.26.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.25.0...tokio-1.26.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-02T18:40:00+08:00",
-          "tree_id": "79b168821f326758a8d7ccb014b3346ae261c504",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5396ccc75f5efa2ac49f8e7a405a56b569273181"
-        },
-        "date": 1677754936893,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 44228000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1080600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.684,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 58.136,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 180.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 415.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1183.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -51829,6 +51770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 20.004,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebe5533ac4366d318c5ef1e6b37937c868f24fe1",
+          "message": "chore(deps): bump async-trait from 0.1.71 to 0.1.72 (#1124)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.71 to 0.1.72.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.71...0.1.72)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:05:21+08:00",
+          "tree_id": "1125acb21c4ae25ea4c85725aeb7e28826dcc8d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebe5533ac4366d318c5ef1e6b37937c868f24fe1"
+        },
+        "date": 1690176547576,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 34349000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1080000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 27.538,
             "unit": "ns/op"
           }
         ]
