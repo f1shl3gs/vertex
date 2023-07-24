@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690176385140,
+  "lastUpdate": 1690176550295,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36219,40 +36219,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "ee7f6e971b778bd59707a6efd776132206aceb77",
-          "message": "fix lock file",
-          "timestamp": "2023-04-02T17:48:34+08:00",
-          "tree_id": "40a0c8081e01927d3e2f95f1b7608729aac72873",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee7f6e971b778bd59707a6efd776132206aceb77"
-        },
-        "date": 1680430315497,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1152,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57312.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "noreply@github.com",
             "name": "GitHub",
             "username": "web-flow"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44303.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "52b344321026475096dc8b8c3609bc42f528082f",
+          "message": "chore(deps): bump quick-xml from 0.29.0 to 0.30.0 (#1121)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.29.0 to 0.30.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.29.0...v0.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:06:09+08:00",
+          "tree_id": "0b73a83cb30cb8444e855ad1c70b5216740575ab",
+          "url": "https://github.com/f1shl3gs/vertex/commit/52b344321026475096dc8b8c3609bc42f528082f"
+        },
+        "date": 1690176533584,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1215,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44299.9,
             "unit": "KiB"
           }
         ]
