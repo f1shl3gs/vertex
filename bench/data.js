@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690175600287,
+  "lastUpdate": 1690175617405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b83d5d4101c37339860ae24add66bd0c1a27c56e",
-          "message": "Merge pull request #813 from f1shl3gs/dependabot/cargo/serde_json-1.0.94\n\nchore(deps): bump serde_json from 1.0.93 to 1.0.94",
-          "timestamp": "2023-03-06T16:03:12+08:00",
-          "tree_id": "66e311ea95e37423ce5a502797be91b30d0a78c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b83d5d4101c37339860ae24add66bd0c1a27c56e"
-        },
-        "date": 1678090119852,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.168,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.269,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.152,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.813,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.155,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b9d480b8ec68e569b637b62765af39d738279359",
           "message": "Merge pull request #819 from f1shl3gs/kafka_sink_replace_rdkafka_with_rskafka\n\nKafka sink replace rdkafka with rskafka",
           "timestamp": "2023-03-06T23:17:30+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.005,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "98597a653914c1011ff7f061531492964a844c36",
+          "message": "chore(deps): bump typetag from 0.2.10 to 0.2.11 (#1119)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.10...0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:06:19+08:00",
+          "tree_id": "a158e45bf895ad360c33da77879e64eab7b64aac",
+          "url": "https://github.com/f1shl3gs/vertex/commit/98597a653914c1011ff7f061531492964a844c36"
+        },
+        "date": 1690175603886,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.609,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.186,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.412,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.579,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.82,
             "unit": "ns/op"
           }
         ]
