@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690175686871,
+  "lastUpdate": 1690175692123,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b9d480b8ec68e569b637b62765af39d738279359",
-          "message": "Merge pull request #819 from f1shl3gs/kafka_sink_replace_rdkafka_with_rskafka\n\nKafka sink replace rdkafka with rskafka",
-          "timestamp": "2023-03-06T23:17:30+08:00",
-          "tree_id": "b2b4f68fff7f607ded0996948ddfe489c77d3189",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b9d480b8ec68e569b637b62765af39d738279359"
-        },
-        "date": 1678116129794,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.479,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.125,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.674,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.224,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.607,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1eff6f7890a7d69c8be0638112ae8d3695931efb",
           "message": "Merge pull request #820 from f1shl3gs/kafka_metrics\n\nKafka metrics",
           "timestamp": "2023-03-07T04:54:40+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.82,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dece55274c9195a0738c2d100057f75772e76600",
+          "message": "chore(deps): bump thiserror from 1.0.43 to 1.0.44 (#1118)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.43 to 1.0.44.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.43...1.0.44)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:06:31+08:00",
+          "tree_id": "f5a901f4b3af1dcc6dbabd7cd431ddfee5830fdb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dece55274c9195a0738c2d100057f75772e76600"
+        },
+        "date": 1690175678141,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.874,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.512,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.779,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 62.056,
             "unit": "ns/op"
           }
         ]
