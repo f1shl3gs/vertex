@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690177684229,
+  "lastUpdate": 1690177732621,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1eff6f7890a7d69c8be0638112ae8d3695931efb",
-          "message": "Merge pull request #820 from f1shl3gs/kafka_metrics\n\nKafka metrics",
-          "timestamp": "2023-03-07T04:54:40+08:00",
-          "tree_id": "29a5747a78fb2e4f7ccda9ccfc1ca9c4d3bf2d7e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1eff6f7890a7d69c8be0638112ae8d3695931efb"
-        },
-        "date": 1678136407160,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.731,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.182,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.368,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.03,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "911dc381ec8738df2807966f54933673fea4491c",
           "message": "Merge pull request #821 from f1shl3gs/add_batch_support_for_kafka_sink\n\nAdd batch support for kafka sink",
           "timestamp": "2023-03-07T17:30:48+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.056,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "383a95e4d8751d419d382ea94374f8fc50da2f83",
+          "message": "chore(deps): bump serde from 1.0.173 to 1.0.175 (#1120)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.173 to 1.0.175.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.173...v1.0.175)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:43:45+08:00",
+          "tree_id": "53958cfcfa0e9b771828750ade3cad50edc4ebe5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/383a95e4d8751d419d382ea94374f8fc50da2f83"
+        },
+        "date": 1690177715489,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.189,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.222,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.44,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 55.68,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 70.366,
             "unit": "ns/op"
           }
         ]
