@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690175397835,
+  "lastUpdate": 1690175405963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58363,6 +58363,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 969.34,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebe5533ac4366d318c5ef1e6b37937c868f24fe1",
+          "message": "chore(deps): bump async-trait from 0.1.71 to 0.1.72 (#1124)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.71 to 0.1.72.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.71...0.1.72)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-24T13:05:21+08:00",
+          "tree_id": "1125acb21c4ae25ea4c85725aeb7e28826dcc8d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebe5533ac4366d318c5ef1e6b37937c868f24fe1"
+        },
+        "date": 1690175392615,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 52.971,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 405.91,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1134.5,
             "unit": "ns/op"
           }
         ]
