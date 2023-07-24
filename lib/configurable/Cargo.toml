@@ -5,7 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-inventory = { version = "0.3.9", default-features = false }
+inventory = { version = "0.3.11", default-features = false }
 configurable-derive = { path = "../configurable-derive" }
 indexmap = { version = "2.0.0", default-features = false, features = ["serde", "std"] }
 serde = { version = "1.0.173", default-features = false }
