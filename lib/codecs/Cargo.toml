@@ -28,7 +28,7 @@ serde_json = { version = "1.0.103", default-features = false  }
 tokio = { version = "1.29.1" }
 tokio-util = { version = "0.7.8", default-features = false, features = ["codec"] }
 tracing = { version = "0.1.38" }
-serde = { version = "1.0.173", default-features = false }
+serde = { version = "1.0.175", default-features = false }
 smallvec = { version = "1.11.0" }
 
 # Optional
