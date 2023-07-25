@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690180694870,
+  "lastUpdate": 1690260246517,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "01a0a45148b6a1f0c749530d3129b97e4b228cac",
-          "message": "Merge pull request #823 from f1shl3gs/misc\n\nMisc",
-          "timestamp": "2023-03-07T22:43:05+08:00",
-          "tree_id": "452717b287c4100e718a648d7d0d131cf31293fc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01a0a45148b6a1f0c749530d3129b97e4b228cac"
-        },
-        "date": 1678200409439,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 89.888,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 186.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 306.66,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 288.01,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b905d8502459ff5b93968cd7413ef3c0af946f5d",
+          "message": "chore(deps): bump typetag from 0.2.11 to 0.2.12 (#1125)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.11 to 0.2.12.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.11...0.2.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-25T12:40:56+08:00",
+          "tree_id": "6b5b70e28af8ee45dd45c2cac0c46dff1223f924",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b905d8502459ff5b93968cd7413ef3c0af946f5d"
+        },
+        "date": 1690260231751,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 84.208,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 194.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 328.53,
             "unit": "ns/op"
           }
         ]
