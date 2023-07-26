@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690363014544,
+  "lastUpdate": 1690363016742,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "31ceff5d75d0cb689bb61bc0ae0067d47c29e106",
-          "message": "Merge pull request #825 from f1shl3gs/dependabot/cargo/serde-1.0.154\n\nchore(deps): bump serde from 1.0.153 to 1.0.154",
-          "timestamp": "2023-03-09T14:26:55+08:00",
-          "tree_id": "36a1fdbca36ebb3189b4dcb0252b3e88d997e89e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31ceff5d75d0cb689bb61bc0ae0067d47c29e106"
-        },
-        "date": 1678343611696,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 104.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 224.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 366.98,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 342.31,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6524f74c762024a8a585de53a68daf1be88d9d24",
+          "message": "chore(deps): bump pprof from 0.12.0 to 0.12.1 (#1126)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.12.0 to 0.12.1.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-26T17:13:33+08:00",
+          "tree_id": "38145c0c8e60933079418ab9a44b9d70ae75d86b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6524f74c762024a8a585de53a68daf1be88d9d24"
+        },
+        "date": 1690363002461,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 86.972,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 206.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 343.75,
             "unit": "ns/op"
           }
         ]
