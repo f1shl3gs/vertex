@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690364031062,
+  "lastUpdate": 1690364093331,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ee5c9f79e835f1fc53c961bd1e8772b811607ce8",
-          "message": "chore(deps): bump tonic-build from 0.9.0 to 0.9.1 (#922)\n\nBumps [tonic-build](https://github.com/hyperium/tonic) from 0.9.0 to 0.9.1.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.0...v0.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-05T00:52:02+08:00",
-          "tree_id": "1076e274ee567aa501ea01cb3d6ab762ef0fc143",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee5c9f79e835f1fc53c961bd1e8772b811607ce8"
-        },
-        "date": 1680628492165,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1147,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57297.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "67e6b180fe0ec6e610129f9638e0107c29abfc45",
           "message": "chore(deps): bump tonic from 0.9.0 to 0.9.1 (#919)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.9.0 to 0.9.1.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.0...v0.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-05T00:51:49+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44323.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6524f74c762024a8a585de53a68daf1be88d9d24",
+          "message": "chore(deps): bump pprof from 0.12.0 to 0.12.1 (#1126)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.12.0 to 0.12.1.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-26T17:13:33+08:00",
+          "tree_id": "38145c0c8e60933079418ab9a44b9d70ae75d86b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6524f74c762024a8a585de53a68daf1be88d9d24"
+        },
+        "date": 1690364078964,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1114,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44323.2,
             "unit": "KiB"
           }
         ]
