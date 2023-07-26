@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690363112018,
+  "lastUpdate": 1690364031062,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7489174f1c122a298543ca8611c9bc56424061b7",
-          "message": "Merge pull request #817 from f1shl3gs/dependabot/cargo/netlink-sys-0.8.5\n\nchore(deps): bump netlink-sys from 0.8.4 to 0.8.5",
-          "timestamp": "2023-03-06T14:54:33+08:00",
-          "tree_id": "e6d7760915df25760d65b5c85dd006d1f82f9774",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7489174f1c122a298543ca8611c9bc56424061b7"
-        },
-        "date": 1678086947295,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 37713000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1074600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.908,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 55.001,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 406.37,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1166.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5bdcad4f1d92817591f37ed23a372514532c5d61",
           "message": "Merge pull request #815 from f1shl3gs/dependabot/cargo/thiserror-1.0.39\n\nchore(deps): bump thiserror from 1.0.38 to 1.0.39",
           "timestamp": "2023-03-06T14:55:20+08:00",
@@ -51689,6 +51630,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.818,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6524f74c762024a8a585de53a68daf1be88d9d24",
+          "message": "chore(deps): bump pprof from 0.12.0 to 0.12.1 (#1126)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.12.0 to 0.12.1.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-26T17:13:33+08:00",
+          "tree_id": "38145c0c8e60933079418ab9a44b9d70ae75d86b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6524f74c762024a8a585de53a68daf1be88d9d24"
+        },
+        "date": 1690364015938,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 24024000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1024200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.734,
             "unit": "ns/op"
           }
         ]
