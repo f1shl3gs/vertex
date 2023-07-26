@@ -63,7 +63,7 @@ notify = { version = "6.0.1", default-features = false, features = ["macos_kqueu
 no-proxy = { version = "0.3.2" }
 num_cpus = { version = "1.16.0" }
 once_cell = { version = "1.18", default-features = false }
-pem = { version = "2.0.1", default-features = false, features = ["std"] }
+pem = { version = "3.0.0", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.0", default-features = false }
 pin-project = { version = "1.1.2" }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
