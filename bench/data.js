@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690261492759,
+  "lastUpdate": 1690362973229,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "975dea2b1364b81fa71cc5fef20baaecbb8114f9",
-          "message": "Merge pull request #824 from f1shl3gs/dependabot/cargo/serde-1.0.153\n\nchore(deps): bump serde from 1.0.152 to 1.0.153",
-          "timestamp": "2023-03-08T23:15:02+08:00",
-          "tree_id": "27d007a815f406854dae23e8e7b2c4fcbb9fc8aa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/975dea2b1364b81fa71cc5fef20baaecbb8114f9"
-        },
-        "date": 1678288792804,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 897530,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 899250,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4fc7e90ea53c9a322cf6955548b4685b88615f5",
+          "message": "chore(deps): bump pem from 2.0.1 to 3.0.0 (#1127)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 2.0.1 to 3.0.0.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v2.0.1...v3.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-26T17:12:55+08:00",
+          "tree_id": "7865ad38472c33f724267d38b2fde54fbee215be",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4fc7e90ea53c9a322cf6955548b4685b88615f5"
+        },
+        "date": 1690362958475,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 697740,
             "unit": "ns/op"
           }
         ]
