@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690364111813,
+  "lastUpdate": 1690364221828,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "67e6b180fe0ec6e610129f9638e0107c29abfc45",
-          "message": "chore(deps): bump tonic from 0.9.0 to 0.9.1 (#919)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.9.0 to 0.9.1.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.0...v0.9.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-05T00:51:49+08:00",
-          "tree_id": "f207dd556c66e83718b161ef03898dce184cbf92",
-          "url": "https://github.com/f1shl3gs/vertex/commit/67e6b180fe0ec6e610129f9638e0107c29abfc45"
-        },
-        "date": 1680628642911,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1302,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57299.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a1df4ec569af0d6acb9d7e2fdfcb2c100b7e81e3",
           "message": "chore(deps): bump proc-macro2 from 1.0.55 to 1.0.56 (#921)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.55 to 1.0.56.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.55...1.0.56)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-05T00:52:36+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44323.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e4fc7e90ea53c9a322cf6955548b4685b88615f5",
+          "message": "chore(deps): bump pem from 2.0.1 to 3.0.0 (#1127)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 2.0.1 to 3.0.0.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v2.0.1...v3.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-26T17:12:55+08:00",
+          "tree_id": "7865ad38472c33f724267d38b2fde54fbee215be",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e4fc7e90ea53c9a322cf6955548b4685b88615f5"
+        },
+        "date": 1690364205307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1260,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44297.5,
             "unit": "KiB"
           }
         ]
