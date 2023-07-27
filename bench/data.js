@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690444193606,
+  "lastUpdate": 1690444198038,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9520a8d5eb94f6ea4949b94e123d426706faf2e7",
-          "message": "Merge pull request #828 from f1shl3gs/zpages\n\nZpages",
-          "timestamp": "2023-03-10T14:26:56+08:00",
-          "tree_id": "d85f92fd96b00123c146c6b669b808a917afe043",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9520a8d5eb94f6ea4949b94e123d426706faf2e7"
-        },
-        "date": 1678429962801,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.088,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.632,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.909,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 41.557,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 67.079,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4e251377c30f67396d087c40cf3c8c559b7b7761",
           "message": "Merge pull request #829 from f1shl3gs/batch_spans\n\nbatch spans",
           "timestamp": "2023-03-11T02:28:14+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.067,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d09340fc0c17f32883c8a4ed955431df6f3c5ca",
+          "message": "chore(deps): bump no-proxy from 0.3.2 to 0.3.3 (#1131)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.2 to 0.3.3.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-27T15:44:51+08:00",
+          "tree_id": "8e7e54cf8959b3b4147a06696190e082f79555d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d09340fc0c17f32883c8a4ed955431df6f3c5ca"
+        },
+        "date": 1690444180622,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 33.675,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.417,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.479,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 55.005,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 69.078,
             "unit": "ns/op"
           }
         ]
