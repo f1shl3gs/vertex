@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690444210028,
+  "lastUpdate": 1690444218485,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4e251377c30f67396d087c40cf3c8c559b7b7761",
-          "message": "Merge pull request #829 from f1shl3gs/batch_spans\n\nbatch spans",
-          "timestamp": "2023-03-11T02:28:14+08:00",
-          "tree_id": "1db2d41472b0dc5bebc731a813f4c017e7ff68e5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e251377c30f67396d087c40cf3c8c559b7b7761"
-        },
-        "date": 1678473221369,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.437,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.655,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 29.631,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.368,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 65.813,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6ed6066383e10ed07b5264f40094093512d7ba92",
           "message": "Merge pull request #830 from f1shl3gs/remove_useless_into_iter\n\nremove useless into_iter",
           "timestamp": "2023-03-11T13:09:14+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 69.078,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2dadc21d99a5d1421647551569379ccfbfe62dbe",
+          "message": "chore(deps): bump pem from 3.0.0 to 3.0.1 (#1128)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.0 to 3.0.1.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.0...v3.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-27T15:45:48+08:00",
+          "tree_id": "2835058e268c267f831d33c6d4653e720f846e62",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2dadc21d99a5d1421647551569379ccfbfe62dbe"
+        },
+        "date": 1690444202378,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.334,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.068,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.137,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 42.205,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.097,
             "unit": "ns/op"
           }
         ]
