@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690444186089,
+  "lastUpdate": 1690444193606,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "42668a253ebe1ccc762938caa31c5349a3f1b488",
-          "message": "Merge pull request #827 from f1shl3gs/dependabot/cargo/libc-0.2.140\n\nchore(deps): bump libc from 0.2.139 to 0.2.140",
-          "timestamp": "2023-03-10T13:24:50+08:00",
-          "tree_id": "1b052d768bbbf595ab27c8dbf07d2f7c7a39af90",
-          "url": "https://github.com/f1shl3gs/vertex/commit/42668a253ebe1ccc762938caa31c5349a3f1b488"
-        },
-        "date": 1678426179150,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.061,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.343,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 34.572,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.117,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9520a8d5eb94f6ea4949b94e123d426706faf2e7",
           "message": "Merge pull request #828 from f1shl3gs/zpages\n\nZpages",
           "timestamp": "2023-03-10T14:26:56+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.762,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1cbc81e42c5a06b8a11df70d0517a479e5e087c6",
+          "message": "chore(deps): bump serde from 1.0.175 to 1.0.176 (#1130)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.175 to 1.0.176.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.175...v1.0.176)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-27T15:45:19+08:00",
+          "tree_id": "109f94ff5692a5d4232f05c6d36f7a54100bb6f7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1cbc81e42c5a06b8a11df70d0517a479e5e087c6"
+        },
+        "date": 1690444178617,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.169,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.644,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.067,
             "unit": "ns/op"
           }
         ]
