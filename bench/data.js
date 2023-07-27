@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690444143148,
+  "lastUpdate": 1690444148443,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58603,6 +58603,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1359.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4d09340fc0c17f32883c8a4ed955431df6f3c5ca",
+          "message": "chore(deps): bump no-proxy from 0.3.2 to 0.3.3 (#1131)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.2 to 0.3.3.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-27T15:44:51+08:00",
+          "tree_id": "8e7e54cf8959b3b4147a06696190e082f79555d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4d09340fc0c17f32883c8a4ed955431df6f3c5ca"
+        },
+        "date": 1690444132520,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 45.694,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 140.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 337.01,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 971.74,
             "unit": "ns/op"
           }
         ]
