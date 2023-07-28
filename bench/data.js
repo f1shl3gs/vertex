@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690539728113,
+  "lastUpdate": 1690539734739,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e056d74a8ba89d5a9d4ec255b3e86c25f0068c5b",
-          "message": "Merge pull request #833 from f1shl3gs/dependabot/cargo/hyper-0.14.25\n\nchore(deps): bump hyper from 0.14.24 to 0.14.25",
-          "timestamp": "2023-03-13T13:49:30+08:00",
-          "tree_id": "38cb2ee6b4d37fe8f7cd1a567db405ea35a6f601",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e056d74a8ba89d5a9d4ec255b3e86c25f0068c5b"
-        },
-        "date": 1678686807736,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 90.497,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 186.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 305.51,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 287.26,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a231aa8a1e9fdbd5762d95613975744703e40b7",
+          "message": "chore(deps): bump tikv-jemalloc-sys (#1134)\n\nBumps [tikv-jemalloc-sys](https://github.com/tikv/jemallocator) from 0.5.3+5.3.0-patched to 0.5.4+5.3.0-patched.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/tikv-jemalloc-sys-0.5.3...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-28T18:18:37+08:00",
+          "tree_id": "30ed253d1e76d279b2e8e5873fadcfc1948aa45a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a231aa8a1e9fdbd5762d95613975744703e40b7"
+        },
+        "date": 1690539717246,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 102.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 251.77,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 421.23,
             "unit": "ns/op"
           }
         ]
