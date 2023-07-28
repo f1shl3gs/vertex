@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690551728985,
+  "lastUpdate": 1690551750405,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58795,6 +58795,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 981.01,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b32d69e63c5610ff54a8e78e346be496e95d426",
+          "message": "remove unimplemented component (#1136)",
+          "timestamp": "2023-07-28T21:38:18+08:00",
+          "tree_id": "d95924f5802d4b28c42f36dd924695c31336bf71",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b32d69e63c5610ff54a8e78e346be496e95d426"
+        },
+        "date": 1690551736239,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 55.652,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 167.59,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 407.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1138.6,
             "unit": "ns/op"
           }
         ]
