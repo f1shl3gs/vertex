@@ -174,7 +174,6 @@ sources = [
     "sources-nvidia_smi",
     "sources-prometheus_scrape",
     "sources-prometheus_remote_write",
-    "sources-pulsar",
     "sources-redis",
     "sources-selfstat",
     "sources-syslog",
@@ -210,7 +209,6 @@ sources-nginx_stub = []
 sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "netlink-packet-core"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-nvidia_smi = ["dep:quick-xml"]
-sources-pulsar = []
 sources-prometheus_scrape = ["prometheus"]
 sources-prometheus_remote_write = ["snap"]
 sources-redis = []
@@ -262,7 +260,6 @@ sinks = [
     "sinks-loki",
     "sinks-prometheus_exporter",
     "sinks-prometheus_remote_write",
-    "sinks-pulsar",
     "sinks-socket",
     "sinks-vertex",
 ]
@@ -273,7 +270,6 @@ sinks-prometheus_remote_write = ["snap"]
 sinks-blackhole = []
 sinks-kafka = ["rskafka"]
 sinks-jaeger = ["jaeger"]
-sinks-pulsar = []
 sinks-elasticsearch = []
 sinks-loki = ["snap", "dep:buffers"]
 sinks-vertex = []

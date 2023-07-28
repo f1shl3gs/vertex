@@ -16,8 +16,6 @@ pub mod loki;
 mod prometheus_exporter;
 #[cfg(feature = "sinks-prometheus_remote_write")]
 mod prometheus_remote_write;
-#[cfg(feature = "sinks-pulsar")]
-mod pulsar;
 #[cfg(feature = "sinks-socket")]
 pub mod socket;
 

@@ -42,8 +42,6 @@ mod kubernetes_logs;
 mod libvirt;
 #[cfg(feature = "sources-memcached")]
 mod memcached;
-#[cfg(feature = "sources-mongodb")]
-mod mongodb;
 #[cfg(feature = "sources-mysqld")]
 mod mysqld;
 #[cfg(feature = "sources-nginx_stub")]
@@ -58,8 +56,6 @@ mod nvidia_smi;
 mod prometheus_remote_write;
 #[cfg(feature = "sources-prometheus_scrape")]
 mod prometheus_scrape;
-#[cfg(feature = "sources-pulsar")]
-mod pulsar;
 #[cfg(feature = "sources-redis")]
 mod redis;
 #[cfg(feature = "sources-selfstat")]
