@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690551793606,
+  "lastUpdate": 1690552782725,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1eff6f7890a7d69c8be0638112ae8d3695931efb",
-          "message": "Merge pull request #820 from f1shl3gs/kafka_metrics\n\nKafka metrics",
-          "timestamp": "2023-03-07T04:54:40+08:00",
-          "tree_id": "29a5747a78fb2e4f7ccda9ccfc1ca9c4d3bf2d7e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1eff6f7890a7d69c8be0638112ae8d3695931efb"
-        },
-        "date": 1678137520850,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 34492000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1075100,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.703,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 58.192,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 189.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 435.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1202.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "911dc381ec8738df2807966f54933673fea4491c",
           "message": "Merge pull request #821 from f1shl3gs/add_batch_support_for_kafka_sink\n\nAdd batch support for kafka sink",
           "timestamp": "2023-03-07T17:30:48+08:00",
@@ -51489,6 +51430,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.166,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b32d69e63c5610ff54a8e78e346be496e95d426",
+          "message": "remove unimplemented component (#1136)",
+          "timestamp": "2023-07-28T21:38:18+08:00",
+          "tree_id": "d95924f5802d4b28c42f36dd924695c31336bf71",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b32d69e63c5610ff54a8e78e346be496e95d426"
+        },
+        "date": 1690552767044,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 27444000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1084200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.617,
             "unit": "ns/op"
           }
         ]
