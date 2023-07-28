@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690539736616,
+  "lastUpdate": 1690539761030,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -58699,6 +58699,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1307.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d",
+          "message": "chore(deps): bump tikv-jemallocator from 0.5.0 to 0.5.4 (#1135)\n\nBumps [tikv-jemallocator](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemallocator\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-28T18:18:19+08:00",
+          "tree_id": "c0b640ed68aa8163ff767d8b19b35732c83894ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d"
+        },
+        "date": 1690539741089,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 50.817,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 147.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 344.6,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 986.29,
             "unit": "ns/op"
           }
         ]
