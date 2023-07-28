@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690552782725,
+  "lastUpdate": 1690553011275,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a0922c93f7db57e52c69b867708d147b93be44d2",
-          "message": "bump kube from 0.80.0 to 0.81.0 (#928)",
-          "timestamp": "2023-04-08T21:41:59+08:00",
-          "tree_id": "1e7543a2bd429b52009060bb9b5e3b5f716b1414",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a0922c93f7db57e52c69b867708d147b93be44d2"
-        },
-        "date": 1680962686023,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1157,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 57814.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44295.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b32d69e63c5610ff54a8e78e346be496e95d426",
+          "message": "remove unimplemented component (#1136)",
+          "timestamp": "2023-07-28T21:38:18+08:00",
+          "tree_id": "d95924f5802d4b28c42f36dd924695c31336bf71",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b32d69e63c5610ff54a8e78e346be496e95d426"
+        },
+        "date": 1690552992923,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1326,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44318.7,
             "unit": "KiB"
           }
         ]
