@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690539769758,
+  "lastUpdate": 1690539779838,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23417,70 +23417,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fc9ec2753f1e43c8ab63ce2eda57237d689018d5",
-          "message": "Merge pull request #831 from f1shl3gs/disable_threadpool_for_jaeger\n\ndisable unused `threadpool` feature",
-          "timestamp": "2023-03-11T17:37:37+08:00",
-          "tree_id": "ad8c203c0237d37f5a30a9465b7c8cc5118aef8d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fc9ec2753f1e43c8ab63ce2eda57237d689018d5"
-        },
-        "date": 1678527735946,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 486.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 48641,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 242970,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 486730,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 261.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 25980,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 130020,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 259450,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 201690,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d",
+          "message": "chore(deps): bump tikv-jemallocator from 0.5.0 to 0.5.4 (#1135)\n\nBumps [tikv-jemallocator](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemallocator\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-28T18:18:19+08:00",
+          "tree_id": "c0b640ed68aa8163ff767d8b19b35732c83894ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d"
+        },
+        "date": 1690539764710,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 561.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 56036,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 286010,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 544750,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 194.58,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19439,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 95720,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 203260,
             "unit": "ns/op"
           }
         ]
