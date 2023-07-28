@@ -350,7 +350,7 @@ metrics = { path = "lib/metrics" }
 
 # Allocation
 mimalloc = { version = "0.1.37", default-features = false, optional = true }
-tikv-jemallocator = { version = "0.5.0", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
+tikv-jemallocator = { version = "0.5.4", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.5.0", optional = true, features = ["use_std"] }
 tikv-jemalloc-sys = { version = "0.5.3", optional = true, features = ["stats"] }
 
