@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690541240439,
+  "lastUpdate": 1690541242016,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "28d27f54292c9942d8829d8ce739caabd1249061",
-          "message": "Merge pull request #834 from f1shl3gs/dependabot/cargo/chrono-0.4.24\n\nchore(deps): bump chrono from 0.4.23 to 0.4.24",
-          "timestamp": "2023-03-13T13:51:07+08:00",
-          "tree_id": "5261ca9f1bf2016aba5e8290774df88d383247dc",
-          "url": "https://github.com/f1shl3gs/vertex/commit/28d27f54292c9942d8829d8ce739caabd1249061"
-        },
-        "date": 1678687030695,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 31.385,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 30.209,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.47,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 42.055,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 65.896,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f77893a74017f6d7489ec8a21b2809a5233c6581",
           "message": "Merge pull request #832 from f1shl3gs/dependabot/cargo/listenfd-1.0.1\n\nchore(deps): bump listenfd from 1.0.0 to 1.0.1",
           "timestamp": "2023-03-13T13:51:40+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 56.477,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ce17d95c347c1e89be19110532100fe1756a6de",
+          "message": "chore(deps): bump tikv-jemalloc-ctl from 0.5.0 to 0.5.4 (#1132)\n\nBumps [tikv-jemalloc-ctl](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-ctl\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-28T18:42:59+08:00",
+          "tree_id": "599d887482db4ef81a3fd0d4cbaae5c242c03ed8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ce17d95c347c1e89be19110532100fe1756a6de"
+        },
+        "date": 1690541226808,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.593,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.505,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.691,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 45.094,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.551,
             "unit": "ns/op"
           }
         ]
