@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690539784519,
+  "lastUpdate": 1690539786975,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13615,55 +13615,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "996cb962e0d46533bc1de8232265e8ccd2d5fa96",
-          "message": "force notify to use tokio channel",
-          "timestamp": "2023-03-11T17:53:27+08:00",
-          "tree_id": "9699ffafdb7aca7f0de5f36bd8d71c8929e911d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/996cb962e0d46533bc1de8232265e8ccd2d5fa96"
-        },
-        "date": 1678528698209,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.807,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.154,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.371,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.346,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.857,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "noreply@github.com",
             "name": "GitHub",
             "username": "web-flow"
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.323,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a231aa8a1e9fdbd5762d95613975744703e40b7",
+          "message": "chore(deps): bump tikv-jemalloc-sys (#1134)\n\nBumps [tikv-jemalloc-sys](https://github.com/tikv/jemallocator) from 0.5.3+5.3.0-patched to 0.5.4+5.3.0-patched.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/tikv-jemalloc-sys-0.5.3...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-07-28T18:18:37+08:00",
+          "tree_id": "30ed253d1e76d279b2e8e5873fadcfc1948aa45a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a231aa8a1e9fdbd5762d95613975744703e40b7"
+        },
+        "date": 1690539772064,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.061,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.271,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.576,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 45.748,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.928,
             "unit": "ns/op"
           }
         ]
