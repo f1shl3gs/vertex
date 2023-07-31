@@ -32,4 +32,4 @@ serde = { version = "1.0.177", default-features = false }
 smallvec = { version = "1.11.0" }
 
 # Optional
-syslog_loose = { version = "0.18.0", default-features = false, optional = true }
+syslog_loose = { version = "0.19.0", default-features = false, optional = true }
