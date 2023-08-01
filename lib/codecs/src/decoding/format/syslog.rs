@@ -7,7 +7,7 @@ use event::{Event, LogRecord};
 use log_schema::log_schema;
 use lookup::path;
 use smallvec::{smallvec, SmallVec};
-use syslog_loose::{IncompleteDate, Message, ProcId, Protocol};
+use syslog_loose::{IncompleteDate, Message, ProcId, Protocol, Variant};
 
 use super::{DeserializeError, Deserializer};
 
@@ -20,7 +20,8 @@ impl Deserializer for SyslogDeserializer {
     fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
         let line = std::str::from_utf8(&buf)?;
         let line = line.trim();
-        let parsed = syslog_loose::parse_message_with_year_exact(line, resolve_year)?;
+        let parsed =
+            syslog_loose::parse_message_with_year_exact(line, resolve_year, Variant::Either)?;
         let mut event = LogRecord::from(parsed.msg).into();
 
         insert_fields_from_syslog(&mut event, parsed);
