@@ -19,18 +19,12 @@ apt install --yes \
     bc \
     build-essential \
     ca-certificates \
-    cmake \
     curl \
-    gawk \
-    libclang-dev \
-    libsasl2-dev \
-    libssl-dev \
-    llvm \
     locales \
     pkg-config \
     shellcheck \
-    sudo \
-    wget
+    wget \
+    unzip
 
 # Apt cleanup
 apt clean
