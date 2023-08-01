@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690867198911,
+  "lastUpdate": 1690868164737,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "faf18491ed00929779a1d109de9e55fa4e1ba069",
-          "message": "Remove rdkafka (#933)\n\n* remove dep:rdkafka\r\n\r\n* impl with rskafka\r\n\r\n* fix kafka tests",
-          "timestamp": "2023-04-11T14:35:33+08:00",
-          "tree_id": "cda40ef1a8178406f79eb112a20705f7bd40f253",
-          "url": "https://github.com/f1shl3gs/vertex/commit/faf18491ed00929779a1d109de9e55fa4e1ba069"
-        },
-        "date": 1681196297739,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1158,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47082.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "013278eec4fe24af383de6da256adfacdd6d9b4b",
           "message": "remove enumflags2 (#934)",
           "timestamp": "2023-04-11T22:01:28+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44429.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a8111b3c6976dcbd104cb25c9e656c277ff5084",
+          "message": "chore(deps): bump serde from 1.0.179 to 1.0.180 (#1140)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.179 to 1.0.180.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.179...v1.0.180)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-01T13:14:50+08:00",
+          "tree_id": "9f24ed35e02e9edc8354ab375ac563939d3a8271",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a8111b3c6976dcbd104cb25c9e656c277ff5084"
+        },
+        "date": 1690868150250,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1124,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44429,
             "unit": "KiB"
           }
         ]
