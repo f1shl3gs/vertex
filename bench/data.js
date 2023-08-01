@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690799995749,
+  "lastUpdate": 1690848322673,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "78acd166cfb288509025482dc02c571e1b2e3948",
-          "message": "Merge pull request #838 from f1shl3gs/dependabot/cargo/serde-1.0.155\n\nchore(deps): bump serde from 1.0.154 to 1.0.155",
-          "timestamp": "2023-03-13T22:28:26+08:00",
-          "tree_id": "941eb885c488b143f962920dd06a8aec323200bd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/78acd166cfb288509025482dc02c571e1b2e3948"
-        },
-        "date": 1678717971798,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 108.85,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 225.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 369.69,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 377.38,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "daaabc3b63bf38447af9daa446d179da6f3ff57d",
+          "message": "chore(deps): bump syslog_loose from 0.18.0 to 0.19.0 (#1139)\n\n* chore(deps): bump syslog_loose from 0.18.0 to 0.19.0\r\n\r\nBumps [syslog_loose](https://github.com/FungusHumungus/syslog-loose) from 0.18.0 to 0.19.0.\r\n- [Commits](https://github.com/FungusHumungus/syslog-loose/compare/v0.18.0...V0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syslog_loose\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update syslog_loose to 0.19.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-01T08:01:52+08:00",
+          "tree_id": "fa688e093bdd309d8299b602376446355b54bcc1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/daaabc3b63bf38447af9daa446d179da6f3ff57d"
+        },
+        "date": 1690848306661,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 101.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 242.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 396.31,
             "unit": "ns/op"
           }
         ]
