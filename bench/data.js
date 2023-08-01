@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1690868164737,
+  "lastUpdate": 1690868484313,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "31ceff5d75d0cb689bb61bc0ae0067d47c29e106",
-          "message": "Merge pull request #825 from f1shl3gs/dependabot/cargo/serde-1.0.154\n\nchore(deps): bump serde from 1.0.153 to 1.0.154",
-          "timestamp": "2023-03-09T14:26:55+08:00",
-          "tree_id": "36a1fdbca36ebb3189b4dcb0252b3e88d997e89e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/31ceff5d75d0cb689bb61bc0ae0067d47c29e106"
-        },
-        "date": 1678344490430,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 34867000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 997350,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.743,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 53.524,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 174.78,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 407.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1160.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "42668a253ebe1ccc762938caa31c5349a3f1b488",
           "message": "Merge pull request #827 from f1shl3gs/dependabot/cargo/libc-0.2.140\n\nchore(deps): bump libc from 0.2.139 to 0.2.140",
           "timestamp": "2023-03-10T13:24:50+08:00",
@@ -51409,6 +51350,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.689,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a8111b3c6976dcbd104cb25c9e656c277ff5084",
+          "message": "chore(deps): bump serde from 1.0.179 to 1.0.180 (#1140)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.179 to 1.0.180.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.179...v1.0.180)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-01T13:14:50+08:00",
+          "tree_id": "9f24ed35e02e9edc8354ab375ac563939d3a8271",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a8111b3c6976dcbd104cb25c9e656c277ff5084"
+        },
+        "date": 1690868467677,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 35235000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1285700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 21.218,
             "unit": "ns/op"
           }
         ]
