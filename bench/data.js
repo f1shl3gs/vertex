@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691335158242,
+  "lastUpdate": 1691336024729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c23f8a242e40f7e3a289594e6436372da79abea",
-          "message": "chore(deps): bump prost from 0.11.8 to 0.11.9 (#940)\n\nBumps [prost](https://github.com/tokio-rs/prost) from 0.11.8 to 0.11.9.\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.11.8...v0.11.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-13T13:24:12+08:00",
-          "tree_id": "54b0758bc888b6fea9a9a2052393fef0e41628d2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c23f8a242e40f7e3a289594e6436372da79abea"
-        },
-        "date": 1681364701150,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1090,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47083.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b13948e777788a1008666a6158a367501684e23f",
           "message": "chore(deps): bump quick-xml from 0.28.1 to 0.28.2 (#938)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.28.1 to 0.28.2.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.28.1...v0.28.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-13T13:24:32+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44431.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "85f642dc00e7fd03b294f3b8a82c27c94b7ae7c0",
+          "message": "fix validate_last_write (#1146)",
+          "timestamp": "2023-08-06T23:13:56+08:00",
+          "tree_id": "e828fe059d6d979afca37784b11c8700076095ec",
+          "url": "https://github.com/f1shl3gs/vertex/commit/85f642dc00e7fd03b294f3b8a82c27c94b7ae7c0"
+        },
+        "date": 1691336009310,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1031,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44435.4,
             "unit": "KiB"
           }
         ]
