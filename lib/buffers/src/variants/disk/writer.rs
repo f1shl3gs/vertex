@@ -800,7 +800,10 @@ where
                 // and the checksum matching, etc.  We'll attempt to actually decode it now so we
                 // can get the actual item that was written, which we need to understand where the
                 // next writer record ID should be.
-                let record = ArchivedRecord::try_new(data_file_mmap.as_ref())
+                let buf = data_file_mmap.as_ref();
+                let len =
+                    usize::from_be_bytes(buf[..8].try_into().expect("extract size part success"));
+                let record = ArchivedRecord::try_new(&buf[8..8 + len])
                     .expect("record was already validated");
                 let item = decode_record_payload::<T>(&record).map_err(|e| {
                     WriterError::FailedToValidate {
