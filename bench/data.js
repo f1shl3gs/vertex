@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691408165108,
+  "lastUpdate": 1691408170050,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
-          "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
-          "timestamp": "2023-03-20T00:25:27+08:00",
-          "tree_id": "6c2c9330bbbe46597e56509ec6f49220cce168f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09ccfc4d9125cc38446d16273feb2a72287fdc32"
-        },
-        "date": 1679243459148,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 618.72,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 61487,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 325000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 616380,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 539.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 52194,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 264880,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 545760,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "efeca4b6f1703116c95fb84f08fc184ca7d2c985",
           "message": "Merge pull request #858 from f1shl3gs/remove_evmap\n\nremove evmap which is unused",
           "timestamp": "2023-03-20T14:21:06+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 193540,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f8b5e4b11f1b668104e2b865c0aa3d261f7d3ca",
+          "message": "chore(deps): bump serde from 1.0.181 to 1.0.183 (#1149)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.181 to 1.0.183.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.181...v1.0.183)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T19:30:41+08:00",
+          "tree_id": "dd53b46b4d7053afa110a1d0ff74b610ed1a557d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f8b5e4b11f1b668104e2b865c0aa3d261f7d3ca"
+        },
+        "date": 1691408152515,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 673.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 66982,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 334530,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 669390,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 229.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 22802,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 113990,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 227660,
             "unit": "ns/op"
           }
         ]
