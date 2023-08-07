@@ -419,7 +419,7 @@ once_cell = { version = "1.18.0" }
 parking_lot = { version = "0.12.1", default-features = false, optional = true }
 percent-encoding = { version = "2.3.0", default-features = false }
 quick-xml = { version = "0.30.0", default-features = false, features = ["serialize"], optional = true }
-regex = { version = "1.9.1", default-features = false }
+regex = { version = "1.9.3", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 smallvec = { version = "1.11.0", optional = true, features = ["union"] }
