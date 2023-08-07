@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691408044739,
+  "lastUpdate": 1691408048474,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "69bb7a86946856d1bca6a3594127b0948490e0b2",
-          "message": "Remove rkyv (#847)\n\n* remove rkyv\r\n\r\n* add `--all-targets` to udeps",
-          "timestamp": "2023-03-19T22:57:46+08:00",
-          "tree_id": "eb60b864b81a9a38fa8eea9cd238d2c4ac66a484",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69bb7a86946856d1bca6a3594127b0948490e0b2"
-        },
-        "date": 1679238085082,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 715570,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 719420,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dab428cd5f82898cfd0dd03f7e301bffe05fc6cc",
+          "message": "chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0 (#1153)\n\n* chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0\r\n\r\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.18.0 to 0.19.0.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.18.0...v0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* upate kube to 0.85.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-07T19:30:26+08:00",
+          "tree_id": "5cf41ad1c31a67f22896e5b0228d07f36fbbfbe0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dab428cd5f82898cfd0dd03f7e301bffe05fc6cc"
+        },
+        "date": 1691408030842,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 863890,
             "unit": "ns/op"
           }
         ]
