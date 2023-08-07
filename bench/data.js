@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691405630774,
+  "lastUpdate": 1691405636491,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c80b4c799c9e41cd19181d72e8139518a64e193",
-          "message": "Merge pull request #845 from f1shl3gs/remove_xdrgen\n\nremove xdrgen from virt",
-          "timestamp": "2023-03-16T17:38:59+08:00",
-          "tree_id": "5abebffe4c40a6b0e132fdcaf1e33b4ee15af838",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c80b4c799c9e41cd19181d72e8139518a64e193"
-        },
-        "date": 1678959860338,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 516.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 51649,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 260170,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 516580,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 451.62,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 45058,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 226000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 452340,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "961bc6cdbf871df94636fce4ae67cb8bcadacd00",
           "message": "Merge pull request #841 from f1shl3gs/dependabot/cargo/quote-1.0.26\n\nchore(deps): bump quote from 1.0.23 to 1.0.26",
           "timestamp": "2023-03-17T00:10:15+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 193320,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "eabf3d97250cf2de0d401f62bb1a104cd6693f0d",
+          "message": "chore(deps): bump pin-project from 1.1.2 to 1.1.3 (#1150)\n\nBumps [pin-project](https://github.com/taiki-e/pin-project) from 1.1.2 to 1.1.3.\r\n- [Release notes](https://github.com/taiki-e/pin-project/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project/compare/v1.1.2...v1.1.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T18:49:45+08:00",
+          "tree_id": "47653441ef5c5c1bd42089c35b7f786fe246fbb4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/eabf3d97250cf2de0d401f62bb1a104cd6693f0d"
+        },
+        "date": 1691405621207,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 515.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 51519,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 257880,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 514810,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 197.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19654,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 98220,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 196340,
             "unit": "ns/op"
           }
         ]
