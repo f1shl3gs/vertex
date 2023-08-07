@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691409111880,
+  "lastUpdate": 1691409116299,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e9092cf110e2e1d1b13af3b4c25b3d72e2456b2b",
-          "message": "chore(deps): bump hyper from 0.14.25 to 0.14.26 (#945)\n\nBumps [hyper](https://github.com/hyperium/hyper) from 0.14.25 to 0.14.26.\r\n- [Release notes](https://github.com/hyperium/hyper/releases)\r\n- [Changelog](https://github.com/hyperium/hyper/blob/v0.14.26/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/hyper/compare/v0.14.25...v0.14.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: hyper\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-14T15:42:20+08:00",
-          "tree_id": "3f6807d4f32fa5fffebe4186f344a7a607680da8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e9092cf110e2e1d1b13af3b4c25b3d72e2456b2b"
-        },
-        "date": 1681459401614,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1095,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47119.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "957aeda6c6ff58da47a58122cf70b4245c92c3aa",
           "message": "chore(deps): bump syn from 2.0.14 to 2.0.15 (#944)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.14 to 2.0.15.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.14...2.0.15)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-14T15:42:03+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44458.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c445f35167fa2e2ed4e289e342e8c698cbfcf87",
+          "message": "chore(deps): bump pin-project-lite from 0.2.10 to 0.2.11 (#1148)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.10...v0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T19:30:49+08:00",
+          "tree_id": "5ae0d61969cd42a144006ce4cf8e8b3d0c0e9446",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c445f35167fa2e2ed4e289e342e8c698cbfcf87"
+        },
+        "date": 1691409100073,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1118,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44435.9,
             "unit": "KiB"
           }
         ]
