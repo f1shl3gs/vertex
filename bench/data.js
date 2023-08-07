@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691407245379,
+  "lastUpdate": 1691408019364,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4e2aae7b1a6c0e62fbbb3b78dbe377208bf145ed",
-          "message": "Merge pull request #846 from f1shl3gs/dependabot/cargo/assert_cmd-2.0.10\n\nchore(deps): bump assert_cmd from 2.0.9 to 2.0.10",
-          "timestamp": "2023-03-17T23:22:01+08:00",
-          "tree_id": "d2e8240de6e707781630f5ab1165a01f6eb7e749",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4e2aae7b1a6c0e62fbbb3b78dbe377208bf145ed"
-        },
-        "date": 1679066745564,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 95.546,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 176.01,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 283.29,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 345.05,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dab428cd5f82898cfd0dd03f7e301bffe05fc6cc",
+          "message": "chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0 (#1153)\n\n* chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0\r\n\r\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.18.0 to 0.19.0.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.18.0...v0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* upate kube to 0.85.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-07T19:30:26+08:00",
+          "tree_id": "5cf41ad1c31a67f22896e5b0228d07f36fbbfbe0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dab428cd5f82898cfd0dd03f7e301bffe05fc6cc"
+        },
+        "date": 1691408003241,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 89.281,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 186.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 288.41,
             "unit": "ns/op"
           }
         ]
