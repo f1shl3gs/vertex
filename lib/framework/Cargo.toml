@@ -67,7 +67,7 @@ pem = { version = "3.0.1", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.0", default-features = false }
 pin-project = { version = "1.1.2" }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
-regex = { version = "1.9.1" }
+regex = { version = "1.9.3" }
 rustls = { version = "0.21.6", default-features = false, features = ["dangerous_configuration"] }
 rustls-native-certs = { version = "0.6.3", default-features = false }
 rustls-pemfile = { version = "1.0.3", default-features = false }
