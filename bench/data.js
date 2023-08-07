@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691405662655,
+  "lastUpdate": 1691405671677,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8c80b4c799c9e41cd19181d72e8139518a64e193",
-          "message": "Merge pull request #845 from f1shl3gs/remove_xdrgen\n\nremove xdrgen from virt",
-          "timestamp": "2023-03-16T17:38:59+08:00",
-          "tree_id": "5abebffe4c40a6b0e132fdcaf1e33b4ee15af838",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8c80b4c799c9e41cd19181d72e8139518a64e193"
-        },
-        "date": 1678959824269,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 24.143,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.105,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 32.599,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.343,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "961bc6cdbf871df94636fce4ae67cb8bcadacd00",
           "message": "Merge pull request #841 from f1shl3gs/dependabot/cargo/quote-1.0.26\n\nchore(deps): bump quote from 1.0.23 to 1.0.26",
           "timestamp": "2023-03-17T00:10:15+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.704,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3ddcad75be21298177905518e4b49a8b520bb8a6",
+          "message": "chore(deps): bump regex from 1.9.1 to 1.9.3 (#1151)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.1 to 1.9.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.1...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T18:50:06+08:00",
+          "tree_id": "610d1a5c3532b44d2e256f75962a8f8c14be2e9b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3ddcad75be21298177905518e4b49a8b520bb8a6"
+        },
+        "date": 1691405655431,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.776,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.512,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.637,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 39.242,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.795,
             "unit": "ns/op"
           }
         ]
