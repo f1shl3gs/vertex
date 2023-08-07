@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691408112097,
+  "lastUpdate": 1691408131847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "69bb7a86946856d1bca6a3594127b0948490e0b2",
-          "message": "Remove rkyv (#847)\n\n* remove rkyv\r\n\r\n* add `--all-targets` to udeps",
-          "timestamp": "2023-03-19T22:57:46+08:00",
-          "tree_id": "eb60b864b81a9a38fa8eea9cd238d2c4ac66a484",
-          "url": "https://github.com/f1shl3gs/vertex/commit/69bb7a86946856d1bca6a3594127b0948490e0b2"
-        },
-        "date": 1679238139932,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.485,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 24.38,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.027,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 32.175,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.562,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
           "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
           "timestamp": "2023-03-20T00:25:27+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 56.578,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5c445f35167fa2e2ed4e289e342e8c698cbfcf87",
+          "message": "chore(deps): bump pin-project-lite from 0.2.10 to 0.2.11 (#1148)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.10...v0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T19:30:49+08:00",
+          "tree_id": "5ae0d61969cd42a144006ce4cf8e8b3d0c0e9446",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5c445f35167fa2e2ed4e289e342e8c698cbfcf87"
+        },
+        "date": 1691408117082,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.072,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.467,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 45.167,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 62.366,
             "unit": "ns/op"
           }
         ]
