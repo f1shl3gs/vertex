@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691408170050,
+  "lastUpdate": 1691408172326,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "09ccfc4d9125cc38446d16273feb2a72287fdc32",
-          "message": "Update toolchain to 1.68.0 (#848)\n\n* update rust to 1.68.0\r\n\r\n* replace tokio::pin! with std::pin::pin!\r\n\r\n* pin inferno to 0.11.15\r\n\r\n* remove unused dev-dependencies",
-          "timestamp": "2023-03-20T00:25:27+08:00",
-          "tree_id": "6c2c9330bbbe46597e56509ec6f49220cce168f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/09ccfc4d9125cc38446d16273feb2a72287fdc32"
-        },
-        "date": 1679243411373,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.755,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.517,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.95,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 35.663,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.422,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b86f4fbbab8aac80b7fee01e379b0fe73492ebce",
           "message": "Merge pull request #855 from f1shl3gs/dependabot/cargo/rsntp-3.0.2\n\nchore(deps): bump rsntp from 3.0.1 to 3.0.2",
           "timestamp": "2023-03-20T14:20:52+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.366,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5f8b5e4b11f1b668104e2b865c0aa3d261f7d3ca",
+          "message": "chore(deps): bump serde from 1.0.181 to 1.0.183 (#1149)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.181 to 1.0.183.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.181...v1.0.183)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-07T19:30:41+08:00",
+          "tree_id": "dd53b46b4d7053afa110a1d0ff74b610ed1a557d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5f8b5e4b11f1b668104e2b865c0aa3d261f7d3ca"
+        },
+        "date": 1691408150266,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.624,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.849,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.513,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 54.736,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.37,
             "unit": "ns/op"
           }
         ]
