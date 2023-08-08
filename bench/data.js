@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691492988007,
+  "lastUpdate": 1691493866171,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd",
-          "message": "chore(deps): bump assert_cmd from 2.0.10 to 2.0.11 (#942)\n\nBumps [assert_cmd](https://github.com/assert-rs/assert_cmd) from 2.0.10 to 2.0.11.\r\n- [Release notes](https://github.com/assert-rs/assert_cmd/releases)\r\n- [Changelog](https://github.com/assert-rs/assert_cmd/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/assert-rs/assert_cmd/compare/v2.0.10...v2.0.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: assert_cmd\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-14T15:42:40+08:00",
-          "tree_id": "b8e8c7a2704e5daa50d7fd2d5ca647c48000e44e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9ffb16fb7cf0a2a891d2a9d4595a4cb4771545bd"
-        },
-        "date": 1681459646171,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1119,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47099.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44440.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "021dae89861b83cb417fb748aaa8f890007b44c9",
+          "message": "chore(deps): bump argh from 0.1.10 to 0.1.11 (#1154)\n\nBumps [argh](https://github.com/google/argh) from 0.1.10 to 0.1.11.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-08T19:03:57+08:00",
+          "tree_id": "bfad1ad1ac479ca971e478e8979bf745f9b4f934",
+          "url": "https://github.com/f1shl3gs/vertex/commit/021dae89861b83cb417fb748aaa8f890007b44c9"
+        },
+        "date": 1691493851441,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1083,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44458,
             "unit": "KiB"
           }
         ]
