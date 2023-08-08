@@ -392,7 +392,7 @@ pprof = { version = "0.12.1", default-features = false, optional = true, feature
 inferno = { version = "0.11.15", default-features = false, features = ["nameattr"], optional = true }
 
 # Cli
-argh = { version = "0.1.10" }
+argh = { version = "0.1.11" }
 
 # External libs
 ahash = { version = "0.8.3", default-features = false, optional = true }
