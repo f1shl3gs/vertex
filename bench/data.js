@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691492924322,
+  "lastUpdate": 1691492988007,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b86f4fbbab8aac80b7fee01e379b0fe73492ebce",
-          "message": "Merge pull request #855 from f1shl3gs/dependabot/cargo/rsntp-3.0.2\n\nchore(deps): bump rsntp from 3.0.1 to 3.0.2",
-          "timestamp": "2023-03-20T14:20:52+08:00",
-          "tree_id": "036515a0c1c6b59a6c85cdfb175f88ee954791ae",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b86f4fbbab8aac80b7fee01e379b0fe73492ebce"
-        },
-        "date": 1679293527959,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.996,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.053,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.124,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.727,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.497,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "efeca4b6f1703116c95fb84f08fc184ca7d2c985",
           "message": "Merge pull request #858 from f1shl3gs/remove_evmap\n\nremove evmap which is unused",
           "timestamp": "2023-03-20T14:21:06+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.37,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "021dae89861b83cb417fb748aaa8f890007b44c9",
+          "message": "chore(deps): bump argh from 0.1.10 to 0.1.11 (#1154)\n\nBumps [argh](https://github.com/google/argh) from 0.1.10 to 0.1.11.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-08T19:03:57+08:00",
+          "tree_id": "bfad1ad1ac479ca971e478e8979bf745f9b4f934",
+          "url": "https://github.com/f1shl3gs/vertex/commit/021dae89861b83cb417fb748aaa8f890007b44c9"
+        },
+        "date": 1691492967588,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 32.871,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.249,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.403,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 55.752,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 67.464,
             "unit": "ns/op"
           }
         ]
