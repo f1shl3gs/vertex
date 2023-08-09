@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691494040902,
+  "lastUpdate": 1691579173840,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "efeca4b6f1703116c95fb84f08fc184ca7d2c985",
-          "message": "Merge pull request #858 from f1shl3gs/remove_evmap\n\nremove evmap which is unused",
-          "timestamp": "2023-03-20T14:21:06+08:00",
-          "tree_id": "0427567aae872764aaf6478855d1538975a33ccf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/efeca4b6f1703116c95fb84f08fc184ca7d2c985"
-        },
-        "date": 1679293563347,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 874990,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 695080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
+          "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-09T19:02:10+08:00",
+          "tree_id": "d8a38f4b3a0692eb846e3215556cab7ff5007eb8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b73c9e7e3fcaaef662a29059ca8fec22d22b845c"
+        },
+        "date": 1691579155967,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 870730,
             "unit": "ns/op"
           }
         ]
