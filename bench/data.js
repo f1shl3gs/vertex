@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691646151611,
+  "lastUpdate": 1691646320227,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bddc42576c7d4f185b74320fcf164ee40609928d",
-          "message": "Merge pull request #857 from f1shl3gs/dependabot/cargo/thiserror-1.0.40\n\nchore(deps): bump thiserror from 1.0.39 to 1.0.40",
-          "timestamp": "2023-03-20T14:33:20+08:00",
-          "tree_id": "d658b315d5b3f496683a32b41912f4977f5451b7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bddc42576c7d4f185b74320fcf164ee40609928d"
-        },
-        "date": 1679295261552,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 31878000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1058000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.215,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 48.202,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 171.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 402.81,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1101.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1beb10fbf89216850c70401d958055a04a9d3427",
           "message": "Merge pull request #852 from f1shl3gs/dependabot/cargo/bstr-1.4.0\n\nchore(deps): bump bstr from 1.3.0 to 1.4.0",
           "timestamp": "2023-03-20T14:33:55+08:00",
@@ -51169,6 +51110,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.736,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0",
+          "message": "chore(deps): bump pin-project-lite from 0.2.11 to 0.2.12 (#1157)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.11 to 0.2.12.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.11...v0.2.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-10T13:22:29+08:00",
+          "tree_id": "517b14bb884ee8fb820c3604de3a8708ce859567",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0"
+        },
+        "date": 1691646305114,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 43811000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1076000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.176,
             "unit": "ns/op"
           }
         ]
