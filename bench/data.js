@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691645143484,
+  "lastUpdate": 1691645210009,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1beb10fbf89216850c70401d958055a04a9d3427",
-          "message": "Merge pull request #852 from f1shl3gs/dependabot/cargo/bstr-1.4.0\n\nchore(deps): bump bstr from 1.3.0 to 1.4.0",
-          "timestamp": "2023-03-20T14:33:55+08:00",
-          "tree_id": "b32fc335afc2c4459d913e962b8b2034c15407f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1beb10fbf89216850c70401d958055a04a9d3427"
-        },
-        "date": 1679294309934,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.727,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.558,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.946,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 35.634,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.479,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "490ba49db76c3e8da998d30f6adf61625efb4b09",
           "message": "Merge pull request #851 from f1shl3gs/dependabot/cargo/serde-1.0.157\n\nchore(deps): bump serde from 1.0.156 to 1.0.157",
           "timestamp": "2023-03-20T16:34:35+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.188,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0",
+          "message": "chore(deps): bump pin-project-lite from 0.2.11 to 0.2.12 (#1157)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.11 to 0.2.12.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.11...v0.2.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-10T13:22:29+08:00",
+          "tree_id": "517b14bb884ee8fb820c3604de3a8708ce859567",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0"
+        },
+        "date": 1691645193500,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.249,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.508,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.581,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.987,
             "unit": "ns/op"
           }
         ]
