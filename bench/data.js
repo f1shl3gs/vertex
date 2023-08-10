@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691644093102,
+  "lastUpdate": 1691644105785,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bddc42576c7d4f185b74320fcf164ee40609928d",
-          "message": "Merge pull request #857 from f1shl3gs/dependabot/cargo/thiserror-1.0.40\n\nchore(deps): bump thiserror from 1.0.39 to 1.0.40",
-          "timestamp": "2023-03-20T14:33:20+08:00",
-          "tree_id": "d658b315d5b3f496683a32b41912f4977f5451b7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bddc42576c7d4f185b74320fcf164ee40609928d"
-        },
-        "date": 1679294281915,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.74,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.447,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.041,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 35.735,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 58.469,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1beb10fbf89216850c70401d958055a04a9d3427",
           "message": "Merge pull request #852 from f1shl3gs/dependabot/cargo/bstr-1.4.0\n\nchore(deps): bump bstr from 1.3.0 to 1.4.0",
           "timestamp": "2023-03-20T14:33:55+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.217,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5d3c2138fa7cdfe7fbf158b115ad685089e3a7e4",
+          "message": "chore(deps): bump tokio from 1.29.1 to 1.30.0 (#1156)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.29.1 to 1.30.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.29.1...tokio-1.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-10T13:03:58+08:00",
+          "tree_id": "da1a1fc5de3c533960b8021ff343e0d92cc0a612",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5d3c2138fa7cdfe7fbf158b115ad685089e3a7e4"
+        },
+        "date": 1691644091012,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.128,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 28.013,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.984,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 46.472,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 61.188,
             "unit": "ns/op"
           }
         ]
