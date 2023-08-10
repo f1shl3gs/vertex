@@ -28,5 +28,5 @@ rand = { version = "0.8.5" }
 serde = { version = "1.0.183", features = ["derive"] }
 serde_json = { version = "1.0.104" }
 measurable = { path = "../measurable" }
-tokio = { version = "1.29.1", default-features = false, features = ["sync"] }
+tokio = { version = "1.30.0", default-features = false, features = ["sync"] }
 tracing = { version = "0.1.38", default-features = false }
