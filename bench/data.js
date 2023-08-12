@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691646320227,
+  "lastUpdate": 1691854761152,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "34a47bfedac2a5e3a2dcbf75749f9f02c73f5ff6",
-          "message": "chore(deps): bump kube from 0.82.0 to 0.82.1 (#949)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.0 to 0.82.1.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.0...0.82.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-17T13:26:14+08:00",
-          "tree_id": "ed5fa3d429efb87876f28bfdabdc11f5c78c572d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/34a47bfedac2a5e3a2dcbf75749f9f02c73f5ff6"
-        },
-        "date": 1681710466440,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1128,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47089.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3c30d4596352bd8677241c0c3ada396f2bddb732",
           "message": "chore(deps): bump tonic from 0.9.1 to 0.9.2 (#952)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.9.1 to 0.9.2.\r\n- [Release notes](https://github.com/hyperium/tonic/releases)\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.9.1...v0.9.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-18T14:44:17+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44316.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "161fdab89b5a61e1f22c1e9cfd1e8ab0d2a2766d",
+          "message": "update rust to 1.71.1 (#1158)",
+          "timestamp": "2023-08-12T23:15:51+08:00",
+          "tree_id": "a57106a181c67c5f3c18d159c82010e0bdc0bd3e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/161fdab89b5a61e1f22c1e9cfd1e8ab0d2a2766d"
+        },
+        "date": 1691854742624,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1254,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44331.3,
             "unit": "KiB"
           }
         ]
