@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691854761152,
+  "lastUpdate": 1691904569144,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "490ba49db76c3e8da998d30f6adf61625efb4b09",
-          "message": "Merge pull request #851 from f1shl3gs/dependabot/cargo/serde-1.0.157\n\nchore(deps): bump serde from 1.0.156 to 1.0.157",
-          "timestamp": "2023-03-20T16:34:35+08:00",
-          "tree_id": "c5956d0d6a8b89611d45c5a1917944b815fd0c55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/490ba49db76c3e8da998d30f6adf61625efb4b09"
-        },
-        "date": 1679301487303,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 96.268,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 177.9,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 292.32,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 342.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0259ddd5531dd53d7b7aba4f13274e3de2a94f0",
+          "message": "update tokio to 1.31.0 (#1159)",
+          "timestamp": "2023-08-13T13:26:01+08:00",
+          "tree_id": "ea8a0c0929446ac1296a80d15124e14ebcec0ea8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0259ddd5531dd53d7b7aba4f13274e3de2a94f0"
+        },
+        "date": 1691904551588,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 101.72,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 245.26,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 410.27,
             "unit": "ns/op"
           }
         ]
