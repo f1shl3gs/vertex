@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691932804513,
+  "lastUpdate": 1691933036240,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "490ba49db76c3e8da998d30f6adf61625efb4b09",
-          "message": "Merge pull request #851 from f1shl3gs/dependabot/cargo/serde-1.0.157\n\nchore(deps): bump serde from 1.0.156 to 1.0.157",
-          "timestamp": "2023-03-20T16:34:35+08:00",
-          "tree_id": "c5956d0d6a8b89611d45c5a1917944b815fd0c55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/490ba49db76c3e8da998d30f6adf61625efb4b09"
-        },
-        "date": 1679302649951,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 43887000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1121600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.896,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 57.935,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 185.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 428.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1231.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2d5416170f80465bfe4970d2a953f05ef6e7e2fa",
           "message": "Merge pull request #853 from f1shl3gs/dependabot/cargo/async-recursion-1.0.4\n\nchore(deps): bump async-recursion from 1.0.2 to 1.0.4",
           "timestamp": "2023-03-20T16:34:47+08:00",
@@ -51109,6 +51050,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.778,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "064ee55a2d01cd03bc531829c22303d4729c6ce9",
+          "message": "update hyper-proxy (#1161)",
+          "timestamp": "2023-08-13T21:00:34+08:00",
+          "tree_id": "bed19b268f88a2b98db886c1f7adb9186a888e86",
+          "url": "https://github.com/f1shl3gs/vertex/commit/064ee55a2d01cd03bc531829c22303d4729c6ce9"
+        },
+        "date": 1691933021368,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 32666000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1028700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.45,
             "unit": "ns/op"
           }
         ]
