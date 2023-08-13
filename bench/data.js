@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691904609035,
+  "lastUpdate": 1691904614524,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "490ba49db76c3e8da998d30f6adf61625efb4b09",
-          "message": "Merge pull request #851 from f1shl3gs/dependabot/cargo/serde-1.0.157\n\nchore(deps): bump serde from 1.0.156 to 1.0.157",
-          "timestamp": "2023-03-20T16:34:35+08:00",
-          "tree_id": "c5956d0d6a8b89611d45c5a1917944b815fd0c55",
-          "url": "https://github.com/f1shl3gs/vertex/commit/490ba49db76c3e8da998d30f6adf61625efb4b09"
-        },
-        "date": 1679301544960,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.955,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.054,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.132,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 34.173,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.581,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ce5671877e829594b9a6f0e7c58bfff45d2baa44",
           "message": "Merge pull request #850 from f1shl3gs/dependabot/cargo/typetag-0.2.7\n\nchore(deps): bump typetag from 0.2.6 to 0.2.7",
           "timestamp": "2023-03-20T16:34:25+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.987,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0259ddd5531dd53d7b7aba4f13274e3de2a94f0",
+          "message": "update tokio to 1.31.0 (#1159)",
+          "timestamp": "2023-08-13T13:26:01+08:00",
+          "tree_id": "ea8a0c0929446ac1296a80d15124e14ebcec0ea8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0259ddd5531dd53d7b7aba4f13274e3de2a94f0"
+        },
+        "date": 1691904600034,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.739,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.483,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.609,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.304,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.752,
             "unit": "ns/op"
           }
         ]
