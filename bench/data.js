@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691904641913,
+  "lastUpdate": 1691905842260,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1beb10fbf89216850c70401d958055a04a9d3427",
-          "message": "Merge pull request #852 from f1shl3gs/dependabot/cargo/bstr-1.4.0\n\nchore(deps): bump bstr from 1.3.0 to 1.4.0",
-          "timestamp": "2023-03-20T14:33:55+08:00",
-          "tree_id": "b32fc335afc2c4459d913e962b8b2034c15407f0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1beb10fbf89216850c70401d958055a04a9d3427"
-        },
-        "date": 1679295672228,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45824000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1373200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 25.358,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 69.455,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 222.06,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 546.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1540.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ce5671877e829594b9a6f0e7c58bfff45d2baa44",
           "message": "Merge pull request #850 from f1shl3gs/dependabot/cargo/typetag-0.2.7\n\nchore(deps): bump typetag from 0.2.6 to 0.2.7",
           "timestamp": "2023-03-20T16:34:25+08:00",
@@ -51149,6 +51090,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.176,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a0259ddd5531dd53d7b7aba4f13274e3de2a94f0",
+          "message": "update tokio to 1.31.0 (#1159)",
+          "timestamp": "2023-08-13T13:26:01+08:00",
+          "tree_id": "ea8a0c0929446ac1296a80d15124e14ebcec0ea8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a0259ddd5531dd53d7b7aba4f13274e3de2a94f0"
+        },
+        "date": 1691905824413,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 35659000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1273100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 28.776,
             "unit": "ns/op"
           }
         ]
