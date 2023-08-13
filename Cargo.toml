@@ -236,7 +236,7 @@ transforms = [
 ]
 transforms-add_tags = []
 transforms-add_fields = []
-transforms-cardinality = ["bloom"]
+transforms-cardinality = ["dep:bloomy"]
 transforms-coercer = []
 transforms-dedup = ["lru"]
 transforms-enum = []
@@ -396,7 +396,7 @@ argh = { version = "0.1.12" }
 
 # External libs
 ahash = { version = "0.8.3", default-features = false, optional = true }
-bloom = { version = "0.3.2", default-features = false, optional = true }
+bloomy = { version = "1.2.0", default-features = false, optional = true }
 bytes = { version = "1.4.0", default-features = false, features = ["serde"] }
 chrono = { version = "0.4.26", default-features = false }
 chrono-tz = { version = "0.8.3", default-features = false }
