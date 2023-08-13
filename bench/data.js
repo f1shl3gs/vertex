@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691959654218,
+  "lastUpdate": 1691960759397,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "be06cb3cac917dc2130d75bd0769abfdc529591d",
-          "message": "chore(deps): bump kube from 0.82.1 to 0.82.2 (#953)\n\nBumps [kube](https://github.com/kube-rs/kube) from 0.82.1 to 0.82.2.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.82.1...0.82.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-20T18:26:08+08:00",
-          "tree_id": "d4f5c99964692e8fdec840ae98c3beca5cfb3432",
-          "url": "https://github.com/f1shl3gs/vertex/commit/be06cb3cac917dc2130d75bd0769abfdc529591d"
-        },
-        "date": 1681987970068,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1381,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47070,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44346.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b9156ab47cf39c3c6017193401dab3849cdf4ee",
+          "message": "Replace bloom with bloomy (#1162)\n\n* fix syn features\r\n\r\n* add flatten_enum test\r\n\r\n* replace bloom with bloomy",
+          "timestamp": "2023-08-14T04:42:48+08:00",
+          "tree_id": "77f117ad77ec45f09431bfbce5906afd32494aad",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b9156ab47cf39c3c6017193401dab3849cdf4ee"
+        },
+        "date": 1691960741529,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1232,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44372.8,
             "unit": "KiB"
           }
         ]
