@@ -19,7 +19,7 @@ rand = { version = "0.8.5" }
 rand_distr = { version = "0.4.3", default-features = false }
 tempfile = { version = "3.7.1" }
 testify = { path = "../testify" }
-tokio = { version = "1.30.0", features = ["test-util"] }
+tokio = { version = "1.31.0", default-features = false, features = ["test-util"] }
 tokio-test = { version = "0.4.2" }
 tower-test = { version = "0.4.0" }
 
@@ -79,7 +79,7 @@ snap = { version = "1.1.0", default-features = false }
 socket2 = { version = "0.5.3", default-features = false }
 syslog_loose = { version = "0.19.0", default-features = false }
 thiserror = { version = "1.0.44" }
-tokio = { version = "1.30.0", features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
+tokio = { version = "1.31.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-rustls = { version = "0.24.1", default-features = false }
 tokio-stream = { version = "0.1.14", features = ["time", "net"] }
 tokio-util = { version = "0.7.8", default-features = false, features = ["codec", "time", "net", "io"] }

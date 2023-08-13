@@ -9,6 +9,6 @@ event = { path = "../event" }
 hyper = { version = "0.14.27" }
 futures = { version = "0.3.28" }
 futures-util = { version = "0.3.27" }
-rand = "0.8.5"
-tokio = { version = "1.30.0" }
+rand = { version ="0.8.5", default-features = false }
+tokio = { version = "1.31.0", default-features = false }
 tokio-util = { version = "0.7.8" }
