@@ -58,8 +58,6 @@ default = [
     "sources",
     "transforms",
     "sinks",
-
-    "extensions-pprof"
 ]
 
 target-x86_64-unknown-linux-musl = [
@@ -74,8 +72,6 @@ target-x86_64-unknown-linux-gnu = [
     "sinks",
     "sources",
     "transforms",
-
-    "extensions-pprof"
 ]
 
 benches = [
@@ -124,7 +120,7 @@ tokio-console = ["framework/tokio-console", "tokio/tracing"]
 # Allocator
 # mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
 # need to declare it again.
-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
+jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
 
 # Extensions
 extensions = [
@@ -136,9 +132,9 @@ extensions = [
     "extensions-zpages"
 ]
 
-extensions-heartbeat = ["uuid", "sysinfo", "parking_lot/serde"]
+extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "parking_lot/serde"]
 extensions-healthcheck = []
-extensions-jemalloc = ["tikv-jemallocator", "tikv-jemalloc-ctl", "tikv-jemalloc-sys"]
+extensions-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
 extensions-pprof = ["dep:pprof", "dep:inferno"]
 extensions-zpages = []
 
@@ -188,33 +184,33 @@ sources-demo_logs = []
 sources-exec = ["tokio/process"]
 sources-clickhouse_metrics = []
 sources-elasticsearch = []
-sources-grpc_check = ["tonic", "tonic-health"]
+sources-grpc_check = ["dep:tonic", "dep:tonic-health"]
 sources-haproxy = []
 sources-http_check = []
 sources-internal_logs = []
 sources-internal_metrics = []
-sources-internal_traces = ["tracing-subscriber"]
-sources-jaeger = ["jaeger", "tonic"]
+sources-internal_traces = ["dep:tracing-subscriber"]
+sources-jaeger = ["dep:jaeger", "dep:tonic"]
 sources-journald = []
-sources-kafka = ["rskafka", "async-stream"]
-sources-kafka_metrics = ["rskafka"]
+sources-kafka = ["dep:rskafka", "dep:async-stream"]
+sources-kafka_metrics = ["dep:rskafka"]
 sources-kmsg = []
-sources-kubernetes_logs = ["tail", "multiline", "kubernetes", "ahash", "parking_lot"]
+sources-kubernetes_logs = ["dep:tail", "dep:multiline", "kubernetes", "dep:ahash", "dep:parking_lot"]
 sources-kubernetes_events = ["kubernetes"]
-sources-libvirt = ["virt"]
+sources-libvirt = ["dep:virt"]
 sources-memcached = []
 sources-mongodb = []
-sources-mysqld = ["sqlx"]
+sources-mysqld = ["dep:sqlx"]
 sources-nginx_stub = []
-sources-node_metrics = ["libc", "netlink-packet-sock-diag", "netlink-sys", "netlink-packet-core"]
+sources-node_metrics = ["dep:libc", "dep:netlink-packet-sock-diag", "dep:netlink-sys", "dep:netlink-packet-core"]
 sources-ntp = ["rsntp/tokio", "rsntp/async"]
 sources-nvidia_smi = ["dep:quick-xml"]
-sources-prometheus_scrape = ["prometheus"]
-sources-prometheus_remote_write = ["snap"]
+sources-prometheus_scrape = ["dep:prometheus"]
+sources-prometheus_remote_write = ["dep:snap"]
 sources-redis = []
-sources-selfstat = ["libc"]
-sources-syslog = ["codecs/syslog", "sources-utils-tcp-keepalive", "sources-utils-tcp-socket", "smallvec"]
-sources-tail = ["tail", "multiline", "encoding_rs"]
+sources-selfstat = ["dep:libc"]
+sources-syslog = ["codecs/syslog", "dep:smallvec"]
+sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
 sources-zookeeper = []
 
 # transforms
@@ -238,13 +234,13 @@ transforms-add_tags = []
 transforms-add_fields = []
 transforms-cardinality = ["dep:bloomy"]
 transforms-coercer = []
-transforms-dedup = ["lru"]
+transforms-dedup = ["dep:lru"]
 transforms-enum = []
-transforms-filter = ["condition"]
-transforms-geoip = [ "maxminddb" ]
+transforms-filter = ["dep:condition"]
+transforms-geoip = [ "dep:maxminddb" ]
 transforms-json_parser = []
-transforms-metricalize = ["async-stream"]
-transforms-route = ["condition"]
+transforms-metricalize = ["dep:async-stream"]
+transforms-route = ["dep:condition"]
 transforms-sample = []
 transforms-substr = []
 transforms-throttle = []
@@ -265,24 +261,20 @@ sinks = [
 ]
 
 sinks-console = []
-sinks-prometheus_exporter = ["flate2"]
-sinks-prometheus_remote_write = ["snap"]
+sinks-prometheus_exporter = ["dep:flate2"]
+sinks-prometheus_remote_write = ["dep:snap"]
 sinks-blackhole = []
-sinks-kafka = ["rskafka"]
-sinks-jaeger = ["jaeger"]
+sinks-kafka = ["dep:rskafka"]
+sinks-jaeger = ["dep:jaeger"]
 sinks-elasticsearch = []
-sinks-loki = ["snap", "dep:buffers"]
+sinks-loki = ["dep:snap", "dep:buffers"]
 sinks-vertex = []
 sinks-clickhouse = []
 sinks-socket = []
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
-kubernetes = ["k8s-openapi", "kube"]
-
-# Misc
-sources-utils-tcp-keepalive = []
-sources-utils-tcp-socket = []
+kubernetes = ["dep:k8s-openapi", "dep:kube"]
 
 bench = [
     "sinks-loki",
