@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691929947884,
+  "lastUpdate": 1691929950306,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59271,6 +59271,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1288.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c70805eb984e26f775acc2ce94c9e235bb664ae2",
+          "message": "update hyper-proxy (#1160)",
+          "timestamp": "2023-08-13T20:28:21+08:00",
+          "tree_id": "8361cbfae65f4c83427e4f12f2b8b4d4e4a6632b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c70805eb984e26f775acc2ce94c9e235bb664ae2"
+        },
+        "date": 1691929935452,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 54.271,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 173.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 410.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1145.8,
             "unit": "ns/op"
           }
         ]
