@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1691992447765,
+  "lastUpdate": 1691993690418,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "25dc439b7c5117886ec0fce17587467c4735cb21",
-          "message": "Merge pull request #854 from f1shl3gs/dependabot/cargo/async-trait-0.1.67\n\nchore(deps): bump async-trait from 0.1.66 to 0.1.67",
-          "timestamp": "2023-03-20T16:34:58+08:00",
-          "tree_id": "a2518f52294a337230f935e5c5a3dd08a29334be",
-          "url": "https://github.com/f1shl3gs/vertex/commit/25dc439b7c5117886ec0fce17587467c4735cb21"
-        },
-        "date": 1679303096274,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 42841000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1462500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.293,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 60.583,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 210.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 465.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1342.6,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "88ac51be7ded1666b7cac6d5208218bdf860bc05",
           "message": "Clickhouse sink (#859)\n\n* add keys() for Tags\r\n\r\n* add 'acknowledgements()' for SinkConfig\r\n\r\n* add components test helpers\r\n\r\n* add clickhouse sink",
           "timestamp": "2023-03-20T18:05:10+08:00",
@@ -51069,6 +51010,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.836,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "57fe407b405612467f7b5526f7c480695cb91ec0",
+          "message": "chore(deps): bump async-trait from 0.1.72 to 0.1.73 (#1164)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.72 to 0.1.73.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.72...0.1.73)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-14T13:49:30+08:00",
+          "tree_id": "daa8c03a6f87bf79968df04bf78a1ebcdeecfa79",
+          "url": "https://github.com/f1shl3gs/vertex/commit/57fe407b405612467f7b5526f7c480695cb91ec0"
+        },
+        "date": 1691993671861,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 35816000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1474300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 28.318,
             "unit": "ns/op"
           }
         ]
