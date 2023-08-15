@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692142955133,
+  "lastUpdate": 1692142956477,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "10554c8d2aa22b377bb98c16363f5855e1bd97ec",
-          "message": "Merge pull request #864 from f1shl3gs/source/clickhouse_metrics\n\nadd source/clickhouse_metrics",
-          "timestamp": "2023-03-22T06:26:10+08:00",
-          "tree_id": "b01305ade94fadb4d7fb1f29cab97b2747a6d00d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10554c8d2aa22b377bb98c16363f5855e1bd97ec"
-        },
-        "date": 1679437791668,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 718610,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 821670,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
+          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:39+08:00",
+          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
+        },
+        "date": 1692142937325,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 855960,
             "unit": "ns/op"
           }
         ]
