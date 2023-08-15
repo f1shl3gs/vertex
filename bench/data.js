@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692142874460,
+  "lastUpdate": 1692142895870,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ccc68c633f925edf80a929bb2bc43c64c513ea5c",
-          "message": "Merge pull request #862 from f1shl3gs/update_syn_2.0.4\n\nupdate syn to 2.0.4",
-          "timestamp": "2023-03-21T18:27:57+08:00",
-          "tree_id": "582c4181ac79c69ffbfca3495d6724a52f47cbc0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ccc68c633f925edf80a929bb2bc43c64c513ea5c"
-        },
-        "date": 1679394738304,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 716160,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 696310,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "578b61ca893c0d13bfb5476b55f992a1c3614a85",
+          "message": "chore(deps): bump serde_json from 1.0.104 to 1.0.105 (#1169)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.104 to 1.0.105.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.104...v1.0.105)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:15+08:00",
+          "tree_id": "3be3cf763894ea66c03cf7857b3e5dd6f9c3c370",
+          "url": "https://github.com/f1shl3gs/vertex/commit/578b61ca893c0d13bfb5476b55f992a1c3614a85"
+        },
+        "date": 1692142879508,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 799360,
             "unit": "ns/op"
           }
         ]
