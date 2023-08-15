@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::time::Duration;
 
+use chrono::Utc;
 use configurable::configurable_component;
 use event::Bucket;
 use framework::config::Output;
@@ -52,6 +53,13 @@ async fn run(
         let mut reporter = Reporter::default();
         let reg = metrics::global_registry();
         reg.report(&mut reporter);
+
+        // set timestamp
+        let timestamp = Utc::now();
+        reporter
+            .metrics
+            .iter_mut()
+            .for_each(|metric| metric.timestamp = Some(timestamp));
 
         if let Err(err) = output.send(reporter.metrics).await {
             error!(
