@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692143003351,
+  "lastUpdate": 1692143016675,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "45eee092ff251e9d05ba24a64c5e12ca8a3ad6fc",
-          "message": "Merge pull request #863 from f1shl3gs/fix_multiline_comment_ident\n\nfix multiline comment ident",
-          "timestamp": "2023-03-21T19:38:42+08:00",
-          "tree_id": "5b4374f4ef689613356d529a038e28db07351a44",
-          "url": "https://github.com/f1shl3gs/vertex/commit/45eee092ff251e9d05ba24a64c5e12ca8a3ad6fc"
-        },
-        "date": 1679398997834,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.934,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.948,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.968,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.751,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.237,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "10554c8d2aa22b377bb98c16363f5855e1bd97ec",
           "message": "Merge pull request #864 from f1shl3gs/source/clickhouse_metrics\n\nadd source/clickhouse_metrics",
           "timestamp": "2023-03-22T06:26:10+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.966,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1c9baf52b976b8d45349dbe2447138f4ca1d778d",
+          "message": "set timestamp for metrics (#1165)",
+          "timestamp": "2023-08-16T07:38:29+08:00",
+          "tree_id": "e39262cd99df6a7d425a8fb14e266c67a96544a2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1c9baf52b976b8d45349dbe2447138f4ca1d778d"
+        },
+        "date": 1692142999954,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.873,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.059,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.528,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 44.255,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.234,
             "unit": "ns/op"
           }
         ]
