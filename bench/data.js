@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692143019623,
+  "lastUpdate": 1692143021012,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "10554c8d2aa22b377bb98c16363f5855e1bd97ec",
-          "message": "Merge pull request #864 from f1shl3gs/source/clickhouse_metrics\n\nadd source/clickhouse_metrics",
-          "timestamp": "2023-03-22T06:26:10+08:00",
-          "tree_id": "b01305ade94fadb4d7fb1f29cab97b2747a6d00d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/10554c8d2aa22b377bb98c16363f5855e1bd97ec"
-        },
-        "date": 1679437849957,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.847,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.971,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.959,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.928,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.163,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd",
           "message": "Propgate trace through http request (#868)\n\n* move http chunk encoder to config/provider/http\r\n\r\n* propagate trace data through http request",
           "timestamp": "2023-03-22T11:29:27+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.234,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
+          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:39+08:00",
+          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
+        },
+        "date": 1692143001926,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.444,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.616,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.674,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 51.671,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 65.974,
             "unit": "ns/op"
           }
         ]
