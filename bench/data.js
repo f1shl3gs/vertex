@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692143144006,
+  "lastUpdate": 1692143158598,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd",
-          "message": "Propgate trace through http request (#868)\n\n* move http chunk encoder to config/provider/http\r\n\r\n* propagate trace data through http request",
-          "timestamp": "2023-03-22T11:29:27+08:00",
-          "tree_id": "c3008cb86e554c955ebb03bef322d6c4518c2f69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd"
-        },
-        "date": 1679456039930,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.987,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.068,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.497,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 33.259,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.869,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "571b0d6a321c8ab5aee0cd93561cbc39932ffd52",
           "message": "Top (#867)\n\n* move alloc features to main.rs\r\n\r\n* jemalloc-extension require feature jemalloc to compile",
           "timestamp": "2023-03-22T11:30:47+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 65.974,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a5dab3a4b6dc98cf0d626f576300b8e383907aa",
+          "message": "chore(deps): bump thiserror from 1.0.44 to 1.0.46 (#1167)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.44 to 1.0.46.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.44...1.0.46)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:50+08:00",
+          "tree_id": "a581a879de44899dc1b4548491648aebd4960633",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7a5dab3a4b6dc98cf0d626f576300b8e383907aa"
+        },
+        "date": 1692143144699,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.161,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 21.879,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.625,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 37.438,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 47.915,
             "unit": "ns/op"
           }
         ]
