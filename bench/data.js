@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692142978210,
+  "lastUpdate": 1692143003351,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -59435,6 +59435,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1282.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "578b61ca893c0d13bfb5476b55f992a1c3614a85",
+          "message": "chore(deps): bump serde_json from 1.0.104 to 1.0.105 (#1169)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.104 to 1.0.105.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.104...v1.0.105)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:15+08:00",
+          "tree_id": "3be3cf763894ea66c03cf7857b3e5dd6f9c3c370",
+          "url": "https://github.com/f1shl3gs/vertex/commit/578b61ca893c0d13bfb5476b55f992a1c3614a85"
+        },
+        "date": 1692142984707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 68.228,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 190.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 460.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1320.8,
             "unit": "ns/op"
           }
         ]
