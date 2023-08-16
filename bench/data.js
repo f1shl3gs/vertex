@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692144111842,
+  "lastUpdate": 1692144186973,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "bcb0891d9f8053a110f4a5c5cf4247b611ec285b",
-          "message": "chore(deps): bump regex from 1.8.0 to 1.8.1 (#959)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.0 to 1.8.1.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/commits/1.8.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-24T18:27:58+08:00",
-          "tree_id": "b071521e9a3f628c1dd73594015254fb54e1534d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/bcb0891d9f8053a110f4a5c5cf4247b611ec285b"
-        },
-        "date": 1682333382496,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1109,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 47431.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c4981d3135057947fcfe200ec531da57d943db2e",
           "message": "chore(deps): bump tracing-subscriber from 0.3.16 to 0.3.17 (#957)\n\nBumps [tracing-subscriber](https://github.com/tokio-rs/tracing) from 0.3.16 to 0.3.17.\r\n- [Release notes](https://github.com/tokio-rs/tracing/releases)\r\n- [Commits](https://github.com/tokio-rs/tracing/compare/tracing-subscriber-0.3.16...tracing-subscriber-0.3.17)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tracing-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-24T18:27:34+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44377,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
+          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-16T07:38:39+08:00",
+          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
+        },
+        "date": 1692144168661,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1299,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44367.2,
             "unit": "KiB"
           }
         ]
