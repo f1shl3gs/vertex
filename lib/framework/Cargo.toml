@@ -78,7 +78,7 @@ serde_yaml = { version = "0.9.25" }
 snap = { version = "1.1.0", default-features = false }
 socket2 = { version = "0.5.3", default-features = false }
 syslog_loose = { version = "0.19.0", default-features = false }
-thiserror = { version = "1.0.46" }
+thiserror = { version = "1.0.47" }
 tokio = { version = "1.31.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread"] }
 tokio-rustls = { version = "0.24.1", default-features = false }
 tokio-stream = { version = "0.1.14", features = ["time", "net"] }
