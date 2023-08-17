@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692290650182,
+  "lastUpdate": 1692290664202,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c1e5743fff873fa6749d28133e1454e492e44cee",
-          "message": "chore(deps): bump tokio-stream from 0.1.12 to 0.1.14 (#967)\n\nBumps [tokio-stream](https://github.com/tokio-rs/tokio) from 0.1.12 to 0.1.14.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Changelog](https://github.com/tokio-rs/tokio/blob/tokio-0.1.14/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-stream-0.1.12...tokio-0.1.14)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-stream\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-28T16:55:37+08:00",
-          "tree_id": "11cac0571170bcb63434d49ca472dd342072c559",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1e5743fff873fa6749d28133e1454e492e44cee"
-        },
-        "date": 1682673419048,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1095,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44195.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "039deef75e0b89933e30841fe5148d28ddb922e7",
           "message": "chore(deps): bump mimalloc from 0.1.36 to 0.1.37 (#964)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.36 to 0.1.37.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.36...v0.1.37)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-28T16:56:01+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44368,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e8d75dfc301fcdffda184e7e101b038a4b98c89",
+          "message": "chore(deps): bump thiserror from 1.0.46 to 1.0.47 (#1176)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.46 to 1.0.47.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.46...1.0.47)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T00:20:47+08:00",
+          "tree_id": "c1c02141acd73e93196fa9a14aa53d0dd58006c6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e8d75dfc301fcdffda184e7e101b038a4b98c89"
+        },
+        "date": 1692290645689,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1247,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44365.8,
             "unit": "KiB"
           }
         ]
