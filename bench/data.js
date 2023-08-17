@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692241947908,
+  "lastUpdate": 1692243120358,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9a64642e61d69d1e29f56d10a90e134763e36f50",
-          "message": "remove openssl (#961)",
-          "timestamp": "2023-04-24T21:27:36+08:00",
-          "tree_id": "968b707972466fb955b805f0a56686fc6fca0277",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9a64642e61d69d1e29f56d10a90e134763e36f50"
-        },
-        "date": 1682344183501,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1115,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44195,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
           "message": "disable elasticsearch integration tests (#968)",
           "timestamp": "2023-04-28T16:27:34+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44365.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2209955205e1c5d1c677ad59bfebe68c131e7feb",
+          "message": "chore(deps): bump no-proxy from 0.3.3 to 0.3.4 (#1170)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.3 to 0.3.4.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-17T11:08:16+08:00",
+          "tree_id": "5555094343c4da3a7d75ae7feb9b5d82401d0b14",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2209955205e1c5d1c677ad59bfebe68c131e7feb"
+        },
+        "date": 1692243101717,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1255,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44366.6,
             "unit": "KiB"
           }
         ]
