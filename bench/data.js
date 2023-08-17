@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692291458240,
+  "lastUpdate": 1692292399921,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1694da30dda33b290fc1642c5a74586257acac8f",
-          "message": "chore(deps): bump tokio from 1.27.0 to 1.28.0 (#963)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.27.0 to 1.28.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.27.0...tokio-1.28.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-29T06:15:46+08:00",
-          "tree_id": "d54e7c3ac7905c9a889fa5f65b92e8eda46db82b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1694da30dda33b290fc1642c5a74586257acac8f"
-        },
-        "date": 1682721471396,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1129,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44209,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "66fd18f064eff94fff5d7e3025713835d38e1ebb",
           "message": "chore(deps): bump tokio-util from 0.7.7 to 0.7.8 (#966)\n\nBumps [tokio-util](https://github.com/tokio-rs/tokio) from 0.7.7 to 0.7.8.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-util-0.7.7...tokio-util-0.7.8)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-util\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-29T07:33:44+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44366.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "537922378e0449d53dedc4278a06f687cbee4a4a",
+          "message": "chore(deps): bump tokio from 1.31.0 to 1.32.0 (#1173)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.31.0 to 1.32.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.31.0...tokio-1.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T00:52:41+08:00",
+          "tree_id": "0fc3f464a34515e8c3ae382679d4891c287f7dc2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/537922378e0449d53dedc4278a06f687cbee4a4a"
+        },
+        "date": 1692292384450,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1094,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44372.8,
             "unit": "KiB"
           }
         ]
