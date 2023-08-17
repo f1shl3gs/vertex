@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692290621632,
+  "lastUpdate": 1692290650182,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c83d7af7b1328294c12068f3dd8650e8d9b92594",
-          "message": "disable elasticsearch integration tests (#968)",
-          "timestamp": "2023-04-28T16:27:34+08:00",
-          "tree_id": "6f62ed6a5e006e0de9b15228e7b65a4205450fb2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c83d7af7b1328294c12068f3dd8650e8d9b92594"
-        },
-        "date": 1682671965777,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1303,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44195,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44366.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7bace9cfa56889c3ed195c1fc32cb154a0d4b0eb",
+          "message": "chore(deps): bump typetag from 0.2.12 to 0.2.13 (#1172)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.12...0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T00:21:43+08:00",
+          "tree_id": "071101b57a8b741f53c9435ed1ff9c86ee27b39b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7bace9cfa56889c3ed195c1fc32cb154a0d4b0eb"
+        },
+        "date": 1692290635007,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1052,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44368,
             "unit": "KiB"
           }
         ]
