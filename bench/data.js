@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692144427112,
+  "lastUpdate": 1692241870623,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd",
-          "message": "Propgate trace through http request (#868)\n\n* move http chunk encoder to config/provider/http\r\n\r\n* propagate trace data through http request",
-          "timestamp": "2023-03-22T11:29:27+08:00",
-          "tree_id": "c3008cb86e554c955ebb03bef322d6c4518c2f69",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43fc3ce2a6a74cdb4b50db8ef56cc2e82c7b28cd"
-        },
-        "date": 1679456167709,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 96.485,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 183.96,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 296.3,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 431.71,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2209955205e1c5d1c677ad59bfebe68c131e7feb",
+          "message": "chore(deps): bump no-proxy from 0.3.3 to 0.3.4 (#1170)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.3 to 0.3.4.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-17T11:08:16+08:00",
+          "tree_id": "5555094343c4da3a7d75ae7feb9b5d82401d0b14",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2209955205e1c5d1c677ad59bfebe68c131e7feb"
+        },
+        "date": 1692241854794,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 88.361,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 189.42,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 292.63,
             "unit": "ns/op"
           }
         ]
