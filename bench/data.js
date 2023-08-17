@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692289546028,
+  "lastUpdate": 1692289547605,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "effa985a9c988d19db3eea1724c56b1898e02242",
-          "message": "Merge pull request #869 from f1shl3gs/dependabot/cargo/syn-2.0.5\n\nchore(deps): bump syn from 2.0.4 to 2.0.5",
-          "timestamp": "2023-03-22T13:47:44+08:00",
-          "tree_id": "291e4bde0e172eca765d2a5d884df1c8bdf001b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/effa985a9c988d19db3eea1724c56b1898e02242"
-        },
-        "date": 1679464342932,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.822,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.369,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.866,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 31.883,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.742,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "4f457f4a497aec5889166a2e474393f4ca008949",
           "message": "Simplify tracing limit (#873)\n\n* simplify tracing-limit\r\n\r\n* refine no metric log",
           "timestamp": "2023-03-22T16:46:21+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 68.721,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1e8d75dfc301fcdffda184e7e101b038a4b98c89",
+          "message": "chore(deps): bump thiserror from 1.0.46 to 1.0.47 (#1176)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.46 to 1.0.47.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.46...1.0.47)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T00:20:47+08:00",
+          "tree_id": "c1c02141acd73e93196fa9a14aa53d0dd58006c6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1e8d75dfc301fcdffda184e7e101b038a4b98c89"
+        },
+        "date": 1692289526612,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 32.635,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.773,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.772,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 54.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 71.885,
             "unit": "ns/op"
           }
         ]
