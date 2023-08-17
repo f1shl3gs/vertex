@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692289488666,
+  "lastUpdate": 1692289496224,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "effa985a9c988d19db3eea1724c56b1898e02242",
-          "message": "Merge pull request #869 from f1shl3gs/dependabot/cargo/syn-2.0.5\n\nchore(deps): bump syn from 2.0.4 to 2.0.5",
-          "timestamp": "2023-03-22T13:47:44+08:00",
-          "tree_id": "291e4bde0e172eca765d2a5d884df1c8bdf001b3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/effa985a9c988d19db3eea1724c56b1898e02242"
-        },
-        "date": 1679464280700,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 718520,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 719760,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "07e8befdd2426ca8453db7c797dfdf8149b4e0fb",
+          "message": "chore(deps): bump syn from 2.0.28 to 2.0.29 (#1174)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.28 to 2.0.29.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.28...2.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T00:21:12+08:00",
+          "tree_id": "3d91e2cdf7734491f1d0ea928059787acd4cf6d9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/07e8befdd2426ca8453db7c797dfdf8149b4e0fb"
+        },
+        "date": 1692289476339,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 900680,
             "unit": "ns/op"
           }
         ]
