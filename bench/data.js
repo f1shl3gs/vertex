@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692324497439,
+  "lastUpdate": 1692324636440,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,65 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "286a2e03edacd66fbea0b64d26c04172b290f7e7",
-          "message": "Fix condition bench (#881)\n\n* fix condition bench\r\n\r\n* add clock feature for chrono",
-          "timestamp": "2023-03-24T13:27:03+08:00",
-          "tree_id": "6caaa992ff2b64af7c3cd242ab5860c187fdb762",
-          "url": "https://github.com/f1shl3gs/vertex/commit/286a2e03edacd66fbea0b64d26c04172b290f7e7"
-        },
-        "date": 1679637212549,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 46778000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1134400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.434,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/1",
-            "value": 67.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 221.65,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 478.4,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1390.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "32932fb18c1ee897cb9981e963c8909351e182da",
           "message": "move tags insert bench to lib/event (#882)",
           "timestamp": "2023-03-24T14:55:17+08:00",
@@ -50829,6 +50770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.519,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "820f7174e4df833f690af703fac16bb603d1a494",
+          "message": "chore(deps): bump quote from 1.0.32 to 1.0.33 (#1171)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.32 to 1.0.33.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.32...1.0.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-18T09:44:52+08:00",
+          "tree_id": "40f78db0f5d9e10b890fe91cae95eddf81a3c293",
+          "url": "https://github.com/f1shl3gs/vertex/commit/820f7174e4df833f690af703fac16bb603d1a494"
+        },
+        "date": 1692324617459,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 40452000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1383800,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 28.572,
             "unit": "ns/op"
           }
         ]
