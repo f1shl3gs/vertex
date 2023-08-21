@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692607207440,
+  "lastUpdate": 1692607215874,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -50828,50 +50828,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "50acc29d3ff82650cedec356e477960a17ebe0a6",
-          "message": "Fix proc and sys path (#886)\n\n* add color to connect status\r\n\r\n* fix proc and sys path setting",
-          "timestamp": "2023-03-24T21:04:13+08:00",
-          "tree_id": "90310a2b29bbeaf43691142539c61e637aa5bc62",
-          "url": "https://github.com/f1shl3gs/vertex/commit/50acc29d3ff82650cedec356e477960a17ebe0a6"
-        },
-        "date": 1679663326525,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 57.759,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 172.12,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 394.02,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1095.7,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "09c167eb83156dbe9e702bd4ac81531aac89c0a7",
           "message": "simplify (#887)",
           "timestamp": "2023-03-24T23:33:54+08:00",
@@ -59611,6 +59567,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1462.3,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722",
+          "message": "chore(deps): bump tempfile from 3.7.1 to 3.8.0 (#1178)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.1 to 3.8.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.1...v3.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-21T16:35:30+08:00",
+          "tree_id": "fab978c65e26a30635282660fc3d0e336a3aff8d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722"
+        },
+        "date": 1692607199153,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 52.657,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 143.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 350.98,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 996.13,
             "unit": "ns/op"
           }
         ]
