@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692607096283,
+  "lastUpdate": 1692607099532,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a",
-          "message": "Build vertex without zpages (#883)\n\n* copy `Metric` and `Point`\r\n\r\n* remove zpages from benches feature",
-          "timestamp": "2023-03-24T17:18:24+08:00",
-          "tree_id": "b8461ba08c2260e70deda1ebdc1c3dbf2472aa11",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e972e7bc4ca5d4cf6bcae86ff1d2ec643c7e7f7a"
-        },
-        "date": 1679649750714,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 718550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 690310,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e91340bb911cbfbe996892c5cee5c71f9212666e",
+          "message": "chore(deps): bump inferno from 0.11.15 to 0.11.16 (#1180)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.15 to 0.11.16.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.15...v0.11.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-21T16:35:12+08:00",
+          "tree_id": "df87193e9e04914734054ee45fa561849721b713",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e91340bb911cbfbe996892c5cee5c71f9212666e"
+        },
+        "date": 1692607084166,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 722730,
             "unit": "ns/op"
           }
         ]
