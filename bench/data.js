@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692608356082,
+  "lastUpdate": 1692608388583,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a7ac1daa5cb42f75c5562b2c186285ad453f286c",
-          "message": "fix jemalloc profiling (#973)",
-          "timestamp": "2023-05-01T21:10:08+08:00",
-          "tree_id": "2171316930b71942efb0f85814502544169a171c",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a7ac1daa5cb42f75c5562b2c186285ad453f286c"
-        },
-        "date": 1682947864555,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1073,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44215.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44369.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b2f5328ad2fa7a48720aaed7134902d26ce8e650",
+          "message": "chore(deps): bump notify from 6.0.1 to 6.1.0 (#1177)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.0.1 to 6.1.0.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.0.1...notify-6.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-21T16:35:39+08:00",
+          "tree_id": "cb083b49f38f8eec6ef18a87a4875a2110fbc2d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b2f5328ad2fa7a48720aaed7134902d26ce8e650"
+        },
+        "date": 1692608373272,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1087,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44357.4,
             "unit": "KiB"
           }
         ]
