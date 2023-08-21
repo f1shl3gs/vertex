@@ -13,7 +13,7 @@ test = false
 chrono = { version = "0.4.26", default-features = false, features = ["clock", "serde"] }
 quickcheck = { version = "1.0.3", default-features = false }
 tokio = { version = "1.32.0", default-features = false, features = ["test-util", "macros", "rt-multi-thread"] }
-tempfile = { version = "3.7.1" }
+tempfile = { version = "3.8.0" }
 criterion = { version = "0.5.1", default-features = false }
 tracing-test = { version = "0.2.4" }
 
