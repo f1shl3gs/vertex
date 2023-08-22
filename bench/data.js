@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692677629637,
+  "lastUpdate": 1692677637248,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "279f4a40e0d0fabfd243ad45ca7ee64c85e44105",
-          "message": "remove some unnecessary IntervalStream (#888)\n\n* replace IntervalStream with tokio::time::Interval\r\n\r\n* remove default_false",
-          "timestamp": "2023-03-25T14:39:02+08:00",
-          "tree_id": "b0ea803b0d50e2c9a6006363068f274d1a3175e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/279f4a40e0d0fabfd243ad45ca7ee64c85e44105"
-        },
-        "date": 1679726571619,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 95.437,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 188.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 291.49,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 406.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f3119b1d8b570dbde774b53699051e9d6bc5f6e",
+          "message": "chore(deps): bump notify from 6.1.0 to 6.1.1 (#1181)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.1.0 to 6.1.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.1.0...notify-6.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-22T12:10:49+08:00",
+          "tree_id": "8967df3437058e449623f83635ab22d4e1a05606",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f3119b1d8b570dbde774b53699051e9d6bc5f6e"
+        },
+        "date": 1692677621623,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 84.334,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 202.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 342.77,
             "unit": "ns/op"
           }
         ]
