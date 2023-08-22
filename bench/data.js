@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692677732884,
+  "lastUpdate": 1692677739759,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "279f4a40e0d0fabfd243ad45ca7ee64c85e44105",
-          "message": "remove some unnecessary IntervalStream (#888)\n\n* replace IntervalStream with tokio::time::Interval\r\n\r\n* remove default_false",
-          "timestamp": "2023-03-25T14:39:02+08:00",
-          "tree_id": "b0ea803b0d50e2c9a6006363068f274d1a3175e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/279f4a40e0d0fabfd243ad45ca7ee64c85e44105"
-        },
-        "date": 1679726633703,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.699,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.972,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.787,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 36.849,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.264,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b261553cd0809c72f30d3bdd9b51c668707958c8",
           "message": "add #[serde(flatten)] to LogRecord's fields (#889)",
           "timestamp": "2023-03-25T15:54:50+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.443,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3f3119b1d8b570dbde774b53699051e9d6bc5f6e",
+          "message": "chore(deps): bump notify from 6.1.0 to 6.1.1 (#1181)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.1.0 to 6.1.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.1.0...notify-6.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-22T12:10:49+08:00",
+          "tree_id": "8967df3437058e449623f83635ab22d4e1a05606",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3f3119b1d8b570dbde774b53699051e9d6bc5f6e"
+        },
+        "date": 1692677723314,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.674,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.172,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.325,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.563,
             "unit": "ns/op"
           }
         ]
