@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692759375266,
+  "lastUpdate": 1692759591430,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,45 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b261553cd0809c72f30d3bdd9b51c668707958c8",
-          "message": "add #[serde(flatten)] to LogRecord's fields (#889)",
-          "timestamp": "2023-03-25T15:54:50+08:00",
-          "tree_id": "9fb0462be2fa59130e3284c80993b08ab7f59a28",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b261553cd0809c72f30d3bdd9b51c668707958c8"
-        },
-        "date": 1679732036983,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 28313000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1028500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.491,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a8146727ba9d857e8a285336c8ba81041647eb08",
           "message": "update openssl to 0.10.48 (#890)",
           "timestamp": "2023-03-26T19:33:17+08:00",
@@ -50809,6 +50770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.585,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e8a2ed4b28a968409a097110169146376568f864",
+          "message": "chore(deps): bump rustls-webpki from 0.101.2 to 0.101.4 (#1182)\n\nBumps [rustls-webpki](https://github.com/rustls/webpki) from 0.101.2 to 0.101.4.\r\n- [Release notes](https://github.com/rustls/webpki/releases)\r\n- [Commits](https://github.com/rustls/webpki/compare/v/0.101.2...v/0.101.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-webpki\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-23T10:32:51+08:00",
+          "tree_id": "09b979ada21e13d3855cc9fc07eb1e5273e91dcf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e8a2ed4b28a968409a097110169146376568f864"
+        },
+        "date": 1692759571993,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 34719000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1204200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.366,
             "unit": "ns/op"
           }
         ]
