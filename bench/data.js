@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692759200237,
+  "lastUpdate": 1692759375266,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36214,40 +36214,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e546cc651d522f93072cfc87c9cf7ff34f4e9fe6",
-          "message": "cleanup unused dependencies and features (#976)",
-          "timestamp": "2023-05-03T16:35:23+08:00",
-          "tree_id": "c440a261c72c20e4d5b8f797a592af648472a67d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e546cc651d522f93072cfc87c9cf7ff34f4e9fe6"
-        },
-        "date": 1683104233659,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1087,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44217,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44381.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c8019b0bf3e3cbde26a24c1cc979f816f8fa503b",
+          "message": "chore(deps): bump dashmap from 5.5.0 to 5.5.1 (#1183)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.0 to 5.5.1.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.0...v5.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-23T10:32:24+08:00",
+          "tree_id": "b2eabd26e1ca257e452cab97742f0242862313c6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c8019b0bf3e3cbde26a24c1cc979f816f8fa503b"
+        },
+        "date": 1692759356014,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1266,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44380.1,
             "unit": "KiB"
           }
         ]
