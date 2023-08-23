@@ -20,7 +20,7 @@ rand_distr = { version = "0.4.3", default-features = false }
 tempfile = { version = "3.8.0" }
 testify = { path = "../testify" }
 tokio = { version = "1.32.0", default-features = false, features = ["test-util"] }
-tokio-test = { version = "0.4.2" }
+tokio-test = { version = "0.4.3" }
 tower-test = { version = "0.4.0" }
 
 [dependencies]
