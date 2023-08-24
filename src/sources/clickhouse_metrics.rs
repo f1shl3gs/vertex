@@ -1,4 +1,5 @@
 use std::io::BufRead;
+use std::sync::Arc;
 use std::time::Duration;
 
 use async_trait::async_trait;
@@ -9,10 +10,9 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::http::{Auth, HttpClient};
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal, Source};
-use futures_util::stream::FuturesUnordered;
 use http::{Method, Request};
 use hyper::Body;
-use tokio_stream::StreamExt;
+use tokio::task::JoinError;
 use url::Url;
 
 #[configurable_component(source, name = "clickhouse_metrics")]
@@ -38,10 +38,10 @@ impl SourceConfig for Config {
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
 
         Ok(Box::pin(run(
-            self.interval,
-            self.endpoint.clone(),
             client,
             self.auth.clone(),
+            self.endpoint.clone(),
+            self.interval,
             cx.output,
             cx.shutdown,
         )))
@@ -287,36 +287,51 @@ impl Collector {
 }
 
 async fn run(
-    interval: Duration,
-    endpoint: Url,
     client: HttpClient,
     auth: Option<Auth>,
+    endpoint: Url,
+    interval: Duration,
     mut output: Pipeline,
     mut shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
     let mut ticker = tokio::time::interval(interval);
-    let collector = &Collector::new(client, auth, endpoint);
+    let collector = Arc::new(Collector::new(client, auth, endpoint));
 
     loop {
         tokio::select! {
             biased;
 
-            _ = &mut shutdown => break,
+            _ = &mut shutdown => return Ok(()),
             _ = ticker.tick() => {}
         }
 
-        let mut tasks = FuturesUnordered::from_iter([
-            collector.currently_metrics(),
-            collector.async_metrics(),
-            collector.event_metrics(),
-            collector.parts_metrics(),
-        ]);
+        let mut tasks = vec![];
+        let c = Arc::clone(&collector);
+        tasks.push(tokio::spawn(async move { c.currently_metrics().await }));
+        let c = Arc::clone(&collector);
+        tasks.push(tokio::spawn(async move { c.async_metrics().await }));
+        let c = Arc::clone(&collector);
+        tasks.push(tokio::spawn(async move { c.event_metrics().await }));
+        let c = Arc::clone(&collector);
+        tasks.push(tokio::spawn(async move { c.parts_metrics().await }));
 
-        while let Some(Ok(metrics)) = tasks.next().await {
-            if let Err(err) = output.send(metrics).await {
-                warn!(message = "send metrics failed", ?err);
+        match futures::future::join_all(tasks)
+            .await
+            .into_iter()
+            .collect::<Result<Vec<Vec<Metric>>, JoinError>>()
+        {
+            Ok(metrics) => {
+                if let Err(err) = output
+                    .send(metrics.into_iter().flatten().collect::<Vec<_>>())
+                    .await
+                {
+                    warn!(message = "send metrics failed", ?err);
 
-                return Ok(());
+                    return Ok(());
+                }
+            }
+            Err(err) => {
+                error!(message = "spawn tasks failed", ?err);
             }
         }
     }
@@ -410,7 +425,7 @@ mod tests {
     #[tokio::test]
     async fn parts() {
         let endpoint = "http://127.0.0.1:8123".parse().unwrap();
-        let client = HttpClient::new(None, &ProxyConfig::default()).unwrap();
+        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
         let c = Collector::new(client, None, endpoint);
 
         let body = c.fetch(&c.parts_uri).await.unwrap();

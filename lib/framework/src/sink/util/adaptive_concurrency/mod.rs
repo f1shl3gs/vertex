@@ -13,7 +13,7 @@ pub use layer::AdaptiveConcurrencyLimitLayer;
 use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
-pub(self) const MAX_CONCURRENCY: usize = 256;
+const MAX_CONCURRENCY: usize = 256;
 
 /// The defaults for these values were chosen after running several simulations
 /// on a test service that had various responses to load. The values are the best

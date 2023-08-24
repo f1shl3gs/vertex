@@ -164,7 +164,7 @@ mod tests {
     fn decode() {
         let tests = [(
             "7.15.0",
-            r##"{"retention_runs":9,"retention_failed":0,"retention_timed_out":0,"retention_deletion_time":"1.2m","retention_deletion_time_millis":72491,"total_snapshots_taken":103,"total_snapshots_failed":2,"total_snapshots_deleted":20,"total_snapshot_deletion_failures":0,"policy_stats":[{"policy":"everything","snapshots_taken":50,"snapshots_failed":2,"snapshots_deleted":20,"snapshot_deletion_failures":0}]}"##,
+            r#"{"retention_runs":9,"retention_failed":0,"retention_timed_out":0,"retention_deletion_time":"1.2m","retention_deletion_time_millis":72491,"total_snapshots_taken":103,"total_snapshots_failed":2,"total_snapshots_deleted":20,"total_snapshot_deletion_failures":0,"policy_stats":[{"policy":"everything","snapshots_taken":50,"snapshots_failed":2,"snapshots_deleted":20,"snapshot_deletion_failures":0}]}"#,
         )];
 
         for (_version, input) in tests {

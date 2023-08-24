@@ -1,3 +1,5 @@
+#![allow(clippy::redundant_closure_call)]
+
 use std::{error, fmt, io, mem};
 
 use bytes::{Buf, BufMut};

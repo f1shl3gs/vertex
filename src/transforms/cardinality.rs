@@ -32,7 +32,7 @@ impl<'de> Deserialize<'de> for LimitExceededAction {
             type Value = LimitExceededAction;
 
             fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-                formatter.write_str(r##""drop" or "drop_tag""##)
+                formatter.write_str(r#""drop" or "drop_tag""#)
             }
 
             fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>

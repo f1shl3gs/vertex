@@ -36,7 +36,7 @@ pub struct TraceSubscription {
 
 pub fn subscribe() -> TraceSubscription {
     let buffer = match early_buffer().as_mut() {
-        Some(buffer) => buffer.drain(..).collect(),
+        Some(buffer) => std::mem::take(buffer),
         None => vec![],
     };
 

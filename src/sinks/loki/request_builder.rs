@@ -107,7 +107,7 @@ impl From<Vec<LokiRecord>> for LokiBatch {
             .into_iter()
             .fold(Self::default(), |mut batch, mut record| {
                 batch.finalizers.merge(record.take_finalizers());
-                batch.stream.extend(record.labels.into_iter());
+                batch.stream.extend(record.labels);
                 batch.values.push(record.event);
                 batch
             });

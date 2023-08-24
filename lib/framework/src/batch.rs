@@ -42,11 +42,7 @@ pub struct BatchSize<B> {
 
 impl<B> Clone for BatchSize<B> {
     fn clone(&self) -> Self {
-        Self {
-            bytes: self.bytes,
-            events: self.events,
-            _type_marker: PhantomData,
-        }
+        *self
     }
 }
 

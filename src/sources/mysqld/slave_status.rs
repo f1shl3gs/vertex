@@ -129,7 +129,7 @@ pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     }
 }
 
-static LOG_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r#".+\.(\d+)$"#).unwrap());
+static LOG_RE: Lazy<Regex> = Lazy::new(|| Regex::new(r".+\.(\d+)$").unwrap());
 
 fn parse_status(val: &str) -> Option<f64> {
     let text = val.to_lowercase();

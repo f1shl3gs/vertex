@@ -193,7 +193,7 @@ fn eval_component_devices(fields: Vec<&str>) -> Vec<String> {
 }
 
 static STATUS_LINE_RE: Lazy<Regex> =
-    Lazy::new(|| Regex::new(r#"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]"#).unwrap());
+    Lazy::new(|| Regex::new(r"(\d+) blocks .*\[(\d+)/(\d+)\] \[([U_]+)\]").unwrap());
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
     let size_str = status_line.split_ascii_whitespace().next().unwrap();

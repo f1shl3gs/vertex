@@ -81,7 +81,7 @@ impl MetricValue {
                 *count += 1;
                 *sum += f;
 
-                for b in buckets.iter_mut() {
+                for b in &mut *buckets {
                     if f <= b.upper {
                         b.count += 1;
                     }

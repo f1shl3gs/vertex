@@ -44,14 +44,13 @@ pub async fn proc_info() -> Result<Vec<Metric>, std::io::Error> {
 
 fn open_fds(pid: i32) -> Result<usize, std::io::Error> {
     let path = format!("/proc/{}/fd", pid);
-    std::fs::read_dir(path)?.fold(Ok(0), |acc, i| {
-        let mut acc = acc?;
-        let ty = i?.file_type()?;
-        if !ty.is_dir() {
-            acc += 1;
-        }
 
-        Ok(acc)
+    std::fs::read_dir(path)?.try_fold(0usize, |acc, item| {
+        let entry = item?;
+        let ty = entry.file_type()?;
+        let next = if !ty.is_dir() { acc + 1 } else { acc };
+
+        Ok(next)
     })
 }
 

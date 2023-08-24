@@ -161,7 +161,7 @@ impl EventFinalizers {
         if self.0.is_empty() {
             self.0 = other.0;
         } else {
-            self.0.extend(other.0.into_iter());
+            self.0.extend(other.0);
             self.0.dedup_by(|a, b| Arc::ptr_eq(a, b));
         }
     }
