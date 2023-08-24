@@ -14,7 +14,7 @@ serde_json = { version = "1.0.105", default-features = false, features = ["std"]
 # externals
 url = { version = "2.4.0", default-features = false }
 no-proxy = { version = "0.3.4", default-features = false }
-encoding_rs = { version = "0.8.32", default-features = false }
+encoding_rs = { version = "0.8.33", default-features = false }
 regex = { version = "1.9.3" }
 chrono-tz = { version = "0.8.3", default-features = false }
 

@@ -35,7 +35,7 @@ codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
 console-subscriber = { version = "0.1.10", optional = true }
 dyn-clone = { version = "1.0.13" }
-encoding_rs = { version = "0.8.32", features = ["serde"]}
+encoding_rs = { version = "0.8.33", features = ["serde"]}
 event = { path = "../event" }
 # TODO: framework should not exit if any error happened
 exitcode = { version = "1.1.2" }
