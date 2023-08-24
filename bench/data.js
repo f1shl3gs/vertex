@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692847474868,
+  "lastUpdate": 1692847487806,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "15c36d3da0b72a6f23092ad12dd62b3c4f5e5857",
-          "message": "chore(deps): bump inventory from 0.3.4 to 0.3.5 (#891)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.4 to 0.3.5.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.4...0.3.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-27T17:01:08+08:00",
-          "tree_id": "b0c382cd09acc6f9fb0aa30efc6afea83e50b688",
-          "url": "https://github.com/f1shl3gs/vertex/commit/15c36d3da0b72a6f23092ad12dd62b3c4f5e5857"
-        },
-        "date": 1679907983396,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.049,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.692,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.971,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 36.936,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 61.555,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f3d4ceb979b13668a3160d7d0f10de9f3ca9c5f0",
           "message": "chore(deps): bump syn from 2.0.8 to 2.0.10 (#892)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.8 to 2.0.10.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.8...2.0.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-03-27T17:01:26+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 60.824,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "74fae9d8df80eca6da6c5ded0b54f31ee4f6e245",
+          "message": "chore(deps): bump tokio-test from 0.4.2 to 0.4.3 (#1185)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.2 to 0.4.3.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.2...tokio-test-0.4.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-24T11:20:27+08:00",
+          "tree_id": "56f5409e13c4f89714478745ec28eafcefb442f3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/74fae9d8df80eca6da6c5ded0b54f31ee4f6e245"
+        },
+        "date": 1692847472543,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.538,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.525,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 25.562,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.223,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.355,
             "unit": "ns/op"
           }
         ]
