@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692933874629,
+  "lastUpdate": 1692933943174,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ddef0b26e42b9f1a459688ecea704d3150e20c3f",
-          "message": "chore(deps): bump quote from 1.0.26 to 1.0.27 (#979)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-11T01:31:02+08:00",
-          "tree_id": "e38cbd96e4b1bc0027e6769b957ec29922784715",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ddef0b26e42b9f1a459688ecea704d3150e20c3f"
-        },
-        "date": 1683741148837,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1077,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44219.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7fc9f9dbcd4839771386e36767abdeecdba8ccd2",
           "message": "chore(deps): bump libc from 0.2.143 to 0.2.144 (#980)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.143 to 0.2.144.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.143...0.2.144)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-11T01:31:31+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44381.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "665d0ee3da99da62c8add6e34049a182e2719092",
+          "message": "Update rust to 1.72.0 (#1187)\n\n* update rust to 1.72.0\r\n\r\n* fix clippy warnings",
+          "timestamp": "2023-08-25T11:05:37+08:00",
+          "tree_id": "1e4ed839a78b957c6bff5f3461b14a44a8f99692",
+          "url": "https://github.com/f1shl3gs/vertex/commit/665d0ee3da99da62c8add6e34049a182e2719092"
+        },
+        "date": 1692933927626,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1059,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44668.9,
             "unit": "KiB"
           }
         ]
