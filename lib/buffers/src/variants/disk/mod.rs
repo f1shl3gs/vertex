@@ -144,7 +144,6 @@ use std::{error::Error, marker::PhantomData, num::NonZeroU64, path::PathBuf, syn
 use async_trait::async_trait;
 use thiserror::Error;
 
-mod backed_archive;
 mod common;
 mod io;
 mod ledger;
