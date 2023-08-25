@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692973101201,
+  "lastUpdate": 1692973123715,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a9054b7c71b34f11de3f05bf88d9f7a1d62fb85e",
-          "message": "chore(deps): bump indexmap from 1.9.2 to 1.9.3 (#896)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 1.9.2 to 1.9.3.\r\n- [Release notes](https://github.com/bluss/indexmap/releases)\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/compare/1.9.2...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-27T21:28:59+08:00",
-          "tree_id": "2200e231a74e9ed31920bbe6fc1c7fda42048104",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a9054b7c71b34f11de3f05bf88d9f7a1d62fb85e"
-        },
-        "date": 1679924176380,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.747,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 29.864,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.149,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.796,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9adbcf1f4b7ba317f1749a04c57aa11ae288ec81",
           "message": "chore(deps): bump tokio from 1.26.0 to 1.27.0 (#898)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.26.0 to 1.27.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.26.0...tokio-1.27.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-03-28T17:08:40+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 69.808,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2ef6ee062a71f785eb525c4b04ddbb433e5fc7d7",
+          "message": "remove BackedArchive (#1189)",
+          "timestamp": "2023-08-25T22:13:56+08:00",
+          "tree_id": "b6fe311291523753696ea22230ceda780a2e4444",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2ef6ee062a71f785eb525c4b04ddbb433e5fc7d7"
+        },
+        "date": 1692973106826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.205,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.37,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.855,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.7,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.498,
             "unit": "ns/op"
           }
         ]
