@@ -6,7 +6,6 @@ use std::{
     time::Instant,
 };
 
-use bytes::BytesMut;
 use crossbeam_utils::atomic::AtomicCell;
 use finalize::OrderedFinalizer;
 use fslock::LockFile;
@@ -15,10 +14,8 @@ use thiserror::Error;
 use tokio::{fs, io::AsyncWriteExt, sync::Notify};
 
 use super::{
-    backed_archive::{BackedArchive, Serialize},
     common::{align16, DiskBufferConfig, MAX_FILE_ID},
     io::{AsyncFile, WritableMemoryMap},
-    ser::SerializeError,
     Filesystem,
 };
 use crate::buffer_usage_data::BufferUsageHandle;
@@ -89,7 +86,6 @@ pub enum LedgerLoadCreateError {
 ///
 /// Do not do any of the listed things unless you _absolutely_ know what you're doing. :)
 #[derive(Debug)]
-#[repr(C)]
 pub struct LedgerState {
     /// Next record ID to use when writing a record.
     writer_next_record_id: AtomicU64,
@@ -118,7 +114,7 @@ impl Default for LedgerState {
     }
 }
 
-impl Serialize for LedgerState {
+impl LedgerState {
     fn serialize(&self) -> Vec<u8> {
         let mut buf = Vec::with_capacity(32);
 
@@ -126,46 +122,30 @@ impl Serialize for LedgerState {
             .writer_next_record_id
             .load(Ordering::Relaxed)
             .to_ne_bytes();
-        buf.extend_from_slice(&writer_next_record_id);
 
         let writer_current_data_file_id = self
             .writer_current_data_file_id
             .load(Ordering::Relaxed)
             .to_ne_bytes();
-        buf.extend_from_slice(&writer_current_data_file_id);
 
         let reader_current_data_file_id = self
             .reader_current_data_file_id
             .load(Ordering::Relaxed)
             .to_ne_bytes();
-        buf.extend_from_slice(&reader_current_data_file_id);
 
         let reader_last_record_id = self
             .reader_last_record_id
             .load(Ordering::Relaxed)
             .to_ne_bytes();
+
+        buf.extend_from_slice(&writer_next_record_id);
+        buf.extend_from_slice(&writer_current_data_file_id);
+        buf.extend_from_slice(&reader_current_data_file_id);
         buf.extend_from_slice(&reader_last_record_id);
 
         buf
     }
-}
 
-#[derive(Debug)]
-pub struct ArchivedLedgerState {
-    /// Next record ID to use when writing a record.
-    writer_next_record_id: AtomicU64,
-
-    /// The current data file ID being written to.
-    writer_current_data_file_id: AtomicU16,
-
-    /// The current data file ID being read from.
-    reader_current_data_file_id: AtomicU16,
-
-    /// The last record ID read by the reader.
-    reader_last_record_id: AtomicU64,
-}
-
-impl ArchivedLedgerState {
     fn get_current_writer_file_id(&self) -> u16 {
         self.writer_current_data_file_id.load(Ordering::Acquire)
     }
@@ -261,7 +241,7 @@ where
     // Advisory lock for this buffer directory.
     ledger_lock: LockFile,
     // Ledger state.
-    state: BackedArchive<FS::MutableMemoryMap, LedgerState>,
+    backing: FS::MutableMemoryMap,
     // The total size, in bytes, of all unread records in the buffer.
     total_buffer_size: AtomicU64,
     // Notifier for reader-related progress.
@@ -297,8 +277,9 @@ where
     /// Gets the internal ledger state.
     ///
     /// This is the information persisted to disk.
-    pub fn state(&self) -> &ArchivedLedgerState {
-        self.state.get_archive_ref()
+    pub fn state(&self) -> &LedgerState {
+        let data = self.backing.as_ref();
+        unsafe { &*data.as_ptr().cast() }
     }
 
     /// Gets the total number of unread records in the buffer.
@@ -557,7 +538,7 @@ where
     /// If there is an error while flushing the ledger to disk, an error variant will be returned
     /// describing the error.
     pub(super) fn flush(&self) -> io::Result<()> {
-        self.state.get_backing_ref().flush()
+        self.backing.flush()
     }
 
     /// Synchronizes the record count and total size of the buffer with buffer usage data.
@@ -621,21 +602,11 @@ where
         let ledger_metadata = ledger_handle.metadata().await?;
         let ledger_len = ledger_metadata.len();
         if ledger_len == 0 {
-            debug!("Ledger file empty.  Initializing with default ledger state.");
-            let mut buf = BytesMut::new();
-            loop {
-                match BackedArchive::from_value(&mut buf, LedgerState::default()) {
-                    Ok(archive) => {
-                        ledger_handle.write_all(archive.get_backing_ref()).await?;
-                        break;
-                    }
-                    Err(SerializeError::FailedToSerialize(reason)) => {
-                        return Err(LedgerLoadCreateError::FailedToSerialize { reason })
-                    }
-                    // Our buffer wasn't big enough, but that's OK!  Resize it and try again.
-                    Err(SerializeError::BackingStoreTooSmall(_, min_len)) => buf.resize(min_len, 0),
-                }
-            }
+            debug!("Ledger file empty. Initializing with default ledger state.");
+
+            // Serialize our value so we can shove it into the backing.
+            let buf = LedgerState::default().serialize();
+            ledger_handle.write_all(&buf).await?;
 
             // Now sync the file to ensure everything is on disk before proceeding.
             ledger_handle.sync_all().await?;
@@ -644,16 +615,14 @@ where
         // Load the ledger state by memory-mapping the ledger file, and zero-copy deserializing our
         // ledger state back out of it.
         let ledger_mmap = config.filesystem.open_mmap_writable(&ledger_path).await?;
-        let ledger_state = match BackedArchive::from_backing(ledger_mmap) {
-            // Deserialized the ledger state without issue from an existing file.
-            Ok(backed) => backed,
-            // Either invalid data, or the buffer doesn't represent a valid ledger structure.
-            Err(e) => {
-                return Err(LedgerLoadCreateError::FailedToDeserialize {
-                    reason: e.into_inner(),
-                })
-            }
-        };
+
+        // Validate ledger backing.
+        let data = ledger_mmap.as_ref();
+        if data.len() < 8 + 2 + 2 + 8 {
+            return Err(LedgerLoadCreateError::FailedToDeserialize {
+                reason: "backing data is too short".to_string(),
+            });
+        }
 
         // Create the ledger object, and synchronize the buffer statistics with the buffer usage
         // handle.  This handles making sure we account for the starting size of the buffer, and
@@ -661,7 +630,7 @@ where
         let mut ledger = Ledger {
             config,
             ledger_lock,
-            state: ledger_state,
+            backing: ledger_mmap,
             total_buffer_size: AtomicU64::new(0),
             reader_notify: Notify::new(),
             writer_notify: Notify::new(),
@@ -744,7 +713,7 @@ where
         f.debug_struct("Ledger")
             .field("config", &self.config)
             .field("ledger_lock", &self.ledger_lock)
-            .field("state", &self.state.get_archive_ref())
+            .field("state", self.state())
             .field(
                 "total_buffer_size",
                 &self.total_buffer_size.load(Ordering::Acquire),

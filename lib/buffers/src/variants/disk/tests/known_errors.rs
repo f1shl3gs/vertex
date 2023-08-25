@@ -15,9 +15,7 @@ use tracing::Instrument;
 
 use super::{create_buffer_with_max_data_file_size, create_default_buffer};
 use crate::test::acknowledge;
-use crate::variants::disk::backed_archive::{Archive, BackedArchive};
-use crate::variants::disk::record::{ArchivedRecord, Record};
-use crate::variants::disk::ser::DeserializeError;
+use crate::variants::disk::record::ArchivedRecord;
 use crate::{
     assert_buffer_size, assert_enough_bytes_written, assert_file_does_not_exist_async,
     assert_file_exists_async, assert_reader_writer_file_positions, await_timeout,
@@ -444,14 +442,6 @@ async fn writer_detects_when_last_record_has_scrambled_archive_data() {
 
 #[tokio::test]
 async fn writer_detects_when_last_record_has_invalid_checksum() {
-    impl<'a> Archive for Record<'a> {
-        type Archived = ArchivedRecord<'a>;
-
-        fn validate(data: &[u8]) -> Result<(), DeserializeError> {
-            ArchivedRecord::try_new(data).map(|_| ())
-        }
-    }
-
     let assertion_registry = install_tracing_helpers();
     let fut = with_temp_dir(|dir| {
         let data_dir = dir.to_path_buf();
@@ -523,15 +513,13 @@ async fn writer_detects_when_last_record_has_invalid_checksum() {
                 buf[8..12].copy_from_slice(&checksum);
             }
 
-            let backed_record = BackedArchive::<_, Record>::from_backing(record_mmap)
-                .expect("archive should not fail");
+            // try validate record_mmap
+            let _archived =
+                ArchivedRecord::try_new(record_mmap.as_ref()).expect("archive should not fail");
 
             // Flush the memory-mapped data file to disk and we're done with our modification.
-            backed_record
-                .get_backing_ref()
-                .flush()
-                .expect("flush should not fail");
-            drop(backed_record);
+            record_mmap.flush().expect("flush should not fail");
+            drop(record_mmap);
 
             // Now reopen the buffer, which should trigger a `Writer::mark_for_skip` call which
             // instructs the writer to skip to the next data file, although this doesn't happen
