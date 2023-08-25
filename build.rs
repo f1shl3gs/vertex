@@ -189,8 +189,6 @@ fn rustc_info() -> (String, String) {
         .output()
         .expect("Get rustc version failed");
 
-    if !out.status.success() {}
-
     let output = std::str::from_utf8(&out.stdout).expect("Parse command output failed");
     let mut version = "";
     let mut channel = "";

@@ -2,7 +2,7 @@
 mod bind;
 #[cfg(feature = "sources-chrony")]
 mod chrony;
-#[cfg(features = "sources-clickhouse_metrics")]
+#[cfg(feature = "sources-clickhouse_metrics")]
 mod clickhouse_metrics;
 #[cfg(feature = "sources-consul")]
 mod consul;

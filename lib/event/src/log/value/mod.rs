@@ -24,6 +24,7 @@ pub enum Value {
     Null,
 }
 
+#[allow(clippy::missing_panics_doc)]
 impl Value {
     pub fn to_string_lossy(&self) -> String {
         match self {

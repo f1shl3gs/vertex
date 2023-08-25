@@ -371,21 +371,21 @@ mod tests {
             (r#"name{registry="} 1890"#, Err(Error::MissingValue)),
             (r#"name{registry=} 1890"#, Err(Error::MissingValue)),
             (
-                r##"msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9"##,
+                r#"msdos_file_access_time_seconds{path="C:\\DIR\\FILE.TXT",error="Cannot find file:\n\"FILE.TXT\""} 1.458255915e9"#,
                 Ok((
                     "msdos_file_access_time_seconds",
                     GroupKey {
                         timestamp: None,
                         labels: btreemap!(
-                            "path" => r##"C:\\DIR\\FILE.TXT"##,
-                            "error" => r##"Cannot find file:\n\"FILE.TXT\""##
+                            "path" => r"C:\\DIR\\FILE.TXT",
+                            "error" => r#"Cannot find file:\n\"FILE.TXT\""#
                         ),
                     },
                     1.458255915e9,
                 )),
             ),
             (
-                r##"node_hwmon_temp_auto_point1_pwm_celsius{chip="0000:00:03_1_0000:09:00_0",sensor="temp1"} 0.1"##,
+                r#"node_hwmon_temp_auto_point1_pwm_celsius{chip="0000:00:03_1_0000:09:00_0",sensor="temp1"} 0.1"#,
                 Ok((
                     "node_hwmon_temp_auto_point1_pwm_celsius",
                     GroupKey {
@@ -410,7 +410,7 @@ mod tests {
                 )),
             ),
             (
-                r##"go_gc_duration_seconds{quantile="1"} 0"##,
+                r#"go_gc_duration_seconds{quantile="1"} 0"#,
                 Ok((
                     "go_gc_duration_seconds",
                     GroupKey {
@@ -423,7 +423,7 @@ mod tests {
                 )),
             ),
             (
-                r##"node_cpu_guest_seconds_total{cpu="0",mode="nice"} 1.1"##,
+                r#"node_cpu_guest_seconds_total{cpu="0",mode="nice"} 1.1"#,
                 Ok((
                     "node_cpu_guest_seconds_total",
                     GroupKey {
@@ -437,7 +437,7 @@ mod tests {
                 )),
             ),
             (
-                r##"some_negative -1"##,
+                r#"some_negative -1"#,
                 Ok((
                     "some_negative",
                     GroupKey {
@@ -552,7 +552,7 @@ mod tests {
 
     #[test]
     fn test_parse() {
-        let input = r##"
+        let input = r#"
 # HELP http_requests_total The total number of HTTP requests.
 # TYPE http_requests_total counter
 http_requests_total{method="post",code="200"} 1027 1395066363000
@@ -589,7 +589,7 @@ rpc_duration_seconds{quantile="0.9"} 9001
 rpc_duration_seconds{quantile="0.99"} 76656
 rpc_duration_seconds_sum 1.7560473e+07
 rpc_duration_seconds_count 2693
-"##;
+"#;
 
         let groups = parse_text(input).unwrap();
         // msdos_file_access_time_seconds, metric_without_timestamp_and_labels and something_weird

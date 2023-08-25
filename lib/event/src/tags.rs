@@ -106,7 +106,7 @@ impl Hash for Array {
                 // * Positive and negative infinity has to different values
                 // * -0 and +0 hash to different values
                 // * otherwise transmute to u64 and hash
-                for v in f.iter() {
+                for v in f {
                     if v.is_finite() {
                         v.is_sign_negative().hash(state);
                         let trunc: u64 = v.trunc().to_bits();
@@ -557,7 +557,7 @@ mod tests {
 
     #[test]
     fn deserialize_value() {
-        let raw = r##"{"bool":true,"bool_array":[true,false],"float64":2.0,"float_array":[1.0,2.0],"int64":1,"int_array":[1,2],"string":"str","string_array":["foo","bar"]}"##;
+        let raw = r#"{"bool":true,"bool_array":[true,false],"float64":2.0,"float_array":[1.0,2.0],"int64":1,"int_array":[1,2],"string":"str","string_array":["foo","bar"]}"#;
         let map: BTreeMap<String, Value> = serde_json::from_str(raw).unwrap();
 
         assert_eq!(map.get("bool").unwrap(), &Value::Bool(true));
