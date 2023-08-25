@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692934735221,
+  "lastUpdate": 1692934829217,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,45 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f3d4ceb979b13668a3160d7d0f10de9f3ca9c5f0",
-          "message": "chore(deps): bump syn from 2.0.8 to 2.0.10 (#892)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.8 to 2.0.10.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.8...2.0.10)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-27T17:01:26+08:00",
-          "tree_id": "9e51565ce309de01a1ac5a602e3c451b81551c4e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f3d4ceb979b13668a3160d7d0f10de9f3ca9c5f0"
-        },
-        "date": 1679909107049,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 41181000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1207000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.786,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "08e6492c29589e2ea7dcf4cbb9dd5ec69ee908ab",
           "message": "chore(deps): bump proc-macro2 from 1.0.53 to 1.0.54 (#894)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.53 to 1.0.54.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.53...1.0.54)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-03-27T17:02:30+08:00",
@@ -50809,6 +50770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.296,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "48305121ba045ca65edd2f9b6cecb33ab3a10bc1",
+          "message": "chore(deps): bump serde from 1.0.185 to 1.0.186 (#1188)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.185 to 1.0.186.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.185...v1.0.186)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-25T11:19:42+08:00",
+          "tree_id": "dc9dcecc6982ab34c95ed4d32981508cb1e3295e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/48305121ba045ca65edd2f9b6cecb33ab3a10bc1"
+        },
+        "date": 1692934812509,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25659000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1007100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.64,
             "unit": "ns/op"
           }
         ]
