@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1692974006968,
+  "lastUpdate": 1692981560547,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9adbcf1f4b7ba317f1749a04c57aa11ae288ec81",
-          "message": "chore(deps): bump tokio from 1.26.0 to 1.27.0 (#898)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.26.0 to 1.27.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.26.0...tokio-1.27.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-03-28T17:08:40+08:00",
-          "tree_id": "775e8ca23039ff4dcc58690068c33fc5ca512969",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9adbcf1f4b7ba317f1749a04c57aa11ae288ec81"
-        },
-        "date": 1679995019138,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 95.974,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 184.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 289.88,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 388.99,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8b6984823112df4bbbbffcbcce0c670b89f35f47",
+          "message": "chore(deps): bump pin-project-lite from 0.2.12 to 0.2.13 (#1191)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.12...v0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-26T00:35:31+08:00",
+          "tree_id": "171d71030b9d31e7451e333ce704050ef9beb63f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8b6984823112df4bbbbffcbcce0c670b89f35f47"
+        },
+        "date": 1692981540921,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 103.28,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 237.52,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 399.66,
             "unit": "ns/op"
           }
         ]
