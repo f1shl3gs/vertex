@@ -5,4 +5,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
-serde = { version = "1.0.185", default-features = false }
+serde = { version = "1.0.186", default-features = false }
