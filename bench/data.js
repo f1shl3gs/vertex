@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693066496301,
+  "lastUpdate": 1693066501544,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7e6441b27a2729e3152a6d38442b055740d6cc66",
-          "message": "bump syn to 2.0.11 (#900)",
-          "timestamp": "2023-03-29T01:32:56+08:00",
-          "tree_id": "bae8fb9bf81ea61e5af7ebfa4a43186e8cdc331f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7e6441b27a2729e3152a6d38442b055740d6cc66"
-        },
-        "date": 1680025082831,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 942200,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -5799,6 +5770,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 699290,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c448a6e92dffdf5867fc2752d9e3887d2383644c",
+          "message": "chore(deps): bump base64 from 0.21.2 to 0.21.3 (#1195)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.2 to 0.21.3.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.2...v0.21.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-27T00:11:50+08:00",
+          "tree_id": "35bddd500549ad0b77d2b0f6d36217aa458c4542",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c448a6e92dffdf5867fc2752d9e3887d2383644c"
+        },
+        "date": 1693066484764,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 716610,
             "unit": "ns/op"
           }
         ]
