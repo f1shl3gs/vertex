@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693218395237,
+  "lastUpdate": 1693218423759,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "93efe1cf3092ff55d0f285afb21ff6e650b3fb4d",
-          "message": "chore(deps): bump proc-macro2 from 1.0.56 to 1.0.57 (#990)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.56 to 1.0.57.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.56...1.0.57)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-17T19:28:16+08:00",
-          "tree_id": "ecc0f4ca1291da938f6bf3ca419152404a4cd3ff",
-          "url": "https://github.com/f1shl3gs/vertex/commit/93efe1cf3092ff55d0f285afb21ff6e650b3fb4d"
-        },
-        "date": 1684324220040,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1097,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44599.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f17805ac8d0663323883312627ea1523510202e8",
           "message": "chore(deps): bump uuid from 1.3.2 to 1.3.3 (#992)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.2 to 1.3.3.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.2...1.3.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-17T19:27:46+08:00",
@@ -43002,6 +42968,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1080,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44606.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "195f4531ccaa48c77aaa3cb774a594eb2ee3ba54",
+          "message": "add PGO section (#1197)",
+          "timestamp": "2023-08-28T18:07:07+08:00",
+          "tree_id": "cf39fe902fc188bc3361787e3d3a59f6be5ccf99",
+          "url": "https://github.com/f1shl3gs/vertex/commit/195f4531ccaa48c77aaa3cb774a594eb2ee3ba54"
+        },
+        "date": 1693218406294,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1044,
             "unit": "s"
           },
           {
