@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693238552710,
+  "lastUpdate": 1693238743921,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43026,45 +43026,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "83c126bc3a037d308cef440523fcfd59d0c0db55",
-          "message": "remove tempdir which is not maintained anymore (#902)",
-          "timestamp": "2023-03-29T15:23:43+08:00",
-          "tree_id": "9d66a0f526fe43e4ae3cd06b65bb73f78b5a5ce6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83c126bc3a037d308cef440523fcfd59d0c0db55"
-        },
-        "date": 1680075844650,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 39563000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 948210,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 21.229,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "365253c422d0cda1c191e215ec5fc9ee9190fc7f",
           "message": "remove serde_xml_rs cause xml-rs is not maintained anymore (#903)\n\n* remove serde_xml_rs\r\n\r\n* style",
           "timestamp": "2023-03-29T16:19:08+08:00",
@@ -50809,6 +50770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 23.185,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "055b713b0209411a2a5ce30a6fe779cbb7f13e77",
+          "message": "chore(deps): bump nix from 0.27.0 to 0.27.1 (#1198)\n\nBumps [nix](https://github.com/nix-rust/nix) from 0.27.0 to 0.27.1.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.27.0...v0.27.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-28T23:40:00+08:00",
+          "tree_id": "46c0c3f0825e35be2b466e751fcfcc3c7e4f4394",
+          "url": "https://github.com/f1shl3gs/vertex/commit/055b713b0209411a2a5ce30a6fe779cbb7f13e77"
+        },
+        "date": 1693238724618,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 35517000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1228200,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.293,
             "unit": "ns/op"
           }
         ]
