@@ -229,3 +229,17 @@ interval: "15s"
 ```
 
 There are more example configurations under `examples/config` to help you know what's Vertex capable of.
+
+## Turning
+### PGO
+Profile-Guided Optimization is a tech to collect data about the typical execution of a program 
+and use this data to inform optimizations such as inlining, machine-code layout, register allocation, etc.
+
+#### How to build Vertex with PGO?
+- Install [cargo-pgo](https://github.com/Kobzol/cargo-pgo)
+- Build Vertex with `cargo pgo build`
+- Run `cargo pgo run -- -- -c config.yaml` and wait for some time to collect enough information from your workload. Usually, waiting several minutes should be enough(your case can be different).
+- Stop Vertex.
+- Run `cargo pgo optimize` to build Vertex with PGO optimization.
+
+A more detailed guide on how to apply PGO is in the Rust [documentation](https://doc.rust-lang.org/rustc/profile-guided-optimization.html).
