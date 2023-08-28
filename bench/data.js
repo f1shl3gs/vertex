@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693218506178,
+  "lastUpdate": 1693218527847,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -23422,70 +23422,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "83c126bc3a037d308cef440523fcfd59d0c0db55",
-          "message": "remove tempdir which is not maintained anymore (#902)",
-          "timestamp": "2023-03-29T15:23:43+08:00",
-          "tree_id": "9d66a0f526fe43e4ae3cd06b65bb73f78b5a5ce6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/83c126bc3a037d308cef440523fcfd59d0c0db55"
-        },
-        "date": 1680074923020,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 491.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 48971,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 244620,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 488930,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 201.97,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 19900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 99584,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 199360,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "365253c422d0cda1c191e215ec5fc9ee9190fc7f",
           "message": "remove serde_xml_rs cause xml-rs is not maintained anymore (#903)\n\n* remove serde_xml_rs\r\n\r\n* style",
           "timestamp": "2023-03-29T16:19:08+08:00",
@@ -36205,6 +36141,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 153220,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "29ab6e6333af60e8347f44634afbd8bb881b986b",
+          "message": "chore(deps): bump nix from 0.26.2 to 0.27.0 (#1196)\n\n* chore(deps): bump nix from 0.26.2 to 0.27.0\r\n\r\nBumps [nix](https://github.com/nix-rust/nix) from 0.26.2 to 0.27.0.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.26.2...v0.27.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix nix features\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-28T18:23:12+08:00",
+          "tree_id": "700c0024bbdb4cb815dfc86c5abe4d9ba9af7dd1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/29ab6e6333af60e8347f44634afbd8bb881b986b"
+        },
+        "date": 1693218486986,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 702.46,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 69913,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 353090,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 703000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 195.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19668,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 97747,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 194980,
             "unit": "ns/op"
           }
         ]
