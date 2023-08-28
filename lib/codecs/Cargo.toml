@@ -23,7 +23,7 @@ futures = { version = "0.3.28" }
 futures-util = { version = "0.3.27" }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
-memchr = { version = "2.5.0" }
+memchr = { version = "2.6.0" }
 serde_json = { version = "1.0.105", default-features = false  }
 tokio = { version = "1.32.0", default-features = false }
 tokio-util = { version = "0.7.8", default-features = false, features = ["codec"] }
