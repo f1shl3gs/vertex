@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693237399483,
+  "lastUpdate": 1693237403942,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -5805,45 +5805,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fef21d7a605ee4fe1a0c946070184ba8142a1ff8",
-          "message": "move atty to dependencies (#904)",
-          "timestamp": "2023-03-29T17:25:31+08:00",
-          "tree_id": "0caa9f5d20dc381dd9b4981d4d611b9234b03ae5",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fef21d7a605ee4fe1a0c946070184ba8142a1ff8"
-        },
-        "date": 1680082164170,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 90.739,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 192.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 315.65,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -13601,6 +13562,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 410.25,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "055b713b0209411a2a5ce30a6fe779cbb7f13e77",
+          "message": "chore(deps): bump nix from 0.27.0 to 0.27.1 (#1198)\n\nBumps [nix](https://github.com/nix-rust/nix) from 0.27.0 to 0.27.1.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.27.0...v0.27.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-28T23:40:00+08:00",
+          "tree_id": "46c0c3f0825e35be2b466e751fcfcc3c7e4f4394",
+          "url": "https://github.com/f1shl3gs/vertex/commit/055b713b0209411a2a5ce30a6fe779cbb7f13e77"
+        },
+        "date": 1693237386952,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 88.991,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 188.41,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 297.56,
             "unit": "ns/op"
           }
         ]
