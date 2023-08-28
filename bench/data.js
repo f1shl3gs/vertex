@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693218527847,
+  "lastUpdate": 1693219651772,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f17805ac8d0663323883312627ea1523510202e8",
-          "message": "chore(deps): bump uuid from 1.3.2 to 1.3.3 (#992)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.2 to 1.3.3.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.2...1.3.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-17T19:27:46+08:00",
-          "tree_id": "fe3f0052301b6601b66e0ba5203ce4f2684cff88",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f17805ac8d0663323883312627ea1523510202e8"
-        },
-        "date": 1684324401522,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1287,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44598.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "627021d88ed597fdba2a461a220c2055661396b2",
           "message": "chore(deps): bump notify from 5.1.0 to 6.0.0 (#993)\n\nBumps [notify](https://github.com/notify-rs/notify) from 5.1.0 to 6.0.0.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-17T21:40:07+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44606.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "29ab6e6333af60e8347f44634afbd8bb881b986b",
+          "message": "chore(deps): bump nix from 0.26.2 to 0.27.0 (#1196)\n\n* chore(deps): bump nix from 0.26.2 to 0.27.0\r\n\r\nBumps [nix](https://github.com/nix-rust/nix) from 0.26.2 to 0.27.0.\r\n- [Changelog](https://github.com/nix-rust/nix/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/nix-rust/nix/compare/v0.26.2...v0.27.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: nix\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix nix features\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-28T18:23:12+08:00",
+          "tree_id": "700c0024bbdb4cb815dfc86c5abe4d9ba9af7dd1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/29ab6e6333af60e8347f44634afbd8bb881b986b"
+        },
+        "date": 1693219632336,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1279,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44592.4,
             "unit": "KiB"
           }
         ]
