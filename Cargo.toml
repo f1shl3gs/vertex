@@ -5,6 +5,8 @@ authors = ["f1shl3gs"]
 edition = "2021"
 repository = "https://github.com/f1shl3gs/vertex"
 publish = false
+# Minimum supported rust version
+rust-version = "1.70.0"
 
 exclude = [
     "tests/fixtures"
