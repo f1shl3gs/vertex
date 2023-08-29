@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693288980855,
+  "lastUpdate": 1693288989009,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "6b22e419d653418adbba167d3c06204376dc1a00",
-          "message": "chore(deps): bump base64 from 0.21.0 to 0.21.1 (#995)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.0 to 0.21.1.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-22T21:16:34+08:00",
-          "tree_id": "c93af74f494f308285d55e2956b4b52d9f1a9d1b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6b22e419d653418adbba167d3c06204376dc1a00"
-        },
-        "date": 1684763167291,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1471,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44580.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a6ca2b4dc3be598e55f23a10fa6a726a649173d",
           "message": "chore(deps): bump regex from 1.8.1 to 1.8.2 (#997)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.8.1 to 1.8.2.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.8.1...1.8.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-24T03:36:03+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44594.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ac485b6e1afb8684ef690bc374030cfbb2c76794",
+          "message": "bump MSRV to 1.70.0 (#1201)",
+          "timestamp": "2023-08-29T13:41:00+08:00",
+          "tree_id": "10fbd4025ae015edf6b95a1914911c9cda4aa80b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ac485b6e1afb8684ef690bc374030cfbb2c76794"
+        },
+        "date": 1693288972605,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1167,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44621.4,
             "unit": "KiB"
           }
         ]
