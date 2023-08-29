@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693287983338,
+  "lastUpdate": 1693288912345,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1d88d86ccac513721dedb96f264603eaaf12db02",
-          "message": "chore(deps): bump proc-macro2 from 1.0.57 to 1.0.58 (#994)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.57 to 1.0.58.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.57...1.0.58)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-18T23:06:18+08:00",
-          "tree_id": "2f05cfc8b99249bea9dc02dd575c8333bf07cb08",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1d88d86ccac513721dedb96f264603eaaf12db02"
-        },
-        "date": 1684424104032,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1443,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44584.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6b22e419d653418adbba167d3c06204376dc1a00",
           "message": "chore(deps): bump base64 from 0.21.0 to 0.21.1 (#995)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.0 to 0.21.1.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-22T21:16:34+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44621.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "140e1c12c22f5dda2941b2d1244786ec4f1dd4cd",
+          "message": "chore(deps): bump memchr from 2.5.0 to 2.6.0 (#1200)\n\n* chore(deps): bump memchr from 2.5.0 to 2.6.0\r\n\r\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.5.0 to 2.6.0.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.5.0...2.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* disable default-features of `memchr`\r\n\r\n* style\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-29T13:41:08+08:00",
+          "tree_id": "788698840fdba517267be2076411a19570ee3c52",
+          "url": "https://github.com/f1shl3gs/vertex/commit/140e1c12c22f5dda2941b2d1244786ec4f1dd4cd"
+        },
+        "date": 1693288895330,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1080,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44594.7,
             "unit": "KiB"
           }
         ]
