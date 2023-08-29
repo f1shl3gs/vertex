@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693319500540,
+  "lastUpdate": 1693319528501,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -50818,50 +50818,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b37730f8d1e5c214e71f04175bc38875ad71c017",
-          "message": "use Waker::will_wake to avoid clone (#910)",
-          "timestamp": "2023-04-03T02:34:41+08:00",
-          "tree_id": "3f23541ea2dae366213799de4c17a40dd8e49dc7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b37730f8d1e5c214e71f04175bc38875ad71c017"
-        },
-        "date": 1680460811741,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 68.835,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 226.61,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 514.15,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1447.4,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -59611,6 +59567,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1365.4,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b403e5defb6dcc52dad0c27363599c2bb0b438a",
+          "message": "chore(deps): bump rustls from 0.21.6 to 0.21.7 (#1203)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.6 to 0.21.7.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.6...v/0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-29T22:27:38+08:00",
+          "tree_id": "23f2c59ba7f9d6678e6bfabcd163ad23e39dd68b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b403e5defb6dcc52dad0c27363599c2bb0b438a"
+        },
+        "date": 1693319511990,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 59.338,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 176.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 440.11,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1257.8,
             "unit": "ns/op"
           }
         ]
