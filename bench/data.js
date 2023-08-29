@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693319530714,
+  "lastUpdate": 1693319574461,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13610,55 +13610,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b37730f8d1e5c214e71f04175bc38875ad71c017",
-          "message": "use Waker::will_wake to avoid clone (#910)",
-          "timestamp": "2023-04-03T02:34:41+08:00",
-          "tree_id": "3f23541ea2dae366213799de4c17a40dd8e49dc7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b37730f8d1e5c214e71f04175bc38875ad71c017"
-        },
-        "date": 1680460779841,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.168,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.593,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.175,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 34.938,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.27,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.13,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7b403e5defb6dcc52dad0c27363599c2bb0b438a",
+          "message": "chore(deps): bump rustls from 0.21.6 to 0.21.7 (#1203)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.6 to 0.21.7.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.6...v/0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-29T22:27:38+08:00",
+          "tree_id": "23f2c59ba7f9d6678e6bfabcd163ad23e39dd68b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7b403e5defb6dcc52dad0c27363599c2bb0b438a"
+        },
+        "date": 1693319554674,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.179,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.811,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.213,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 51.791,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.98,
             "unit": "ns/op"
           }
         ]
