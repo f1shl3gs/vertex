@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693321425789,
+  "lastUpdate": 1693321602831,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -36224,40 +36224,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "a84892df93020f84011ec265f65ce060aee63687",
-          "message": "chore(deps): bump proptest from 1.1.0 to 1.2.0 (#998)\n\nBumps [proptest](https://github.com/proptest-rs/proptest) from 1.1.0 to 1.2.0.\r\n- [Release notes](https://github.com/proptest-rs/proptest/releases)\r\n- [Changelog](https://github.com/proptest-rs/proptest/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/proptest-rs/proptest/compare/v1.1.0...v1.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proptest\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-05-24T17:31:17+08:00",
-          "tree_id": "d346f86d80e9bbcad80c5c6a9967e453676fa7e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a84892df93020f84011ec265f65ce060aee63687"
-        },
-        "date": 1684922387701,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1423,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44580.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d4920c2c96f8e7a76438f8043c2f6534c3d0a79a",
           "message": "chore(deps): bump bstr from 1.4.0 to 1.5.0 (#996)\n\nBumps [bstr](https://github.com/BurntSushi/bstr) from 1.4.0 to 1.5.0.\r\n- [Commits](https://github.com/BurntSushi/bstr/compare/1.4.0...1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bstr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-05-24T17:50:41+08:00",
@@ -43007,6 +42973,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44618.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9d33ff4672a67621d022cac9f1a97b0d819bc9a",
+          "message": "chore(deps): bump dashmap from 5.5.1 to 5.5.2 (#1202)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.1 to 5.5.2.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.1...v5.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-29T22:42:50+08:00",
+          "tree_id": "56420cfc14d2f28a93f37557e2cc4eccd8de4a53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9d33ff4672a67621d022cac9f1a97b0d819bc9a"
+        },
+        "date": 1693321582218,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1255,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44595.9,
             "unit": "KiB"
           }
         ]
