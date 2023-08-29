@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693320406063,
+  "lastUpdate": 1693320437729,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -13620,55 +13620,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ca3478cbc70199f5b7322a82ab50cfa7f96fffa2",
-          "message": "chore(deps): bump enumflags2 from 0.7.5 to 0.7.6 (#912)\n\nBumps [enumflags2](https://github.com/meithecatte/enumflags2) from 0.7.5 to 0.7.6.\r\n- [Release notes](https://github.com/meithecatte/enumflags2/releases)\r\n- [Commits](https://github.com/meithecatte/enumflags2/compare/v0.7.5...v0.7.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: enumflags2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-04-03T13:30:59+08:00",
-          "tree_id": "f4c28c59defa0c484e30228078871905555d28e4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ca3478cbc70199f5b7322a82ab50cfa7f96fffa2"
-        },
-        "date": 1680500186314,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.749,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.538,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.987,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 32.027,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.749,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f7060cb8aa733439326e32fb4f41d41883a09c52",
           "message": "chore(deps): bump mimalloc from 0.1.34 to 0.1.35 (#914)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.34 to 0.1.35.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.34...v0.1.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-04-03T13:31:12+08:00",
@@ -23403,6 +23354,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.98,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9d33ff4672a67621d022cac9f1a97b0d819bc9a",
+          "message": "chore(deps): bump dashmap from 5.5.1 to 5.5.2 (#1202)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.1 to 5.5.2.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.1...v5.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-29T22:42:50+08:00",
+          "tree_id": "56420cfc14d2f28a93f37557e2cc4eccd8de4a53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9d33ff4672a67621d022cac9f1a97b0d819bc9a"
+        },
+        "date": 1693320420390,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.925,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.516,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 36.979,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.066,
             "unit": "ns/op"
           }
         ]
