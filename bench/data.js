@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693320754954,
+  "lastUpdate": 1693321425789,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -43021,45 +43021,6 @@ window.BENCHMARK_DATA = {
             "username": "f1shl3gs"
           },
           "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "ee7f6e971b778bd59707a6efd776132206aceb77",
-          "message": "fix lock file",
-          "timestamp": "2023-04-02T17:48:34+08:00",
-          "tree_id": "40a0c8081e01927d3e2f95f1b7608729aac72873",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee7f6e971b778bd59707a6efd776132206aceb77"
-        },
-        "date": 1680430451737,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45354000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1344600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.396,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
             "email": "noreply@github.com",
             "name": "GitHub",
             "username": "web-flow"
@@ -50809,6 +50770,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.751,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a9d33ff4672a67621d022cac9f1a97b0d819bc9a",
+          "message": "chore(deps): bump dashmap from 5.5.1 to 5.5.2 (#1202)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.1 to 5.5.2.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.1...v5.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-29T22:42:50+08:00",
+          "tree_id": "56420cfc14d2f28a93f37557e2cc4eccd8de4a53",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a9d33ff4672a67621d022cac9f1a97b0d819bc9a"
+        },
+        "date": 1693321408300,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25305000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1046100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.823,
             "unit": "ns/op"
           }
         ]
