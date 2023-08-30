@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693372599528,
+  "lastUpdate": 1693372638395,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "54065f38380dca2514616fece7889e5d7ac6b5e5",
-          "message": "chore(deps): bump serde from 1.0.163 to 1.0.164 (#1024)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.163 to 1.0.164.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.163...v1.0.164)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-09T18:19:15+08:00",
-          "tree_id": "9d3b842ea9c02706ae07c9be569c6de7f7f1f8d0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/54065f38380dca2514616fece7889e5d7ac6b5e5"
-        },
-        "date": 1686306284195,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.042,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.032,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.874,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.568,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 57.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.94,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cabf478f50f1bef23a24eb42319288eb44aaed23",
+          "message": "chore(deps): bump chrono from 0.4.26 to 0.4.27 (#1205)\n\n* chore(deps): bump chrono from 0.4.26 to 0.4.27\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.26 to 0.4.27.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.26...v0.4.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* Fix deprecated chrono method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-08-30T13:11:52+08:00",
+          "tree_id": "c76bd79d9e021c127147c289e5375d50c945a31f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cabf478f50f1bef23a24eb42319288eb44aaed23"
+        },
+        "date": 1693372617574,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.996,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 29.552,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.028,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 50.074,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 63.606,
             "unit": "ns/op"
           }
         ]
