@@ -51,7 +51,7 @@ hyper = { version = "0.14.27", features = ["client", "runtime", "http1", "http2"
 hyper-proxy = { git = "https://github.com/f1shl3gs/hyper-proxy", rev = "f05b6cd5c609b294291cd4dcc2879684b5e84c00", default-features = false, features = ["rustls"] }
 hyper-rustls = { version = "0.24.1", default-features = false }
 indexmap = { version = "2.0.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.11" }
+inventory = { version = "0.3.11", default-features = false }
 listenfd = { version = "1.0.1", default-features = false, optional = true }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
