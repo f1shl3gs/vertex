@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693415082672,
+  "lastUpdate": 1693415929454,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ff9dea02cfd8eb87350e51d341ae65ef57ae4cf8",
-          "message": "chore(deps): bump quote from 1.0.29 to 1.0.31 (#1106)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.29 to 1.0.31.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.29...1.0.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-18T03:52:15+08:00",
-          "tree_id": "3a13bec51bf929861ce35b647e11447654ef8096",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ff9dea02cfd8eb87350e51d341ae65ef57ae4cf8"
-        },
-        "date": 1689624843462,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1157,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44870.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b2ea7a6269f7b8b424e5f49f86734ef26fcd8d04",
           "message": "chore(deps): bump uuid from 1.4.0 to 1.4.1 (#1107)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.4.0 to 1.4.1.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.4.0...1.4.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-18T14:00:50+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44633.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "841086f494f3e5ab2c61df37caaa61b525f6017a",
+          "message": "chore(deps): bump dashmap from 5.5.2 to 5.5.3 (#1208)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.2 to 5.5.3.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.2...v.5.5.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-31T00:59:06+08:00",
+          "tree_id": "8793b7648d9292123f0d3eb2284e2f7ce5fd780f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/841086f494f3e5ab2c61df37caaa61b525f6017a"
+        },
+        "date": 1693415912158,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1034,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44634.3,
             "unit": "KiB"
           }
         ]
