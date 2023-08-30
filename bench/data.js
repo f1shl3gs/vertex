@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693368788718,
+  "lastUpdate": 1693369698529,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "distinct": true,
-          "id": "6db60c70b2b41f85ab1175d8a0f6b069846e094e",
-          "message": "print line to debug",
-          "timestamp": "2023-07-18T00:55:18+08:00",
-          "tree_id": "a59b574d4efa98d4c9f06a0116f4988489fcbd16",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6db60c70b2b41f85ab1175d8a0f6b069846e094e"
-        },
-        "date": 1689614221568,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1143,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44863.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44595.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "26068cca6869a3573e049fb082a4bdca25a0c84d",
+          "message": "chore(deps): bump memchr from 2.6.0 to 2.6.1 (#1206)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.0 to 2.6.1.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.0...2.6.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-30T12:08:03+08:00",
+          "tree_id": "56d2692154c3939ab64519bba399a7db4ad59e27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/26068cca6869a3573e049fb082a4bdca25a0c84d"
+        },
+        "date": 1693369682593,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1064,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44612.2,
             "unit": "KiB"
           }
         ]
