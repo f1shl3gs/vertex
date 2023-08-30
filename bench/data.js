@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693375544286,
+  "lastUpdate": 1693376415377,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d6a9b26d1791bc3ac63da187c2950453952ab71d",
-          "message": "chore(deps): bump syn from 2.0.25 to 2.0.26 (#1105)\n\n* chore(deps): bump syn from 2.0.25 to 2.0.26\r\n\r\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.25 to 2.0.26.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.25...2.0.26)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* remove wait\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-07-18T03:29:54+08:00",
-          "tree_id": "b6d578328b1f5a838b11107a99c28111ac3b5113",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d6a9b26d1791bc3ac63da187c2950453952ab71d"
-        },
-        "date": 1689623568110,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1155,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44869.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ff9dea02cfd8eb87350e51d341ae65ef57ae4cf8",
           "message": "chore(deps): bump quote from 1.0.29 to 1.0.31 (#1106)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.29 to 1.0.31.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.29...1.0.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-18T03:52:15+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44634.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "dbb7ac750283c4a0aaf24094bb2f30a73aaa0142",
+          "message": "bump inventory to 0.3.12 (#1207)",
+          "timestamp": "2023-08-30T14:00:21+08:00",
+          "tree_id": "4d5d64df0728dc89fbbe695b30726315a459744a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/dbb7ac750283c4a0aaf24094bb2f30a73aaa0142"
+        },
+        "date": 1693376398028,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1036,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44633.8,
             "unit": "KiB"
           }
         ]
