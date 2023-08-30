@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693369698529,
+  "lastUpdate": 1693370296286,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21516,45 +21516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "50c2c7425d65969b4bbbe427e70c37a3d37dad5e",
-          "message": "remove lib/serde_regex (#1021)",
-          "timestamp": "2023-06-09T01:05:08+08:00",
-          "tree_id": "f3aede8963e3a46d77147d8ca2426411019ebfb0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/50c2c7425d65969b4bbbe427e70c37a3d37dad5e"
-        },
-        "date": 1686245550104,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 46728000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1313500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 25.089,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 26.703,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "26068cca6869a3573e049fb082a4bdca25a0c84d",
+          "message": "chore(deps): bump memchr from 2.6.0 to 2.6.1 (#1206)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.0 to 2.6.1.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.0...2.6.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-30T12:08:03+08:00",
+          "tree_id": "56d2692154c3939ab64519bba399a7db4ad59e27",
+          "url": "https://github.com/f1shl3gs/vertex/commit/26068cca6869a3573e049fb082a4bdca25a0c84d"
+        },
+        "date": 1693370274876,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 44162000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1524300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 25.199,
             "unit": "ns/op"
           }
         ]
