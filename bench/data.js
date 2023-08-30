@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693414944959,
+  "lastUpdate": 1693415041413,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "184b91d34be296292f4c6bf967a7642b0e966dd8",
-          "message": "chore(deps): bump tokio-rustls from 0.24.0 to 0.24.1 (#1026)\n\nBumps [tokio-rustls](https://github.com/rustls/tokio-rustls) from 0.24.0 to 0.24.1.\r\n- [Commits](https://github.com/rustls/tokio-rustls/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-12T19:11:00+08:00",
-          "tree_id": "f907dcb1dce99b78371e0996a17584ccc18e1371",
-          "url": "https://github.com/f1shl3gs/vertex/commit/184b91d34be296292f4c6bf967a7642b0e966dd8"
-        },
-        "date": 1686568567381,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 66.475,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 219.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 513.36,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1505.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "82e457ec5ff854ca12f39bf829b3d05de4b6f4a5",
           "message": "chore(deps): bump crossbeam-utils from 0.8.15 to 0.8.16 (#1027)\n\nBumps [crossbeam-utils](https://github.com/crossbeam-rs/crossbeam) from 0.8.15 to 0.8.16.\r\n- [Release notes](https://github.com/crossbeam-rs/crossbeam/releases)\r\n- [Changelog](https://github.com/crossbeam-rs/crossbeam/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/crossbeam-rs/crossbeam/compare/crossbeam-utils-0.8.15...crossbeam-utils-0.8.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: crossbeam-utils\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-15T10:16:00+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1265.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "841086f494f3e5ab2c61df37caaa61b525f6017a",
+          "message": "chore(deps): bump dashmap from 5.5.2 to 5.5.3 (#1208)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.2 to 5.5.3.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.2...v.5.5.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-08-31T00:59:06+08:00",
+          "tree_id": "8793b7648d9292123f0d3eb2284e2f7ce5fd780f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/841086f494f3e5ab2c61df37caaa61b525f6017a"
+        },
+        "date": 1693415021840,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 73.179,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 220.71,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 534.27,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1502.9,
             "unit": "ns/op"
           }
         ]
