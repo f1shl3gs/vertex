@@ -78,8 +78,7 @@ const fn default_maximum_buffer_size() -> usize {
     1024 * 1024 // 1MiB
 }
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, PartialEq, Error)]
+#[derive(Debug, Error)]
 pub enum ExecConfigError {
     #[error("A non-empty list for command must be provided")]
     CommandEmpty,

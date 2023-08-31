@@ -9,8 +9,7 @@ pub use buffer::*;
 pub use checkpoint::{Checkpointer, Fingerprint, Position};
 pub use harvester::{Harvester, Line};
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Copy, Clone, Debug, PartialEq, Default)]
+#[derive(Copy, Clone, Debug, Default)]
 pub enum ReadFrom {
     #[default]
     Beginning,

@@ -3,8 +3,7 @@ use std::marker::PhantomData;
 
 use crate::{generate_config, Configurable};
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone)]
 pub enum ExampleError {
     MissingExample,
     DoesNotExist(String),

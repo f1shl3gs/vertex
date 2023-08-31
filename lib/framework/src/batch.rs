@@ -12,8 +12,7 @@ use crate::stream::BatcherSettings;
 // Provide sensible sink default 10MB with 1s timeout.
 // Don't allow chaining builder methods on that.
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Debug, Error, PartialEq)]
+#[derive(Debug, Error)]
 pub enum BatchError {
     #[error("This sink does not allow setting `max_bytes`")]
     BytesNotAllowed,
