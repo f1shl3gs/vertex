@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693462625604,
+  "lastUpdate": 1693497657304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "c1cc7b4bd7f0ca01a6d228f6ebe933eecbb43c4f",
-          "message": "chore(deps): bump uuid from 1.3.3 to 1.3.4 (#1029)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.3 to 1.3.4.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.3...1.3.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-15T12:48:25+08:00",
-          "tree_id": "5c1d672b34c2794c0b24ceca129f3fd1aad3f81f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1cc7b4bd7f0ca01a6d228f6ebe933eecbb43c4f"
-        },
-        "date": 1686804776726,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 114.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 236.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 358.08,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 298.06,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "941703debffa63e1f1d1248b5ac102cad023daf1",
+          "message": "Remove unnecessary `PartialEq` (#1211)",
+          "timestamp": "2023-08-31T23:57:40+08:00",
+          "tree_id": "fb0a96fc53950da1a475e8564b3c196332d38b91",
+          "url": "https://github.com/f1shl3gs/vertex/commit/941703debffa63e1f1d1248b5ac102cad023daf1"
+        },
+        "date": 1693497641254,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 84.593,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 202.79,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 341.48,
             "unit": "ns/op"
           }
         ]
