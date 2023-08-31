@@ -11,8 +11,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 use serde::de::{Error, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Configurable, Copy, Clone, Debug, Serialize, PartialEq, Default)]
+#[derive(Configurable, Copy, Clone, Debug, Serialize, Default)]
 #[serde(rename_all = "snake_case")]
 pub enum LimitExceededAction {
     #[default]
