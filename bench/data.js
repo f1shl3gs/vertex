@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693497734811,
+  "lastUpdate": 1693497755573,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c1cc7b4bd7f0ca01a6d228f6ebe933eecbb43c4f",
-          "message": "chore(deps): bump uuid from 1.3.3 to 1.3.4 (#1029)\n\nBumps [uuid](https://github.com/uuid-rs/uuid) from 1.3.3 to 1.3.4.\r\n- [Release notes](https://github.com/uuid-rs/uuid/releases)\r\n- [Commits](https://github.com/uuid-rs/uuid/compare/1.3.3...1.3.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: uuid\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-15T12:48:25+08:00",
-          "tree_id": "5c1d672b34c2794c0b24ceca129f3fd1aad3f81f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c1cc7b4bd7f0ca01a6d228f6ebe933eecbb43c4f"
-        },
-        "date": 1686804809414,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.895,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.806,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.946,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.028,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.916,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b07b1dec239b7947f39aef44b15bd4929cab31cf",
           "message": "chore(deps): bump rustls from 0.21.1 to 0.21.2 (#1030)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.1 to 0.21.2.\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/RELEASE_NOTES.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.1...v/0.21.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-15T21:21:42+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 63.965,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "941703debffa63e1f1d1248b5ac102cad023daf1",
+          "message": "Remove unnecessary `PartialEq` (#1211)",
+          "timestamp": "2023-08-31T23:57:40+08:00",
+          "tree_id": "fb0a96fc53950da1a475e8564b3c196332d38b91",
+          "url": "https://github.com/f1shl3gs/vertex/commit/941703debffa63e1f1d1248b5ac102cad023daf1"
+        },
+        "date": 1693497737307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.871,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.444,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 28.022,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 44.349,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 60.831,
             "unit": "ns/op"
           }
         ]
