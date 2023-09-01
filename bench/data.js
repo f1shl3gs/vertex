@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693607849932,
+  "lastUpdate": 1693607878275,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "86e2655c960fbf6a59886a2b65a2408a08b80acf",
-          "message": "chore(deps): bump notify from 6.0.0 to 6.0.1 (#1032)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.0.0 to 6.0.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.0.0...notify-6.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-16T21:00:34+08:00",
-          "tree_id": "e0b9c40fa2fc59cfbd4527c3b5c396ac212aacbb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/86e2655c960fbf6a59886a2b65a2408a08b80acf"
-        },
-        "date": 1686920748893,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 604.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 60531,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 312760,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 627820,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 217.33,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 22094,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 108170,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 220700,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ca4b2c6b099c32757aa72669a66fe53d36ea198e",
           "message": "chore(deps): bump serde_json from 1.0.96 to 1.0.97 (#1033)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.96 to 1.0.97.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.96...v1.0.97)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-16T21:43:15+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 201800,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d5a22ad7f379be72cdf4a4ed40db1fdae4743f53",
+          "message": "add `prost-derive` to fix prometheus bench (#1220)",
+          "timestamp": "2023-09-02T06:33:46+08:00",
+          "tree_id": "8c660dc2563104ad81951e5bf6cfa8bdc0d27309",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d5a22ad7f379be72cdf4a4ed40db1fdae4743f53"
+        },
+        "date": 1693607861375,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 522,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 52240,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 260890,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 524210,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 203.8,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 20208,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 100950,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 201930,
             "unit": "ns/op"
           }
         ]
