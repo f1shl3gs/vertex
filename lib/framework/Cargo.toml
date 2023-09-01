@@ -43,7 +43,7 @@ flate2 = { version = "1.0.27" }
 futures = { version = "0.3.28", default-features = false }
 futures-util = { version = "0.3.27", default-features = false }
 glob = { version = "0.3.1" }
-headers = { version = "0.3.8" }
+headers = { version = "0.3.9" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["duration", "bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
 hostname = { version = "0.3.1" }
 http = { version = "0.2.9", default-features = false }
