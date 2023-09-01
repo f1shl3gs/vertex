@@ -23,7 +23,7 @@ futures = { version = "0.3.28", default-features = false, features = ["std"] }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 prost = { version = "0.11.9", default-features = false, features = ["std"] }
-prost-types = { version = "0.11.9", default-features = false }
+prost-types = { version = "0.12.0", default-features = false }
 rand = { version = "0.8.5" }
 serde = { version = "1.0.188", features = ["derive"] }
 serde_json = { version = "1.0.105" }
