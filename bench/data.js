@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693608893272,
+  "lastUpdate": 1693609266389,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b07b1dec239b7947f39aef44b15bd4929cab31cf",
-          "message": "chore(deps): bump rustls from 0.21.1 to 0.21.2 (#1030)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.1 to 0.21.2.\r\n- [Changelog](https://github.com/rustls/rustls/blob/main/RELEASE_NOTES.md)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.1...v/0.21.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-15T21:21:42+08:00",
-          "tree_id": "88d246ac560f17c4344d6c5aa25ad455509a9a19",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b07b1dec239b7947f39aef44b15bd4929cab31cf"
-        },
-        "date": 1686836619603,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 39375000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 988340,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.94,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ef8808ccebb854ded50d0d8b607cd91f0fe4200a",
           "message": "chore(deps): bump rustls-native-certs from 0.6.2 to 0.6.3 (#1031)\n\nBumps [rustls-native-certs](https://github.com/ctz/rustls-native-certs) from 0.6.2 to 0.6.3.\r\n- [Commits](https://github.com/ctz/rustls-native-certs/compare/v/0.6.2...v/0.6.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-native-certs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-15T22:51:35+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 22.293,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d5a22ad7f379be72cdf4a4ed40db1fdae4743f53",
+          "message": "add `prost-derive` to fix prometheus bench (#1220)",
+          "timestamp": "2023-09-02T06:33:46+08:00",
+          "tree_id": "8c660dc2563104ad81951e5bf6cfa8bdc0d27309",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d5a22ad7f379be72cdf4a4ed40db1fdae4743f53"
+        },
+        "date": 1693609246506,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 37415000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1398400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.948,
             "unit": "ns/op"
           }
         ]
