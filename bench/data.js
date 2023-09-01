@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693607962802,
+  "lastUpdate": 1693608893272,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1e083f7ce066beac7187a74c7d4f4a605c790119",
-          "message": "chore(deps): bump serde_yaml from 0.9.24 to 0.9.25 (#1111)\n\nBumps [serde_yaml](https://github.com/dtolnay/serde-yaml) from 0.9.24 to 0.9.25.\r\n- [Release notes](https://github.com/dtolnay/serde-yaml/releases)\r\n- [Commits](https://github.com/dtolnay/serde-yaml/compare/0.9.24...0.9.25)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_yaml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-21T13:28:00+08:00",
-          "tree_id": "9086abb7909d78d09e66b6e4c5efbd7048ea2f91",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1e083f7ce066beac7187a74c7d4f4a605c790119"
-        },
-        "date": 1689918949246,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1500,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44845.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1015,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44649.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d5a22ad7f379be72cdf4a4ed40db1fdae4743f53",
+          "message": "add `prost-derive` to fix prometheus bench (#1220)",
+          "timestamp": "2023-09-02T06:33:46+08:00",
+          "tree_id": "8c660dc2563104ad81951e5bf6cfa8bdc0d27309",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d5a22ad7f379be72cdf4a4ed40db1fdae4743f53"
+        },
+        "date": 1693608876778,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1112,
             "unit": "s"
           },
           {
