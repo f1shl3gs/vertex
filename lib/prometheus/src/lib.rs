@@ -378,7 +378,7 @@ pub fn parse_request(req: proto::WriteRequest) -> Result<Vec<MetricGroup>, Error
 
     for metadata in req.metadata {
         let name = metadata.metric_family_name;
-        let kind = proto::MetricType::from_i32(metadata.r#type)
+        let kind = proto::MetricType::try_from(metadata.r#type)
             .unwrap_or(proto::MetricType::Unknown)
             .into();
 
