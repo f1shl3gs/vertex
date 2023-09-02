@@ -19,7 +19,6 @@ const SLAB_KEY: Key = Key::from_static_str("slab");
 const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
 #[configurable_component(source, name = "memcached")]
-#[derive(Debug)]
 struct MemcachedConfig {
     /// The endpoint to Memcached servers.
     #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]

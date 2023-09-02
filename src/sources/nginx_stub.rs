@@ -21,7 +21,6 @@ use nom::{
 use thiserror::Error;
 
 #[configurable_component(source, name = "nginx_stub")]
-#[derive(Debug)]
 struct NginxStubConfig {
     /// HTTP/HTTPS endpoint to Nginx server.
     ///

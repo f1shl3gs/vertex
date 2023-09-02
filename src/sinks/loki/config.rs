@@ -44,7 +44,7 @@ pub enum OutOfOrderAction {
 }
 
 #[configurable_component(sink, name = "loki")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct LokiConfig {
     /// The base URL of the Loki instance
     #[configurable(required, format = "uri", example = "http://example.com/ingest")]

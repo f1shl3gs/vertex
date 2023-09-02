@@ -14,7 +14,6 @@ use framework::{
 use metrics::{Attributes, Observation};
 
 #[configurable_component(source, name = "internal_metrics")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Duration between reports

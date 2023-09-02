@@ -40,7 +40,7 @@ impl Method {
 /// a label for each HTTP response status class with a value of `1` if
 /// the status code matches the class.
 #[configurable_component(source, name = "http_check")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct Config {
     /// The URL of the endpoint to be monitored.
     #[configurable(required, format = "uri", example = "http://localhost:80")]

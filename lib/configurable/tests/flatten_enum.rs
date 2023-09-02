@@ -82,7 +82,7 @@ fn flatten_enum() {
     }
 
     #[configurable_component(transform, name = "cardinality")]
-    #[derive(Copy, Clone, Debug)]
+    #[derive(Copy, Clone)]
     #[serde(deny_unknown_fields)]
     struct Config {
         /// How many distict values for any given key.

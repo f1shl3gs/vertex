@@ -40,7 +40,6 @@ const INSTANCE_KEY: Key = Key::from_static_str("instance");
 const SERVER_KEY: Key = Key::from_static_str("server");
 
 #[configurable_component(source, name = "haproxy")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct HaproxyConfig {
     /// HTTP/HTTPS endpoint to Consul server.

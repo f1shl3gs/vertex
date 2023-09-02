@@ -18,7 +18,6 @@ use framework::Source;
 use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
 
 #[configurable_component(source, name = "consul")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct ConsulSourceConfig {
     /// HTTP/HTTPS endpoint to Consul server.

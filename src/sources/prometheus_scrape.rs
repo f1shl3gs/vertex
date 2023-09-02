@@ -17,7 +17,6 @@ use prometheus::{GroupKind, MetricGroup};
 use thiserror::Error;
 
 #[configurable_component(source, name = "prometheus_scrape")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct PrometheusScrapeConfig {
     /// Endpoints to scrape metrics from.

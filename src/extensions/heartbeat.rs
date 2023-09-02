@@ -24,7 +24,6 @@ const fn default_interval() -> Duration {
 }
 
 #[configurable_component(extension, name = "heartbeat")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// POST some state of vertex to remote endpoint.

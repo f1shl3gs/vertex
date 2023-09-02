@@ -14,7 +14,6 @@ use framework::{
 use tokio::io::AsyncReadExt;
 
 #[configurable_component(source, name = "kmsg")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct KmsgConfig {}
 

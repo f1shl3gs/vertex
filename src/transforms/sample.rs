@@ -6,7 +6,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 
 #[configurable_component(transform, name = "sample")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct SampleConfig {
     /// The rate at which events will be forwarded, expressed as 1/N. For
     /// example, "10" means 1 out of every 10 events will be forwarded and

@@ -234,7 +234,7 @@ impl DataStreamConfig {
 }
 
 #[configurable_component(sink, name = "elasticsearch")]
-#[derive(Debug, Default)]
+#[derive(Default)]
 #[serde(deny_unknown_fields)]
 pub struct ElasticsearchConfig {
     /// The Elasticsearch endpoint to send logs to. This should be full URL.

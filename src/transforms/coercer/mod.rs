@@ -12,7 +12,7 @@ use framework::timezone::TimeZone;
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "coercer")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct CoercerConfig {
     /// Coerce log filed to another type.

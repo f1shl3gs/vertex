@@ -13,7 +13,6 @@ use kube::runtime::{watcher, WatchStreamExt};
 use kube::{Api, Client};
 
 #[configurable_component(source, name = "kubernetes_events")]
-#[derive(Debug)]
 struct Config {
     /// Namespaces to watch for, if this field is empty, all namespaces will
     /// be watched.

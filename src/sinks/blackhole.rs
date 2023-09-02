@@ -10,7 +10,6 @@ use futures::FutureExt;
 use futures_util::StreamExt;
 
 #[configurable_component(sink, name = "blackhole")]
-#[derive(Clone, Debug, Default)]
 #[serde(deny_unknown_fields)]
 pub struct BlackholeConfig {
     /// Receive rate, in event per second.

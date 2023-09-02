@@ -11,7 +11,7 @@ use maxminddb;
 use serde::Serialize;
 
 #[configurable_component(transform, name = "geoip")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other

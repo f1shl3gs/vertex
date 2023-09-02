@@ -24,7 +24,6 @@ fn default_endpoint() -> SocketAddr {
 ///
 /// https://opencensus.io/zpages/
 #[configurable_component(extension, name = "zpages")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     #[serde(default = "default_endpoint")]

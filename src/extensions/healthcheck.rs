@@ -21,7 +21,6 @@ fn default_endpoint() -> SocketAddr {
 }
 
 #[configurable_component(extension, name = "healthcheck")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// Which address to listen for.

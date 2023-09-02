@@ -307,7 +307,6 @@ impl Default for Collectors {
 /// from various sources. This is intended to be used when the collector is
 /// deployed as an agent, and replace `node_exporter`.
 #[configurable_component(source, name = "node")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct NodeMetricsConfig {
     /// procfs mountpoint.

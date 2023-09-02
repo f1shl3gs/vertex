@@ -84,7 +84,7 @@ pub enum Mode {
 }
 
 #[configurable_component(transform, name = "cardinality")]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 #[serde(deny_unknown_fields)]
 struct CardinalityConfig {
     /// How many distinct values for any given key.

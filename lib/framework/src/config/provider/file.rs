@@ -4,7 +4,7 @@ use crate::config::{provider::ProviderConfig, Builder};
 use crate::SignalHandler;
 
 #[configurable_component(provider, name = "file")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct FileConfig {
     path: String,
 }

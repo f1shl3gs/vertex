@@ -16,7 +16,6 @@ const fn default_count() -> usize {
 }
 
 #[configurable_component(source, name = "demo_logs")]
-#[derive(Debug)]
 struct DemoLogsConfig {
     /// How many logs to produce.
     #[serde(default = "default_count")]

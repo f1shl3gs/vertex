@@ -65,7 +65,6 @@ const fn default_slave_status() -> bool {
 }
 
 #[configurable_component(source, name = "mysqld")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct MysqldConfig {
     /// Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)

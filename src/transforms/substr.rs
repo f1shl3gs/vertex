@@ -6,7 +6,6 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "substr")]
-#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct SubstrConfig {
     /// Which field to transform.

@@ -35,7 +35,6 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
 }
 
 #[configurable_component(sink, name = "prometheus_remote_write")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct RemoteWriteConfig {
     /// Endpoint of Prometheus's remote write API.

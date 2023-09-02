@@ -49,7 +49,6 @@ fn enum_in_struct() {
     }
 
     #[configurable_component(sink, name = "console")]
-    #[derive(Debug)]
     #[serde(deny_unknown_fields)]
     pub struct ConsoleSinkConfig {
         /// The standard stream to write to.

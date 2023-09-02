@@ -26,7 +26,6 @@ use parking_lot::Mutex;
 use tripwire::{Trigger, Tripwire};
 
 #[configurable_component(sink, name = "prometheus_exporter")]
-#[derive(Clone, Debug)]
 #[serde(deny_unknown_fields)]
 struct PrometheusExporterConfig {
     /// The address the prometheus server will listen at

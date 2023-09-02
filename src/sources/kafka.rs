@@ -91,7 +91,6 @@ impl AutoOffsetReset {
 }
 
 #[configurable_component(source, name = "kafka")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct KafkaSourceConfig {
     /// A comma-separated list of host and port pairs that are the address

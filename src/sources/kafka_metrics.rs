@@ -24,7 +24,6 @@ fn default_topic_filter() -> Regex {
 /// enabled by default in
 /// [Kafka exporter](https://github.com/danielqsj/kafka_exporter)
 #[configurable_component(source, name = "kafka_metrics")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// A comma-separated list of host and port pairs that are the addresses of

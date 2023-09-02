@@ -121,6 +121,9 @@ pub fn configurable_component_impl(
 
     // Generate and apply all of the necessary derives.
     let mut derives = Punctuated::<Path, Comma>::new();
+    derives.push(parse_quote_spanned! {ident.span() =>
+        Debug
+    });
     derives.push(parse_quote_spanned! {ident.span()=>
         ::configurable::Configurable
     });

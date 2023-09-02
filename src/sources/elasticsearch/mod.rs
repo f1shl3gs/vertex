@@ -19,7 +19,6 @@ use serde::Deserialize;
 use tokio::time::Interval;
 
 #[configurable_component(source, name = "elasticsearch")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Address of the Elasticsearch node we should connect to.

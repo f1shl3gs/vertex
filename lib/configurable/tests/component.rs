@@ -6,7 +6,7 @@ use configurable_derive::configurable_component;
 #[test]
 fn test_generate() {
     #[configurable_component(sink, name = "some")]
-    #[derive(Debug, Default)]
+    #[derive(Default)]
     pub struct SomeConfig {
         #[configurable(required)]
         foo: String,

@@ -16,7 +16,6 @@ pub fn default_service() -> String {
 }
 
 #[configurable_component(source, name = "internal_traces")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct InternalTracesConfig {
     #[serde(default = "default_service")]
