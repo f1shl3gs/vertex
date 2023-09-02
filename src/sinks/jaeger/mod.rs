@@ -18,7 +18,6 @@ use self::http::HttpSinkConfig;
 struct CollectorConfig {}
 
 #[configurable_component(sink, name = "jaeger")]
-#[derive(Debug)]
 #[serde(rename_all = "lowercase", tag = "protocol")]
 enum JaegerConfig {
     Udp(UdpSinkConfig),

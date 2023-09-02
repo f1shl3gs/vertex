@@ -14,7 +14,7 @@ use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
 
 #[configurable_component(source, name = "prometheus_remote_write")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct PrometheusRemoteWriteConfig {
     /// The address to accept connections on. The address must include a port

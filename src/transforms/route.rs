@@ -9,7 +9,7 @@ use indexmap::IndexMap;
 const UNMATCHED_ROUTE: &str = "_unmatched";
 
 #[configurable_component(transform, name = "route")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// A table of route identifiers to logical conditions representing the filter of the route.

@@ -13,7 +13,6 @@ use framework::{
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 #[configurable_component(source, name = "nvidia_smi")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct NvidiaSmiConfig {
     /// The nvidia_smi's absolutely path.

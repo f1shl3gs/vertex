@@ -130,7 +130,6 @@ impl MetricConfig {
 }
 
 #[configurable_component(transform, name = "metricalize")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct MetricalizeConfig {
     /// The interval between flushes.

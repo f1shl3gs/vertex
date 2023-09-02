@@ -9,7 +9,6 @@ use framework::{Healthcheck, Sink};
 use serde::{Deserialize, Serialize};
 
 #[configurable_component(sink, name = "socket")]
-#[derive(Debug)]
 pub struct Config {
     #[serde(flatten)]
     pub mode: Mode,

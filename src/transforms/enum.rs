@@ -107,7 +107,7 @@ struct MappingItem {
 }
 
 #[configurable_component(transform, name = "enum")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// source is the filed to evaluate.

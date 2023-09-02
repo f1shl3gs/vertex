@@ -28,7 +28,6 @@ enum MatchType {
 }
 
 #[configurable_component(transform, name = "dedup")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Options controlling how we cache recent Events for future duplicate checking.

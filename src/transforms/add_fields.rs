@@ -7,7 +7,7 @@ use framework::config::{DataType, TransformConfig};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "add_fields")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct AddFieldsConfig {
     #[configurable(required)]

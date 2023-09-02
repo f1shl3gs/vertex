@@ -59,7 +59,7 @@ impl SinkBatchSettings for KafkaDefaultsBatchSettings {
 }
 
 #[configurable_component(sink, name = "kafka")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct KafkaSinkConfig {
     /// A comma-separated list of host and port pairs that are the addresses of
     /// the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client

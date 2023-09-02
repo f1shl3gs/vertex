@@ -47,7 +47,6 @@ const fn default_delay_deletion() -> Duration {
 
 /// Configuration for the `kubernetes_logs` source.
 #[configurable_component(source, name = "kubernetes_logs")]
-#[derive(Debug)]
 pub struct Config {
     /// Specifies the label selector to filter `Pod`s with, to be used in
     /// addition to the built-in `vertex.io/exclude` filter

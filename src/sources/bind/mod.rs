@@ -23,7 +23,6 @@ use framework::Source;
 ///   inet 127.0.0.1 port 8053 allow { 127.0.0.1; };
 /// };
 #[configurable_component(source, name = "bind")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Endpoint for the BIND statistics api

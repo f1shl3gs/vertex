@@ -8,7 +8,7 @@ use framework::config::{default_true, DataType, Output, TransformConfig, Transfo
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "add_tags")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct AddTagsConfig {
     /// Tags add to the event.

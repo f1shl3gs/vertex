@@ -34,7 +34,7 @@ pub struct RequestConfig {
 }
 
 #[configurable_component(provider, name = "http")]
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct HttpConfig {
     /// The URL to download config

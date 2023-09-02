@@ -19,7 +19,6 @@ const DEFAULT_PROFILE_SECONDS: u64 = 30;
 const DEFAULT_FREQUENCY: u32 = 1000;
 
 #[configurable_component(extension, name = "pprof")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// Which address the pprof server will listen

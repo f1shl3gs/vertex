@@ -21,7 +21,6 @@ use tokio::sync::oneshot;
 use tracing::{error, info};
 
 #[configurable_component(source, name = "mock")]
-#[derive(Debug)]
 pub struct MockSourceConfig {
     #[serde(skip)]
     receiver: Arc<Mutex<Option<ReceiverStream<Events>>>>,
@@ -118,7 +117,7 @@ impl SourceConfig for MockSourceConfig {
 }
 
 #[configurable_component(transform, name = "mock")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct MockTransformConfig {
     #[serde(default)]
@@ -222,7 +221,6 @@ impl Default for Mode {
 }
 
 #[configurable_component(sink, name = "mock")]
-#[derive(Debug)]
 pub struct MockSinkConfig {
     #[serde(skip)]
     sink: Mode,

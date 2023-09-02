@@ -11,7 +11,7 @@ use framework::{
 use rsntp;
 
 #[configurable_component(source, name = "ntp")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct NtpConfig {
     /// NTP servers to use.

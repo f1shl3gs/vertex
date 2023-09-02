@@ -41,7 +41,6 @@ const BACKOFF_DURATION: Duration = Duration::from_secs(1);
 const JOURNALCTL: &str = "journalctl";
 
 #[configurable_component(source, name = "journald")]
-#[derive(Debug, Default)]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
 pub struct JournaldConfig {
     pub current_boot_only: Option<bool>,

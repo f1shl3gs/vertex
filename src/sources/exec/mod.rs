@@ -96,7 +96,6 @@ enum Mode {
 }
 
 #[configurable_component(source, name = "exec")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct ExecConfig {
     // TODO: replace with mode, enum can make sure only one of them configured.

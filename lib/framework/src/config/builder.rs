@@ -378,15 +378,13 @@ mod tests {
     use configurable::configurable_component;
 
     #[configurable_component(source, name = "mock")]
-    #[derive(Debug)]
     struct MockSourceConfig;
 
     #[configurable_component(transform, name = "mock")]
-    #[derive(Debug, Clone)]
+    #[derive(Clone)]
     struct MockTransformConfig;
 
     #[configurable_component(sink, name = "mock")]
-    #[derive(Debug)]
     struct MockSinkConfig;
 
     #[async_trait]

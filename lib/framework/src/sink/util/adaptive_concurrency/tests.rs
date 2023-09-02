@@ -123,7 +123,6 @@ const fn default_concurrency() -> Concurrency {
 }
 
 #[configurable_component(sink, name = "test")]
-#[derive(Debug)]
 struct TestConfig {
     request: RequestConfig,
     params: TestParams,
@@ -480,7 +479,6 @@ mod mock {
     use std::time::Duration;
 
     #[configurable_component(source, name = "mock_logs")]
-    #[derive(Debug)]
     pub struct MockLogsConfig {
         pub lines: Vec<String>,
         pub count: usize,

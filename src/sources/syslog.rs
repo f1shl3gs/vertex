@@ -75,7 +75,6 @@ pub enum Mode {
 }
 
 #[configurable_component(source, name = "syslog")]
-#[derive(Debug)]
 pub struct SyslogConfig {
     /// The type of socket to use.
     #[serde(flatten)]

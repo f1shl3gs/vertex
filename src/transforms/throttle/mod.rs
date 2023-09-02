@@ -23,7 +23,6 @@ const fn default_window() -> Duration {
 }
 
 #[configurable_component(transform, name = "throttle")]
-#[derive(Debug)]
 struct ThrottleConfig {
     /// The name of the log field whose value will be hashed to determine if the
     /// event should be rate limited.

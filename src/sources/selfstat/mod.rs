@@ -15,7 +15,7 @@ use framework::{
 };
 
 #[configurable_component(source, name = "selfstat")]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone)]
 struct SelfStatConfig {
     /// The interval between scrapes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]

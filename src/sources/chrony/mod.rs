@@ -34,7 +34,7 @@ const fn default_timeout() -> Duration {
 /// platforms. All of the data that would typically be captured by
 /// the tracking command is made available in this source.
 #[configurable_component(source, name = "chrony")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct Config {
     /// The Address on where to communicate to `chronyd`.
     ///

@@ -102,7 +102,6 @@ pub struct GrpcServerConfig {
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/
 #[configurable_component(source, name = "jaeger")]
-#[derive(Debug)]
 struct JaegerConfig {
     thrift_http: Option<ThriftHttpConfig>,
     thrift_compact: Option<ThriftCompactConfig>,

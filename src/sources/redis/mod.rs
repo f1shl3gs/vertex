@@ -244,7 +244,6 @@ impl From<std::num::ParseFloatError> for Error {
 }
 
 #[configurable_component(source, name = "redis")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 pub struct RedisSourceConfig {
     /// Redis address

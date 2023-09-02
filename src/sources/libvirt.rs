@@ -15,7 +15,6 @@ fn default_sock() -> String {
 }
 
 #[configurable_component(source, name = "libvirt")]
-#[derive(Debug)]
 struct LibvirtSourceConfig {
     /// The socket path of libvirtd, read permission is required.
     #[serde(default = "default_sock")]

@@ -10,7 +10,7 @@ use futures_util::stream;
 use log_schema::log_schema;
 
 #[configurable_component(source, name = "internal_logs")]
-#[derive(Debug, Default)]
+#[derive(Default)]
 #[serde(deny_unknown_fields)]
 pub struct InternalLogsConfig {
     /// Host key

@@ -49,7 +49,6 @@ fn default_file_key() -> String {
 }
 
 #[configurable_component(source, name = "tail")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct TailConfig {
     /// Ignore files with a data modification date older than the specified duration.

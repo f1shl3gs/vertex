@@ -16,7 +16,6 @@ use tokio::task::JoinError;
 use url::Url;
 
 #[configurable_component(source, name = "clickhouse_metrics")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The endpoint of the ClickHouse server.

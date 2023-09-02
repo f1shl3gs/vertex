@@ -7,7 +7,7 @@ use metrics::Counter;
 use serde_json::Value;
 
 #[configurable_component(transform, name = "json_parser")]
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields, default)]
 pub struct JsonParserConfig {
     /// Which field to parse, by default log_schema's message key is used.

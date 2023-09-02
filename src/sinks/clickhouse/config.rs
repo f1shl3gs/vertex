@@ -19,7 +19,7 @@ pub fn default_database() -> String {
 }
 
 #[configurable_component(sink, name = "clickhouse")]
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 pub struct Config {
     /// The endpoint of the ClickHouse server.

@@ -292,7 +292,7 @@ impl TransformOutputs {
 }
 
 #[configurable_component(transform, name = "noop")]
-#[derive(Clone, Debug, Default)]
+#[derive(Clone, Default)]
 pub struct Noop;
 
 #[async_trait]
