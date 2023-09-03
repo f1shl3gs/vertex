@@ -7,11 +7,17 @@ use configurable::configurable_component;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
-use maxminddb;
 use serde::Serialize;
 
+fn default_target() -> String {
+    "geoip".to_string()
+}
+
+fn default_locale() -> String {
+    "en".to_string()
+}
+
 #[configurable_component(transform, name = "geoip")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// Path to the `MaxMind GeoIP2` or `GeoLite2` binary city database file. Other
@@ -37,14 +43,6 @@ struct Config {
     /// https://dev.maxmind.com/geoip/docs/databases/city-and-country?lang=en
     #[serde(default = "default_locale")]
     pub locale: String,
-}
-
-fn default_target() -> String {
-    "geoip".to_string()
-}
-
-fn default_locale() -> String {
-    "en".to_string()
 }
 
 #[async_trait]

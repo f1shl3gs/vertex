@@ -14,8 +14,10 @@ fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
 }
 
+/// This source connects to libvirt daemon and collect per-domain metrics related
+/// to CPU, memory, disk and network usage.
 #[configurable_component(source, name = "libvirt")]
-struct LibvirtSourceConfig {
+struct Config {
     /// The socket path of libvirtd, read permission is required.
     #[serde(default = "default_sock")]
     #[configurable(required)]
@@ -28,7 +30,7 @@ struct LibvirtSourceConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "libvirt")]
-impl SourceConfig for LibvirtSourceConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let sock = self.sock.clone();
         let mut ticker = tokio::time::interval(self.interval);
@@ -925,6 +927,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<LibvirtSourceConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

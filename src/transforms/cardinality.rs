@@ -83,10 +83,11 @@ pub enum Mode {
     Exact,
 }
 
+/// Rate limits one or more log streams to limit load on downstream services, or
+/// to enforce usage quotas on users.
 #[configurable_component(transform, name = "cardinality")]
-#[derive(Copy, Clone)]
 #[serde(deny_unknown_fields)]
-struct CardinalityConfig {
+struct Config {
     /// How many distinct values for any given key.
     #[configurable(required)]
     limit: usize,
@@ -101,7 +102,7 @@ struct CardinalityConfig {
 
 #[async_trait]
 #[typetag::serde(name = "cardinality")]
-impl TransformConfig for CardinalityConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Cardinality::new(
             self.limit,
@@ -258,7 +259,7 @@ mod tests {
     //
     // #[test]
     // fn generate_config() {
-    //     crate::testing::test_generate_config::<CardinalityConfig>()
+    //     crate::testing::test_generate_config::<Config>()
     // }
 
     #[test]
@@ -302,7 +303,7 @@ mod tests {
         assert_eq!(set.len(), 2);
     }
 
-    async fn run(config: CardinalityConfig, input: Vec<Metric>) -> OutputBuffer {
+    async fn run(config: Config, input: Vec<Metric>) -> OutputBuffer {
         let mut cardinality = config.build(&TransformContext::default()).await.unwrap();
         let cardinality = cardinality.as_function();
 
@@ -313,7 +314,7 @@ mod tests {
 
     #[tokio::test]
     async fn transform_drop() {
-        let config = CardinalityConfig {
+        let config = Config {
             limit: 0,
             action: LimitExceededAction::Drop,
             mode: Mode::Exact,
@@ -335,7 +336,7 @@ mod tests {
 
     #[tokio::test]
     async fn drop_tag() {
-        let config = CardinalityConfig {
+        let config = Config {
             limit: 0,
             action: LimitExceededAction::DropTag,
             mode: Mode::Exact,

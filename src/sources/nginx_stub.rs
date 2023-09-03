@@ -21,7 +21,7 @@ use nom::{
 use thiserror::Error;
 
 #[configurable_component(source, name = "nginx_stub")]
-struct NginxStubConfig {
+struct Config {
     /// HTTP/HTTPS endpoint to Nginx server.
     ///
     /// http://nginx.org/en/docs/http/ngx_http_stub_status_module.html
@@ -41,7 +41,7 @@ struct NginxStubConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "nginx_stub")]
-impl SourceConfig for NginxStubConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let http_client = HttpClient::new(&self.tls, &cx.proxy)?;
 
@@ -311,7 +311,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<NginxStubConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

@@ -50,7 +50,7 @@ fn default_file_key() -> String {
 
 #[configurable_component(source, name = "tail")]
 #[serde(deny_unknown_fields)]
-struct TailConfig {
+struct Config {
     /// Ignore files with a data modification date older than the specified duration.
     #[serde(default = "default_ignore_older_than")]
     #[serde(with = "humanize::duration::serde_option")]
@@ -151,7 +151,7 @@ pub(crate) struct FinalizerEntry {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "tail")]
-impl SourceConfig for TailConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         // add the source name as a subdir, so that multiple sources can operate
         // within the same given data_dir(e.g. the global one) without the file
@@ -172,7 +172,7 @@ impl SourceConfig for TailConfig {
 }
 
 fn tail_source(
-    config: &TailConfig,
+    config: &Config,
     data_dir: PathBuf,
     shutdown: ShutdownSignal,
     mut output: Pipeline,
@@ -453,11 +453,11 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<TailConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
-    fn test_default_tail_config(dir: &tempfile::TempDir) -> TailConfig {
-        TailConfig {
+    fn test_default_tail_config(dir: &tempfile::TempDir) -> Config {
+        Config {
             ignore_older_than: None,
             host_key: None,
             include: vec![dir.path().join("*")],
@@ -481,7 +481,7 @@ mod tests {
     }
 
     async fn run_tail(
-        config: &TailConfig,
+        config: &Config,
         data_dir: PathBuf,
         wait_shutdown: bool,
         acking_mode: AckingMode,
@@ -538,7 +538,7 @@ mod tests {
     async fn happy_path() {
         let n = 5;
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             ..test_default_tail_config(&dir)
         };
@@ -604,7 +604,7 @@ mod tests {
         let n = 5;
 
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             ..test_default_tail_config(&dir)
         };
@@ -642,7 +642,7 @@ mod tests {
         let n = 5;
 
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             ..test_default_tail_config(&dir)
         };
@@ -720,7 +720,7 @@ mod tests {
         let n = 5;
 
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*.txt"), dir.path().join("a.*")],
             exclude: vec![dir.path().join("a.*.txt")],
             ..test_default_tail_config(&dir)
@@ -790,7 +790,7 @@ mod tests {
         // Default
         {
             let dir = tempdir().unwrap();
-            let config = TailConfig {
+            let config = Config {
                 include: vec![dir.path().join("*")],
                 ..test_default_tail_config(&dir)
             };
@@ -819,7 +819,7 @@ mod tests {
         // Custom
         {
             let dir = tempdir().unwrap();
-            let config = TailConfig {
+            let config = Config {
                 include: vec![dir.path().join("*")],
                 file_key: "source".to_string(),
                 ..test_default_tail_config(&dir)
@@ -864,7 +864,7 @@ mod tests {
         trace_init();
 
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             ..test_default_tail_config(&dir)
         };
@@ -911,7 +911,7 @@ mod tests {
 
     async fn file_start_position_server_restart_with_file_rotation(acking: AckingMode) {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             ..test_default_tail_config(&dir)
         };
@@ -960,7 +960,7 @@ mod tests {
 
         let dir = tempdir().unwrap();
         let path = dir.path().to_path_buf();
-        let config = TailConfig {
+        let config = Config {
             include: vec![path.join("*")],
             ignore_older_than: Some(Duration::from_secs(5)),
             ..test_default_tail_config(&dir)
@@ -1056,7 +1056,7 @@ mod tests {
     #[tokio::test]
     async fn file_max_line_bytes() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             max_line_bytes: 10,
             ..test_default_tail_config(&dir)
@@ -1097,7 +1097,7 @@ mod tests {
     #[tokio::test]
     async fn test_multi_line_aggregation() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             multiline: Some(MultilineConfig {
                 timeout: Duration::from_millis(25),
@@ -1160,7 +1160,7 @@ mod tests {
     #[tokio::test]
     async fn test_split_reads() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             max_read_bytes: 1,
             ..test_default_tail_config(&dir)
@@ -1201,7 +1201,7 @@ mod tests {
     #[tokio::test]
     async fn test_gzipped_file() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             ignore_older_than: None,
             include: vec![PathBuf::from("tests/fixtures/gzipped.log")],
             // TODO: remove this once files are fingerprinted after decompression
@@ -1240,7 +1240,7 @@ mod tests {
     #[tokio::test]
     async fn test_non_utf8_encoded_file() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![PathBuf::from("tests/fixtures/utf-16le.log")],
             charset: Some(UTF_16LE),
             ..test_default_tail_config(&dir)
@@ -1272,7 +1272,7 @@ mod tests {
     #[tokio::test]
     async fn test_non_default_line_delimiter() {
         let dir = tempdir().unwrap();
-        let config = TailConfig {
+        let config = Config {
             include: vec![dir.path().join("*")],
             line_delimiter: "\r\n".to_string(),
             ..test_default_tail_config(&dir)

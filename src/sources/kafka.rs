@@ -90,9 +90,10 @@ impl AutoOffsetReset {
     }
 }
 
+/// Collect logs from Apache Kafka topics.
 #[configurable_component(source, name = "kafka")]
 #[serde(deny_unknown_fields)]
-struct KafkaSourceConfig {
+struct Config {
     /// A comma-separated list of host and port pairs that are the address
     /// of the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka
     /// client connects to initially to bootstrap itself.
@@ -160,7 +161,7 @@ struct KafkaSourceConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
-impl SourceConfig for KafkaSourceConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let client = ClientBuilder::new(self.bootstrap_brokers.clone())
             .build()
@@ -203,7 +204,7 @@ struct Keys {
 }
 
 impl Keys {
-    fn from(config: &KafkaSourceConfig) -> Self {
+    fn from(config: &Config) -> Self {
         Self {
             timestamp: OwnedPath::from(log_schema().timestamp_key()),
             key: config.key_field.clone(),
@@ -563,6 +564,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<KafkaSourceConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

@@ -45,7 +45,13 @@ const fn default_delay_deletion() -> Duration {
     Duration::from_secs(60)
 }
 
-/// Configuration for the `kubernetes_logs` source.
+/// Collects Pod logs from Kubernetes Nodes, automatically enriching data with
+/// metadata via the Kubernetes API.
+///
+/// Kubernetes version >= 1.20 is required.
+///
+/// This source requires read access to the `/var/log/pods` directory. When run
+/// in a Kubernetes cluster this can be provided with a `hostPath` volume.
 #[configurable_component(source, name = "kubernetes_logs")]
 pub struct Config {
     /// Specifies the label selector to filter `Pod`s with, to be used in

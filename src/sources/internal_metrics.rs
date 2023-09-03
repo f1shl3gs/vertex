@@ -13,6 +13,8 @@ use framework::{
 };
 use metrics::{Attributes, Observation};
 
+/// Exposes Vertex's own internal metrics, allowing you to collect,
+/// process, and route Vertex's internal metrics just like other metrics.
 #[configurable_component(source, name = "internal_metrics")]
 #[serde(deny_unknown_fields)]
 struct Config {

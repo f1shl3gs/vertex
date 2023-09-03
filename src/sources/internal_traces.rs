@@ -15,16 +15,18 @@ pub fn default_service() -> String {
     "vertex".into()
 }
 
+/// Exposes Vertex's own internal traces, allowing you to collect, process,
+/// and route.
 #[configurable_component(source, name = "internal_traces")]
 #[serde(deny_unknown_fields)]
-struct InternalTracesConfig {
+struct Config {
     #[serde(default = "default_service")]
     pub service: String,
 }
 
 #[async_trait]
 #[typetag::serde(name = "internal_traces")]
-impl SourceConfig for InternalTracesConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let subscription = framework::trace::subscribe_spans();
         let shutdown = cx.shutdown;
@@ -71,6 +73,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<InternalTracesConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

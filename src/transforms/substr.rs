@@ -7,7 +7,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "substr")]
 #[serde(deny_unknown_fields)]
-struct SubstrConfig {
+struct Config {
     /// Which field to transform.
     #[configurable(required)]
     field: String,
@@ -25,7 +25,7 @@ struct SubstrConfig {
 
 #[async_trait]
 #[typetag::serde(name = "substr")]
-impl TransformConfig for SubstrConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         Ok(Transform::function(Substr {
             field: self.field.clone(),
@@ -77,7 +77,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<SubstrConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[test]

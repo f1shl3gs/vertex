@@ -16,7 +16,7 @@ const fn default_count() -> usize {
 }
 
 #[configurable_component(source, name = "demo_logs")]
-struct DemoLogsConfig {
+struct Config {
     /// How many logs to produce.
     #[serde(default = "default_count")]
     count: usize,
@@ -32,7 +32,7 @@ struct DemoLogsConfig {
 
 #[async_trait]
 #[typetag::serde(name = "demo_logs")]
-impl SourceConfig for DemoLogsConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let message = self.log.clone();
         let mut output = cx.output;
@@ -78,6 +78,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<DemoLogsConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

@@ -12,7 +12,7 @@ use log_schema::log_schema;
 #[configurable_component(source, name = "internal_logs")]
 #[derive(Default)]
 #[serde(deny_unknown_fields)]
-pub struct InternalLogsConfig {
+pub struct Config {
     /// Host key
     host_key: Option<String>,
 
@@ -20,9 +20,11 @@ pub struct InternalLogsConfig {
     pid_key: Option<String>,
 }
 
+/// The internal logs source exposes all log and trace messages emitted
+/// by the running Vertex instance.
 #[async_trait::async_trait]
 #[typetag::serde(name = "internal_logs")]
-impl SourceConfig for InternalLogsConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let host_key = self
             .host_key
@@ -94,7 +96,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<InternalLogsConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[tokio::test]
@@ -149,7 +151,7 @@ mod tests {
 
     async fn start_source() -> impl Stream<Item = Event> {
         let (tx, rx) = Pipeline::new_test();
-        let source = InternalLogsConfig::default()
+        let source = Config::default()
             .build(SourceContext::new_test(tx))
             .await
             .unwrap();

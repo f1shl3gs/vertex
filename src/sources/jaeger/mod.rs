@@ -56,7 +56,7 @@ struct ThriftCompactConfig {
 /// do not support it (notably, Node.js) and use Thrift’s binary encoding.
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
-#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
 struct ThriftBinaryConfig {
     #[serde(default = "default_thrift_binary_socketaddr")]
@@ -102,7 +102,7 @@ pub struct GrpcServerConfig {
 ///
 /// See https://www.jaegertracing.io/docs/1.31/apis/
 #[configurable_component(source, name = "jaeger")]
-struct JaegerConfig {
+struct Config {
     thrift_http: Option<ThriftHttpConfig>,
     thrift_compact: Option<ThriftCompactConfig>,
     thrift_binary: Option<ThriftBinaryConfig>,
@@ -111,7 +111,7 @@ struct JaegerConfig {
 
 #[async_trait]
 #[typetag::serde(name = "jaeger")]
-impl SourceConfig for JaegerConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         let shutdown = cx.shutdown;
         let source = cx.key.to_string();
@@ -208,6 +208,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<JaegerConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }
