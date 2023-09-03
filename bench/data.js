@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693657533646,
+  "lastUpdate": 1693743232490,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d53932b150a7624e19ca02925747eea79db7f8e4",
-          "message": "chore(deps): bump proc-macro2 from 1.0.60 to 1.0.63 (#1035)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.60 to 1.0.63.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.60...1.0.63)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-26T13:38:16+08:00",
-          "tree_id": "37336d95fa9280b3ef97bb2eedde15ef3bbdfa53",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d53932b150a7624e19ca02925747eea79db7f8e4"
-        },
-        "date": 1687758239371,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 892550,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 692110,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9a6e65b5585265a1a9027596111ef8360ea55730",
+          "message": "small refactor and style (#1224)",
+          "timestamp": "2023-09-03T20:10:26+08:00",
+          "tree_id": "af9a6e1e375f698723283d348277e2d2db7c11d0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9a6e65b5585265a1a9027596111ef8360ea55730"
+        },
+        "date": 1693743216365,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 723800,
             "unit": "ns/op"
           }
         ]
