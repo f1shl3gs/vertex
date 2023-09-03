@@ -1,7 +1,10 @@
+use std::net::SocketAddr;
 use std::sync::Arc;
 
+use configurable::Configurable;
 use event::Event;
 use framework::tls::MaybeTlsListener;
+use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::FutureExt;
 use http::{Method, Request, Response, StatusCode};
@@ -10,9 +13,29 @@ use hyper::server::accept::from_stream;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Server};
 use jaeger::agent::deserialize_binary_batch;
+use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
-use super::ThriftHttpConfig;
+fn default_thrift_http_endpoint() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), 14268)
+}
+
+/// In some cases it is not feasible to deploy Jaeger Agent next to the application,
+/// for example, when the application code is running as AWS Lambda function.
+/// In these scenarios the Jaeger Clients can be configured to submit spans directly
+/// to the Collectors over HTTP/HTTPS.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-http-stable
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ThriftHttpConfig {
+    #[serde(default = "default_thrift_http_endpoint")]
+    #[configurable(required)]
+    pub endpoint: SocketAddr,
+
+    #[serde(default)]
+    tls: Option<TlsConfig>,
+}
 
 pub async fn serve(
     config: ThriftHttpConfig,

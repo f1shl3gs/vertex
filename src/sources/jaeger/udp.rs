@@ -1,10 +1,63 @@
 use std::net::SocketAddr;
 
 use bytes::BytesMut;
+use configurable::Configurable;
 use event::Event;
 use framework::{Pipeline, ShutdownSignal};
 use jaeger::Batch;
+use serde::{Deserialize, Serialize};
 use tokio::net::UdpSocket;
+
+// See https://www.jaegertracing.io/docs/1.31/getting-started/
+const PROTOCOL_COMPACT_THRIFT_OVER_UDP_PORT: u16 = 6831;
+const PROTOCOL_BINARY_THRIFT_OVER_UDP_PORT: u16 = 6832;
+
+const fn default_max_packet_size() -> usize {
+    65000
+}
+
+fn default_thrift_compact_socketaddr() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_COMPACT_THRIFT_OVER_UDP_PORT)
+}
+
+fn default_thrift_binary_socketaddr() -> SocketAddr {
+    SocketAddr::new([0, 0, 0, 0].into(), PROTOCOL_BINARY_THRIFT_OVER_UDP_PORT)
+}
+
+/// The Agent can only receive spans over UDP in Thrift format.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ThriftCompactConfig {
+    #[serde(default = "default_thrift_compact_socketaddr")]
+    #[configurable(required)]
+    pub endpoint: SocketAddr,
+
+    #[serde(default = "default_max_packet_size")]
+    pub max_packet_size: usize,
+
+    #[serde(default)]
+    pub socket_buffer_size: Option<usize>,
+}
+
+/// Most Jaeger Clients use Thrift’s compact encoding, however some client libraries
+/// do not support it (notably, Node.js) and use Thrift’s binary encoding.
+///
+/// See https://www.jaegertracing.io/docs/1.31/apis/#thrift-over-udp-stable
+#[derive(Configurable, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ThriftBinaryConfig {
+    #[serde(default = "default_thrift_binary_socketaddr")]
+    #[configurable(required)]
+    pub endpoint: SocketAddr,
+
+    #[serde(default = "default_max_packet_size")]
+    pub max_packet_size: usize,
+
+    #[serde(default)]
+    pub socket_buffer_size: Option<usize>,
+}
 
 pub(super) async fn serve(
     source: String,
