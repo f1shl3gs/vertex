@@ -6,8 +6,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 
 #[configurable_component(transform, name = "sample")]
-#[derive(Clone)]
-struct SampleConfig {
+struct Config {
     /// The rate at which events will be forwarded, expressed as 1/N. For
     /// example, "10" means 1 out of every 10 events will be forwarded and
     /// rest will be dropped
@@ -26,7 +25,7 @@ struct SampleConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "sample")]
-impl TransformConfig for SampleConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(Sample::new(
             self.rate,
@@ -108,7 +107,7 @@ impl FunctionTransform for Sample {
 
 #[cfg(test)]
 mod tests {
-    use super::{Sample, SampleConfig};
+    use super::{Config, Sample};
     use event::{Event, LogRecord};
     use framework::{FunctionTransform, OutputBuffer};
     use log_schema::log_schema;
@@ -116,7 +115,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<SampleConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     fn assert_approx_eq(a: f64, b: f64, delta: f64) {

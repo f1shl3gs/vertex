@@ -308,7 +308,7 @@ impl Default for Collectors {
 /// deployed as an agent, and replace `node_exporter`.
 #[configurable_component(source, name = "node")]
 #[serde(deny_unknown_fields)]
-pub struct NodeMetricsConfig {
+pub struct Config {
     /// procfs mountpoint.
     #[serde(default = "default_proc_path")]
     proc_path: String,
@@ -338,7 +338,7 @@ fn default_collectors() -> Collectors {
     Collectors::default()
 }
 
-impl Default for NodeMetricsConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             proc_path: default_proc_path(),
@@ -827,7 +827,7 @@ impl NodeMetrics {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "node_metrics")]
-impl SourceConfig for NodeMetricsConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let nm = NodeMetrics {
             interval: self.interval,
@@ -850,7 +850,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<NodeMetricsConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

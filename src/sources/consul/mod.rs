@@ -15,11 +15,11 @@ use framework::http::HttpClient;
 use framework::tls::TlsConfig;
 use framework::Source;
 
-use crate::sources::consul::client::{Client, ConsulError, QueryOptions};
+use client::{Client, ConsulError, QueryOptions};
 
 #[configurable_component(source, name = "consul")]
 #[serde(deny_unknown_fields)]
-struct ConsulSourceConfig {
+struct Config {
     /// HTTP/HTTPS endpoint to Consul server.
     #[configurable(required, format = "uri", example = "http://localhost:8500")]
     endpoints: Vec<String>,
@@ -40,7 +40,7 @@ struct ConsulSourceConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "consul")]
-impl SourceConfig for ConsulSourceConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let SourceContext {
             mut shutdown,
@@ -341,6 +341,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ConsulSourceConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

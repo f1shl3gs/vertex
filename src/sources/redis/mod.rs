@@ -245,7 +245,7 @@ impl From<std::num::ParseFloatError> for Error {
 
 #[configurable_component(source, name = "redis")]
 #[serde(deny_unknown_fields)]
-pub struct RedisSourceConfig {
+pub struct Config {
     /// Redis address
     #[configurable(required, format = "ip-address")]
     endpoint: String,
@@ -270,7 +270,7 @@ fn default_namespace() -> Option<String> {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "redis")]
-impl SourceConfig for RedisSourceConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let src = RedisSource {
             url: self.endpoint.clone(),
@@ -1028,7 +1028,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<RedisSourceConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

@@ -66,7 +66,7 @@ const fn default_slave_status() -> bool {
 
 #[configurable_component(source, name = "mysqld")]
 #[serde(deny_unknown_fields)]
-struct MysqldConfig {
+struct Config {
     /// Since 5.1, Collect from SHOW GLOBAL STATUS (Enabled by default)
     #[serde(default = "default_global_status")]
     global_status: bool,
@@ -126,7 +126,7 @@ const fn default_info_schema() -> InfoSchemaConfig {
     }
 }
 
-impl MysqldConfig {
+impl Config {
     fn connect_options(&self) -> MySqlConnectOptions {
         // TODO support ssl
         let mut options = MySqlConnectOptions::new()
@@ -148,7 +148,7 @@ impl MysqldConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "mysqld")]
-impl SourceConfig for MysqldConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let mut ticker = tokio::time::interval(self.interval);
         let options = self.connect_options();
@@ -327,6 +327,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<MysqldConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

@@ -16,9 +16,10 @@ use http::{StatusCode, Uri};
 use prometheus::{GroupKind, MetricGroup};
 use thiserror::Error;
 
+/// Collect metrics from prometheus clients.
 #[configurable_component(source, name = "prometheus_scrape")]
 #[serde(deny_unknown_fields)]
-struct PrometheusScrapeConfig {
+struct Config {
     /// Endpoints to scrape metrics from.
     #[configurable(required, format = "uri", example = "http://example.com/metrics")]
     endpoints: Vec<String>,
@@ -45,7 +46,7 @@ struct PrometheusScrapeConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_scrape")]
-impl SourceConfig for PrometheusScrapeConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let urls = self
             .endpoints
@@ -323,13 +324,13 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::prometheus_scrape::{offset, PrometheusScrapeConfig};
+    use crate::sources::prometheus_scrape::{offset, Config};
     use framework::config::default_interval;
     use testify::random::random_string;
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<PrometheusScrapeConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[test]

@@ -18,8 +18,9 @@ const STAT_PREFIX: &str = "STAT";
 const SLAB_KEY: Key = Key::from_static_str("slab");
 const INSTANCE_KEY: Key = Key::from_static_str("instance");
 
+/// Collect metrics from memcached servers.
 #[configurable_component(source, name = "memcached")]
-struct MemcachedConfig {
+struct Config {
     /// The endpoint to Memcached servers.
     #[configurable(required, format = "ip-address", example = "127.0.0.1:3000")]
     endpoints: Vec<String>,
@@ -31,7 +32,7 @@ struct MemcachedConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "memcached")]
-impl SourceConfig for MemcachedConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let mut ticker = tokio::time::interval(self.interval);
         let endpoints = self.endpoints.clone();
@@ -50,17 +51,11 @@ impl SourceConfig for MemcachedConfig {
                     _ = ticker.tick() => {}
                 }
 
-                let mut metrics =
-                    futures::future::join_all(endpoints.iter().map(|addr| gather(addr)))
-                        .await
-                        .into_iter()
-                        .flatten()
-                        .collect::<Vec<_>>();
-
-                let now = Utc::now();
-                metrics
-                    .iter_mut()
-                    .for_each(|metric| metric.timestamp = Some(now));
+                let metrics = futures::future::join_all(endpoints.iter().map(|addr| gather(addr)))
+                    .await
+                    .into_iter()
+                    .flatten()
+                    .collect::<Vec<_>>();
 
                 if let Err(err) = output.send(metrics).await {
                     error!(
@@ -719,7 +714,9 @@ async fn gather(addr: &str) -> Vec<Metric> {
         ),
     ]);
 
+    let now = Utc::now();
     for metric in metrics.iter_mut() {
+        metric.timestamp = Some(now);
         metric.insert_tag(INSTANCE_KEY, addr.to_string());
     }
 
@@ -894,7 +891,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<MemcachedConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[tokio::test]

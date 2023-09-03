@@ -22,8 +22,10 @@ const fn default_window() -> Duration {
     Duration::from_secs(1)
 }
 
+/// Rate limits one or more log streams to limit load on downstream services, or to
+/// enforce usage quotas on users.
 #[configurable_component(transform, name = "throttle")]
-struct ThrottleConfig {
+struct Config {
     /// The name of the log field whose value will be hashed to determine if the
     /// event should be rate limited.
     ///
@@ -42,7 +44,7 @@ struct ThrottleConfig {
 
 #[async_trait]
 #[typetag::serde(name = "throttle")]
-impl TransformConfig for ThrottleConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let throttle = Throttle::new(self.threshold, self.window, self.key_field.clone());
 
@@ -184,12 +186,12 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ThrottleConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[tokio::test]
     async fn throttle_events() {
-        let config = serde_yaml::from_str::<ThrottleConfig>(
+        let config = serde_yaml::from_str::<Config>(
             r#"
 threshold: 2
 window: 5s
@@ -253,7 +255,7 @@ window: 5s
 
     #[tokio::test]
     async fn throttle_buckets() {
-        let config = serde_yaml::from_str::<ThrottleConfig>(
+        let config = serde_yaml::from_str::<Config>(
             r#"
 threshold: 1
 window: 5s

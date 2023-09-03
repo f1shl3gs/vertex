@@ -15,11 +15,11 @@ use tokio::io::AsyncReadExt;
 
 #[configurable_component(source, name = "kmsg")]
 #[serde(deny_unknown_fields)]
-struct KmsgConfig {}
+struct Config {}
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kmsg")]
-impl SourceConfig for KmsgConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let mut shutdown = cx.shutdown;
         let mut output = cx.output;
@@ -188,7 +188,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<KmsgConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

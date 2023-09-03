@@ -6,8 +6,8 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::{FunctionTransform, OutputBuffer, Transform};
 use metrics::Counter;
 
+/// Filters events based on a set of conditions.
 #[configurable_component(transform, name = "filter")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The condition to be matched against every input event. Only messages that pass

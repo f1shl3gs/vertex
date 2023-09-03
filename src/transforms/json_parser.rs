@@ -9,7 +9,7 @@ use serde_json::Value;
 #[configurable_component(transform, name = "json_parser")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields, default)]
-pub struct JsonParserConfig {
+pub struct Config {
     /// Which field to parse, by default log_schema's message key is used.
     pub field: Option<String>,
 
@@ -29,7 +29,7 @@ pub struct JsonParserConfig {
     pub overwrite_target: bool,
 }
 
-impl Default for JsonParserConfig {
+impl Default for Config {
     fn default() -> Self {
         Self {
             field: None,
@@ -43,7 +43,7 @@ impl Default for JsonParserConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "json_parser")]
-impl TransformConfig for JsonParserConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         Ok(Transform::function(JsonParser::from(self.clone())))
     }
@@ -74,8 +74,8 @@ pub struct JsonParser {
     invalid_events: Counter,
 }
 
-impl From<JsonParserConfig> for JsonParser {
-    fn from(config: JsonParserConfig) -> JsonParser {
+impl From<Config> for JsonParser {
+    fn from(config: Config) -> JsonParser {
         let field = config
             .field
             .unwrap_or_else(|| log_schema().message_key().to_string());
@@ -180,12 +180,12 @@ mod test {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<JsonParserConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[test]
     fn json_parser_drop_field() {
-        let mut parser = JsonParser::from(JsonParserConfig::default());
+        let mut parser = JsonParser::from(Config::default());
 
         let event = Event::from(r#"{"greeting": "hello", "name": "bob"}"#);
         let metadata = event.metadata().clone();
@@ -200,7 +200,7 @@ mod test {
 
     #[test]
     fn json_parser_doesnt_drop_field() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             ..Default::default()
         });
@@ -218,7 +218,7 @@ mod test {
 
     #[test]
     fn json_parser_parse_raw() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             ..Default::default()
         });
@@ -247,7 +247,7 @@ mod test {
     // This is a regression test, see: https://github.com/timberio/vector/issues/2814
     #[test]
     fn json_parser_parse_periods() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             ..Default::default()
         });
@@ -275,7 +275,7 @@ mod test {
 
     #[test]
     fn json_parser_parse_raw_with_whitespace() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             ..Default::default()
         });
@@ -302,7 +302,7 @@ mod test {
 
     #[test]
     fn json_parser_parse_field() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             field: Some("data".into()),
             drop_field: false,
             ..Default::default()
@@ -343,11 +343,11 @@ mod test {
 
     #[test]
     fn json_parser_parse_inner_json() {
-        let mut parser_outer = JsonParser::from(JsonParserConfig {
+        let mut parser_outer = JsonParser::from(Config {
             ..Default::default()
         });
 
-        let mut parser_inner = JsonParser::from(JsonParserConfig {
+        let mut parser_inner = JsonParser::from(Config {
             field: Some("log".into()),
             ..Default::default()
         });
@@ -378,7 +378,7 @@ mod test {
         let invalid = r#"{"greeting": "hello","#;
 
         // Raw
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             ..Default::default()
         });
@@ -399,7 +399,7 @@ mod test {
         assert_eq!(event.metadata(), &metadata);
 
         // Field
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             field: Some("data".into()),
             drop_field: false,
             ..Default::default()
@@ -421,7 +421,7 @@ mod test {
         let not_object = r#""hello""#;
 
         // Raw
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_invalid: true,
             ..Default::default()
         });
@@ -437,7 +437,7 @@ mod test {
         assert!(transform_one(&mut parser, event).is_none());
 
         // Field
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             field: Some("data".into()),
             drop_invalid: true,
             ..Default::default()
@@ -462,10 +462,10 @@ mod test {
 
     #[test]
     fn json_parser_chained() {
-        let mut parser1 = JsonParser::from(JsonParserConfig {
+        let mut parser1 = JsonParser::from(Config {
             ..Default::default()
         });
-        let mut parser2 = JsonParser::from(JsonParserConfig {
+        let mut parser2 = JsonParser::from(Config {
             field: Some("nested".into()),
             ..Default::default()
         });
@@ -491,7 +491,7 @@ mod test {
 
     #[test]
     fn json_parser_types() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             ..Default::default()
         });
 
@@ -551,7 +551,7 @@ mod test {
 
     #[test]
     fn drop_field_before_adding() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: true,
             ..Default::default()
         });
@@ -576,7 +576,7 @@ mod test {
 
     #[test]
     fn doesnt_drop_field_after_failed_parse() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: true,
             ..Default::default()
         });
@@ -595,7 +595,7 @@ mod test {
 
     #[test]
     fn target_field_works() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             target_field: Some("that".into()),
             ..Default::default()
@@ -613,7 +613,7 @@ mod test {
 
     #[test]
     fn target_field_preserves_existing() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             target_field: Some("message".into()),
             ..Default::default()
@@ -633,7 +633,7 @@ mod test {
 
     #[test]
     fn target_field_overwrites_existing() {
-        let mut parser = JsonParser::from(JsonParserConfig {
+        let mut parser = JsonParser::from(Config {
             drop_field: false,
             target_field: Some("message".into()),
             overwrite_target: true,

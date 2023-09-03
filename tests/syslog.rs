@@ -16,7 +16,7 @@ use testify::send_lines;
 use testify::wait::wait_for_tcp;
 use vertex::sinks::socket;
 use vertex::sinks::socket::Config;
-use vertex::sources::syslog::{default_max_length, Mode, SyslogConfig};
+use vertex::sources::syslog::{default_max_length, Config as SyslogConfig, Mode};
 
 use crate::util::trace_init;
 use util::start_topology;

@@ -8,15 +8,19 @@ use framework::{
     config::{default_interval, DataType, Output, SourceConfig, SourceContext},
     Source,
 };
-use rsntp;
 
+const fn default_timeout() -> Duration {
+    Duration::from_secs(10)
+}
+
+/// This source checks the drift of that node's clock against a given NTP server or servers.
 #[configurable_component(source, name = "ntp")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields)]
-pub struct NtpConfig {
+pub struct Config {
     /// NTP servers to use.
     #[configurable(required, format = "hostname", example = "pool.ntp.org")]
-    pub pools: Vec<String>,
+    pools: Vec<String>,
 
     /// Duration between each scrape.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
@@ -25,16 +29,12 @@ pub struct NtpConfig {
     /// The NTP client query timeout
     #[serde(default = "default_timeout")]
     #[serde(with = "humanize::duration::serde")]
-    pub timeout: Duration,
-}
-
-const fn default_timeout() -> Duration {
-    Duration::from_secs(10)
+    timeout: Duration,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "ntp")]
-impl SourceConfig for NtpConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ntp = Ntp {
             interval: self.interval,
@@ -134,6 +134,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<NtpConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

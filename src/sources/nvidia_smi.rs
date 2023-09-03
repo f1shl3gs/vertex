@@ -12,9 +12,11 @@ use framework::{
 };
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+/// Collect metrics of NVIDIA GPU, `nvidia_smi` is install automatically
+/// when you install NVIDIA GPU driver.
 #[configurable_component(source, name = "nvidia_smi")]
 #[serde(deny_unknown_fields)]
-struct NvidiaSmiConfig {
+struct Config {
     /// The nvidia_smi's absolutely path.
     #[serde(default = "default_smi_path")]
     path: PathBuf,
@@ -30,7 +32,7 @@ fn default_smi_path() -> PathBuf {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "nvidia_smi")]
-impl SourceConfig for NvidiaSmiConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let path = self.path.clone();
         let mut ticker = tokio::time::interval(self.interval);
@@ -446,7 +448,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<NvidiaSmiConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

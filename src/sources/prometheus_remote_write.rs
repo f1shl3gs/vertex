@@ -13,10 +13,11 @@ use http::{HeaderMap, Method, StatusCode, Uri};
 use prometheus::{proto, GroupKind, MetricGroup};
 use prost::Message;
 
+/// Start a HTTP server and receive Protobuf encoded metrics.
 #[configurable_component(source, name = "prometheus_remote_write")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields)]
-struct PrometheusRemoteWriteConfig {
+struct Config {
     /// The address to accept connections on. The address must include a port
     #[configurable(required)]
     address: SocketAddr,
@@ -33,7 +34,7 @@ struct PrometheusRemoteWriteConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_remote_write")]
-impl SourceConfig for PrometheusRemoteWriteConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let source = RemoteWriteSource;
 
@@ -206,7 +207,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<PrometheusRemoteWriteConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     fn make_events() -> Vec<Event> {
@@ -254,7 +255,7 @@ mod tests {
         let address = testify::next_addr();
         let (tx, rx) = Pipeline::new_test_finalize(EventStatus::Delivered);
 
-        let source = PrometheusRemoteWriteConfig {
+        let source = Config {
             address,
             auth: None,
             tls: tls.clone(),

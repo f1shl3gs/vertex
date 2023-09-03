@@ -12,9 +12,8 @@ use framework::timezone::TimeZone;
 use framework::{FunctionTransform, OutputBuffer, Transform};
 
 #[configurable_component(transform, name = "coercer")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
-struct CoercerConfig {
+struct Config {
     /// Coerce log filed to another type.
     ///
     /// NB: nonconvertible filed will be dropped.
@@ -26,7 +25,7 @@ struct CoercerConfig {
 
 #[async_trait]
 #[typetag::serde(name = "coercer")]
-impl TransformConfig for CoercerConfig {
+impl TransformConfig for Config {
     async fn build(&self, cx: &TransformContext) -> framework::Result<Transform> {
         let timezone = self.timezone.unwrap_or(cx.globals.timezone);
         let types = parse_conversion_map(&self.types, timezone)?;
@@ -91,7 +90,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<CoercerConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     async fn run() -> LogRecord {
@@ -108,7 +107,7 @@ mod tests {
         );
         let metadata = log.metadata().clone();
 
-        let mut coercer = serde_yaml::from_str::<CoercerConfig>(
+        let mut coercer = serde_yaml::from_str::<Config>(
             r##"
 types:
   number: int

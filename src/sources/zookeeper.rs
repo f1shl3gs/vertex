@@ -11,9 +11,8 @@ use tokio::io::{AsyncBufReadExt, AsyncWriteExt};
 use tokio::net::TcpStream;
 
 #[configurable_component(source, name = "zookeeper")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
-struct ZookeeperConfig {
+struct Config {
     /// The endpoints to connect to.
     #[configurable(required)]
     endpoint: String,
@@ -25,7 +24,7 @@ struct ZookeeperConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "zookeeper")]
-impl SourceConfig for ZookeeperConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         Ok(Box::pin(run(
             self.endpoint.clone(),
@@ -204,7 +203,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ZookeeperConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

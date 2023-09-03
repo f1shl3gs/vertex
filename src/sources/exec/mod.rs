@@ -97,7 +97,7 @@ enum Mode {
 
 #[configurable_component(source, name = "exec")]
 #[serde(deny_unknown_fields)]
-pub struct ExecConfig {
+pub struct Config {
     // TODO: replace with mode, enum can make sure only one of them configured.
     //   `flatten` or `untag enum` might be needed
     scheduled: Option<ScheduledConfig>,
@@ -127,7 +127,7 @@ pub struct ExecConfig {
     decoding: DeserializerConfig,
 }
 
-impl ExecConfig {
+impl Config {
     fn validate(&self) -> Result<(), ExecConfigError> {
         if self.scheduled.is_some() && self.streaming.is_some() {
             return Err(ExecConfigError::Conflict);
@@ -145,7 +145,7 @@ impl ExecConfig {
 
 #[async_trait]
 #[typetag::serde(name = "exec")]
-impl SourceConfig for ExecConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.validate()?;
         let hostname = crate::hostname().ok();
@@ -517,7 +517,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ExecConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

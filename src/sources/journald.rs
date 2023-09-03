@@ -1,8 +1,3 @@
-/// Journald read logs from `journalctl -o export -f -c cursor`
-///
-/// The format is simple enough to write a parser for it. Without
-/// Deserialize(vertex) or Serialize(journalctl) we should get a better
-/// performance.
 use std::collections::{BTreeMap, HashSet};
 use std::io::SeekFrom;
 use std::path::Path;
@@ -40,24 +35,44 @@ const RECEIVED_TIMESTAMP: &str = "__REALTIME_TIMESTAMP";
 const BACKOFF_DURATION: Duration = Duration::from_secs(1);
 const JOURNALCTL: &str = "journalctl";
 
+/// Journald read logs from `journalctl -o export -f -c cursor`
+///
+/// The format is simple enough to write a parser for it. Without
+/// Deserialize(vertex) or Serialize(journalctl) we should get a better
+/// performance.
+///
+/// This source requires permissions to run `journalctl`.
 #[configurable_component(source, name = "journald")]
 #[serde(deny_unknown_fields, rename_all = "snake_case")]
-pub struct JournaldConfig {
+pub struct Config {
+    /// Only include entries that occurred after the current boot of the system.
     pub current_boot_only: Option<bool>,
+
+    /// A list of unit names to monitor. If empty or not present, all units are accepted.
+    /// Unit anmes lacking a `.` have `.service` appended to make them a valid service
+    /// unit name.
     pub units: Vec<String>,
+
     /// The list of unit names to exclude from monitoring. Unit names lacking a "." will have
     /// ".service" appended to make them a valid service unit name.
     pub excludes: Vec<String>,
+
     /// The systemd journal is read in batches, and a checkpoint is set at the end of each batch.
     /// This option limits the size of the batch.
     pub batch_size: Option<usize>,
+
+    /// The absolutely path of the `journalctl` executable. If not set, a search is done for
+    /// the journalctl path.
     pub journalctl_path: Option<PathBuf>,
+
+    /// The absolutely path of the journal directory. If not set, `journalctl` uses the
+    /// default system journal path.
     pub journal_directory: Option<PathBuf>,
 }
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "journald")]
-impl SourceConfig for JournaldConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let data_dir = cx.globals.make_subdir(cx.key.id()).map_err(|err| {
             warn!("create sub dir failed {:?}", err);
@@ -607,7 +622,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<JournaldConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

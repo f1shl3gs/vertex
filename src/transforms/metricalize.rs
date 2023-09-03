@@ -131,7 +131,7 @@ impl MetricConfig {
 
 #[configurable_component(transform, name = "metricalize")]
 #[serde(deny_unknown_fields)]
-struct MetricalizeConfig {
+struct Config {
     /// The interval between flushes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
@@ -147,7 +147,7 @@ struct MetricalizeConfig {
 
 #[async_trait]
 #[typetag::serde(name = "metricalize")]
-impl TransformConfig for MetricalizeConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> framework::Result<Transform> {
         let agg = Metricalize::new(self.interval, self.metrics.clone());
         Ok(Transform::event_task(agg))
@@ -296,7 +296,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<MetricalizeConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]

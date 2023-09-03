@@ -39,9 +39,13 @@ const FRONTEND_KEY: Key = Key::from_static_str("frontend");
 const INSTANCE_KEY: Key = Key::from_static_str("instance");
 const SERVER_KEY: Key = Key::from_static_str("server");
 
+/// This source scrapes HAProxy stats.
+///
+/// As of 2.0.0, HAProxy includes a Prometheus exporter module that can be
+/// built into HAProxy binary during build time.
 #[configurable_component(source, name = "haproxy")]
 #[serde(deny_unknown_fields)]
-struct HaproxyConfig {
+struct Config {
     /// HTTP/HTTPS endpoint to Consul server.
     #[configurable(required)]
     endpoints: Vec<String>,
@@ -61,7 +65,7 @@ struct HaproxyConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "haproxy")]
-impl SourceConfig for HaproxyConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let SourceContext {
             proxy,
@@ -1099,7 +1103,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<HaproxyConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     // Available on unix only, see

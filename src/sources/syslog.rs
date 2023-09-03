@@ -74,8 +74,10 @@ pub enum Mode {
     },
 }
 
+/// This source allows to collect Syslog messages through a Unix socket server (UDP or
+/// TCP) or over the network using TCP or UDP.
 #[configurable_component(source, name = "syslog")]
-pub struct SyslogConfig {
+pub struct Config {
     /// The type of socket to use.
     #[serde(flatten)]
     pub mode: Mode,
@@ -94,7 +96,7 @@ pub struct SyslogConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "syslog")]
-impl SourceConfig for SyslogConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let host_key = self
             .host_key
@@ -329,7 +331,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<SyslogConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[test]
@@ -338,14 +340,14 @@ mod tests {
 mode: tcp
 address: 127.0.0.1:12345
 "#;
-        let config: SyslogConfig = serde_yaml::from_str(text).unwrap();
+        let config: Config = serde_yaml::from_str(text).unwrap();
 
         assert!(matches!(config.mode, Mode::Tcp { .. }));
     }
 
     #[test]
     fn config_tcp_with_receive_buffer_size() {
-        let config: SyslogConfig =
+        let config: Config =
             serde_yaml::from_str("mode: tcp\naddress: 127.0.0.1:12345\nreceive_buffer_bytes: 1ki")
                 .unwrap();
 
@@ -362,7 +364,7 @@ address: 127.0.0.1:12345
 
     #[test]
     fn config_tcp_with_keepalive() {
-        let config: SyslogConfig = serde_yaml::from_str(
+        let config: Config = serde_yaml::from_str(
             "mode: tcp\naddress: 127.0.0.1:12345\nkeepalive:\n  timeout: 120s",
         )
         .unwrap();
@@ -378,7 +380,7 @@ address: 127.0.0.1:12345
 
     #[test]
     fn config_udp() {
-        let config: SyslogConfig =
+        let config: Config =
             serde_yaml::from_str("mode: udp\naddress: 127.0.0.1:12345\nmax_length: 1024").unwrap();
 
         assert_eq!(config.max_length, 1024);
@@ -394,7 +396,7 @@ address: 127.0.0.1:12345
     #[cfg(unix)]
     #[test]
     fn config_unix() {
-        let config: SyslogConfig =
+        let config: Config =
             serde_yaml::from_str("mode: unix\npath: /some/path/to/your.sock").unwrap();
 
         match config.mode {

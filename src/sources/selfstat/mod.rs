@@ -16,7 +16,7 @@ use framework::{
 
 #[configurable_component(source, name = "selfstat")]
 #[derive(Copy, Clone)]
-struct SelfStatConfig {
+struct Config {
     /// The interval between scrapes.
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
@@ -24,7 +24,7 @@ struct SelfStatConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "selfstat")]
-impl SourceConfig for SelfStatConfig {
+impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> crate::Result<Source> {
         let ss = SelfStat {
             interval: self.interval,
@@ -98,6 +98,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<SelfStatConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }
