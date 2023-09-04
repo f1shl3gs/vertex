@@ -9,7 +9,7 @@ use bytes::Bytes;
 use chrono::Utc;
 use configurable::{configurable_component, Configurable};
 use encoding_transcode::{Decoder, Encoder};
-use event::{fields, tags, BatchNotifier, BatchStatus, Event, LogRecord};
+use event::{fields, tags, BatchNotifier, BatchStatus, LogRecord};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::source::util::OrderedFinalizer;
 use framework::{hostname, Pipeline, ShutdownSignal, Source};
@@ -383,7 +383,7 @@ fn tail_source(
         // Once harvester ends this will run until it has finished processing remaining
         // logs in the queue
         let mut messages = messages.map(move |line| {
-            let mut event: Event = LogRecord::new(
+            let mut log = LogRecord::new(
                 tags!(
                     &file_key => line.filename,
                     &host_key => &hostname,
@@ -394,12 +394,11 @@ fn tail_source(
                     "offset" => line.offset,
                     timestamp_key =>  Utc::now()
                 ),
-            )
-            .into();
+            );
 
             if let Some(finalizer) = &finalizer {
                 let (batch, receiver) = BatchNotifier::new_with_receiver();
-                event = event.with_batch_notifier(&batch);
+                log = log.with_batch_notifier(&batch);
 
                 finalizer.add(
                     FinalizerEntry {
@@ -412,10 +411,10 @@ fn tail_source(
                 checkpoints.update(line.fingerprint, line.offset);
             }
 
-            event
+            log
         });
 
-        tokio::spawn(async move { output.send_all_v2(&mut messages).await });
+        tokio::spawn(async move { output.send_event_stream(&mut messages).await });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown, shutdown_checkpointer, checkpointer);
@@ -436,20 +435,23 @@ fn tail_source(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::testing::trace_init;
-    use encoding_rs::UTF_16LE;
-    use event::log::Value;
-    use event::tags::Key;
-    use event::EventStatus;
-    use framework::{Pipeline, ShutdownSignal};
-    use multiline::Mode;
     use std::fs;
     use std::fs::File;
     use std::future::Future;
     use std::io::Write;
+
+    use encoding_rs::UTF_16LE;
+    use event::log::Value;
+    use event::tags::Key;
+    use event::Event;
+    use event::EventStatus;
+    use framework::{Pipeline, ShutdownSignal};
+    use multiline::Mode;
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout};
+
+    use super::*;
+    use crate::testing::trace_init;
 
     #[test]
     fn generate_config() {
