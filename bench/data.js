@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693808343452,
+  "lastUpdate": 1693808348928,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5302184432482f6132ef756e53edc56dd37840a6",
-          "message": "chore(deps): bump memmap2 from 0.7.0 to 0.7.1 (#1040)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.7.0 to 0.7.1.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.7.0...v0.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-26T13:38:55+08:00",
-          "tree_id": "c03066e3e8bc777928194fde44c1b7fd6804ab43",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5302184432482f6132ef756e53edc56dd37840a6"
-        },
-        "date": 1687758509342,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 48.439,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 169.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 379.88,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1065.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "59d882f229252eb144f0b22ed5647c7ed01859ff",
           "message": "chore(deps): bump libc from 0.2.146 to 0.2.147 (#1036)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.146 to 0.2.147.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.146...0.2.147)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-26T20:48:44+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1160.5,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37278beab80690370f476fe5170558498a8a6898",
+          "message": "chore(deps): bump thiserror from 1.0.47 to 1.0.48 (#1228)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.47 to 1.0.48.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.47...1.0.48)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-04T14:14:55+08:00",
+          "tree_id": "f732553e91a54f8c1a46f34d9e6974dac3d71c0f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37278beab80690370f476fe5170558498a8a6898"
+        },
+        "date": 1693808332535,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 54.716,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 171.32,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 409.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1140.8,
             "unit": "ns/op"
           }
         ]
