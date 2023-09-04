@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693808515313,
+  "lastUpdate": 1693808529676,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "532214b6eff7641260f184189878f9b7681360b1",
-          "message": "cleanup (#1116)",
-          "timestamp": "2023-07-22T22:53:37+08:00",
-          "tree_id": "51e858d6b195651549bc0e4f4434e144b589bd33",
-          "url": "https://github.com/f1shl3gs/vertex/commit/532214b6eff7641260f184189878f9b7681360b1"
-        },
-        "date": 1690037853605,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 42.726,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 140.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 345.08,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 971.57,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "9bbd944319a0ee8e8031b5e940fe7baa90958218",
           "message": "Transform/samples (#1117)\n\n* remove seahash\r\n\r\n* add tests",
           "timestamp": "2023-07-23T08:24:20+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1130,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e18e9216453b458f4e90575fd0d1a0d6d4125d8b",
+          "message": "chore(deps): bump memchr from 2.6.2 to 2.6.3 (#1229)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.2 to 2.6.3.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.2...2.6.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-04T14:15:04+08:00",
+          "tree_id": "749e18c266bd8c29da02b3b8736c42c7987c5a8a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e18e9216453b458f4e90575fd0d1a0d6d4125d8b"
+        },
+        "date": 1693808511381,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 44.364,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 139.93,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 339.62,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 988.38,
             "unit": "ns/op"
           }
         ]
