@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693808359335,
+  "lastUpdate": 1693808379636,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25418,50 +25418,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "59d882f229252eb144f0b22ed5647c7ed01859ff",
-          "message": "chore(deps): bump libc from 0.2.146 to 0.2.147 (#1036)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.146 to 0.2.147.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.146...0.2.147)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-26T20:48:44+08:00",
-          "tree_id": "c7af35031e70d9a0a6aa64dc1fb284b029bfb3f2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/59d882f229252eb144f0b22ed5647c7ed01859ff"
-        },
-        "date": 1687783991033,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 58.077,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 196.89,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 432.24,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1284.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1140.8,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "046010aaeb8dc9697e587d2342f2d3bd5a6c013c",
+          "message": "chore(deps): bump regex from 1.9.4 to 1.9.5 (#1230)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.4 to 1.9.5.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.4...1.9.5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-04T14:14:45+08:00",
+          "tree_id": "8beea559a26fa683cd97a8d47e27f949458d214e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/046010aaeb8dc9697e587d2342f2d3bd5a6c013c"
+        },
+        "date": 1693808359459,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 65.478,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 205.03,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 491.74,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1371.9,
             "unit": "ns/op"
           }
         ]
