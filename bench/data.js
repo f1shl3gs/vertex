@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693808385843,
+  "lastUpdate": 1693808400174,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "26a961e6bd3f214578dfbac2dd14c623c32d716c",
-          "message": "fix lib/condition bench (#1115)",
-          "timestamp": "2023-07-22T04:01:01+08:00",
-          "tree_id": "7156271b777fe8defbede06615afd346d2f45276",
-          "url": "https://github.com/f1shl3gs/vertex/commit/26a961e6bd3f214578dfbac2dd14c623c32d716c"
-        },
-        "date": 1689969913275,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.509,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.688,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.178,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.614,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.796,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "532214b6eff7641260f184189878f9b7681360b1",
           "message": "cleanup (#1116)",
           "timestamp": "2023-07-22T22:53:37+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.134,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d77dcec07c495288cdc230d24f0e15725c16a1af",
+          "message": "chore(deps): bump syn from 2.0.29 to 2.0.31 (#1227)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.29 to 2.0.31.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.29...2.0.31)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-04T14:14:35+08:00",
+          "tree_id": "1288cea1e11253008b0032ecd9b835f149172c82",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d77dcec07c495288cdc230d24f0e15725c16a1af"
+        },
+        "date": 1693808380137,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 29.898,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.341,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 29.555,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 49.444,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 67.092,
             "unit": "ns/op"
           }
         ]
