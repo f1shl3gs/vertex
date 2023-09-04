@@ -600,7 +600,8 @@ impl Metric {
     #[inline]
     pub fn has_tag(&self, key: &str) -> bool {
         // TODO: avoid allocation
-        self.series.tags.contains_key(key.to_string())
+        let key: Key = key.to_string().into();
+        self.series.tags.contains_key(&key)
     }
 
     #[inline]

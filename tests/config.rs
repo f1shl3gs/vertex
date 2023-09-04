@@ -78,17 +78,21 @@ sources:
 
 transforms:
     add1:
-        type: add_tags
+        type: rewrite
         inputs:
             - in1
-        tags:
-            foo: bar
+        operations:
+            - type: set
+              key: foo
+              value: bar
     add2:
-        type: add_tags
+        type: rewrite
         inputs:
             - in1
-        tags:
-            foo: bar
+        operations:
+            - type: set
+              key: foo
+              value: bar
 sinks:
     out1:
         type: stdout

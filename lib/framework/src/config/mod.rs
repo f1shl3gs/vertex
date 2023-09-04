@@ -315,12 +315,14 @@ sources:
 
 transforms:
   add_extra_tags:
-    type: add_tags
+    type: rewrite
     inputs:
       - generator
       - ntp
-    tags:
-      hostname: ${HOSTNAME}
+    operations:
+      - type: set
+        key: hostname
+        value: ${HOSTNAME}
 
 sinks:
   blackhole:

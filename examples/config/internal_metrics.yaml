@@ -8,12 +8,14 @@ sources:
 
 transforms:
   add_tags:
-    type: add_tags
+    type: rewrite
     inputs:
       - metrics
       - selfstat
-    tags:
-      host: ${HOSTNAME}
+    operations:
+      - type: set
+        key: host
+        value: ${HOSTNAME}
 
 sinks:
   prom:
