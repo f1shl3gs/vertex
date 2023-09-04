@@ -279,10 +279,10 @@ impl LogSource {
             }
 
             checkpoints.update(line.fingerprint, line.offset);
-            log.into()
+            log
         });
 
-        tokio::spawn(async move { output.send_all_v2(&mut events).await });
+        tokio::spawn(async move { output.send_event_stream(&mut events).await });
 
         tokio::task::spawn_blocking(move || {
             let result = harvester.run(tx, shutdown.clone(), shutdown.clone(), checkpointer);

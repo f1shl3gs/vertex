@@ -185,17 +185,6 @@ impl Pipeline {
             .await
     }
 
-    pub async fn send_all_v2(
-        &mut self,
-        events: impl Stream<Item = Event> + Unpin,
-    ) -> Result<(), ClosedError> {
-        self.inner
-            .as_mut()
-            .expect("no default output")
-            .send_all(events)
-            .await
-    }
-
     pub async fn send_event_stream<S, E>(&mut self, events: S) -> Result<(), ClosedError>
     where
         S: Stream<Item = E> + Unpin,
@@ -263,18 +252,6 @@ impl Inner {
 
         self.sent_events.inc(count as u64);
         self.sent_bytes.inc(byte_size as u64);
-
-        Ok(())
-    }
-
-    async fn send_all(
-        &mut self,
-        events: impl Stream<Item = Event> + Unpin,
-    ) -> Result<(), ClosedError> {
-        let mut stream = events.ready_chunks(CHUNK_SIZE);
-        while let Some(events) = stream.next().await {
-            self.send_batch(events).await?;
-        }
 
         Ok(())
     }
