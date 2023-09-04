@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693804583567,
+  "lastUpdate": 1693805623233,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "43c1b64d476c2182052a0ca25aa46d143abe3c24",
-          "message": "chore(deps): bump syn from 2.0.18 to 2.0.20 (#1037)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.18 to 2.0.20.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.18...2.0.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-26T13:38:31+08:00",
-          "tree_id": "f09c4c3e193e65ccab27aa9cd436c8ad6464003e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43c1b64d476c2182052a0ca25aa46d143abe3c24"
-        },
-        "date": 1687759367900,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 43851000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 998940,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.362,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d53932b150a7624e19ca02925747eea79db7f8e4",
           "message": "chore(deps): bump proc-macro2 from 1.0.60 to 1.0.63 (#1035)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.60 to 1.0.63.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.60...1.0.63)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-26T13:38:16+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.385,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0f21bdd3076e92651c75deea44a3b99f3e70e35",
+          "message": "remove send_all_v2 (#1226)",
+          "timestamp": "2023-09-04T13:11:34+08:00",
+          "tree_id": "3f2f5775acdf02cf239b552412e75a7441f6e07e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0f21bdd3076e92651c75deea44a3b99f3e70e35"
+        },
+        "date": 1693805606999,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 29460000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1013300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.365,
             "unit": "ns/op"
           }
         ]
