@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693804552327,
+  "lastUpdate": 1693804561604,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "43c1b64d476c2182052a0ca25aa46d143abe3c24",
-          "message": "chore(deps): bump syn from 2.0.18 to 2.0.20 (#1037)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.18 to 2.0.20.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.18...2.0.20)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-06-26T13:38:31+08:00",
-          "tree_id": "f09c4c3e193e65ccab27aa9cd436c8ad6464003e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/43c1b64d476c2182052a0ca25aa46d143abe3c24"
-        },
-        "date": 1687758289180,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.66,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 21.897,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.833,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 30.217,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 50.068,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5302184432482f6132ef756e53edc56dd37840a6",
           "message": "chore(deps): bump memmap2 from 0.7.0 to 0.7.1 (#1040)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.7.0 to 0.7.1.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.7.0...v0.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-06-26T13:38:55+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.317,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d0f21bdd3076e92651c75deea44a3b99f3e70e35",
+          "message": "remove send_all_v2 (#1226)",
+          "timestamp": "2023-09-04T13:11:34+08:00",
+          "tree_id": "3f2f5775acdf02cf239b552412e75a7441f6e07e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d0f21bdd3076e92651c75deea44a3b99f3e70e35"
+        },
+        "date": 1693804545280,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.916,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.158,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.206,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 41.53,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.259,
             "unit": "ns/op"
           }
         ]
