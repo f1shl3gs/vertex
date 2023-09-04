@@ -26,18 +26,22 @@ transforms:
       warn: .message contains warn
 
   info:
-    type: add_tags
+    type: rewrite
     inputs:
       - route.info
-    tags:
-      level: info
+    operations:
+      - type: set
+        key: level
+        value: info
 
   warn:
-    type: add_tags
+    type: rewrite
     inputs:
       - route.warn
-    tags:
-      level: warn
+    operations:
+      - type: set
+        key: level
+        value: warn
 
 sinks:
   stdout:

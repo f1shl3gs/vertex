@@ -1044,6 +1044,7 @@ version = "0.1.0"
 dependencies = [
  "bytes",
  "chrono",
+ "configurable",
  "criterion",
  "finalize",
  "futures",

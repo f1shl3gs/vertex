@@ -83,6 +83,22 @@ benches = [
 ]
 
 # Integration tests
+integration-tests-clickhouse = []
+integration-tests-consul = []
+integration-tests-elasticsearch = []
+integration-tests-haproxy = []
+integration-tests-kafka = []
+integration-tests-loki = []
+integration-tests-memcached = []
+integration-tests-mysql = []
+integration-tests-nginx_stub = []
+integration-tests-ntp = []
+integration-tests-prometheus_exporter = []
+integration-tests-prometheus_remote_write = []
+integration-tests-prometheus_scrape = []
+integration-tests-redis = []
+integration-tests-zookeeper = []
+
 all-integration-tests = [
     "integration-tests-consul",
     "integration-tests-elasticsearch",
@@ -100,29 +116,11 @@ all-integration-tests = [
     "integration-tests-zookeeper"
 ]
 
-integration-tests-clickhouse = []
-integration-tests-consul = []
-integration-tests-elasticsearch = []
-integration-tests-haproxy = []
-integration-tests-kafka = []
-integration-tests-loki = []
-integration-tests-memcached = []
-integration-tests-mysql = []
-integration-tests-nginx_stub = []
-integration-tests-ntp = []
-integration-tests-prometheus_exporter = []
-integration-tests-prometheus_remote_write = []
-integration-tests-prometheus_scrape = []
-integration-tests-redis = []
-integration-tests-zookeeper = []
-
-# Common
-tokio-console = ["framework/tokio-console", "tokio/tracing"]
-
-# Allocator
-# mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
-# need to declare it again.
-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
+extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "parking_lot/serde"]
+extensions-healthcheck = []
+extensions-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
+extensions-pprof = ["dep:pprof", "dep:inferno"]
+extensions-zpages = []
 
 # Extensions
 extensions = [
@@ -134,13 +132,43 @@ extensions = [
     "extensions-zpages"
 ]
 
-extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "parking_lot/serde"]
-extensions-healthcheck = []
-extensions-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
-extensions-pprof = ["dep:pprof", "dep:inferno"]
-extensions-zpages = []
-
 # Sources
+sources-bind = []
+sources-chrony = []
+sources-consul = []
+sources-demo_logs = []
+sources-exec = ["tokio/process"]
+sources-clickhouse_metrics = []
+sources-elasticsearch = []
+sources-grpc_check = ["dep:tonic", "dep:tonic-health"]
+sources-haproxy = []
+sources-http_check = []
+sources-internal_logs = []
+sources-internal_metrics = []
+sources-internal_traces = ["dep:tracing-subscriber"]
+sources-jaeger = ["dep:jaeger", "dep:tonic"]
+sources-journald = []
+sources-kafka = ["dep:rskafka", "dep:async-stream"]
+sources-kafka_metrics = ["dep:rskafka"]
+sources-kmsg = []
+sources-kubernetes_logs = ["dep:tail", "dep:multiline", "kubernetes", "dep:ahash", "dep:parking_lot"]
+sources-kubernetes_events = ["kubernetes"]
+sources-libvirt = ["dep:virt"]
+sources-memcached = []
+sources-mongodb = []
+sources-mysqld = ["dep:sqlx"]
+sources-nginx_stub = []
+sources-node_metrics = ["dep:libc", "dep:netlink-packet-sock-diag", "dep:netlink-sys", "dep:netlink-packet-core"]
+sources-ntp = ["rsntp/tokio", "rsntp/async"]
+sources-nvidia_smi = ["dep:quick-xml"]
+sources-prometheus_scrape = ["dep:prometheus"]
+sources-prometheus_remote_write = ["dep:snap"]
+sources-redis = []
+sources-selfstat = ["dep:libc"]
+sources-syslog = ["codecs/syslog", "dep:smallvec"]
+sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
+sources-zookeeper = []
+
 sources = [
     "sources-bind",
     "sources-chrony",
@@ -179,60 +207,6 @@ sources = [
     "sources-zookeeper",
 ]
 
-sources-bind = []
-sources-chrony = []
-sources-consul = []
-sources-demo_logs = []
-sources-exec = ["tokio/process"]
-sources-clickhouse_metrics = []
-sources-elasticsearch = []
-sources-grpc_check = ["dep:tonic", "dep:tonic-health"]
-sources-haproxy = []
-sources-http_check = []
-sources-internal_logs = []
-sources-internal_metrics = []
-sources-internal_traces = ["dep:tracing-subscriber"]
-sources-jaeger = ["dep:jaeger", "dep:tonic"]
-sources-journald = []
-sources-kafka = ["dep:rskafka", "dep:async-stream"]
-sources-kafka_metrics = ["dep:rskafka"]
-sources-kmsg = []
-sources-kubernetes_logs = ["dep:tail", "dep:multiline", "kubernetes", "dep:ahash", "dep:parking_lot"]
-sources-kubernetes_events = ["kubernetes"]
-sources-libvirt = ["dep:virt"]
-sources-memcached = []
-sources-mongodb = []
-sources-mysqld = ["dep:sqlx"]
-sources-nginx_stub = []
-sources-node_metrics = ["dep:libc", "dep:netlink-packet-sock-diag", "dep:netlink-sys", "dep:netlink-packet-core"]
-sources-ntp = ["rsntp/tokio", "rsntp/async"]
-sources-nvidia_smi = ["dep:quick-xml"]
-sources-prometheus_scrape = ["dep:prometheus"]
-sources-prometheus_remote_write = ["dep:snap"]
-sources-redis = []
-sources-selfstat = ["dep:libc"]
-sources-syslog = ["codecs/syslog", "dep:smallvec"]
-sources-tail = ["dep:tail", "dep:multiline", "dep:encoding_rs"]
-sources-zookeeper = []
-
-# transforms
-transforms = [
-    "transforms-add_tags",
-    "transforms-add_fields",
-    "transforms-cardinality",
-    "transforms-coercer",
-    "transforms-dedup",
-    "transforms-enum",
-    "transforms-filter",
-    "transforms-geoip",
-    "transforms-json_parser",
-    "transforms-metricalize",
-    "transforms-route",
-    "transforms-sample",
-    "transforms-substr",
-    "transforms-throttle"
-]
-transforms-add_tags = []
 transforms-add_fields = []
 transforms-cardinality = ["dep:bloomy"]
 transforms-coercer = []
@@ -242,12 +216,43 @@ transforms-filter = ["dep:condition"]
 transforms-geoip = [ "dep:maxminddb" ]
 transforms-json_parser = []
 transforms-metricalize = ["dep:async-stream"]
+transforms-rewrite = []
 transforms-route = ["dep:condition"]
 transforms-sample = []
 transforms-substr = []
 transforms-throttle = []
 
-# sinks
+# transforms
+transforms = [
+    "transforms-add_fields",
+    "transforms-cardinality",
+    "transforms-coercer",
+    "transforms-dedup",
+    "transforms-enum",
+    "transforms-filter",
+    "transforms-geoip",
+    "transforms-json_parser",
+    "transforms-metricalize",
+    "transforms-rewrite",
+    "transforms-route",
+    "transforms-sample",
+    "transforms-substr",
+    "transforms-throttle"
+]
+
+# Sinks
+sinks-console = []
+sinks-prometheus_exporter = ["dep:flate2"]
+sinks-prometheus_remote_write = ["dep:snap"]
+sinks-blackhole = []
+sinks-kafka = ["dep:rskafka"]
+sinks-jaeger = ["dep:jaeger"]
+sinks-elasticsearch = []
+sinks-loki = ["dep:snap", "dep:buffers"]
+sinks-vertex = []
+sinks-clickhouse = []
+sinks-socket = []
+
 sinks = [
     "sinks-blackhole",
     "sinks-clickhouse",
@@ -262,17 +267,14 @@ sinks = [
     "sinks-vertex",
 ]
 
-sinks-console = []
-sinks-prometheus_exporter = ["dep:flate2"]
-sinks-prometheus_remote_write = ["dep:snap"]
-sinks-blackhole = []
-sinks-kafka = ["dep:rskafka"]
-sinks-jaeger = ["dep:jaeger"]
-sinks-elasticsearch = []
-sinks-loki = ["dep:snap", "dep:buffers"]
-sinks-vertex = []
-sinks-clickhouse = []
-sinks-socket = []
+# Common
+tokio-console = ["framework/tokio-console", "tokio/tracing"]
+
+# Allocator
+# mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
+# need to declare it again.
+jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
+
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.

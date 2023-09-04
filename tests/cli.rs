@@ -30,7 +30,7 @@ fn clean_output() {
         (vec!["sources", "node"], true),
         (vec!["sources", "something_not_exist"], false),
         (vec!["transforms"], true),
-        (vec!["transforms", "add_tags"], true),
+        (vec!["transforms", "rewrite"], true),
         (vec!["transforms", "something_not_exist"], false),
         (vec!["sinks"], true),
         (vec!["sinks", "something_not_exist"], false),

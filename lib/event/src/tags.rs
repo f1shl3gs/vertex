@@ -4,6 +4,8 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::hash::{Hash, Hasher};
 
+use configurable::schema::{generate_string_schema, SchemaGenerator, SchemaObject};
+use configurable::{Configurable, GenerateError};
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 
@@ -25,6 +27,12 @@ impl Key {
     /// Returns a reference to the underlying key name
     pub fn as_str(&self) -> &str {
         self.0.as_ref()
+    }
+}
+
+impl Configurable for Key {
+    fn generate_schema(_gen: &mut SchemaGenerator) -> Result<SchemaObject, GenerateError> {
+        Ok(generate_string_schema())
     }
 }
 
@@ -68,7 +76,7 @@ impl fmt::Display for Key {
 }
 
 /// Array of homogeneous values
-#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize, PartialOrd)]
 #[serde(untagged)]
 pub enum Array {
     /// Array of bools
@@ -180,7 +188,7 @@ impl From<Vec<String>> for Array {
 }
 
 /// Value types for use in `KeyValue` pairs.
-#[derive(Clone, Debug, Deserialize, Serialize, PartialOrd)]
+#[derive(Clone, Configurable, Debug, Deserialize, Serialize, PartialOrd)]
 #[serde(untagged)]
 pub enum Value {
     /// bool values
@@ -391,8 +399,8 @@ impl Tags {
     }
 
     #[inline]
-    pub fn contains_key(&self, key: impl Into<Key>) -> bool {
-        self.0.contains_key(&(key.into()))
+    pub fn contains_key(&self, key: &Key) -> bool {
+        self.0.contains_key(key)
     }
 
     pub fn keys(&self) -> Keys<'_, Key, Value> {

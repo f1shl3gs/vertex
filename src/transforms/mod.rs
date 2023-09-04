@@ -1,7 +1,5 @@
 #[cfg(feature = "transforms-add_fields")]
 mod add_fields;
-#[cfg(feature = "transforms-add_tags")]
-mod add_tags;
 #[cfg(feature = "transforms-cardinality")]
 mod cardinality;
 #[cfg(feature = "transforms-coercer")]
@@ -18,6 +16,8 @@ mod geoip;
 mod json_parser;
 #[cfg(feature = "transforms-metricalize")]
 mod metricalize;
+#[cfg(feature = "transforms-rewrite")]
+mod rewrite;
 #[cfg(feature = "transforms-route")]
 mod route;
 #[cfg(feature = "transforms-sample")]
