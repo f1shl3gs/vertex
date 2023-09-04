@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1693809724985,
+  "lastUpdate": 1693809778434,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dece55274c9195a0738c2d100057f75772e76600",
-          "message": "chore(deps): bump thiserror from 1.0.43 to 1.0.44 (#1118)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.43 to 1.0.44.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.43...1.0.44)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-24T13:06:31+08:00",
-          "tree_id": "f5a901f4b3af1dcc6dbabd7cd431ddfee5830fdb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dece55274c9195a0738c2d100057f75772e76600"
-        },
-        "date": 1690176875202,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1293,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44295.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "383a95e4d8751d419d382ea94374f8fc50da2f83",
           "message": "chore(deps): bump serde from 1.0.173 to 1.0.175 (#1120)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.173 to 1.0.175.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.173...v1.0.175)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-24T13:43:45+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44697.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e18e9216453b458f4e90575fd0d1a0d6d4125d8b",
+          "message": "chore(deps): bump memchr from 2.6.2 to 2.6.3 (#1229)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.2 to 2.6.3.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.2...2.6.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-04T14:15:04+08:00",
+          "tree_id": "749e18c266bd8c29da02b3b8736c42c7987c5a8a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e18e9216453b458f4e90575fd0d1a0d6d4125d8b"
+        },
+        "date": 1693809758299,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1273,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44643.7,
             "unit": "KiB"
           }
         ]
