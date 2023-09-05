@@ -29,7 +29,7 @@ jobs:
     needs:
       - cancel-previous
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: sudo -E bash ci/environment/bootstrap-ubuntu-20.04.sh
       - run: bash ci/prepare.sh
       - run: cargo build --release 2>&1 | tee build.txt
