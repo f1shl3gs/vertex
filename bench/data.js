@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694004890487,
+  "lastUpdate": 1694004916514,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "52b344321026475096dc8b8c3609bc42f528082f",
-          "message": "chore(deps): bump quick-xml from 0.29.0 to 0.30.0 (#1121)\n\nBumps [quick-xml](https://github.com/tafia/quick-xml) from 0.29.0 to 0.30.0.\r\n- [Release notes](https://github.com/tafia/quick-xml/releases)\r\n- [Changelog](https://github.com/tafia/quick-xml/blob/master/Changelog.md)\r\n- [Commits](https://github.com/tafia/quick-xml/compare/v0.29.0...v0.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quick-xml\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-24T13:06:09+08:00",
-          "tree_id": "0b73a83cb30cb8444e855ad1c70b5216740575ab",
-          "url": "https://github.com/f1shl3gs/vertex/commit/52b344321026475096dc8b8c3609bc42f528082f"
-        },
-        "date": 1690175411395,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 59.142,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 176.42,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 438.75,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1243.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7d731b849d8cc489b382418a98de621915f5973a",
           "message": "chore(deps): bump inventory from 0.3.9 to 0.3.11 (#1122)\n\nBumps [inventory](https://github.com/dtolnay/inventory) from 0.3.9 to 0.3.11.\r\n- [Release notes](https://github.com/dtolnay/inventory/releases)\r\n- [Commits](https://github.com/dtolnay/inventory/compare/0.3.9...0.3.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inventory\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-24T13:05:43+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1321.7,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d442f0b404917ea0cadfd09bc2152945d7924205",
+          "message": "chore(deps): bump chrono from 0.4.28 to 0.4.29 (#1233)\n\n* chore(deps): bump chrono from 0.4.28 to 0.4.29\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.28 to 0.4.29.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.28...v0.4.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecate warnings\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-09-06T20:50:55+08:00",
+          "tree_id": "ce444298af95e00cc18dabc0b54a8854ffabfb04",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d442f0b404917ea0cadfd09bc2152945d7924205"
+        },
+        "date": 1694004900187,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 54.232,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 172.36,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 416.86,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1139.2,
             "unit": "ns/op"
           }
         ]
