@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::num::{ParseFloatError, ParseIntError};
 
 use bytes::Bytes;
-use chrono::{DateTime, TimeZone as _, Utc};
+use chrono::{DateTime, Utc};
 use framework::timezone::{datetime_to_utc, TimeZone};
 use thiserror::Error;
 
@@ -211,8 +211,8 @@ fn parse_timestamp(tz: TimeZone, s: &str) -> Result<DateTime<Utc>, Error> {
     }
 
     for format in TIMESTAMP_UTC_FORMATS {
-        if let Ok(result) = Utc.datetime_from_str(s, format) {
-            return Ok(result);
+        if let Ok(result) = DateTime::parse_from_str(s, format) {
+            return Ok(datetime_to_utc(&result));
         }
     }
 

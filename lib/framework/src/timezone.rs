@@ -1,3 +1,4 @@
+use chrono::format::{parse, Parsed, StrftimeItems};
 use chrono::{DateTime, Local, ParseError, TimeZone as _, Utc};
 use chrono_tz::Tz;
 use configurable::schema::{
@@ -23,12 +24,15 @@ pub enum TimeZone {
 /// This is a wrapper trait to allow `TimeZone` types to be passed generically
 impl TimeZone {
     pub fn datetime_from_str(&self, s: &str, format: &str) -> Result<DateTime<Utc>, ParseError> {
+        let mut parsed = Parsed::new();
+        parse(&mut parsed, s, StrftimeItems::new(format))?;
+
         match self {
-            Self::Local => Local
-                .datetime_from_str(s, format)
+            TimeZone::Local => parsed
+                .to_datetime_with_timezone(&Local)
                 .map(|dt| datetime_to_utc(&dt)),
-            Self::Named(tz) => tz
-                .datetime_from_str(s, format)
+            TimeZone::Named(tz) => parsed
+                .to_datetime_with_timezone(tz)
                 .map(|dt| datetime_to_utc(&dt)),
         }
     }
