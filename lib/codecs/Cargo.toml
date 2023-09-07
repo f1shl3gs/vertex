@@ -15,7 +15,7 @@ serde_yaml = { version = "0.9.25" }
 serde_path_to_error = { version = "0.1.14" }
 
 [dependencies]
-bytes = { version = "1.4.0", default-features = false }
+bytes = { version = "1.5.0", default-features = false }
 chrono = { version = "0.4.30", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
