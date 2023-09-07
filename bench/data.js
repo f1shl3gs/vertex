@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694114356930,
+  "lastUpdate": 1694114708885,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4d09340fc0c17f32883c8a4ed955431df6f3c5ca",
-          "message": "chore(deps): bump no-proxy from 0.3.2 to 0.3.3 (#1131)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.2 to 0.3.3.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-27T15:44:51+08:00",
-          "tree_id": "8e7e54cf8959b3b4147a06696190e082f79555d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d09340fc0c17f32883c8a4ed955431df6f3c5ca"
-        },
-        "date": 1690445191122,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1157,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44325.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2dadc21d99a5d1421647551569379ccfbfe62dbe",
           "message": "chore(deps): bump pem from 3.0.0 to 3.0.1 (#1128)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.0 to 3.0.1.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.0...v3.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-27T15:45:48+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44776.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2f4c58735d1b298fb82556b23a8db15c7b52331c",
+          "message": "chore(deps): bump bytes from 1.4.0 to 1.5.0 (#1235)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-08T02:57:46+08:00",
+          "tree_id": "977ea087488313d280dc22a37c1b46ad4d7ca088",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2f4c58735d1b298fb82556b23a8db15c7b52331c"
+        },
+        "date": 1694114688054,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1430,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44779.5,
             "unit": "KiB"
           }
         ]
