@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694112177804,
+  "lastUpdate": 1694112179833,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "98597a653914c1011ff7f061531492964a844c36",
-          "message": "chore(deps): bump typetag from 0.2.10 to 0.2.11 (#1119)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.10...0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-24T13:06:19+08:00",
-          "tree_id": "a158e45bf895ad360c33da77879e64eab7b64aac",
-          "url": "https://github.com/f1shl3gs/vertex/commit/98597a653914c1011ff7f061531492964a844c36"
-        },
-        "date": 1690175603886,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.609,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.186,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.412,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 46.579,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.82,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "dece55274c9195a0738c2d100057f75772e76600",
           "message": "chore(deps): bump thiserror from 1.0.43 to 1.0.44 (#1118)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.43 to 1.0.44.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.43...1.0.44)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-24T13:06:31+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.335,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58f9c0a677a0316be141a964471633b9bf5ab33b",
+          "message": "chore(deps): bump chrono from 0.4.29 to 0.4.30 (#1236)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.29 to 0.4.30.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.29...v0.4.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-08T02:38:24+08:00",
+          "tree_id": "be322c6a53396b316ff8d6ac3eb58ee1bb28a246",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58f9c0a677a0316be141a964471633b9bf5ab33b"
+        },
+        "date": 1694112162713,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.655,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.537,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.892,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.428,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 59.096,
             "unit": "ns/op"
           }
         ]
