@@ -48,7 +48,7 @@ const fn default_delay_deletion() -> Duration {
 /// Collects Pod logs from Kubernetes Nodes, automatically enriching data with
 /// metadata via the Kubernetes API.
 ///
-/// Kubernetes version >= 1.20 is required.
+/// Kubernetes version >= 1.22 is required.
 ///
 /// This source requires read access to the `/var/log/pods` directory. When run
 /// in a Kubernetes cluster this can be provided with a `hostPath` volume.
