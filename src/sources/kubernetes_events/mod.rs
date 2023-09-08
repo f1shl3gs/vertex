@@ -15,7 +15,7 @@ use kube::{Api, Client};
 /// The Kubernetes events source collects events from the Kubernetes API server.
 /// It collects all the new or updated events that come in.
 ///
-/// Kubernetes version >= 1.20 is required.
+/// Kubernetes version >= 1.22 is required.
 #[configurable_component(source, name = "kubernetes_events")]
 struct Config {
     /// Namespaces to watch for, if this field is empty, all namespaces will
