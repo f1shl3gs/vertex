@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694195329470,
+  "lastUpdate": 1694195467230,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2dadc21d99a5d1421647551569379ccfbfe62dbe",
-          "message": "chore(deps): bump pem from 3.0.0 to 3.0.1 (#1128)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.0 to 3.0.1.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.0...v3.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-27T15:45:48+08:00",
-          "tree_id": "2835058e268c267f831d33c6d4653e720f846e62",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2dadc21d99a5d1421647551569379ccfbfe62dbe"
-        },
-        "date": 1690445332549,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1099,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44324.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1cbc81e42c5a06b8a11df70d0517a479e5e087c6",
           "message": "chore(deps): bump serde from 1.0.175 to 1.0.176 (#1130)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.175 to 1.0.176.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.175...v1.0.176)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-27T15:45:19+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44779.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "363c73750a1209447f5914d803ac17b62d53b4cb",
+          "message": "chore(deps): bump kube from 0.85.0 to 0.86.0 (#1237)\n\n* chore(deps): bump kube from 0.85.0 to 0.86.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.85.0 to 0.86.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.85.0...0.86.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.20.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-09-09T01:28:13+08:00",
+          "tree_id": "f515d55274a29924110e0e0f1aefee6606a0c8a7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/363c73750a1209447f5914d803ac17b62d53b4cb"
+        },
+        "date": 1694195446012,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1184,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44788.2,
             "unit": "KiB"
           }
         ]
