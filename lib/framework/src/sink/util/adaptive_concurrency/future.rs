@@ -5,29 +5,30 @@ use std::task::{Context, Poll};
 use std::time::Instant;
 
 use futures::ready;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tokio::sync::OwnedSemaphorePermit;
 
 use super::controller::{instant_now, Controller};
 use crate::sink::util::retries::RetryLogic;
 
-/// Future for the `AdaptiveConcurrencyLimit` service.
-///
-/// This future runs the inner future, which is used to collect the response from the inner service,
-/// and then tells the controller to adjust its measurements when that future is ready. It also
-/// owns the semaphore permit that is used to control concurrency such that the semaphore is
-/// returned when this future is dropped.
-///
-/// Note that this future must e awaited immediately(such as by spawning it) to prevent
-#[pin_project]
-#[derive(Debug)]
-pub struct ResponseFuture<F, L> {
-    #[pin]
-    inner: F,
-    // Keep this around so that it is dropped when the future complets
-    _permit: OwnedSemaphorePermit,
-    controller: Arc<Controller<L>>,
-    start: Instant,
+pin_project! {
+    /// Future for the `AdaptiveConcurrencyLimit` service.
+    ///
+    /// This future runs the inner future, which is used to collect the response from the inner service,
+    /// and then tells the controller to adjust its measurements when that future is ready. It also
+    /// owns the semaphore permit that is used to control concurrency such that the semaphore is
+    /// returned when this future is dropped.
+    ///
+    /// Note that this future must e awaited immediately(such as by spawning it) to prevent
+    #[derive(Debug)]
+    pub struct ResponseFuture<F, L> {
+        #[pin]
+        inner: F,
+        // Keep this around so that it is dropped when the future completes
+        _permit: OwnedSemaphorePermit,
+        controller: Arc<Controller<L>>,
+        start: Instant,
+    }
 }
 
 impl<F, L> ResponseFuture<F, L> {

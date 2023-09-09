@@ -1,22 +1,18 @@
-use std::{
-    io::{Error as IoError, ErrorKind},
-    marker::Unpin,
-    pin::Pin,
-    task::{Context, Poll},
-};
+use std::io::{Error as IoError, ErrorKind};
+use std::marker::Unpin;
+use std::pin::Pin;
+use std::task::{Context, Poll};
 
 use bytes::Bytes;
+use codec::BytesCodec;
+use event::{EventFinalizers, EventStatus};
 use futures::{ready, Sink};
-use pin_project::{pin_project, pinned_drop};
+use pin_project_lite::pin_project;
 use tokio::io::AsyncWrite;
 use tokio_util::codec::FramedWrite;
 
-// TODO: remove this mod
-use crate::batch::EncodedEvent;
-use codec::BytesCodec;
-use event::{EventFinalizers, EventStatus};
-
 use super::SocketMode;
+use crate::batch::EncodedEvent;
 
 const MAX_PENDING_ITEMS: usize = 1024;
 
@@ -62,23 +58,35 @@ impl State {
     }
 }
 
-/// [FramedWrite](https://docs.rs/tokio-util/0.3.1/tokio_util/codec/struct.FramedWrite.html) wrapper.
-/// Wrapper acts like [Sink](https://docs.rs/futures/0.3.7/futures/sink/trait.Sink.html) forwarding all
-/// calls to `FramedWrite`, but in addition:
-/// - Call `shutdown_check` on each `poll_flush`, so we can stop sending data if other side disconnected.
-/// - Flush all data on each `poll_ready` if total number of events in queue more than some limit.
-/// - Count event size on each `start_send`.
-/// - Ack all sent events on successful `poll_flush` and `poll_close` or on `Drop`.
-#[pin_project(PinnedDrop)]
-pub struct BytesSink<T>
-where
-    T: AsyncWrite + Unpin,
-{
-    #[pin]
-    inner: FramedWrite<T, BytesCodec>,
+pin_project! {
+    /// [FramedWrite](https://docs.rs/tokio-util/0.3.1/tokio_util/codec/struct.FramedWrite.html) wrapper.
+    /// Wrapper acts like [Sink](https://docs.rs/futures/0.3.7/futures/sink/trait.Sink.html) forwarding all
+    /// calls to `FramedWrite`, but in addition:
+    /// - Call `shutdown_check` on each `poll_flush`, so we can stop sending data if other side disconnected.
+    /// - Flush all data on each `poll_ready` if total number of events in queue more than some limit.
+    /// - Count event size on each `start_send`.
+    /// - Ack all sent events on successful `poll_flush` and `poll_close` or on `Drop`.
+    pub struct BytesSink<T>
+    where
+        T: AsyncWrite,
+        T: Unpin,
+    {
+        #[pin]
+        inner: FramedWrite<T, BytesCodec>,
 
-    shutdown_check: Box<dyn Fn(&mut T) -> ShutdownCheck + Send>,
-    state: State,
+        shutdown_check: Box<dyn Fn(&mut T) -> ShutdownCheck + Send>,
+        state: State,
+    }
+
+    impl<T> PinnedDrop for BytesSink<T>
+    where
+        T: AsyncWrite,
+        T: Unpin,
+    {
+        fn drop(this: Pin<&mut Self>) {
+            this.get_mut().state.ack(EventStatus::Dropped);
+        }
+    }
 }
 
 impl<T> BytesSink<T>
@@ -101,16 +109,6 @@ where
                 finalizers: vec![],
             },
         }
-    }
-}
-
-#[pinned_drop]
-impl<T> PinnedDrop for BytesSink<T>
-where
-    T: AsyncWrite + Unpin,
-{
-    fn drop(self: Pin<&mut Self>) {
-        self.get_mut().state.ack(EventStatus::Dropped)
     }
 }
 

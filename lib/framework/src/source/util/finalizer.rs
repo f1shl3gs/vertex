@@ -10,6 +10,7 @@ use event::{BatchStatus, BatchStatusReceiver};
 use futures::{FutureExt, Stream};
 use futures_util::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use futures_util::StreamExt;
+use pin_project_lite::pin_project;
 use tokio::sync::mpsc;
 use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
 
@@ -90,12 +91,13 @@ where
     }
 }
 
-#[pin_project::pin_project]
-struct FinalizerStream<T, S> {
-    shutdown: ShutdownSignal,
-    new_entries: UnboundedReceiver<(BatchStatusReceiver, T)>,
-    status_receivers: S,
-    is_shutdown: bool,
+pin_project! {
+    struct FinalizerStream<T, S> {
+        shutdown: ShutdownSignal,
+        new_entries: UnboundedReceiver<(BatchStatusReceiver, T)>,
+        status_receivers: S,
+        is_shutdown: bool,
+    }
 }
 
 impl<T, S> Stream for FinalizerStream<T, S>
@@ -175,10 +177,11 @@ impl<F: Future> FuturesSet<F> for FuturesUnordered<F> {
     }
 }
 
-#[pin_project::pin_project]
-pub struct FinalizerFuture<T> {
-    receiver: BatchStatusReceiver,
-    entry: Option<T>,
+pin_project! {
+    pub struct FinalizerFuture<T> {
+        receiver: BatchStatusReceiver,
+        entry: Option<T>,
+    }
 }
 
 impl<T> Future for FinalizerFuture<T> {

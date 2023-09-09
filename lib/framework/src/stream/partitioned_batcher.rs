@@ -7,6 +7,7 @@ use std::time::Duration;
 
 use futures::{ready, Stream};
 use measurable::ByteSizeOf;
+use pin_project_lite::pin_project;
 use tokio_util::time::delay_queue::Key;
 use tokio_util::time::DelayQueue;
 
@@ -270,28 +271,29 @@ impl BatcherSettings {
     }
 }
 
-#[pin_project::pin_project]
-pub struct PartitionedBatcher<S, P, T>
-where
-    P: Partitioner,
-{
-    /// The total number of bytes a single batch in this struct is allowed to hold
-    batch_allocation_limit: usize,
-    /// The maximum number of items that are allowed per-batch
-    batch_item_limit: usize,
-    /// The store of live batches. Note that the key here is an option type, on account of the
-    /// interface of `P`.
-    batches: HashMap<P::Key, Batch<P::Item>, BuildHasherDefault<twox_hash::XxHash64>>,
-    /// The store of `closed` batches. When this is not empty it will be preferentially flushed
-    /// prior to consuming any new items from the underlying stream.
-    closed_batches: Vec<(P::Key, Vec<P::Item>)>,
-    /// The queue of pending batch expirations
-    timer: T,
-    /// The partitioner for this `Batcher`
-    partitioner: P,
-    /// The stream this `Batcher` wraps
-    #[pin]
-    stream: S,
+pin_project! {
+    pub struct PartitionedBatcher<S, P, T>
+    where
+        P: Partitioner,
+    {
+        // The total number of bytes a single batch in this struct is allowed to hold
+        batch_allocation_limit: usize,
+        // The maximum number of items that are allowed per-batch
+        batch_item_limit: usize,
+        // The store of live batches. Note that the key here is an option type, on account of the
+        // interface of `P`.
+        batches: HashMap<P::Key, Batch<P::Item>, BuildHasherDefault<twox_hash::XxHash64>>,
+        // The store of `closed` batches. When this is not empty it will be preferentially flushed
+        // prior to consuming any new items from the underlying stream.
+        closed_batches: Vec<(P::Key, Vec<P::Item>)>,
+        // The queue of pending batch expirations
+        timer: T,
+        // The partitioner for this `Batcher`
+        partitioner: P,
+        // The stream this `Batcher` wraps
+        #[pin]
+        stream: S,
+    }
 }
 
 impl<S, P> PartitionedBatcher<S, P, ExpirationQueue<P::Key>>
@@ -503,14 +505,15 @@ mod tests {
             .prop_map(TestTimer::new)
     }
 
-    /// A test partitioner
-    ///
-    /// This partitioner is nothing special. It has a large-ish key space but not so large that
-    /// we'll never see batches accumulate properly.
-    #[pin_project::pin_project]
-    #[derive(Debug)]
-    struct TestPartitioner {
-        key_space: NonZeroU8,
+    pin_project! {
+        /// A test partitioner
+        ///
+        /// This partitioner is nothing special. It has a large-ish key space but not so large that
+        /// we'll never see batches accumulate properly.
+        #[derive(Debug)]
+        struct TestPartitioner {
+            key_space: NonZeroU8,
+        }
     }
 
     impl Partitioner for TestPartitioner {

@@ -11,8 +11,8 @@ pub type MaybeTlsStream<S> = MaybeTls<S, TlsStream<S>>;
 impl MaybeTlsStream<TcpStream> {
     pub fn set_keepalive(&mut self, keepalive: TcpKeepaliveConfig) -> io::Result<()> {
         let stream = match self {
-            Self::Raw(raw) => raw,
-            Self::Tls(tls) => tls.get_ref().0,
+            Self::Raw { raw } => raw,
+            Self::Tls { tls } => tls.get_ref().0,
         };
 
         if let Some(timeout) = keepalive.timeout {
@@ -26,8 +26,8 @@ impl MaybeTlsStream<TcpStream> {
 
     pub fn set_send_buffer_bytes(&mut self, bytes: usize) -> io::Result<()> {
         let stream = match self {
-            Self::Raw(raw) => raw,
-            Self::Tls(tls) => tls.get_ref().0,
+            Self::Raw { raw } => raw,
+            Self::Tls { tls } => tls.get_ref().0,
         };
 
         tcp::set_send_buffer_size(stream, bytes)

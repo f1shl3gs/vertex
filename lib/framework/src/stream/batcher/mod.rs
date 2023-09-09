@@ -11,26 +11,31 @@ use std::task::{Context, Poll};
 use futures::ready;
 use futures::stream::{Fuse, Stream};
 use futures::{Future, StreamExt};
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tokio::time::Sleep;
 
-#[pin_project]
-pub struct Batcher<S, C> {
-    state: C,
+pin_project! {
+    pub struct Batcher<S, C> {
+        state: C,
 
-    /// The stream this `Batcher` wraps
-    #[pin]
-    stream: Fuse<S>,
+        // The stream this `Batcher` wraps
+        #[pin]
+        stream: Fuse<S>,
 
-    #[pin]
-    timer: Maybe<Sleep>,
+        #[pin]
+        timer: Maybe<Sleep>,
+    }
 }
 
-/// An `Option`, but with pin projection
-#[pin_project(project = MaybeProj)]
-pub enum Maybe<T> {
-    Some(#[pin] T),
-    None,
+pin_project! {
+    #[project = MaybeProj]
+    pub enum Maybe<T> {
+        Some {
+            #[pin]
+            value: T
+        },
+        None,
+    }
 }
 
 impl<S, C> Batcher<S, C>
@@ -75,21 +80,23 @@ where
                             this.timer.set(Maybe::None);
                             return Poll::Ready(Some(this.state.take_batch()));
                         } else if this.state.len() == 1 {
-                            this.timer
-                                .set(Maybe::Some(tokio::time::sleep(this.state.timeout())));
+                            this.timer.set(Maybe::Some {
+                                value: tokio::time::sleep(this.state.timeout()),
+                            });
                         }
                     } else {
                         let output = Poll::Ready(Some(this.state.take_batch()));
                         this.state.push(item, item_metadata);
-                        this.timer
-                            .set(Maybe::Some(tokio::time::sleep(this.state.timeout())));
+                        this.timer.set(Maybe::Some {
+                            value: tokio::time::sleep(this.state.timeout()),
+                        });
                         return output;
                     }
                 }
 
                 Poll::Pending => {
-                    return if let MaybeProj::Some(timer) = this.timer.as_mut().project() {
-                        ready!(timer.poll(cx));
+                    return if let MaybeProj::Some { value } = this.timer.as_mut().project() {
+                        ready!(value.poll(cx));
                         this.timer.set(Maybe::None);
                         debug_assert!(this.state.len() != 0, "Timer should have been cancelled");
 

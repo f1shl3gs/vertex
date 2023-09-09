@@ -4,16 +4,17 @@ use std::time::{Duration, Instant};
 
 use futures::{Stream, StreamExt};
 use futures_util::ready;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tokio::time::interval;
 
 use crate::stats;
 
-#[pin_project]
-pub struct Utilization<S> {
-    timer: Timer,
-    intervals: tokio::time::Interval,
-    inner: S,
+pin_project! {
+    pub struct Utilization<S> {
+        timer: Timer,
+        intervals: tokio::time::Interval,
+        inner: S,
+    }
 }
 
 impl<S> Utilization<S> {

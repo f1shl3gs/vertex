@@ -7,7 +7,7 @@ use std::{
 use buffers::channel::BufferReceiverStream;
 use event::Events;
 use futures::future::{BoxFuture, Future, FutureExt};
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 
 use crate::config::ComponentKey;
 use crate::utilization::Utilization;
@@ -22,13 +22,14 @@ pub enum TaskOutput {
     Extension,
 }
 
-/// High level topology task
-#[pin_project]
-pub struct Task {
-    #[pin]
-    inner: BoxFuture<'static, Result<TaskOutput, ()>>,
-    key: ComponentKey,
-    typetag: String,
+pin_project! {
+    /// High level topology task
+    pub struct Task {
+        #[pin]
+        inner: BoxFuture<'static, Result<TaskOutput, ()>>,
+        key: ComponentKey,
+        typetag: String,
+    }
 }
 
 impl Task {

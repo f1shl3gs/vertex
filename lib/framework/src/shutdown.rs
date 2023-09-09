@@ -6,6 +6,7 @@ use std::{
 };
 
 use futures::{future, ready, Future, FutureExt};
+use pin_project_lite::pin_project;
 use tokio::time::{timeout_at, Instant};
 use tripwire::{Trigger, Tripwire};
 
@@ -245,20 +246,21 @@ impl ShutdownSignalToken {
     }
 }
 
-/// Passed to each Source to coordinate the global shutdown process.
-#[pin_project::pin_project]
-#[derive(Clone)]
-pub struct ShutdownSignal {
-    /// This will be triggered when global shutdown has begun, and is a
-    /// sign to the Source to begin its shutdown process.
-    #[pin]
-    begin: Option<Tripwire>,
+pin_project! {
+    /// Passed to each Source to coordinate the global shutdown process.
+    #[derive(Clone)]
+    pub struct ShutdownSignal {
+        // This will be triggered when global shutdown has begun, and is a
+        // sign to the Source to begin its shutdown process.
+        #[pin]
+        begin: Option<Tripwire>,
 
-    /// When a Source allows this to go out of scope it informs the global
-    /// shutdown coordinator that this Source's local shutdown process is
-    /// complete.
-    /// Optional only so that `poll()` can move the handle out and return it.
-    completed: Option<ShutdownSignalToken>,
+        // When a Source allows this to go out of scope it informs the global
+        // shutdown coordinator that this Source's local shutdown process is
+        // complete.
+        // Optional only so that `poll()` can move the handle out and return it.
+        completed: Option<ShutdownSignalToken>,
+    }
 }
 
 impl Future for ShutdownSignal {

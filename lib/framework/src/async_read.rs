@@ -1,6 +1,8 @@
 use std::future::Future;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+use pin_project_lite::pin_project;
 use tokio::io::{AsyncRead, ReadBuf};
 
 pub trait VecAsyncReadExt: AsyncRead {
@@ -19,14 +21,15 @@ pub trait VecAsyncReadExt: AsyncRead {
 
 impl<S> VecAsyncReadExt for S where S: AsyncRead {}
 
-/// A AsyncRead combinator which reads from a reader until a future resolves
-#[pin_project::pin_project]
-#[derive(Clone, Debug)]
-pub struct AllowReadUntil<S, F> {
-    #[pin]
-    reader: S,
-    #[pin]
-    until: F,
+pin_project! {
+    /// A AsyncRead combinator which reads from a reader until a future resolves
+    #[derive(Clone, Debug)]
+    pub struct AllowReadUntil<S, F> {
+        #[pin]
+        reader: S,
+        #[pin]
+        until: F,
+    }
 }
 
 impl<S, F> AllowReadUntil<S, F> {

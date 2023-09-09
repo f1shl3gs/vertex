@@ -1,15 +1,17 @@
-use pin_project::pin_project;
 use std::pin::Pin;
 use std::task::{Context, Poll};
+
+use pin_project_lite::pin_project;
 use tokio::io::{AsyncRead, AsyncWrite, ReadBuf};
 
-/// This wraps the inner socket and emits `BytesReceived` with the
-/// actual number of bytes read before hnalding framing
-#[pin_project]
-pub struct AfterRead<T, F> {
-    #[pin]
-    inner: T,
-    after_read: F,
+pin_project! {
+    /// This wraps the inner socket and emits `BytesReceived` with the
+    /// actual number of bytes read before handing framing
+    pub struct AfterRead<T, F> {
+        #[pin]
+        inner: T,
+        after_read: F,
+    }
 }
 
 impl<T, F> AfterRead<T, F> {
