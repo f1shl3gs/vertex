@@ -5,19 +5,22 @@ use std::task::{Context, Poll};
 
 use futures::stream::{Fuse, FuturesOrdered};
 use futures::{ready, Stream, StreamExt};
+use pin_project_lite::pin_project;
 use tokio::task::JoinHandle;
 
-#[pin_project::pin_project]
-pub struct ConcurrentMap<S, T>
-where
-    S: Stream,
-    T: Send + 'static,
-{
-    #[pin]
-    stream: Fuse<S>,
-    limit: Option<NonZeroUsize>,
-    inflight: FuturesOrdered<JoinHandle<T>>,
-    f: Box<dyn Fn(S::Item) -> Pin<Box<dyn Future<Output = T> + Send + 'static>> + Send>,
+pin_project! {
+    pub struct ConcurrentMap<S, T>
+    where
+        S: Stream,
+        T: Send,
+        T: 'static
+    {
+        #[pin]
+        stream: Fuse<S>,
+        limit: Option<NonZeroUsize>,
+        inflight: FuturesOrdered<JoinHandle<T>>,
+        f: Box<dyn Fn(S::Item) -> Pin<Box<dyn Future<Output = T> + Send + 'static>> + Send>,
+    }
 }
 
 impl<S, T> ConcurrentMap<S, T>

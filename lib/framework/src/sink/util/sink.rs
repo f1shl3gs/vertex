@@ -11,7 +11,7 @@ use event::EventStatus;
 use futures::{ready, FutureExt, Sink, Stream, TryFutureExt};
 use futures_util::future::BoxFuture;
 use futures_util::stream::FuturesUnordered;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tokio::sync::oneshot;
 use tokio::time::{sleep, Sleep};
 use tower::{Service, ServiceBuilder};
@@ -22,42 +22,43 @@ use crate::batch::{Batch, EncodedBatch, EncodedEvent, FinalizersBatch, PushResul
 use crate::sink::util::service::{Map, ServiceBuilderExt};
 use crate::sink::util::{PartitionBuffer, PartitionInnerBuffer};
 
-/// A Partition based batcher, given some `Service` and `Batch` where the
-/// input is partitionable via the `Partition` trait, it will hold many
-/// inflight batches.
-///
-/// This type is similar to `BatchSink` with the added benefit that it has
-/// more fine grained partitioning ability. It will hold many different
-/// batches of events and contain linger timeouts for each.
-///
-/// Note that, unlike `BatchSink`, the `batch` given to this is *only* used
-/// to create new batches (via `Batch::fresh`) for each new partition.
-///
-/// # Acking
-///
-/// Service based acking will only ack events when all prior request
-/// batches have been acked. This means if sequential requests r1, r2 and
-/// r3 are dispatched and r2 and r3 complete, all events contained in
-/// all requests will not be acked until r1 has completed.
-///
-/// # Ordering
-/// Per partition ordering can be achieved by holding onto future of a
-/// request until it finishes. Until then all further requests in that
-/// partition are delayed.
-#[pin_project]
-pub struct PartitionBatchSink<S, B, K>
-where
-    B: Batch,
-    S: Service<B::Output>,
-{
-    service: ServiceSink<S, B::Output>,
-    buffer: Option<(K, EncodedEvent<B::Input>)>,
-    batch: StatefulBatch<FinalizersBatch<B>>,
-    partitions: HashMap<K, StatefulBatch<FinalizersBatch<B>>>,
-    timeout: Duration,
-    lingers: HashMap<K, Pin<Box<Sleep>>>,
-    inflight: Option<HashMap<K, BoxFuture<'static, ()>>>,
-    closing: bool,
+pin_project! {
+    /// A Partition based batcher, given some `Service` and `Batch` where the
+    /// input is partitionable via the `Partition` trait, it will hold many
+    /// inflight batches.
+    ///
+    /// This type is similar to `BatchSink` with the added benefit that it has
+    /// more fine grained partitioning ability. It will hold many different
+    /// batches of events and contain linger timeouts for each.
+    ///
+    /// Note that, unlike `BatchSink`, the `batch` given to this is *only* used
+    /// to create new batches (via `Batch::fresh`) for each new partition.
+    ///
+    /// # Acking
+    ///
+    /// Service based acking will only ack events when all prior request
+    /// batches have been acked. This means if sequential requests r1, r2 and
+    /// r3 are dispatched and r2 and r3 complete, all events contained in
+    /// all requests will not be acked until r1 has completed.
+    ///
+    /// # Ordering
+    /// Per partition ordering can be achieved by holding onto future of a
+    /// request until it finishes. Until then all further requests in that
+    /// partition are delayed.
+    pub struct PartitionBatchSink<S, B, K>
+    where
+        B: Batch,
+        S: Service<B::Output>,
+    {
+        service: ServiceSink<S, B::Output>,
+        buffer: Option<(K, EncodedEvent<B::Input>)>,
+        batch: StatefulBatch<FinalizersBatch<B>>,
+        partitions: HashMap<K, StatefulBatch<FinalizersBatch<B>>>,
+        timeout: Duration,
+        lingers: HashMap<K, Pin<Box<Sleep>>>,
+        inflight: Option<HashMap<K, BoxFuture<'static, ()>>>,
+        closing: bool,
+    }
 }
 
 impl<S, B, K> Debug for PartitionBatchSink<S, B, K>
@@ -430,33 +431,34 @@ impl Response for () {}
 
 impl<'a> Response for &'a str {}
 
-/// A `Sink` interface that wraps a `Service` and a `Batch`.
-///
-/// Provided a batching schema, a service and batch settings
-/// this type will handle buffering events via the batching
-/// scheme and dispatching requests via the service based on
-/// either the size of the batch or a batch linger timeout.
-///
-/// # Acking
-///
-/// Service based acking will only ack events when all prior
-/// request batches have been acked. This means if sequential
-/// request r1, r2, and r3 are dispatched and r2 and r3 complete,
-/// all events contained in all requests will not be acked
-/// until r1 has completed.
-#[pin_project]
-#[derive(Debug)]
-pub struct BatchSink<S, B>
-where
-    S: Service<B::Output>,
-    B: Batch,
-{
-    #[pin]
-    inner: PartitionBatchSink<
-        Map<S, PartitionInnerBuffer<B::Output, ()>, B::Output>,
-        PartitionBuffer<B, ()>,
-        (),
-    >,
+pin_project! {
+    /// A `Sink` interface that wraps a `Service` and a `Batch`.
+    ///
+    /// Provided a batching schema, a service and batch settings
+    /// this type will handle buffering events via the batching
+    /// scheme and dispatching requests via the service based on
+    /// either the size of the batch or a batch linger timeout.
+    ///
+    /// # Acking
+    ///
+    /// Service based acking will only ack events when all prior
+    /// request batches have been acked. This means if sequential
+    /// request r1, r2, and r3 are dispatched and r2 and r3 complete,
+    /// all events contained in all requests will not be acked
+    /// until r1 has completed.
+    #[derive(Debug)]
+    pub struct BatchSink<S, B>
+    where
+        S: Service<B::Output>,
+        B: Batch,
+    {
+        #[pin]
+        inner: PartitionBatchSink<
+            Map<S, PartitionInnerBuffer<B::Output, ()>, B::Output>,
+            PartitionBuffer<B, ()>,
+            (),
+        >,
+    }
 }
 
 impl<S, B> BatchSink<S, B>

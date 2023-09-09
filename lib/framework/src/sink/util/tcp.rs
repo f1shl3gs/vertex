@@ -175,14 +175,14 @@ impl TcpConnector {
 
                 debug!(message = "Negotiated TLS.");
 
-                MaybeTlsStream::Tls(stream)
+                MaybeTlsStream::Tls { tls: stream }
             }
             None => {
                 let stream = TcpStream::connect(addr)
                     .await
                     .map_err(|err| TcpError::Connect(TlsError::Connect(err)))?;
 
-                MaybeTlsStream::Raw(stream)
+                MaybeTlsStream::Raw { raw: stream }
             }
         };
 

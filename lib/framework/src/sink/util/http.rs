@@ -13,7 +13,7 @@ use futures_util::future::BoxFuture;
 use http::StatusCode;
 use hyper::{body, Body};
 use measurable::ByteSizeOf;
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tower::Service;
 
 use crate::batch::{Batch, EncodedEvent};
@@ -73,43 +73,49 @@ pub trait HttpSink: Send + Sync + 'static {
     async fn build_request(&self, events: Self::Output) -> crate::Result<http::Request<Bytes>>;
 }
 
-/// Provides a simple wrapper around internal tower and batching
-/// sinks for http.
-///
-/// This type wraps some `HttpSink` and some `Batch` type and will
-/// apply request, batch and tls settings. Internally, it holds an
-/// Arc reference to the `HttpSink`. It then exposes a `Sink`
-/// interface that can be returned from `SinkConfig`.
-///
-/// Implementation details we require to buffer a single item due
-/// to how `Sink` works. this is because we must "encode" the type
-/// to be able to send it to the inner batch type and sink. Because
-/// of this we must provide a single buffer slot. To ensure the
-/// buffer is flully flushed make sure `poll_flush` returns ready.
-#[pin_project]
-pub struct BatchedHttpSink<T, B, RL = HttpRetryLogic>
-where
-    B: Batch,
-    B::Output: ByteSizeOf + Clone + Send + 'static,
-    T: HttpSink<Input = B::Input, Output = B::Output>,
-    RL: RetryLogic<Response = http::Response<Bytes>> + Send + 'static,
-{
-    sink: Arc<T>,
-    #[pin]
-    inner: BatchedSink<
-        HttpBatchService<BoxFuture<'static, crate::Result<hyper::Request<Bytes>>>, B::Output>,
-        B,
-        RL,
-    >,
+pin_project! {
+    /// Provides a simple wrapper around internal tower and batching
+    /// sinks for http.
+    ///
+    /// This type wraps some `HttpSink` and some `Batch` type and will
+    /// apply request, batch and tls settings. Internally, it holds an
+    /// Arc reference to the `HttpSink`. It then exposes a `Sink`
+    /// interface that can be returned from `SinkConfig`.
+    ///
+    /// Implementation details we require to buffer a single item due
+    /// to how `Sink` works. this is because we must "encode" the type
+    /// to be able to send it to the inner batch type and sink. Because
+    /// of this we must provide a single buffer slot. To ensure the
+    /// buffer is fully flushed make sure `poll_flush` returns ready.
+    pub struct BatchedHttpSink<T, B, RL = HttpRetryLogic>
+    where
+        B: Batch,
+        B::Output: ByteSizeOf,
+        B::Output: Clone,
+        B::Output: Send,
+        B::Output: 'static,
+        T: HttpSink<Input = B::Input, Output = B::Output>,
+        RL: RetryLogic<Response = http::Response<Bytes>>,
+        RL: Send,
+        RL: 'static,
+    {
+        sink: Arc<T>,
+        #[pin]
+        inner: BatchedSink<
+            HttpBatchService<BoxFuture<'static, crate::Result<hyper::Request<Bytes>>>, B::Output>,
+            B,
+            RL,
+        >,
 
-    encoder: T::Encoder,
+        encoder: T::Encoder,
 
-    // An empty slot is needed to buffer an item where we encoded it but
-    // the inner sink is applying back pressure. This trick is used in
-    // the `WithFlatMap` sink combinator.
-    //
-    // See https://docs.rs/futures/0.1.29/src/futures/sink/with_flat_map.rs.html#20
-    slot: Option<EncodedEvent<B::Input>>,
+        // An empty slot is needed to buffer an item where we encoded it but
+        // the inner sink is applying back pressure. This trick is used in
+        // the `WithFlatMap` sink combinator.
+        //
+        // See https://docs.rs/futures/0.1.29/src/futures/sink/with_flat_map.rs.html#20
+        slot: Option<EncodedEvent<B::Input>>,
+    }
 }
 
 impl<T, B> BatchedHttpSink<T, B>

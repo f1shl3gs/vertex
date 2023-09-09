@@ -5,26 +5,28 @@ use std::task::{Context, Poll};
 
 use futures::stream::FuturesOrdered;
 use futures::stream::Stream;
+use pin_project_lite::pin_project;
 
-/// A set of futures which may complete in any order, and results are returned in chunks.
-///
-/// While callers could poll `FuturesUnordered` directly, only one result can be grabbed
-/// at a time. As well, while the `ready_chunks` helper is available from `futures_util`,
-/// it uses an internally fused stream, meaning that it cannot be used with `FuturesUnordered`
-/// as the first `None` result from polling `FuturesUnordered` "fuses" all future polls
-/// of `ReadyChunks`, effectively causing it to return no further items.
-///
-/// `FuturesUnorderedChunked` takes the best of both worlds and combines the batching
-/// with the unordered futures polling so that it can be used in a more straightforward
-/// way from user code.
-#[pin_project::pin_project]
-#[derive(Debug)]
-#[must_use = "streams do nothing unless polled"]
-pub struct FuturesUnorderedChunked<F: Future> {
-    #[pin]
-    futures: FuturesOrdered<F>,
-    items: Vec<F::Output>,
-    chunk_size: usize,
+pin_project! {
+    /// A set of futures which may complete in any order, and results are returned in chunks.
+    ///
+    /// While callers could poll `FuturesUnordered` directly, only one result can be grabbed
+    /// at a time. As well, while the `ready_chunks` helper is available from `futures_util`,
+    /// it uses an internally fused stream, meaning that it cannot be used with `FuturesUnordered`
+    /// as the first `None` result from polling `FuturesUnordered` "fuses" all future polls
+    /// of `ReadyChunks`, effectively causing it to return no further items.
+    ///
+    /// `FuturesUnorderedChunked` takes the best of both worlds and combines the batching
+    /// with the unordered futures polling so that it can be used in a more straightforward
+    /// way from user code.
+    #[derive(Debug)]
+    #[must_use = "streams do nothing unless polled"]
+    pub struct FuturesUnorderedChunked<F: Future> {
+        #[pin]
+        futures: FuturesOrdered<F>,
+        items: Vec<F::Output>,
+        chunk_size: usize,
+    }
 }
 
 impl<F: Future> FuturesUnorderedChunked<F> {

@@ -5,17 +5,18 @@ use event::EventContainer;
 use futures::Stream;
 use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 
-#[pin_project]
-#[derive(Clone, Debug)]
-pub struct MetricRecorder<S> {
-    #[pin]
-    inner: S,
+pin_project! {
+    #[derive(Clone, Debug)]
+    pub struct MetricRecorder<S> {
+        #[pin]
+        inner: S,
 
-    // metrics
-    received_events: Counter,
-    received_bytes: Counter,
+        // metrics
+        received_events: Counter,
+        received_bytes: Counter,
+    }
 }
 
 impl<S> Stream for MetricRecorder<S>

@@ -165,9 +165,9 @@ impl<S> MaybeTlsIncomingStream<S> {
     pub fn get_ref(&self) -> Option<&S> {
         match &self.state {
             StreamState::Accepted(stream) => Some(match stream {
-                MaybeTls::Raw(s) => s,
-                MaybeTls::Tls(s) => {
-                    let (s, _c) = s.get_ref();
+                MaybeTls::Raw { raw } => raw,
+                MaybeTls::Tls { tls } => {
+                    let (s, _c) = tls.get_ref();
                     s
                 }
             }),
@@ -188,7 +188,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
             Some(acceptor) => StreamState::Accepting(
                 async move { acceptor.accept(stream).await.map_err(TlsError::Handshake) }.boxed(),
             ),
-            None => StreamState::Accepted(MaybeTlsStream::Raw(stream)),
+            None => StreamState::Accepted(MaybeTlsStream::Raw { raw: stream }),
         };
         Self { state, peer_addr }
     }
@@ -198,7 +198,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
     pub async fn handshake(&mut self) -> crate::tls::Result<()> {
         if let StreamState::Accepting(fut) = &mut self.state {
             let stream = fut.await?;
-            self.state = StreamState::Accepted(MaybeTlsStream::Tls(stream));
+            self.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });
         }
 
         Ok(())
@@ -244,7 +244,7 @@ impl MaybeTlsIncomingStream<TcpStream> {
                 StreamState::Accepted(stream) => poll_fn(Pin::new(stream), cx),
                 StreamState::Accepting(fut) => match futures::ready!(fut.as_mut().poll(cx)) {
                     Ok(stream) => {
-                        this.state = StreamState::Accepted(MaybeTlsStream::Tls(stream));
+                        this.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });
                         continue;
                     }
                     Err(err) => {
@@ -293,7 +293,7 @@ impl AsyncWrite for MaybeTlsIncomingStream<TcpStream> {
             },
             StreamState::Accepting(fut) => match futures::ready!(fut.as_mut().poll(cx)) {
                 Ok(stream) => {
-                    this.state = StreamState::Accepted(MaybeTlsStream::Tls(stream));
+                    this.state = StreamState::Accepted(MaybeTlsStream::Tls { tls: stream });
                     Poll::Pending
                 }
                 Err(err) => {

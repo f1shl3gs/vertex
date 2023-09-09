@@ -12,7 +12,7 @@ use futures::Stream;
 use futures_util::StreamExt;
 use measurable::ByteSizeOf;
 use metrics::{Attributes, Counter};
-use pin_project::pin_project;
+use pin_project_lite::pin_project;
 use tokio::sync::mpsc;
 
 use crate::config::Output;
@@ -315,11 +315,12 @@ impl Inner {
     }
 }
 
-#[pin_project]
-#[derive(Debug)]
-pub struct ReceiverStream<T> {
-    #[pin]
-    inner: tokio_stream::wrappers::ReceiverStream<T>,
+pin_project! {
+    #[derive(Debug)]
+    pub struct ReceiverStream<T> {
+        #[pin]
+        inner: tokio_stream::wrappers::ReceiverStream<T>,
+    }
 }
 
 impl<T> ReceiverStream<T> {
