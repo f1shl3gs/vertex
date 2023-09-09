@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694251341338,
+  "lastUpdate": 1694251342644,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "a13dfbdb4d23336f320f518d3275dc8c5d4d373d",
-          "message": "chore(deps): bump quote from 1.0.31 to 1.0.32 (#1123)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.31 to 1.0.32.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.31...1.0.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-24T14:16:44+08:00",
-          "tree_id": "41fc718873bd442a94bd86dfbc8e5135f5fdf27a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/a13dfbdb4d23336f320f518d3275dc8c5d4d373d"
-        },
-        "date": 1690179584602,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 89.528,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 185.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 288.01,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 396.99,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "84e77f3d2e0f9ed69a7709abccdcbc8c39fe568f",
+          "message": "replace pin-project with pin-project-lite (#1238)",
+          "timestamp": "2023-09-09T17:19:21+08:00",
+          "tree_id": "90a2f571ff482721d79a4f860bc735357e8d4bc4",
+          "url": "https://github.com/f1shl3gs/vertex/commit/84e77f3d2e0f9ed69a7709abccdcbc8c39fe568f"
+        },
+        "date": 1694251326321,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 85.064,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 202.09,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 338.73,
             "unit": "ns/op"
           }
         ]
