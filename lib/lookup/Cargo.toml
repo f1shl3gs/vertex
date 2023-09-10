@@ -16,5 +16,5 @@ configurable = { path = "../configurable" }
 serde = { version = "1.0.188", default-features = false }
 
 [dev-dependencies]
-serde_json = { version = "1.0.105" }
+serde_json = { version = "1.0.106" }
 criterion = { version = "0.5.1", default-features = false, features = ["html_reports"] }
