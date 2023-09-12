@@ -66,7 +66,10 @@ pub fn get_version() -> String {
 static WORKER_THREADS: OnceLock<usize> = OnceLock::new();
 
 pub fn num_workers() -> usize {
-    *WORKER_THREADS.get_or_init(num_cpus::get)
+    *WORKER_THREADS.get_or_init(|| {
+        let workers = std::thread::available_parallelism().expect("get available threads failed");
+        workers.get()
+    })
 }
 
 pub fn set_workers(n: usize) {
