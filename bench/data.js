@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694522391093,
+  "lastUpdate": 1694522394397,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4d09340fc0c17f32883c8a4ed955431df6f3c5ca",
-          "message": "chore(deps): bump no-proxy from 0.3.2 to 0.3.3 (#1131)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.2 to 0.3.3.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-27T15:44:51+08:00",
-          "tree_id": "8e7e54cf8959b3b4147a06696190e082f79555d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d09340fc0c17f32883c8a4ed955431df6f3c5ca"
-        },
-        "date": 1690444180622,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 33.675,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 31.417,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 31.479,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 55.005,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 69.078,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2dadc21d99a5d1421647551569379ccfbfe62dbe",
           "message": "chore(deps): bump pem from 3.0.0 to 3.0.1 (#1128)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.0 to 3.0.1.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.0...v3.0.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-27T15:45:48+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.58,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed0d8533f44fe2364f1cddb48720681ce798d272",
+          "message": "remove num_cpu (#1244)",
+          "timestamp": "2023-09-12T20:35:25+08:00",
+          "tree_id": "8fabc7ee806e660c254399e3319796c0bd582ba8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed0d8533f44fe2364f1cddb48720681ce798d272"
+        },
+        "date": 1694522377525,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.153,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.509,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.21,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 42.942,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 56.907,
             "unit": "ns/op"
           }
         ]
