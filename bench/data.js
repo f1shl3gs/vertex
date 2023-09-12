@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694522412377,
+  "lastUpdate": 1694523256802,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2b32d69e63c5610ff54a8e78e346be496e95d426",
-          "message": "remove unimplemented component (#1136)",
-          "timestamp": "2023-07-28T21:38:18+08:00",
-          "tree_id": "d95924f5802d4b28c42f36dd924695c31336bf71",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b32d69e63c5610ff54a8e78e346be496e95d426"
-        },
-        "date": 1690552992923,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1326,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44318.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44813.4,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed0d8533f44fe2364f1cddb48720681ce798d272",
+          "message": "remove num_cpu (#1244)",
+          "timestamp": "2023-09-12T20:35:25+08:00",
+          "tree_id": "8fabc7ee806e660c254399e3319796c0bd582ba8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed0d8533f44fe2364f1cddb48720681ce798d272"
+        },
+        "date": 1694523239893,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 991,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44852.9,
             "unit": "KiB"
           }
         ]
