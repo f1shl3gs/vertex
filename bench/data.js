@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694460446205,
+  "lastUpdate": 1694480585866,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "4d09340fc0c17f32883c8a4ed955431df6f3c5ca",
-          "message": "chore(deps): bump no-proxy from 0.3.2 to 0.3.3 (#1131)\n\nBumps [no-proxy](https://github.com/jdrouet/no-proxy) from 0.3.2 to 0.3.3.\r\n- [Commits](https://github.com/jdrouet/no-proxy/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: no-proxy\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-27T15:44:51+08:00",
-          "tree_id": "8e7e54cf8959b3b4147a06696190e082f79555d3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4d09340fc0c17f32883c8a4ed955431df6f3c5ca"
-        },
-        "date": 1690444073663,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 88.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 184.59,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 288.78,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 402.66,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2482b30f99a13be9f9a8af47b5f7012393542cff",
+          "message": "chore(deps): bump socket2 from 0.5.3 to 0.5.4 (#1243)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.3 to 0.5.4.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-12T08:59:31+08:00",
+          "tree_id": "8f63623e62d1b29157d61217234e566db69d1a67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2482b30f99a13be9f9a8af47b5f7012393542cff"
+        },
+        "date": 1694480564691,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 103.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 246.24,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 403.63,
             "unit": "ns/op"
           }
         ]
