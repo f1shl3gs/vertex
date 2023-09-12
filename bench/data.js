@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694480674538,
+  "lastUpdate": 1694481427112,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "6ce17d95c347c1e89be19110532100fe1756a6de",
-          "message": "chore(deps): bump tikv-jemalloc-ctl from 0.5.0 to 0.5.4 (#1132)\n\nBumps [tikv-jemalloc-ctl](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-ctl\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-28T18:42:59+08:00",
-          "tree_id": "599d887482db4ef81a3fd0d4cbaae5c242c03ed8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/6ce17d95c347c1e89be19110532100fe1756a6de"
-        },
-        "date": 1690542220989,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1106,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44295.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44782.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2482b30f99a13be9f9a8af47b5f7012393542cff",
+          "message": "chore(deps): bump socket2 from 0.5.3 to 0.5.4 (#1243)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.3 to 0.5.4.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-12T08:59:31+08:00",
+          "tree_id": "8f63623e62d1b29157d61217234e566db69d1a67",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2482b30f99a13be9f9a8af47b5f7012393542cff"
+        },
+        "date": 1694481409402,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 924,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 44813.4,
             "unit": "KiB"
           }
         ]
