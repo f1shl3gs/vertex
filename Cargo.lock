@@ -1186,7 +1186,6 @@ dependencies = [
  "nix 0.27.1",
  "no-proxy",
  "notify",
- "num_cpus",
  "once_cell",
  "pem",
  "percent-encoding",
