@@ -33,20 +33,15 @@ pub mod built_info {
 
 pub fn get_version() -> String {
     let pkg_version = built_info::PKG_VERSION.to_string();
-    let build_desc = built_info::VERTEX_BUILD_DESC;
-    let build_string = match build_desc {
-        Some(desc) => format!("{} {}", built_info::TARGET, desc),
-        None => built_info::TARGET.to_string(),
-    };
 
     // We do not add 'debug' to the BUILD_DESC unless the caller has
     // flagged on line or full debug symbols. See the Cargo Book profiling
     // section for value meaning:
     // https://doc.rust-lang.org/cargo/reference/profiles.html#debug
     let build_string = match built_info::DEBUG {
-        "1" => format!("{} debug=line", build_string),
-        "2" | "true" => format!("{} debug=full", build_string),
-        _ => build_string,
+        "1" => format!("{} debug=line", built_info::TARGET),
+        "2" | "true" => format!("{} debug=full", built_info::TARGET),
+        _ => built_info::TARGET.to_string(),
     };
 
     format!("{} ({})", pkg_version, build_string)

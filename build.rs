@@ -30,25 +30,8 @@ impl TrackedEnv {
     }
 }
 
-enum ConstantValue {
-    Required(String),
-    Optional(Option<String>),
-}
-
-impl ConstantValue {
-    pub fn as_parts(&self) -> (&'static str, String) {
-        match &self {
-            ConstantValue::Required(value) => ("&str", format!("{:?}", value)),
-            ConstantValue::Optional(value) => match value {
-                Some(value) => ("Option<&str>", format!("{:?}", value)),
-                None => ("Option<&str>", "None".to_string()),
-            },
-        }
-    }
-}
-
 struct BuildConstants {
-    values: Vec<(String, String, ConstantValue)>,
+    values: Vec<(String, String, String)>,
 }
 
 impl BuildConstants {
@@ -57,19 +40,8 @@ impl BuildConstants {
     }
 
     pub fn add_required_constants(&mut self, name: &str, desc: &str, value: String) {
-        self.values.push((
-            name.to_string(),
-            desc.to_string(),
-            ConstantValue::Required(value),
-        ));
-    }
-
-    pub fn add_optional_constants(&mut self, name: &str, desc: &str, value: Option<String>) {
-        self.values.push((
-            name.to_string(),
-            desc.to_string(),
-            ConstantValue::Optional(value),
-        ));
+        self.values
+            .push((name.to_string(), desc.to_string(), value));
     }
 
     pub fn write_to_file(self, file_name: impl AsRef<Path>) -> std::io::Result<()> {
@@ -83,10 +55,9 @@ impl BuildConstants {
         )?;
 
         for (name, desc, value) in self.values {
-            let (typ, value) = value.as_parts();
             let full = format!(
-                "#[doc=r#\"{}\"#]\npub const {}: {} = {};\n",
-                desc, name, typ, value
+                "#[doc=r#\"{}\"#]\npub const {}: &str = {:?};\n",
+                desc, name, value
             );
             output_file.write_all(full.as_ref())?;
         }
@@ -124,7 +95,6 @@ fn main() {
     let debug = tracker
         .get_env_var("DEBUG")
         .expect("Cargo-provided environment variables should always exist");
-    let build_desc = tracker.get_env_var("VERTEX_BUILD_DESC");
 
     // Gather up the constants and write them out to our build constants file.
     let mut constants = BuildConstants::new();
@@ -146,11 +116,6 @@ fn main() {
         arch,
     );
     constants.add_required_constants("DEBUG", "Level of debug info for Vertex", debug);
-    constants.add_optional_constants(
-        "VERTEX_BUILD_DESC",
-        "Special build description, related ot versioned released",
-        build_desc,
-    );
 
     let (rustc_version, rustc_channel) = rustc_info();
     constants.add_required_constants("RUSTC_VERSION", "The rustc version info", rustc_version);
