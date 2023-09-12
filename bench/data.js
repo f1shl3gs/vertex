@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694535452003,
+  "lastUpdate": 1694536463801,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7de5d853fe5dd3d29bbe8a870fbf7705ba871fe6",
-          "message": "chore(deps): bump serde from 1.0.177 to 1.0.179 (#1137)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.177 to 1.0.179.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.177...v1.0.179)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-31T18:15:50+08:00",
-          "tree_id": "dfb48014a28cba3faa18a73419e14e00448609dd",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7de5d853fe5dd3d29bbe8a870fbf7705ba871fe6"
-        },
-        "date": 1690799978092,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1272,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44441.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "daaabc3b63bf38447af9daa446d179da6f3ff57d",
           "message": "chore(deps): bump syslog_loose from 0.18.0 to 0.19.0 (#1139)\n\n* chore(deps): bump syslog_loose from 0.18.0 to 0.19.0\r\n\r\nBumps [syslog_loose](https://github.com/FungusHumungus/syslog-loose) from 0.18.0 to 0.19.0.\r\n- [Commits](https://github.com/FungusHumungus/syslog-loose/compare/v0.18.0...V0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syslog_loose\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update syslog_loose to 0.19.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-08-01T08:01:52+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 44852.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "21cb257cdb03ade75dd75851dfc89d5d16f2652f",
+          "message": "add 'default-features = false' to tracing-subscriber (#1246)",
+          "timestamp": "2023-09-13T00:12:25+08:00",
+          "tree_id": "2ff4410cedc4bb3883526dda12797fae577bf960",
+          "url": "https://github.com/f1shl3gs/vertex/commit/21cb257cdb03ade75dd75851dfc89d5d16f2652f"
+        },
+        "date": 1694536444541,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1162,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42583.1,
             "unit": "KiB"
           }
         ]
