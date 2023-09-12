@@ -9,10 +9,11 @@ use configurable::component::{
     TransformDescription,
 };
 use exitcode::ExitCode;
-use framework::{config, get_version, signal, topology, SignalTo};
+use framework::{config, signal, topology, SignalTo};
 use tokio_stream::wrappers::UnboundedReceiverStream;
 use tokio_stream::StreamExt;
 use tracing::{error, info, warn};
+use vertex::built_info::{GIT_HASH, PKG_VERSION, RUSTC_VERSION, TARGET};
 #[cfg(feature = "extensions-healthcheck")]
 use vertex::extensions::healthcheck;
 #[cfg(feature = "extensions-heartbeat")]
@@ -73,7 +74,9 @@ pub struct RootCommand {
 impl RootCommand {
     #![allow(clippy::print_stdout)]
     fn show_version(&self) {
-        println!("vertex {}", get_version());
+        println!("Vertex {} -- {}", PKG_VERSION, GIT_HASH);
+        println!("Target {}", TARGET);
+        println!("rustc  {}", RUSTC_VERSION);
     }
 
     fn config_paths_with_formats(&self) -> Vec<config::ConfigPath> {
