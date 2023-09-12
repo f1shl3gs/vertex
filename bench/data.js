@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694523256802,
+  "lastUpdate": 1694523999783,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e4fc7e90ea53c9a322cf6955548b4685b88615f5",
-          "message": "chore(deps): bump pem from 2.0.1 to 3.0.0 (#1127)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 2.0.1 to 3.0.0.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v2.0.1...v3.0.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-26T17:12:55+08:00",
-          "tree_id": "7865ad38472c33f724267d38b2fde54fbee215be",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e4fc7e90ea53c9a322cf6955548b4685b88615f5"
-        },
-        "date": 1690364096503,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45613000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1093000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.273,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1cbc81e42c5a06b8a11df70d0517a479e5e087c6",
           "message": "chore(deps): bump serde from 1.0.175 to 1.0.176 (#1130)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.175 to 1.0.176.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.175...v1.0.176)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-27T15:45:19+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.131,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ed0d8533f44fe2364f1cddb48720681ce798d272",
+          "message": "remove num_cpu (#1244)",
+          "timestamp": "2023-09-12T20:35:25+08:00",
+          "tree_id": "8fabc7ee806e660c254399e3319796c0bd582ba8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ed0d8533f44fe2364f1cddb48720681ce798d272"
+        },
+        "date": 1694523977047,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 44232000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1387000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 25.181,
             "unit": "ns/op"
           }
         ]
