@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694608554657,
+  "lastUpdate": 1694608558675,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d",
-          "message": "chore(deps): bump tikv-jemallocator from 0.5.0 to 0.5.4 (#1135)\n\nBumps [tikv-jemallocator](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemallocator\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-28T18:18:19+08:00",
-          "tree_id": "c0b640ed68aa8163ff767d8b19b35732c83894ec",
-          "url": "https://github.com/f1shl3gs/vertex/commit/db6e9a1fb447f3909a2f9c94f1f3fb0098485c4d"
-        },
-        "date": 1690539753669,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.5,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.332,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.91,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 40.735,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.323,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a231aa8a1e9fdbd5762d95613975744703e40b7",
           "message": "chore(deps): bump tikv-jemalloc-sys (#1134)\n\nBumps [tikv-jemalloc-sys](https://github.com/tikv/jemallocator) from 0.5.3+5.3.0-patched to 0.5.4+5.3.0-patched.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/tikv-jemalloc-sys-0.5.3...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-28T18:18:37+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 62.085,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b4b4921bc4ed5407c6a8a846e78decfae9107d46",
+          "message": "chore(deps): bump libc from 0.2.147 to 0.2.148 (#1249)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.147 to 0.2.148.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.147...0.2.148)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-13T20:31:45+08:00",
+          "tree_id": "5870df083c595796feff80e0c6042937902b9e74",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b4b4921bc4ed5407c6a8a846e78decfae9107d46"
+        },
+        "date": 1694608540878,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.606,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.489,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.815,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.177,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 50.868,
             "unit": "ns/op"
           }
         ]
