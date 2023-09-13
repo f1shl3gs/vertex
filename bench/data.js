@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694632999417,
+  "lastUpdate": 1694633002556,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f0fa01a3c2b0ea7041cc1d47aa479d1de8fa626c",
-          "message": "chore(deps): bump serde from 1.0.176 to 1.0.177 (#1133)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.176 to 1.0.177.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.176...v1.0.177)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-28T18:18:54+08:00",
-          "tree_id": "f8053c873da71ea209c50a016f3c2c9d09b2d283",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f0fa01a3c2b0ea7041cc1d47aa479d1de8fa626c"
-        },
-        "date": 1690539782618,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.559,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.216,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.738,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 45.067,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.477,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "6ce17d95c347c1e89be19110532100fe1756a6de",
           "message": "chore(deps): bump tikv-jemalloc-ctl from 0.5.0 to 0.5.4 (#1132)\n\nBumps [tikv-jemalloc-ctl](https://github.com/tikv/jemallocator) from 0.5.0 to 0.5.4.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/0.5.0...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-ctl\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-28T18:42:59+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.831,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ab2efbbcafc7a01e16642930a92b37a76ca32731",
+          "message": "chore(deps): bump proc-macro2 from 1.0.66 to 1.0.67 (#1251)\n\nBumps [proc-macro2](https://github.com/dtolnay/proc-macro2) from 1.0.66 to 1.0.67.\r\n- [Release notes](https://github.com/dtolnay/proc-macro2/releases)\r\n- [Commits](https://github.com/dtolnay/proc-macro2/compare/1.0.66...1.0.67)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: proc-macro2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-14T03:19:04+08:00",
+          "tree_id": "e6b30b784d05b7e7238efa3a89bd32a663ae2e6b",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ab2efbbcafc7a01e16642930a92b37a76ca32731"
+        },
+        "date": 1694632983955,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.147,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.958,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.768,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.825,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.446,
             "unit": "ns/op"
           }
         ]
