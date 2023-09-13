@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694623450130,
+  "lastUpdate": 1694623461119,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8a231aa8a1e9fdbd5762d95613975744703e40b7",
-          "message": "chore(deps): bump tikv-jemalloc-sys (#1134)\n\nBumps [tikv-jemalloc-sys](https://github.com/tikv/jemallocator) from 0.5.3+5.3.0-patched to 0.5.4+5.3.0-patched.\r\n- [Release notes](https://github.com/tikv/jemallocator/releases)\r\n- [Changelog](https://github.com/tikv/jemallocator/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/jemallocator/compare/tikv-jemalloc-sys-0.5.3...0.5.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tikv-jemalloc-sys\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-07-28T18:18:37+08:00",
-          "tree_id": "30ed253d1e76d279b2e8e5873fadcfc1948aa45a",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a231aa8a1e9fdbd5762d95613975744703e40b7"
-        },
-        "date": 1690539772064,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.061,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.271,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.576,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 45.748,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 55.928,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "f0fa01a3c2b0ea7041cc1d47aa479d1de8fa626c",
           "message": "chore(deps): bump serde from 1.0.176 to 1.0.177 (#1133)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.176 to 1.0.177.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.176...v1.0.177)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-07-28T18:18:54+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.868,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f89502aa898ef06d1f268235fd502f09c30a7a3e",
+          "message": "fix vertex version (#1250)",
+          "timestamp": "2023-09-14T00:39:51+08:00",
+          "tree_id": "9c9fe0b15b85f28e20f8ff0b1b9963ad8eb79875",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f89502aa898ef06d1f268235fd502f09c30a7a3e"
+        },
+        "date": 1694623444033,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.345,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.14,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.636,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.915,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 54.831,
             "unit": "ns/op"
           }
         ]
