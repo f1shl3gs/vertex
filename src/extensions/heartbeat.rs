@@ -50,7 +50,7 @@ impl ExtensionConfig for Config {
         status.uuid = get_uuid();
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
         status.hostname = framework::hostname().unwrap();
-        status.version = framework::get_version();
+        status.version = crate::get_version();
         status.lease = humanize::duration::duration(&(self.interval + Duration::from_secs(15)));
         status.os = sysinfo::os().unwrap_or_default();
         status.address = get_advertise_addr()?;
