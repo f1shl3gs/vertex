@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694623461119,
+  "lastUpdate": 1694624299601,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "4af7ece4cf0dbbc8622b35570dd3a73012ed2f40",
-          "message": "chore(ci): bump arduino/setup-protoc from 1 to 2 (#1142)\n\nBumps [arduino/setup-protoc](https://github.com/arduino/setup-protoc) from 1 to 2.\r\n- [Release notes](https://github.com/arduino/setup-protoc/releases)\r\n- [Commits](https://github.com/arduino/setup-protoc/compare/v1...v2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: arduino/setup-protoc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-02T10:23:54+08:00",
-          "tree_id": "73a73ee79b4aef57b88785fc8ae5807191e0ec86",
-          "url": "https://github.com/f1shl3gs/vertex/commit/4af7ece4cf0dbbc8622b35570dd3a73012ed2f40"
-        },
-        "date": 1690944623102,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1425,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44429,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "441f40a4c30df5a4756219535af76004755a5532",
           "message": "chore(deps): bump rustls from 0.21.5 to 0.21.6 (#1144)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.5 to 0.21.6.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.5...v/0.21.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-03T13:16:25+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42592.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f89502aa898ef06d1f268235fd502f09c30a7a3e",
+          "message": "fix vertex version (#1250)",
+          "timestamp": "2023-09-14T00:39:51+08:00",
+          "tree_id": "9c9fe0b15b85f28e20f8ff0b1b9963ad8eb79875",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f89502aa898ef06d1f268235fd502f09c30a7a3e"
+        },
+        "date": 1694624282704,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 960,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42592.6,
             "unit": "KiB"
           }
         ]
