@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694536721671,
+  "lastUpdate": 1694607353590,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "daaabc3b63bf38447af9daa446d179da6f3ff57d",
-          "message": "chore(deps): bump syslog_loose from 0.18.0 to 0.19.0 (#1139)\n\n* chore(deps): bump syslog_loose from 0.18.0 to 0.19.0\r\n\r\nBumps [syslog_loose](https://github.com/FungusHumungus/syslog-loose) from 0.18.0 to 0.19.0.\r\n- [Commits](https://github.com/FungusHumungus/syslog-loose/compare/v0.18.0...V0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syslog_loose\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update syslog_loose to 0.19.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-01T08:01:52+08:00",
-          "tree_id": "fa688e093bdd309d8299b602376446355b54bcc1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/daaabc3b63bf38447af9daa446d179da6f3ff57d"
-        },
-        "date": 1690849594899,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1304,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44429.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a8111b3c6976dcbd104cb25c9e656c277ff5084",
           "message": "chore(deps): bump serde from 1.0.179 to 1.0.180 (#1140)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.179 to 1.0.180.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.179...v1.0.180)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-01T13:14:50+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1162,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42583.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0bc36a6dbf3994b7ced0d1f6e2f58d63d934579a",
+          "message": "chore(ci): bump docker/login-action from 2 to 3 (#1248)\n\nBumps [docker/login-action](https://github.com/docker/login-action) from 2 to 3.\r\n- [Release notes](https://github.com/docker/login-action/releases)\r\n- [Commits](https://github.com/docker/login-action/compare/v2...v3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/login-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-13T19:57:01+08:00",
+          "tree_id": "b27935241a9b5674f108b0e22fd411a5b098e027",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0bc36a6dbf3994b7ced0d1f6e2f58d63d934579a"
+        },
+        "date": 1694607332309,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 980,
             "unit": "s"
           },
           {
