@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694607353590,
+  "lastUpdate": 1694607554695,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8a8111b3c6976dcbd104cb25c9e656c277ff5084",
-          "message": "chore(deps): bump serde from 1.0.179 to 1.0.180 (#1140)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.179 to 1.0.180.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.179...v1.0.180)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-01T13:14:50+08:00",
-          "tree_id": "9f24ed35e02e9edc8354ab375ac563939d3a8271",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8a8111b3c6976dcbd104cb25c9e656c277ff5084"
-        },
-        "date": 1690868150250,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1124,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44429,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 980,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42583.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ee231fcb58bbd84225b54ebc7a500d698bdf282c",
+          "message": "chore(ci): bump docker/build-push-action from 4 to 5 (#1247)\n\nBumps [docker/build-push-action](https://github.com/docker/build-push-action) from 4 to 5.\r\n- [Release notes](https://github.com/docker/build-push-action/releases)\r\n- [Commits](https://github.com/docker/build-push-action/compare/v4...v5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/build-push-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-13T19:57:10+08:00",
+          "tree_id": "4a37d84dfcd3c9afc6b465b7edc96a68c0268d18",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ee231fcb58bbd84225b54ebc7a500d698bdf282c"
+        },
+        "date": 1694607532380,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1159,
             "unit": "s"
           },
           {
