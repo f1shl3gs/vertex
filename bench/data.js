@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694683309277,
+  "lastUpdate": 1694683548466,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c64bc765c9b55061b5efe85d7a17c9900ff70b72",
-          "message": "chore(deps): bump tempfile from 3.7.0 to 3.7.1 (#1147)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.0 to 3.7.1.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.0...v3.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-07T18:49:27+08:00",
-          "tree_id": "e5c9d4f8200c9c6536efe86e82645506556460c6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c64bc765c9b55061b5efe85d7a17c9900ff70b72"
-        },
-        "date": 1691406576490,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1080,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44431.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eabf3d97250cf2de0d401f62bb1a104cd6693f0d",
           "message": "chore(deps): bump pin-project from 1.1.2 to 1.1.3 (#1150)\n\nBumps [pin-project](https://github.com/taiki-e/pin-project) from 1.1.2 to 1.1.3.\r\n- [Release notes](https://github.com/taiki-e/pin-project/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project/compare/v1.1.2...v1.1.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-07T18:49:45+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42573.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1f198a93332ea8bb7f94c44581242d0c8efc3ac1",
+          "message": "Cleanup deps (#1254)\n\n* add `default-features = false` to serde_json\r\n\r\n* remove syslog_loose",
+          "timestamp": "2023-09-14T17:01:34+08:00",
+          "tree_id": "c45cd769aa467910b85a1989817b68b69a2798ef",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1f198a93332ea8bb7f94c44581242d0c8efc3ac1"
+        },
+        "date": 1694683524737,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1263,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42590.6,
             "unit": "KiB"
           }
         ]
