@@ -3156,9 +3156,11 @@ dependencies = [
  "parking_lot",
  "pin-project-lite",
  "rand",
+ "rustls",
  "snap",
  "thiserror",
  "tokio",
+ "tokio-rustls",
  "tracing",
  "zstd",
 ]
