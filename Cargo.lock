@@ -1205,7 +1205,6 @@ dependencies = [
  "smallvec",
  "snap",
  "socket2 0.5.4",
- "syslog_loose",
  "tempfile",
  "testify",
  "thiserror",
