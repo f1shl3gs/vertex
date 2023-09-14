@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694700040812,
+  "lastUpdate": 1694704921731,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "daaabc3b63bf38447af9daa446d179da6f3ff57d",
-          "message": "chore(deps): bump syslog_loose from 0.18.0 to 0.19.0 (#1139)\n\n* chore(deps): bump syslog_loose from 0.18.0 to 0.19.0\r\n\r\nBumps [syslog_loose](https://github.com/FungusHumungus/syslog-loose) from 0.18.0 to 0.19.0.\r\n- [Commits](https://github.com/FungusHumungus/syslog-loose/compare/v0.18.0...V0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syslog_loose\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update syslog_loose to 0.19.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-01T08:01:52+08:00",
-          "tree_id": "fa688e093bdd309d8299b602376446355b54bcc1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/daaabc3b63bf38447af9daa446d179da6f3ff57d"
-        },
-        "date": 1690848311194,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 691660,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 910190,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6ecb380b2027880eb8f8f70ce99b35fd6c9eed9b",
+          "message": "chore(deps): bump mimalloc from 0.1.38 to 0.1.39 (#1256)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.38 to 0.1.39.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.38...v0.1.39)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-14T23:18:58+08:00",
+          "tree_id": "0cadcf9db4feee640a281060c06a8255b30615f0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6ecb380b2027880eb8f8f70ce99b35fd6c9eed9b"
+        },
+        "date": 1694704905685,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 667800,
             "unit": "ns/op"
           }
         ]
