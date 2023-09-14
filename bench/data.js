@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694700001478,
+  "lastUpdate": 1694700040812,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21516,45 +21516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2b32d69e63c5610ff54a8e78e346be496e95d426",
-          "message": "remove unimplemented component (#1136)",
-          "timestamp": "2023-07-28T21:38:18+08:00",
-          "tree_id": "d95924f5802d4b28c42f36dd924695c31336bf71",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2b32d69e63c5610ff54a8e78e346be496e95d426"
-        },
-        "date": 1690552767044,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27444000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1084200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.617,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.745,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "717e1926d9ef49a120c0b7f36055de342ba1935d",
+          "message": "add `transport-tls` to rskafka (#1255)",
+          "timestamp": "2023-09-14T21:40:45+08:00",
+          "tree_id": "98cb5cf5c994c346a07a1f33476f729bd7e92bb9",
+          "url": "https://github.com/f1shl3gs/vertex/commit/717e1926d9ef49a120c0b7f36055de342ba1935d"
+        },
+        "date": 1694700017079,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 23824000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1093700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.628,
             "unit": "ns/op"
           }
         ]
