@@ -4,7 +4,7 @@
 use std::io::{self, Read};
 use std::time;
 
-use chrono::{TimeZone, Utc};
+use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{fields, LogRecord};
 use framework::{
@@ -55,7 +55,7 @@ impl SourceConfig for Config {
 
                         if let Ok((priority, seq, ts, msg)) = parse_line(&buf, n) {
                             let nano_seconds = boot + ts * 1000;
-                                let timestamp = Utc.timestamp_opt((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32).unwrap();
+                                let timestamp = DateTime::<Utc>::from_timestamp((nano_seconds / (1000 * 1000 * 1000)) as i64, (nano_seconds % (1000 * 1000 * 1000)) as u32).unwrap();
                                 let timestamp_key = log_schema::log_schema().timestamp_key();
                                 let record = LogRecord::from(fields!(
                                         "priority" => priority,

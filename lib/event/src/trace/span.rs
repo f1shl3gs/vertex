@@ -368,8 +368,14 @@ impl Span {
     ///
     /// Events should preserve the order in which they're set. This will typically
     /// match the ordering of the events' timestamp.
+    ///
+    /// # Panics
+    ///
+    /// Get timestamp nanos failed
     pub fn add_event(&mut self, name: impl Into<Cow<'static, str>>, attributes: Vec<KeyValue>) {
-        let timestamp = Utc::now().timestamp_nanos();
+        let timestamp = Utc::now()
+            .timestamp_nanos_opt()
+            .expect("timestamp can not be represented in a timestamp with nanosecond precision.");
 
         self.events.push_back(Event {
             name: name.into(),

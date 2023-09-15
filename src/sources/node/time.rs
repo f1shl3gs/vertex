@@ -1,15 +1,16 @@
-use super::Error;
-use event::{tags, Metric};
 use std::ffi::CStr;
+
+use event::{tags, Metric};
+
+use super::Error;
 
 /// Exposes the current system time
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let local_now = chrono::Local::now();
     let offset = local_now.offset().local_minus_utc() as f64;
+    let now_sec = local_now.timestamp_nanos_opt().unwrap() as f64 / 1e9;
 
-    let now_sec = local_now.timestamp_nanos() as f64 / 1e9;
-
-    // TODO: we should and possiblily get TZ with chrono, cause
+    // TODO: we should and possibly get TZ with chrono, cause
     // the offset is already got
     let tz = libc_timezone();
 
