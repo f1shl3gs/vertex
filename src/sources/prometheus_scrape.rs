@@ -3,7 +3,7 @@ use std::hash::{Hash, Hasher};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Metric, Quantile, EXPORTED_INSTANCE_KEY, INSTANCE_KEY};
 use framework::config::{default_interval, DataType, Output, SourceConfig, SourceContext};
@@ -117,7 +117,9 @@ fn scrape(
                 let client = client.clone();
                 let mut shutdown = shutdown.clone();
                 let mut output = output.clone();
-                let now = chrono::Utc::now().timestamp_nanos();
+                let now = Utc::now().timestamp_nanos_opt().expect(
+                    "timestamp can not be represented in a timestamp with nanosecond precision.",
+                );
                 let mut ticker = tokio::time::interval_at(
                     tokio::time::Instant::now() + offset(&url, now, interval, jitter_seed),
                     interval,
@@ -316,9 +318,9 @@ fn convert_metrics(groups: Vec<MetricGroup>) -> Vec<Metric> {
 fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
     match timestamp {
         None => Some(default),
-        Some(timestamp) => Utc
-            .timestamp_opt(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
-            .latest(),
+        Some(timestamp) => {
+            DateTime::<Utc>::from_timestamp(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
+        }
     }
 }
 
@@ -336,7 +338,7 @@ mod tests {
     #[test]
     fn spread_offset() {
         let n = 1000;
-        let now = chrono::Utc::now().timestamp_nanos();
+        let now = chrono::Utc::now().timestamp_nanos_opt().unwrap();
         let interval = default_interval();
 
         for _i in 0..n {
@@ -352,7 +354,7 @@ mod tests {
         let t2 = String::from("boo");
         let t3 = String::from("far");
 
-        let now = chrono::Utc::now().timestamp_nanos();
+        let now = chrono::Utc::now().timestamp_nanos_opt().unwrap();
         let interval = default_interval();
 
         let o1 = offset(&t1, now, interval, 0);

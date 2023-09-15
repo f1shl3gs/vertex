@@ -1,5 +1,5 @@
 use chrono::format::{parse, Parsed, StrftimeItems};
-use chrono::{DateTime, Local, ParseError, TimeZone as _, Utc};
+use chrono::{DateTime, Local, ParseError, Utc};
 use chrono_tz::Tz;
 use configurable::schema::{
     generate_const_string_schema, generate_one_of_schema, get_or_generate_schema, SchemaGenerator,
@@ -47,7 +47,8 @@ impl TimeZone {
 
 /// Convert a timestamp with a non-UTC time zone into UTC
 pub fn datetime_to_utc<TZ: chrono::TimeZone>(ts: &DateTime<TZ>) -> DateTime<Utc> {
-    Utc.timestamp_nanos(ts.timestamp_nanos())
+    DateTime::<Utc>::from_timestamp(ts.timestamp(), ts.timestamp_subsec_nanos())
+        .expect("convert to utc timestamp failed")
 }
 
 impl Configurable for TimeZone {

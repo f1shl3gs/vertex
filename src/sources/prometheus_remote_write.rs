@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::net::SocketAddr;
 
 use bytes::Bytes;
-use chrono::{DateTime, TimeZone, Utc};
+use chrono::{DateTime, Utc};
 use configurable::configurable_component;
 use event::{Bucket, Event, Metric, Quantile};
 use framework::config::{DataType, Output, Resource, SourceConfig, SourceContext};
@@ -15,7 +15,6 @@ use prost::Message;
 
 /// Start a HTTP server and receive Protobuf encoded metrics.
 #[configurable_component(source, name = "prometheus_remote_write")]
-#[derive(Clone)]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The address to accept connections on. The address must include a port
@@ -105,9 +104,9 @@ impl HttpSource for RemoteWriteSource {
 fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateTime<Utc>> {
     match timestamp {
         None => Some(default),
-        Some(timestamp) => Utc
-            .timestamp_opt(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
-            .latest(),
+        Some(timestamp) => {
+            DateTime::<Utc>::from_timestamp(timestamp / 1000, (timestamp % 1000) as u32 * 1000000)
+        }
     }
 }
 
