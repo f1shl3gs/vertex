@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694855199607,
+  "lastUpdate": 1694855497744,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "daaabc3b63bf38447af9daa446d179da6f3ff57d",
-          "message": "chore(deps): bump syslog_loose from 0.18.0 to 0.19.0 (#1139)\n\n* chore(deps): bump syslog_loose from 0.18.0 to 0.19.0\r\n\r\nBumps [syslog_loose](https://github.com/FungusHumungus/syslog-loose) from 0.18.0 to 0.19.0.\r\n- [Commits](https://github.com/FungusHumungus/syslog-loose/compare/v0.18.0...V0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syslog_loose\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* update syslog_loose to 0.19.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-01T08:01:52+08:00",
-          "tree_id": "fa688e093bdd309d8299b602376446355b54bcc1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/daaabc3b63bf38447af9daa446d179da6f3ff57d"
-        },
-        "date": 1690849400741,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 27501000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1108900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.689,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8a8111b3c6976dcbd104cb25c9e656c277ff5084",
           "message": "chore(deps): bump serde from 1.0.179 to 1.0.180 (#1140)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.179 to 1.0.180.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.179...v1.0.180)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-01T13:14:50+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.629,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea",
+          "message": "chore(deps): bump the prost group with 3 updates (#1258)\n\nBumps the prost group with 3 updates: [prost](https://github.com/tokio-rs/prost), [prost-types](https://github.com/tokio-rs/prost) and [prost-build](https://github.com/tokio-rs/prost).\r\n\r\n\r\nUpdates `prost` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-types` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\nUpdates `prost-build` from 0.12.0 to 0.12.1\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.12.0...v0.12.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-types\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n  dependency-group: prost\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-16T16:48:42+08:00",
+          "tree_id": "22f12223886cc8b26d9c7ee5c2b2de7effbc892a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/22a5318d6d77c6b7ca5aabc1b600326b9e59e2ea"
+        },
+        "date": 1694855480107,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 43192000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1084700,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.962,
             "unit": "ns/op"
           }
         ]
