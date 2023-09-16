@@ -1,7 +1,7 @@
-use crate::protocol::Pool;
 use std::io::{Read, Write};
 
 use super::{impl_procedure, unpack_flex, Pack, Result, Unpack};
+use crate::protocol::Pool;
 
 pub const REMOTE_STORAGE_POOL_LIST_MAX: usize = 4096;
 

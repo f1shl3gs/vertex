@@ -1,9 +1,7 @@
 use std::io::{Read, Write};
 
-use super::constants::REMOTE_PROC_DOMAIN_GET_VCPUS;
 use super::{
     impl_procedure, unpack_flex, unpack_opaque_flex, Domain, Pack, ReadExt, Result, Unpack,
-    WriteExt,
 };
 
 pub const REMOTE_VCPUINFO_MAX: usize = 16384;

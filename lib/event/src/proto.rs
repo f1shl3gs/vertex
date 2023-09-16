@@ -2,11 +2,12 @@
 mod proto_event {
     include!(concat!(env!("OUT_DIR"), "/event.rs"));
 }
-pub use proto_event::*;
 
-use chrono::TimeZone;
 use std::borrow::Cow;
 use std::collections::BTreeMap;
+
+use chrono::TimeZone;
+pub use proto_event::*;
 use tracing::error;
 
 use crate::metadata::WithMetadata;

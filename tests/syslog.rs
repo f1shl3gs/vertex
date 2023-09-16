@@ -18,8 +18,7 @@ use vertex::sinks::socket;
 use vertex::sinks::socket::Config;
 use vertex::sources::syslog::{default_max_length, Config as SyslogConfig, Mode};
 
-use crate::util::trace_init;
-use util::start_topology;
+use crate::util::{start_topology, trace_init};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[allow(non_camel_case_types, clippy::upper_case_acronyms)]

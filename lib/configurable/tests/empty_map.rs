@@ -1,8 +1,9 @@
+use std::collections::BTreeMap;
+
 use configurable::example::Visitor;
 use configurable::schema::generate_root_schema;
 use configurable_derive::Configurable;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
 
 #[allow(clippy::print_stdout)]
 #[test]

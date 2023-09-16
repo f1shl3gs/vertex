@@ -1,6 +1,5 @@
 use std::io::{Read, Write};
 
-use crate::protocol::constants::REMOTE_PROC_CONNECT_OPEN;
 use crate::protocol::{
     impl_procedure, pack_string, Pack, Result, Unpack, WriteExt, VIR_NET_MESSAGE_STRING_MAX,
 };

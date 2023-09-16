@@ -1,6 +1,6 @@
-use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use std::{iter, slice, vec};
 
+use finalize::{AddBatchNotifier, BatchNotifier, EventFinalizer, EventFinalizers, Finalizable};
 use measurable::ByteSizeOf;
 
 use crate::{

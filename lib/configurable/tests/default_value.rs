@@ -1,11 +1,12 @@
 #![allow(clippy::print_stdout)]
 
+use std::fmt::Formatter;
+
 use configurable::example::Visitor;
 use configurable::schema::generate_root_schema;
 use configurable_derive::Configurable;
 use serde::de::Unexpected;
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::fmt::Formatter;
 
 /// Concurrency struct doc
 #[derive(Configurable, Default)]

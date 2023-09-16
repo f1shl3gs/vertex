@@ -50,7 +50,7 @@ impl SourceConfig for Config {
                     spans,
                 );
 
-                trace.insert_tag("hostanme", hostname.clone());
+                trace.insert_tag("hostname", hostname.clone());
                 trace.insert_tag("version", version.clone());
 
                 if let Err(err) = output.send(trace).await {

@@ -30,6 +30,11 @@ pub mod trigger;
 pub mod udp;
 mod utilization;
 
+#[macro_use]
+extern crate tracing;
+
+use std::sync::OnceLock;
+
 pub use common::*;
 pub use extension::Extension;
 pub use pipeline::Pipeline;
@@ -41,11 +46,6 @@ pub(crate) use transform::TransformOutputs;
 pub use transform::{
     FunctionTransform, OutputBuffer, SyncTransform, TaskTransform, Transform, TransformOutputsBuf,
 };
-
-#[macro_use]
-extern crate tracing;
-
-use std::sync::OnceLock;
 
 /// Vertex's basic error type, dynamically dispatched and safe to send across threads
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
