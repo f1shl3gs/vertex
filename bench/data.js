@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694860616787,
+  "lastUpdate": 1694861420784,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "021dae89861b83cb417fb748aaa8f890007b44c9",
-          "message": "chore(deps): bump argh from 0.1.10 to 0.1.11 (#1154)\n\nBumps [argh](https://github.com/google/argh) from 0.1.10 to 0.1.11.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-08T19:03:57+08:00",
-          "tree_id": "bfad1ad1ac479ca971e478e8979bf745f9b4f934",
-          "url": "https://github.com/f1shl3gs/vertex/commit/021dae89861b83cb417fb748aaa8f890007b44c9"
-        },
-        "date": 1691493851441,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1083,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44458,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
           "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-09T19:02:10+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42613.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6f9803719feee876fb44527b35fe1357b20f8bd2",
+          "message": "chore(deps): bump syn from 2.0.34 to 2.0.35 (#1260)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.34 to 2.0.35.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.34...2.0.35)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-16T18:31:40+08:00",
+          "tree_id": "f981b7e5614cdd9d7eee3769c5900f49c40e1364",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6f9803719feee876fb44527b35fe1357b20f8bd2"
+        },
+        "date": 1694861403698,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 974,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42624.6,
             "unit": "KiB"
           }
         ]
