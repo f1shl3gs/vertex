@@ -385,7 +385,7 @@ prost-types = { version = "0.12.1", default-features = false }
 # Profile
 pprof = { version = "0.12.1", default-features = false, optional = true, features = ["flamegraph", "prost-codec"] }
 # pin inferno, so rustc will not warning us for inferno using older quick-xml.
-inferno = { version = "0.11.16", default-features = false, features = ["nameattr"], optional = true }
+inferno = { version = "0.11.17", default-features = false, features = ["nameattr"], optional = true }
 
 # Cli
 argh = { version = "0.1.12" }
