@@ -1,8 +1,7 @@
-use crate::protocol::Params;
 use std::io::{Read, Write};
 
-use super::constants::REMOTE_PROC_DOMAIN_GET_BLOCK_IO_TUNE;
 use super::{impl_procedure, unpack_flex, Domain, Pack, RemoteTypedParam, Result, Unpack};
+use crate::protocol::Params;
 
 pub const REMOTE_DOMAIN_BLOCK_IO_TUNE_PARAMETERS_MAX: usize = 32;
 

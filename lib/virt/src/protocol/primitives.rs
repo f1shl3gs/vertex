@@ -1,5 +1,4 @@
 use std::borrow::{Borrow, Cow};
-use std::convert;
 use std::io::{self, Read, Write};
 use std::ops::Deref;
 
@@ -413,9 +412,9 @@ impl<W: Write> Pack<W> for String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::protocol::assert_pack;
     use std::io::Cursor;
+
+    use super::*;
 
     #[test]
     fn string() {

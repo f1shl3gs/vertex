@@ -14,11 +14,10 @@ use crate::protocol::{
     DomainMemoryStatsResponse, DomainStatsRecord, GetAllDomainStatsRequest,
     GetAllDomainStatsResponse, GetDomainBlockIoTuneRequest, GetDomainBlockIoTuneResponse,
     GetDomainInfoRequest, GetDomainInfoResponse, GetDomainVcpusRequest, GetDomainVcpusResponse,
-    GetLibVersionRequest, GetStoragePoolInfoRequest, GetStoragePoolInfoResponse, GetVersionRequest,
-    GetVersionResponse, MemoryStats, OpenRequest, OpenResponse, Procedure, VcpuInfo,
-};
-use crate::protocol::{
-    GetLibVersionResponse, MessageError as ProtocolError, MessageHeader, Pack, Unpack,
+    GetLibVersionRequest, GetLibVersionResponse, GetStoragePoolInfoRequest,
+    GetStoragePoolInfoResponse, GetVersionRequest, GetVersionResponse, MemoryStats,
+    MessageError as ProtocolError, MessageHeader, OpenRequest, OpenResponse, Pack, Procedure,
+    Unpack, VcpuInfo,
 };
 
 #[derive(Debug)]

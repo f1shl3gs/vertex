@@ -1,6 +1,8 @@
-use crate::provider::Provider;
-use glob::Pattern;
 use std::path::PathBuf;
+
+use glob::Pattern;
+
+use crate::provider::Provider;
 
 /// A glob-based path provider
 ///

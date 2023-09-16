@@ -1,7 +1,7 @@
 use std::io::Write;
 
 use super::impl_procedure;
-use super::{Pack, ReadExt, Result, Unpack, REMOTE_PROC_CONNECT_GET_VERSION};
+use super::{Pack, ReadExt, Result, Unpack};
 
 pub struct GetLibVersionRequest {}
 

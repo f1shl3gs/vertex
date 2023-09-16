@@ -1,7 +1,6 @@
 use std::io::{Read, Write};
 
-use super::constants::REMOTE_PROC_DOMAIN_MEMORY_STATS;
-use super::{impl_procedure, unpack_flex, Domain, Pack, ReadExt, Result, Unpack, WriteExt};
+use super::{impl_procedure, unpack_flex, Domain, Pack, ReadExt, Result, Unpack};
 
 pub struct DomainMemoryStatsRequest<'a> {
     pub domain: &'a Domain,

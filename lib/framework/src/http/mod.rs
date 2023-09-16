@@ -347,13 +347,15 @@ impl Auth {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::tls::MaybeTlsListener;
+    use std::convert::Infallible;
+    use std::time::Duration;
+
     use http::{Method, Response};
     use hyper::service::{make_service_fn, service_fn};
     use hyper::Server;
-    use std::convert::Infallible;
-    use std::time::Duration;
+
+    use super::*;
+    use crate::tls::MaybeTlsListener;
 
     #[test]
     fn test_default_request_headers_defaults() {

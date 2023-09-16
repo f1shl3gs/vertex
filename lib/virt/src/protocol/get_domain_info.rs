@@ -1,6 +1,5 @@
 use std::io::{Read, Write};
 
-use super::constants::REMOTE_PROC_DOMAIN_GET_INFO;
 use super::{impl_procedure, Domain, Pack, ReadExt, Result, Unpack};
 
 pub struct GetDomainInfoRequest<'a> {

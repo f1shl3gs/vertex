@@ -1,6 +1,5 @@
 use std::io::{Read, Write};
 
-use super::constants::REMOTE_PROC_CONNECT_GET_VERSION;
 use super::{impl_procedure, version_num_to_string, Pack, ReadExt, Result, Unpack};
 
 pub struct GetVersionRequest {}

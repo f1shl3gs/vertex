@@ -1,5 +1,6 @@
-use assert_cmd::Command;
 use std::process::ExitStatus;
+
+use assert_cmd::Command;
 
 fn run_command(args: Vec<&str>) -> (Vec<u8>, ExitStatus) {
     let mut cmd = Command::cargo_bin("vertex").unwrap();

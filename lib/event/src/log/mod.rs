@@ -10,13 +10,13 @@ use lookup::Path;
 use measurable::ByteSizeOf;
 use serde::Serialize;
 use tracing::field::Field;
+use value::keys::{all_fields, keys};
 pub use value::Value;
 
 use crate::metadata::EventMetadata;
 use crate::tags::{skip_serializing_if_empty, Key, Tags};
 use crate::MaybeAsLogMut;
 use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
-use value::keys::{all_fields, keys};
 
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;

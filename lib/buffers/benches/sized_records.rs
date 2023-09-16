@@ -1,3 +1,5 @@
+mod common;
+
 use std::{
     mem,
     num::{NonZeroU64, NonZeroUsize},
@@ -6,15 +8,12 @@ use std::{
 };
 
 use buffers::{BufferType, WhenFull};
+use common::{init_instrumentation, war_measurement, wtr_measurement};
 use criterion::{
     criterion_group, criterion_main, measurement::WallTime, BatchSize, BenchmarkGroup, BenchmarkId,
     Criterion, SamplingMode, Throughput,
 };
 use tokio::runtime::{Handle, Runtime};
-
-use crate::common::{init_instrumentation, war_measurement, wtr_measurement};
-
-mod common;
 
 /// A struct to manage the data_dir of an on-disk benchmark
 ///
