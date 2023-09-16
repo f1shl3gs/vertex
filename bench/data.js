@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694887096151,
+  "lastUpdate": 1694887137712,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c64bc765c9b55061b5efe85d7a17c9900ff70b72",
-          "message": "chore(deps): bump tempfile from 3.7.0 to 3.7.1 (#1147)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.0 to 3.7.1.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.0...v3.7.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-07T18:49:27+08:00",
-          "tree_id": "e5c9d4f8200c9c6536efe86e82645506556460c6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c64bc765c9b55061b5efe85d7a17c9900ff70b72"
-        },
-        "date": 1691405621356,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.382,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.884,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 24.574,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 42.403,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.704,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "3ddcad75be21298177905518e4b49a8b520bb8a6",
           "message": "chore(deps): bump regex from 1.9.1 to 1.9.3 (#1151)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.1 to 1.9.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.1...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-07T18:50:06+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 67.19,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "612f67e5b4dfc5f4f8f15b8aae226fd37b52646c",
+          "message": "fix some typo (#1261)",
+          "timestamp": "2023-09-17T01:54:18+08:00",
+          "tree_id": "0407f1eb851974ca288683a74e957cc520912ca8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/612f67e5b4dfc5f4f8f15b8aae226fd37b52646c"
+        },
+        "date": 1694887119227,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.304,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 24.625,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.602,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 43.189,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 59.737,
             "unit": "ns/op"
           }
         ]
