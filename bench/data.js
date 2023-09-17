@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694898799328,
+  "lastUpdate": 1694919631348,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3ddcad75be21298177905518e4b49a8b520bb8a6",
-          "message": "chore(deps): bump regex from 1.9.1 to 1.9.3 (#1151)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.1 to 1.9.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.1...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-07T18:50:06+08:00",
-          "tree_id": "610d1a5c3532b44d2e256f75962a8f8c14be2e9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ddcad75be21298177905518e4b49a8b520bb8a6"
-        },
-        "date": 1691405593147,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 722340,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 865680,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "099922639b26b63ae3a127337dd0485c4bb87880",
+          "message": "chore(deps): bump syn from 2.0.35 to 2.0.36 (#1263)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.35 to 2.0.36.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.35...2.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-17T10:57:29+08:00",
+          "tree_id": "3744d032e7a984eacdbb511ec088a456936a0449",
+          "url": "https://github.com/f1shl3gs/vertex/commit/099922639b26b63ae3a127337dd0485c4bb87880"
+        },
+        "date": 1694919614310,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 720760,
             "unit": "ns/op"
           }
         ]
