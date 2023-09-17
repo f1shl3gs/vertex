@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694932772919,
+  "lastUpdate": 1694932776049,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dab428cd5f82898cfd0dd03f7e301bffe05fc6cc",
-          "message": "chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0 (#1153)\n\n* chore(deps): bump k8s-openapi from 0.18.0 to 0.19.0\r\n\r\nBumps [k8s-openapi](https://github.com/Arnavion/k8s-openapi) from 0.18.0 to 0.19.0.\r\n- [Release notes](https://github.com/Arnavion/k8s-openapi/releases)\r\n- [Changelog](https://github.com/Arnavion/k8s-openapi/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Arnavion/k8s-openapi/compare/v0.18.0...v0.19.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: k8s-openapi\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* upate kube to 0.85.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-07T19:30:26+08:00",
-          "tree_id": "5cf41ad1c31a67f22896e5b0228d07f36fbbfbe0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dab428cd5f82898cfd0dd03f7e301bffe05fc6cc"
-        },
-        "date": 1691408072301,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.444,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.581,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.745,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 46.835,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.578,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5c445f35167fa2e2ed4e289e342e8c698cbfcf87",
           "message": "chore(deps): bump pin-project-lite from 0.2.10 to 0.2.11 (#1148)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.10...v0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-07T19:30:49+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 69.701,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8bd15c1089caaa292521f3cc5f56707cb1b9a4f7",
+          "message": "Small refactor (#1264)\n\n* simplify subscription\r\n\r\n* simplify `Pipeline`'s send",
+          "timestamp": "2023-09-17T14:35:20+08:00",
+          "tree_id": "223e2761df621b8a8d47cc736fb8b114aad1f976",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8bd15c1089caaa292521f3cc5f56707cb1b9a4f7"
+        },
+        "date": 1694932759355,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.306,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.208,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.852,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 44.627,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.192,
             "unit": "ns/op"
           }
         ]
