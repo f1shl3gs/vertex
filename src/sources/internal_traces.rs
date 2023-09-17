@@ -5,6 +5,7 @@ use async_trait::async_trait;
 use configurable::configurable_component;
 use event::{tags, Trace};
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
+use framework::trace::SpanSubscription;
 use framework::Source;
 use futures::StreamExt;
 use log_schema::log_schema;
@@ -28,7 +29,7 @@ struct Config {
 #[typetag::serde(name = "internal_traces")]
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
-        let subscription = framework::trace::subscribe_spans();
+        let subscription = SpanSubscription::subscribe();
         let shutdown = cx.shutdown;
         let mut output = cx.output;
         let service: Cow<'static, str> = self.service.clone().into();
@@ -36,8 +37,8 @@ impl SourceConfig for Config {
         let version = crate::get_version();
 
         Ok(Box::pin(async move {
-            let mut rx = tokio_stream::wrappers::BroadcastStream::new(subscription.receiver)
-                .filter_map(|span| futures::future::ready(span.ok()))
+            let mut rx = subscription
+                .into_stream()
                 .ready_chunks(MAX_CHUNK_SIZE)
                 .take_until(shutdown);
 

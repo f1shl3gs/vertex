@@ -6,14 +6,14 @@ use event::trace::{
     AnyValue, Event, EvictedHashMap, EvictedQueue, Key, KeyValue, Link, SpanContext, SpanKind,
     Status, StatusCode,
 };
-use event::{tags::Value, Trace};
+use event::{tags::Value, Events, Trace};
 
 use crate::thrift::jaeger::{Batch, Log, Span, SpanRef, Tag, TagType};
 use crate::translate::id::to_trace_id;
 
-impl From<Batch> for event::Event {
+impl From<Batch> for Events {
     fn from(batch: Batch) -> Self {
-        event::Event::Trace(batch.into())
+        Events::Traces(vec![batch.into()])
     }
 }
 
