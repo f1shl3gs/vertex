@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 
 use bytes::BytesMut;
 use configurable::Configurable;
-use event::Event;
 use framework::{Pipeline, ShutdownSignal};
 use jaeger::Batch;
 use serde::{Deserialize, Serialize};
@@ -104,7 +103,7 @@ pub(super) async fn serve(
 
                         match decode(payload.to_vec()) {
                             Ok(batch) => {
-                                if let Err(err) = output.send(Event::from(batch)).await {
+                                if let Err(err) = output.send(batch).await {
                                     error!(message = "Error sending trace", ?err);
 
                                     return Err(err.into());

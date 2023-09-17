@@ -19,12 +19,12 @@ pub struct SyslogDeserializer;
 impl Deserializer for SyslogDeserializer {
     fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {
         let line = std::str::from_utf8(&buf)?;
-        let line = line.trim();
-        let parsed =
-            syslog_loose::parse_message_with_year_exact(line, resolve_year, Variant::Either)?;
-        let mut event = LogRecord::from(parsed.msg).into();
-
-        insert_fields_from_syslog(&mut event, parsed);
+        let parsed = syslog_loose::parse_message_with_year_exact(
+            line.trim(),
+            resolve_year,
+            Variant::Either,
+        )?;
+        let event = convert(parsed).into();
 
         Ok(smallvec![event])
     }
@@ -43,8 +43,8 @@ fn resolve_year((month, _date, _hour, _min, _sec): IncompleteDate) -> i32 {
     }
 }
 
-fn insert_fields_from_syslog(event: &mut Event, parsed: Message<&str>) {
-    let log = event.as_mut_log();
+fn convert(parsed: Message<&str>) -> LogRecord {
+    let mut log = LogRecord::from(parsed.msg);
 
     if let Some(ts) = parsed.timestamp {
         log.insert_field(log_schema().timestamp_key(), DateTime::<Utc>::from(ts));
@@ -85,10 +85,12 @@ fn insert_fields_from_syslog(event: &mut Event, parsed: Message<&str>) {
 
     for elmt in parsed.structured_data.into_iter() {
         let mut structured = BTreeMap::<String, Value>::new();
-
         for (name, value) in elmt.params {
             structured.insert(name.to_string(), value.into());
         }
+
         log.insert_field(path!(elmt.id), structured);
     }
+
+    log
 }

@@ -3,15 +3,14 @@ use base64::Engine;
 use event::tags::{Tags, Value};
 use event::{
     trace::{AnyValue, EvictedHashMap, Key, SpanContext, SpanId, SpanKind, TraceId, TraceState},
-    Trace,
+    Events, Trace,
 };
 
-use crate::proto::{self, ValueType};
+use crate::proto::{self, Batch, ValueType};
 
-impl From<proto::Batch> for event::Event {
-    fn from(batch: proto::Batch) -> Self {
-        let trace: event::Trace = batch.into();
-        trace.into()
+impl From<Batch> for Events {
+    fn from(batch: Batch) -> Self {
+        Events::Traces(vec![batch.into()])
     }
 }
 

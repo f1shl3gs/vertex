@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 
 use async_trait::async_trait;
 use configurable::Configurable;
-use event::Event;
 use framework::{Pipeline, ShutdownSignal};
 use futures_util::FutureExt;
 use jaeger::proto::collector_service_server::CollectorServiceServer;
@@ -40,11 +39,9 @@ impl CollectorService for JaegerCollector {
         if let Some(batch) = req.batch {
             let mut output = self.output.lock().await;
 
-            let event = Event::from(batch);
-            if let Err(err) = output.send(event).await {
-                let err = format!("{:?}", err);
+            if let Err(err) = output.send(batch).await {
                 warn!(message = "Error sending trace", %err);
-                return Err(Status::internal(err));
+                return Err(Status::internal(err.to_string()));
             }
         }
 

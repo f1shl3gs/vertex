@@ -2,7 +2,6 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use configurable::Configurable;
-use event::Event;
 use framework::tls::MaybeTlsListener;
 use framework::tls::TlsConfig;
 use framework::{Pipeline, ShutdownSignal};
@@ -90,7 +89,7 @@ async fn handle(
     let buf = to_bytes(req.into_body()).await?;
     match deserialize_binary_batch(buf.to_vec()) {
         Ok(batch) => {
-            if let Err(err) = output.lock().await.send(Event::from(batch)).await {
+            if let Err(err) = output.lock().await.send(batch).await {
                 error!(message = "Error sending batch", ?err);
                 Ok(Response::builder()
                     .status(StatusCode::SERVICE_UNAVAILABLE)
