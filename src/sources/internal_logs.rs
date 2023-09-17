@@ -1,9 +1,9 @@
 use chrono::Utc;
 use configurable::configurable_component;
-use event::Event;
 use framework::config::{DataType, Output, SourceConfig, SourceContext};
 use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
+use framework::trace::TraceSubscription;
 use framework::Source;
 use futures::StreamExt;
 use futures_util::stream;
@@ -47,38 +47,31 @@ async fn run(
     mut output: Pipeline,
     shutdown: ShutdownSignal,
 ) -> Result<(), ()> {
-    let subscription = framework::trace::subscribe();
-    let hostname = crate::hostname();
+    let mut subscription = TraceSubscription::subscribe();
+    let hostname = crate::hostname().unwrap();
     let pid = std::process::id();
 
     // chain the logs emitted before the source started first
-    let mut rx = stream::iter(subscription.buffer)
-        .map(Ok)
-        .chain(tokio_stream::wrappers::BroadcastStream::new(
-            subscription.receiver,
-        ))
+    let mut rx = stream::iter(subscription.buffered())
+        .chain(subscription.into_stream())
+        .ready_chunks(128)
         .take_until(shutdown);
 
     // Note: This loop, or anything called within it, MUST NOT generate any
     // logs that don't break the loop, as that could cause an infinite loop
     // since it receives all such logs
-    while let Some(res) = rx.next().await {
-        if let Ok(mut log) = res {
-            if let Ok(hostname) = &hostname {
-                log.insert_field(host_key.as_str(), hostname.to_owned());
-            }
-
+    while let Some(mut logs) = rx.next().await {
+        let timestamp = Utc::now();
+        logs.iter_mut().for_each(|log| {
+            log.insert_field(host_key.as_str(), hostname.as_str());
             log.insert_field(pid_key.as_str(), pid);
             log.insert_field(log_schema().source_type_key(), "internal_log");
-            log.insert_field(log_schema().timestamp_key(), Utc::now());
-            if let Err(err) = output.send(Event::from(log)).await {
-                error!(
-                    message = "Error sending log",
-                    %err
-                );
+            log.insert_field(log_schema().timestamp_key(), timestamp);
+        });
 
-                return Err(());
-            }
+        if let Err(err) = output.send_batch(logs).await {
+            error!(message = "Error sending log", %err);
+            return Err(());
         }
     }
 
@@ -87,12 +80,15 @@ async fn run(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use event::log::Value;
-    use futures::Stream;
     use std::time::Duration;
+
+    use event::log::Value;
+    use event::LogRecord;
+    use futures::Stream;
     use testify::collect_ready;
     use tokio::time::sleep;
+
+    use super::*;
 
     #[test]
     fn generate_config() {
@@ -102,43 +98,32 @@ mod tests {
     #[tokio::test]
     async fn receive_logs() {
         let test_id: u8 = rand::random();
-        let start = chrono::Utc::now();
+        let start = Utc::now();
         framework::trace::init(false, false, "debug", 10);
         framework::trace::reset_early_buffer();
-        error!(
-            message = "Before source started",
-            %test_id
-        );
+        error!(message = "Before source started", %test_id);
 
         let rx = start_source().await;
-        error!(
-            message = "After source started",
-            %test_id
-        );
+        error!(message = "After source started", %test_id);
 
         sleep(Duration::from_millis(10)).await;
-        let mut events = collect_ready(rx).await;
+        let mut logs = collect_ready(rx).await;
         let test_id = Value::from(test_id.to_string());
-        events.retain(|event| event.as_log().get_field("test_id") == Some(&test_id));
+        logs.retain(|log| log.get_field("test_id") == Some(&test_id));
 
-        let end = chrono::Utc::now();
+        let end = Utc::now();
 
-        assert_eq!(events.len(), 2);
+        assert_eq!(logs.len(), 2);
         assert_eq!(
-            events[0].as_log().get_field("message").unwrap(),
+            logs[0].get_field("message").unwrap(),
             &Value::from("Before source started")
         );
         assert_eq!(
-            events[1]
-                .as_log()
-                .get_field("message")
-                .unwrap()
-                .to_string_lossy(),
+            logs[1].get_field("message").unwrap().to_string_lossy(),
             "After source started"
         );
 
-        for event in events {
-            let log = event.as_log();
+        for log in logs {
             let timestamp = log
                 .get_field("timestamp")
                 .unwrap()
@@ -149,7 +134,7 @@ mod tests {
         }
     }
 
-    async fn start_source() -> impl Stream<Item = Event> {
+    async fn start_source() -> impl Stream<Item = LogRecord> {
         let (tx, rx) = Pipeline::new_test();
         let source = Config::default()
             .build(SourceContext::new_test(tx))
@@ -159,6 +144,6 @@ mod tests {
         tokio::spawn(source);
         sleep(Duration::from_millis(10)).await;
         framework::trace::stop_buffering();
-        rx
+        rx.map(|item| item.into_log())
     }
 }
