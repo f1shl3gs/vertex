@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694933815014,
+  "lastUpdate": 1694933948442,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3ddcad75be21298177905518e4b49a8b520bb8a6",
-          "message": "chore(deps): bump regex from 1.9.1 to 1.9.3 (#1151)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.1 to 1.9.3.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.1...1.9.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-07T18:50:06+08:00",
-          "tree_id": "610d1a5c3532b44d2e256f75962a8f8c14be2e9b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3ddcad75be21298177905518e4b49a8b520bb8a6"
-        },
-        "date": 1691407198017,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 45714000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1343200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.803,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "eabf3d97250cf2de0d401f62bb1a104cd6693f0d",
           "message": "chore(deps): bump pin-project from 1.1.2 to 1.1.3 (#1150)\n\nBumps [pin-project](https://github.com/taiki-e/pin-project) from 1.1.2 to 1.1.3.\r\n- [Release notes](https://github.com/taiki-e/pin-project/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project/compare/v1.1.2...v1.1.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-07T18:49:45+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.929,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8bd15c1089caaa292521f3cc5f56707cb1b9a4f7",
+          "message": "Small refactor (#1264)\n\n* simplify subscription\r\n\r\n* simplify `Pipeline`'s send",
+          "timestamp": "2023-09-17T14:35:20+08:00",
+          "tree_id": "223e2761df621b8a8d47cc736fb8b114aad1f976",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8bd15c1089caaa292521f3cc5f56707cb1b9a4f7"
+        },
+        "date": 1694933930863,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 34726000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 941570,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.279,
             "unit": "ns/op"
           }
         ]
