@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694932776049,
+  "lastUpdate": 1694933815014,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "161fdab89b5a61e1f22c1e9cfd1e8ab0d2a2766d",
-          "message": "update rust to 1.71.1 (#1158)",
-          "timestamp": "2023-08-12T23:15:51+08:00",
-          "tree_id": "a57106a181c67c5f3c18d159c82010e0bdc0bd3e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/161fdab89b5a61e1f22c1e9cfd1e8ab0d2a2766d"
-        },
-        "date": 1691854742624,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1254,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44331.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a0259ddd5531dd53d7b7aba4f13274e3de2a94f0",
           "message": "update tokio to 1.31.0 (#1159)",
           "timestamp": "2023-08-13T13:26:01+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42593.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8bd15c1089caaa292521f3cc5f56707cb1b9a4f7",
+          "message": "Small refactor (#1264)\n\n* simplify subscription\r\n\r\n* simplify `Pipeline`'s send",
+          "timestamp": "2023-09-17T14:35:20+08:00",
+          "tree_id": "223e2761df621b8a8d47cc736fb8b114aad1f976",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8bd15c1089caaa292521f3cc5f56707cb1b9a4f7"
+        },
+        "date": 1694933794358,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1131,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42604.2,
             "unit": "KiB"
           }
         ]
