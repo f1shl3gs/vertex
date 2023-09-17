@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1694919782102,
+  "lastUpdate": 1694920745863,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0",
-          "message": "chore(deps): bump pin-project-lite from 0.2.11 to 0.2.12 (#1157)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.11 to 0.2.12.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.11...v0.2.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-10T13:22:29+08:00",
-          "tree_id": "517b14bb884ee8fb820c3604de3a8708ce859567",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e752f53cfc671d84ab64af2d25b1a0bc55f4f9a0"
-        },
-        "date": 1691646136907,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1059,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44316.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42624.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "099922639b26b63ae3a127337dd0485c4bb87880",
+          "message": "chore(deps): bump syn from 2.0.35 to 2.0.36 (#1263)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.35 to 2.0.36.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.35...2.0.36)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-17T10:57:29+08:00",
+          "tree_id": "3744d032e7a984eacdbb511ec088a456936a0449",
+          "url": "https://github.com/f1shl3gs/vertex/commit/099922639b26b63ae3a127337dd0485c4bb87880"
+        },
+        "date": 1694920725537,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1142,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42593.5,
             "unit": "KiB"
           }
         ]
