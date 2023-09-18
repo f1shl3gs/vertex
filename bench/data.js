@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695039353781,
+  "lastUpdate": 1695039378340,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5c445f35167fa2e2ed4e289e342e8c698cbfcf87",
-          "message": "chore(deps): bump pin-project-lite from 0.2.10 to 0.2.11 (#1148)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.10 to 0.2.11.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.10...v0.2.11)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-07T19:30:49+08:00",
-          "tree_id": "5ae0d61969cd42a144006ce4cf8e8b3d0c0e9446",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5c445f35167fa2e2ed4e289e342e8c698cbfcf87"
-        },
-        "date": 1691408146172,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 59.998,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 190.76,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 457.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1274,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "021dae89861b83cb417fb748aaa8f890007b44c9",
           "message": "chore(deps): bump argh from 0.1.10 to 0.1.11 (#1154)\n\nBumps [argh](https://github.com/google/argh) from 0.1.10 to 0.1.11.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-08T19:03:57+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1113.1,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "6c4a6e58dc43cba785e6929c7de2a5674ffff779",
+          "message": "fix unused_qualifications (#1266)",
+          "timestamp": "2023-09-18T20:11:34+08:00",
+          "tree_id": "769a1de750711d6d9ff95cae910b22b5f8b60716",
+          "url": "https://github.com/f1shl3gs/vertex/commit/6c4a6e58dc43cba785e6929c7de2a5674ffff779"
+        },
+        "date": 1695039357772,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 64.244,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 194.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 471.9,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1324.4,
             "unit": "ns/op"
           }
         ]
