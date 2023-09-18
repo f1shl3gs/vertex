@@ -271,7 +271,7 @@ fn tail_source(
     };
 
     Ok(Box::pin(async move {
-        info!(message = "Starting harvest files", ?include, ?exclude,);
+        info!(message = "Starting harvest files", ?include, ?exclude);
 
         let mut encoding_decoder = charset.map(Decoder::new);
 
@@ -533,7 +533,7 @@ mod tests {
     }
 
     async fn sleep_500_millis() {
-        tokio::time::sleep(Duration::from_millis(500)).await
+        sleep(Duration::from_millis(500)).await
     }
 
     #[tokio::test]

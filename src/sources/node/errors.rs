@@ -140,7 +140,7 @@ impl From<num::ParseFloatError> for Error {
     }
 }
 
-impl From<std::string::ParseError> for Error {
+impl From<ParseError> for Error {
     fn from(err: ParseError) -> Self {
         let err = io::Error::new(io::ErrorKind::InvalidInput, err);
 

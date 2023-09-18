@@ -8,6 +8,7 @@ const BUFFER_SIZE: usize = 4096;
 const BOM_UTF8: &[u8] = b"\xef\xbb\xbf";
 const BOM_UTF8_LEN: usize = BOM_UTF8.len();
 
+/// Helps transcoding from the specified encoding to utf8.
 pub struct Decoder {
     buffer: [u8; BUFFER_SIZE],
     output: BytesMut,
@@ -54,8 +55,10 @@ impl Decoder {
             self.output.extend_from_slice(&self.buffer[..written]);
 
             match result {
-                CoderResult::InputEmpty => break, // we have consumed all of the given input so we are done
-                CoderResult::OutputFull => (), // continue reading from the input in the next loop iteration
+                // we have consumed all of the given input so we are done
+                CoderResult::InputEmpty => break,
+                // continue reading from the input in the next loop iteration
+                CoderResult::OutputFull => (),
             }
         }
 
@@ -89,11 +92,12 @@ impl Decoder {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 enum Utf16Encoding {
-    Le,
     // little-endian
-    Be, // big-endian
+    Le,
+    // big-endian
+    Be,
 }
 
 /// Helps transcoding to the specified encoding from utf8
@@ -161,8 +165,10 @@ impl Encoder {
             self.output.extend_from_slice(&self.buffer[..written]);
 
             match result {
-                CoderResult::InputEmpty => break, // we have consumed all of the given input, so we are done
-                CoderResult::OutputFull => (), // continue reading from the input in the next loop iteration
+                // we have consumed all of the given input, so we are done
+                CoderResult::InputEmpty => break,
+                // continue reading from the input in the next loop iteration
+                CoderResult::OutputFull => (),
             }
         }
 

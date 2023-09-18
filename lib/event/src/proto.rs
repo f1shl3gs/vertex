@@ -97,19 +97,19 @@ fn decode_array(items: Vec<Value>) -> Option<crate::log::Value> {
     Some(crate::log::Value::Array(accum))
 }
 
-impl From<TagValueArray> for crate::tags::Array {
+impl From<TagValueArray> for Array {
     fn from(array: TagValueArray) -> Self {
         match array.kind {
-            0 => crate::tags::Array::Bool(array.bool),
-            1 => crate::tags::Array::I64(array.i64),
-            2 => crate::tags::Array::F64(array.f64),
-            3 => crate::tags::Array::String(array.string.into_iter().map(Cow::from).collect()),
+            0 => Array::Bool(array.bool),
+            1 => Array::I64(array.i64),
+            2 => Array::F64(array.f64),
+            3 => Array::String(array.string.into_iter().map(Cow::from).collect()),
             _ => unreachable!(), // TryFrom is what we need
         }
     }
 }
 
-impl From<crate::tags::Array> for TagValueArray {
+impl From<Array> for TagValueArray {
     fn from(array: Array) -> Self {
         match array {
             Array::Bool(b) => TagValueArray {
@@ -170,7 +170,7 @@ impl From<BTreeMap<String, TagValue>> for Tags {
     }
 }
 
-impl From<Log> for crate::LogRecord {
+impl From<Log> for LogRecord {
     fn from(log: Log) -> Self {
         let fields = log
             .fields
@@ -178,7 +178,7 @@ impl From<Log> for crate::LogRecord {
             .filter_map(|(k, v)| decode_value(v).map(|value| (k, value)))
             .collect::<BTreeMap<_, _>>();
 
-        crate::LogRecord::new(log.tags.into(), fields)
+        LogRecord::new(log.tags.into(), fields)
     }
 }
 
@@ -318,13 +318,13 @@ impl From<LogRecord> for Log {
     }
 }
 
-impl From<Log> for event_wrapper::Event {
+impl From<Log> for Event {
     fn from(log: Log) -> Self {
         Self::Log(log)
     }
 }
 
-impl From<Metric> for event_wrapper::Event {
+impl From<Metric> for Event {
     fn from(metric: Metric) -> Self {
         Self::Metric(metric)
     }

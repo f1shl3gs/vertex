@@ -9,13 +9,14 @@ mod remove;
 use std::borrow::{Borrow, Cow};
 use std::collections::BTreeMap;
 
-use super::Value;
 use lookup::BorrowedSegment;
 
 pub use get::get;
 pub use get_mut::get_mut;
 pub use insert::insert;
 pub use remove::remove;
+
+use super::Value;
 
 pub trait ValueCollection {
     type BorrowedKey: ?Sized;

@@ -8,7 +8,6 @@ use ahash::AHashMap;
 use futures::Stream;
 use futures_util::TryStreamExt;
 use kube::runtime::watcher;
-use kube::runtime::watcher::Event;
 use kube::Resource;
 use parking_lot::RwLock;
 
@@ -54,7 +53,7 @@ where
     K: Resource + Clone + 'static,
     K::DynamicType: Eq + Hash,
 {
-    fn apply(&mut self, event: &Event<K>) {
+    fn apply(&mut self, event: &watcher::Event<K>) {
         match event {
             watcher::Event::Applied(obj) => {
                 if let Some(key) = &obj.meta().uid {

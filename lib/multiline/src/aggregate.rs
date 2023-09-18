@@ -102,7 +102,7 @@ pub struct Logic<R, K, C> {
     rule: R,
 
     /// Timeout for multiline aggregate
-    timeout: std::time::Duration,
+    timeout: Duration,
 
     /// Line per key
     /// Key is usually a filename or other line source identifier.
@@ -114,7 +114,7 @@ pub struct Logic<R, K, C> {
 
 impl<R, K, C> Logic<R, K, C> {
     /// Create a new `Logic` using the specified `Config`
-    pub fn new(rule: R, timeout: std::time::Duration) -> Self {
+    pub fn new(rule: R, timeout: Duration) -> Self {
         Self {
             rule,
             timeout,

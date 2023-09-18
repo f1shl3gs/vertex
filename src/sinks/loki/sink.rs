@@ -51,10 +51,10 @@ impl LokiRequestBuilder {
 #[derive(Debug, Error)]
 pub enum RequestBuildError {
     #[error("Failed to build payload, err: {0}")]
-    IO(std::io::Error),
+    IO(Error),
 }
 
-impl From<std::io::Error> for RequestBuildError {
+impl From<Error> for RequestBuildError {
     fn from(err: Error) -> Self {
         RequestBuildError::IO(err)
     }

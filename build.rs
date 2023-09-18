@@ -44,7 +44,7 @@ impl BuildConstants {
             .push((name.to_string(), desc.to_string(), value));
     }
 
-    pub fn write_to_file(self, file_name: impl AsRef<Path>) -> std::io::Result<()> {
+    pub fn write_to_file(self, file_name: impl AsRef<Path>) -> Result<()> {
         let base = std::env::var("OUT_DIR").expect("OUT_DIR not present in build script!");
         let dest = Path::new(&base).join(file_name);
 

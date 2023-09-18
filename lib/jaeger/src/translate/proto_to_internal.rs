@@ -53,8 +53,8 @@ impl From<proto::Span> for event::trace::Span {
     }
 }
 
-impl From<proto::Batch> for Trace {
-    fn from(batch: crate::proto::Batch) -> Self {
+impl From<Batch> for Trace {
+    fn from(batch: Batch) -> Self {
         let (service, tags) = match batch.process {
             Some(process) => {
                 let attrs = process

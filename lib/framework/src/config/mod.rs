@@ -222,7 +222,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn builder() -> builder::Builder {
+    pub fn builder() -> Builder {
         Default::default()
     }
 

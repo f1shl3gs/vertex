@@ -22,7 +22,7 @@ impl metrics::Reporter for Reporter {
         self.inflight = Some((name, description));
     }
 
-    fn report(&mut self, attrs: &Attributes, observation: metrics::Observation) {
+    fn report(&mut self, attrs: &Attributes, observation: Observation) {
         let (name, description) = self
             .inflight
             .expect("name and description should be set already");
@@ -33,8 +33,8 @@ impl metrics::Reporter for Reporter {
             .collect::<BTreeMap<_, _>>();
 
         let metric = match observation {
-            Observation::Counter(c) => event::Metric::sum_with_tags(name, description, c, tags),
-            Observation::Gauge(g) => event::Metric::gauge_with_tags(name, description, g, tags),
+            Observation::Counter(c) => Metric::sum_with_tags(name, description, c, tags),
+            Observation::Gauge(g) => Metric::gauge_with_tags(name, description, g, tags),
             Observation::Histogram(h) => {
                 let mut count = 0;
                 let buckets = h

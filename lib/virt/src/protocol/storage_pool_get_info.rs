@@ -8,7 +8,7 @@ pub struct Pool {
 }
 
 impl<W: Write> Pack<W> for Pool {
-    fn pack(&self, w: &mut W) -> crate::protocol::Result<usize> {
+    fn pack(&self, w: &mut W) -> Result<usize> {
         Ok(self.name.pack(w)? + self.uuid.pack(w)?)
     }
 }

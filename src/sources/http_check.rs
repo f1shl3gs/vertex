@@ -181,7 +181,6 @@ async fn scrape(
 mod tests {
     use std::convert::Infallible;
 
-    use crate::testing::trace_init;
     use event::tags::Key;
     use event::MetricValue;
     use http::Response;
@@ -190,6 +189,7 @@ mod tests {
     use testify::collect_ready;
 
     use super::*;
+    use crate::testing::trace_init;
 
     #[test]
     fn generate_config() {
