@@ -611,13 +611,15 @@ mod checkpoints_tests {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::io::Cursor;
+
     use chrono::TimeZone;
     use event::Event;
-    use std::io::Cursor;
     use tempfile::tempdir;
     use tokio::time::{sleep, timeout, Duration};
     use tokio_stream::StreamExt;
+
+    use super::*;
 
     #[test]
     fn generate_config() {

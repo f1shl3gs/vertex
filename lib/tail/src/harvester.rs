@@ -248,7 +248,7 @@ where
             // `spawn_blocking` fulfills all of these requirements.
             let sleep = async move {
                 if backoff > 0 {
-                    tokio::time::sleep(Duration::from_millis(backoff as u64)).await;
+                    sleep(Duration::from_millis(backoff as u64)).await;
                 }
             };
             futures::pin_mut!(sleep);

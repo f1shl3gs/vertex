@@ -428,7 +428,7 @@ mod test {
 
     impl<S> Layer<S> for RecordingLayer<S>
     where
-        S: Subscriber + for<'a> tracing_subscriber::registry::LookupSpan<'a>,
+        S: Subscriber + for<'a> LookupSpan<'a>,
     {
         fn register_callsite(&self, _metadata: &'static Metadata<'static>) -> Interest {
             Interest::always()

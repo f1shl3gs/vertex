@@ -210,7 +210,7 @@ pub fn udp(
     receive_buffer_bytes: Option<usize>,
     shutdown: ShutdownSignal,
     mut output: Pipeline,
-) -> framework::Source {
+) -> Source {
     Box::pin(async move {
         let socket = UdpSocket::bind(&addr)
             .await
@@ -433,7 +433,7 @@ address: 127.0.0.1:12345
 
         let log = LogRecord::from(fields!(
             log_schema().message_key() => msg,
-            log_schema().timestamp_key() => chrono::Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
+            log_schema().timestamp_key() => Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
             log_schema().source_type_key() => "syslog",
             "host" => "74794bfb6795",
             "hostname" => "74794bfb6795",
@@ -468,7 +468,7 @@ address: 127.0.0.1:12345
         let event = event_from_bytes("host", None, raw.into()).unwrap();
 
         let want = Event::from(LogRecord::from(fields!(
-            log_schema().timestamp_key() => chrono::Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
+            log_schema().timestamp_key() => Utc.with_ymd_and_hms(2019, 2, 13, 19, 48, 34).unwrap(),
             log_schema().host_key() => "74794bfb6795",
             log_schema().source_type_key() => "syslog",
             "hostname" => "74794bfb6795",

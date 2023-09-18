@@ -14,7 +14,7 @@ pub const CONFIGURABLE: &str = "configurable";
 pub struct Description {
     /// Whether the description was an explicit annotation or whether it was a doc string.
     explicit: bool,
-    content: syn::LitStr,
+    content: LitStr,
 }
 
 impl Description {
@@ -76,7 +76,7 @@ pub struct FieldAttrs {
     pub format: Option<LitStr>,
     pub serde_with: Option<LitStr>,
     pub description: Option<Description>,
-    pub example: Option<syn::Lit>,
+    pub example: Option<Lit>,
 }
 
 impl FieldAttrs {
@@ -224,7 +224,7 @@ impl FieldAttrs {
 
         let json_value = match &self.serde_with {
             Some(serde_with) => {
-                let serde_with: syn::Path = serde_with.parse().expect("valid serde with value");
+                let serde_with: Path = serde_with.parse().expect("valid serde with value");
 
                 quote! {
                     let value = #serde_with::serialize(&default_value, serde_json::value::Serializer)
@@ -251,13 +251,13 @@ impl FieldAttrs {
 /// Represents a `#[derive(FromArgs)]` type's top-level attributes.
 #[derive(Default)]
 pub struct TypeAttrs {
-    pub name: Option<syn::LitStr>,
-    pub title: Option<syn::LitStr>,
+    pub name: Option<LitStr>,
+    pub title: Option<LitStr>,
     pub description: Option<Description>,
     pub component_type: Option<syn::Ident>,
 
     // serde's attributes
-    pub rename_all: Option<syn::LitStr>,
+    pub rename_all: Option<LitStr>,
     pub tag: Option<LitStr>,
     pub untagged: bool,
 }

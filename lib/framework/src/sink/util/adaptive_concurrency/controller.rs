@@ -339,6 +339,6 @@ where
     }
 }
 
-pub fn instant_now() -> std::time::Instant {
+pub fn instant_now() -> Instant {
     tokio::time::Instant::now().into()
 }

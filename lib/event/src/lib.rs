@@ -1,4 +1,5 @@
 #![deny(warnings)]
+#![deny(unused_qualifications)]
 #![deny(clippy::all)]
 #![deny(clippy::pedantic)]
 #![allow(
@@ -446,7 +447,7 @@ impl TryInto<serde_json::Value> for Event {
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
 impl TryFrom<serde_json::Value> for Event {
-    type Error = crate::Error;
+    type Error = Error;
 
     fn try_from(map: serde_json::Value) -> Result<Self, Self::Error> {
         match map {

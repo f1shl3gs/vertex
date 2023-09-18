@@ -292,7 +292,7 @@ struct RedisSource {
     // password: Option<String>,
     url: String,
     namespace: Option<String>,
-    interval: std::time::Duration,
+    interval: Duration,
 
     client_name: Option<String>,
     // TODO: add TLS and timeouts

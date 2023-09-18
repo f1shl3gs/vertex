@@ -118,7 +118,7 @@ pub struct MultilineConfig {
     pub parser: Parser,
 }
 
-impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
+impl<'de> Deserialize<'de> for MultilineConfig {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
@@ -344,7 +344,7 @@ impl<'de> serde::de::Deserialize<'de> for MultilineConfig {
     }
 }
 
-impl serde::ser::Serialize for MultilineConfig {
+impl Serialize for MultilineConfig {
     fn serialize<S>(&self, _serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,

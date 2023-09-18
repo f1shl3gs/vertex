@@ -10,7 +10,7 @@ use tokio::io::AsyncBufReadExt;
 pub struct NetstatConfig {
     #[serde(default = "default_fields")]
     #[serde(with = "serde_regex")]
-    fields: regex::Regex,
+    fields: Regex,
 }
 
 impl Default for NetstatConfig {

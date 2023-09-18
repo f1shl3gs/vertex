@@ -7,8 +7,7 @@ mod span;
 
 use std::borrow::Cow;
 use std::collections::VecDeque;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
+use std::fmt::{self, Debug};
 use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
@@ -405,7 +404,7 @@ impl FromStr for TraceState {
 pub struct TraceId(pub u128);
 
 impl Debug for TraceId {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!("{:032x}", self.0))
     }
 }
@@ -417,7 +416,7 @@ impl From<[u8; 16]> for TraceId {
 }
 
 impl fmt::LowerHex for TraceId {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::LowerHex::fmt(&self.0, f)
     }
 }
@@ -454,13 +453,13 @@ impl TraceId {
 pub struct SpanId(pub u64);
 
 impl Debug for SpanId {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!("{:016x}", self.0))
     }
 }
 
 impl fmt::LowerHex for SpanId {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::LowerHex::fmt(&self.0, f)
     }
 }

@@ -226,7 +226,7 @@ impl Watcher {
     }
 }
 
-fn is_gzipped(r: &mut io::BufReader<fs::File>) -> io::Result<bool> {
+fn is_gzipped(r: &mut BufReader<File>) -> io::Result<bool> {
     let header_bytes = r.fill_buf()?;
     // WARN: The paired `BufReader::consume` is not called intentionally. If we
     // do we'll chop a decent part of the potential gzip stream off.

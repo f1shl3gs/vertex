@@ -1,6 +1,5 @@
 use std::collections::HashMap;
-use std::fmt;
-use std::fmt::{Debug, Formatter};
+use std::fmt::{self, Debug, Formatter};
 use std::hash::Hash;
 use std::marker::PhantomData;
 use std::pin::Pin;
@@ -417,7 +416,7 @@ fn result_status<R: Response + Send>(result: crate::Result<R>) -> EventStatus {
 }
 
 // Response
-pub trait Response: fmt::Debug {
+pub trait Response: Debug {
     fn is_successful(&self) -> bool {
         true
     }
@@ -522,21 +521,22 @@ where
 
 #[cfg(test)]
 mod tests {
+    use std::io::Error;
     use std::sync::atomic::AtomicUsize;
     use std::{
         convert::Infallible,
         sync::{atomic::Ordering::Relaxed, Arc, Mutex},
     };
 
-    use crate::batch::BatchSettings;
-    use crate::sink::util::buffer::vec::EncodedLength;
-    use crate::sink::util::VecBuffer;
     use bytes::Bytes;
     use event::{BatchNotifier, BatchStatus, EventFinalizer, EventFinalizers};
     use futures::{future, stream, task::noop_waker_ref, SinkExt, StreamExt};
     use tokio::{task::yield_now, time::Instant};
 
     use super::*;
+    use crate::batch::BatchSettings;
+    use crate::sink::util::buffer::vec::EncodedLength;
+    use crate::sink::util::VecBuffer;
 
     const TIMEOUT: Duration = Duration::from_secs(10);
 
@@ -592,7 +592,7 @@ mod tests {
     async fn batch_sink_acking_sequential() {
         let ack_counter = Counter::default();
 
-        let svc = tower::service_fn(|_| future::ok::<_, std::io::Error>(()));
+        let svc = tower::service_fn(|_| future::ok::<_, Error>(()));
         let mut batch_settings = BatchSettings::default();
         batch_settings.size.bytes = 9999;
         batch_settings.size.events = 10;
@@ -716,7 +716,7 @@ mod tests {
 
             sent_requests.lock().unwrap().push(req);
 
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -748,7 +748,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -787,7 +787,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -833,7 +833,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -865,7 +865,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -892,7 +892,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -925,7 +925,7 @@ mod tests {
         let svc = tower::service_fn(|req| {
             let sent_requests = Arc::clone(&sent_requests);
             sent_requests.lock().unwrap().push(req);
-            future::ok::<_, std::io::Error>(())
+            future::ok::<_, Error>(())
         });
 
         let mut batch_settings = BatchSettings::default();
@@ -1023,12 +1023,12 @@ mod tests {
                 sleep(Duration::from_secs(1))
                     .map(move |_| {
                         sent_requests.lock().unwrap().push(req);
-                        Result::<_, std::io::Error>::Ok(())
+                        Result::<_, Error>::Ok(())
                     })
                     .boxed()
             } else {
                 sent_requests.lock().unwrap().push(req);
-                future::ok::<_, std::io::Error>(()).boxed()
+                future::ok::<_, Error>(()).boxed()
             }
         });
 

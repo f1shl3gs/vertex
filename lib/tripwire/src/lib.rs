@@ -197,10 +197,12 @@ impl Tripwire {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use futures::StreamExt;
     use std::time::{Duration, Instant};
+
+    use futures::StreamExt;
     use tokio_stream::wrappers::ReceiverStream;
+
+    use super::*;
 
     #[test]
     #[allow(clippy::redundant_clone)]

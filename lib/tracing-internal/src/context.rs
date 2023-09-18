@@ -34,7 +34,7 @@ impl WithContext {
     // the "remembered" subscriber.
     pub fn with_context(
         &self,
-        dispatch: &tracing::Dispatch,
+        dispatch: &Dispatch,
         id: &span::Id,
         mut f: impl FnMut(&mut TraceData, &dyn PreSampledTracer),
     ) {

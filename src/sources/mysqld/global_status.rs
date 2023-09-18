@@ -17,7 +17,7 @@ struct GlobalStatus {
     value: String,
 }
 
-pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, super::MysqlError> {
+pub async fn gather(pool: &MySqlPool) -> Result<Vec<Metric>, MysqlError> {
     let stats = sqlx::query_as::<_, GlobalStatus>(GLOBAL_STATUS_QUERY)
         .fetch_all(pool)
         .await

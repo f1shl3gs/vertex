@@ -6,7 +6,7 @@ mod task;
 #[cfg(test)]
 pub mod test;
 
-// re-exprot
+// re-export
 pub use builder::{build_pieces, Pieces};
 pub use fanout::{ControlChannel, ControlMessage, Fanout};
 pub use running::RunningTopology;
@@ -29,7 +29,7 @@ type BuiltBuffer = (
     Arc<Mutex<Option<BufferReceiverStream<Events>>>>,
 );
 
-type Outputs = HashMap<OutputId, fanout::ControlChannel>;
+type Outputs = HashMap<OutputId, ControlChannel>;
 
 type TaskHandle = tokio::task::JoinHandle<Result<TaskOutput, ()>>;
 
@@ -94,7 +94,7 @@ pub async fn build_or_log_errors(
     diff: &ConfigDiff,
     buffers: HashMap<ComponentKey, BuiltBuffer>,
 ) -> Option<Pieces> {
-    match builder::build_pieces(config, diff, buffers).await {
+    match build_pieces(config, diff, buffers).await {
         Err(errors) => {
             for err in errors {
                 error!(

@@ -4,8 +4,7 @@ use std::marker::PhantomData;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 
 use event::trace::{EvictedHashMap, Link, Span, StatusCode, TraceId};
-use tracing::span::Attributes;
-use tracing::{span, Subscriber};
+use tracing::{span::Attributes, Subscriber};
 use tracing_core::span::{Id, Record};
 use tracing_core::{Event, Field};
 use tracing_subscriber::layer::Context;
@@ -40,7 +39,7 @@ where
 
     fn get_context(
         dispatch: &tracing::Dispatch,
-        id: &span::Id,
+        id: &Id,
         f: &mut dyn FnMut(&mut TraceData, &dyn PreSampledTracer),
     ) {
         let subscriber = dispatch

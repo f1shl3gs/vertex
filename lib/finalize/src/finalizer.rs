@@ -186,7 +186,7 @@ pin_project! {
 
 impl<T> Future for FinalizerFuture<T> {
     type Output = (<BatchStatusReceiver as Future>::Output, T);
-    fn poll(mut self: Pin<&mut Self>, ctx: &mut std::task::Context<'_>) -> Poll<Self::Output> {
+    fn poll(mut self: Pin<&mut Self>, ctx: &mut Context<'_>) -> Poll<Self::Output> {
         let status = std::task::ready!(self.receiver.poll_unpin(ctx));
         // The use of this above in a `Futures{Ordered|Unordered|`
         // will only take this once before dropping the future.

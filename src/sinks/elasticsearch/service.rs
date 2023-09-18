@@ -36,7 +36,7 @@ impl Finalizable for ElasticsearchRequest {
 #[derive(Clone)]
 pub struct ElasticsearchService {
     batch_service: HttpBatchService<
-        BoxFuture<'static, Result<http::Request<Bytes>, crate::Error>>,
+        BoxFuture<'static, Result<Request<Bytes>, crate::Error>>,
         ElasticsearchRequest,
     >,
 }
@@ -49,7 +49,7 @@ impl ElasticsearchService {
         let builder = Arc::new(request_builder);
         let batch_service = HttpBatchService::new(client, move |req| {
             let builder = Arc::clone(&builder);
-            let fut: BoxFuture<'static, Result<http::Request<Bytes>, crate::Error>> =
+            let fut: BoxFuture<'static, Result<Request<Bytes>, crate::Error>> =
                 Box::pin(async move { builder.build_request(req).await });
 
             fut

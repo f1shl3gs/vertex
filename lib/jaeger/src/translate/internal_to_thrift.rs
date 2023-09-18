@@ -46,8 +46,8 @@ impl From<(Key, AnyValue)> for Tag {
     }
 }
 
-impl From<event::trace::Event> for Log {
-    fn from(event: event::trace::Event) -> Self {
+impl From<Event> for Log {
+    fn from(event: Event) -> Self {
         let timestamp = event.timestamp / 1000;
 
         let mut fields = event

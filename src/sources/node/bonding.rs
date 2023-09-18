@@ -1,8 +1,10 @@
-use super::read_to_string;
-use super::{Error, ErrorContext};
-use event::{tags, Metric};
 use std::collections::HashMap;
 use std::path::PathBuf;
+
+use event::{tags, Metric};
+
+use super::read_to_string;
+use super::{Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let path = PathBuf::from(sys_path);

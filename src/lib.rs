@@ -1,3 +1,4 @@
+#![deny(unused_qualifications)]
 #![allow(clippy::new_without_default)]
 #![allow(clippy::float_cmp)]
 #![allow(clippy::too_many_arguments)]

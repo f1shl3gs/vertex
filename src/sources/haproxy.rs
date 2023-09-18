@@ -1097,9 +1097,10 @@ fn parse_status_field(value: &str) -> f64 {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::io;
     use std::io::BufReader;
+
+    use super::*;
 
     #[test]
     fn generate_config() {

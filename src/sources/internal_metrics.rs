@@ -86,7 +86,7 @@ impl metrics::Reporter for Reporter {
         self.inflight = Some((name, description));
     }
 
-    fn report(&mut self, attrs: &Attributes, observation: metrics::Observation) {
+    fn report(&mut self, attrs: &Attributes, observation: Observation) {
         let (name, description) = self
             .inflight
             .expect("name and description should be set already");

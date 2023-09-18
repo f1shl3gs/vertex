@@ -169,7 +169,7 @@ fn allow_null<'de, D>(de: D) -> Result<Option<Value>, D::Error>
 where
     D: serde::Deserializer<'de>,
 {
-    Value::deserialize(de).map(Option::Some)
+    Value::deserialize(de).map(Some)
 }
 
 fn skip_if_default<'de, D, T>(deserializer: D) -> Result<Option<Box<T>>, D::Error>
