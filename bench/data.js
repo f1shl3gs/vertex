@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695191246951,
+  "lastUpdate": 1695192050176,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7b9156ab47cf39c3c6017193401dab3849cdf4ee",
-          "message": "Replace bloom with bloomy (#1162)\n\n* fix syn features\r\n\r\n* add flatten_enum test\r\n\r\n* replace bloom with bloomy",
-          "timestamp": "2023-08-14T04:42:48+08:00",
-          "tree_id": "77f117ad77ec45f09431bfbce5906afd32494aad",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b9156ab47cf39c3c6017193401dab3849cdf4ee"
-        },
-        "date": 1691960741529,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1232,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44372.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42637.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5f9d45c0abc63878458d6f7fb8a5a799a6b3619",
+          "message": "fix clippy warnings (#1268)",
+          "timestamp": "2023-09-20T14:22:18+08:00",
+          "tree_id": "9987807a5674e7a9a6ac633e16a8e7c6df80ff15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a5f9d45c0abc63878458d6f7fb8a5a799a6b3619"
+        },
+        "date": 1695192031182,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 958,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42654.7,
             "unit": "KiB"
           }
         ]
