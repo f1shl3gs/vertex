@@ -60,13 +60,13 @@ memchr = { version = "2.6.3", default-features = false }
 metrics = { path = "../metrics" }
 # wired feature requirement, see: https://docs.rs/notify/latest/notify/#crossbeam-channel--tokio
 notify = { version = "6.1.1", default-features = false, features = ["macos_kqueue"] }
-no-proxy = { version = "0.3.4" }
+no-proxy = { version = "0.3.4", default-features = false, features = ["serialize"] }
 once_cell = { version = "1.18", default-features = false }
 pem = { version = "3.0.2", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.0", default-features = false }
 pin-project-lite = { version = "0.2.13", default-features = false }
 pkcs8 = { version = "0.10.2", default-features = false, features = ["pkcs5", "std", "encryption"] }
-regex = { version = "1.9.5" }
+regex = { version = "1.9.5", default-features = false }
 rustls = { version = "0.21.7", default-features = false, features = ["dangerous_configuration"] }
 rustls-native-certs = { version = "0.6.3", default-features = false }
 rustls-pemfile = { version = "1.0.3", default-features = false }

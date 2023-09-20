@@ -16,19 +16,19 @@ pub fn decode(encodings: Option<&str>, mut body: Bytes) -> Result<Bytes, ErrorMe
                     let mut decoded = Vec::new();
                     MultiGzDecoder::new(body.reader())
                         .read_to_end(&mut decoded)
-                        .map_err(|error| handle_decode_error(encoding, error))?;
+                        .map_err(|err| handle_decode_error(encoding, err))?;
                     decoded.into()
                 }
                 "deflate" => {
                     let mut decoded = Vec::new();
                     ZlibDecoder::new(body.reader())
                         .read_to_end(&mut decoded)
-                        .map_err(|error| handle_decode_error(encoding, error))?;
+                        .map_err(|err| handle_decode_error(encoding, err))?;
                     decoded.into()
                 }
                 "snappy" => SnappyDecoder::new()
                     .decompress_vec(&body)
-                    .map_err(|error| handle_decode_error(encoding, error))?
+                    .map_err(|err| handle_decode_error(encoding, err))?
                     .into(),
                 encoding => {
                     return Err(ErrorMessage::new(

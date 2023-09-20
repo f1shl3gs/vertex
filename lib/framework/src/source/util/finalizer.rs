@@ -11,8 +11,7 @@ use futures::{FutureExt, Stream};
 use futures_util::stream::{BoxStream, FuturesOrdered, FuturesUnordered};
 use futures_util::StreamExt;
 use pin_project_lite::pin_project;
-use tokio::sync::mpsc;
-use tokio::sync::mpsc::{UnboundedReceiver, UnboundedSender};
+use tokio::sync::mpsc::{unbounded_channel, UnboundedReceiver, UnboundedSender};
 
 use crate::ShutdownSignal;
 
@@ -47,7 +46,7 @@ where
     /// Produce a finalizer set along with the output stream of received
     /// acknowledged batch identifiers.
     pub fn new(shutdown: ShutdownSignal) -> (Self, impl Stream<Item = (BatchStatus, T)>) {
-        let (tx, rx) = mpsc::unbounded_channel();
+        let (tx, rx) = unbounded_channel();
 
         (
             Self {

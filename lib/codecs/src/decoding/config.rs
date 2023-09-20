@@ -1,13 +1,12 @@
 use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
-use super::Decoder;
-use crate::decoding::framing::OctetCountingDecoderConfig;
 #[cfg(feature = "syslog")]
-use crate::decoding::SyslogDeserializer;
-use crate::decoding::{
-    BytesDeserializer, BytesDeserializerConfig, CharacterDelimitedDecoderConfig, Deserializer,
-    Framer, JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoderConfig,
+use super::SyslogDeserializer;
+use super::{
+    framing::OctetCountingDecoderConfig, BytesDeserializer, BytesDeserializerConfig,
+    CharacterDelimitedDecoderConfig, Decoder, Deserializer, Framer, JsonDeserializer,
+    LogfmtDeserializer, NewlineDelimitedDecoderConfig,
 };
 
 /// Configuration for building a `Framer`.

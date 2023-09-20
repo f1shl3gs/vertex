@@ -1,8 +1,10 @@
 use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 
-use super::{transformer::Transformer, Framer, Serializer, SerializerConfig};
-use crate::encoding::{BytesEncoder, CharacterDelimitedEncoder, NewlineDelimitedEncoder};
+use super::{
+    transformer::Transformer, BytesEncoder, CharacterDelimitedEncoder, Framer,
+    NewlineDelimitedEncoder, Serializer, SerializerConfig,
+};
 
 /// Configuration for building a `Framer`.
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
