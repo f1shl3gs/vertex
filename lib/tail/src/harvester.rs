@@ -9,7 +9,6 @@ use chrono::{DateTime, Utc};
 use futures::future::{select, Either};
 use futures::{stream, Sink, SinkExt};
 use tokio::time::sleep;
-use tracing::{debug, error, info, trace, warn};
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
 use super::watch::Watcher;

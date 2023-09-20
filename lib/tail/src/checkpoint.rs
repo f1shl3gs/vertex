@@ -8,7 +8,6 @@ use std::sync::{Arc, Mutex};
 use chrono::{DateTime, Utc};
 use dashmap::DashMap;
 use serde::{Deserialize, Serialize};
-use tracing::{error, info, warn};
 
 const STATE_VERSION: &str = "v1";
 const TMP_FILE_NAME: &str = "checkpoints.new.json";

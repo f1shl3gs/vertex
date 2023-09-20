@@ -1,10 +1,9 @@
 use std::collections::HashMap;
 
-use framework::config;
-use framework::config::{ConfigDiff, Format};
+use framework::config::{self, ConfigDiff, Format};
 use framework::topology;
 
-async fn load(config: &str, format: config::Format) -> Result<Vec<String>, Vec<String>> {
+async fn load(config: &str, format: Format) -> Result<Vec<String>, Vec<String>> {
     let c = config::load_from_str(config, format)?;
 
     let diff = ConfigDiff::initial(&c);

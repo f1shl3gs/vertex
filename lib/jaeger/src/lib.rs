@@ -1,5 +1,3 @@
-extern crate core;
-
 pub mod agent;
 mod thrift;
 mod translate;
