@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695191200076,
+  "lastUpdate": 1695191210004,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
-          "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-09T19:02:10+08:00",
-          "tree_id": "d8a38f4b3a0692eb846e3215556cab7ff5007eb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b73c9e7e3fcaaef662a29059ca8fec22d22b845c"
-        },
-        "date": 1691579184082,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.929,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 28.453,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.818,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 45.338,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 62.217,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5d3c2138fa7cdfe7fbf158b115ad685089e3a7e4",
           "message": "chore(deps): bump tokio from 1.29.1 to 1.30.0 (#1156)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.29.1 to 1.30.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.29.1...tokio-1.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-10T13:03:58+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.453,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5f9d45c0abc63878458d6f7fb8a5a799a6b3619",
+          "message": "fix clippy warnings (#1268)",
+          "timestamp": "2023-09-20T14:22:18+08:00",
+          "tree_id": "9987807a5674e7a9a6ac633e16a8e7c6df80ff15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a5f9d45c0abc63878458d6f7fb8a5a799a6b3619"
+        },
+        "date": 1695191191758,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.403,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.903,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.069,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.843,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 49.491,
             "unit": "ns/op"
           }
         ]
