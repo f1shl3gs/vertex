@@ -10,7 +10,7 @@ syslog = ["syslog_loose"]
 
 [dev-dependencies]
 tokio = { version = "1.32.0", default-features = false, features = ["test-util", "macros"] }
-futures-util = { version = "0.3.27" }
+futures-util = { version = "0.3.28", default-features = false }
 serde_yaml = { version = "0.9.25" }
 serde_path_to_error = { version = "0.1.14" }
 
@@ -20,7 +20,7 @@ chrono = { version = "0.4.31", default-features = false }
 configurable = { path = "../configurable" }
 event = { path = "../event" }
 futures = { version = "0.3.28" }
-futures-util = { version = "0.3.27" }
+futures-util = { version = "0.3.28", default-features = false }
 log_schema = { path = "../log_schema" }
 lookup = { path = "../lookup" }
 memchr = { version = "2.6.3", default-features = false }

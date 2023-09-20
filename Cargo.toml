@@ -351,7 +351,7 @@ tikv-jemalloc-sys = { version = "0.5.4", optional = true, features = ["stats"] }
 async-stream = { version = "0.3.5", optional = true }
 async-trait = { version = "0.1.73" }
 futures = { version = "0.3.28", default-features = false }
-futures-util = { version = "0.3.27", default-features = false }
+futures-util = { version = "0.3.28", default-features = false }
 tokio = { version = "1.32.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.14", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.9", default-features = false, features = ["codec", "time", "net"] }
@@ -401,7 +401,7 @@ exitcode = { version = "1.1.2" }
 flate2 = { version = "1.0.27", optional = true }
 glob = { version = "0.3.1" }
 indexmap = { version = "2.0.0", default-features = false, features = ["serde"] }
-inventory = { version = "0.3.11", default-features = false }
+inventory = { version = "0.3.12", default-features = false }
 k8s-openapi = { version = "0.20.0", default-features = false, optional = true, features = ["v1_22"] }
 kube = { version = "0.86.0", default-features = false, optional = true, features = ["client", "runtime", "rustls-tls"] }
 libc = { version = "0.2.148", optional = true }
