@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695215680502,
+  "lastUpdate": 1695216523878,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "57fe407b405612467f7b5526f7c480695cb91ec0",
-          "message": "chore(deps): bump async-trait from 0.1.72 to 0.1.73 (#1164)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.72 to 0.1.73.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.72...0.1.73)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-14T13:49:30+08:00",
-          "tree_id": "daa8c03a6f87bf79968df04bf78a1ebcdeecfa79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/57fe407b405612467f7b5526f7c480695cb91ec0"
-        },
-        "date": 1691993744886,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1412,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44375.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 958,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42654.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d3981f531bba5b323fd6ec05a4a49ed34028722",
+          "message": "remove unused qualification (#1269)",
+          "timestamp": "2023-09-20T21:09:31+08:00",
+          "tree_id": "ec5176b804e1533145b6d95345eda7b6b721d2d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d3981f531bba5b323fd6ec05a4a49ed34028722"
+        },
+        "date": 1695216506755,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1001,
             "unit": "s"
           },
           {
