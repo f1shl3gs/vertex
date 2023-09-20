@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695191141049,
+  "lastUpdate": 1695191200076,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
-          "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-09T19:02:10+08:00",
-          "tree_id": "d8a38f4b3a0692eb846e3215556cab7ff5007eb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b73c9e7e3fcaaef662a29059ca8fec22d22b845c"
-        },
-        "date": 1691579174932,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 490.1,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 48744,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 243300,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 491490,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 175.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 17313,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 88013,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 173070,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5d3c2138fa7cdfe7fbf158b115ad685089e3a7e4",
           "message": "chore(deps): bump tokio from 1.29.1 to 1.30.0 (#1156)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.29.1 to 1.30.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.29.1...tokio-1.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-10T13:03:58+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 192260,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5f9d45c0abc63878458d6f7fb8a5a799a6b3619",
+          "message": "fix clippy warnings (#1268)",
+          "timestamp": "2023-09-20T14:22:18+08:00",
+          "tree_id": "9987807a5674e7a9a6ac633e16a8e7c6df80ff15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a5f9d45c0abc63878458d6f7fb8a5a799a6b3619"
+        },
+        "date": 1695191183417,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 556.39,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 55532,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 277610,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 555400,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 190.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19041,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 95154,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 190320,
             "unit": "ns/op"
           }
         ]
