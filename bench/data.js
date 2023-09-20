@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695235666889,
+  "lastUpdate": 1695235725191,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c70805eb984e26f775acc2ce94c9e235bb664ae2",
-          "message": "update hyper-proxy (#1160)",
-          "timestamp": "2023-08-13T20:28:21+08:00",
-          "tree_id": "8361cbfae65f4c83427e4f12f2b8b4d4e4a6632b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c70805eb984e26f775acc2ce94c9e235bb664ae2"
-        },
-        "date": 1691929933621,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 563.13,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 56057,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 280260,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 560690,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 190.19,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 18884,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 94392,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 188940,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "064ee55a2d01cd03bc531829c22303d4729c6ce9",
           "message": "update hyper-proxy (#1161)",
           "timestamp": "2023-08-13T21:00:34+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 199990,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
+          "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-21T02:43:21+08:00",
+          "tree_id": "8cc9330fd9f2405da702bec2e02cb25dfd806290",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69c7f72e455355a0a01203eb10ec62b6ffa94429"
+        },
+        "date": 1695235701471,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 715.83,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 71005,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 351850,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 706370,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 257.15,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 25736,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 133660,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 259600,
             "unit": "ns/op"
           }
         ]
