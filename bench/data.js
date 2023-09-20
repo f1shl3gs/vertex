@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695191139700,
+  "lastUpdate": 1695191141049,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
-          "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-09T19:02:10+08:00",
-          "tree_id": "d8a38f4b3a0692eb846e3215556cab7ff5007eb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b73c9e7e3fcaaef662a29059ca8fec22d22b845c"
-        },
-        "date": 1691579166592,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 110.03,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 250.83,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 408.95,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 288.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a5f9d45c0abc63878458d6f7fb8a5a799a6b3619",
+          "message": "fix clippy warnings (#1268)",
+          "timestamp": "2023-09-20T14:22:18+08:00",
+          "tree_id": "9987807a5674e7a9a6ac633e16a8e7c6df80ff15",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a5f9d45c0abc63878458d6f7fb8a5a799a6b3619"
+        },
+        "date": 1695191123953,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 85.354,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 196.63,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 336.24,
             "unit": "ns/op"
           }
         ]
