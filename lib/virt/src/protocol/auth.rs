@@ -15,6 +15,7 @@ impl<W: Write> Pack<W> for AuthListRequest {
     }
 }
 
+#[allow(clippy::upper_case_acronyms)]
 pub enum AuthType {
     None,
     SASL,

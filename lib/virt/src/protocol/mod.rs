@@ -1,5 +1,3 @@
-#![allow(warnings)]
-
 mod auth;
 mod connect_list_storage_pools;
 mod constants;
@@ -133,7 +131,7 @@ impl<W: Write, T: Pack<W>> Pack<W> for [T] {
         }
 
         let p = padding(sz);
-        if p.len() > 0 {
+        if !p.is_empty() {
             w.write_all(p)?;
             sz += p.len();
         }

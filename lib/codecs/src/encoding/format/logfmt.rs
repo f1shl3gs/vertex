@@ -1,13 +1,10 @@
-use std::collections::BTreeMap;
 use std::fmt::Write;
 
 use bytes::BytesMut;
-use event::log::Value;
 use event::Event;
-use log_schema::log_schema;
 use tokio_util::codec::Encoder;
 
-use crate::encoding::SerializeError;
+use super::SerializeError;
 
 /// Serializer that converts an `Event` to bytes using the logfmt format
 #[derive(Clone, Debug)]
@@ -41,30 +38,34 @@ impl Encoder<Event> for LogfmtSerializer {
     }
 }
 
-fn flatten(input: &BTreeMap<String, Value>, separator: char) -> BTreeMap<String, String> {
-    let mut map = BTreeMap::new();
-
-    for (k, v) in input {
-        match v {
-            // TODO: array
-            Value::Object(m) => {
-                for (nk, nv) in flatten(m, separator) {
-                    map.insert(format!("{}{}{}", k, separator, nk), nv);
-                }
-            }
-            _ => {
-                map.insert(k.to_string(), v.to_string_lossy());
-            }
-        }
-    }
-
-    map
-}
-
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use std::collections::BTreeMap;
+
     use event::fields;
+    use event::log::Value;
+
+    use super::*;
+
+    fn flatten(input: &BTreeMap<String, Value>, separator: char) -> BTreeMap<String, String> {
+        let mut map = BTreeMap::new();
+
+        for (k, v) in input {
+            match v {
+                // TODO: array
+                Value::Object(m) => {
+                    for (nk, nv) in flatten(m, separator) {
+                        map.insert(format!("{}{}{}", k, separator, nk), nv);
+                    }
+                }
+                _ => {
+                    map.insert(k.to_string(), v.to_string_lossy());
+                }
+            }
+        }
+
+        map
+    }
 
     #[test]
     fn flatten_nest_object() {

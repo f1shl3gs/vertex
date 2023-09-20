@@ -1,15 +1,15 @@
 use std::io;
 
 use bytes::{Buf, Bytes, BytesMut};
+use configurable::Configurable;
 use serde::{Deserialize, Serialize};
-
-use tokio_util::codec::{Framed, LinesCodec, LinesCodecError};
+use tokio_util::codec::{LinesCodec, LinesCodecError};
 use tracing::trace;
 
 use crate::FramingError;
 
 /// Config used to build a `OctetCountingDecoder`
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
 pub struct OctetCountingDecoderConfig {
     #[serde(skip_serializing_if = "Option::is_none")]
     max_length: Option<usize>,
@@ -222,7 +222,7 @@ impl OctetCountingDecoder {
         &mut self,
         src: &mut BytesMut,
     ) -> Option<Result<Option<Bytes>, LinesCodecError>> {
-        if let Some(&first_byte) = src.get(0) {
+        if let Some(&first_byte) = src.first() {
             if (49..=57).contains(&first_byte) {
                 // First character is non zero number so we can assume that
                 // octet count framing is used

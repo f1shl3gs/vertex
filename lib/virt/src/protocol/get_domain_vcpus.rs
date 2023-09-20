@@ -5,7 +5,7 @@ use super::{
 };
 
 pub const REMOTE_VCPUINFO_MAX: usize = 16384;
-pub const REMOTE_CPUMAPS_MAX: usize = 8388608;
+// pub const REMOTE_CPUMAPS_MAX: usize = 8388608;
 
 pub struct GetDomainVcpusRequest<'a> {
     pub domain: &'a Domain,

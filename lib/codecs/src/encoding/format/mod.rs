@@ -3,7 +3,7 @@ pub mod logfmt;
 pub mod native_json;
 pub mod text;
 
-use std::fmt::{Debug, Formatter};
+use std::fmt::Debug;
 
 use event::Event;
 
