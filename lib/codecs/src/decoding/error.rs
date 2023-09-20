@@ -1,6 +1,6 @@
-use crate::decoding::format::DeserializeError;
-use crate::FramingError;
 use std::fmt::{Display, Formatter};
+
+use super::{DeserializeError, FramingError};
 
 /// An error that occurs while decoding a stream
 pub trait StreamDecodingError {

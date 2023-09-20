@@ -10,12 +10,11 @@ mod transformer;
 use std::fmt::{Debug, Display, Formatter};
 
 use bytes::BytesMut;
+use configurable::Configurable;
 use event::Event;
 use serde::{Deserialize, Serialize};
 
-use crate::FramingError;
 pub use config::{EncodingConfig, EncodingConfigWithFraming, FramingConfig, SinkType};
-use configurable::Configurable;
 pub use encoder::{Encoder, EncodingError};
 pub use format::{
     json::JsonSerializer, logfmt::LogfmtSerializer, native_json::NativeJsonSerializer,
@@ -27,6 +26,8 @@ pub use framing::{
     newline::NewlineDelimitedEncoder,
 };
 pub use transformer::{TimestampFormat, Transformer};
+
+use super::FramingError;
 
 /// The error returned when serializing a structured event into bytes.
 #[derive(Debug)]

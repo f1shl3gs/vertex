@@ -94,7 +94,7 @@ impl LogSchema {
         let default_value = LOG_SCHEMA_DEFAULT.get_or_init(LogSchema::default);
 
         if *other != *default_value {
-            // If the set value is the defalt, override it. If it's already overridden, error
+            // If the set value is the default, override it. If it's already overridden, error
             if self.host_key() != default_value.host_key() && self.host_key() != other.host_key() {
                 errors.push("conflicting values for 'log_schema.host_key' found".to_owned());
             } else {

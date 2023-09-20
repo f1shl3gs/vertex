@@ -46,7 +46,7 @@ where
                     // allow for recovering the original event value because we have to
                     // consume it to do the encoding... but that might not always be
                     // the case.
-                    error!("Disk buffer writer has encountered an unreacoverable error.");
+                    error!("Disk buffer writer has encountered an unrecoverable error.");
 
                     err.into()
                 })
