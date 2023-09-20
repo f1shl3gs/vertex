@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695216523878,
+  "lastUpdate": 1695216755603,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b73c9e7e3fcaaef662a29059ca8fec22d22b845c",
-          "message": "chore(deps): bump argh from 0.1.11 to 0.1.12 (#1155)\n\nBumps [argh](https://github.com/google/argh) from 0.1.11 to 0.1.12.\r\n- [Release notes](https://github.com/google/argh/releases)\r\n- [Commits](https://github.com/google/argh/compare/0.1.11...0.1.12)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: argh\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-09T19:02:10+08:00",
-          "tree_id": "d8a38f4b3a0692eb846e3215556cab7ff5007eb8",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b73c9e7e3fcaaef662a29059ca8fec22d22b845c"
-        },
-        "date": 1691580312989,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 41034000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1015100,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.769,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5d3c2138fa7cdfe7fbf158b115ad685089e3a7e4",
           "message": "chore(deps): bump tokio from 1.29.1 to 1.30.0 (#1156)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.29.1 to 1.30.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.29.1...tokio-1.30.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-10T13:03:58+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.382,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7d3981f531bba5b323fd6ec05a4a49ed34028722",
+          "message": "remove unused qualification (#1269)",
+          "timestamp": "2023-09-20T21:09:31+08:00",
+          "tree_id": "ec5176b804e1533145b6d95345eda7b6b721d2d3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7d3981f531bba5b323fd6ec05a4a49ed34028722"
+        },
+        "date": 1695216737194,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25145000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1126900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.817,
             "unit": "ns/op"
           }
         ]
