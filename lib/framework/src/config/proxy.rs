@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use super::{default_true, skip_serializing_if_default};
 
 fn from_env(key: &str) -> Option<String> {
-    // use lowercase first and the upercase
+    // use lowercase first and the uppercase
     std::env::var(key.to_lowercase())
         .ok()
         .or_else(|| std::env::var(key.to_uppercase()).ok())
@@ -70,7 +70,7 @@ pub struct ProxyConfig {
     /// Wildcard domains: ".example.com" matches requests to example.com and its
     ///                    subdomains
     /// IP address:        "127.0.0.1" matches requests to 127.0.0.1
-    /// CIDR blocks:       "192.168.0.0./16" matches requests to any IP addressess in this range.
+    /// CIDR blocks:       "192.168.0.0./16" matches requests to any IP addresses in this range.
     /// Splat:             "*" matches all hosts
     #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
     pub no_proxy: NoProxy,

@@ -1,14 +1,14 @@
+use std::fmt::{Display, Formatter};
+
 use bytes::BytesMut;
 use event::Event;
-use std::fmt::{Display, Formatter};
 use tokio_util::codec::Encoder as _;
 use tracing::warn;
 
-use crate::encoding::{
-    CharacterDelimitedEncoder, Framer, NewlineDelimitedEncoder, SerializeError, Serializer,
-    TextSerializer,
+use super::{
+    CharacterDelimitedEncoder, Framer, FramingError, NewlineDelimitedEncoder, SerializeError,
+    Serializer, TextSerializer,
 };
-use crate::FramingError;
 
 /// An error that occurred while encoding structured events into byte frames.
 #[derive(Debug)]

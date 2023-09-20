@@ -7,7 +7,7 @@ use std::fmt::Debug;
 
 use event::Event;
 
-use crate::encoding::SerializeError;
+use super::SerializeError;
 
 /// Serialize a structured event into a byte frame.
 pub trait Serializer:

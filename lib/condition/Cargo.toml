@@ -11,8 +11,8 @@ harness = false
 [dependencies]
 event = { path = "../event" }
 lookup = { path = "../lookup" }
-regex = { version = "1.9.5" }
-serde = { version = "1.0.188" }
+regex = { version = "1.9.5", default-features = false }
+serde = { version = "1.0.188", default-features = false }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false }
