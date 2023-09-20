@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695235665316,
+  "lastUpdate": 1695235666889,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c70805eb984e26f775acc2ce94c9e235bb664ae2",
-          "message": "update hyper-proxy (#1160)",
-          "timestamp": "2023-08-13T20:28:21+08:00",
-          "tree_id": "8361cbfae65f4c83427e4f12f2b8b4d4e4a6632b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c70805eb984e26f775acc2ce94c9e235bb664ae2"
-        },
-        "date": 1691929946131,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.63,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 25.468,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.749,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 41.185,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 54.816,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "064ee55a2d01cd03bc531829c22303d4729c6ce9",
           "message": "update hyper-proxy (#1161)",
           "timestamp": "2023-08-13T21:00:34+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.501,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "69c7f72e455355a0a01203eb10ec62b6ffa94429",
+          "message": "chore(deps): bump smallvec from 1.11.0 to 1.11.1 (#1273)\n\nBumps [smallvec](https://github.com/servo/rust-smallvec) from 1.11.0 to 1.11.1.\r\n- [Release notes](https://github.com/servo/rust-smallvec/releases)\r\n- [Commits](https://github.com/servo/rust-smallvec/compare/v1.11.0...v1.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: smallvec\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-21T02:43:21+08:00",
+          "tree_id": "8cc9330fd9f2405da702bec2e02cb25dfd806290",
+          "url": "https://github.com/f1shl3gs/vertex/commit/69c7f72e455355a0a01203eb10ec62b6ffa94429"
+        },
+        "date": 1695235648891,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.969,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.112,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.474,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 44.376,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.499,
             "unit": "ns/op"
           }
         ]
