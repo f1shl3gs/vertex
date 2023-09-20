@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695231919608,
+  "lastUpdate": 1695232944963,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0224f1f279fcb5a01ac7314afbec13f6dcb3e214",
-          "message": "set dependabot's schedule.time to \"20:00\" (#1166)",
-          "timestamp": "2023-08-16T07:18:56+08:00",
-          "tree_id": "586ce584d26b5ac9bd91a194cd2c7a285ea5d7e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0224f1f279fcb5a01ac7314afbec13f6dcb3e214"
-        },
-        "date": 1692142924900,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1237,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44374.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "1c9baf52b976b8d45349dbe2447138f4ca1d778d",
           "message": "set timestamp for metrics (#1165)",
           "timestamp": "2023-08-16T07:38:29+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1062,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42653,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "9e06d28118f4e94af2c57a946a16bb636007e08b",
+          "message": "fix tracing-limit bench (#1271)",
+          "timestamp": "2023-09-21T01:39:46+08:00",
+          "tree_id": "74a267d73fb3e897a659223cdd333d07d9c5f4cb",
+          "url": "https://github.com/f1shl3gs/vertex/commit/9e06d28118f4e94af2c57a946a16bb636007e08b"
+        },
+        "date": 1695232922707,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1181,
             "unit": "s"
           },
           {
