@@ -363,8 +363,9 @@ impl Table {
 }
 
 mod termsize {
-    use libc::{c_ushort, ioctl, STDOUT_FILENO, TIOCGWINSZ};
     use std::io::IsTerminal;
+
+    use libc::{c_ushort, ioctl, STDOUT_FILENO, TIOCGWINSZ};
 
     /// A representation of the size of the current terminal
     #[repr(C)]

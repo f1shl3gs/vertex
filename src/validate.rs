@@ -104,7 +104,7 @@ impl Validate {
         init_log_schema(&paths, true)
             .map_err(&mut report_error)
             .ok()?;
-        let (builder, load_warnings) = config::load_builder_from_paths(&paths)
+        let (builder, load_warnings) = load_builder_from_paths(&paths)
             .map_err(&mut report_error)
             .ok()?;
 

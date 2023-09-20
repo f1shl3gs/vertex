@@ -1,7 +1,6 @@
 #[cfg(test)]
 mod tests;
 
-use std::fs;
 use std::fs::File;
 use std::io::{self, BufRead, BufReader, Seek};
 use std::os::unix::fs::MetadataExt;
@@ -10,7 +9,6 @@ use std::path::PathBuf;
 use bytes::{Bytes, BytesMut};
 use chrono::{DateTime, Utc};
 use flate2::bufread::MultiGzDecoder;
-use tracing::debug;
 
 use crate::buffer::read_until_with_max_size;
 use crate::{Position, ReadFrom};
@@ -47,8 +45,8 @@ impl Watcher {
         ignore_before: Option<DateTime<Utc>>,
         max_line_bytes: usize,
         line_delimiter: Bytes,
-    ) -> Result<Self, std::io::Error> {
-        let f = std::fs::File::open(&path)?;
+    ) -> Result<Self, io::Error> {
+        let f = File::open(&path)?;
         let metadata = f.metadata()?;
         let devno = metadata.dev();
         let inode = metadata.ino();
@@ -178,7 +176,7 @@ impl Watcher {
         let inode = meta.ino();
 
         if (devno, inode) != (self.devno, self.inode) {
-            let mut reader = io::BufReader::new(fs::File::open(&path)?);
+            let mut reader = io::BufReader::new(File::open(&path)?);
             let gzipped = is_gzipped(&mut reader)?;
             let new_reader: Box<dyn BufRead> = if gzipped {
                 if self.position != 0 {

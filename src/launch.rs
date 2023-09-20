@@ -325,7 +325,7 @@ impl RootCommand {
     }
 }
 
-pub fn handle_config_errors(errors: Vec<String>) -> exitcode::ExitCode {
+pub fn handle_config_errors(errors: Vec<String>) -> ExitCode {
     for err in errors {
         error!(message = "configuration error", ?err);
     }

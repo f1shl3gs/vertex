@@ -1,7 +1,6 @@
 use std::io::{self, BufRead};
 
 use bytes::BytesMut;
-use tracing::warn;
 
 use crate::Position;
 
