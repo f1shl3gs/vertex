@@ -162,9 +162,10 @@ where
 
 #[cfg(test)]
 mod tests {
+    use lookup::parse_path;
+
     use super::*;
     use crate::encoding::TimestampFormat;
-    use lookup::parse_path;
 
     #[test]
     fn deserialize() {
@@ -206,6 +207,7 @@ timestamp_format: unix
             ),
         ];
 
+        #[allow(unused_variables)]
         for (input, config, want) in tests {
             let encoding = serde_yaml::from_str::<EncodingConfig>(input).unwrap();
             let serializer = encoding.config();
@@ -220,28 +222,29 @@ timestamp_format: unix
     fn deserialize_config_with_framing() {
         let tests = [
             (
-                r##"
+                r#"
 framing: newline_delimited
 encoding:
     codec: json
     only_fields: [ "a.b.c" ]
-"##,
+"#,
                 Some(FramingConfig::NewlineDelimited),
                 SerializerConfig::Json,
                 Transformer::new(Some(vec![parse_path("a.b.c")]), None, None).unwrap(),
             ),
             (
-                r##"
+                r#"
 encoding:
     codec: json
     only_fields: [ "a.b.c" ]
-"##,
+"#,
                 None,
                 SerializerConfig::Json,
                 Transformer::new(Some(vec![parse_path("a.b.c")]), None, None).unwrap(),
             ),
         ];
 
+        #[allow(unused_variables)]
         for (input, framing, config, transformer) in tests {
             let encoding = serde_yaml::from_str::<EncodingConfigWithFraming>(input).unwrap();
             let (got_framing, serializer) = encoding.config();

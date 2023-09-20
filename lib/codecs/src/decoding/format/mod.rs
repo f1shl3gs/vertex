@@ -7,7 +7,6 @@ mod logfmt;
 #[cfg(feature = "syslog")]
 mod syslog;
 
-use std::convert::Infallible;
 use std::fmt::Debug;
 use std::str::Utf8Error;
 
@@ -16,7 +15,6 @@ use event::Event;
 use smallvec::SmallVec;
 
 pub use self::bytes::*;
-use crate::FramingError;
 pub use json::JsonDeserializer;
 pub use logfmt::LogfmtDeserializer;
 #[cfg(feature = "syslog")]

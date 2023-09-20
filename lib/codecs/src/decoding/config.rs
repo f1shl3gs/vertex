@@ -1,15 +1,13 @@
 use configurable::Configurable;
-use event::Event;
 use serde::{Deserialize, Serialize};
-use smallvec::SmallVec;
 
 use super::Decoder;
+use crate::decoding::framing::OctetCountingDecoderConfig;
 #[cfg(feature = "syslog")]
 use crate::decoding::SyslogDeserializer;
 use crate::decoding::{
-    BytesDeserializer, BytesDeserializerConfig, CharacterDelimitedDecoder, DecodeError,
-    Deserializer, Framer, JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoder,
-    OctetCountingDecoder,
+    BytesDeserializer, BytesDeserializerConfig, CharacterDelimitedDecoderConfig, Deserializer,
+    Framer, JsonDeserializer, LogfmtDeserializer, NewlineDelimitedDecoderConfig,
 };
 
 /// Configuration for building a `Framer`.
@@ -20,42 +18,13 @@ pub enum FramingConfig {
     Bytes,
 
     /// Configures the `NewlineDelimitedFramer`
-    NewlineDelimited {
-        /// The maximum length of the byte buffer.
-        ///
-        /// This length does *not* include the trailing delimiter.
-        ///
-        /// By default, there is no maximum length enforced. If events are malformed, this can lead to
-        /// additional resource usage as events continue to be buffered in memory, and can potentially
-        /// lead to memory exhaustion in extreme cases.
-        ///
-        /// If there is a risk of processing malformed data, such as logs with user-controlled input,
-        /// consider setting the maximum length to a reasonably large value as a safety net. This will
-        /// ensure that processing is not truly unbounded.
-        #[serde(skip_serializing_if = "Option::is_none")]
-        max_length: Option<usize>,
-    },
+    NewlineDelimited(NewlineDelimitedDecoderConfig),
 
     /// Configures the `CharacterDelimitedFramer`.
-    CharacterDelimited {
-        /// The character that delimits byte sequences.
-        ///
-        /// This length does *not* include the trailing delimiter.
-        delimiter: u8,
-
-        /// The maximum length of the byte buffer.
-        ///
-        /// This length does *not* include the trailing delimiter.
-        #[serde(default, skip_serializing_if = "Option::is_none")]
-        max_length: Option<usize>,
-    },
+    CharacterDelimited(CharacterDelimitedDecoderConfig),
 
     /// Configures the `OctetCountingFramer`.
-    OctetCounting {
-        /// The maximum length of the byte buffer.
-        #[serde(skip_serializing_if = "Option::is_none")]
-        max_length: Option<usize>,
-    },
+    OctetCounting(OctetCountingDecoderConfig),
 }
 
 impl FramingConfig {
@@ -63,35 +32,9 @@ impl FramingConfig {
     pub fn build(&self) -> Framer {
         match self {
             FramingConfig::Bytes => Framer::Bytes(BytesDeserializerConfig::new()),
-            FramingConfig::CharacterDelimited {
-                delimiter,
-                max_length,
-            } => {
-                let framer = match max_length {
-                    Some(max_length) => {
-                        CharacterDelimitedDecoder::new_with_max_length(*delimiter, *max_length)
-                    }
-                    None => CharacterDelimitedDecoder::new(*delimiter),
-                };
-
-                Framer::CharacterDelimited(framer)
-            }
-            FramingConfig::NewlineDelimited { max_length } => {
-                let framer = match max_length {
-                    Some(max_length) => NewlineDelimitedDecoder::new_with_max_length(*max_length),
-                    None => NewlineDelimitedDecoder::new(),
-                };
-
-                Framer::NewlineDelimited(framer)
-            }
-            FramingConfig::OctetCounting { max_length } => {
-                let framer = match max_length {
-                    Some(max_length) => OctetCountingDecoder::new_with_max_length(*max_length),
-                    None => OctetCountingDecoder::new(),
-                };
-
-                Framer::OctetCounting(framer)
-            }
+            FramingConfig::CharacterDelimited(config) => Framer::CharacterDelimited(config.build()),
+            FramingConfig::NewlineDelimited(config) => Framer::NewlineDelimited(config.build()),
+            FramingConfig::OctetCounting(config) => Framer::OctetCounting(config.build()),
         }
     }
 }
@@ -129,11 +72,13 @@ impl DeserializerConfig {
     pub fn default_stream_framing(&self) -> FramingConfig {
         match self {
             DeserializerConfig::Bytes | DeserializerConfig::Json | DeserializerConfig::Logfmt => {
-                FramingConfig::NewlineDelimited { max_length: None }
+                FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
             }
 
             #[cfg(feature = "syslog")]
-            DeserializerConfig::Syslog => FramingConfig::NewlineDelimited { max_length: None },
+            DeserializerConfig::Syslog => {
+                FramingConfig::NewlineDelimited(NewlineDelimitedDecoderConfig::default())
+            }
         }
     }
 }

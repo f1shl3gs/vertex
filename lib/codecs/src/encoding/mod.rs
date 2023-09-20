@@ -64,7 +64,12 @@ impl From<serde_json::Error> for SerializeError {
 
 impl Display for SerializeError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+        match self {
+            SerializeError::Io(err) => write!(f, "IO error, {}", err),
+            SerializeError::Fmt(err) => write!(f, "format error, {}", err),
+            SerializeError::Json(err) => write!(f, "serialize json failed, {}", err),
+            SerializeError::Other(msg) => write!(f, "unknown error, {}", msg),
+        }
     }
 }
 
@@ -74,9 +79,9 @@ impl Display for SerializeError {
 pub enum SerializerConfig {
     /// Configures the `JsonSerializer`
     Json,
-    /// Configures the `LogfmtSerializer`F
+    /// Configures the `LogfmtSerializer`
     Logfmt,
-    /// Configures the `NativeJsonSerializer`,
+    /// Configures the `NativeJsonSerializer`
     NativeJson,
     /// Configures the `TextSerializer`
     Text,

@@ -43,7 +43,7 @@ impl MessageHeader {
         w.write_i32(self.procedure)?;
         w.write_i32(self.typ)?;
         w.write_u32(self.serial)?;
-        w.write_i32(self.status as i32)?;
+        w.write_i32(self.status)?;
 
         Ok(24)
     }
@@ -284,9 +284,6 @@ impl<R: Read> Unpack<R> for String {
 pub struct Opaque<'a>(pub Cow<'a, [u8]>);
 
 impl<'a> Opaque<'a> {
-    pub fn owned(v: Vec<u8>) -> Opaque<'a> {
-        Opaque(Cow::Owned(v))
-    }
     pub fn borrowed(v: &'a [u8]) -> Opaque<'a> {
         Opaque(Cow::Borrowed(v))
     }
@@ -304,7 +301,7 @@ impl<'a> Opaque<'a> {
         let mut size = 8 + data.len();
 
         let p = padding(size);
-        if p.len() > 0 {
+        if !p.is_empty() {
             w.write_all(p)?;
             size += p.len();
         }

@@ -6,23 +6,24 @@ mod error;
 pub mod format;
 mod framing;
 
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::Debug;
 
 use bytes::{Bytes, BytesMut};
-pub use config::*;
-pub use error::{DecodeError, StreamDecodingError};
 use event::Event;
-use format::Deserializer as _;
-pub use format::*;
-pub use framing::*;
-use serde::{Deserialize, Serialize};
+use format::{DeserializeError, Deserializer as _};
 use smallvec::SmallVec;
-use tokio::io::{AsyncRead, AsyncWrite};
-use tokio_util::codec::Framed;
 use tracing::warn;
 
-use crate::decoding::format::DeserializeError;
-use crate::encoding::JsonSerializer;
+pub use config::*;
+pub use error::{DecodeError, StreamDecodingError};
+#[cfg(feature = "syslog")]
+pub use format::SyslogDeserializer;
+pub use format::{BytesDeserializer, JsonDeserializer, LogfmtDeserializer};
+pub use framing::{
+    BytesDeserializerConfig, CharacterDelimitedDecoder, CharacterDelimitedDecoderConfig,
+    NewlineDelimitedDecoder, NewlineDelimitedDecoderConfig, OctetCountingDecoder,
+};
+
 use crate::FramingError;
 
 /// Produce byte frames from a byte stream / byte message
@@ -119,7 +120,7 @@ impl Default for Decoder {
     fn default() -> Self {
         Self {
             framer: Framer::NewlineDelimited(NewlineDelimitedDecoder::new()),
-            deserializer: Deserializer::Bytes(BytesDeserializer::new()),
+            deserializer: Deserializer::Bytes(BytesDeserializer),
         }
     }
 }
@@ -137,6 +138,7 @@ impl Decoder {
     /// possible.
     ///
     /// Emits logs if either framing or parsing failed.
+    #[allow(clippy::type_complexity)]
     fn handle_framing_result(
         &mut self,
         frame: Result<Option<Bytes>, FramingError>,

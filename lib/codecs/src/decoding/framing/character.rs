@@ -1,16 +1,15 @@
-use std::io;
-
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, Bytes, BytesMut};
+use configurable::Configurable;
 use memchr::memchr;
 use serde::{Deserialize, Serialize};
-use tokio_util::codec::{Decoder, Encoder, Framed};
-use tracing::{trace, warn};
+use tokio_util::codec::Decoder;
+use tracing::warn;
 
 use crate::FramingError;
 
-/// Options for building a `CharacterDelimitedDecoder`
-#[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
-pub struct CharacterDelimitedDecoderOptions {
+/// Config used to build a `CharacterDelimitedDecoder`
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
+pub struct CharacterDelimitedDecoderConfig {
     /// The character that delimits byte sequences
     delimiter: u8,
     /// The maximum length of the byte buffer
@@ -20,22 +19,13 @@ pub struct CharacterDelimitedDecoderOptions {
     max_length: Option<usize>,
 }
 
-/// Config used to build a `CharacterDelimitedDecoder`
-#[derive(Clone, Debug, Deserialize, Serialize)]
-pub struct CharacterDelimitedDecoderConfig {
-    pub(crate) character_delimited: CharacterDelimitedDecoderOptions,
-}
-
 impl CharacterDelimitedDecoderConfig {
     /// Build the `CharacterDelimitedDecoder` from this configuration.
     pub fn build(&self) -> CharacterDelimitedDecoder {
-        if let Some(max_length) = self.character_delimited.max_length {
-            CharacterDelimitedDecoder::new_with_max_length(
-                self.character_delimited.delimiter,
-                max_length,
-            )
+        if let Some(max_length) = self.max_length {
+            CharacterDelimitedDecoder::new_with_max_length(self.delimiter, max_length)
         } else {
-            CharacterDelimitedDecoder::new(self.character_delimited.delimiter)
+            CharacterDelimitedDecoder::new(self.delimiter)
         }
     }
 }
@@ -134,8 +124,11 @@ impl Decoder for CharacterDelimitedDecoder {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::collections::HashMap;
+
+    use bytes::BufMut;
+
+    use super::*;
 
     #[test]
     fn character_delimited_decode() {

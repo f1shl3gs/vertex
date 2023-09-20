@@ -1,9 +1,10 @@
-use crate::FramingError;
 use bytes::{Bytes, BytesMut};
+use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Decoder;
 
-use super::character::CharacterDelimitedDecoder;
+use super::CharacterDelimitedDecoder;
+use crate::FramingError;
 
 #[inline]
 pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
@@ -11,15 +12,8 @@ pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {
 }
 
 /// Config used to build a `NewlineDelimitedDecoder`
-#[derive(Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
+#[derive(Configurable, Debug, Clone, Default, Deserialize, Serialize, PartialEq)]
 pub struct NewlineDelimitedDecoderConfig {
-    #[serde(default, skip_serializing_if = "skip_serializing_if_default")]
-    pub(crate) newline_delimited: NewlineDelimitedDecoderOptions,
-}
-
-/// Options for building a `CharacterDelimitedDecoder`
-#[derive(Clone, Debug, Default, Deserialize, Serialize, PartialEq)]
-pub struct NewlineDelimitedDecoderOptions {
     /// The maximum length of the byte buffer
     ///
     /// This length does *not* include the trailing delimiter
@@ -27,32 +21,9 @@ pub struct NewlineDelimitedDecoderOptions {
     max_length: Option<usize>,
 }
 
-impl NewlineDelimitedDecoderOptions {
-    /// Creates a `NewlineDelimitedDecoderOptions` with a maximum frame length limit.
-    pub const fn new_with_max_length(max_length: usize) -> Self {
-        Self {
-            max_length: Some(max_length),
-        }
-    }
-}
-
-impl NewlineDelimitedDecoderConfig {
-    /// Creates a new `NewlineDelimitedDecoderConfig`
-    pub fn new() -> Self {
-        Self::default()
-    }
-
-    /// Creates a `NewlineDelimitedDecoder` with a maximum frame length limit
-    pub const fn new_with_max_length(max_length: usize) -> Self {
-        Self {
-            newline_delimited: { NewlineDelimitedDecoderOptions::new_with_max_length(max_length) },
-        }
-    }
-}
-
 impl NewlineDelimitedDecoderConfig {
     pub(crate) fn build(&self) -> NewlineDelimitedDecoder {
-        if let Some(max_length) = self.newline_delimited.max_length {
+        if let Some(max_length) = self.max_length {
             NewlineDelimitedDecoder::new_with_max_length(max_length)
         } else {
             NewlineDelimitedDecoder::new()

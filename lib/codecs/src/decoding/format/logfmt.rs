@@ -174,7 +174,7 @@ mod tests {
                 ),
             ),
             (
-                r##"foo=bar a=14 baz="hello kitty" cool%story=bro f %^asdf"##,
+                r#"foo=bar a=14 baz="hello kitty" cool%story=bro f %^asdf"#,
                 fields!(
                     "foo" => "bar",
                     "a" => "14",

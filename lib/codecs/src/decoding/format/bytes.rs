@@ -1,6 +1,5 @@
 use bytes::Bytes;
-use event::{Event, LogRecord};
-use serde::{Deserialize, Serialize};
+use event::Event;
 use smallvec::{smallvec, SmallVec};
 
 use crate::decoding::format::{DeserializeError, Deserializer};
@@ -11,13 +10,6 @@ use crate::decoding::format::{DeserializeError, Deserializer};
 /// further decoding has been specified.
 #[derive(Clone, Debug)]
 pub struct BytesDeserializer;
-
-impl BytesDeserializer {
-    /// Creates a new `BytesDeserializer`
-    pub fn new() -> Self {
-        Self
-    }
-}
 
 impl Deserializer for BytesDeserializer {
     fn parse(&self, buf: Bytes) -> Result<SmallVec<[Event; 1]>, DeserializeError> {

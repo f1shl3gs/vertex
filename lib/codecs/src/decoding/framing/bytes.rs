@@ -1,6 +1,7 @@
-use crate::FramingError;
 use bytes::{Bytes, BytesMut};
-use tokio_util::codec::{Decoder, Framed};
+use tokio_util::codec::Decoder;
+
+use crate::FramingError;
 
 /// A decoder for passing through bytes as-is.
 ///
@@ -23,7 +24,7 @@ impl Decoder for BytesDeserializerConfig {
     type Item = Bytes;
     type Error = FramingError;
 
-    fn decode(&mut self, src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
+    fn decode(&mut self, _src: &mut BytesMut) -> Result<Option<Self::Item>, Self::Error> {
         self.flushed = false;
         Ok(None)
     }

@@ -58,13 +58,6 @@ pub struct RemoteTypedParam {
 }
 
 impl RemoteTypedParam {
-    pub fn as_i32(&self) -> i32 {
-        match self.value {
-            RemoteTypedParamValue::Const1(v) => v,
-            _ => panic!(),
-        }
-    }
-
     pub fn as_u32(&self) -> u32 {
         match self.value {
             RemoteTypedParamValue::Const2(v) => v,
