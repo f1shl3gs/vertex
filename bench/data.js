@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695333805481,
+  "lastUpdate": 1695333823738,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "1e8d75dfc301fcdffda184e7e101b038a4b98c89",
-          "message": "chore(deps): bump thiserror from 1.0.46 to 1.0.47 (#1176)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.46 to 1.0.47.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.46...1.0.47)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-18T00:20:47+08:00",
-          "tree_id": "c1c02141acd73e93196fa9a14aa53d0dd58006c6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1e8d75dfc301fcdffda184e7e101b038a4b98c89"
-        },
-        "date": 1692290645689,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1247,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44365.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0e0529dc15e75647519695addb05b5c465e60993",
           "message": "chore(deps): bump dyn-clone from 1.0.12 to 1.0.13 (#1175)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.12 to 1.0.13.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.12...1.0.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-18T00:21:00+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 976,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42641.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e747443d2c1614a9a587429b4323546b9ccc59e6",
+          "message": "add tonic group (#1278)",
+          "timestamp": "2023-09-22T05:44:53+08:00",
+          "tree_id": "83e40e64dc4cff00c83def52b9989b78e82606d7",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e747443d2c1614a9a587429b4323546b9ccc59e6"
+        },
+        "date": 1695333804421,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 978,
             "unit": "s"
           },
           {
