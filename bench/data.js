@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695331731751,
+  "lastUpdate": 1695331739196,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "57fe407b405612467f7b5526f7c480695cb91ec0",
-          "message": "chore(deps): bump async-trait from 0.1.72 to 0.1.73 (#1164)\n\nBumps [async-trait](https://github.com/dtolnay/async-trait) from 0.1.72 to 0.1.73.\r\n- [Release notes](https://github.com/dtolnay/async-trait/releases)\r\n- [Commits](https://github.com/dtolnay/async-trait/compare/0.1.72...0.1.73)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: async-trait\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-14T13:49:30+08:00",
-          "tree_id": "daa8c03a6f87bf79968df04bf78a1ebcdeecfa79",
-          "url": "https://github.com/f1shl3gs/vertex/commit/57fe407b405612467f7b5526f7c480695cb91ec0"
-        },
-        "date": 1691992359485,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 868770,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 705410,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "acf77e486ee7a54ba0bd47718c38de7c92565cde",
+          "message": "chore(deps): bump tonic-health from 0.10.0 to 0.10.1 (#1276)\n\nBumps [tonic-health](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-health\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-22T05:25:50+08:00",
+          "tree_id": "4b0d55d2c74857b402bf70d67db04c9df5180c86",
+          "url": "https://github.com/f1shl3gs/vertex/commit/acf77e486ee7a54ba0bd47718c38de7c92565cde"
+        },
+        "date": 1695331720799,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 701420,
             "unit": "ns/op"
           }
         ]
