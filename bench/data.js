@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695332939225,
+  "lastUpdate": 1695332940539,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "dfa0aaddfcb00900c2ba8395968572923052467d",
-          "message": "use `dep:` to indicate dependence (#1163)",
-          "timestamp": "2023-08-14T20:36:47+08:00",
-          "tree_id": "30e1afd2652a7acb710e88dcfad40be4a566b4b4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dfa0aaddfcb00900c2ba8395968572923052467d"
-        },
-        "date": 1692016913029,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.332,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.673,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.489,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 52.451,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.713,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.023,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8482d8a429dc2769ca01755eb7a2d6823ff69cec",
+          "message": "chore(deps): bump tonic from 0.10.0 to 0.10.1 (#1277)\n\nBumps [tonic](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-09-22T05:44:41+08:00",
+          "tree_id": "8f7f4f3fe35b230503c6150ea6c26c6208c79ff5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8482d8a429dc2769ca01755eb7a2d6823ff69cec"
+        },
+        "date": 1695332921731,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 22.783,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.241,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 22.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 38.348,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 48.464,
             "unit": "ns/op"
           }
         ]
