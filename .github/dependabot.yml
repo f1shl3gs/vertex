@@ -15,6 +15,10 @@ updates:
         patterns:
           - "prost"
           - "prost-*"
+      tonic:
+        patterns:
+          - "tonic"
+          - "tonic-*"
   - package-ecosystem: github-actions
     directory: /
     schedule:
