@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695332672733,
+  "lastUpdate": 1695332820938,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "064ee55a2d01cd03bc531829c22303d4729c6ce9",
-          "message": "update hyper-proxy (#1161)",
-          "timestamp": "2023-08-13T21:00:34+08:00",
-          "tree_id": "bed19b268f88a2b98db886c1f7adb9186a888e86",
-          "url": "https://github.com/f1shl3gs/vertex/commit/064ee55a2d01cd03bc531829c22303d4729c6ce9"
-        },
-        "date": 1691933021368,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 32666000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1028700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.45,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7b9156ab47cf39c3c6017193401dab3849cdf4ee",
           "message": "Replace bloom with bloomy (#1162)\n\n* fix syn features\r\n\r\n* add flatten_enum test\r\n\r\n* replace bloom with bloomy",
           "timestamp": "2023-08-14T04:42:48+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.292,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "2b08c5726b5c3a5746497a1da7357ede8fabe368",
+          "message": "chore(deps): bump tonic-build from 0.10.0 to 0.10.1 (#1275)\n\nBumps [tonic-build](https://github.com/hyperium/tonic) from 0.10.0 to 0.10.1.\r\n- [Changelog](https://github.com/hyperium/tonic/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/hyperium/tonic/compare/v0.10.0...v0.10.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tonic-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-22T05:25:43+08:00",
+          "tree_id": "6fcb79b2b34ff5da54e2bbff25ef6666ca88f9a0",
+          "url": "https://github.com/f1shl3gs/vertex/commit/2b08c5726b5c3a5746497a1da7357ede8fabe368"
+        },
+        "date": 1695332801923,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25678000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1088300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.469,
             "unit": "ns/op"
           }
         ]
