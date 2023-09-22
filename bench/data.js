@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695350494495,
+  "lastUpdate": 1695413370761,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "537922378e0449d53dedc4278a06f687cbee4a4a",
-          "message": "chore(deps): bump tokio from 1.31.0 to 1.32.0 (#1173)\n\nBumps [tokio](https://github.com/tokio-rs/tokio) from 1.31.0 to 1.32.0.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-1.31.0...tokio-1.32.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-18T00:52:41+08:00",
-          "tree_id": "0fc3f464a34515e8c3ae382679d4891c287f7dc2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/537922378e0449d53dedc4278a06f687cbee4a4a"
-        },
-        "date": 1692292384450,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1094,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44372.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "820f7174e4df833f690af703fac16bb603d1a494",
           "message": "chore(deps): bump quote from 1.0.32 to 1.0.33 (#1171)\n\nBumps [quote](https://github.com/dtolnay/quote) from 1.0.32 to 1.0.33.\r\n- [Release notes](https://github.com/dtolnay/quote/releases)\r\n- [Commits](https://github.com/dtolnay/quote/compare/1.0.32...1.0.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: quote\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-18T09:44:52+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 927,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42654.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8cb5081d8e89d0f261ad0811c3e431ede0e934a4",
+          "message": "replace env::var_os with env::var (#1281)",
+          "timestamp": "2023-09-23T03:51:25+08:00",
+          "tree_id": "0830e9bbb17c1e7ea31b7e546be223f3ef46d2a5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8cb5081d8e89d0f261ad0811c3e431ede0e934a4"
+        },
+        "date": 1695413351894,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 937,
             "unit": "s"
           },
           {
