@@ -143,7 +143,7 @@ async fn run(
 }
 
 fn parse_version(input: &str) -> String {
-    let input = input.strip_prefix("zk_version").unwrap();
+    let input = input.strip_prefix("zk_version").unwrap_or(input);
     let version = input.trim_start().split(',').next().unwrap_or("");
 
     version.to_string()

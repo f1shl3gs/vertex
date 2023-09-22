@@ -44,7 +44,7 @@ struct Config {
 }
 
 fn default_cache_config() -> NonZeroUsize {
-    NonZeroUsize::new(4 * 1024).unwrap()
+    NonZeroUsize::new(4 * 1024).expect("static non-zero number")
 }
 
 #[async_trait]

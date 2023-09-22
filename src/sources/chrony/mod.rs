@@ -226,21 +226,22 @@ async fn scrape(addr: &PathBuf) -> Result<Vec<Metric>, Error> {
     ])
 }
 
+#[allow(clippy::disallowed_methods)] // Caller handles the result of `write`.
 trait WriteExt: Write {
-    fn write_u8(&mut self, n: u8) -> io::Result<usize> {
-        self.write(&n.to_be_bytes())
+    fn write_u8(&mut self, n: u8) -> io::Result<()> {
+        self.write_all(&n.to_be_bytes())
     }
 
-    fn write_u16(&mut self, n: u16) -> io::Result<usize> {
-        self.write(&n.to_be_bytes())
+    fn write_u16(&mut self, n: u16) -> io::Result<()> {
+        self.write_all(&n.to_be_bytes())
     }
 
-    fn write_u32(&mut self, n: u32) -> io::Result<usize> {
-        self.write(&n.to_be_bytes())
+    fn write_u32(&mut self, n: u32) -> io::Result<()> {
+        self.write_all(&n.to_be_bytes())
     }
 
-    fn write_u64(&mut self, n: u64) -> io::Result<usize> {
-        self.write(&n.to_be_bytes())
+    fn write_u64(&mut self, n: u64) -> io::Result<()> {
+        self.write_all(&n.to_be_bytes())
     }
 }
 

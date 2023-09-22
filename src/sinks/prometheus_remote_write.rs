@@ -125,7 +125,7 @@ struct PartitionKey {
 }
 
 async fn healthcheck(endpoint: Uri, client: HttpClient) -> crate::Result<()> {
-    let req = http::Request::get(endpoint).body(Body::empty()).unwrap();
+    let req = http::Request::get(endpoint).body(Body::empty())?;
 
     let resp = client.send(req).await?;
 
@@ -170,7 +170,7 @@ impl Service<PartitionInnerBuffer<Vec<Metric>, PartitionKey>> for RemoteWriteSer
         let body = self.encode_events(events);
         let body = snap_block(body);
 
-        let mut builder = http::Request::post(self.endpoint.clone())
+        let mut builder = http::Request::post(&self.endpoint)
             .header("X-Prometheus-Remote-Write-Version", "0.1.0")
             .header("Content-Encoding", "snappy")
             .header("Content-Type", "application/x-protobuf");

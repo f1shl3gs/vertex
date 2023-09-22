@@ -1,9 +1,10 @@
-use super::{read_to_string, Error};
-use event::{tags, Metric};
-use std::borrow::Cow;
-use std::collections::BTreeMap;
 /// Exposes ZFS performance statistics
+use std::collections::BTreeMap;
+
+use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
+
+use super::{read_to_string, Error};
 
 macro_rules! parse_subsystem_metrics {
     ($metrics: expr, $root: expr, $subsystem: expr, $path: expr) => {
@@ -81,9 +82,9 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/spl/kstat/zfs/*/state", proc_path);
     let paths = glob::glob(&pattern)?;
     for path in paths.filter_map(Result::ok) {
-        let path = path.to_str().unwrap();
-        let pool_name = Cow::from(parse_pool_name(path)?);
-        let kvs = parse_pool_state_file(path).await?;
+        let path = path.to_string_lossy();
+        let pool_name = parse_pool_name(path.as_ref())?;
+        let kvs = parse_pool_state_file(path.as_ref()).await?;
         for (k, v) in kvs {
             let v = match v {
                 true => 1f64,
@@ -95,7 +96,7 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
                 "kstat.zfs.misc.state",
                 v,
                 tags!(
-                    "zpool" => pool_name.clone(),
+                    "zpool" => &pool_name,
                     "state" => k
                 ),
             ))

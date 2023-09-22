@@ -41,7 +41,7 @@ pub struct Server {
 impl Default for Server {
     fn default() -> Self {
         let zero = DateTime::from_naive_utc_and_offset(
-            NaiveDateTime::from_timestamp_millis(0).unwrap(),
+            NaiveDateTime::from_timestamp_millis(0).expect("zero datetime"),
             Utc,
         );
 

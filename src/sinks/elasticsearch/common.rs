@@ -78,7 +78,7 @@ impl ElasticsearchCommon {
         }
 
         let bulk_url = format!("{}/_bulk?{}", base_url, query.finish());
-        let bulk_uri = bulk_url.parse::<Uri>().unwrap();
+        let bulk_uri = bulk_url.parse::<Uri>()?;
 
         let request = config.request.clone();
 

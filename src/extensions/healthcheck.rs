@@ -17,7 +17,7 @@ pub fn set_readiness(ready: bool) {
 }
 
 fn default_endpoint() -> SocketAddr {
-    "0.0.0.0:13133".parse().unwrap()
+    SocketAddr::from(([0, 0, 0, 0], 13133))
 }
 
 #[configurable_component(extension, name = "healthcheck")]
@@ -60,7 +60,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
         return Ok(Response::builder()
             .status(StatusCode::METHOD_NOT_ALLOWED)
             .body(Body::empty())
-            .unwrap());
+            .expect("should build not allowed response"));
     }
 
     let (status, body) = match req.uri().path() {
@@ -81,7 +81,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     Ok(Response::builder()
         .status(status)
         .body(Body::from(body))
-        .unwrap())
+        .expect("should build response"))
 }
 
 #[cfg(test)]

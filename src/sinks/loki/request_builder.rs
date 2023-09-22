@@ -138,7 +138,7 @@ impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
             .map(|record| {
                 let seconds = record.event.timestamp / 1_000_000_000;
                 let nanos = (record.event.timestamp % 1_000_000_000) as i32;
-                let line = String::from_utf8(record.event.event.to_vec()).unwrap();
+                let line = String::from_utf8_lossy(&record.event.event).to_string();
                 super::proto::EntryAdapter {
                     timestamp: Some(prost_types::Timestamp { seconds, nanos }),
                     line,
@@ -151,6 +151,6 @@ impl Encoder<Vec<LokiRecord>> for LokiBatchEncoder {
         };
 
         let buf = pr.encode_to_vec();
-        writer.write(&buf)
+        writer.write_all(&buf).map(|_| buf.len())
     }
 }

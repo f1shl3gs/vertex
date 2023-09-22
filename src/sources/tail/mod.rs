@@ -199,7 +199,7 @@ fn tail_source(
         .host_key
         .clone()
         .unwrap_or_else(|| log_schema().host_key().to_string());
-    let hostname = hostname().unwrap();
+    let hostname = hostname().expect("get hostname");
     let timestamp_key = log_schema().timestamp_key();
     let source_type_key = log_schema().source_type_key();
 

@@ -56,7 +56,7 @@ impl HttpSink for Config {
             builder = builder.header("Content-Encoding", ce);
         }
 
-        let mut request = builder.body(events.freeze()).unwrap();
+        let mut request = builder.body(events.freeze())?;
         if let Some(auth) = &self.auth {
             auth.apply(&mut request);
         }
@@ -67,7 +67,7 @@ impl HttpSink for Config {
 
 pub async fn healthcheck(client: HttpClient, config: Config) -> crate::Result<()> {
     let uri = format!("{}/?query=SELECT%201", config.endpoint);
-    let mut request = Request::get(uri).body(Body::empty()).unwrap();
+    let mut request = Request::get(uri).body(Body::empty())?;
 
     if let Some(auth) = &config.auth {
         auth.apply(&mut request);
