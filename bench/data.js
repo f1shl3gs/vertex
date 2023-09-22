@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695334449087,
+  "lastUpdate": 1695349413172,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "578b61ca893c0d13bfb5476b55f992a1c3614a85",
-          "message": "chore(deps): bump serde_json from 1.0.104 to 1.0.105 (#1169)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.104 to 1.0.105.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.104...v1.0.105)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-16T07:38:15+08:00",
-          "tree_id": "3be3cf763894ea66c03cf7857b3e5dd6f9c3c370",
-          "url": "https://github.com/f1shl3gs/vertex/commit/578b61ca893c0d13bfb5476b55f992a1c3614a85"
-        },
-        "date": 1692142879508,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 799360,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 728430,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "73a534b50e2e59282539dd9b9fe362d77b0f315b",
+          "message": "fix unwrap (#1279)",
+          "timestamp": "2023-09-22T10:20:04+08:00",
+          "tree_id": "0fee20e6c7c3dc57bea1d20a2c16b5c0348a7227",
+          "url": "https://github.com/f1shl3gs/vertex/commit/73a534b50e2e59282539dd9b9fe362d77b0f315b"
+        },
+        "date": 1695349395219,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 726910,
             "unit": "ns/op"
           }
         ]
