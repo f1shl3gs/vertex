@@ -1,6 +1,5 @@
 use std::collections::HashSet;
 use std::env;
-use std::ffi::OsString;
 use std::io::{Error, ErrorKind, Result, Write};
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -147,7 +146,7 @@ fn main() {
 }
 
 fn rustc_info() -> (String, String) {
-    let rustc = env::var_os("RUSTC").unwrap_or_else(|| OsString::from("rustc"));
+    let rustc = env::var("RUSTC").unwrap_or_else(|_err| "rustc".to_string());
 
     let out = Command::new(rustc)
         .arg("-vV")
