@@ -188,8 +188,7 @@ impl Serialize for BufferConfig {
 }
 
 pub fn memory_buffer_default_max_events() -> NonZeroUsize {
-    // Error shall never happened
-    NonZeroUsize::new(512).unwrap()
+    NonZeroUsize::new(512).expect("static non-zero number")
 }
 
 /// A specific type of buffer stage.

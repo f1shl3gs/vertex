@@ -49,7 +49,7 @@ impl ExtensionConfig for Config {
 
         status.uuid = get_uuid();
         status.uptime = chrono::Utc::now().to_rfc3339_opts(SecondsFormat::Nanos, false);
-        status.hostname = framework::hostname().unwrap();
+        status.hostname = framework::hostname().expect("get hostname failed");
         status.version = crate::get_version();
         status.lease = humanize::duration::duration(&(self.interval + Duration::from_secs(15)));
         status.os = sysinfo::os().unwrap_or_default();
@@ -156,7 +156,9 @@ async fn run(
         let body = serde_json::to_string(VERTEX_STATUS.deref())
             .expect("status serialize should always success");
 
-        let req = Request::post(&endpoint.uri).body(Body::from(body)).unwrap();
+        let req = Request::post(&endpoint.uri)
+            .body(Body::from(body))
+            .expect("should build POST request");
 
         match client.send(req).await {
             Ok(resp) => {

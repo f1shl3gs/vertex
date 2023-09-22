@@ -336,9 +336,13 @@ impl Client {
                     }
                     StatusCode::MOVED_PERMANENTLY => {
                         return match parts.headers.get("Location") {
-                            Some(redirect) => Err(ConsulError::NeedRedirection(
-                                redirect.to_str().unwrap().to_string(),
-                            )),
+                            Some(redirect) => {
+                                let value = redirect
+                                    .to_str()
+                                    .map_err(|_err| ConsulError::RedirectionFailed)?;
+
+                                return Err(ConsulError::NeedRedirection(value.to_string()));
+                            }
                             None => Err(ConsulError::RedirectionFailed),
                         };
                     }

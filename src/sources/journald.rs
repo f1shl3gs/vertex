@@ -317,7 +317,7 @@ fn create_event(entry: BTreeMap<String, Value>) -> Event {
                 (timestamp / 1_000_000) as i64,
                 (timestamp % 1_000_000) as u32 * 1_000,
             )
-            .unwrap();
+            .expect("valid timestamp");
 
             log.insert_field(log_schema().timestamp_key(), Value::Timestamp(timestamp));
         }

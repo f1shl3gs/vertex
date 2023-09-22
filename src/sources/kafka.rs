@@ -461,14 +461,21 @@ async fn run(
                 }
             }
 
-            let mut new_topics = client
-                .list_topics()
-                .await
-                .unwrap()
-                .into_iter()
-                .filter(|t| t.name.starts_with("test_"))
-                .collect::<Vec<_>>();
-            new_topics.sort_by(|a, b| a.name.cmp(&b.name));
+            let new_topics = match client.list_topics().await {
+                Ok(topics) => {
+                    let mut topics = topics
+                        .into_iter()
+                        .filter(|t| want_topics.contains(&t.name))
+                        .collect::<Vec<_>>();
+                    topics.sort_by(|a, b| a.name.cmp(&b.name));
+                    topics
+                }
+                Err(err) => {
+                    error!(message = "list topics failed", ?err);
+
+                    continue;
+                }
+            };
 
             if !compare_topics(&topics, &new_topics) {
                 notify.notify_waiters();

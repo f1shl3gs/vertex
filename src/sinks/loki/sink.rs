@@ -169,7 +169,9 @@ impl EventEncoder {
         let timestamp_key = schema.timestamp_key();
         let timestamp = match event.as_log().get_field(timestamp_key) {
             Some(event::log::Value::Timestamp(ts)) => ts.timestamp_nanos_opt().unwrap(),
-            _ => chrono::Utc::now().timestamp_nanos_opt().unwrap(),
+            _ => chrono::Utc::now()
+                .timestamp_nanos_opt()
+                .expect("should success"),
         };
 
         if self.remove_timestamp {

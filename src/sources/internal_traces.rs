@@ -33,7 +33,7 @@ impl SourceConfig for Config {
         let shutdown = cx.shutdown;
         let mut output = cx.output;
         let service: Cow<'static, str> = self.service.clone().into();
-        let hostname = crate::hostname().unwrap();
+        let hostname = crate::hostname().expect("get hostname success");
         let version = crate::get_version();
 
         Ok(Box::pin(async move {

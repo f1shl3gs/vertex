@@ -55,6 +55,10 @@ enum Error {
     Frequency(ParseIntError),
     #[error("build profiler failed")]
     BuildProfiler(#[from] pprof::Error),
+
+    // TODO: once prost version of pprof meets ours, then add error
+    #[error("encode to protobuf data failed")]
+    Protobuf,
 }
 
 async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
@@ -89,7 +93,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
         Ok(report) => {
             let buf = if flamegraph {
                 let mut buf = BytesMut::new().writer();
-                report.flamegraph(&mut buf).unwrap();
+                report.flamegraph(&mut buf)?;
 
                 buf.into_inner().freeze()
             } else {
@@ -99,8 +103,8 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
                 //
                 // Pyroscope will consume this kind of data too.
                 let mut buf = BytesMut::new();
-                let profile = report.pprof().unwrap();
-                profile.encode(&mut buf).unwrap();
+                let profile = report.pprof()?;
+                profile.encode(&mut buf).map_err(|_err| Error::Protobuf)?;
 
                 buf.freeze()
             };
@@ -114,7 +118,7 @@ async fn handle(req: Request<Body>) -> Result<Response<Body>, Error> {
             let resp = Response::builder()
                 .status(StatusCode::INTERNAL_SERVER_ERROR)
                 .body(Body::empty())
-                .unwrap();
+                .expect("should build 500 response");
 
             Ok(resp)
         }

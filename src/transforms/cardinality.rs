@@ -195,7 +195,7 @@ impl Cardinality {
                 .insert(key.clone(), AcceptedTagValueSet::new(self.limit, self.mode));
         }
 
-        let set = self.accepted_tags.get_mut(key).unwrap();
+        let set = self.accepted_tags.get_mut(key).expect("should exist");
         if set.contains(value) {
             // Tag value has already been accepted, nothing more to do
             return true;

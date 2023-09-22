@@ -3,7 +3,7 @@ use std::task::{Context, Poll};
 use bytes::Bytes;
 use event::{EventFinalizers, EventStatus, Finalizable};
 use framework::config::UriSerde;
-use framework::http::{Auth, HttpClient};
+use framework::http::{Auth, HttpClient, HttpError};
 use framework::stream::DriverResponse;
 use futures_util::future::BoxFuture;
 use http::StatusCode;
@@ -14,9 +14,9 @@ use tracing::Instrument;
 #[derive(Debug, Error)]
 pub enum LokiError {
     #[error("Server responded with an error: {0}")]
-    ServerError(StatusCode),
+    Server(StatusCode),
     #[error("Failed to make HTTP(S) request: {0}")]
-    HttpError(framework::http::HttpError),
+    Http(HttpError),
 }
 
 pub struct LokiRequest {
@@ -107,11 +107,11 @@ impl Service<LokiRequest> for LokiService {
                             events_byte_size,
                         })
                     } else {
-                        Err(LokiError::ServerError(status))
+                        Err(LokiError::Server(status))
                     }
                 }
 
-                Err(err) => Err(LokiError::HttpError(err)),
+                Err(err) => Err(LokiError::Http(err)),
             }
         })
     }
