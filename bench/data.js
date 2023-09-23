@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695439319912,
+  "lastUpdate": 1695439870221,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
-          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-16T07:38:39+08:00",
-          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
-        },
-        "date": 1692144095649,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 29315000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1026700,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 19.628,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "578b61ca893c0d13bfb5476b55f992a1c3614a85",
           "message": "chore(deps): bump serde_json from 1.0.104 to 1.0.105 (#1169)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.104 to 1.0.105.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.104...v1.0.105)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-16T07:38:15+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.937,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5adf4bb744a7cc2b43986678cbb8495fa359f5b9",
+          "message": "disable smallvec's features (#1282)",
+          "timestamp": "2023-09-23T11:03:35+08:00",
+          "tree_id": "62fa4bd077483b0aed8d38016672d1b6988325d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5adf4bb744a7cc2b43986678cbb8495fa359f5b9"
+        },
+        "date": 1695439849077,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 33426000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1204600,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 23.668,
             "unit": "ns/op"
           }
         ]
