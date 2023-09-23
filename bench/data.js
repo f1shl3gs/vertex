@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695438407779,
+  "lastUpdate": 1695438410251,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
-          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-16T07:38:39+08:00",
-          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
-        },
-        "date": 1692142887776,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 86.227,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 206.54,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 347.52,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 390.67,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5adf4bb744a7cc2b43986678cbb8495fa359f5b9",
+          "message": "disable smallvec's features (#1282)",
+          "timestamp": "2023-09-23T11:03:35+08:00",
+          "tree_id": "62fa4bd077483b0aed8d38016672d1b6988325d8",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5adf4bb744a7cc2b43986678cbb8495fa359f5b9"
+        },
+        "date": 1695438392283,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 88.585,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 189.13,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 291.63,
             "unit": "ns/op"
           }
         ]
