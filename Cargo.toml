@@ -418,7 +418,7 @@ quick-xml = { version = "0.30.0", default-features = false, features = ["seriali
 regex = { version = "1.9.5", default-features = false }
 rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f125186593215eba012a61b58bfeea5afb4b", optional = true, features = ["transport-tls"] }
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
-smallvec = { version = "1.11.1", optional = true, features = ["union"] }
+smallvec = { version = "1.11.1", default-features = false, optional = true }
 snap = { version = "1.1.0", default-features = false, optional = true }
 sqlx = { version = "0.7.1", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.48" }
