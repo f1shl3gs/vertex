@@ -1,11 +1,12 @@
 use configurable::Configurable;
 use hyper::http::uri::InvalidUri;
-use hyper_proxy::Custom;
-use hyper_proxy::{Intercept, Proxy, ProxyConnector};
-use no_proxy::NoProxy;
 use serde::{Deserialize, Serialize};
 
 use super::{default_true, skip_serializing_if_default};
+use crate::http::{
+    proxy::{Custom, Intercept, Proxy, ProxyConnector},
+    NoProxy,
+};
 
 fn from_env(key: &str) -> Option<String> {
     // use lowercase first and the uppercase
@@ -14,7 +15,7 @@ fn from_env(key: &str) -> Option<String> {
         .or_else(|| std::env::var(key.to_uppercase()).ok())
 }
 
-#[derive(Clone, Default, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Default, Deserialize, Serialize)]
 pub struct NoProxyInterceptor(NoProxy);
 
 impl NoProxyInterceptor {
@@ -47,7 +48,7 @@ impl NoProxyInterceptor {
 /// Similar to common proxy configuration convention, users can set different proxies
 /// to use based on the type of traffic being proxied, as well as set specific hosts that
 /// should not be proxied.
-#[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
+#[derive(Configurable, Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(deny_unknown_fields)]
 pub struct ProxyConfig {
     #[serde(
@@ -93,7 +94,7 @@ impl ProxyConfig {
             enabled: true,
             http: from_env("HTTP_PROXY"),
             https: from_env("HTTPS_PROXY"),
-            no_proxy: from_env("NO_PROXY").map(NoProxy::from).unwrap_or_default(),
+            no_proxy: NoProxy::from_env().unwrap_or_default(),
         }
     }
 
