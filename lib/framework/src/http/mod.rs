@@ -1,3 +1,4 @@
+pub(crate) mod proxy;
 mod trace;
 
 use std::borrow::Cow;
@@ -15,9 +16,9 @@ use hyper::{
     client,
     client::{Client, HttpConnector},
 };
-use hyper_proxy::ProxyConnector;
 use hyper_rustls::HttpsConnector;
 use metrics::{exponential_buckets, Attributes};
+pub use proxy::NoProxy;
 use rustls::{ClientConfig, RootCertStore};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
@@ -45,7 +46,7 @@ pub enum HttpError {
 pub type HttpClientFuture = <HttpClient as Service<Request<Body>>>::Future;
 
 pub struct HttpClient<B = Body> {
-    client: Client<ProxyConnector<HttpsConnector<HttpConnector>>, B>,
+    client: Client<proxy::ProxyConnector<HttpsConnector<HttpConnector>>, B>,
     user_agent: HeaderValue,
 }
 
@@ -91,7 +92,7 @@ where
 
         let https = hyper_rustls::HttpsConnector::from((http, config));
 
-        let mut proxy = ProxyConnector::new(https).unwrap();
+        let mut proxy = proxy::ProxyConnector::new(https).unwrap();
         proxy_config.configure(&mut proxy)?;
         let client = client_builder.build(proxy);
 

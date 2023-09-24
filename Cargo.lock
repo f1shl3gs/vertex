@@ -644,7 +644,6 @@ dependencies = [
  "humanize",
  "indexmap 2.0.0",
  "inventory",
- "no-proxy",
  "regex",
  "serde",
  "serde_json",
@@ -1173,10 +1172,10 @@ dependencies = [
  "http",
  "humanize",
  "hyper",
- "hyper-proxy",
  "hyper-rustls",
  "indexmap 2.0.0",
  "inventory",
+ "ipnet",
  "listenfd",
  "log_schema",
  "lookup",
@@ -1599,24 +1598,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hyper-proxy"
-version = "0.9.0"
-source = "git+https://github.com/f1shl3gs/hyper-proxy?rev=f05b6cd5c609b294291cd4dcc2879684b5e84c00#f05b6cd5c609b294291cd4dcc2879684b5e84c00"
-dependencies = [
- "bytes",
- "futures-util",
- "headers",
- "http",
- "hyper",
- "hyper-rustls",
- "rustls-native-certs",
- "rustls-webpki",
- "tokio",
- "tokio-rustls",
- "tower-service",
-]
-
-[[package]]
 name = "hyper-rustls"
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1767,6 +1748,12 @@ name = "inventory"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e1be380c410bf0595e94992a648ea89db4dd3f3354ba54af206fd2a68cf5ac8e"
+
+[[package]]
+name = "ipnet"
+version = "2.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28b29a3cd74f0f4598934efe3aeba42bae0eb4680554128851ebbecb02af14e6"
 
 [[package]]
 name = "ipnetwork"
