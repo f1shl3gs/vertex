@@ -30,7 +30,7 @@ measurable = { path = "../measurable" }
 thiserror = { version = "1.0.48" }
 tokio = { version = "1.32.0", default-features = false, features = ["rt", "macros", "rt-multi-thread", "time", "fs", "io-util"] }
 tokio-util = { version = "0.7.9", default-features = false }
-tracing = { version = "0.1.38", default-features = false, features = ["attributes"] }
+tracing = { version = "0.1.37", default-features = false, features = ["attributes"] }
 
 [dev-dependencies]
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }

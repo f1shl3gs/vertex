@@ -60,7 +60,6 @@ memchr = { version = "2.6.3", default-features = false }
 metrics = { path = "../metrics" }
 # wired feature requirement, see: https://docs.rs/notify/latest/notify/#crossbeam-channel--tokio
 notify = { version = "6.1.1", default-features = false, features = ["macos_kqueue"] }
-no-proxy = { version = "0.3.4", default-features = false, features = ["serialize"] }
 once_cell = { version = "1.18", default-features = false }
 pem = { version = "3.0.2", default-features = false, features = ["std"] }
 percent-encoding = { version = "2.3.0", default-features = false }
@@ -82,7 +81,7 @@ tokio-rustls = { version = "0.24.1", default-features = false }
 tokio-stream = { version = "0.1.14", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.9", default-features = false, features = ["codec", "time", "net", "io"] }
 tower = { version = "0.4.13", default-features = false, features = ["buffer", "limit", "retry", "timeout", "util"] }
-tracing = { version = "0.1.38", default-features = false }
+tracing = { version = "0.1.37", default-features = false }
 tracing-core = { version = "0.1.31", default-features = false }
 tracing-internal = { path = "../tracing-internal" }
 tracing-futures = { version = "0.2.5", default-features = false, features = ["futures-03"] }
