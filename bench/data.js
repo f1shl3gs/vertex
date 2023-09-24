@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695533949630,
+  "lastUpdate": 1695534010276,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e1521d021d5b212a82d6a0ab3072d7bf07c92c5f",
-          "message": "chore(deps): bump flate2 from 1.0.26 to 1.0.27 (#1168)\n\nBumps [flate2](https://github.com/rust-lang/flate2-rs) from 1.0.26 to 1.0.27.\r\n- [Release notes](https://github.com/rust-lang/flate2-rs/releases)\r\n- [Commits](https://github.com/rust-lang/flate2-rs/compare/1.0.26...1.0.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: flate2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-16T07:38:39+08:00",
-          "tree_id": "0da895efbfce7cf74500f4e0941363babb7bbb0e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e1521d021d5b212a82d6a0ab3072d7bf07c92c5f"
-        },
-        "date": 1692143125524,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 659.98,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 65927,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 328900,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 655680,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 224.68,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 22550,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 112120,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 224650,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7a5dab3a4b6dc98cf0d626f576300b8e383907aa",
           "message": "chore(deps): bump thiserror from 1.0.44 to 1.0.46 (#1167)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.44 to 1.0.46.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.44...1.0.46)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-16T07:38:50+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 189890,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "40ee01994fc9554d755ce25b73839df6732c32aa",
+          "message": "remove hyper-proxy (#1283)",
+          "timestamp": "2023-09-24T13:35:05+08:00",
+          "tree_id": "c6373b07f8bb6651a102ac7eba2344eae4d82844",
+          "url": "https://github.com/f1shl3gs/vertex/commit/40ee01994fc9554d755ce25b73839df6732c32aa"
+        },
+        "date": 1695533990773,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 628.66,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 61364,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 313060,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 619670,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 225.67,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 22829,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 113630,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 222780,
             "unit": "ns/op"
           }
         ]
