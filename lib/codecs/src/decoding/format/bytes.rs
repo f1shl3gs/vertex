@@ -19,8 +19,9 @@ impl Deserializer for BytesDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::log::Value;
+
+    use super::*;
 
     #[test]
     fn deserialize() {

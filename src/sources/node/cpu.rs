@@ -2,11 +2,11 @@
 use std::path::PathBuf;
 
 use event::{tags, Metric};
+use framework::config::{default_true, serde_regex};
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
-use framework::config::{default_true, serde_regex};
 
 const USER_HZ: f64 = 100.0;
 

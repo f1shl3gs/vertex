@@ -140,9 +140,10 @@ impl<'a> Serialize for FieldsIter<'a> {
 
 #[cfg(test)]
 mod tests {
+    use serde_json::json;
+
     use super::*;
     use crate::log::fields_from_json;
-    use serde_json::json;
 
     #[test]
     fn keys_simple() {

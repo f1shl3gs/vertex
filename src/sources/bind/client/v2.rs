@@ -155,8 +155,9 @@ impl Client {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use bytes::Buf;
+
+    use super::*;
 
     #[test]
     fn decode() {

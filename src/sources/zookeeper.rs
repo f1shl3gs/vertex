@@ -216,9 +216,10 @@ mod tests {
 
 #[cfg(all(test, feature = "integration-tests-zookeeper"))]
 mod integration_tests {
+    use std::time::Duration;
+
     use super::fetch_stats;
     use crate::testing::ContainerBuilder;
-    use std::time::Duration;
 
     #[tokio::test]
     async fn test_fetch_stats() {

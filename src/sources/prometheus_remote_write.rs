@@ -191,9 +191,6 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::common::prometheus::TimeSeries;
-    use crate::testing::components;
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
     use event::{assert_event_data_eq, buckets, quantiles, tags, EventStatus, Metric};
@@ -203,6 +200,10 @@ mod tests {
     use framework::tls::TlsConfig;
     use hyper::Body;
     use testify::collect_ready;
+
+    use super::*;
+    use crate::common::prometheus::TimeSeries;
+    use crate::testing::components;
 
     #[test]
     fn generate_config() {

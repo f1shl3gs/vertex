@@ -42,9 +42,10 @@ impl Decoder for BytesDeserializerConfig {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use futures_util::StreamExt;
     use tokio_util::codec::FramedRead;
+
+    use super::*;
 
     #[test]
     fn decode() {

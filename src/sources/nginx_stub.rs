@@ -340,10 +340,11 @@ mod tests {
 mod integration_tests {
     use std::env::current_dir;
 
-    use super::get_stub_status;
-    use crate::testing::ContainerBuilder;
     use framework::config::ProxyConfig;
     use framework::http::{Auth, HttpClient};
+
+    use super::get_stub_status;
+    use crate::testing::ContainerBuilder;
 
     #[tokio::test]
     async fn new_test_nginx() {

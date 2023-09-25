@@ -1,8 +1,10 @@
-use super::{read_to_string, Error, ErrorContext};
+use std::collections::BTreeMap;
+
 use event::Metric;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
 use tokio::io::AsyncBufReadExt;
+
+use super::{read_to_string, Error, ErrorContext};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {

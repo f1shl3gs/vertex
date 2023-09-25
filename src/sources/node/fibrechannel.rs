@@ -1,6 +1,8 @@
-use super::{read_to_string, Error, ErrorContext};
-use event::{tags, Metric};
 use std::path::PathBuf;
+
+use event::{tags, Metric};
+
+use super::{read_to_string, Error, ErrorContext};
 
 #[derive(Debug, Default)]
 pub struct FibreChannelCounters {

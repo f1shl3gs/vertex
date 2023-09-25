@@ -444,7 +444,6 @@ struct Smi {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs::read_to_string;
 
     #[test]
     fn generate_config() {
@@ -453,8 +452,8 @@ mod tests {
 
     #[test]
     fn test_deserialize_output() {
-        let text = read_to_string("tests/fixtures/nvidia-smi.xml").unwrap();
-        let smi: Smi = quick_xml::de::from_str(&text).unwrap();
+        let text = include_str!("../../tests/fixtures/nvidia-smi.xml");
+        let smi: Smi = quick_xml::de::from_str(text).unwrap();
         assert_eq!(smi.driver_version, "470.82.00");
         assert_eq!(smi.gpus.len(), 1);
         assert_eq!(smi.gpus[0].compute_mode, "Default");

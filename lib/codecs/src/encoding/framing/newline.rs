@@ -1,8 +1,8 @@
-use crate::FramingError;
 use bytes::BytesMut;
 use tokio_util::codec::Encoder;
 
 use super::character::CharacterDelimitedEncoder;
+use crate::FramingError;
 
 /// A codec for handling bytes that are delimited by (a) newline(s).
 #[derive(Debug, Clone)]

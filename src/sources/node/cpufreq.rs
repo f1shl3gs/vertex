@@ -1,6 +1,8 @@
-use super::{read_into, Error, ErrorContext};
-use event::{tags, Metric};
 use std::path::PathBuf;
+
+use event::{tags, Metric};
+
+use super::{read_into, Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -144,8 +146,9 @@ async fn parse_cpu_freq_cpu_info(root: PathBuf) -> Result<Stat, Error> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::path::PathBuf;
+
+    use super::*;
 
     #[tokio::test]
     async fn test_parse_cpu_freq_cpu_info() {

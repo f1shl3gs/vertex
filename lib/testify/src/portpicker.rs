@@ -96,8 +96,9 @@ pub fn pick_unused_local_port() -> Port {
 
 #[cfg(test)]
 mod tests {
-    use super::pick_unused_port;
     use std::net::{IpAddr, Ipv4Addr, Ipv6Addr};
+
+    use super::pick_unused_port;
 
     #[test]
     fn ipv4_localhost() {

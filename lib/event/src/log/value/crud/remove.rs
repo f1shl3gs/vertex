@@ -1,6 +1,6 @@
-use super::Value;
-use super::{get_matching_coalesce_key, ValueCollection};
 use lookup::BorrowedSegment;
+
+use super::{get_matching_coalesce_key, Value, ValueCollection};
 
 pub fn remove<'a, T: ValueCollection>(
     value: &mut T,
@@ -42,8 +42,9 @@ pub fn remove<'a, T: ValueCollection>(
 
 #[cfg(test)]
 mod test {
-    use crate::log::Value;
     use serde_json::json;
+
+    use crate::log::Value;
 
     #[test]
     fn remove_coalesce() {

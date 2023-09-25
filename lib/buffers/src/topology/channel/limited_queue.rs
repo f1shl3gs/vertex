@@ -260,10 +260,9 @@ pub fn limited<T>(limit: usize) -> (LimitedSender<T>, LimitedReceiver<T>) {
 mod tests {
     use tokio_test::{assert_pending, assert_ready, task::spawn};
 
+    use super::limited;
     use crate::topology::test_util::Sample;
     use crate::{test::MultiEventRecord, topology::channel::limited_queue::SendError};
-
-    use super::limited;
 
     #[test]
     fn send_receive() {

@@ -1,6 +1,8 @@
-use super::{read_to_string, Error, ErrorContext};
-use event::{tags, Metric};
 use std::path::PathBuf;
+
+use event::{tags, Metric};
+
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);

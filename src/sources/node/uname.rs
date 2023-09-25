@@ -1,5 +1,6 @@
-use super::Error;
 use event::{tags, Metric};
+
+use super::Error;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
     let mut u = libc::utsname {

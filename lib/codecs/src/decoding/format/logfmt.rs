@@ -2,11 +2,12 @@
 
 use std::collections::BTreeMap;
 
-use crate::decoding::format::{DeserializeError, Deserializer};
 use bytes::Bytes;
 use event::log::Value;
 use event::{tags, Event, LogRecord};
 use smallvec::{smallvec, SmallVec};
+
+use crate::decoding::format::{DeserializeError, Deserializer};
 
 // This parser is based on https://github.com/brandur/logfmt
 pub(crate) fn parse(line: &str) -> BTreeMap<String, Value> {
@@ -114,8 +115,9 @@ impl Deserializer for LogfmtDeserializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::fields;
+
+    use super::*;
 
     #[test]
     fn deserialize() {

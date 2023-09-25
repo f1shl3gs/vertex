@@ -246,8 +246,9 @@ impl<'a> Iterator for Iter<'a> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::collections::HashSet;
+
+    use super::*;
 
     #[test]
     fn insert_over_capacity_test() {

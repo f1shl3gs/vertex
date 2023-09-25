@@ -186,10 +186,12 @@ impl Encoder {
 
 #[cfg(test)]
 mod tests {
-    use super::{Decoder, Encoder, BOM_UTF8};
+    use std::char::REPLACEMENT_CHARACTER;
+
     use bytes::Bytes;
     use encoding_rs::{SHIFT_JIS, UTF_16BE, UTF_16LE, UTF_8};
-    use std::char::REPLACEMENT_CHARACTER;
+
+    use super::{Decoder, Encoder, BOM_UTF8};
 
     // BOM unicode character (U+FEFF) expressed in utf-16
     // http://unicode.org/faq/utf_bom.html#bom4

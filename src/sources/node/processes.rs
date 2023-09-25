@@ -1,6 +1,7 @@
-use event::{tags, Metric};
 use std::collections::HashMap;
 use std::path::Path;
+
+use event::{tags, Metric};
 
 use super::{read_into, read_to_string, Error};
 

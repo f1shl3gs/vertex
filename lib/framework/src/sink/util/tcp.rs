@@ -23,14 +23,11 @@ use tokio_util::codec::Encoder;
 
 use super::{SinkBuildError, SocketMode};
 use crate::batch::EncodedEvent;
-use crate::dns;
 use crate::sink::util::socket_bytes_sink::{BytesSink, ShutdownCheck};
 use crate::sink::VecSinkExt;
 use crate::tcp::TcpKeepaliveConfig;
 use crate::tls::{MaybeTlsStream, TlsConfig, TlsError};
-use crate::OpenGauge;
-use crate::StreamSink;
-use crate::{Healthcheck, Sink};
+use crate::{dns, Healthcheck, OpenGauge, Sink, StreamSink};
 
 #[derive(Debug, Error)]
 enum TcpError {

@@ -360,9 +360,10 @@ impl FromIterator<(String, Value)> for Value {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::io::Read;
     use std::path::Path;
+
+    use super::*;
 
     fn parse_artifact(path: impl AsRef<Path>) -> std::io::Result<Vec<u8>> {
         let mut f = match std::fs::File::open(path) {

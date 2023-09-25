@@ -1,7 +1,9 @@
-use super::{read_to_string, Error, ErrorContext};
-use event::Metric;
-/// Collect metrics from /proc/meminfo
+//! Collect metrics from /proc/meminfo
 use std::{collections::HashMap, path::PathBuf};
+
+use event::Metric;
+
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(root);

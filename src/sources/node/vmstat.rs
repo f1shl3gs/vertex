@@ -1,4 +1,4 @@
-/// Exposes statistics from `/proc/vmstat`
+//! Exposes statistics from `/proc/vmstat`
 use event::Metric;
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};

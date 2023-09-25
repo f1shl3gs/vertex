@@ -26,8 +26,9 @@ impl Encoder<Event> for NativeJsonSerializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::fields;
+
+    use super::*;
 
     #[test]
     fn serialize() {

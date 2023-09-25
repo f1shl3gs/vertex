@@ -586,8 +586,9 @@ impl Decoder for EntryCodec {
 
 #[cfg(test)]
 mod checkpoints_tests {
-    use super::*;
     use tempfile::tempdir;
+
+    use super::*;
 
     #[tokio::test]
     async fn test_checkpoints() {

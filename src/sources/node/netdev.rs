@@ -1,9 +1,11 @@
-use super::{read_to_string, Error, ErrorContext};
+use std::num::ParseIntError;
+
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::num::ParseIntError;
+
+use super::{read_to_string, Error, ErrorContext};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]

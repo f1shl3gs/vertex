@@ -253,17 +253,18 @@ impl<T> Default for TopologyBuilder<T> {
 
 #[cfg(test)]
 mod tests {
+    use std::num::NonZeroUsize;
+
     use tracing::Span;
 
     use super::TopologyBuilder;
     use crate::{
-        topology::{builder::TopologyError, test_util::assert_current_send_capacity},
+        topology::{
+            builder::TopologyError, test_util::assert_current_send_capacity, test_util::Sample,
+        },
         variants::memory::MemoryBuffer,
         WhenFull,
     };
-
-    use crate::topology::test_util::Sample;
-    use std::num::NonZeroUsize;
 
     #[tokio::test]
     async fn single_stage_topology_block() {

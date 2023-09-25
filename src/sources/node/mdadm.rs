@@ -1,7 +1,6 @@
 /// Exposes statistics about devices in `/proc/mdstat` (does nothing if no `/proc/mdstat` present).
 use std::path::Path;
 
-use super::{read_to_string, Error, ErrorContext};
 use event::{tags, Metric};
 use nom::branch::alt;
 use nom::bytes::complete::{tag, take_while};
@@ -11,6 +10,8 @@ use nom::number::complete::double;
 use nom::IResult;
 use once_cell::sync::Lazy;
 use regex::Regex;
+
+use super::{read_to_string, Error, ErrorContext};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]

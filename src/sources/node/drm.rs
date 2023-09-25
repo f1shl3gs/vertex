@@ -1,11 +1,12 @@
-/// exposing /sys/class/drm/card?/device stats.
-///
-/// Expose GPU metrics using sysfs/drm.
-/// amdgpu is the only driver which exposes this information through DRM.
-///
-/// https://github.com/prometheus/node_exporter/pull/1998
-use super::{read_into, read_to_string, Error, ErrorContext};
+//! exposing /sys/class/drm/card?/device stats.
+//!
+//! Expose GPU metrics using sysfs/drm.
+//! amdgpu is the only driver which exposes this information through DRM.
+//!
+//! https://github.com/prometheus/node_exporter/pull/1998
 use event::{tags, Metric};
+
+use super::{read_into, read_to_string, Error, ErrorContext};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = class_drm_card_amdgpu_stats(sys_path)

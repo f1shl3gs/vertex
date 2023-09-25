@@ -63,13 +63,15 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::ShutdownSignal;
-    use futures::FutureExt;
     use std::fs::remove_file;
+
+    use futures::FutureExt;
     use testify::temp::temp_file;
     use tokio::fs::File;
     use tokio::io::{AsyncBufReadExt, AsyncWriteExt, BufReader, BufWriter};
+
+    use super::*;
+    use crate::ShutdownSignal;
 
     #[tokio::test]
     async fn test_read_line_without_shutdown() {

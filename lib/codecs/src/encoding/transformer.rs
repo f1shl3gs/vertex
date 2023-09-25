@@ -206,9 +206,9 @@ impl Transformer {
 #[cfg(test)]
 mod tests {
     use log_schema::log_schema;
+    use std::collections::BTreeMap;
 
     use super::*;
-    use std::collections::BTreeMap;
 
     #[test]
     fn serialize() {

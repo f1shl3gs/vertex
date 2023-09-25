@@ -1,4 +1,4 @@
-/// Exposes ZFS performance statistics
+//! Exposes ZFS performance statistics
 use std::collections::BTreeMap;
 
 use event::{tags, Metric};
