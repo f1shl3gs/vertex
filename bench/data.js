@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695603400784,
+  "lastUpdate": 1695604197614,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "b2f5328ad2fa7a48720aaed7134902d26ce8e650",
-          "message": "chore(deps): bump notify from 6.0.1 to 6.1.0 (#1177)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.0.1 to 6.1.0.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.0.1...notify-6.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:39+08:00",
-          "tree_id": "cb083b49f38f8eec6ef18a87a4875a2110fbc2d0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b2f5328ad2fa7a48720aaed7134902d26ce8e650"
-        },
-        "date": 1692608373272,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1087,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44357.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722",
           "message": "chore(deps): bump tempfile from 3.7.1 to 3.8.0 (#1178)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.1 to 3.8.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.1...v3.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-21T16:35:30+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42466.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b9c881f4dd53338892a60e61c150c29a041deba7",
+          "message": "chore(deps): bump memmap2 from 0.7.1 to 0.8.0 (#1285)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.7.1 to 0.8.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.7.1...v0.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-25T08:51:20+08:00",
+          "tree_id": "3678ed8fab1826a156caff709c187e2f70520c7d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b9c881f4dd53338892a60e61c150c29a041deba7"
+        },
+        "date": 1695604179361,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 967,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42472.5,
             "unit": "KiB"
           }
         ]
