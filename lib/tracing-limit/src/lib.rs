@@ -19,7 +19,7 @@ extern crate tracing;
 use std::time::Instant;
 
 #[cfg(test)]
-use mock_instant::Instant;
+use testify::instant::Instant;
 
 const RATE_LIMIT_FIELD: &str = "internal_log_rate_limit";
 const MESSAGE_FIELD: &str = "message";
@@ -404,7 +404,7 @@ mod test {
         time::Duration,
     };
 
-    use mock_instant::MockClock;
+    use testify::instant::MockClock;
     use tracing_subscriber::layer::SubscriberExt;
 
     use super::*;

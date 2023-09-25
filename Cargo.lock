@@ -2133,12 +2133,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mock_instant"
-version = "0.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c1a54de846c4006b88b1516731cc1f6026eb5dc4bcb186aa071ef66d40524ec"
-
-[[package]]
 name = "multiline"
 version = "0.1.0"
 dependencies = [
@@ -4126,7 +4120,7 @@ version = "0.1.0"
 dependencies = [
  "criterion",
  "dashmap",
- "mock_instant",
+ "testify",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
