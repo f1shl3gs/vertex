@@ -1,4 +1,3 @@
-use super::{Error, ErrorContext};
 use event::{tags, Metric};
 /// Exposes statistics from /proc/net/softnet_stat
 ///
@@ -11,6 +10,8 @@ use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
+
+use super::{Error, ErrorContext};
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {

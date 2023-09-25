@@ -1,6 +1,7 @@
-use super::{read_to_string, Error, ErrorContext};
-/// Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
+//! Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
 use event::Metric;
+
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let stat4 = sockstat4(proc_path).await.context("read sockstat failed")?;

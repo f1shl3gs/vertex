@@ -1,5 +1,3 @@
-use super::{read_into, read_to_string, Error};
-use event::{tags, Metric};
 use std::collections::BTreeMap;
 /// Expose various statistics from /sys/class/powercap
 ///
@@ -12,6 +10,10 @@ use std::collections::BTreeMap;
 /// - Using raw-access to the underlying MSRs under /dev/msr. This requires root.
 /// Not that you cannot get readings for individual processes, the results are for the entire CPU socket.
 use std::path::PathBuf;
+
+use event::{tags, Metric};
+
+use super::{read_into, read_to_string, Error};
 
 /// RaplZone stores the information for one RAPL power zone
 #[derive(Debug)]

@@ -1,8 +1,9 @@
-/// Exposes thermal zone & cooling device statistics from /sys/class/thermal
+//! Exposes thermal zone & cooling device statistics from /sys/class/thermal
 use std::path::Path;
 
-use super::{read_into, read_to_string, Error};
 use event::{tags, Metric};
+
+use super::{read_into, read_to_string, Error};
 
 /// ThermalStats contains info from files in /sys/class/thermal_zone<zone>
 /// for a single <zone>

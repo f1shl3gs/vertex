@@ -1,10 +1,12 @@
-use super::Error;
-use crate::invalid_error;
-use event::{tags, Metric};
 use std::convert::TryFrom;
 use std::convert::TryInto;
 use std::path::Path;
+
+use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
+
+use super::Error;
+use crate::invalid_error;
 
 /// Network models the "net" line.
 #[allow(clippy::derive_partial_eq_without_eq)]

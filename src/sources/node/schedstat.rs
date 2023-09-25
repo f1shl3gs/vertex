@@ -1,7 +1,8 @@
-use super::{Error, ErrorContext};
-/// Exposes task scheduler statistics from /proc/schedstat
+//! Exposes task scheduler statistics from /proc/schedstat
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
+
+use super::{Error, ErrorContext};
 
 #[derive(Debug, Default)]
 struct Schedstat {

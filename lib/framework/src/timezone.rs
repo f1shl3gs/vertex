@@ -76,9 +76,11 @@ impl Configurable for TimeZone {
 }
 
 pub mod ser_de {
-    use super::*;
-    use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
     use std::fmt::Formatter;
+
+    use serde::{de, Deserialize, Deserializer, Serialize, Serializer};
+
+    use super::*;
 
     struct TimeZoneVisitor;
 

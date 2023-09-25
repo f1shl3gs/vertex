@@ -403,8 +403,9 @@ fn sanitize_metric_name(name: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use framework::config::ProxyConfig;
+
+    use super::*;
 
     #[test]
     fn generate_config() {

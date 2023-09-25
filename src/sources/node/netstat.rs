@@ -1,10 +1,12 @@
-use super::{Error, ErrorContext};
+use std::collections::BTreeMap;
+
 use event::Metric;
 use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::collections::BTreeMap;
 use tokio::io::AsyncBufReadExt;
+
+use super::{Error, ErrorContext};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {

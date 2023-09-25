@@ -148,10 +148,11 @@ async fn check(service: String, address: String) -> framework::Result<(Code, Ser
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use crate::testing::trace_init;
     use event::MetricValue::Gauge;
     use tonic::transport::Server;
+
+    use super::*;
+    use crate::testing::trace_init;
 
     #[test]
     fn generate_config() {

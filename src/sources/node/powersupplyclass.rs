@@ -1,8 +1,10 @@
-use super::{read_to_string, Error};
+use std::path::{Path, PathBuf};
+
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
-use std::path::{Path, PathBuf};
+
+use super::{read_to_string, Error};
 
 /// PowerSupply contains info from files in /sys/class/power_supply for
 /// a single power supply

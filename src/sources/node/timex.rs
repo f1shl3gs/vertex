@@ -1,6 +1,7 @@
-/// Exposes selected adjtimex(2) system call stats.
-use super::{Error, ErrorContext};
+//! Exposes selected adjtimex(2) system call stats.
 use event::Metric;
+
+use super::{Error, ErrorContext};
 
 // The system clock is not synchronized to a reliable
 // server (TIME_ERROR)

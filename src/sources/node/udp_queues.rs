@@ -1,6 +1,7 @@
-use super::Error;
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
+
+use super::Error;
 
 /// Exposes UDP total lengths of the rx_queue and tx_queue
 /// from `/proc/net/udp` and `/proc/net/udp6`

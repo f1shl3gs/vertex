@@ -1,7 +1,8 @@
-use crate::{OwnedSegment, Path};
 use std::borrow::Cow;
 use std::iter::Cloned;
 use std::slice::Iter;
+
+use crate::{OwnedSegment, Path};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub enum BorrowedSegment<'a> {

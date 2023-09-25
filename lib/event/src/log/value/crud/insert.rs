@@ -71,8 +71,9 @@ pub fn insert<'a, T: ValueCollection>(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use serde_json::json;
+
+    use super::*;
 
     #[test]
     fn insert_coalesce() {

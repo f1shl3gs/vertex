@@ -1,6 +1,8 @@
-use super::{read_to_string, Error};
-use event::Metric;
 use std::path::PathBuf;
+
+use event::Metric;
+
+use super::{read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let root = PathBuf::from(proc_path);

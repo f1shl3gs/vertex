@@ -323,11 +323,12 @@ fn enrich_syslog_event(event: &mut Event, host_key: &str, default_host: Option<B
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
     use event::log::Value;
     use event::{assert_event_data_eq, fields, LogRecord};
+
+    use super::*;
 
     #[test]
     fn generate_config() {

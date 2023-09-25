@@ -1,5 +1,6 @@
-use super::{read_to_string, Error, ErrorContext};
 use event::Metric;
+
+use super::{read_to_string, Error, ErrorContext};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let (allocated, maximum) = read_file_nr(proc_path)

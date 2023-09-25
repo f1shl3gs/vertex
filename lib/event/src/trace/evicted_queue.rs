@@ -139,8 +139,9 @@ impl<T> Extend<T> for EvictedQueue<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::EvictedQueue;
     use std::collections::VecDeque;
+
+    use super::EvictedQueue;
 
     #[test]
     fn insert_over_capacity_test() {

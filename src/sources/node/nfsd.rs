@@ -1,10 +1,12 @@
+use std::convert::{TryFrom, TryInto};
+use std::path::Path;
+
+use event::{tags, Metric};
+use tokio::io::AsyncBufReadExt;
+
 use super::Error;
 use crate::invalid_error;
 use crate::sources::node::nfs::{Network, V2Stats, V3Stats};
-use event::{tags, Metric};
-use std::convert::{TryFrom, TryInto};
-use std::path::Path;
-use tokio::io::AsyncBufReadExt;
 
 // ReplyCache models the "rc" line.
 #[derive(Debug, Default, PartialEq)]
@@ -544,8 +546,9 @@ pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use tempfile::tempdir;
+
+    use super::*;
 
     #[tokio::test]
     async fn test_server_rpc_stats() {

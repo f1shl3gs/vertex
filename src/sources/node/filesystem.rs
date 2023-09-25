@@ -1,10 +1,11 @@
 use std::{ffi::CString, path::Path};
 
-use super::{Error, ErrorContext};
 use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
+
+use super::{Error, ErrorContext};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FileSystemConfig {
@@ -272,8 +273,9 @@ impl Usage {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::path::PathBuf;
+
+    use super::*;
 
     #[tokio::test]
     async fn test_get_stats() {

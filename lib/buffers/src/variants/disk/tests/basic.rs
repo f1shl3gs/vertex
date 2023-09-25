@@ -6,9 +6,9 @@ use tokio_test::{assert_pending, assert_ready, task::spawn};
 use tracing::Instrument;
 
 use super::create_default_buffer;
-use crate::test::acknowledge;
 use crate::{
     assert_buffer_is_empty, assert_buffer_records,
+    test::acknowledge,
     test::{install_tracing_helpers, with_temp_dir, MultiEventRecord, SizedRecord},
     variants::disk::{tests::create_default_buffer_with_usage, writer::RecordWriter},
     EventCount,

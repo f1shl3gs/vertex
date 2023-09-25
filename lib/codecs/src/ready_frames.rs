@@ -117,9 +117,10 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use futures::{channel::mpsc, SinkExt};
     use futures_util::poll;
+
+    use super::*;
 
     #[tokio::test]
     async fn idle_passthrough() {

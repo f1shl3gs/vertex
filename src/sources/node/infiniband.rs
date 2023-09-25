@@ -1,7 +1,9 @@
+use std::path::{Path, PathBuf};
+
+use event::{tags, Metric};
+
 use super::{read_to_string, Error, ErrorContext};
 use crate::invalid_error;
-use event::{tags, Metric};
-use std::path::{Path, PathBuf};
 
 /// InfiniBandCounters contains counter values from files in
 /// /sys/class/infiniband/<Name>/ports/<Port>/counters or

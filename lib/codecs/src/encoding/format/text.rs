@@ -1,8 +1,9 @@
-use crate::encoding::SerializeError;
 use bytes::{BufMut, BytesMut};
 use event::Event;
 use log_schema::log_schema;
 use tokio_util::codec::Encoder;
+
+use crate::encoding::SerializeError;
 
 /// Serializer that converts a log to bytes by extracting the message key, or converts a metric to
 /// bytes by calling its `Display` implementation.
@@ -46,8 +47,9 @@ impl Encoder<Event> for TextSerializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::{fields, tags, Metric};
+
+    use super::*;
 
     #[test]
     fn serialize() {

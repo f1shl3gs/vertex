@@ -1,7 +1,8 @@
-use crate::encoding::SerializeError;
 use bytes::{BufMut, BytesMut};
 use event::Event;
 use tokio_util::codec::Encoder;
+
+use crate::encoding::SerializeError;
 
 /// Serializer that converts an `Event` to bytes using the JSON format.
 #[derive(Clone, Debug)]
@@ -31,8 +32,9 @@ impl Encoder<Event> for JsonSerializer {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use event::fields;
+
+    use super::*;
 
     #[test]
     fn serialize() {

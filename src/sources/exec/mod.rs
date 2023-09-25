@@ -509,11 +509,13 @@ async fn run_streaming(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use bytes::Bytes;
-    use event::log::Value;
     use std::io::Cursor;
     use std::task::Poll;
+
+    use bytes::Bytes;
+    use event::log::Value;
+
+    use super::*;
 
     #[test]
     fn generate_config() {
