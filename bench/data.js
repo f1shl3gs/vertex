@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695637128272,
+  "lastUpdate": 1695637160549,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0e0529dc15e75647519695addb05b5c465e60993",
-          "message": "chore(deps): bump dyn-clone from 1.0.12 to 1.0.13 (#1175)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.12 to 1.0.13.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.12...1.0.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-18T00:21:00+08:00",
-          "tree_id": "ec84ed482dc89345cc35655a42bdccc4d24bfea2",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0e0529dc15e75647519695addb05b5c465e60993"
-        },
-        "date": 1692289521796,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 690.6,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 68870,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 344630,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 688090,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 227.55,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 22681,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 113150,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 226410,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7bace9cfa56889c3ed195c1fc32cb154a0d4b0eb",
           "message": "chore(deps): bump typetag from 0.2.12 to 0.2.13 (#1172)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.12...0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-18T00:21:43+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 187890,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "a6168c7ea7a218f24f2526c02535b904d77c777d",
+          "message": "re-order imports (#1288)\n\n* format\r\n\r\n* add `std` feature to pretty_assertion",
+          "timestamp": "2023-09-25T18:14:06+08:00",
+          "tree_id": "b67d83621a6b1bac591f30fa01d509b78205955f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/a6168c7ea7a218f24f2526c02535b904d77c777d"
+        },
+        "date": 1695637142795,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 561.19,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 55963,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 279960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 560110,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 191.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19122,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 95935,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 191110,
             "unit": "ns/op"
           }
         ]
