@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695607743502,
+  "lastUpdate": 1695607795763,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "07e8befdd2426ca8453db7c797dfdf8149b4e0fb",
-          "message": "chore(deps): bump syn from 2.0.28 to 2.0.29 (#1174)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.28 to 2.0.29.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.28...2.0.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-18T00:21:12+08:00",
-          "tree_id": "3d91e2cdf7734491f1d0ea928059787acd4cf6d9",
-          "url": "https://github.com/f1shl3gs/vertex/commit/07e8befdd2426ca8453db7c797dfdf8149b4e0fb"
-        },
-        "date": 1692289510967,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.294,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.392,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.736,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 38.972,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 52.891,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0e0529dc15e75647519695addb05b5c465e60993",
           "message": "chore(deps): bump dyn-clone from 1.0.12 to 1.0.13 (#1175)\n\nBumps [dyn-clone](https://github.com/dtolnay/dyn-clone) from 1.0.12 to 1.0.13.\r\n- [Release notes](https://github.com/dtolnay/dyn-clone/releases)\r\n- [Commits](https://github.com/dtolnay/dyn-clone/compare/1.0.12...1.0.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dyn-clone\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-18T00:21:00+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 49.892,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "bc68ae83522b2e6572a4802d4c037309ea0fba88",
+          "message": "format Cargo.toml (#1286)",
+          "timestamp": "2023-09-25T10:05:47+08:00",
+          "tree_id": "2c2e48e8b2cfacd883ce8c9e98e6ce9e46b1401d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/bc68ae83522b2e6572a4802d4c037309ea0fba88"
+        },
+        "date": 1695607778770,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.288,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.775,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.798,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 157.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.493,
             "unit": "ns/op"
           }
         ]
