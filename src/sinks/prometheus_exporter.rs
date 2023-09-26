@@ -4,7 +4,7 @@ use std::convert::Infallible;
 use std::fmt::Write;
 use std::hash::Hasher;
 use std::io::Write as IoWrite;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::net::SocketAddr;
 use std::ops::{Deref, DerefMut};
 use std::sync::Arc;
 use std::time::Duration;
@@ -13,8 +13,7 @@ use async_trait::async_trait;
 use bytes::{BufMut, BytesMut};
 use chrono::Utc;
 use configurable::configurable_component;
-use event::{EventStatus, Finalizable, Metric};
-use event::{Events, MetricValue};
+use event::{EventStatus, Events, Finalizable, Metric, MetricValue};
 use framework::config::{DataType, Resource, SinkConfig, SinkContext};
 use framework::tls::{MaybeTlsListener, TlsConfig};
 use framework::{Healthcheck, Sink, StreamSink};
@@ -23,13 +22,13 @@ use futures::{FutureExt, StreamExt};
 use hyper::service::{make_service_fn, service_fn};
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use parking_lot::Mutex;
-use tripwire::{Trigger, Tripwire};
+use tripwire::Tripwire;
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[serde(deny_unknown_fields)]
 struct Config {
     /// The address the prometheus server will listen at
-    #[serde(default = "default_endpoint_address")]
+    #[serde(default = "default_endpoint")]
     #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
     endpoint: SocketAddr,
 
@@ -42,8 +41,8 @@ struct Config {
     tls: Option<TlsConfig>,
 }
 
-const fn default_endpoint_address() -> SocketAddr {
-    SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), 9100)
+fn default_endpoint() -> SocketAddr {
+    SocketAddr::from(([0, 0, 0, 0], 9100))
 }
 
 const fn default_ttl() -> Duration {
@@ -124,110 +123,20 @@ struct Sets {
 }
 
 struct PrometheusExporter {
-    ttl: i64,
+    ttl: Duration,
     tls: Option<TlsConfig>,
     endpoint: SocketAddr,
-    // Once this structure is dropped, shutdown_trigger's will be called too,
-    // so the underlying routine gc and http server will stop too.
-    shutdown_trigger: Option<Trigger>,
     metrics: Arc<Mutex<BTreeMap<String, Sets>>>,
 }
 
 impl PrometheusExporter {
     fn new(config: &Config) -> Self {
         Self {
-            shutdown_trigger: None,
             endpoint: config.endpoint,
             metrics: Arc::new(Mutex::new(BTreeMap::new())),
-            ttl: config.ttl.as_secs() as i64,
+            ttl: config.ttl,
             tls: config.tls.clone(),
         }
-    }
-
-    async fn start_server_if_needed(&mut self) {
-        if self.shutdown_trigger.is_some() {
-            return;
-        }
-
-        let (trigger, tripwire) = Tripwire::new();
-        let metrics = Arc::clone(&self.metrics);
-
-        // Start a gc routine, and flush metrics every ttl. It will keep state clean
-        let flush_period = Duration::from_secs(self.ttl as u64);
-        let mut ticker = tokio::time::interval(flush_period);
-
-        let mut shutdown = tripwire.clone();
-        tokio::spawn(async move {
-            loop {
-                tokio::select! {
-                    biased;
-
-                    _ = &mut shutdown => break,
-                    _ = ticker.tick() => {}
-                }
-
-                let mut cleaned = 0;
-                let metrics = Arc::clone(&metrics);
-                let mut state = metrics.lock();
-                let now = Utc::now().timestamp();
-
-                for (_name, set) in state.iter_mut() {
-                    set.metrics.retain(|entry| {
-                        let keep = entry.expired_at > now;
-                        if !keep {
-                            cleaned += 1;
-                        }
-
-                        keep
-                    });
-                }
-
-                state.retain(|_name, set| !set.metrics.is_empty());
-
-                debug!(message = "GC finished", cleaned);
-            }
-        });
-
-        let metrics = Arc::clone(&self.metrics);
-        let new_service = make_service_fn(move |_| {
-            let metrics = Arc::clone(&metrics);
-
-            async move {
-                Ok::<_, Infallible>(service_fn(move |req| {
-                    let now = Utc::now().timestamp();
-                    let metrics = Arc::clone(&metrics);
-
-                    let resp = handle(req, metrics, now);
-
-                    futures::future::ok::<_, Infallible>(resp)
-                }))
-            }
-        });
-
-        let address = self.endpoint;
-        let tls = self.tls.clone();
-        tokio::spawn(async move {
-            let listener = MaybeTlsListener::bind(&address, &tls)
-                .await
-                .map_err(|err| {
-                    error!(message = "Server TLS error", ?err);
-                })?;
-
-            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
-                .serve(new_service)
-                .with_graceful_shutdown(tripwire)
-                .await
-                .map_err(|err| {
-                    error!(
-                        message = "Server error",
-                        %err
-                    );
-                })?;
-
-            Ok::<(), ()>(())
-        });
-
-        self.shutdown_trigger = Some(trigger);
     }
 }
 
@@ -395,8 +304,78 @@ fn should_compress(req: &Request<Body>) -> bool {
 #[async_trait]
 impl StreamSink for PrometheusExporter {
     async fn run(mut self: Box<Self>, mut input: BoxStream<'_, Events>) -> Result<(), ()> {
-        self.start_server_if_needed().await;
+        let (_trigger, tripwire) = Tripwire::new();
+        let metrics = Arc::clone(&self.metrics);
+        let mut ticker = tokio::time::interval(self.ttl);
 
+        // GC routine
+        let mut shutdown = tripwire.clone();
+        tokio::spawn(async move {
+            loop {
+                tokio::select! {
+                    biased;
+
+                    _ = &mut shutdown => break,
+                    _ = ticker.tick() => {}
+                }
+
+                let mut cleaned = 0;
+                let metrics = Arc::clone(&metrics);
+                let mut state = metrics.lock();
+                let now = Utc::now().timestamp();
+
+                for (_name, set) in state.iter_mut() {
+                    set.metrics.retain(|entry| {
+                        let keep = entry.expired_at > now;
+                        if !keep {
+                            cleaned += 1;
+                        }
+
+                        keep
+                    });
+                }
+
+                state.retain(|_name, set| !set.metrics.is_empty());
+
+                debug!(message = "GC finished", cleaned);
+            }
+        });
+
+        let metrics = Arc::clone(&self.metrics);
+        let service = make_service_fn(move |_| {
+            let metrics = Arc::clone(&metrics);
+
+            async move {
+                Ok::<_, Infallible>(service_fn(move |req| {
+                    let now = Utc::now().timestamp();
+                    let metrics = Arc::clone(&metrics);
+                    let resp = handle(req, metrics, now);
+
+                    futures::future::ok::<_, Infallible>(resp)
+                }))
+            }
+        });
+
+        // HTTP server routine
+        let address = self.endpoint;
+        let tls = self.tls.clone();
+        tokio::spawn(async move {
+            let listener = MaybeTlsListener::bind(&address, &tls)
+                .await
+                .map_err(|err| error!(message = "Server TLS error", ?err))?;
+
+            info!(message = "start http server", ?address);
+
+            Server::builder(hyper::server::accept::from_stream(listener.accept_stream()))
+                .serve(service)
+                .with_graceful_shutdown(tripwire)
+                .await
+                .map_err(|err| error!(message = "Server error", ?err))?;
+
+            Ok::<(), ()>(())
+        });
+
+        // Handle input metrics
         while let Some(events) = input.next().await {
             if let Events::Metrics(metrics) = events {
                 let mut state = self.metrics.lock();
@@ -422,7 +401,7 @@ impl StreamSink for PrometheusExporter {
                     // `insert` will not update the entry, but `replace` will.
                     sets.metrics.replace(ExpiringEntry {
                         metric,
-                        expired_at: timestamp.timestamp() + self.ttl,
+                        expired_at: timestamp.timestamp() + self.ttl.as_secs() as i64,
                     });
                     finalizers.update_status(EventStatus::Delivered)
                 })
@@ -467,9 +446,6 @@ mod tests {
         set.insert(ent);
 
         assert_eq!(set.len(), 1);
-        assert_eq!(
-            set.iter().enumerate().next().unwrap().1.expired_at,
-            now + 60
-        );
+        assert_eq!(set.first().unwrap().expired_at, now + 60);
     }
 }
