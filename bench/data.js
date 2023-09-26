@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695715124598,
+  "lastUpdate": 1695715870570,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c8019b0bf3e3cbde26a24c1cc979f816f8fa503b",
-          "message": "chore(deps): bump dashmap from 5.5.0 to 5.5.1 (#1183)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.0 to 5.5.1.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.0...v5.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-23T10:32:24+08:00",
-          "tree_id": "b2eabd26e1ca257e452cab97742f0242862313c6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c8019b0bf3e3cbde26a24c1cc979f816f8fa503b"
-        },
-        "date": 1692759356014,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1266,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44380.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "74fae9d8df80eca6da6c5ded0b54f31ee4f6e245",
           "message": "chore(deps): bump tokio-test from 0.4.2 to 0.4.3 (#1185)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.2 to 0.4.3.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.2...tokio-test-0.4.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-24T11:20:27+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42472.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0a9b2a7e86288a2ac4791b2f9293c8ed9362284",
+          "message": "refine configs (#1289)\n\n* rename Config name\r\n\r\n* simplify",
+          "timestamp": "2023-09-26T15:53:02+08:00",
+          "tree_id": "7ac2be4a08c07d3df8eeeef2637b688b0dd82829",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0a9b2a7e86288a2ac4791b2f9293c8ed9362284"
+        },
+        "date": 1695715852701,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 939,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42408.6,
             "unit": "KiB"
           }
         ]
