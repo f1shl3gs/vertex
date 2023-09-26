@@ -201,7 +201,7 @@ fn handle(
                                 "# HELP {} {}\n# TYPE {} {}",
                                 name, description, name, kind
                             )
-                                .unwrap();
+                            .unwrap();
                             header = true;
                         }
 
