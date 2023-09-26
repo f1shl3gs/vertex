@@ -36,7 +36,7 @@ impl SinkBatchSettings for PrometheusRemoteWriteDefaultBatchSettings {
 
 #[configurable_component(sink, name = "prometheus_remote_write")]
 #[serde(deny_unknown_fields)]
-pub struct RemoteWriteConfig {
+pub struct Config {
     /// Endpoint of Prometheus's remote write API.
     #[configurable(required, format = "uri", example = "http://10.1.1.1:8000")]
     pub endpoint: String,
@@ -58,7 +58,7 @@ pub struct RemoteWriteConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "prometheus_remote_write")]
-impl SinkConfig for RemoteWriteConfig {
+impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let endpoint = self.endpoint.parse::<Uri>().map_err(BuildError::UriParse)?;
         let batch = self.batch.into_batch_settings()?;
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<RemoteWriteConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     macro_rules! labels {
@@ -250,7 +250,7 @@ mod tests {
         tokio::spawn(server);
 
         let config = format!("endpoint: \"http://{}/write\"\n{}", addr, config);
-        let config: RemoteWriteConfig = serde_yaml::from_str(&config).unwrap();
+        let config: Config = serde_yaml::from_str(&config).unwrap();
         let cx = SinkContext::new_test();
 
         let (sink, _healthcheck) = config.build(cx).await.unwrap();
@@ -370,7 +370,7 @@ mod tests {
 mod integration_tests {
     use std::time::Duration;
 
-    use super::RemoteWriteConfig;
+    use super::Config;
     use crate::testing::{ContainerBuilder, WaitFor};
     use event::Metric;
     use framework::config::{ProxyConfig, SinkConfig, SinkContext};
@@ -391,7 +391,7 @@ mod integration_tests {
 
         // 2. Setup sink
         let config = format!("endpoint: http://{}/api/v1/push", address);
-        let config: RemoteWriteConfig = serde_yaml::from_str(&config).unwrap();
+        let config: Config = serde_yaml::from_str(&config).unwrap();
         let cx = SinkContext::new_test();
 
         let (sink, _healthcheck) = config.build(cx).await.unwrap();

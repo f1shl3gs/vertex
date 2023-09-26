@@ -8,7 +8,7 @@ use hyper::Body;
 use serde::{Deserialize, Serialize};
 use testify::random::random_string;
 
-use super::config::LokiConfig;
+use super::config::Config;
 
 const LOKI_PORT: u16 = 3100;
 
@@ -36,7 +36,7 @@ labels:
         address, &label_value
     );
 
-    let config: LokiConfig = serde_yaml::from_str(&config).unwrap();
+    let config: Config = serde_yaml::from_str(&config).unwrap();
     let cx = SinkContext::new_test();
 
     let (sink, healthcheck) = config.build(cx).await.unwrap();

@@ -49,7 +49,7 @@ pub struct Config {
     pub current_boot_only: Option<bool>,
 
     /// A list of unit names to monitor. If empty or not present, all units are accepted.
-    /// Unit anmes lacking a `.` have `.service` appended to make them a valid service
+    /// Unit names lacking a `.` have `.service` appended to make them a valid service
     /// unit name.
     pub units: Vec<String>,
 

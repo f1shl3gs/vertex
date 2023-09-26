@@ -9,14 +9,14 @@ use framework::template::Template;
 use log_schema::log_schema;
 
 use super::common::ElasticsearchCommon;
-use super::config::{BulkConfig, ElasticsearchConfig};
+use super::config::{BulkConfig, Config};
 use super::config::{DataStreamConfig, ElasticsearchMode};
 use super::sink::process_log;
 use super::BulkAction;
 
 #[tokio::test]
 async fn sets_create_action_when_configured() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: Some(String::from("{{ action }}te")),
             index: Some(String::from("vertex")),
@@ -57,7 +57,7 @@ fn data_stream_body() -> BTreeMap<String, Value> {
 
 #[tokio::test]
 async fn encode_datastream_mode() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: None,
             index: Some("index".into()),
@@ -93,7 +93,7 @@ async fn encode_datastream_mode() {
 
 #[tokio::test]
 async fn encode_datastream_mode_no_routing() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: None,
             index: Some("index".into()),
@@ -133,7 +133,7 @@ async fn encode_datastream_mode_no_routing() {
 
 #[tokio::test]
 async fn decode_bulk_action_error() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: Some("{{ action }}".into()),
             index: Some("index".into()),
@@ -154,7 +154,7 @@ async fn decode_bulk_action_error() {
 
 #[tokio::test]
 async fn decode_bulk_action() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: Some("create".into()),
             index: Some("index".into()),
@@ -172,7 +172,7 @@ async fn decode_bulk_action() {
 
 #[tokio::test]
 async fn encode_datastream_mode_no_sync() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: None,
             index: Some("index".into()),
@@ -213,7 +213,7 @@ async fn encode_datastream_mode_no_sync() {
 
 #[tokio::test]
 async fn allow_using_excepted_fields() {
-    let config = ElasticsearchConfig {
+    let config = Config {
         bulk: Some(BulkConfig {
             action: None,
             index: Some("{{ idx }}".into()),

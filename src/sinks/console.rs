@@ -33,7 +33,7 @@ pub enum Encoding {
 
 #[configurable_component(sink, name = "console")]
 #[serde(deny_unknown_fields)]
-pub struct ConsoleSinkConfig {
+pub struct Config {
     /// The standard stream to write to.
     #[serde(default)]
     stream: Stream,
@@ -43,7 +43,7 @@ pub struct ConsoleSinkConfig {
 
 #[async_trait]
 #[typetag::serde(name = "console")]
-impl SinkConfig for ConsoleSinkConfig {
+impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let transformer = self.encoding.transformer();
         let encoder =
@@ -123,6 +123,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ConsoleSinkConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 }

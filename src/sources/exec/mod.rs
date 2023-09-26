@@ -84,12 +84,10 @@ pub enum ExecConfigError {
     CommandEmpty,
     #[error("The maximum buffer size must be greater than zero")]
     ZeroBuffer,
-    #[error("`scheduled` and `streaming` can't be defined at the same time")]
-    Conflict,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-#[serde(rename_all = "snake_case")]
+#[derive(Configurable, Debug, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case", tag = "type")]
 enum Mode {
     Scheduled(ScheduledConfig),
     Streaming(StreamingConfig),
@@ -98,10 +96,8 @@ enum Mode {
 #[configurable_component(source, name = "exec")]
 #[serde(deny_unknown_fields)]
 pub struct Config {
-    // TODO: replace with mode, enum can make sure only one of them configured.
-    //   `flatten` or `untag enum` might be needed
-    scheduled: Option<ScheduledConfig>,
-    streaming: Option<StreamingConfig>,
+    #[configurable(required)]
+    mode: Mode,
 
     /// The command to be run, plus any arguments if needed.
     #[configurable(required)]
@@ -129,10 +125,6 @@ pub struct Config {
 
 impl Config {
     fn validate(&self) -> Result<(), ExecConfigError> {
-        if self.scheduled.is_some() && self.streaming.is_some() {
-            return Err(ExecConfigError::Conflict);
-        }
-
         if self.command.is_empty() {
             Err(ExecConfigError::CommandEmpty)
         } else if self.maximum_buffer_size == 0 {
@@ -148,15 +140,15 @@ impl Config {
 impl SourceConfig for Config {
     async fn build(&self, cx: SourceContext) -> framework::Result<Source> {
         self.validate()?;
-        let hostname = crate::hostname().ok();
+        let hostname = crate::hostname()?;
         let framing = self
             .framing
             .clone()
             .unwrap_or_else(|| self.decoding.default_stream_framing());
         let decoder = DecodingConfig::new(framing, self.decoding.clone()).build();
 
-        if let Some(config) = &self.scheduled {
-            Ok(Box::pin(run_scheduled(
+        match &self.mode {
+            Mode::Scheduled(config) => Ok(Box::pin(run_scheduled(
                 self.command.clone(),
                 self.working_directory.clone(),
                 self.include_stderr,
@@ -165,9 +157,8 @@ impl SourceConfig for Config {
                 decoder,
                 cx.shutdown,
                 cx.output,
-            )))
-        } else if let Some(config) = &self.streaming {
-            Ok(Box::pin(run_streaming(
+            ))),
+            Mode::Streaming(config) => Ok(Box::pin(run_streaming(
                 self.command.clone(),
                 self.working_directory.clone(),
                 self.include_stderr,
@@ -177,9 +168,7 @@ impl SourceConfig for Config {
                 decoder,
                 cx.shutdown,
                 cx.output,
-            )))
-        } else {
-            Err("`scheduled` or `streaming` must be defined".into())
+            ))),
         }
     }
 
@@ -192,7 +181,7 @@ async fn run_scheduled(
     command: Vec<String>,
     working_directory: Option<PathBuf>,
     include_stderr: bool,
-    hostname: Option<String>,
+    hostname: String,
     interval: Duration,
     decoder: codecs::Decoder,
     mut shutdown: ShutdownSignal,
@@ -217,7 +206,7 @@ async fn run_scheduled(
                 command.clone(),
                 working_directory.clone(),
                 include_stderr,
-                hostname.clone(),
+                &hostname,
                 shutdown.clone(),
                 decoder.clone(),
                 output.clone(),
@@ -248,7 +237,7 @@ async fn run_command(
     command: Vec<String>,
     working_dir: Option<PathBuf>,
     include_stderr: bool,
-    hostname: Option<String>,
+    hostname: &str,
     shutdown: ShutdownSignal,
     decoder: codecs::Decoder,
     mut output: Pipeline,
@@ -296,7 +285,7 @@ async fn run_command(
         let mut processed_count = 0;
 
         for mut event in events {
-            handle_event(&command, &hostname, &Some(stream), pid, &mut event);
+            handle_event(&command, hostname, &Some(stream), pid, &mut event);
 
             match output.send(event).await {
                 Ok(_) => {
@@ -367,14 +356,15 @@ fn build_command(
 
 fn handle_event(
     command: &[String],
-    hostname: &Option<String>,
+    hostname: &str,
     data_stream: &Option<&str>,
     pid: Option<u32>,
     event: &mut Event,
 ) {
     if let Event::Log(log) = event {
-        // Add timestamp
+        // Add timestamp and hostname
         log.insert_field(log_schema().timestamp_key(), Utc::now());
+        log.insert_field(log_schema().host_key(), hostname);
 
         // Add source type
         log.insert_tag(log_schema().source_type_key(), EXEC);
@@ -387,11 +377,6 @@ fn handle_event(
         // Add pid (if needed)
         if let Some(pid) = pid {
             log.try_insert_field(PID_KEY, pid);
-        }
-
-        // Add hostname (if needed)
-        if let Some(hostname) = hostname {
-            log.try_insert_field(log_schema().host_key(), hostname.clone());
         }
 
         // Add command
@@ -440,7 +425,7 @@ async fn run_streaming(
     command: Vec<String>,
     working_dir: Option<PathBuf>,
     include_stderr: bool,
-    hostname: Option<String>,
+    hostname: String,
     restart: RestartPolicy,
     delay: Duration,
     decoder: codecs::Decoder,
@@ -459,7 +444,7 @@ async fn run_streaming(
                         command.clone(),
                         working_dir.clone(),
                         include_stderr,
-                        hostname.clone(),
+                        &hostname,
                         shutdown.clone(),
                         decoder.clone(),
                         output.clone()
@@ -492,7 +477,7 @@ async fn run_streaming(
                 command,
                 working_dir,
                 include_stderr,
-                hostname,
+                &hostname,
                 shutdown,
                 decoder,
                 output,
@@ -525,12 +510,12 @@ mod tests {
     #[test]
     fn test_handle_event() {
         let command = vec!["ls".to_string()];
-        let hostname = Some("localhost".to_string());
+        let hostname = "localhost";
         let data_stream = Some(STDOUT);
         let pid = Some(123);
 
         let mut event = Bytes::from("hello").into();
-        handle_event(&command, &hostname, &data_stream, pid, &mut event);
+        handle_event(&command, hostname, &data_stream, pid, &mut event);
 
         let log = event.as_log();
 
@@ -620,7 +605,7 @@ mod tests {
     #[tokio::test]
     async fn run_command_on_unix_like() {
         let command = vec!["echo".into(), "hello".into()];
-        let hostname = Some("localhost".to_string());
+        let hostname = "localhost";
         let decoder = Default::default();
         let shutdown = ShutdownSignal::noop();
         let (tx, mut rx) = Pipeline::new_test();

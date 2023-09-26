@@ -1,8 +1,8 @@
 use framework::http::HttpClient;
 
-use crate::sinks::loki::config::LokiConfig;
+use crate::sinks::loki::config::Config;
 
-pub async fn health_check(config: LokiConfig, client: HttpClient) -> crate::Result<()> {
+pub async fn health_check(config: Config, client: HttpClient) -> crate::Result<()> {
     let endpoint = config.endpoint.append_path("ready")?;
     let mut req = http::Request::get(endpoint.uri)
         .body(hyper::Body::empty())

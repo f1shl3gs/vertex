@@ -8,7 +8,7 @@ use framework::tls::TlsConfig;
 use framework::HealthcheckError;
 use http::{Request, StatusCode, Uri};
 
-use super::config::{ElasticsearchAuth, ElasticsearchConfig};
+use super::config::{Config, ElasticsearchAuth};
 use super::encoder::ElasticsearchEncoder;
 use super::request_builder::ElasticsearchRequestBuilder;
 use super::ElasticsearchCommonMode;
@@ -27,7 +27,7 @@ pub struct ElasticsearchCommon {
 }
 
 impl ElasticsearchCommon {
-    pub async fn parse_config(config: &ElasticsearchConfig) -> crate::Result<Self> {
+    pub async fn parse_config(config: &Config) -> crate::Result<Self> {
         // Test the configured host, but ignore the result
         let uri = format!("{}/_test", &config.endpoint);
         let uri = uri.parse::<Uri>().map_err(|err| ParseError::InvalidHost {

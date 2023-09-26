@@ -20,7 +20,7 @@ use measurable::ByteSizeOf;
 use thiserror::Error;
 use tokio_util::codec::Encoder as _;
 
-use super::config::{LokiConfig, OutOfOrderAction};
+use super::config::{Config, OutOfOrderAction};
 use super::request_builder::{LokiBatchEncoder, LokiEvent, LokiRecord, PartitionKey};
 use super::service::{LokiRequest, LokiService};
 
@@ -263,7 +263,7 @@ pub struct LokiSink {
 }
 
 impl LokiSink {
-    pub fn new(config: LokiConfig, client: HttpClient, _cx: SinkContext) -> crate::Result<Self> {
+    pub fn new(config: Config, client: HttpClient, _cx: SinkContext) -> crate::Result<Self> {
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
         let encoder = Encoder::<()>::new(serializer);

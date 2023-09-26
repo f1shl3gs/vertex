@@ -236,7 +236,7 @@ impl DataStreamConfig {
 #[configurable_component(sink, name = "elasticsearch")]
 #[derive(Default)]
 #[serde(deny_unknown_fields)]
-pub struct ElasticsearchConfig {
+pub struct Config {
     /// The Elasticsearch endpoint to send logs to. This should be full URL.
     #[configurable(required, format = "uri")]
     pub endpoint: String,
@@ -290,7 +290,7 @@ pub struct ElasticsearchConfig {
     pub data_stream: Option<DataStreamConfig>,
 }
 
-impl ElasticsearchConfig {
+impl Config {
     pub fn index(&self) -> crate::Result<Template> {
         let index = self
             .bulk
@@ -327,7 +327,7 @@ impl ElasticsearchConfig {
 
 #[async_trait]
 #[typetag::serde(name = "elasticsearch")]
-impl SinkConfig for ElasticsearchConfig {
+impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> framework::Result<(Sink, Healthcheck)> {
         let common = ElasticsearchCommon::parse_config(self).await?;
         let http_client = HttpClient::new(&self.tls, cx.proxy())?;
@@ -371,7 +371,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<ElasticsearchConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]
@@ -381,7 +381,7 @@ mod tests {
 
     #[test]
     fn parse_mode() {
-        let config = serde_yaml::from_str::<ElasticsearchConfig>(
+        let config = serde_yaml::from_str::<Config>(
             r#"
 endpoint: ""
 mode: data_stream
