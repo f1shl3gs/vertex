@@ -133,7 +133,7 @@ impl RootCommand {
                     "tower_limit=trace".to_owned(),
                     "runtime=trace".to_owned(),
                     "tokio=trace".to_owned(),
-                    format!("rdkafka={}", level),
+                    format!("rskafka={}", level),
                     format!("buffers={}", level),
                 ]
                 .join(","),
@@ -143,10 +143,9 @@ impl RootCommand {
                     format!("framework={}", level),
                     format!("tail={}", level),
                     format!("codec={}", level),
-                    format!("vrl={}", level),
                     format!("file_source={}", level),
                     "tower_limit=trace".to_owned(),
-                    format!("rdkafka={}", level),
+                    format!("rskafka={}", level),
                     format!("buffers={}", level),
                 ]
                 .join(","),
