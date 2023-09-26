@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695638376322,
+  "lastUpdate": 1695714968506,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7bace9cfa56889c3ed195c1fc32cb154a0d4b0eb",
-          "message": "chore(deps): bump typetag from 0.2.12 to 0.2.13 (#1172)\n\nBumps [typetag](https://github.com/dtolnay/typetag) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/dtolnay/typetag/releases)\r\n- [Commits](https://github.com/dtolnay/typetag/compare/0.2.12...0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: typetag\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-18T00:21:43+08:00",
-          "tree_id": "071101b57a8b741f53c9435ed1ff9c86ee27b39b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7bace9cfa56889c3ed195c1fc32cb154a0d4b0eb"
-        },
-        "date": 1692289644411,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 717190,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 693330,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e0a9b2a7e86288a2ac4791b2f9293c8ed9362284",
+          "message": "refine configs (#1289)\n\n* rename Config name\r\n\r\n* simplify",
+          "timestamp": "2023-09-26T15:53:02+08:00",
+          "tree_id": "7ac2be4a08c07d3df8eeeef2637b688b0dd82829",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e0a9b2a7e86288a2ac4791b2f9293c8ed9362284"
+        },
+        "date": 1695714950472,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 699180,
             "unit": "ns/op"
           }
         ]
