@@ -45,7 +45,7 @@ pub enum OutOfOrderAction {
 
 #[configurable_component(sink, name = "loki")]
 #[derive(Clone)]
-pub struct LokiConfig {
+pub struct Config {
     /// The base URL of the Loki instance
     #[configurable(required, format = "uri", example = "http://example.com/ingest")]
     pub endpoint: UriSerde,
@@ -107,7 +107,7 @@ pub struct LokiConfig {
     acknowledgements: bool,
 }
 
-impl LokiConfig {
+impl Config {
     pub fn build_client(&self, cx: SinkContext) -> crate::Result<HttpClient> {
         let client = HttpClient::new(&self.tls, cx.proxy())?;
         Ok(client)
@@ -116,7 +116,7 @@ impl LokiConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "loki")]
-impl SinkConfig for LokiConfig {
+impl SinkConfig for Config {
     async fn build(&self, cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         for label in self.labels.keys() {
             if !valid_label_name(label) {
@@ -126,7 +126,7 @@ impl SinkConfig for LokiConfig {
 
         let client = self.build_client(cx.clone())?;
 
-        let config = LokiConfig {
+        let config = Config {
             auth: self.auth.choose_one(&self.auth)?,
             ..self.clone()
         };
@@ -167,7 +167,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<LokiConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 
     #[test]

@@ -11,14 +11,14 @@ use futures_util::StreamExt;
 
 #[configurable_component(sink, name = "blackhole")]
 #[serde(deny_unknown_fields)]
-pub struct BlackholeConfig {
+pub struct Config {
     /// Receive rate, in event per second.
     pub rate: Option<usize>,
 }
 
 #[async_trait]
 #[typetag::serde(name = "blackhole")]
-impl SinkConfig for BlackholeConfig {
+impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = BlackholeSink::new();
         let health_check = futures::future::ok(()).boxed();
@@ -56,6 +56,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<BlackholeConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

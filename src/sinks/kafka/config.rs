@@ -60,7 +60,7 @@ impl SinkBatchSettings for KafkaDefaultsBatchSettings {
 
 #[configurable_component(sink, name = "kafka")]
 #[derive(Clone)]
-pub struct KafkaSinkConfig {
+pub struct Config {
     /// A comma-separated list of host and port pairs that are the addresses of
     /// the Kafka brokers in a "bootstrap" Kafka cluster that a Kafka client
     /// connects to initially ot bootstrap itself.
@@ -96,7 +96,7 @@ pub struct KafkaSinkConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "kafka")]
-impl SinkConfig for KafkaSinkConfig {
+impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = super::sink::KafkaSink::new(self.clone()).await?;
         let hc = health_check(self.clone()).boxed();
@@ -114,6 +114,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<KafkaSinkConfig>();
+        crate::testing::test_generate_config::<Config>();
     }
 }

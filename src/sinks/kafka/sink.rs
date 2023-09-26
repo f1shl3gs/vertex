@@ -11,7 +11,7 @@ use rskafka::client::ClientBuilder;
 use thiserror::Error;
 use tower::limit::ConcurrencyLimit;
 
-use super::config::KafkaSinkConfig;
+use super::config::Config;
 use super::request_builder::KafkaRequestBuilder;
 use super::service::KafkaService;
 
@@ -34,7 +34,7 @@ pub struct KafkaSink {
 }
 
 impl KafkaSink {
-    pub async fn new(config: KafkaSinkConfig) -> crate::Result<Self> {
+    pub async fn new(config: Config) -> crate::Result<Self> {
         let transformer = config.encoding.transformer();
         let serializer = config.encoding.build();
         let encoder = Encoder::<()>::new(serializer);
@@ -76,7 +76,7 @@ impl KafkaSink {
     }
 }
 
-pub async fn health_check(config: KafkaSinkConfig) -> crate::Result<()> {
+pub async fn health_check(config: Config) -> crate::Result<()> {
     trace!(message = "Health check started",);
 
     let client = ClientBuilder::new(config.bootstrap_servers)

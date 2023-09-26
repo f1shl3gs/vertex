@@ -13,10 +13,8 @@ use framework::config::{DataType, Output, TransformConfig, TransformContext};
 use framework::template::Template;
 use framework::{OutputBuffer, TaskTransform, Transform};
 use futures::{Stream, StreamExt};
-
-use crate::transforms::throttle::rate_limiter::RateLimiter;
 use gcra::Quota;
-use rate_limiter::KeyedRateLimiter;
+use rate_limiter::{KeyedRateLimiter, RateLimiter};
 
 const fn default_window() -> Duration {
     Duration::from_secs(1)

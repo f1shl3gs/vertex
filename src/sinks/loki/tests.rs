@@ -4,13 +4,13 @@ use framework::http::HttpClient;
 use framework::sink::util::testing::{build_test_server, load_sink};
 use futures_util::StreamExt;
 
-use super::config::LokiConfig;
+use super::config::Config;
 use super::healthcheck::health_check;
 use super::sink::LokiSink;
 
 #[test]
 fn interpolate_labels() {
-    let (config, cx) = load_sink::<LokiConfig>(
+    let (config, cx) = load_sink::<Config>(
         r#"
 endpoint: http://localhost:3100
 labels:
@@ -57,7 +57,7 @@ remove_label_fields: true
 
 #[test]
 fn use_label_from_dropped_fields() {
-    let (config, cx) = load_sink::<LokiConfig>(
+    let (config, cx) = load_sink::<Config>(
         r#"
 endpoint: http://localhost:3100
 labels:
@@ -87,7 +87,7 @@ encoding:
 
 #[tokio::test]
 async fn health_check_includes_auth() {
-    let (mut config, _cx) = load_sink::<LokiConfig>(
+    let (mut config, _cx) = load_sink::<Config>(
         r#"
 endpoint: http://localhost:3100
 labels:

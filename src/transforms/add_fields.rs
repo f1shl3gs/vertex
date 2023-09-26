@@ -9,7 +9,7 @@ use framework::{FunctionTransform, OutputBuffer, Transform};
 #[configurable_component(transform, name = "add_fields")]
 #[derive(Clone)]
 #[serde(deny_unknown_fields)]
-pub struct AddFieldsConfig {
+pub struct Config {
     #[configurable(required)]
     pub fields: HashMap<String, String>,
 
@@ -19,7 +19,7 @@ pub struct AddFieldsConfig {
 
 #[async_trait::async_trait]
 #[typetag::serde(name = "add_fields")]
-impl TransformConfig for AddFieldsConfig {
+impl TransformConfig for Config {
     async fn build(&self, _cx: &TransformContext) -> crate::Result<Transform> {
         if self.fields.is_empty() {
             return Err("fields is required".into());
@@ -44,7 +44,7 @@ struct AddFields {
 }
 
 impl AddFields {
-    fn from(conf: &AddFieldsConfig) -> Self {
+    fn from(conf: &Config) -> Self {
         Self {
             fields: conf.fields.clone(),
             overwrite: conf.overwrite,
@@ -74,6 +74,6 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<AddFieldsConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 }

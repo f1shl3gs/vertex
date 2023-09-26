@@ -27,7 +27,7 @@ use tripwire::{Trigger, Tripwire};
 
 #[configurable_component(sink, name = "prometheus_exporter")]
 #[serde(deny_unknown_fields)]
-struct PrometheusExporterConfig {
+struct Config {
     /// The address the prometheus server will listen at
     #[serde(default = "default_endpoint_address")]
     #[configurable(required, format = "ip-address", example = "0.0.0.0:9100")]
@@ -52,7 +52,7 @@ const fn default_ttl() -> Duration {
 
 #[async_trait]
 #[typetag::serde(name = "prometheus_exporter")]
-impl SinkConfig for PrometheusExporterConfig {
+impl SinkConfig for Config {
     async fn build(&self, _cx: SinkContext) -> crate::Result<(Sink, Healthcheck)> {
         let sink = PrometheusExporter::new(self);
         let health_check = futures::future::ok(()).boxed();
@@ -134,7 +134,7 @@ struct PrometheusExporter {
 }
 
 impl PrometheusExporter {
-    fn new(config: &PrometheusExporterConfig) -> Self {
+    fn new(config: &Config) -> Self {
         Self {
             shutdown_trigger: None,
             endpoint: config.endpoint,
@@ -439,7 +439,7 @@ mod tests {
 
     #[test]
     fn generate_config() {
-        crate::testing::test_generate_config::<PrometheusExporterConfig>()
+        crate::testing::test_generate_config::<Config>()
     }
 
     #[test]
