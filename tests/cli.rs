@@ -50,7 +50,7 @@ fn clean_output() {
 /// Validate example configs will help us keep them updated.
 #[test]
 fn validate_example_configs() {
-    let mut dir = std::fs::read_dir("examples/config").unwrap();
+    let mut dir = std::fs::read_dir("examples").unwrap();
 
     // Clippy tell us use `for in`, if we do use `for in`, then
     // it tell us not to use `for in`.
