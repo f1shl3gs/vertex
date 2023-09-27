@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695787210464,
+  "lastUpdate": 1695787250170,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e91340bb911cbfbe996892c5cee5c71f9212666e",
-          "message": "chore(deps): bump inferno from 0.11.15 to 0.11.16 (#1180)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.15 to 0.11.16.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.15...v0.11.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:12+08:00",
-          "tree_id": "df87193e9e04914734054ee45fa561849721b713",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e91340bb911cbfbe996892c5cee5c71f9212666e"
-        },
-        "date": 1692607169783,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 618,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 58943,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 293310,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 607130,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 238.44,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 22395,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 111910,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 222730,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722",
           "message": "chore(deps): bump tempfile from 3.7.1 to 3.8.0 (#1178)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.1 to 3.8.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.1...v3.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-21T16:35:30+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 200740,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
+          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
+          "timestamp": "2023-09-27T11:55:54+08:00",
+          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
+        },
+        "date": 1695787232890,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 560.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 55900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 279640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 558930,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 193.64,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 19207,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 96096,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 191850,
             "unit": "ns/op"
           }
         ]
