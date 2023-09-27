@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695852700317,
+  "lastUpdate": 1695852704857,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e8a2ed4b28a968409a097110169146376568f864",
-          "message": "chore(deps): bump rustls-webpki from 0.101.2 to 0.101.4 (#1182)\n\nBumps [rustls-webpki](https://github.com/rustls/webpki) from 0.101.2 to 0.101.4.\r\n- [Release notes](https://github.com/rustls/webpki/releases)\r\n- [Commits](https://github.com/rustls/webpki/compare/v/0.101.2...v/0.101.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-webpki\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-23T10:32:51+08:00",
-          "tree_id": "09b979ada21e13d3855cc9fc07eb1e5273e91dcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e8a2ed4b28a968409a097110169146376568f864"
-        },
-        "date": 1692758171801,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 111.31,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 249.84,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 383.17,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 292.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fb94769c870196f76f9159c3b8bd26a80c1516af",
+          "message": "chore(deps): bump indexmap from 2.0.0 to 2.0.1 (#1297)\n\nBumps [indexmap](https://github.com/bluss/indexmap) from 2.0.0 to 2.0.1.\r\n- [Changelog](https://github.com/bluss/indexmap/blob/master/RELEASES.md)\r\n- [Commits](https://github.com/bluss/indexmap/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: indexmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-28T06:08:26+08:00",
+          "tree_id": "d39c402c28878dd8aca038e0bc8f115e2810fe52",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fb94769c870196f76f9159c3b8bd26a80c1516af"
+        },
+        "date": 1695852686550,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 88.829,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 186.16,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 293.4,
             "unit": "ns/op"
           }
         ]
