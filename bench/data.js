@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695781918041,
+  "lastUpdate": 1695787141668,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "e91340bb911cbfbe996892c5cee5c71f9212666e",
-          "message": "chore(deps): bump inferno from 0.11.15 to 0.11.16 (#1180)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.15 to 0.11.16.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.15...v0.11.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:12+08:00",
-          "tree_id": "df87193e9e04914734054ee45fa561849721b713",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e91340bb911cbfbe996892c5cee5c71f9212666e"
-        },
-        "date": 1692607084166,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 722730,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 723460,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
+          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
+          "timestamp": "2023-09-27T11:55:54+08:00",
+          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
+        },
+        "date": 1695787124351,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 718360,
             "unit": "ns/op"
           }
         ]
