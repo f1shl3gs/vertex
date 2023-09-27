@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695858214572,
+  "lastUpdate": 1695858269370,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "fe9b81e167dd717f17c859913c1575d0531d999c",
-          "message": "chore(deps): bump encoding_rs from 0.8.32 to 0.8.33 (#1186)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.32 to 0.8.33.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.32...v0.8.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-24T11:20:06+08:00",
-          "tree_id": "76ad4976756a307f8ca5e17ec5b55f3812873bde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe9b81e167dd717f17c859913c1575d0531d999c"
-        },
-        "date": 1692847440825,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 556.59,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 55480,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 276580,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 553400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 157.94,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 16983,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 85821,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 172130,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "74fae9d8df80eca6da6c5ded0b54f31ee4f6e245",
           "message": "chore(deps): bump tokio-test from 0.4.2 to 0.4.3 (#1185)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.2 to 0.4.3.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.2...tokio-test-0.4.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-24T11:20:27+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 227860,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f512d2d2469d414046a80c2fe4f6fc81727935c",
+          "message": "remove assert_cmd (#1299)",
+          "timestamp": "2023-09-28T07:39:00+08:00",
+          "tree_id": "652cd8ab784b62a91a4370ed4ed05046376c2737",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f512d2d2469d414046a80c2fe4f6fc81727935c"
+        },
+        "date": 1695858251936,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 585.54,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 58719,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 301680,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 587730,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 196.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 18148,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 92950,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 187310,
             "unit": "ns/op"
           }
         ]
