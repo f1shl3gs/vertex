@@ -1,20 +1,16 @@
-use std::process::ExitStatus;
-
-use assert_cmd::Command;
+use std::process::{Command, ExitStatus};
 
 fn run_command(args: Vec<&str>) -> (Vec<u8>, ExitStatus) {
-    let mut cmd = Command::cargo_bin("vertex").unwrap();
-    for arg in args {
-        cmd.arg(arg);
-    }
-
-    let output = cmd.output().expect("Failed to execute process");
+    let output = Command::new(env!("CARGO_BIN_EXE_vertex"))
+        .args(args)
+        .output()
+        .expect("Failed to execute process");
 
     (output.stdout, output.status)
 }
 
-fn assert_no_log_lines(output: Vec<u8>) {
-    let output = String::from_utf8(output).expect("Output is not a valid utf8 string");
+fn assert_no_log_lines(output: &[u8]) {
+    let output = String::from_utf8_lossy(output);
 
     // Assert there are no lines with keywords
     let keywords = ["ERROR", "WARN", "INFO", "DEBUG", "TRACE"];
@@ -42,7 +38,7 @@ fn clean_output() {
 
     for (args, want) in tests {
         let (output, status) = run_command(args.clone());
-        assert_no_log_lines(output);
+        assert_no_log_lines(&output);
         assert_eq!(status.success(), want, "args: {:?}", args)
     }
 }
@@ -57,15 +53,14 @@ fn validate_example_configs() {
     #[allow(clippy::while_let_on_iterator)]
     while let Some(result) = dir.next() {
         let entry = result.expect("Scan entry failed");
-
-        let path = entry.path().to_string_lossy().to_string();
+        let path = entry.path();
         if !path.ends_with(".yaml") && !path.ends_with(".yml") {
             continue;
         }
 
-        let args = vec!["validate", "-c", &path, "--no-environment"];
+        let args = vec!["validate", "-c", path.to_str().unwrap(), "--no-environment"];
         let (output, status) = run_command(args.clone());
-        assert_no_log_lines(output.clone());
+        assert_no_log_lines(&output);
         assert!(
             status.success(),
             "args: {:?}\noutput: {:?}",
