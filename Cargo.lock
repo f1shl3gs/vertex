@@ -1254,6 +1254,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "gcra"
+version = "0.1.0"
+source = "git+https://github.com/f1shl3gs/gcra.git?rev=6473b6da31cf1bd35e5e63790c9503a02c076f96#6473b6da31cf1bd35e5e63790c9503a02c076f96"
+
+[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4365,6 +4370,7 @@ dependencies = [
  "framework",
  "futures",
  "futures-util",
+ "gcra",
  "glob",
  "http",
  "humanize",
