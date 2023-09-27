@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695810947372,
+  "lastUpdate": 1695810970249,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "3f3119b1d8b570dbde774b53699051e9d6bc5f6e",
-          "message": "chore(deps): bump notify from 6.1.0 to 6.1.1 (#1181)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.1.0 to 6.1.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.1.0...notify-6.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-22T12:10:49+08:00",
-          "tree_id": "8967df3437058e449623f83635ab22d4e1a05606",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f3119b1d8b570dbde774b53699051e9d6bc5f6e"
-        },
-        "date": 1692677614739,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 724270,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 692830,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e91548701acd5024a91343a91ff11a3d61e9e85",
+          "message": "use `gcra` crate (#1296)",
+          "timestamp": "2023-09-27T18:32:26+08:00",
+          "tree_id": "bf3f6287a76514ca73101d1f3dfad358be514356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e91548701acd5024a91343a91ff11a3d61e9e85"
+        },
+        "date": 1695810948366,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 862090,
             "unit": "ns/op"
           }
         ]
