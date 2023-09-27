@@ -306,7 +306,6 @@ path = "benches/haproxy.rs"
 prost-build = { version = "0.12.1", default-features = false }
 
 [dev-dependencies]
-assert_cmd = { version = "2.0.12", default-features = false }
 base64 = { version = "0.21.4", default-features = false }
 criterion = { version = "0.5.1", default-features = false, features = ["async_tokio"] }
 framework = { path = "lib/framework", features = ["test-util"] }
