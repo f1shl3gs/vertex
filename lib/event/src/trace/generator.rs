@@ -3,7 +3,7 @@ use std::fmt;
 
 use rand::{rngs, Rng};
 
-use crate::trace::{SpanId, TraceId};
+use super::{SpanId, TraceId};
 
 /// Interface for generating IDs
 pub trait IdGenerator: Send + Sync + fmt::Debug {

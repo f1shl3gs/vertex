@@ -1,7 +1,7 @@
 use bytes::{Bytes, BytesMut};
 use tokio_util::codec::Decoder;
 
-use crate::FramingError;
+use super::FramingError;
 
 /// A decoder for passing through bytes as-is.
 ///

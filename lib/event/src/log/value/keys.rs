@@ -4,7 +4,7 @@ use std::iter;
 
 use serde::{Serialize, Serializer};
 
-use crate::log::Value;
+use super::Value;
 
 /// Iterates over all paths in from `a.b[0].c[1]` in alphabetical order.
 /// It is implemented as a wrapper around `all_fields` to reduce code

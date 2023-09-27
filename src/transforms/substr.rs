@@ -71,9 +71,10 @@ impl FunctionTransform for Substr {
 
 #[cfg(test)]
 mod tests {
+    use event::{assert_event_data_eq, fields, Event};
+
     use super::*;
     use crate::transforms::transform_one;
-    use event::{assert_event_data_eq, fields, Event};
 
     #[test]
     fn generate_config() {

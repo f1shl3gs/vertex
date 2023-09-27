@@ -5,7 +5,7 @@ use buffers::BufferType;
 use configurable::NamedComponent;
 use serde::{Deserialize, Serialize};
 
-use crate::config::{
+use super::{
     default_true, skip_serializing_if_default, ComponentKey, DataType, GlobalOptions, ProxyConfig,
     Resource,
 };

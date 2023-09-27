@@ -4,8 +4,7 @@ use bytes::{Buf, BufMut};
 use event::{proto, Event, Events};
 use prost::Message;
 
-use crate::encoding::AsMetadata;
-use crate::{Encodable, EventCount};
+use super::{encoding::AsMetadata, Encodable, EventCount};
 
 impl EventCount for Event {
     fn event_count(&self) -> usize {

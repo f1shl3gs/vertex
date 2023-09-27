@@ -12,8 +12,7 @@ use super::{
     Buffer, DiskBufferConfigBuilder, Ledger, Reader, Writer,
 };
 use crate::encoding::FixedEncodable;
-use crate::variants::disk::common::align16;
-use crate::variants::disk::record::RECORD_HEADER_LEN;
+use crate::variants::disk::{common::align16, record::RECORD_HEADER_LEN};
 use crate::{buffer_usage_data::BufferUsageHandle, Bufferable};
 
 type FilesystemUnderTest = ProductionFilesystem;

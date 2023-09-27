@@ -90,9 +90,10 @@ impl FunctionTransform for Filter {
 
 #[cfg(test)]
 mod tests {
+    use event::{fields, tags, Event, LogRecord};
+
     use super::*;
     use crate::transforms::transform_one;
-    use event::{fields, tags, Event, LogRecord};
 
     #[test]
     fn generate_config() {

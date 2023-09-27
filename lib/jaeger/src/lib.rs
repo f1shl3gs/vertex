@@ -3,7 +3,7 @@ mod thrift;
 mod translate;
 mod transport;
 
-pub use crate::thrift::jaeger::{Batch, Log, Process, Span, SpanRef, SpanRefType, Tag, TagType};
+pub use thrift::jaeger::{Batch, Log, Process, Span, SpanRef, SpanRefType, Tag, TagType};
 
 pub mod proto {
     include!(concat!(env!("OUT_DIR"), "/jaeger.api_v2.rs"));

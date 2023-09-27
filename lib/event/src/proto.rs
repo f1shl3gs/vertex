@@ -10,10 +10,10 @@ use chrono::TimeZone;
 pub use proto_event::*;
 use tracing::error;
 
+use super::{Key, LogRecord, MetricValue, Tags};
 use crate::metadata::WithMetadata;
 use crate::proto::event_wrapper::Event;
 use crate::tags::Array;
-use crate::{Key, LogRecord, MetricValue, Tags};
 
 fn encode_array(items: Vec<crate::log::Value>) -> ValueArray {
     ValueArray {

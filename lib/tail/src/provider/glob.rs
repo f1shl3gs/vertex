@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use glob::Pattern;
 
-use crate::provider::Provider;
+use super::Provider;
 
 /// A glob-based path provider
 ///

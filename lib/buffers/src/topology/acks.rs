@@ -470,9 +470,10 @@ mod tests {
         strategy::{Just, Strategy},
     };
 
-    use crate::topology::acks::{MarkerError, OrderedAcknowledgements, PendingMarkerLength};
-
-    use super::{EligibleMarker, EligibleMarkerLength};
+    use super::{
+        EligibleMarker, EligibleMarkerLength, MarkerError, OrderedAcknowledgements,
+        PendingMarkerLength,
+    };
 
     #[derive(Debug, Clone, Copy)]
     enum Action {

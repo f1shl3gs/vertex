@@ -24,7 +24,7 @@ pub use framing::{
     NewlineDelimitedDecoder, NewlineDelimitedDecoderConfig, OctetCountingDecoder,
 };
 
-use crate::FramingError;
+use super::FramingError;
 
 /// Produce byte frames from a byte stream / byte message
 #[derive(Clone, Debug)]

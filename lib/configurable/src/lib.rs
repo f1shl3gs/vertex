@@ -14,7 +14,7 @@ pub use errors::GenerateError;
 pub use example::generate_config;
 pub use named::NamedComponent;
 
-pub use crate::configurable::{Configurable, ConfigurableString};
+pub use configurable::{Configurable, ConfigurableString};
 
 // re-export
 pub use indexmap::IndexMap;

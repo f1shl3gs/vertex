@@ -326,9 +326,10 @@ fn utc_timestamp(timestamp: Option<i64>, default: DateTime<Utc>) -> Option<DateT
 
 #[cfg(test)]
 mod tests {
-    use crate::sources::prometheus_scrape::{offset, Config};
     use framework::config::default_interval;
     use testify::random::random_string;
+
+    use crate::sources::prometheus_scrape::{offset, Config};
 
     #[test]
     fn generate_config() {

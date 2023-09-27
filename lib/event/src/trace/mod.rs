@@ -1,9 +1,7 @@
-// mod context;
 mod evicted_hash_map;
 mod evicted_queue;
 pub mod generator;
 mod span;
-// mod tracer;
 
 use std::borrow::Cow;
 use std::collections::VecDeque;
@@ -12,17 +10,17 @@ use std::num::ParseIntError;
 use std::ops::{BitAnd, BitOr, Not};
 use std::str::FromStr;
 
-use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
-
-use crate::tags::Tags;
-use crate::{
-    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
-};
 pub use evicted_hash_map::EvictedHashMap;
 pub use evicted_queue::EvictedQueue;
 pub use generator::RngGenerator;
+use measurable::ByteSizeOf;
+use serde::{Deserialize, Serialize};
 pub use span::*;
+
+use super::tags::Tags;
+use super::{
+    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
+};
 
 /// Key used for metric `AttributeSet`s and trace `Span` attributes
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize)]

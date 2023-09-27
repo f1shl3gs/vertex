@@ -88,9 +88,10 @@ impl FunctionTransform for Rewrite {
 
 #[cfg(test)]
 mod tests {
+    use event::{tags, Event, Metric};
+
     use super::*;
     use crate::transforms::transform_one;
-    use event::{tags, Event, Metric};
 
     #[test]
     fn generate_config() {

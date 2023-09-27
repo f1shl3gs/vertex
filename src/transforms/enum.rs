@@ -179,9 +179,10 @@ impl FunctionTransform for Enum {
 
 #[cfg(test)]
 mod tests {
+    use event::{fields, Event};
+
     use super::*;
     use crate::transforms::transform_one;
-    use event::{fields, Event};
 
     #[test]
     fn generate_config() {

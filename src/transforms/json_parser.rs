@@ -173,10 +173,11 @@ impl FunctionTransform for JsonParser {
 
 #[cfg(test)]
 mod test {
-    use super::*;
-    use crate::transforms::transform_one;
     use event::Event;
     use serde_json::json;
+
+    use super::*;
+    use crate::transforms::transform_one;
 
     #[test]
     fn generate_config() {

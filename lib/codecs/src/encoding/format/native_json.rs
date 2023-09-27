@@ -2,7 +2,7 @@ use bytes::{BufMut, BytesMut};
 use event::Event;
 use tokio_util::codec::Encoder;
 
-use crate::encoding::SerializeError;
+use super::SerializeError;
 
 /// Serializer that converts an `Event` to bytes using the JSON format
 #[derive(Clone, Debug)]

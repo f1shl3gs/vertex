@@ -2,7 +2,7 @@ use std::io::{self, BufRead};
 
 use bytes::BytesMut;
 
-use crate::Position;
+use super::Position;
 
 /// Read up to `max_size` bytes from `reader`, splitting by `delim`
 ///

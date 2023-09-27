@@ -4,9 +4,9 @@ use chrono::{DateTime, Utc};
 use measurable::ByteSizeOf;
 use serde::Serialize;
 
-use crate::metadata::EventMetadata;
-use crate::tags::{Key, Tags, Value};
-use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use super::metadata::EventMetadata;
+use super::tags::{Key, Tags, Value};
+use super::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
 
 pub const INSTANCE_KEY: Key = Key::from_static_str("instance");
 pub const EXPORTED_INSTANCE_KEY: Key = Key::from_static_str("exported_instance");

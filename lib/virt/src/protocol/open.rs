@@ -1,6 +1,6 @@
 use std::io::{Read, Write};
 
-use crate::protocol::{
+use super::{
     impl_procedure, pack_string, Pack, Result, Unpack, WriteExt, VIR_NET_MESSAGE_STRING_MAX,
 };
 
