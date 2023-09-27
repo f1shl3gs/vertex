@@ -420,7 +420,7 @@ rskafka = { git = "https://github.com/f1shl3gs/rskafka", rev = "95a9f12518659321
 rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], optional = true }
 smallvec = { version = "1.11.1", default-features = false, optional = true }
 snap = { version = "1.1.0", default-features = false, optional = true }
-sqlx = { version = "0.7.1", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
+sqlx = { version = "0.7.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
 thiserror = { version = "1.0.48" }
 tonic = { version = "0.10.1", default-features = false, features = ["transport"], optional = true }
 tonic-health = { version = "0.10.1", default-features = false, optional = true }
