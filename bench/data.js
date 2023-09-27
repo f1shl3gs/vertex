@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695852807165,
+  "lastUpdate": 1695852829800,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e8a2ed4b28a968409a097110169146376568f864",
-          "message": "chore(deps): bump rustls-webpki from 0.101.2 to 0.101.4 (#1182)\n\nBumps [rustls-webpki](https://github.com/rustls/webpki) from 0.101.2 to 0.101.4.\r\n- [Release notes](https://github.com/rustls/webpki/releases)\r\n- [Commits](https://github.com/rustls/webpki/compare/v/0.101.2...v/0.101.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-webpki\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-23T10:32:51+08:00",
-          "tree_id": "09b979ada21e13d3855cc9fc07eb1e5273e91dcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e8a2ed4b28a968409a097110169146376568f864"
-        },
-        "date": 1692758230169,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 659.49,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 66513,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 332590,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 666120,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 190.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 19060,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 95048,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 188400,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fe9b81e167dd717f17c859913c1575d0531d999c",
           "message": "chore(deps): bump encoding_rs from 0.8.32 to 0.8.33 (#1186)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.32 to 0.8.33.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.32...v0.8.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-24T11:20:06+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 185390,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "68b316157b278ecb8f8824740e7789fe9403890c",
+          "message": "chore(deps): bump pprof from 0.12.1 to 0.13.0 (#1298)\n\nBumps [pprof](https://github.com/tikv/pprof-rs) from 0.12.1 to 0.13.0.\r\n- [Changelog](https://github.com/tikv/pprof-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tikv/pprof-rs/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pprof\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-28T06:08:12+08:00",
+          "tree_id": "ca1f5f859977c6ce703a630a083118f0aec61c60",
+          "url": "https://github.com/f1shl3gs/vertex/commit/68b316157b278ecb8f8824740e7789fe9403890c"
+        },
+        "date": 1695852808495,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 673.47,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 67125,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 335280,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 670210,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 229.17,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 22922,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 113960,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 227860,
             "unit": "ns/op"
           }
         ]
