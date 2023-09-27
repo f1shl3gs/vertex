@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 use std::time::Instant;
 
-use super::gcra::{GcraState, Quota};
+use gcra::{GcraState, Quota};
 
 pub struct RateLimiter {
     quota: Quota,

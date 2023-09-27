@@ -1,4 +1,3 @@
-mod gcra;
 mod rate_limiter;
 
 use std::num::NonZeroU32;
