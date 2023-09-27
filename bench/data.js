@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695788523759,
+  "lastUpdate": 1695801052361,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722",
-          "message": "chore(deps): bump tempfile from 3.7.1 to 3.8.0 (#1178)\n\nBumps [tempfile](https://github.com/Stebalien/tempfile) from 3.7.1 to 3.8.0.\r\n- [Changelog](https://github.com/Stebalien/tempfile/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/Stebalien/tempfile/compare/v3.7.1...v3.8.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tempfile\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:30+08:00",
-          "tree_id": "fab978c65e26a30635282660fc3d0e336a3aff8d",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ffb6b24e4212f6bb42a7e8c7c7bb36c6f2466722"
-        },
-        "date": 1692607099113,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 723860,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 718360,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "58e3acc1af8c7db09caf6dc1ec28a6b142a99fe4",
+          "message": "chore(deps): bump sqlx from 0.7.1 to 0.7.2 (#1293)\n\nBumps [sqlx](https://github.com/launchbadge/sqlx) from 0.7.1 to 0.7.2.\r\n- [Changelog](https://github.com/launchbadge/sqlx/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/launchbadge/sqlx/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: sqlx\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-27T15:47:39+08:00",
+          "tree_id": "e600e45780a2ec0e99a7ea287f64ff91c9e65bd6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/58e3acc1af8c7db09caf6dc1ec28a6b142a99fe4"
+        },
+        "date": 1695801034093,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 693390,
             "unit": "ns/op"
           }
         ]
