@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695810986359,
+  "lastUpdate": 1695811022419,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "3f3119b1d8b570dbde774b53699051e9d6bc5f6e",
-          "message": "chore(deps): bump notify from 6.1.0 to 6.1.1 (#1181)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.1.0 to 6.1.1.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.1.0...notify-6.1.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-22T12:10:49+08:00",
-          "tree_id": "8967df3437058e449623f83635ab22d4e1a05606",
-          "url": "https://github.com/f1shl3gs/vertex/commit/3f3119b1d8b570dbde774b53699051e9d6bc5f6e"
-        },
-        "date": 1692677723314,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 26.674,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.172,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 25.21,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 41.325,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.563,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "c8019b0bf3e3cbde26a24c1cc979f816f8fa503b",
           "message": "chore(deps): bump dashmap from 5.5.0 to 5.5.1 (#1183)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.0 to 5.5.1.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.0...v5.5.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-23T10:32:24+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 50.458,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e91548701acd5024a91343a91ff11a3d61e9e85",
+          "message": "use `gcra` crate (#1296)",
+          "timestamp": "2023-09-27T18:32:26+08:00",
+          "tree_id": "bf3f6287a76514ca73101d1f3dfad358be514356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e91548701acd5024a91343a91ff11a3d61e9e85"
+        },
+        "date": 1695810999693,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.337,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.994,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.462,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 188.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 66.587,
             "unit": "ns/op"
           }
         ]
