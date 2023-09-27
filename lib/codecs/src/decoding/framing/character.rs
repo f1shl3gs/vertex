@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use tokio_util::codec::Decoder;
 use tracing::warn;
 
-use crate::FramingError;
+use super::FramingError;
 
 /// Config used to build a `CharacterDelimitedDecoder`
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]

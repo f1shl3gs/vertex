@@ -5,7 +5,7 @@ use std::collections::{HashMap, VecDeque};
 use measurable::ByteSizeOf;
 use serde::Serialize;
 
-use crate::trace::{AnyValue, Key, KeyValue};
+use super::{AnyValue, Key, KeyValue};
 
 /// A hash map with a capped number of attributes that retains
 /// the most recently set entries.

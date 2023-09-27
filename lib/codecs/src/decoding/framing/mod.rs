@@ -11,7 +11,7 @@ pub use character::{CharacterDelimitedDecoder, CharacterDelimitedDecoderConfig};
 pub use newline::{NewlineDelimitedDecoder, NewlineDelimitedDecoderConfig};
 pub use octet_counting::{OctetCountingDecoder, OctetCountingDecoderConfig};
 
-use crate::FramingError;
+use super::FramingError;
 
 /// Produce byte frames from a byte stream / byte message.
 pub trait Framer:

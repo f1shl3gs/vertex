@@ -1,7 +1,6 @@
 use std::io::{Read, Write};
 
-use super::{impl_procedure, Pack, Unpack};
-use crate::protocol::unpack_flex;
+use super::{impl_procedure, unpack_flex, Pack, Unpack};
 
 const REMOTE_AUTH_TYPE_LIST_MAX: usize = 20;
 

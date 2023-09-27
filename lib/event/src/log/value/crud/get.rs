@@ -1,7 +1,6 @@
 use lookup::BorrowedSegment;
 
-use super::{get_matching_coalesce_key, ValueCollection};
-use crate::log::Value;
+use super::{get_matching_coalesce_key, Value, ValueCollection};
 
 pub fn get<'a>(
     mut value: &Value,

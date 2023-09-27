@@ -3,8 +3,7 @@ use configurable::Configurable;
 use serde::{Deserialize, Serialize};
 use tokio_util::codec::Decoder;
 
-use super::CharacterDelimitedDecoder;
-use crate::FramingError;
+use super::{CharacterDelimitedDecoder, FramingError};
 
 #[inline]
 pub fn skip_serializing_if_default<E: Default + PartialEq>(e: &E) -> bool {

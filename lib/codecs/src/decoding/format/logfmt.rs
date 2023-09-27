@@ -7,7 +7,7 @@ use event::log::Value;
 use event::{tags, Event, LogRecord};
 use smallvec::{smallvec, SmallVec};
 
-use crate::decoding::format::{DeserializeError, Deserializer};
+use super::{DeserializeError, Deserializer};
 
 // This parser is based on https://github.com/brandur/logfmt
 pub(crate) fn parse(line: &str) -> BTreeMap<String, Value> {

@@ -39,8 +39,8 @@ use log_schema::log_schema;
 use measurable::ByteSizeOf;
 use serde::Serialize;
 
-use crate::log::Logs;
-use crate::tags::{Key, Tags};
+use log::Logs;
+use tags::{Key, Tags};
 
 #[derive(PartialEq, Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]

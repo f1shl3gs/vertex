@@ -17,9 +17,11 @@ use super::{
     io::{AsyncFile, Filesystem},
     ledger::Ledger,
     reader::decode_record_payload,
-    record::{Record, RecordStatus, RECORD_HEADER_LEN},
+    record::{
+        validate_record_archive_with_length, ArchivedRecord, Record, RecordStatus,
+        RECORD_HEADER_LEN,
+    },
 };
-use crate::variants::disk::record::{validate_record_archive_with_length, ArchivedRecord};
 use crate::{
     encoding::{AsMetadata, Encodable},
     Bufferable,

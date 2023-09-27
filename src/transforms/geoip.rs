@@ -243,9 +243,10 @@ impl FunctionTransform for Geoip {
 
 #[cfg(test)]
 mod tests {
+    use event::fields;
+
     use super::*;
     use crate::transforms::transform_one;
-    use event::fields;
 
     #[test]
     fn generate_config() {

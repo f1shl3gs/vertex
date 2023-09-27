@@ -23,7 +23,7 @@ use hyper::{body, Body};
 use prost::Message;
 use tower::{Service, ServiceBuilder};
 
-use crate::sinks::BuildError;
+use super::BuildError;
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct PrometheusRemoteWriteDefaultBatchSettings;
@@ -370,13 +370,14 @@ mod tests {
 mod integration_tests {
     use std::time::Duration;
 
-    use super::Config;
-    use crate::testing::{ContainerBuilder, WaitFor};
     use event::Metric;
     use framework::config::{ProxyConfig, SinkConfig, SinkContext};
     use framework::http::HttpClient;
     use hyper::Body;
     use serde::{Deserialize, Serialize};
+
+    use super::Config;
+    use crate::testing::{ContainerBuilder, WaitFor};
 
     #[tokio::test]
     async fn cortex_write_and_query() {

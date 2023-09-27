@@ -2,7 +2,7 @@ use bytes::Bytes;
 use event::Event;
 use smallvec::{smallvec, SmallVec};
 
-use crate::decoding::format::{DeserializeError, Deserializer};
+use super::{DeserializeError, Deserializer};
 
 /// Deserializer that converts bytes to an `Event`.
 ///

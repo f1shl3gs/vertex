@@ -3,7 +3,7 @@ use event::Event;
 use log_schema::log_schema;
 use tokio_util::codec::Encoder;
 
-use crate::encoding::SerializeError;
+use super::SerializeError;
 
 /// Serializer that converts a log to bytes by extracting the message key, or converts a metric to
 /// bytes by calling its `Display` implementation.

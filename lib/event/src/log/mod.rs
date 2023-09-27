@@ -15,8 +15,9 @@ pub use value::Value;
 
 use crate::metadata::EventMetadata;
 use crate::tags::{skip_serializing_if_empty, Key, Tags};
-use crate::MaybeAsLogMut;
-use crate::{BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable};
+use crate::{
+    BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, Finalizable, MaybeAsLogMut,
+};
 
 /// The type alias for an array of `LogRecord` elements
 pub type Logs = Vec<LogRecord>;

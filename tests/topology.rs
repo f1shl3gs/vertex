@@ -15,10 +15,10 @@ use futures_util::{stream, StreamExt};
 use log_schema::log_schema;
 use tempfile::tempdir;
 use tokio::time::sleep;
-use util::{sink, source, transform};
-
-use crate::util::{sink_failing_healthcheck, sink_with_data, source_with_data, MockSourceConfig};
-use crate::util::{start_topology, trace_init};
+use util::{
+    sink, sink_failing_healthcheck, sink_with_data, source, source_with_data, start_topology,
+    trace_init, transform, MockSourceConfig,
+};
 
 fn into_message(event: Event) -> String {
     event

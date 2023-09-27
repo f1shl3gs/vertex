@@ -2,10 +2,10 @@ use std::borrow::{Borrow, Cow};
 use std::io::{self, Read, Write};
 use std::ops::Deref;
 
-use crate::protocol::constants::{
-    MESSAGE_STATUS_OK, MESSAGE_TYPE_CALL, VIR_NET_MESSAGE_STRING_MAX,
+use super::{
+    constants::{MESSAGE_STATUS_OK, MESSAGE_TYPE_CALL, VIR_NET_MESSAGE_STRING_MAX},
+    pack_flex, Error, Pack, ReadExt, Result, Unpack, WriteExt,
 };
-use crate::protocol::{pack_flex, Error, Pack, ReadExt, Result, Unpack, WriteExt};
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct MessageHeader {

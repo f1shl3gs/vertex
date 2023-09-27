@@ -5,18 +5,14 @@ use tokio_test::{assert_pending, task::spawn};
 use tracing::Instrument;
 
 use super::{
-    create_buffer_with_max_buffer_size, create_buffer_with_max_data_file_size,
-    create_buffer_with_max_record_size,
-};
-use crate::test::acknowledge;
-use crate::variants::disk::common::align16;
-use crate::variants::disk::tests::{
-    get_corrected_max_record_size, get_minimum_data_file_size_for_record_payload,
+    align16, create_buffer_with_max_buffer_size, create_buffer_with_max_data_file_size,
+    create_buffer_with_max_record_size, get_corrected_max_record_size,
+    get_minimum_data_file_size_for_record_payload,
 };
 use crate::{
     assert_buffer_is_empty, assert_buffer_size, assert_enough_bytes_written,
     assert_reader_writer_file_positions,
-    test::{install_tracing_helpers, with_temp_dir, SizedRecord},
+    test::{acknowledge, install_tracing_helpers, with_temp_dir, SizedRecord},
 };
 
 #[tokio::test]

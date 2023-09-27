@@ -2,9 +2,9 @@ mod conversion;
 
 use std::collections::HashMap;
 
-use crate::transforms::coercer::conversion::{parse_conversion_map, Conversion};
 use async_trait::async_trait;
 use configurable::configurable_component;
+use conversion::{parse_conversion_map, Conversion};
 use event::log::Value;
 use event::Events;
 use framework::config::{DataType, Output, TransformConfig, TransformContext};

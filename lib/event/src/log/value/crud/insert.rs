@@ -5,9 +5,7 @@ use std::collections::BTreeMap;
 
 use lookup::BorrowedSegment;
 
-use super::ValueCollection;
-use crate::log::value::crud::{get_matching_coalesce_key, skip_remaining_coalesce_segments};
-use crate::log::Value;
+use super::{get_matching_coalesce_key, skip_remaining_coalesce_segments, Value, ValueCollection};
 
 pub fn insert<'a, T: ValueCollection>(
     value: &mut T,

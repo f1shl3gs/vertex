@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use tokio_util::codec::{LinesCodec, LinesCodecError};
 use tracing::trace;
 
-use crate::FramingError;
+use super::FramingError;
 
 /// Config used to build a `OctetCountingDecoder`
 #[derive(Configurable, Clone, Debug, Deserialize, Serialize)]
