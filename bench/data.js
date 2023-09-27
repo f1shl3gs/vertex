@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695811116447,
+  "lastUpdate": 1695811169220,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2ef6ee062a71f785eb525c4b04ddbb433e5fc7d7",
-          "message": "remove BackedArchive (#1189)",
-          "timestamp": "2023-08-25T22:13:56+08:00",
-          "tree_id": "b6fe311291523753696ea22230ceda780a2e4444",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2ef6ee062a71f785eb525c4b04ddbb433e5fc7d7"
-        },
-        "date": 1692973990279,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1017,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44587.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 986,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42413.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "731bb5b2376d76d6feb755bfe9a67f4f4406a618",
+          "message": "use `super` to import mods (#1295)",
+          "timestamp": "2023-09-27T18:21:21+08:00",
+          "tree_id": "8a6b88f7b7ce0c8a09cf4144bc954ea769ee475f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/731bb5b2376d76d6feb755bfe9a67f4f4406a618"
+        },
+        "date": 1695811152009,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 943,
             "unit": "s"
           },
           {
