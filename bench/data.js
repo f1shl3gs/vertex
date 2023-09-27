@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695811373155,
+  "lastUpdate": 1695811967003,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8b6984823112df4bbbbffcbcce0c670b89f35f47",
-          "message": "chore(deps): bump pin-project-lite from 0.2.12 to 0.2.13 (#1191)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.12...v0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-26T00:35:31+08:00",
-          "tree_id": "171d71030b9d31e7451e333ce704050ef9beb63f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b6984823112df4bbbbffcbcce0c670b89f35f47"
-        },
-        "date": 1692982505535,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1044,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44612,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ba2ebb2de656fdcd28f6ec490078b3a34026110",
           "message": "chore(deps): bump mimalloc from 0.1.37 to 0.1.38 (#1190)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.37 to 0.1.38.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.37...v0.1.38)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-26T01:16:37+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42413.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5e91548701acd5024a91343a91ff11a3d61e9e85",
+          "message": "use `gcra` crate (#1296)",
+          "timestamp": "2023-09-27T18:32:26+08:00",
+          "tree_id": "bf3f6287a76514ca73101d1f3dfad358be514356",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5e91548701acd5024a91343a91ff11a3d61e9e85"
+        },
+        "date": 1695811946088,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1045,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42420.3,
             "unit": "KiB"
           }
         ]
