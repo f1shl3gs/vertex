@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695802921828,
+  "lastUpdate": 1695803068974,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e91340bb911cbfbe996892c5cee5c71f9212666e",
-          "message": "chore(deps): bump inferno from 0.11.15 to 0.11.16 (#1180)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.15 to 0.11.16.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.15...v0.11.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:12+08:00",
-          "tree_id": "df87193e9e04914734054ee45fa561849721b713",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e91340bb911cbfbe996892c5cee5c71f9212666e"
-        },
-        "date": 1692608189171,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 32550000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1072400,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.791,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b2f5328ad2fa7a48720aaed7134902d26ce8e650",
           "message": "chore(deps): bump notify from 6.0.1 to 6.1.0 (#1177)\n\nBumps [notify](https://github.com/notify-rs/notify) from 6.0.1 to 6.1.0.\r\n- [Release notes](https://github.com/notify-rs/notify/releases)\r\n- [Changelog](https://github.com/notify-rs/notify/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/notify-rs/notify/compare/notify-6.0.1...notify-6.1.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: notify\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-21T16:35:39+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 25.268,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "309ca0b9162966dd8c5f2a337ce3502935e9a37b",
+          "message": "chore(deps): bump thiserror from 1.0.48 to 1.0.49 (#1294)\n\nBumps [thiserror](https://github.com/dtolnay/thiserror) from 1.0.48 to 1.0.49.\r\n- [Release notes](https://github.com/dtolnay/thiserror/releases)\r\n- [Commits](https://github.com/dtolnay/thiserror/compare/1.0.48...1.0.49)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: thiserror\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
+          "timestamp": "2023-09-27T16:03:11+08:00",
+          "tree_id": "5d965832f2c6820edbf2f24a24bc399b6d4990a3",
+          "url": "https://github.com/f1shl3gs/vertex/commit/309ca0b9162966dd8c5f2a337ce3502935e9a37b"
+        },
+        "date": 1695803051307,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 32468000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1069500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.204,
             "unit": "ns/op"
           }
         ]
