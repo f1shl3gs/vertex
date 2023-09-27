@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695787250170,
+  "lastUpdate": 1695788126052,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "665d0ee3da99da62c8add6e34049a182e2719092",
-          "message": "Update rust to 1.72.0 (#1187)\n\n* update rust to 1.72.0\r\n\r\n* fix clippy warnings",
-          "timestamp": "2023-08-25T11:05:37+08:00",
-          "tree_id": "1e4ed839a78b957c6bff5f3461b14a44a8f99692",
-          "url": "https://github.com/f1shl3gs/vertex/commit/665d0ee3da99da62c8add6e34049a182e2719092"
-        },
-        "date": 1692933927626,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1059,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44668.9,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1258,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42420.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
+          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
+          "timestamp": "2023-09-27T11:55:54+08:00",
+          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
+        },
+        "date": 1695788108460,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1025,
             "unit": "s"
           },
           {
