@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695787190907,
+  "lastUpdate": 1695787210464,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "dca7d27f7a2c5088d5f3a50f623627eb713a01e6",
-          "message": "chore(deps): bump serde from 1.0.183 to 1.0.185 (#1179)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.183 to 1.0.185.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.183...v1.0.185)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-21T16:35:22+08:00",
-          "tree_id": "1a1ab18e5ac665dbe14508acf21d3a9fee0c04e1",
-          "url": "https://github.com/f1shl3gs/vertex/commit/dca7d27f7a2c5088d5f3a50f623627eb713a01e6"
-        },
-        "date": 1692607154527,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 23.078,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 23.948,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 23.258,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 39.405,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 53.208,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "e91340bb911cbfbe996892c5cee5c71f9212666e",
           "message": "chore(deps): bump inferno from 0.11.15 to 0.11.16 (#1180)\n\nBumps [inferno](https://github.com/jonhoo/inferno) from 0.11.15 to 0.11.16.\r\n- [Changelog](https://github.com/jonhoo/inferno/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/jonhoo/inferno/compare/v0.11.15...v0.11.16)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: inferno\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-21T16:35:12+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.571,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7245d2ff188881dd80856f39cbc2edc6ddac6813",
+          "message": "Remove minikube files (#1292)\n\n* remove minikube configs\r\n\r\n* move config to examples\r\n\r\n* fix example files",
+          "timestamp": "2023-09-27T11:55:54+08:00",
+          "tree_id": "4a37cf8e2fea6d3e6e206058a9b17cbe8d64e715",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7245d2ff188881dd80856f39cbc2edc6ddac6813"
+        },
+        "date": 1695787192716,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.343,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.764,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.962,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 156.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 55.443,
             "unit": "ns/op"
           }
         ]
