@@ -8,7 +8,7 @@ mod console;
 mod elasticsearch;
 #[cfg(feature = "sinks-jaeger")]
 mod jaeger;
-#[cfg(any(feature = "sinks-kafka", feature = "rdkafka"))]
+#[cfg(any(feature = "sinks-kafka", feature = "rskafka"))]
 mod kafka;
 #[cfg(feature = "sinks-loki")]
 pub mod loki;

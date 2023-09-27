@@ -152,22 +152,6 @@ impl SinkBatchSettings for BulkSizeBasedDefaultBatchSettings {
     const TIMEOUT: Duration = Duration::from_secs(300);
 }
 
-/// "Default" batch settings when a sink handles batch settings
-/// entirely on its own.
-///
-/// This has very few usages, but can be notably seen in the Kafka
-/// sink, where the values are used to configure `librdkafka` itself
-/// rather than being passed as `BatchSettings`/`BatcherSettings` to
-/// components in the sink itself.
-#[derive(Clone, Copy, Debug, Default)]
-pub struct NoDefaultBatchSettings;
-
-impl SinkBatchSettings for NoDefaultBatchSettings {
-    const MAX_EVENTS: Option<usize> = None;
-    const MAX_BYTES: Option<usize> = None;
-    const TIMEOUT: Duration = Duration::from_secs(1);
-}
-
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Merged;
 
