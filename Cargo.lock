@@ -961,7 +961,7 @@ dependencies = [
  "lookup",
  "measurable",
  "prost 0.12.1",
- "prost-build 0.12.1",
+ "prost-build",
  "prost-types 0.12.1",
  "rand",
  "serde",
@@ -2580,9 +2580,9 @@ checksum = "26072860ba924cbfa98ea39c8c19b4dd6a4a25423dbdf219c1eca91aa0cf6964"
 
 [[package]]
 name = "pprof"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "978385d59daf9269189d052ca8a84c1acfd0715c0599a5d5188d4acc078ca46a"
+checksum = "ef5c97c51bd34c7e742402e216abdeb44d415fbe6ae41d56b114723e953711cb"
 dependencies = [
  "backtrace",
  "cfg-if",
@@ -2593,9 +2593,9 @@ dependencies = [
  "nix 0.26.4",
  "once_cell",
  "parking_lot",
- "prost 0.11.9",
- "prost-build 0.11.9",
- "prost-derive 0.11.9",
+ "prost 0.12.1",
+ "prost-build",
+ "prost-derive 0.12.1",
  "sha2",
  "smallvec",
  "symbolic-demangle",
@@ -2649,16 +2649,6 @@ dependencies = [
 
 [[package]]
 name = "prettyplease"
-version = "0.1.25"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6c8646e95016a7a6c4adea95bafa8a16baab64b583356217f2c85db4a39d9a86"
-dependencies = [
- "proc-macro2",
- "syn 1.0.109",
-]
-
-[[package]]
-name = "prettyplease"
 version = "0.2.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ae005bd773ab59b4725093fd7df83fd7892f7d8eafb48dbd7de6e024e4215f9d"
@@ -2683,7 +2673,7 @@ dependencies = [
  "criterion",
  "indexmap 2.0.0",
  "prost 0.12.1",
- "prost-build 0.12.1",
+ "prost-build",
 ]
 
 [[package]]
@@ -2728,28 +2718,6 @@ dependencies = [
 
 [[package]]
 name = "prost-build"
-version = "0.11.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "119533552c9a7ffacc21e099c24a0ac8bb19c2a2a3f363de84cd9b844feab270"
-dependencies = [
- "bytes",
- "heck",
- "itertools 0.10.5",
- "lazy_static",
- "log",
- "multimap",
- "petgraph",
- "prettyplease 0.1.25",
- "prost 0.11.9",
- "prost-types 0.11.9",
- "regex",
- "syn 1.0.109",
- "tempfile",
- "which",
-]
-
-[[package]]
-name = "prost-build"
 version = "0.12.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8bdf592881d821b83d471f8af290226c8d51402259e9bb5be7f9f8bdebbb11ac"
@@ -2761,7 +2729,7 @@ dependencies = [
  "multimap",
  "once_cell",
  "petgraph",
- "prettyplease 0.2.15",
+ "prettyplease",
  "prost 0.12.1",
  "prost-types 0.12.1",
  "regex",
@@ -3963,9 +3931,9 @@ version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c9d37bb15da06ae9bb945963066baca6561b505af93a52e949a85d28558459a2"
 dependencies = [
- "prettyplease 0.2.15",
+ "prettyplease",
  "proc-macro2",
- "prost-build 0.12.1",
+ "prost-build",
  "quote",
  "syn 2.0.37",
 ]
@@ -4403,7 +4371,7 @@ dependencies = [
  "pretty_assertions",
  "prometheus",
  "prost 0.12.1",
- "prost-build 0.12.1",
+ "prost-build",
  "prost-types 0.12.1",
  "quick-xml 0.30.0",
  "rand",
