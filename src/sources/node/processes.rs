@@ -67,6 +67,7 @@ impl Stats {
         Stats(Default::default())
     }
 
+    #[cfg(test)]
     fn clear(&mut self) {
         self.0.iter_mut().for_each(|(_, v)| {
             *v = 0;

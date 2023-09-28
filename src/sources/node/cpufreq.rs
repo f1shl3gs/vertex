@@ -2,7 +2,7 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_into, Error, ErrorContext};
+use super::{read_into, Error};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let stats = get_cpu_freq_stat(sys_path).await?;
@@ -95,9 +95,7 @@ struct Stat {
 }
 
 async fn get_cpu_freq_stat(sys_path: &str) -> Result<Vec<Stat>, Error> {
-    let cpus = glob::glob(&format!("{}/devices/system/cpu/cpu[0-9]*", sys_path))
-        .context("no cpu files were found")?;
-
+    let cpus = glob::glob(&format!("{}/devices/system/cpu/cpu[0-9]*", sys_path))?;
     let mut stats = Vec::new();
 
     for path in cpus.flatten() {

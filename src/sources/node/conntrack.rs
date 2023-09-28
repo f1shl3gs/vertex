@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use event::Metric;
 use tokio::io::AsyncBufReadExt;
 
-use super::{read_into, Error, ErrorContext};
+use super::{read_into, Error};
 
 /// Shows conntrack statistics (does nothing if no `/proc/sys/net/netfilter/` present)
 ///
@@ -13,17 +13,13 @@ use super::{read_into, Error, ErrorContext};
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_count");
-    let count = read_into::<_, u64, _>(path)
-        .await
-        .context("read conntrack count failed")?;
+    let count = read_into::<_, u64, _>(path).await?;
 
     let mut path = PathBuf::from(proc_path);
     path.push("sys/net/netfilter/nf_conntrack_max");
     let max = read_into::<_, u64, _>(path).await?;
 
-    let stats = get_conntrack_statistics(proc_path)
-        .await
-        .context("get conntrack statistics failed")?;
+    let stats = get_conntrack_statistics(proc_path).await?;
 
     let statistic = stats
         .iter()
@@ -129,7 +125,7 @@ impl ConntrackStatEntry {
     fn new(line: &str) -> Result<Self, Error> {
         let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
         if parts.len() != 17 {
-            return Err(Error::new_invalid("No processor were found"));
+            return Err(Error::from("No processor were found"));
         }
 
         let entries = hex_u64(parts[0].as_bytes())?;

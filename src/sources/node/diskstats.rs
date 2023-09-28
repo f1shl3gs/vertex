@@ -1,6 +1,7 @@
-/// Exposes disk I/O statistics
-///
-/// Docs from https://www.kernel.org/doc/Documentation/iostats.txt
+//! Exposes disk I/O statistics
+//!
+//! Docs from https://www.kernel.org/doc/Documentation/iostats.txt
+
 use std::borrow::Cow;
 
 use event::{tags, tags::Key, Metric};
@@ -8,7 +9,7 @@ use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
@@ -37,9 +38,7 @@ impl DiskStatsConfig {
     pub async fn gather(&self, root: &str) -> Result<Vec<Metric>, Error> {
         let mut metrics = Vec::new();
         let path = &format!("{}/diskstats", root);
-        let f = tokio::fs::File::open(path)
-            .await
-            .context("open diskstats failed")?;
+        let f = tokio::fs::File::open(path).await?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 

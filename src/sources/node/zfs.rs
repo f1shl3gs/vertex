@@ -148,7 +148,7 @@ async fn parse_pool_procfs_file(path: &str) -> Result<BTreeMap<String, u64>, Err
 
     let length = path.split('/').count();
     if length < 2 {
-        return Err(Error::new_invalid(
+        return Err(Error::from(
             "zpool path did not return at least two elements",
         ));
     }
@@ -248,9 +248,7 @@ fn parse_pool_name(path: &str) -> Result<String, Error> {
     let elements = path.split('/').collect::<Vec<_>>();
     let length = elements.len();
     if length < 2 {
-        return Err(Error::new_invalid(
-            "zpool path did not return at least two elements",
-        ));
+        return Err("zpool path did not return at least two elements".into());
     }
 
     let name = elements[length - 2];

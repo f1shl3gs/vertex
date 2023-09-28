@@ -1,16 +1,17 @@
-/// Exposes error detection and correction statistics
+//! Exposes error detection and correction statistics
+
 use std::borrow::Cow;
 
 use event::tags::Key;
 use event::{tags, Metric};
 
-use super::{read_into, Error, ErrorContext};
+use super::{read_into, Error};
 
 const CONTROLLER_KEY: Key = Key::from_static_str("controller");
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);
-    let paths = glob::glob(&pattern).context("find mc paths failed")?;
+    let paths = glob::glob(&pattern)?;
 
     let mut metrics = Vec::new();
     for path in paths.flatten() {
@@ -21,11 +22,9 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
             .unwrap()
             .strip_prefix("mc")
             .unwrap();
-        let path = path.as_os_str().to_str().unwrap();
 
-        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(path)
-            .await
-            .context("read edac stats failed")?;
+        let path = path.to_string_lossy();
+        let (ce_count, ce_noinfo_count, ue_count, ue_noinfo_count) = read_edac_stats(&path).await?;
 
         let controller = Cow::from(controller.to_string());
         metrics.push(Metric::sum_with_tags(
@@ -64,9 +63,7 @@ pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
         ));
 
         // for each controller, walk the csrow directories
-        let csrows = glob::glob(&format!("{}/csrow[0-9]*", path))
-            .context("walk csrow directories failed")?;
-
+        let csrows = glob::glob(&format!("{}/csrow[0-9]*", path))?;
         for path in csrows.flatten() {
             // looks horrible
             let num = path

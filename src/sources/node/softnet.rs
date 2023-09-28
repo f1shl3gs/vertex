@@ -1,17 +1,18 @@
+//! Exposes statistics from /proc/net/softnet_stat
+//!
+//! For the proc file format details,
+//! See:
+//! * Linux 2.6.23 https://elixir.bootlin.com/linux/v2.6.23/source/net/core/dev.c#L2343
+//! * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
+//! and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
+
 use event::{tags, Metric};
-/// Exposes statistics from /proc/net/softnet_stat
-///
-/// For the proc file format details,
-/// See:
-/// * Linux 2.6.23 https://elixir.bootlin.com/linux/v2.6.23/source/net/core/dev.c#L2343
-/// * Linux 4.17 https://elixir.bootlin.com/linux/v4.17/source/net/core/net-procfs.c#L162
-/// and https://elixir.bootlin.com/linux/v4.17/source/include/linux/netdevice.h#L2810.
 use tokio::{
     fs,
     io::{self, AsyncBufReadExt},
 };
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 // SoftnetStat contains a single row of data from /proc/net/softnet_stat
 struct SoftnetStat {
@@ -27,19 +28,16 @@ struct SoftnetStat {
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/softnet_stat", proc_path);
-    let f = fs::File::open(path)
-        .await
-        .context("open softnet_stat failed")?;
+    let f = fs::File::open(path).await.map_err(|err| Error::Io {
+        msg: "open softnet_stat failed".into(),
+        err,
+    })?;
     let r = io::BufReader::new(f);
     let mut lines = r.lines();
 
     let mut metrics = Vec::new();
     let mut n = 0;
-    while let Some(line) = lines
-        .next_line()
-        .await
-        .context("read softnet_stat lines failed")?
-    {
+    while let Some(line) = lines.next_line().await? {
         if let Ok(stat) = parse_softnet(&line) {
             let cpu = &n.to_string();
             n += 1;
@@ -81,7 +79,7 @@ fn parse_softnet(s: &str) -> Result<SoftnetStat, Error> {
     let parts = s.split_ascii_whitespace().collect::<Vec<_>>();
 
     if parts.len() < MIN_COLUMNS {
-        return Err(Error::new_invalid(format!(
+        return Err(Error::from(format!(
             "{} columns were detected, but at least {} were expected",
             parts.len(),
             MIN_COLUMNS,

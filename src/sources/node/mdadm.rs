@@ -11,7 +11,7 @@ use nom::IResult;
 use once_cell::sync::Lazy;
 use regex::Regex;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 /// MDStat holds info parsed from /proc/mdstat
 #[derive(Debug, PartialEq)]
@@ -77,7 +77,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
                 "not enough fields in mdline(expect at least 3), line: {}",
                 line
             );
-            return Err(Error::new_invalid(msg));
+            return Err(Error::from(msg));
         }
 
         let name = parts[0];
@@ -85,14 +85,13 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
 
         if line_count <= i + 3 {
             let msg = format!("error parsing: {}, too few lines for md device", name);
-            return Err(Error::new_invalid(msg));
+            return Err(Error::from(msg));
         }
 
         // failed disks have the suffix(F) & Spare disks have the suffix (S)
         let fail = line.matches("(F)").count() as i64;
         let spare = line.matches("(S)").count() as i64;
-        let (active, total, down, size) =
-            eval_status_line(lines[i], lines[i + 1]).context("parse md device lines failed")?;
+        let (active, total, down, size) = eval_status_line(lines[i], lines[i + 1])?;
 
         let mut sync_line_index = i + 2;
         if lines[i + 2].contains("bitmap") {
@@ -129,7 +128,7 @@ async fn parse_mdstat<P: AsRef<Path>>(path: P) -> Result<Vec<MDStat>, Error> {
                 let (_, (_pct, _synced_blocks, _finish, _speed)) =
                     recovery_line(lines[sync_line_index]).map_err(|err| {
                         let msg = format!("parse recovery line failed, err: {}", err);
-                        Error::new_invalid(msg)
+                        Error::from(msg)
                     })?;
                 synced_blocks = _synced_blocks;
                 pct = _pct;
@@ -198,7 +197,7 @@ static STATUS_LINE_RE: Lazy<Regex> =
 
 fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64, i64), Error> {
     let size_str = status_line.split_ascii_whitespace().next().unwrap();
-    let size = size_str.parse().context("unexpected status line")?;
+    let size = size_str.parse()?;
 
     if dev_line.contains("raid0") || dev_line.contains("linear") {
         // In the device deviceLine, only disks have a number associated with them in []
@@ -220,7 +219,7 @@ fn eval_status_line(dev_line: &str, status_line: &str) -> Result<(i64, i64, i64,
 
     if caps.len() != 5 {
         let msg = format!("couldn't find all the substring matches {}", status_line);
-        return Err(Error::new_invalid(msg));
+        return Err(Error::from(msg));
     }
 
     let total = caps[2].parse()?;

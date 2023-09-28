@@ -6,7 +6,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetstatConfig {
@@ -29,17 +29,13 @@ fn default_fields() -> Regex {
 
 pub async fn gather(conf: &NetstatConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/netstat", proc_path);
-    let mut net_stats = get_net_stats(&path).await.context("read netstat failed")?;
+    let mut net_stats = get_net_stats(&path).await?;
 
     let path = format!("{}/net/snmp", proc_path);
-    let snmp_stats = get_net_stats(&path)
-        .await
-        .context("read snmp stats failed")?;
+    let snmp_stats = get_net_stats(&path).await?;
 
     let path = format!("{}/net/snmp6", proc_path);
-    let snmp6_stats = get_snmp6_stats(&path)
-        .await
-        .context("read snmp6 stats failed")?;
+    let snmp6_stats = get_snmp6_stats(&path).await?;
 
     // Merge the results of snmpStats into netStats (collisions are possible,
     // but we know that the keys are always unique for the give use case.
@@ -93,7 +89,7 @@ async fn get_net_stats(path: &str) -> Result<BTreeMap<String, BTreeMap<String, S
         let protocol = names[0].strip_suffix(':').unwrap();
         stats.insert(protocol.to_string(), BTreeMap::new());
         if names.len() != values.len() {
-            return Err(Error::new_invalid("mismatch field count"));
+            return Err(Error::from("mismatch field count"));
         }
 
         for i in 0..names.len() {

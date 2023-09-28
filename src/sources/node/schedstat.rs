@@ -1,8 +1,9 @@
 //! Exposes task scheduler statistics from /proc/schedstat
+
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 #[derive(Debug, Default)]
 struct Schedstat {
@@ -14,9 +15,7 @@ struct Schedstat {
 }
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = schedstat(proc_path)
-        .await
-        .context("read schedstat failed")?;
+    let stats = schedstat(proc_path).await?;
 
     let mut metrics = Vec::with_capacity(3 * stats.len());
     for stat in stats {
