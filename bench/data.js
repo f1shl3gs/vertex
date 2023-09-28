@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695859739887,
+  "lastUpdate": 1695867169541,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "fe9b81e167dd717f17c859913c1575d0531d999c",
-          "message": "chore(deps): bump encoding_rs from 0.8.32 to 0.8.33 (#1186)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.32 to 0.8.33.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.32...v0.8.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-24T11:20:06+08:00",
-          "tree_id": "76ad4976756a307f8ca5e17ec5b55f3812873bde",
-          "url": "https://github.com/f1shl3gs/vertex/commit/fe9b81e167dd717f17c859913c1575d0531d999c"
-        },
-        "date": 1692847407114,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 881830,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 852580,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f",
+          "message": "move assert_event_data_eq to lib/testify (#1300)",
+          "timestamp": "2023-09-28T10:09:21+08:00",
+          "tree_id": "d56f75cd1db57ea1880eb75d0876de30ba60690c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f"
+        },
+        "date": 1695867147069,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 868160,
             "unit": "ns/op"
           }
         ]
