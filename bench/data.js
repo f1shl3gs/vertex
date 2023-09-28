@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695867169541,
+  "lastUpdate": 1695867183816,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "74fae9d8df80eca6da6c5ded0b54f31ee4f6e245",
-          "message": "chore(deps): bump tokio-test from 0.4.2 to 0.4.3 (#1185)\n\nBumps [tokio-test](https://github.com/tokio-rs/tokio) from 0.4.2 to 0.4.3.\r\n- [Release notes](https://github.com/tokio-rs/tokio/releases)\r\n- [Commits](https://github.com/tokio-rs/tokio/compare/tokio-test-0.4.2...tokio-test-0.4.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: tokio-test\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-24T11:20:27+08:00",
-          "tree_id": "56f5409e13c4f89714478745ec28eafcefb442f3",
-          "url": "https://github.com/f1shl3gs/vertex/commit/74fae9d8df80eca6da6c5ded0b54f31ee4f6e245"
-        },
-        "date": 1692847419434,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 99.512,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 238.56,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 402.26,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 342.35,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f",
+          "message": "move assert_event_data_eq to lib/testify (#1300)",
+          "timestamp": "2023-09-28T10:09:21+08:00",
+          "tree_id": "d56f75cd1db57ea1880eb75d0876de30ba60690c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/b5f29c7bbd7e23c8a949b00bb7db15f4c9e5150f"
+        },
+        "date": 1695867162008,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 104.88,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 244.25,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 407.43,
             "unit": "ns/op"
           }
         ]
