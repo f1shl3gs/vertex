@@ -71,7 +71,8 @@ impl FunctionTransform for Substr {
 
 #[cfg(test)]
 mod tests {
-    use event::{assert_event_data_eq, fields, Event};
+    use event::{fields, Event};
+    use testify::assert_event_data_eq;
 
     use super::*;
     use crate::transforms::transform_one;
