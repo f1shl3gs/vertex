@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695882349313,
+  "lastUpdate": 1695882375050,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "665d0ee3da99da62c8add6e34049a182e2719092",
-          "message": "Update rust to 1.72.0 (#1187)\n\n* update rust to 1.72.0\r\n\r\n* fix clippy warnings",
-          "timestamp": "2023-08-25T11:05:37+08:00",
-          "tree_id": "1e4ed839a78b957c6bff5f3461b14a44a8f99692",
-          "url": "https://github.com/f1shl3gs/vertex/commit/665d0ee3da99da62c8add6e34049a182e2719092"
-        },
-        "date": 1692932987977,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 22.986,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 22.58,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 22.845,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 36.704,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 49.513,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 70.657,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "5636a1391782918cc4d888a6b9622bdd3a02a7f3",
+          "message": "refactor error (#1301)\n\n* refine Error\r\n\r\n* fix test",
+          "timestamp": "2023-09-28T14:21:48+08:00",
+          "tree_id": "a140e0203df674c4b75ed063c4b0959a6f6dbcb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/5636a1391782918cc4d888a6b9622bdd3a02a7f3"
+        },
+        "date": 1695882356682,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.322,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.328,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 26.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 147.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.101,
             "unit": "ns/op"
           }
         ]
