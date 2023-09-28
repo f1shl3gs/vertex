@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695897782045,
+  "lastUpdate": 1695897796658,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -11722,70 +11722,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "48305121ba045ca65edd2f9b6cecb33ab3a10bc1",
-          "message": "chore(deps): bump serde from 1.0.185 to 1.0.186 (#1188)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.185 to 1.0.186.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.185...v1.0.186)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-25T11:19:42+08:00",
-          "tree_id": "dc9dcecc6982ab34c95ed4d32981508cb1e3295e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/48305121ba045ca65edd2f9b6cecb33ab3a10bc1"
-        },
-        "date": 1692933836147,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tracing-limit/none/1",
-            "value": 552.43,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/100",
-            "value": 56096,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/500",
-            "value": 279850,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/none/1000",
-            "value": 560890,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1",
-            "value": 158.67,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/100",
-            "value": 15798,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/500",
-            "value": 78983,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tracing-limit/5s/1000",
-            "value": 157930,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "01ef6854270a3777db2e184c90a5cbc6d8ef4717",
           "message": "chore(deps): bump pem from 3.0.1 to 3.0.2 (#1184)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.1 to 3.0.2.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.1...v3.0.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-25T12:00:49+08:00",
@@ -18105,6 +18041,70 @@ window.BENCHMARK_DATA = {
           {
             "name": "tracing-limit/5s/1000",
             "value": 185210,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a46b4471798fe401c44a6f2997f68068ea50fc2",
+          "message": "fix metrics collect (#1302)",
+          "timestamp": "2023-09-28T18:38:28+08:00",
+          "tree_id": "b4342588a742c781ccb28e2ae94236557468058c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a46b4471798fe401c44a6f2997f68068ea50fc2"
+        },
+        "date": 1695897778996,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tracing-limit/none/1",
+            "value": 567.94,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/100",
+            "value": 56436,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/500",
+            "value": 281540,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/none/1000",
+            "value": 564640,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1",
+            "value": 185.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/100",
+            "value": 18526,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/500",
+            "value": 92553,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tracing-limit/5s/1000",
+            "value": 185090,
             "unit": "ns/op"
           }
         ]
