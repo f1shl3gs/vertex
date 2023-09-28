@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695859133753,
+  "lastUpdate": 1695859739887,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e8a2ed4b28a968409a097110169146376568f864",
-          "message": "chore(deps): bump rustls-webpki from 0.101.2 to 0.101.4 (#1182)\n\nBumps [rustls-webpki](https://github.com/rustls/webpki) from 0.101.2 to 0.101.4.\r\n- [Release notes](https://github.com/rustls/webpki/releases)\r\n- [Commits](https://github.com/rustls/webpki/compare/v/0.101.2...v/0.101.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls-webpki\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-23T10:32:51+08:00",
-          "tree_id": "09b979ada21e13d3855cc9fc07eb1e5273e91dcf",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e8a2ed4b28a968409a097110169146376568f864"
-        },
-        "date": 1692759571993,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 34719000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1204200,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 23.366,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "fe9b81e167dd717f17c859913c1575d0531d999c",
           "message": "chore(deps): bump encoding_rs from 0.8.32 to 0.8.33 (#1186)\n\nBumps [encoding_rs](https://github.com/hsivonen/encoding_rs) from 0.8.32 to 0.8.33.\r\n- [Commits](https://github.com/hsivonen/encoding_rs/compare/v0.8.32...v0.8.33)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: encoding_rs\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-24T11:20:06+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 24.974,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "0f512d2d2469d414046a80c2fe4f6fc81727935c",
+          "message": "remove assert_cmd (#1299)",
+          "timestamp": "2023-09-28T07:39:00+08:00",
+          "tree_id": "652cd8ab784b62a91a4370ed4ed05046376c2737",
+          "url": "https://github.com/f1shl3gs/vertex/commit/0f512d2d2469d414046a80c2fe4f6fc81727935c"
+        },
+        "date": 1695859714476,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 50811000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1621300,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 26.952,
             "unit": "ns/op"
           }
         ]
