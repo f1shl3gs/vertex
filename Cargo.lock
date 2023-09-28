@@ -1686,7 +1686,7 @@ dependencies = [
  "prost 0.12.1",
  "prost-types 0.12.1",
  "thrift",
- "tonic 0.10.1",
+ "tonic 0.10.2",
  "tonic-build",
 ]
 
@@ -3827,9 +3827,9 @@ dependencies = [
 
 [[package]]
 name = "tonic"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "14c00bc15e49625f3d2f20b17082601e5e17cf27ead69e805174026c194b6664"
+checksum = "d560933a0de61cf715926b9cac824d4c883c2c43142f787595e48280c40a1d0e"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -3854,9 +3854,9 @@ dependencies = [
 
 [[package]]
 name = "tonic-build"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9d37bb15da06ae9bb945963066baca6561b505af93a52e949a85d28558459a2"
+checksum = "9d021fc044c18582b9a2408cd0dd05b1596e3ecdb5c4df822bb0183545683889"
 dependencies = [
  "prettyplease",
  "proc-macro2",
@@ -3867,15 +3867,15 @@ dependencies = [
 
 [[package]]
 name = "tonic-health"
-version = "0.10.1"
+version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85e0181bc19dca6407fcd0323b97e9f0867ce3b020be84661a5ade2821360387"
+checksum = "f80db390246dfb46553481f6024f0082ba00178ea495dbb99e70ba9a4fafb5e1"
 dependencies = [
  "async-stream",
  "prost 0.12.1",
  "tokio",
  "tokio-stream",
- "tonic 0.10.1",
+ "tonic 0.10.2",
 ]
 
 [[package]]
@@ -4322,7 +4322,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tokio-util",
- "tonic 0.10.1",
+ "tonic 0.10.2",
  "tonic-health",
  "tower",
  "tracing",
