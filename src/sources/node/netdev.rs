@@ -5,7 +5,7 @@ use framework::config::serde_regex;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -27,10 +27,7 @@ impl Default for NetdevConfig {
 
 impl NetdevConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
-        let stats = self
-            .get_net_dev_stats(proc_path)
-            .await
-            .context("get netdev stats failed")?;
+        let stats = self.get_net_dev_stats(proc_path).await?;
 
         let mut metrics = Vec::new();
         for stat in stats {
@@ -284,13 +281,18 @@ mod tests {
             config: NetdevConfig,
         }
 
-        serde_yaml::from_str::<Dummy>(
+        let got = serde_yaml::from_str::<Dummy>(
             r#"
 config:
     include: .*
         "#,
         )
         .unwrap();
+
+        match got.config {
+            NetdevConfig::Include(re) => assert_eq!(re.as_str(), ".*"),
+            _ => panic!("unexpected config"),
+        }
     }
 
     #[test]

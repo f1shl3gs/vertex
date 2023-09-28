@@ -1,4 +1,5 @@
 //! Exposes thermal zone & cooling device statistics from /sys/class/thermal
+
 use std::path::Path;
 
 use event::{tags, Metric};

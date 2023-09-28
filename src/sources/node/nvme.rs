@@ -2,22 +2,16 @@ use std::path::PathBuf;
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 pub async fn gather(root: &str) -> Result<Vec<Metric>, Error> {
     let mut path = PathBuf::from(root);
     path.push("class/nvme");
 
     let mut metrics = Vec::new();
-    let mut readdir = tokio::fs::read_dir(path)
-        .await
-        .context("read nvme root dir failed")?;
+    let mut readdir = tokio::fs::read_dir(path).await?;
 
-    while let Some(dir) = readdir
-        .next_entry()
-        .await
-        .context("readdir nvme dir entries failed")?
-    {
+    while let Some(dir) = readdir.next_entry().await? {
         let infos = read_nvme_device(dir.path()).await?;
 
         metrics.push(Metric::gauge_with_tags(

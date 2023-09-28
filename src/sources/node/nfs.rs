@@ -6,7 +6,6 @@ use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
 use super::Error;
-use crate::invalid_error;
 
 /// Network models the "net" line.
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -23,7 +22,7 @@ impl TryFrom<Vec<u64>> for Network {
 
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         if values.len() != 4 {
-            return invalid_error!("invalid Network {:?}", values);
+            return Err(format!("invalid Network {:?}", values).into());
         }
 
         Ok(Network {
@@ -65,7 +64,7 @@ impl TryFrom<Vec<u64>> for V2Stats {
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 18 {
-            return Err(Error::new_invalid("invalid V2Stats line"));
+            return Err(Error::from("invalid V2Stats line"));
         }
 
         Ok(Self {
@@ -125,7 +124,7 @@ impl TryFrom<Vec<u64>> for V3Stats {
     fn try_from(values: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = values[0] as usize;
         if values.len() - 1 != vs || vs < 22 {
-            return Err(Error::new_invalid("invalid V3Stats line"));
+            return Err(Error::from("invalid V3Stats line"));
         }
 
         Ok(V3Stats {
@@ -226,7 +225,7 @@ impl TryFrom<Vec<u64>> for ClientV4Stats {
     fn try_from(mut v: Vec<u64>) -> Result<Self, Self::Error> {
         let vs = v[0] as usize;
         if v.len() - 1 != vs {
-            return invalid_error!("invalid ClientV4Stats line {:?}", v);
+            return Err(format!("invalid ClientV4Stats line {:?}", v).into());
         }
 
         // This function currently supports mapping 59 NFS v4 client stats. Older
@@ -312,7 +311,7 @@ pub struct ClientRPC {
 impl ClientRPC {
     fn new(values: Vec<u64>) -> Result<Self, Error> {
         if values.len() != 3 {
-            return Err(Error::new_invalid("invalid RPC line"));
+            return Err(Error::from("invalid RPC line"));
         }
 
         Ok(ClientRPC {
@@ -344,7 +343,7 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
         let parts = line.trim().split_ascii_whitespace().collect::<Vec<_>>();
 
         if parts.len() < 2 {
-            return invalid_error!("invalid NFS metric line, {}", line);
+            return Err(format!("invalid NFS metric line, {}", line).into());
         }
 
         // TODO: the error is not handled
@@ -366,7 +365,7 @@ pub async fn client_rpc_stats<P: AsRef<Path>>(path: P) -> Result<ClientRPCStats,
             "proc4" => stats.client_v4_stats = values.try_into()?,
 
             _ => {
-                return Err(Error::new_invalid("errors parsing NFS metric line"));
+                return Err(Error::from("errors parsing NFS metric line"));
             }
         }
     }

@@ -1,7 +1,8 @@
 //! Exposes selected adjtimex(2) system call stats.
+
 use event::Metric;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 // The system clock is not synchronized to a reliable
 // server (TIME_ERROR)
@@ -16,7 +17,7 @@ const NANOSECONDS: f64 = 1000000000.0;
 const MICROSECONDS: f64 = 1000000.0;
 
 pub async fn gather() -> Result<Vec<Metric>, Error> {
-    let (tx, status) = adjtimex().context("syscall adjtimex failed")?;
+    let (tx, status) = adjtimex()?;
 
     // TIME_ERROR is not an actually error, see
     // https://man7.org/linux/man-pages/man2/adjtimex.2.html#top_of_page

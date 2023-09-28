@@ -15,7 +15,10 @@ pub async fn gather() -> Result<Vec<Metric>, Error> {
     let v = unsafe { libc::uname(&mut u) };
     if v != 0 {
         warn!("call libc::uname failed, code {}", v as i8);
-        return Err(Error::last_os_error());
+        return Err(Error::Io {
+            err: std::io::Error::last_os_error(),
+            msg: "".to_string(),
+        });
     }
 
     let sysname = &to_string(u.sysname);

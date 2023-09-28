@@ -4,7 +4,7 @@ use event::Metric;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct IPVSConfig {
@@ -33,9 +33,7 @@ fn default_labels() -> Vec<String> {
 
 // TODO: this implement is dummy, too many to_string() and clone()
 pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = parse_ipvs_stats(proc_path)
-        .await
-        .context("parse ipvs stats failed")?;
+    let stats = parse_ipvs_stats(proc_path).await?;
 
     let mut metrics = vec![
         Metric::sum(
@@ -65,9 +63,7 @@ pub async fn gather(conf: &IPVSConfig, proc_path: &str) -> Result<Vec<Metric>, E
         ),
     ];
 
-    let backends = parse_ipvs_backend_status(proc_path)
-        .await
-        .context("parse ipvs backend status failed")?;
+    let backends = parse_ipvs_backend_status(proc_path).await?;
 
     let mut sums = BTreeMap::new();
     let mut label_values = BTreeMap::new();
@@ -162,14 +158,12 @@ async fn parse_ipvs_stats(root: &str) -> Result<IPVSStats, Error> {
     let content = read_to_string(path).await?;
     let lines = content.lines().collect::<Vec<_>>();
     if lines.len() < 4 {
-        return Err(Error::new_invalid("ip_vs_stats corrupt: too short"));
+        return Err("ip_vs_stats corrupt: too short".into());
     }
 
     let stat_fields = lines[2].split_ascii_whitespace().collect::<Vec<_>>();
     if stat_fields.len() != 5 {
-        return Err(Error::new_invalid(
-            "ip_vs_stats corrupt: unexpected number of fields",
-        ));
+        return Err("ip_vs_stats corrupt: unexpected number of fields".into());
     }
 
     let connections = u64::from_str_radix(stat_fields[0], 16)?;
@@ -318,7 +312,7 @@ fn parse_ip_port(s: &str) -> Result<(String, u16), Error> {
 
                 std::net::Ipv6Addr::new(p1, p2, p3, p4, p5, p6, p7, p8).to_string()
             }
-            _ => return Err(Error::new_invalid("unexpected IP:Port")),
+            _ => return Err(Error::from("unexpected IP:Port")),
         }
     };
 

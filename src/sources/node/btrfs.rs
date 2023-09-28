@@ -4,7 +4,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string, Error, ErrorContext};
+use super::{read_into, read_to_string, Error};
 
 const SECTOR_SIZE: u64 = 512;
 
@@ -210,11 +210,11 @@ fn get_layout_metrics(typ: &str, mode: &str, s: LayoutUsage) -> Vec<Metric> {
 
 async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
     let pattern = format!("{}/fs/btrfs/*-*", root,);
-    let paths = glob::glob(&pattern).context("find btrfs blocks failed")?;
+    let paths = glob::glob(&pattern)?;
 
     let mut stats = vec![];
     for path in paths.flatten() {
-        let s = get_stats(path).await.context("get btrfs stats failed")?;
+        let s = get_stats(path).await?;
         stats.push(s);
     }
 
@@ -222,9 +222,7 @@ async fn stats(root: &str) -> Result<Vec<Stats>, Error> {
 }
 
 async fn get_stats(root: PathBuf) -> Result<Stats, Error> {
-    let devices = read_device_info(&root)
-        .await
-        .with_context(|| format!("read device info failed, {:#?}", &root))?;
+    let devices = read_device_info(&root).await?;
 
     let path = root.join("label");
     let label = read_to_string(path).await?;
@@ -295,9 +293,7 @@ async fn list_files(path: impl AsRef<Path>) -> Result<Vec<String>, Error> {
 
 async fn read_device_info(path: &Path) -> Result<BTreeMap<String, Device>, Error> {
     let path = path.join("devices");
-    let mut dirs = tokio::fs::read_dir(path)
-        .await
-        .context("read btrfs devices failed")?;
+    let mut dirs = tokio::fs::read_dir(path).await?;
 
     let mut devices = BTreeMap::new();
     while let Some(ent) = dirs.next_entry().await? {

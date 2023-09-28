@@ -5,7 +5,7 @@ use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FileSystemConfig {
@@ -43,7 +43,7 @@ fn default_fs_type_exclude() -> regex::Regex {
 impl FileSystemConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = format!("{}/mounts", proc_path);
-        let stats = self.get_stats(path).await.context("read fs stats failed")?;
+        let stats = self.get_stats(path).await?;
 
         let mut metrics = Vec::new();
 
@@ -129,9 +129,7 @@ impl FileSystemConfig {
 
     async fn get_stats<P: AsRef<Path>>(&self, path: P) -> Result<Vec<Stat>, Error> {
         let mut stats = Vec::new();
-        let f = tokio::fs::File::open(path)
-            .await
-            .context("open mounts failed")?;
+        let f = tokio::fs::File::open(path).await?;
         let reader = tokio::io::BufReader::new(f);
         let mut lines = reader.lines();
 

@@ -1,16 +1,19 @@
-/// Exposes ARP statistics from `/proc/net/arp`.
+//! Exposes ARP statistics from `/proc/net/arp`.
 use std::collections::HashMap;
 
 use event::{tags, Metric};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/net/arp", proc_path);
     let f = tokio::fs::File::open(&path)
         .await
-        .context("open arp file failed")?;
+        .map_err(|err| Error::Io {
+            err,
+            msg: "open arp file failed".into(),
+        })?;
     let reader = tokio::io::BufReader::new(f);
     let mut lines = reader.lines();
     let mut devices = HashMap::<String, i64>::new();

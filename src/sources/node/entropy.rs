@@ -1,12 +1,11 @@
-/// Exposes available entropy
+//! Exposes available entropy
+
 use event::Metric;
 
-use super::{read_into, Error, ErrorContext};
+use super::{read_into, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let (avail, pool_size) = read_random(proc_path)
-        .await
-        .context("read random stat failed")?;
+    let (avail, pool_size) = read_random(proc_path).await?;
 
     Ok(vec![
         Metric::gauge(

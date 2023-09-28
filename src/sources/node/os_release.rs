@@ -77,7 +77,7 @@ async fn release_infos() -> Result<BTreeMap<String, String>, Error> {
         }
     }
 
-    Err(Error::new_invalid("No invalid os release file"))
+    Err(Error::from("No invalid os release file"))
 }
 
 async fn parse_os_release(path: &str) -> Result<BTreeMap<String, String>, Error> {

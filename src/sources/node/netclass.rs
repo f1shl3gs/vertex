@@ -2,7 +2,7 @@ use event::{tags, Metric};
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct NetClassConfig {
@@ -25,9 +25,7 @@ fn default_ignores() -> regex::Regex {
 }
 
 pub async fn gather(conf: &NetClassConfig, sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let devices = net_class_devices(sys_path)
-        .await
-        .context("read net class devices failed")?;
+    let devices = net_class_devices(sys_path).await?;
 
     let mut metrics = Vec::new();
     for device in devices {

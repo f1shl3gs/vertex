@@ -2,8 +2,7 @@ use std::path::{Path, PathBuf};
 
 use event::{tags, Metric};
 
-use super::{read_to_string, Error, ErrorContext};
-use crate::invalid_error;
+use super::{read_to_string, Error};
 
 /// InfiniBandCounters contains counter values from files in
 /// /sys/class/infiniband/<Name>/ports/<Port>/counters or
@@ -588,7 +587,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
                     continue;
                 }
 
-                return invalid_error!("failed to read file {}, err: {}", name, err);
+                return Err(format!("failed to read file {}, err: {}", name, err).into());
             }
         };
 
@@ -601,9 +600,7 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
     }
 
     let pp = path.clone().join("ports");
-    let mut dirs = tokio::fs::read_dir(pp)
-        .await
-        .context("failed to list InfiniBand ports")?;
+    let mut dirs = tokio::fs::read_dir(pp).await?;
     while let Some(entry) = dirs.next_entry().await? {
         let port = parse_infiniband_port(name, entry.path()).await?;
         device.ports.push(port);
@@ -615,17 +612,10 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
 /// parse_infiniband_port scans predefined files in /sys/class/infiniband/<device>/ports/<port>
 /// directory and gets their contents
 async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPort, Error> {
-    let port_num = root
-        .file_name()
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .parse::<u32>()
-        .context("failed to convert port to u32")?;
-
+    let port = root.to_string_lossy().parse::<u32>()?;
     let mut ibp = InfiniBandPort {
+        port,
         name: name.to_string(),
-        port: port_num,
         ..Default::default()
     };
 
@@ -656,7 +646,7 @@ async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPo
 fn parse_state(s: &str) -> Result<(u32, String), Error> {
     let parts = s.split(':').map(|p| p.trim()).collect::<Vec<_>>();
     if parts.len() != 2 {
-        return invalid_error!("failed to split {} into 'ID: Name'", s);
+        return Err(format!("failed to split {} into 'ID: Name'", s).into());
     }
 
     let name = parts[1].to_string();
@@ -669,7 +659,7 @@ fn parse_state(s: &str) -> Result<(u32, String), Error> {
 fn parse_rate(s: &str) -> Result<u64, Error> {
     let parts = s.splitn(2, ' ').collect::<Vec<_>>();
     if parts.len() != 2 {
-        return invalid_error!("failed to split {}", s);
+        return Err(format!("failed to split {}", s).into());
     }
 
     let v = parts[0].parse::<f64>()?;
@@ -696,7 +686,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                     continue;
                 }
 
-                return invalid_error!("failed to read file {}, err: {}", name, err);
+                return Err(format!("failed to read file {}, err: {}", name, err).into());
             }
         };
 
@@ -758,7 +748,7 @@ async fn parse_infiniband_counters(root: PathBuf) -> Result<InfiniBandCounters, 
                             continue;
                         }
 
-                        return invalid_error!("failed to read file {}, err: {}", name, err);
+                        return Err(format!("failed to read file {}, err: {}", name, err).into());
                     }
                 };
 

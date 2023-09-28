@@ -1,6 +1,5 @@
 #![allow(dead_code)]
-#[allow(unused)]
-#[allow(unused_variables)]
+
 mod arp;
 mod bcache;
 mod bonding;
@@ -14,7 +13,7 @@ mod diskstats;
 mod drm;
 mod edac;
 mod entropy;
-mod errors;
+mod error;
 mod fibrechannel;
 mod filefd;
 mod filesystem;
@@ -51,6 +50,7 @@ mod udp_queues;
 mod uname;
 mod vmstat;
 mod wifi;
+#[cfg(target_os = "linux")]
 mod xfs;
 mod zfs;
 
@@ -60,6 +60,7 @@ use std::time::Duration;
 use std::{path::Path, sync::Arc};
 
 use configurable::configurable_component;
+use error::Error;
 use event::{tags, Metric};
 use framework::config::{
     default_interval, default_true, DataType, Output, SourceConfig, SourceContext,
@@ -68,9 +69,42 @@ use framework::pipeline::Pipeline;
 use framework::shutdown::ShutdownSignal;
 use framework::Source;
 use serde::{Deserialize, Serialize};
-use typetag;
 
-use self::errors::{Error, ErrorContext};
+fn default_cpu_config() -> Option<cpu::CPUConfig> {
+    Some(cpu::CPUConfig::default())
+}
+
+fn default_diskstats_config() -> Option<diskstats::DiskStatsConfig> {
+    Some(diskstats::DiskStatsConfig::default())
+}
+
+fn default_filesystem_config() -> Option<filesystem::FileSystemConfig> {
+    Some(filesystem::FileSystemConfig::default())
+}
+
+fn default_ipvs_config() -> Option<ipvs::IPVSConfig> {
+    Some(ipvs::IPVSConfig::default())
+}
+
+fn default_netclass_config() -> Option<netclass::NetClassConfig> {
+    Some(netclass::NetClassConfig::default())
+}
+
+fn default_netdev_config() -> Option<netdev::NetdevConfig> {
+    Some(netdev::NetdevConfig::default())
+}
+
+fn default_netstat_config() -> Option<netstat::NetstatConfig> {
+    Some(netstat::NetstatConfig::default())
+}
+
+fn default_powersupply_config() -> Option<powersupplyclass::PowerSupplyConfig> {
+    Some(powersupplyclass::PowerSupplyConfig::default())
+}
+
+fn default_vmstat_config() -> Option<vmstat::VMStatConfig> {
+    Some(vmstat::VMStatConfig::default())
+}
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(deny_unknown_fields)]
@@ -201,6 +235,7 @@ struct Collectors {
     #[serde(default = "default_vmstat_config")]
     pub vmstat: Option<vmstat::VMStatConfig>,
 
+    #[cfg(target_os = "linux")]
     #[serde(default = "default_true")]
     pub xfs: bool,
 
@@ -211,42 +246,6 @@ struct Collectors {
     #[cfg(target_os = "macos")]
     #[serde(default = "default_true")]
     pub boot_time: bool,
-}
-
-fn default_cpu_config() -> Option<cpu::CPUConfig> {
-    Some(cpu::CPUConfig::default())
-}
-
-fn default_diskstats_config() -> Option<diskstats::DiskStatsConfig> {
-    Some(diskstats::DiskStatsConfig::default())
-}
-
-fn default_filesystem_config() -> Option<filesystem::FileSystemConfig> {
-    Some(filesystem::FileSystemConfig::default())
-}
-
-fn default_ipvs_config() -> Option<ipvs::IPVSConfig> {
-    Some(ipvs::IPVSConfig::default())
-}
-
-fn default_netclass_config() -> Option<netclass::NetClassConfig> {
-    Some(netclass::NetClassConfig::default())
-}
-
-fn default_netdev_config() -> Option<netdev::NetdevConfig> {
-    Some(netdev::NetdevConfig::default())
-}
-
-fn default_netstat_config() -> Option<netstat::NetstatConfig> {
-    Some(netstat::NetstatConfig::default())
-}
-
-fn default_powersupply_config() -> Option<powersupplyclass::PowerSupplyConfig> {
-    Some(powersupplyclass::PowerSupplyConfig::default())
-}
-
-fn default_vmstat_config() -> Option<vmstat::VMStatConfig> {
-    Some(vmstat::VMStatConfig::default())
 }
 
 impl Default for Collectors {
@@ -321,7 +320,7 @@ pub struct Config {
     #[serde(default = "default_interval", with = "humanize::duration::serde")]
     interval: Duration,
 
-    #[serde(default = "default_collectors")]
+    #[serde(default)]
     #[configurable(skip)]
     collectors: Collectors,
 }
@@ -334,17 +333,13 @@ fn default_sys_path() -> String {
     "/sys".into()
 }
 
-fn default_collectors() -> Collectors {
-    Collectors::default()
-}
-
 impl Default for Config {
     fn default() -> Self {
         Self {
             proc_path: default_proc_path(),
             sys_path: default_sys_path(),
             interval: default_interval(),
-            collectors: default_collectors(),
+            collectors: Collectors::default(),
         }
     }
 }
@@ -778,6 +773,7 @@ impl NodeMetrics {
                 }))
             }
 
+            #[cfg(target_os = "linux")]
             if self.collectors.xfs {
                 let sys_path = Arc::clone(&sys_path);
                 tasks.push(tokio::spawn(async move {

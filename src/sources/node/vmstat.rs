@@ -1,10 +1,11 @@
 //! Exposes statistics from `/proc/vmstat`
+
 use event::Metric;
 use framework::config::serde_regex;
 use serde::{Deserialize, Serialize};
 use tokio::io::AsyncBufReadExt;
 
-use super::{Error, ErrorContext};
+use super::Error;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct VMStatConfig {
@@ -29,15 +30,13 @@ fn default_fields() -> regex::Regex {
 impl VMStatConfig {
     pub async fn gather(&self, proc_path: &str) -> Result<Vec<Metric>, Error> {
         let path = format!("{}/vmstat", proc_path);
-        let f = tokio::fs::File::open(path)
-            .await
-            .context("open vmstat failed")?;
+        let f = tokio::fs::File::open(path).await?;
 
         let r = tokio::io::BufReader::new(f);
         let mut lines = r.lines();
         let mut metrics = Vec::new();
 
-        while let Some(line) = lines.next_line().await.context("read next line failed")? {
+        while let Some(line) = lines.next_line().await? {
             if !self.fields.is_match(&line) {
                 continue;
             }

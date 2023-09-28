@@ -1,11 +1,11 @@
-use once_cell::sync::Lazy;
 use std::collections::BTreeMap;
 use std::path::Path;
 
 use event::{tags, Metric};
+use once_cell::sync::Lazy;
 use regex::Regex;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let entries = std::fs::read_dir(format!("{}/class/hwmon", sys_path))?
@@ -519,9 +519,7 @@ async fn hwmon_name(path: impl AsRef<Path>) -> Result<String, Error> {
     let path = path.as_ref();
     let ap = path.join("device");
     if tokio::fs::read_link(&ap).await.is_ok() {
-        let dev_path = tokio::fs::canonicalize(ap)
-            .await
-            .context("canonicalize failed")?;
+        let dev_path = tokio::fs::canonicalize(ap).await?;
         let dev_name = dev_path.file_name().unwrap().to_str().unwrap();
         let dev_prefix = dev_path.parent().unwrap();
         let dev_type = dev_prefix.file_name().unwrap().to_str().unwrap();

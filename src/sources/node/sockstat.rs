@@ -1,14 +1,12 @@
 //! Exposes various statistics from /proc/net/sockstat and /proc/net/sockstat6
+
 use event::Metric;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let stat4 = sockstat4(proc_path).await.context("read sockstat failed")?;
-
-    let stat6 = sockstat6(proc_path)
-        .await
-        .context("read sockstat6 failed")?;
+    let stat4 = sockstat4(proc_path).await?;
+    let stat6 = sockstat6(proc_path).await?;
 
     let mut metrics = stat4.metrics(false);
     metrics.extend(stat6.metrics(true));
@@ -119,7 +117,7 @@ fn parse_sockstat(content: &str) -> Result<NetSockstat, Error> {
         let size = fields.len();
 
         if size < 3 || size % 2 != 1 {
-            return Err(Error::new_invalid("malformed sockstat line"));
+            return Err(Error::from("malformed sockstat line"));
         }
 
         let proto = fields[0].strip_suffix(':').unwrap();

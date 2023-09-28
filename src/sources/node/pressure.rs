@@ -9,21 +9,20 @@
 //! Example io pressure file:
 //! > some avg10=0.06 avg60=0.21 avg300=0.99 total=8537362
 //! > full avg10=0.00 avg60=0.13 avg300=0.96 total=8183134
+
 use event::Metric;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
     let path = format!("{}/pressure/cpu", proc_path);
-    let cpu = psi_stats(&path).await.context("read cpu pressure failed")?;
+    let cpu = psi_stats(&path).await?;
 
     let path = format!("{}/pressure/io", proc_path);
-    let io = psi_stats(&path).await.context("read io pressure failed")?;
+    let io = psi_stats(&path).await?;
 
     let path = format!("{}/pressure/memory", proc_path);
-    let memory = psi_stats(&path)
-        .await
-        .context("read memory pressure failed")?;
+    let memory = psi_stats(&path).await?;
 
     let mut metrics = Vec::new();
     if let Some(some) = cpu.some {
@@ -120,7 +119,7 @@ fn parse_psi_stat(line: &str) -> Result<PSIStat, Error> {
     let parts = line.split_ascii_whitespace().collect::<Vec<_>>();
 
     if parts.len() != 5 {
-        return Err(Error::new_invalid("malformed psi stat line"));
+        return Err(Error::from("malformed psi stat line"));
     }
 
     let avg10 = parts[1].strip_prefix("avg10=").unwrap().parse()?;

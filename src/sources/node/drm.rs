@@ -4,14 +4,13 @@
 //! amdgpu is the only driver which exposes this information through DRM.
 //!
 //! https://github.com/prometheus/node_exporter/pull/1998
+
 use event::{tags, Metric};
 
-use super::{read_into, read_to_string, Error, ErrorContext};
+use super::{read_into, read_to_string, Error};
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
-    let stats = class_drm_card_amdgpu_stats(sys_path)
-        .await
-        .context("read drm amdgpu stats failed")?;
+    let stats = class_drm_card_amdgpu_stats(sys_path).await?;
 
     let mut metrics = Vec::with_capacity(8 * stats.len());
     for stat in stats {
@@ -100,7 +99,7 @@ async fn class_drm_card_amdgpu_stats(
     sys_path: &str,
 ) -> Result<Vec<ClassDRMCardAMDGPUStats>, Error> {
     let pattern = format!("{}/class/drm/card[0-9]", sys_path);
-    let paths = glob::glob(&pattern).context("glob drm failed")?;
+    let paths = glob::glob(&pattern)?;
 
     let mut stats = Vec::new();
     for path in paths.flatten() {
@@ -163,7 +162,7 @@ async fn parse_class_drm_amdgpu_card(card: &str) -> Result<ClassDRMCardAMDGPUSta
     let uevent = read_to_string(path).await?;
 
     if !uevent.contains("DRIVER=amdgpu") {
-        return Err(Error::new_invalid("the device is not an amdgpu"));
+        return Err(Error::from("the device is not an amdgpu"));
     }
 
     let name = &card[card.len() - 5..];

@@ -1,11 +1,9 @@
 use event::Metric;
 
-use super::{read_to_string, Error, ErrorContext};
+use super::{read_to_string, Error};
 
 pub async fn gather(proc_path: &str) -> Result<Vec<Metric>, Error> {
-    let (allocated, maximum) = read_file_nr(proc_path)
-        .await
-        .context("read file-nr failed")?;
+    let (allocated, maximum) = read_file_nr(proc_path).await?;
 
     Ok(vec![
         Metric::gauge(
