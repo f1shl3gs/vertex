@@ -232,9 +232,10 @@ fn annotate_from_container_status(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use event::assert_event_data_eq;
     use k8s_openapi::api::core::v1::PodIP;
+    use testify::assert_event_data_eq;
+
+    use super::*;
 
     #[test]
     fn test_annotate_from_file_info() {

@@ -1068,7 +1068,6 @@ dependencies = [
  "percent-encoding",
  "pin-project-lite",
  "pkcs8",
- "pretty_assertions",
  "proptest",
  "rand",
  "rand_distr",

@@ -193,13 +193,13 @@ fn reparse_groups(groups: Vec<MetricGroup>) -> Vec<Event> {
 mod tests {
     use bytes::BytesMut;
     use chrono::{SubsecRound, Utc};
-    use event::{assert_event_data_eq, buckets, quantiles, tags, EventStatus, Metric};
+    use event::{buckets, quantiles, tags, EventStatus, Metric};
     use framework::config::ProxyConfig;
     use framework::http::HttpClient;
     use framework::pipeline::Pipeline;
     use framework::tls::TlsConfig;
     use hyper::Body;
-    use testify::collect_ready;
+    use testify::{assert_event_data_eq, collect_ready};
 
     use super::*;
     use crate::common::prometheus::TimeSeries;

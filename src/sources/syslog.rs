@@ -326,7 +326,8 @@ mod tests {
     use chrono::{DateTime, Datelike, NaiveDate, TimeZone};
     use codecs::decoding::format::Deserializer;
     use event::log::Value;
-    use event::{assert_event_data_eq, fields, LogRecord};
+    use event::{fields, LogRecord};
+    use testify::assert_event_data_eq;
 
     use super::*;
 
