@@ -54,7 +54,8 @@ mod wifi;
 mod xfs;
 mod zfs;
 
-use std::io::Read;
+use futures::stream::FuturesUnordered;
+use futures_util::StreamExt;
 use std::str::FromStr;
 use std::time::Duration;
 use std::{path::Path, sync::Arc};
@@ -302,6 +303,14 @@ impl Default for Collectors {
     }
 }
 
+fn default_proc_path() -> String {
+    "/proc".into()
+}
+
+fn default_sys_path() -> String {
+    "/sys".into()
+}
+
 /// The Node source generates metrics about the host system scraped
 /// from various sources. This is intended to be used when the collector is
 /// deployed as an agent, and replace `node_exporter`.
@@ -323,14 +332,6 @@ pub struct Config {
     #[serde(default)]
     #[configurable(skip)]
     collectors: Collectors,
-}
-
-fn default_proc_path() -> String {
-    "/proc".into()
-}
-
-fn default_sys_path() -> String {
-    "/sys".into()
 }
 
 impl Default for Config {
@@ -362,14 +363,7 @@ pub struct NodeMetrics {
 /// relative small and the filesystem is kind of `tmpfs`, so the performance should never
 /// be a problem.
 pub async fn read_to_string<P: AsRef<Path>>(path: P) -> Result<String, std::io::Error> {
-    // let mut f = tokio::fs::File::open(path.as_ref()).await?;
-    // let mut content = String::new();
-    // f.read_to_string(&mut content).await?;
-    // Ok(content)
-
-    let mut file = std::fs::File::open(path)?;
-    let mut content = String::new();
-    file.read_to_string(&mut content)?;
+    let mut content = std::fs::read_to_string(path)?;
 
     while content.ends_with('\n') || content.ends_with('\t') || content.ends_with(' ') {
         content.pop();
@@ -450,7 +444,7 @@ impl NodeMetrics {
                 _ = ticker.tick() => {}
             }
 
-            let mut tasks = Vec::new();
+            let mut tasks = FuturesUnordered::new();
 
             if self.collectors.arp {
                 let proc_path = Arc::clone(&proc_path);
@@ -796,23 +790,18 @@ impl NodeMetrics {
                 }));
             }
 
-            let mut metrics = futures::future::join_all(tasks)
-                .await
-                .iter()
-                .flatten()
-                .fold(Vec::new(), |mut metrics, ms| {
-                    metrics.extend_from_slice(ms);
-                    metrics
-                });
+            let mut metrics = vec![];
+            while let Some(Ok(mut parts)) = tasks.next().await {
+                let now = chrono::Utc::now();
+                parts
+                    .iter_mut()
+                    .for_each(|metric| metric.timestamp = Some(now));
 
-            let now = chrono::Utc::now();
-            metrics.iter_mut().for_each(|metric| {
-                metric.timestamp = Some(now);
-            });
+                metrics.extend(parts);
+            }
 
             if let Err(err) = out.send(metrics).await {
                 error!(message = "Error sending node metrics", ?err);
-
                 return Err(());
             }
         }
