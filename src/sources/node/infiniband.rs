@@ -612,7 +612,11 @@ async fn parse_infiniband_device(path: PathBuf) -> Result<InfiniBandDevice, Erro
 /// parse_infiniband_port scans predefined files in /sys/class/infiniband/<device>/ports/<port>
 /// directory and gets their contents
 async fn parse_infiniband_port(name: &str, root: PathBuf) -> Result<InfiniBandPort, Error> {
-    let port = root.to_string_lossy().parse::<u32>()?;
+    let port = root
+        .file_name()
+        .expect("filename should present in path")
+        .to_string_lossy()
+        .parse::<u32>()?;
     let mut ibp = InfiniBandPort {
         port,
         name: name.to_string(),
