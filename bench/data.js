@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1695898632577,
+  "lastUpdate": 1695898736428,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21516,45 +21516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "665d0ee3da99da62c8add6e34049a182e2719092",
-          "message": "Update rust to 1.72.0 (#1187)\n\n* update rust to 1.72.0\r\n\r\n* fix clippy warnings",
-          "timestamp": "2023-08-25T11:05:37+08:00",
-          "tree_id": "1e4ed839a78b957c6bff5f3461b14a44a8f99692",
-          "url": "https://github.com/f1shl3gs/vertex/commit/665d0ee3da99da62c8add6e34049a182e2719092"
-        },
-        "date": 1692934147682,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 34028000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1109000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 24.296,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 21.609,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8a46b4471798fe401c44a6f2997f68068ea50fc2",
+          "message": "fix metrics collect (#1302)",
+          "timestamp": "2023-09-28T18:38:28+08:00",
+          "tree_id": "b4342588a742c781ccb28e2ae94236557468058c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8a46b4471798fe401c44a6f2997f68068ea50fc2"
+        },
+        "date": 1695898717726,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 25911000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1095100,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 19.487,
             "unit": "ns/op"
           }
         ]
