@@ -32,7 +32,7 @@ chrono = { version = "0.4.31", default-features = false }
 chrono-tz = { version = "0.8.3", default-features = false, features = ["serde"] }
 codecs = { path = "../codecs" }
 configurable = { path = "../configurable" }
-console-subscriber = { version = "0.1.10", optional = true }
+console-subscriber = { version = "0.2.0", optional = true }
 dyn-clone = { version = "1.0.14" }
 encoding_rs = { version = "0.8.33", features = ["serde"] }
 event = { path = "../event" }
