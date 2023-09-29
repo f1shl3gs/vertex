@@ -7,7 +7,7 @@ publish = false
 [dependencies]
 inventory = { version = "0.3.12", default-features = false }
 configurable-derive = { path = "../configurable-derive" }
-indexmap = { version = "2.0.1", default-features = false, features = ["serde", "std"] }
+indexmap = { version = "2.0.2", default-features = false, features = ["serde", "std"] }
 serde = { version = "1.0.188", default-features = false }
 serde_json = { version = "1.0.107", default-features = false }
 
