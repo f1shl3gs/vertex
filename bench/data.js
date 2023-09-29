@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696030248342,
+  "lastUpdate": 1696030262846,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "8b6984823112df4bbbbffcbcce0c670b89f35f47",
-          "message": "chore(deps): bump pin-project-lite from 0.2.12 to 0.2.13 (#1191)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.12...v0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-26T00:35:31+08:00",
-          "tree_id": "171d71030b9d31e7451e333ce704050ef9beb63f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b6984823112df4bbbbffcbcce0c670b89f35f47"
-        },
-        "date": 1692981633780,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 64.629,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 187.8,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 456.64,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1298.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "5ba2ebb2de656fdcd28f6ec490078b3a34026110",
           "message": "chore(deps): bump mimalloc from 0.1.37 to 0.1.38 (#1190)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.37 to 0.1.38.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.37...v0.1.38)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-26T01:16:37+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 978.61,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dad60838c5ee382990f76a717fc6f698af430cc",
+          "message": "deps: remove tempfile (#1306)\n\n* add temp_dir\r\n\r\n* remove tempfile\r\n\r\n* style",
+          "timestamp": "2023-09-30T07:27:14+08:00",
+          "tree_id": "9ee4df2e68c3d3c64366e3a5c4458fa5db653fcd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dad60838c5ee382990f76a717fc6f698af430cc"
+        },
+        "date": 1696030245420,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 52.396,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 161.73,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 396.43,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1117.8,
             "unit": "ns/op"
           }
         ]
