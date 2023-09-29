@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696030293988,
+  "lastUpdate": 1696030312935,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "5ba2ebb2de656fdcd28f6ec490078b3a34026110",
-          "message": "chore(deps): bump mimalloc from 0.1.37 to 0.1.38 (#1190)\n\nBumps [mimalloc](https://github.com/purpleprotocol/mimalloc_rust) from 0.1.37 to 0.1.38.\r\n- [Release notes](https://github.com/purpleprotocol/mimalloc_rust/releases)\r\n- [Commits](https://github.com/purpleprotocol/mimalloc_rust/compare/v0.1.37...v0.1.38)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: mimalloc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-26T01:16:37+08:00",
-          "tree_id": "275573c12603f62b5e6a4d41134ea6c81f9adbfa",
-          "url": "https://github.com/f1shl3gs/vertex/commit/5ba2ebb2de656fdcd28f6ec490078b3a34026110"
-        },
-        "date": 1692984049373,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.136,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.459,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.229,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.79,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 59.867,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2452730e1c935dd4550f9e5d83e1cd3da52fbf23",
           "message": "chore(deps): bump serde from 1.0.186 to 1.0.187 (#1192)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.186 to 1.0.187.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.186...v1.0.187)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-26T11:55:31+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 55.323,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dad60838c5ee382990f76a717fc6f698af430cc",
+          "message": "deps: remove tempfile (#1306)\n\n* add temp_dir\r\n\r\n* remove tempfile\r\n\r\n* style",
+          "timestamp": "2023-09-30T07:27:14+08:00",
+          "tree_id": "9ee4df2e68c3d3c64366e3a5c4458fa5db653fcd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dad60838c5ee382990f76a717fc6f698af430cc"
+        },
+        "date": 1696030291401,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 31.893,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 32.589,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 32.141,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 182.87,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 69.454,
             "unit": "ns/op"
           }
         ]
