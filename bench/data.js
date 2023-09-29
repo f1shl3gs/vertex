@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696030262846,
+  "lastUpdate": 1696030264237,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21526,45 +21526,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "01ef6854270a3777db2e184c90a5cbc6d8ef4717",
-          "message": "chore(deps): bump pem from 3.0.1 to 3.0.2 (#1184)\n\nBumps [pem](https://github.com/jcreekmore/pem-rs) from 3.0.1 to 3.0.2.\r\n- [Changelog](https://github.com/jcreekmore/pem-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jcreekmore/pem-rs/compare/v3.0.1...v3.0.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pem\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-25T12:00:49+08:00",
-          "tree_id": "f84958bb91d9f6fab1ff4855be734f36fa124483",
-          "url": "https://github.com/f1shl3gs/vertex/commit/01ef6854270a3777db2e184c90a5cbc6d8ef4717"
-        },
-        "date": 1692937367035,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 30350000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1118500,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 22.763,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8b6984823112df4bbbbffcbcce0c670b89f35f47",
           "message": "chore(deps): bump pin-project-lite from 0.2.12 to 0.2.13 (#1191)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.12...v0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-26T00:35:31+08:00",
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 19.997,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "114cc39b01f6880f9487e9ec3610eaacc7f1e5be",
+          "message": "chore(deps): bump console-subscriber from 0.1.10 to 0.2.0 (#1305)\n\nBumps [console-subscriber](https://github.com/tokio-rs/console) from 0.1.10 to 0.2.0.\r\n- [Release notes](https://github.com/tokio-rs/console/releases)\r\n- [Commits](https://github.com/tokio-rs/console/compare/console-subscriber-v0.1.10...console-subscriber-v0.2.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: console-subscriber\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-30T07:05:20+08:00",
+          "tree_id": "dbc9739a6ab947db8dfdff587e7569349f4a5936",
+          "url": "https://github.com/f1shl3gs/vertex/commit/114cc39b01f6880f9487e9ec3610eaacc7f1e5be"
+        },
+        "date": 1696030240405,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 39639000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1531900,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 25.731,
             "unit": "ns/op"
           }
         ]
