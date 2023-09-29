@@ -36,19 +36,18 @@ use std::fmt::{Debug, Display, Formatter};
 use std::ops::BitOr;
 use std::path::PathBuf;
 
+use ::serde::{Deserialize, Serialize};
+pub use builder::Builder;
+pub use global::GlobalOptions;
 // IndexMap preserves insertion order, allowing us to output errors in the
 // same order they are present in the file.
 use indexmap::IndexMap;
-
-use ::serde::{Deserialize, Serialize};
-pub use builder::Builder;
+pub use loading::load_from_paths_with_provider;
 pub use resource::{Protocol, Resource};
 
 pub use crate::config::sink::SinkOuter;
 use crate::config::source::SourceOuter;
 use crate::config::transform::TransformOuter;
-pub use global::GlobalOptions;
-pub use loading::load_from_paths_with_provider;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 #[serde(default)]

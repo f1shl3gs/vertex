@@ -203,14 +203,14 @@ where
 mod tests {
     use codecs::encoding::{Framer, NewlineDelimitedEncoder, Serializer, TextSerializer};
     use codecs::Encoder;
-    use testify::random::random_lines_with_stream;
+    use testify::{random::random_lines_with_stream, temp::temp_dir};
     use tokio::net::UnixListener;
 
     use super::*;
     use crate::testing::CountReceiver;
 
     fn temp_uds_path(name: &str) -> PathBuf {
-        tempfile::tempdir().unwrap().into_path().join(name)
+        temp_dir().join(name)
     }
 
     #[tokio::test]

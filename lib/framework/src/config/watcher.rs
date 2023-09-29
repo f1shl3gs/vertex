@@ -126,12 +126,13 @@ fn add_paths(watcher: &mut RecommendedWatcher, config_paths: &[PathBuf]) -> Resu
 
 #[cfg(all(test, unix, not(target_os = "macos")))]
 mod tests {
-    use super::*;
     use std::fs::File;
     use std::io::Write;
-    use tempfile::tempdir;
-    use testify::temp::temp_file;
+
+    use testify::temp::{temp_file, temp_dir};
     use tokio::signal::unix::{signal, SignalKind};
+
+    use super::*;
 
     async fn test(file: &mut File, timeout: Duration) -> bool {
         let mut signal = signal(SignalKind::hangup()).expect("Signal handlers should not panic");
@@ -145,7 +146,7 @@ mod tests {
     #[tokio::test]
     async fn file_directory_update() {
         let delay = Duration::from_secs(3);
-        let directory = tempdir().unwrap().into_path();
+        let directory = temp_dir();
         let filepath = directory.join("test.txt");
         let mut file = File::create(&filepath).unwrap();
 
