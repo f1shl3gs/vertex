@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696029807618,
+  "lastUpdate": 1696030213860,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "8b6984823112df4bbbbffcbcce0c670b89f35f47",
-          "message": "chore(deps): bump pin-project-lite from 0.2.12 to 0.2.13 (#1191)\n\nBumps [pin-project-lite](https://github.com/taiki-e/pin-project-lite) from 0.2.12 to 0.2.13.\r\n- [Release notes](https://github.com/taiki-e/pin-project-lite/releases)\r\n- [Changelog](https://github.com/taiki-e/pin-project-lite/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/taiki-e/pin-project-lite/compare/v0.2.12...v0.2.13)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: pin-project-lite\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-26T00:35:31+08:00",
-          "tree_id": "171d71030b9d31e7451e333ce704050ef9beb63f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/8b6984823112df4bbbbffcbcce0c670b89f35f47"
-        },
-        "date": 1692981541967,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 877520,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 723360,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8dad60838c5ee382990f76a717fc6f698af430cc",
+          "message": "deps: remove tempfile (#1306)\n\n* add temp_dir\r\n\r\n* remove tempfile\r\n\r\n* style",
+          "timestamp": "2023-09-30T07:27:14+08:00",
+          "tree_id": "9ee4df2e68c3d3c64366e3a5c4458fa5db653fcd",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8dad60838c5ee382990f76a717fc6f698af430cc"
+        },
+        "date": 1696030196460,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 723940,
             "unit": "ns/op"
           }
         ]
