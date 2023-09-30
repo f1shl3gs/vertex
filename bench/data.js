@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696056062031,
+  "lastUpdate": 1696056836118,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ac485b6e1afb8684ef690bc374030cfbb2c76794",
-          "message": "bump MSRV to 1.70.0 (#1201)",
-          "timestamp": "2023-08-29T13:41:00+08:00",
-          "tree_id": "10fbd4025ae015edf6b95a1914911c9cda4aa80b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ac485b6e1afb8684ef690bc374030cfbb2c76794"
-        },
-        "date": 1693288972605,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1167,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44621.4,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 983,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42391.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4e8b081f915f14fa308a7beeea9e301ed62b5a5",
+          "message": "add necessary features for tracing-subscriber to pass test (#1308)",
+          "timestamp": "2023-09-30T14:36:10+08:00",
+          "tree_id": "3eb342b47a3597c2359a4e91071a9589fcb19ed1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4e8b081f915f14fa308a7beeea9e301ed62b5a5"
+        },
+        "date": 1696056816665,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 918,
             "unit": "s"
           },
           {
