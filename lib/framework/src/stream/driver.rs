@@ -36,7 +36,6 @@ pub struct Driver<I, S> {
 }
 
 impl<I, S> Driver<I, S> {
-    #[allow(clippy::missing_const_for_fn)]
     pub fn new(input: I, service: S) -> Self {
         Self { input, service }
     }

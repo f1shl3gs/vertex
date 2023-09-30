@@ -21,7 +21,6 @@ impl Rule for DockerParser {
 #[cfg(test)]
 mod tests {
     #[test]
-    #[allow(clippy::missing_const_for_fn)]
     #[allow(unused_variables)]
     fn merge() {
         let input = [
