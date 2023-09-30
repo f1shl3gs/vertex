@@ -19,28 +19,25 @@ pub mod proto;
 pub mod tags;
 pub mod trace;
 
-// re-export
+use std::collections::btree_map;
+use std::collections::BTreeMap;
+
 pub use array::{EventContainer, Events};
+use bytes::Bytes;
+use chrono::Utc;
 pub use finalize::{
     AddBatchNotifier, BatchNotifier, BatchStatus, BatchStatusReceiver, EventFinalizer,
     EventFinalizers, EventStatus, Finalizable,
 };
 pub use log::LogRecord;
-pub use metadata::EventMetadata;
-pub use metric::*;
-pub use trace::{Trace, Traces};
-
-use std::collections::btree_map;
-use std::collections::BTreeMap;
-
-use bytes::Bytes;
-use chrono::Utc;
+use log::Logs;
 use log_schema::log_schema;
 use measurable::ByteSizeOf;
+pub use metadata::EventMetadata;
+pub use metric::*;
 use serde::Serialize;
-
-use log::Logs;
 use tags::{Key, Tags};
+pub use trace::{Trace, Traces};
 
 #[derive(PartialEq, Debug, Clone, Serialize)]
 #[serde(rename_all = "snake_case")]

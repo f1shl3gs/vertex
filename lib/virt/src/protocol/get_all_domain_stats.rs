@@ -1,8 +1,10 @@
 use std::io::{Read, Write};
 
 use super::constants::{REMOTE_DOMAIN_LIST_MAX, VIR_NET_MESSAGE_STRING_MAX};
-use super::{impl_procedure, Error, ReadExt, Result};
-use super::{pack_flex, unpack_flex, unpack_string, Domain, Pack, Unpack};
+use super::{
+    impl_procedure, pack_flex, unpack_flex, unpack_string, Domain, Error, Pack, ReadExt, Result,
+    Unpack,
+};
 
 pub const REMOTE_CONNECT_GET_ALL_DOMAIN_STATS_MAX: usize = 4096;
 

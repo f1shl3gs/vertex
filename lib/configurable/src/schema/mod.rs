@@ -6,18 +6,17 @@ mod visit;
 
 use std::collections::BTreeSet;
 
-use indexmap::IndexMap;
-use num::ConfigurableNumber;
-use serde_json::Value;
-
 use crate::configurable::ConfigurableString;
 use crate::schema::json_schema::NumberValidation;
 use crate::{Configurable, GenerateError};
 pub use gen::{SchemaGenerator, SchemaSettings};
+use indexmap::IndexMap;
 pub use json_schema::{
     ArrayValidation, InstanceType, Metadata, ObjectValidation, RootSchema, Schema, SchemaObject,
     SingleOrVec, SubschemaValidation,
 };
+use num::ConfigurableNumber;
+use serde_json::Value;
 
 pub type Map<K, V> = IndexMap<K, V>;
 pub type Set<V> = BTreeSet<V>;

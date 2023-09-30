@@ -12,8 +12,8 @@ use tokio::time::sleep;
 
 use super::checkpoint::{Checkpointer, CheckpointsView, Fingerprint};
 use super::watch::Watcher;
+use super::ReadFrom;
 use crate::provider::Provider;
-use crate::ReadFrom;
 
 /// A sentinel type to signal that file server was gracefully shut down.
 ///

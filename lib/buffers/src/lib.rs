@@ -1,4 +1,5 @@
-#[deny(clippy::cast_precision_loss)]
+#![deny(clippy::cast_precision_loss)]
+
 mod buffer_usage_data;
 mod config;
 pub mod encoding;
@@ -9,22 +10,19 @@ mod variants;
 #[cfg(test)]
 mod test;
 
-// re-export
-pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
-pub use encoding::Encodable;
-pub use topology::{builder, channel};
+#[macro_use]
+extern crate tracing;
 
 use std::fmt::Debug;
 
-use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
-
+pub use config::{memory_buffer_default_max_events, BufferBuildError, BufferConfig, BufferType};
+pub use encoding::Encodable;
 use finalize::AddBatchNotifier;
+use measurable::ByteSizeOf;
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
-
-#[macro_use]
-extern crate tracing;
+use serde::{Deserialize, Serialize};
+pub use topology::{builder, channel};
 
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Debug, Copy, Clone, Deserialize, Serialize, PartialEq)]
