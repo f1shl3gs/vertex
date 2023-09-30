@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696079065602,
+  "lastUpdate": 1696079077826,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "c448a6e92dffdf5867fc2752d9e3887d2383644c",
-          "message": "chore(deps): bump base64 from 0.21.2 to 0.21.3 (#1195)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.2 to 0.21.3.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.2...v0.21.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-27T00:11:50+08:00",
-          "tree_id": "35bddd500549ad0b77d2b0f6d36217aa458c4542",
-          "url": "https://github.com/f1shl3gs/vertex/commit/c448a6e92dffdf5867fc2752d9e3887d2383644c"
-        },
-        "date": 1693066582914,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 25.168,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.941,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.489,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.244,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.891,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "64345042bcf7cefbb932b8983bc48f4ae26160bf",
           "message": "chore(deps): bump serde from 1.0.187 to 1.0.188 (#1194)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.187 to 1.0.188.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.187...v1.0.188)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-27T11:40:04+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 66.315,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "4edfe8f1c2a18febe55caa610856b37d692c626c",
+          "message": "chore(deps): bump regex from 1.9.5 to 1.9.6 (#1310)\n\nBumps [regex](https://github.com/rust-lang/regex) from 1.9.5 to 1.9.6.\r\n- [Release notes](https://github.com/rust-lang/regex/releases)\r\n- [Changelog](https://github.com/rust-lang/regex/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/regex/compare/1.9.5...1.9.6)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: regex\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-09-30T21:00:34+08:00",
+          "tree_id": "c3a5056e1958c6cb45460b2f6b75246830e94eb2",
+          "url": "https://github.com/f1shl3gs/vertex/commit/4edfe8f1c2a18febe55caa610856b37d692c626c"
+        },
+        "date": 1696079060274,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 26.134,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.587,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.99,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 152.5,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 58.457,
             "unit": "ns/op"
           }
         ]
