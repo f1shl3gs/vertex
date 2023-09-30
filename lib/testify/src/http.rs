@@ -1,5 +1,6 @@
-use hyper::{Body, Response, StatusCode};
 use std::path::Path;
+
+use hyper::{Body, Response, StatusCode};
 
 static NOTFOUND: &[u8] = b"Not Found";
 
