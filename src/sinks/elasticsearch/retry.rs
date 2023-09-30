@@ -25,7 +25,6 @@ enum ElasticsearchResultItem {
 }
 
 impl ElasticsearchResultItem {
-    #[allow(clippy::missing_const_for_fn)] // const cannot run destructor
     fn result(self) -> ElasticsearchIndexResult {
         match self {
             Self::Index(r) => r,

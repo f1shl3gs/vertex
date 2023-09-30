@@ -6,7 +6,6 @@
 #![deny(clippy::trivially_copy_pass_by_ref)]
 #![allow(clippy::type_complexity)]
 #![deny(clippy::disallowed_methods)] // [nursery] mark some functions as verboten
-#![deny(clippy::missing_const_for_fn)] // [nursery] valuable to the optimizer, but may produce false positives
 
 pub mod common;
 pub mod extensions;
