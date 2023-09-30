@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696031302811,
+  "lastUpdate": 1696055955594,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2452730e1c935dd4550f9e5d83e1cd3da52fbf23",
-          "message": "chore(deps): bump serde from 1.0.186 to 1.0.187 (#1192)\n\nBumps [serde](https://github.com/serde-rs/serde) from 1.0.186 to 1.0.187.\r\n- [Release notes](https://github.com/serde-rs/serde/releases)\r\n- [Commits](https://github.com/serde-rs/serde/compare/v1.0.186...v1.0.187)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-26T11:55:31+08:00",
-          "tree_id": "c62175d38685467987f3b547800d9ea14d5ba556",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2452730e1c935dd4550f9e5d83e1cd3da52fbf23"
-        },
-        "date": 1693022327517,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 102.14,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 237.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 407.09,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 292.92,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "d4e8b081f915f14fa308a7beeea9e301ed62b5a5",
+          "message": "add necessary features for tracing-subscriber to pass test (#1308)",
+          "timestamp": "2023-09-30T14:36:10+08:00",
+          "tree_id": "3eb342b47a3597c2359a4e91071a9589fcb19ed1",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d4e8b081f915f14fa308a7beeea9e301ed62b5a5"
+        },
+        "date": 1696055937755,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 85.22,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 201.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 338.52,
             "unit": "ns/op"
           }
         ]
