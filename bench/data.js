@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696063099876,
+  "lastUpdate": 1696063999435,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "7b403e5defb6dcc52dad0c27363599c2bb0b438a",
-          "message": "chore(deps): bump rustls from 0.21.6 to 0.21.7 (#1203)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.6 to 0.21.7.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.6...v/0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-29T22:27:38+08:00",
-          "tree_id": "23f2c59ba7f9d6678e6bfabcd163ad23e39dd68b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b403e5defb6dcc52dad0c27363599c2bb0b438a"
-        },
-        "date": 1693320734882,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1306,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44618.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "a9d33ff4672a67621d022cac9f1a97b0d819bc9a",
           "message": "chore(deps): bump dashmap from 5.5.1 to 5.5.2 (#1202)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.1 to 5.5.2.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.1...v5.5.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-29T22:42:50+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 918,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42391.2,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "806cb97713d37b1871f90cc60520f8dc27232718",
+          "message": "remove `clippy::missing_const_for_fn` (#1309)",
+          "timestamp": "2023-09-30T16:33:38+08:00",
+          "tree_id": "49076dd88eaa11a445dab6f9a6ea727c42c4af32",
+          "url": "https://github.com/f1shl3gs/vertex/commit/806cb97713d37b1871f90cc60520f8dc27232718"
+        },
+        "date": 1696063979812,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1033,
             "unit": "s"
           },
           {
