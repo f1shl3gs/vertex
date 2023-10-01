@@ -1,8 +1,8 @@
-use chrono::Utc;
 use std::borrow::Cow;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use chrono::Utc;
 use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 

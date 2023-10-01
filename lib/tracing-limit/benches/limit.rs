@@ -1,19 +1,17 @@
-#[macro_use]
-extern crate tracing;
-
-#[macro_use]
-extern crate criterion;
-
-use std::{
-    fmt,
-    sync::{Mutex, MutexGuard},
-};
+use std::fmt;
+use std::sync::{Mutex, MutexGuard};
 
 use criterion::{black_box, BenchmarkId, Criterion};
 use tracing::{field, span, subscriber::Interest, Event, Metadata, Subscriber};
 use tracing_limit::RateLimitedLayer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::layer::{Context, Layer};
+
+#[macro_use]
+extern crate tracing;
+
+#[macro_use]
+extern crate criterion;
 
 const INPUTS: &[usize] = &[1, 100, 500, 1000];
 
