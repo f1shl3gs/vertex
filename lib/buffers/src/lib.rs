@@ -16,12 +16,11 @@ pub use topology::{builder, channel};
 
 use std::fmt::Debug;
 
-use measurable::ByteSizeOf;
-use serde::{Deserialize, Serialize};
-
 use finalize::AddBatchNotifier;
+use measurable::ByteSizeOf;
 #[cfg(test)]
 use quickcheck::{Arbitrary, Gen};
+use serde::{Deserialize, Serialize};
 
 #[macro_use]
 extern crate tracing;

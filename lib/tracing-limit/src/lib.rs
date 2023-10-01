@@ -399,10 +399,8 @@ impl Visit for MessageVisitor {
 
 #[cfg(test)]
 mod test {
-    use std::{
-        sync::{Arc, Mutex},
-        time::Duration,
-    };
+    use std::sync::{Arc, Mutex};
+    use std::time::Duration;
 
     use testify::instant::MockClock;
     use tracing_subscriber::layer::SubscriberExt;

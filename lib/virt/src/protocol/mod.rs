@@ -13,8 +13,7 @@ mod open;
 mod primitives;
 mod storage_pool_get_info;
 
-use std::io;
-use std::io::{Read, Write};
+use std::io::{self, Read, Write};
 use std::string::FromUtf8Error;
 
 pub use auth::*;
