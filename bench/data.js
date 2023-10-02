@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696208185156,
+  "lastUpdate": 1696208505600,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "841086f494f3e5ab2c61df37caaa61b525f6017a",
-          "message": "chore(deps): bump dashmap from 5.5.2 to 5.5.3 (#1208)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.2 to 5.5.3.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.2...v.5.5.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-31T00:59:06+08:00",
-          "tree_id": "8793b7648d9292123f0d3eb2284e2f7ce5fd780f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/841086f494f3e5ab2c61df37caaa61b525f6017a"
-        },
-        "date": 1693415912158,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1034,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44634.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aadbae7cff57918c3a8d7d891f119afa84011330",
           "message": "chore(deps): bump memchr from 2.6.1 to 2.6.2 (#1209)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.1 to 2.6.2.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.1...2.6.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-31T01:28:40+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42389.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e876921f1811df51d4e5add83b606df20487be12",
+          "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-02T08:38:36+08:00",
+          "tree_id": "f0fd15d1432987505897c67024859a35a8dc98bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e876921f1811df51d4e5add83b606df20487be12"
+        },
+        "date": 1696208483495,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1211,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42401,
             "unit": "KiB"
           }
         ]
