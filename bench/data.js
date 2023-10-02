@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696207308084,
+  "lastUpdate": 1696207313284,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "ac485b6e1afb8684ef690bc374030cfbb2c76794",
-          "message": "bump MSRV to 1.70.0 (#1201)",
-          "timestamp": "2023-08-29T13:41:00+08:00",
-          "tree_id": "10fbd4025ae015edf6b95a1914911c9cda4aa80b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ac485b6e1afb8684ef690bc374030cfbb2c76794"
-        },
-        "date": 1693287845694,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 722020,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 837930,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "e876921f1811df51d4e5add83b606df20487be12",
+          "message": "chore(deps): bump memchr from 2.6.3 to 2.6.4 (#1315)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.3 to 2.6.4.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.3...2.6.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-02T08:38:36+08:00",
+          "tree_id": "f0fd15d1432987505897c67024859a35a8dc98bf",
+          "url": "https://github.com/f1shl3gs/vertex/commit/e876921f1811df51d4e5add83b606df20487be12"
+        },
+        "date": 1696207294843,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 719710,
             "unit": "ns/op"
           }
         ]
