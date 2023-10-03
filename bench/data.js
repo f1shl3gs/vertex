@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696353591099,
+  "lastUpdate": 1696353637590,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "140e1c12c22f5dda2941b2d1244786ec4f1dd4cd",
-          "message": "chore(deps): bump memchr from 2.5.0 to 2.6.0 (#1200)\n\n* chore(deps): bump memchr from 2.5.0 to 2.6.0\r\n\r\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.5.0 to 2.6.0.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.5.0...2.6.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* disable default-features of `memchr`\r\n\r\n* style\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-29T13:41:08+08:00",
-          "tree_id": "788698840fdba517267be2076411a19570ee3c52",
-          "url": "https://github.com/f1shl3gs/vertex/commit/140e1c12c22f5dda2941b2d1244786ec4f1dd4cd"
-        },
-        "date": 1693287939894,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.302,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.365,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.77,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 45.442,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 62.13,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "7b403e5defb6dcc52dad0c27363599c2bb0b438a",
           "message": "chore(deps): bump rustls from 0.21.6 to 0.21.7 (#1203)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.6 to 0.21.7.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.6...v/0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-29T22:27:38+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 57.797,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "c64127eb6ae9ab3cf665ea1ca0153b1918d58a6f",
+          "message": "chore(deps): bump memmap2 from 0.8.0 to 0.9.0 (#1316)\n\nBumps [memmap2](https://github.com/RazrFalcon/memmap2-rs) from 0.8.0 to 0.9.0.\r\n- [Changelog](https://github.com/RazrFalcon/memmap2-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/RazrFalcon/memmap2-rs/compare/v0.8.0...v0.9.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memmap2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-04T01:16:26+08:00",
+          "tree_id": "e9f66e04dadaa690c2e375209e7ee2a1ea91b867",
+          "url": "https://github.com/f1shl3gs/vertex/commit/c64127eb6ae9ab3cf665ea1ca0153b1918d58a6f"
+        },
+        "date": 1696353619626,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 28.121,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 27.012,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.019,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 154.82,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.943,
             "unit": "ns/op"
           }
         ]
