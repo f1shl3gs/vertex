@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696413399249,
+  "lastUpdate": 1696413435446,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "26068cca6869a3573e049fb082a4bdca25a0c84d",
-          "message": "chore(deps): bump memchr from 2.6.0 to 2.6.1 (#1206)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.0 to 2.6.1.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.0...2.6.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-30T12:08:03+08:00",
-          "tree_id": "56d2692154c3939ab64519bba399a7db4ad59e27",
-          "url": "https://github.com/f1shl3gs/vertex/commit/26068cca6869a3573e049fb082a4bdca25a0c84d"
-        },
-        "date": 1693368736717,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 52.3,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 160.73,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 392.48,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1108.2,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "cabf478f50f1bef23a24eb42319288eb44aaed23",
           "message": "chore(deps): bump chrono from 0.4.26 to 0.4.27 (#1205)\n\n* chore(deps): bump chrono from 0.4.26 to 0.4.27\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.26 to 0.4.27.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.26...v0.4.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* Fix deprecated chrono method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-08-30T13:11:52+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1147,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3e9146bb6bea446824f12398ddef9a1fee07a7b7",
+          "message": "add influxdb sink (#1319)\n\n* add influxdb sink\r\n\r\n* remove demo health test",
+          "timestamp": "2023-10-04T17:53:15+08:00",
+          "tree_id": "8f6a790afffbbb2dcc17e6ef9e59450cf47b18e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3e9146bb6bea446824f12398ddef9a1fee07a7b7"
+        },
+        "date": 1696413416751,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 50.461,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 155.56,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 379.65,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1094.9,
             "unit": "ns/op"
           }
         ]
