@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696387081351,
+  "lastUpdate": 1696387896888,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "1fb5a1e5d6f70266d2b8cbbef5bad56a0e2a2d33",
-          "message": "chore(deps): bump chrono from 0.4.27 to 0.4.28 (#1210)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.27 to 0.4.28.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.27...v0.4.28)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-31T13:48:31+08:00",
-          "tree_id": "e7acc765fcb24a81d9cfbdb93066a5528f3b09d6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/1fb5a1e5d6f70266d2b8cbbef5bad56a0e2a2d33"
-        },
-        "date": 1693462070617,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1024,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44650.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1026,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42386.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "129afc30cfa2c0a611c063a8335d36f3b7088a02",
+          "message": "chore(ci): bump styfle/cancel-workflow-action from 0.11.0 to 0.12.0 (#1317)\n\nBumps [styfle/cancel-workflow-action](https://github.com/styfle/cancel-workflow-action) from 0.11.0 to 0.12.0.\r\n- [Release notes](https://github.com/styfle/cancel-workflow-action/releases)\r\n- [Commits](https://github.com/styfle/cancel-workflow-action/compare/0.11.0...0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: styfle/cancel-workflow-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-04T10:32:49+08:00",
+          "tree_id": "6ce1851ea37c835d3076ec5bd5575c6284bc6f2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/129afc30cfa2c0a611c063a8335d36f3b7088a02"
+        },
+        "date": 1696387878398,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 973,
             "unit": "s"
           },
           {
