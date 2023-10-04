@@ -10,18 +10,16 @@ use super::service::InfluxdbRequest;
 #[derive(Clone, Eq, Hash, PartialEq)]
 pub struct PartitionKey {
     bucket: String,
-    org: String,
 }
 
 /// KeyPartitioner that partitions events by (org, bucket) pair.
 pub struct KeyPartitioner {
-    org: Template,
     bucket: Template,
 }
 
 impl KeyPartitioner {
-    pub fn new(org: Template, bucket: Template) -> Self {
-        Self { org, bucket }
+    pub fn new(bucket: Template) -> Self {
+        Self { bucket }
     }
 }
 
@@ -30,12 +28,10 @@ impl Partitioner for KeyPartitioner {
     type Key = Option<PartitionKey>;
 
     fn partition(&self, item: &Self::Item) -> Self::Key {
-        let org = self.org.render(item).ok()?;
         let bucket = self.bucket.render(item).ok()?;
 
         Some(PartitionKey {
-            bucket: String::from_utf8_lossy(&org).to_string(),
-            org: String::from_utf8_lossy(&bucket).to_string(),
+            bucket: String::from_utf8_lossy(&bucket).to_string(),
         })
     }
 }
@@ -55,7 +51,7 @@ impl InfluxdbRequestBuilder {
 }
 
 impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
-    type Metadata = (PartitionKey, EventFinalizers);
+    type Metadata = (PartitionKey, EventFinalizers, usize);
     type Events = Vec<Metric>;
     type Encoder = LineProtocolEncoder;
     type Payload = Bytes;
@@ -71,9 +67,9 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
     }
 
     fn split_input(&self, input: (PartitionKey, Vec<Metric>)) -> (Self::Metadata, Self::Events) {
-        let (pk, mut metrics) = input;
+        let (partition_key, mut metrics) = input;
         let finalizers = metrics.take_finalizers();
-        ((pk, finalizers), metrics)
+        ((partition_key, finalizers, metrics.len()), metrics)
     }
 
     fn build_request(
@@ -81,12 +77,9 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        let (pk, finalizers) = metadata;
-        // TODO: fix this
-        let batch_size = finalizers.len();
+        let (pk, finalizers, batch_size) = metadata;
 
         InfluxdbRequest {
-            org: pk.org,
             bucket: pk.bucket,
             compression: self.compression,
             finalizers,

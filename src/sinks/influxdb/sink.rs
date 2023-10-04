@@ -13,7 +13,6 @@ use super::request_builder::{InfluxdbRequestBuilder, KeyPartitioner};
 use super::service::{InfluxdbRetryLogic, InfluxdbService};
 
 pub struct InfluxdbSink {
-    org: Template,
     bucket: Template,
     batch: BatcherSettings,
     compression: Compression,
@@ -22,14 +21,12 @@ pub struct InfluxdbSink {
 
 impl InfluxdbSink {
     pub fn new(
-        org: Template,
         bucket: Template,
         batch: BatcherSettings,
         compression: Compression,
         service: Svc<InfluxdbService, InfluxdbRetryLogic>,
     ) -> Self {
         Self {
-            org,
             bucket,
             batch,
             compression,
@@ -39,7 +36,7 @@ impl InfluxdbSink {
 
     async fn run_inner(self: Box<Self>, input: BoxStream<'_, Events>) -> Result<(), ()> {
         let builder = InfluxdbRequestBuilder::new(self.compression);
-        let partitioner = KeyPartitioner::new(self.org, self.bucket);
+        let partitioner = KeyPartitioner::new(self.bucket);
 
         input
             .flat_map(|events| match events {

@@ -51,8 +51,10 @@ struct Config {
     request: RequestConfig,
 
     /// The organization to write data to.
+    ///
+    /// API Token cannot be used across organizations, so org do not need to be a `Template`.
     #[configurable(required)]
-    org: Template,
+    org: String,
 
     /// The bucket to write to.
     #[configurable(required)]
@@ -70,7 +72,12 @@ impl SinkConfig for Config {
         let client = HttpClient::new(&self.tls, &cx.proxy)?;
         let endpoint = format!("{}/api/v2/write", self.endpoint).parse()?;
         let batch = self.batch.into_batcher_settings()?;
-        let service = InfluxdbService::new(client.clone(), endpoint, self.token.clone());
+        let service = InfluxdbService::new(
+            client.clone(),
+            endpoint,
+            self.org.clone(),
+            self.token.clone(),
+        );
         let service = ServiceBuilder::new()
             .settings(
                 self.request.unwrap_with(&RequestConfig::default()),
@@ -78,13 +85,7 @@ impl SinkConfig for Config {
             )
             .service(service);
 
-        let sink = InfluxdbSink::new(
-            self.org.clone(),
-            self.bucket.clone(),
-            batch,
-            self.compression,
-            service,
-        );
+        let sink = InfluxdbSink::new(self.bucket.clone(), batch, self.compression, service);
 
         let healthcheck = health::healthcheck(client, self.endpoint.clone(), self.token.clone());
 
