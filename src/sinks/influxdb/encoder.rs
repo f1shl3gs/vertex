@@ -3,7 +3,6 @@ use std::io::Write;
 
 use event::{Metric, MetricValue};
 use framework::sink::util::{Encoder, TrackWriter};
-use ieee754::PrettyFloat;
 
 // https://docs.influxdata.com/influxdb/cloud/reference/syntax/line-protocol/#special-characters
 const COMMA_EQ_SPACE: [char; 3] = [',', '=', ' '];
@@ -36,10 +35,10 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
 
             match &metric.value {
                 MetricValue::Sum(value) => {
-                    writeln!(writer, "counter={}", PrettyFloat(*value))?;
+                    writeln!(writer, "counter={}", value)?;
                 }
                 MetricValue::Gauge(value) => {
-                    writeln!(writer, "gauge={}", PrettyFloat(*value))?;
+                    writeln!(writer, "gauge={}", value)?;
                 }
                 MetricValue::Histogram {
                     buckets,
@@ -58,7 +57,7 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                         }
                     }
                     write!(writer, ",count={}", count)?;
-                    writeln!(writer, ",sum={}", PrettyFloat(*sum))?;
+                    writeln!(writer, ",sum={}", sum)?;
                 }
                 MetricValue::Summary {
                     quantiles,
@@ -67,23 +66,13 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                 } => {
                     for (index, quantile) in quantiles.iter().enumerate() {
                         if index == 0 {
-                            write!(
-                                writer,
-                                "{}={}",
-                                quantile.quantile,
-                                PrettyFloat(quantile.value)
-                            )?;
+                            write!(writer, "{}={}", quantile.quantile, quantile.value)?;
                         } else {
-                            write!(
-                                writer,
-                                ",{}={}",
-                                quantile.quantile,
-                                PrettyFloat(quantile.value)
-                            )?;
+                            write!(writer, ",{}={}", quantile.quantile, quantile.value)?;
                         }
                     }
                     write!(writer, ",count={}", count)?;
-                    writeln!(writer, ",sum={}", PrettyFloat(*sum))?;
+                    writeln!(writer, ",sum={}", sum)?;
                 }
             }
         }
