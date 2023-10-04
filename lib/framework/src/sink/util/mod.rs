@@ -27,7 +27,7 @@ pub use buffer::{
 pub use compressor::Compressor;
 pub use encoding::*;
 pub use partitioner::KeyPartitioner;
-pub use request_builder::{EncodeResult, RequestBuilder};
+pub use request_builder::{EncodeResult, RequestBuilder, RequestMetadata};
 
 use thiserror::Error;
 

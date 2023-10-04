@@ -14,7 +14,7 @@ use crate::batch::{
 /// pipeline. In particular, only the latest in a series of metrics are
 /// output, and incremental metrics are summed into the output buffer.
 /// Any conversion of metrics is handled by the normalization type
-/// `N: MetricNormalize`. Further, distibution metrics have their samples
+/// `N: MetricNormalize`. Further, distribution metrics have their samples
 /// compressed with `compress_distribution` below.
 pub struct MetricsBuffer {
     metrics: Option<MetricSet>,

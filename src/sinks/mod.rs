@@ -6,6 +6,8 @@ mod clickhouse;
 mod console;
 #[cfg(feature = "sinks-elasticsearch")]
 mod elasticsearch;
+#[cfg(feature = "sinks-influxdb")]
+mod influxdb;
 #[cfg(feature = "sinks-jaeger")]
 mod jaeger;
 #[cfg(any(feature = "sinks-kafka", feature = "rskafka"))]

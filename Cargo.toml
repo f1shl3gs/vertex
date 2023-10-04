@@ -242,16 +242,16 @@ transforms = [
 ]
 
 # Sinks
+sinks-blackhole = []
+sinks-clickhouse = []
 sinks-console = []
+sinks-elasticsearch = []
+sinks-influxdb = ["dep:ieee754"]
+sinks-jaeger = ["dep:jaeger"]
+sinks-kafka = ["dep:rskafka"]
+sinks-loki = ["dep:snap", "dep:buffers"]
 sinks-prometheus_exporter = ["dep:flate2"]
 sinks-prometheus_remote_write = ["dep:snap"]
-sinks-blackhole = []
-sinks-kafka = ["dep:rskafka"]
-sinks-jaeger = ["dep:jaeger"]
-sinks-elasticsearch = []
-sinks-loki = ["dep:snap", "dep:buffers"]
-sinks-vertex = []
-sinks-clickhouse = []
 sinks-socket = []
 
 sinks = [
@@ -259,13 +259,13 @@ sinks = [
     "sinks-clickhouse",
     "sinks-console",
     "sinks-elasticsearch",
+    "sinks-influxdb",
     "sinks-jaeger",
     "sinks-kafka",
     "sinks-loki",
     "sinks-prometheus_exporter",
     "sinks-prometheus_remote_write",
     "sinks-socket",
-    "sinks-vertex",
 ]
 
 # Common
@@ -328,6 +328,7 @@ configurable = { path = "lib/configurable" }
 event = { path = "lib/event" }
 framework = { path = "lib/framework" }
 humanize = { git = "https://github.com/f1shl3gs/humanize", default-features = false, features = ["bytes", "serde"], rev = "bf61d1d7a8cf282ce95017e98bb0b29c4dd0d98a" }
+ieee754 = { path = "lib/ieee754", optional = true }
 jaeger = { path = "lib/jaeger", optional = true }
 log_schema = { path = "lib/log_schema" }
 lookup = { path = "lib/lookup" }

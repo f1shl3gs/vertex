@@ -4,6 +4,37 @@ use bytes::Bytes;
 
 use super::{Compression, Compressor, Encoder};
 
+/// Metadata for batch requests.
+pub struct RequestMetadata {
+    /// Number of events represented by this batch request.
+    pub event_count: usize,
+    /// Size, in bytes, of the in-memory representation of all events in this batch request.
+    pub events_bytes: usize,
+    /// Uncompressed size, in bytes, of the encoded events in this batch request.
+    pub request_encoded_size: usize,
+    /// On-the-wire size, in bytes, of the batch request itself after compression, etc.
+    ///
+    /// This is akin to the bytes sent/received over the network, regardless of whether or not
+    /// compression was used.
+    pub request_wire_size: usize,
+}
+
+impl RequestMetadata {
+    pub fn new(
+        event_count: usize,
+        events_bytes: usize,
+        request_encoded_size: usize,
+        request_wire_size: usize,
+    ) -> Self {
+        Self {
+            event_count,
+            events_bytes,
+            request_encoded_size,
+            request_wire_size,
+        }
+    }
+}
+
 pub struct EncodeResult<P> {
     pub payload: P,
     pub uncompressed_byte_size: usize,
