@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696428067669,
+  "lastUpdate": 1696428116304,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -25428,50 +25428,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "841086f494f3e5ab2c61df37caaa61b525f6017a",
-          "message": "chore(deps): bump dashmap from 5.5.2 to 5.5.3 (#1208)\n\nBumps [dashmap](https://github.com/xacrimon/dashmap) from 5.5.2 to 5.5.3.\r\n- [Release notes](https://github.com/xacrimon/dashmap/releases)\r\n- [Commits](https://github.com/xacrimon/dashmap/compare/v5.5.2...v.5.5.3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: dashmap\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-31T00:59:06+08:00",
-          "tree_id": "8793b7648d9292123f0d3eb2284e2f7ce5fd780f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/841086f494f3e5ab2c61df37caaa61b525f6017a"
-        },
-        "date": 1693415021840,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "tags/insert/1",
-            "value": 73.179,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/5",
-            "value": 220.71,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/10",
-            "value": 534.27,
-            "unit": "ns/op"
-          },
-          {
-            "name": "tags/insert/20",
-            "value": 1502.9,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "aadbae7cff57918c3a8d7d891f119afa84011330",
           "message": "chore(deps): bump memchr from 2.6.1 to 2.6.2 (#1209)\n\nBumps [memchr](https://github.com/BurntSushi/memchr) from 2.6.1 to 2.6.2.\r\n- [Commits](https://github.com/BurntSushi/memchr/compare/2.6.1...2.6.2)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: memchr\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-08-31T01:28:40+08:00",
@@ -29811,6 +29767,50 @@ window.BENCHMARK_DATA = {
           {
             "name": "tags/insert/20",
             "value": 1155.6,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "af09841d762c8f4fa07812973efe5d98947fef38",
+          "message": "Sinks/influxdb: org should not be a template value (#1323)\n\n* org should not be a `Template`",
+          "timestamp": "2023-10-04T21:57:46+08:00",
+          "tree_id": "02eb48393ed2669598c7f8046d709d4ccd0fc109",
+          "url": "https://github.com/f1shl3gs/vertex/commit/af09841d762c8f4fa07812973efe5d98947fef38"
+        },
+        "date": 1696428098125,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "tags/insert/1",
+            "value": 53.187,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/5",
+            "value": 164.29,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/10",
+            "value": 403.38,
+            "unit": "ns/op"
+          },
+          {
+            "name": "tags/insert/20",
+            "value": 1145.1,
             "unit": "ns/op"
           }
         ]
