@@ -1,15 +1,14 @@
-use bytes::Bytes;
 use std::collections::HashMap;
 use std::io::Write;
 
-use crate::sinks::loki::sanitize::sanitize_label_value;
+use bytes::Bytes;
 use event::{EventFinalizers, Finalizable};
 use framework::sink::util::encoding::Encoder;
 use measurable::ByteSizeOf;
 use prost::Message;
 use serde::{ser::SerializeSeq, Serialize, Serializer};
 
-use super::sanitize::sanitize_label_key;
+use super::sanitize::{sanitize_label_key, sanitize_label_value};
 
 pub type Labels = Vec<(String, String)>;
 

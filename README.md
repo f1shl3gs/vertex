@@ -83,6 +83,7 @@ the downstream service it interacts with.
 | console                 | Print data to stdout or stderr           | &check; | &check; | &check; |
 | jaeger                  | Send traces to jaeger agent or collector | &cross; | &cross; | &check; |
 | kafka                   | Send events to kafka                     | &cross; | &check; | &cross; |
+| influxdb                | Deliver metrics to InfluxDB v2.x         | &check; | &cross; | &cross; |
 | loki                    | Send logs to Loki                        | &cross; | &check; | &cross; |
 | prometheus_exporter     | Start a HTTP server and expose metrics   | &check; | &cross; | &cross; |
 | prometheus_remote_write | Push metrics to Prometheus               | &check; | &cross; | &cross; |

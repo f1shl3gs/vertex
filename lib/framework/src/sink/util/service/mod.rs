@@ -48,6 +48,7 @@ pub struct RequestConfig {
     #[serde(default)]
     #[serde(skip_serializing_if = "concurrency_is_none")]
     pub concurrency: Concurrency,
+
     /// The time a request can take before being aborted.
     ///
     /// It is highly recommended that you do not lower this value below the service’s

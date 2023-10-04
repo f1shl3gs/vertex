@@ -1,9 +1,45 @@
-use std::io;
+use std::io::{self, Write};
 
 use bytes::BytesMut;
 use codecs::encoding::{Framer, Transformer};
 use event::Event;
 use tokio_util::codec::Encoder as _;
+
+/// TrackWriter is a thin wrapper to track written bytes.
+pub struct TrackWriter<W> {
+    writer: W,
+    written: usize,
+}
+
+impl<W> TrackWriter<W>
+where
+    W: Write,
+{
+    pub fn new(writer: W) -> Self {
+        Self { writer, written: 0 }
+    }
+
+    #[inline]
+    pub fn written(&self) -> usize {
+        self.written
+    }
+}
+
+impl<W> Write for TrackWriter<W>
+where
+    W: Write,
+{
+    fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
+        #[allow(clippy::disallowed_methods)]
+        let n = self.writer.write(buf)?;
+        self.written += n;
+        Ok(n)
+    }
+
+    fn flush(&mut self) -> std::io::Result<()> {
+        self.writer.flush()
+    }
+}
 
 pub trait Encoder<T> {
     /// Encodes the input into the provided writer.
