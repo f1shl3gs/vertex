@@ -240,7 +240,7 @@ fn handle(
                             } => {
                                 for b in buckets {
                                     let mut tags = metric.tags().clone();
-                                    if b.upper.is_infinite() {
+                                    if b.upper == f64::MAX {
                                         tags.insert("le".to_string(), "+Inf");
                                     } else {
                                         tags.insert("le".to_string(), b.upper.to_string());

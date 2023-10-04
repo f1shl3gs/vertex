@@ -51,7 +51,7 @@ impl Encoder<Vec<Metric>> for LineProtocolEncoder {
                             writer.write_all(&[b','])?;
                         }
 
-                        if bucket.upper.is_infinite() {
+                        if bucket.upper == f64::MAX {
                             write!(writer, "+Inf={}", bucket.count)?;
                         } else {
                             write!(writer, "{}={}", bucket.upper, bucket.count)?;
