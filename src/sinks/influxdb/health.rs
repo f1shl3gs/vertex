@@ -39,18 +39,3 @@ pub async fn healthcheck(client: HttpClient, endpoint: String, token: String) ->
         status => Err(HealthcheckError::UnexpectedStatus(status).into()),
     }
 }
-
-#[cfg(test)]
-mod tests {
-    use framework::config::ProxyConfig;
-
-    use super::*;
-
-    #[tokio::test]
-    async fn health_check() {
-        let endpoint = "http://localhost:8086".to_string();
-        let token = "5rGWQ9YT5mD2FqKP4-WcOfLS232LWj8OWwc9dCH0Jy6QRu9ckjj3eL4S5Mwjzd5ZI4Z82SCnpKI-XKI9KoF1gw==".to_string();
-        let client = HttpClient::new(&None, &ProxyConfig::default()).unwrap();
-        healthcheck(client, endpoint, token).await.unwrap();
-    }
-}
