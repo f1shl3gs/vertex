@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696413568150,
+  "lastUpdate": 1696413573655,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "f32fbed75873058e765e17a2ef276d947d6aa217",
-          "message": "chore(deps): bump headers from 0.3.8 to 0.3.9 (#1212)\n\nBumps [headers](https://github.com/hyperium/headers) from 0.3.8 to 0.3.9.\r\n- [Commits](https://github.com/hyperium/headers/compare/headers-v0.3.8...headers-v0.3.9)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: headers\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-01T13:51:01+08:00",
-          "tree_id": "a87b3a81893d69addd9aea8846cc0d7eeffd7e3b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f32fbed75873058e765e17a2ef276d947d6aa217"
-        },
-        "date": 1693548862872,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1265,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44624.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "0759acb34d42bd35fd9c291042349f7eeaf538ce",
           "message": "chore(deps): bump prost-build from 0.11.9 to 0.12.0 (#1214)\n\nBumps [prost-build](https://github.com/tokio-rs/prost) from 0.11.9 to 0.12.0.\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.11.9...v0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-02T01:14:54+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 978,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42402.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fdc07a5c4616f8535ccc9b234d8c8a8749c6714b",
+          "message": "sinks/prometheus: fix infinite bucket value (#1320)",
+          "timestamp": "2023-10-04T17:35:52+08:00",
+          "tree_id": "94eb725b3980cf8964fd0a8cede38cecdbc03975",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fdc07a5c4616f8535ccc9b234d8c8a8749c6714b"
+        },
+        "date": 1696413552211,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1217,
             "unit": "s"
           },
           {
