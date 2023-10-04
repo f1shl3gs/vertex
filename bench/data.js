@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696418880493,
+  "lastUpdate": 1696418909697,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "cabf478f50f1bef23a24eb42319288eb44aaed23",
-          "message": "chore(deps): bump chrono from 0.4.26 to 0.4.27 (#1205)\n\n* chore(deps): bump chrono from 0.4.26 to 0.4.27\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.26 to 0.4.27.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.26...v0.4.27)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* Fix deprecated chrono method\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-08-30T13:11:52+08:00",
-          "tree_id": "c76bd79d9e021c127147c289e5375d50c945a31f",
-          "url": "https://github.com/f1shl3gs/vertex/commit/cabf478f50f1bef23a24eb42319288eb44aaed23"
-        },
-        "date": 1693372617574,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 29.996,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.552,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.028,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 50.074,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 63.606,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 58.188,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94d2b352b540a161953cdd2d319ae9a8459cdadf",
+          "message": "fix histogram le value (#1321)",
+          "timestamp": "2023-10-04T19:24:03+08:00",
+          "tree_id": "10ecef8eed913d75200037bab31e54e55645c5c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94d2b352b540a161953cdd2d319ae9a8459cdadf"
+        },
+        "date": 1696418891207,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 27.782,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.942,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 27.002,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 154.76,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 57.673,
             "unit": "ns/op"
           }
         ]
