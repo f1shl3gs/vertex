@@ -3,7 +3,6 @@ use event::{EventFinalizers, Finalizable, Metric};
 use framework::partition::Partitioner;
 use framework::sink::util::{Compression, EncodeResult, RequestBuilder};
 use framework::template::Template;
-use measurable::ByteSizeOf;
 
 use super::encoder::LineProtocolEncoder;
 use super::service::InfluxdbRequest;
@@ -52,7 +51,7 @@ impl InfluxdbRequestBuilder {
 }
 
 impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
-    type Metadata = (PartitionKey, EventFinalizers, usize, usize);
+    type Metadata = (PartitionKey, EventFinalizers, usize);
     type Events = Vec<Metric>;
     type Encoder = LineProtocolEncoder;
     type Payload = Bytes;
@@ -70,10 +69,7 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
     fn split_input(&self, input: (PartitionKey, Vec<Metric>)) -> (Self::Metadata, Self::Events) {
         let (partition_key, mut metrics) = input;
         let finalizers = metrics.take_finalizers();
-        (
-            (partition_key, finalizers, metrics.len(), metrics.size_of()),
-            metrics,
-        )
+        ((partition_key, finalizers, metrics.len()), metrics)
     }
 
     fn build_request(
@@ -81,7 +77,7 @@ impl RequestBuilder<(PartitionKey, Vec<Metric>)> for InfluxdbRequestBuilder {
         metadata: Self::Metadata,
         payload: EncodeResult<Self::Payload>,
     ) -> Self::Request {
-        let (pk, finalizers, batch_size, _) = metadata;
+        let (pk, finalizers, batch_size) = metadata;
 
         InfluxdbRequest {
             bucket: pk.bucket,
