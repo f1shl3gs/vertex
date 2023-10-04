@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696418985923,
+  "lastUpdate": 1696419839876,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "e4b7ddc76f27d440a3e330e4c8fb7eabb3ee244a",
-          "message": "Bump tonic and prost (#1219)",
-          "timestamp": "2023-09-02T05:20:01+08:00",
-          "tree_id": "9cf1f74f117c51eb9d5bd964b6ccea42c75aefbb",
-          "url": "https://github.com/f1shl3gs/vertex/commit/e4b7ddc76f27d440a3e330e4c8fb7eabb3ee244a"
-        },
-        "date": 1693604344335,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1015,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44649.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d5a22ad7f379be72cdf4a4ed40db1fdae4743f53",
           "message": "add `prost-derive` to fix prometheus bench (#1220)",
           "timestamp": "2023-09-02T06:33:46+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 1355,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42726.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "94d2b352b540a161953cdd2d319ae9a8459cdadf",
+          "message": "fix histogram le value (#1321)",
+          "timestamp": "2023-10-04T19:24:03+08:00",
+          "tree_id": "10ecef8eed913d75200037bab31e54e55645c5c5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/94d2b352b540a161953cdd2d319ae9a8459cdadf"
+        },
+        "date": 1696419821177,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1020,
             "unit": "s"
           },
           {
