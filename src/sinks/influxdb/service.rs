@@ -16,7 +16,6 @@ use tracing::Instrument;
 
 #[derive(Clone)]
 pub struct InfluxdbRequest {
-    pub org: String,
     pub bucket: String,
     pub compression: Compression,
     pub finalizers: EventFinalizers,
@@ -67,6 +66,7 @@ impl DriverResponse for InfluxdbResponse {
 pub struct InfluxdbService {
     client: HttpClient,
     endpoint: Uri,
+    org: String,
     token: String,
 }
 
@@ -81,7 +81,7 @@ impl Service<InfluxdbRequest> for InfluxdbService {
 
     fn call(&mut self, req: InfluxdbRequest) -> Self::Future {
         let mut client = self.client.clone();
-        let uri = format!("{}?org={}&bucket={}", self.endpoint, req.org, req.bucket);
+        let uri = format!("{}?org={}&bucket={}", self.endpoint, self.org, req.bucket);
         let token = self.token.clone();
 
         Box::pin(async move {
@@ -112,10 +112,11 @@ impl Service<InfluxdbRequest> for InfluxdbService {
 }
 
 impl InfluxdbService {
-    pub fn new(client: HttpClient, endpoint: Uri, token: String) -> Self {
+    pub fn new(client: HttpClient, endpoint: Uri, org: String, token: String) -> Self {
         Self {
             client,
             endpoint,
+            org,
             token,
         }
     }
