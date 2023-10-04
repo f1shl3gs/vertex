@@ -240,7 +240,12 @@ fn handle(
                             } => {
                                 for b in buckets {
                                     let mut tags = metric.tags().clone();
-                                    tags.insert("le".to_string(), b.upper.to_string());
+                                    if b.upper.is_infinite() {
+                                        tags.insert("le".to_string(), "+Inf");
+                                    } else {
+                                        tags.insert("le".to_string(), b.upper.to_string());
+                                    }
+
                                     write_metric!(buf, metric.name(), tags, b.count);
                                 }
 
