@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696354708663,
+  "lastUpdate": 1696386972958,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "7b403e5defb6dcc52dad0c27363599c2bb0b438a",
-          "message": "chore(deps): bump rustls from 0.21.6 to 0.21.7 (#1203)\n\nBumps [rustls](https://github.com/rustls/rustls) from 0.21.6 to 0.21.7.\r\n- [Release notes](https://github.com/rustls/rustls/releases)\r\n- [Commits](https://github.com/rustls/rustls/compare/v/0.21.6...v/0.21.7)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustls\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-08-29T22:27:38+08:00",
-          "tree_id": "23f2c59ba7f9d6678e6bfabcd163ad23e39dd68b",
-          "url": "https://github.com/f1shl3gs/vertex/commit/7b403e5defb6dcc52dad0c27363599c2bb0b438a"
-        },
-        "date": 1693319453162,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 84.57,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 200.25,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 341.77,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 328.44,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "129afc30cfa2c0a611c063a8335d36f3b7088a02",
+          "message": "chore(ci): bump styfle/cancel-workflow-action from 0.11.0 to 0.12.0 (#1317)\n\nBumps [styfle/cancel-workflow-action](https://github.com/styfle/cancel-workflow-action) from 0.11.0 to 0.12.0.\r\n- [Release notes](https://github.com/styfle/cancel-workflow-action/releases)\r\n- [Commits](https://github.com/styfle/cancel-workflow-action/compare/0.11.0...0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: styfle/cancel-workflow-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-04T10:32:49+08:00",
+          "tree_id": "6ce1851ea37c835d3076ec5bd5575c6284bc6f2d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/129afc30cfa2c0a611c063a8335d36f3b7088a02"
+        },
+        "date": 1696386954534,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 85.129,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 196.84,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 332.41,
             "unit": "ns/op"
           }
         ]
