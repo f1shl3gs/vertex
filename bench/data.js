@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696390308646,
+  "lastUpdate": 1696391144618,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "941703debffa63e1f1d1248b5ac102cad023daf1",
-          "message": "Remove unnecessary `PartialEq` (#1211)",
-          "timestamp": "2023-08-31T23:57:40+08:00",
-          "tree_id": "fb0a96fc53950da1a475e8564b3c196332d38b91",
-          "url": "https://github.com/f1shl3gs/vertex/commit/941703debffa63e1f1d1248b5ac102cad023daf1"
-        },
-        "date": 1693498668798,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1076,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44650.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42386.3,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "59c6fa5e068a1fdaa01cb6df5273335ee23086d0",
+          "message": "chore(deps): bump lru from 0.11.1 to 0.12.0 (#1318)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.11.1 to 0.12.0.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.11.1...0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-04T11:26:23+08:00",
+          "tree_id": "15a0eaf85a19643276e9019f427938fadc2fab0f",
+          "url": "https://github.com/f1shl3gs/vertex/commit/59c6fa5e068a1fdaa01cb6df5273335ee23086d0"
+        },
+        "date": 1696391126316,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 978,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42402.1,
             "unit": "KiB"
           }
         ]
