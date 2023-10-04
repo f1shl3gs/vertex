@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696414566963,
+  "lastUpdate": 1696414774022,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "0759acb34d42bd35fd9c291042349f7eeaf538ce",
-          "message": "chore(deps): bump prost-build from 0.11.9 to 0.12.0 (#1214)\n\nBumps [prost-build](https://github.com/tokio-rs/prost) from 0.11.9 to 0.12.0.\r\n- [Release notes](https://github.com/tokio-rs/prost/releases)\r\n- [Commits](https://github.com/tokio-rs/prost/compare/v0.11.9...v0.12.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: prost-build\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-02T01:14:54+08:00",
-          "tree_id": "784bc5a5fb094d1f626ee7681844a24a1a3b7207",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0759acb34d42bd35fd9c291042349f7eeaf538ce"
-        },
-        "date": 1693590203080,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1524,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44646.8,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42402.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "3e9146bb6bea446824f12398ddef9a1fee07a7b7",
+          "message": "add influxdb sink (#1319)\n\n* add influxdb sink\r\n\r\n* remove demo health test",
+          "timestamp": "2023-10-04T17:53:15+08:00",
+          "tree_id": "8f6a790afffbbb2dcc17e6ef9e59450cf47b18e6",
+          "url": "https://github.com/f1shl3gs/vertex/commit/3e9146bb6bea446824f12398ddef9a1fee07a7b7"
+        },
+        "date": 1696414749756,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1355,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42726.6,
             "unit": "KiB"
           }
         ]
