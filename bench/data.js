@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696391327995,
+  "lastUpdate": 1696412360094,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -2905,45 +2905,6 @@ window.BENCHMARK_DATA = {
       }
     ],
     "metrics": [
-      {
-        "commit": {
-          "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "9149d2f1d7bf7c82d8be71552fd9323a4f4028a9",
-          "message": "CI: decrease points in bench charts (#1204)\n\n* set `max-items-in-chart` to 100",
-          "timestamp": "2023-08-29T23:50:12+08:00",
-          "tree_id": "e7f2275126be7354fecaa89f33072920c4bd2994",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9149d2f1d7bf7c82d8be71552fd9323a4f4028a9"
-        },
-        "date": 1693324422176,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "metrics/without_labels",
-            "value": 100.2,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_2_labels",
-            "value": 228.99,
-            "unit": "ns/op"
-          },
-          {
-            "name": "metrics/with_4_labels",
-            "value": 360.42,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -6801,6 +6762,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "metrics/with_4_labels",
             "value": 330.31,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "fdc07a5c4616f8535ccc9b234d8c8a8749c6714b",
+          "message": "sinks/prometheus: fix infinite bucket value (#1320)",
+          "timestamp": "2023-10-04T17:35:52+08:00",
+          "tree_id": "94eb725b3980cf8964fd0a8cede38cecdbc03975",
+          "url": "https://github.com/f1shl3gs/vertex/commit/fdc07a5c4616f8535ccc9b234d8c8a8749c6714b"
+        },
+        "date": 1696412342143,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "metrics/without_labels",
+            "value": 85.05,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_2_labels",
+            "value": 196.69,
+            "unit": "ns/op"
+          },
+          {
+            "name": "metrics/with_4_labels",
+            "value": 329.3,
             "unit": "ns/op"
           }
         ]
