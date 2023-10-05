@@ -21,8 +21,6 @@ use vertex::extensions::heartbeat;
 
 use crate::{top, validate};
 
-const DEFAULT_BLOCKING_THREAD_KEEPALIVE: u64 = 30;
-
 #[derive(FromArgs)]
 #[argh(description = "Vertex is an all-in-one collector for metrics, logs and traces")]
 pub struct RootCommand {
@@ -57,15 +55,24 @@ pub struct RootCommand {
     #[argh(
         option,
         short = 't',
+        default = "framework::num_workers()",
         description = "specify how many threads the Tokio runtime will use"
     )]
-    pub threads: Option<usize>,
+    pub threads: usize,
 
     #[argh(
         option,
+        default = "20",
         description = "specify keepalive of blocking threads, in seconds"
     )]
-    pub blocking_thread_keepalive: Option<u64>,
+    pub blocking_thread_keepalive: u64,
+
+    #[argh(
+        option,
+        default = "512",
+        description = "specifies the limit for additional blocking threads spawned by the Runtime"
+    )]
+    pub max_blocking_threads: usize,
 
     #[argh(subcommand)]
     pub sub_commands: Option<SubCommands>,
@@ -99,22 +106,17 @@ impl RootCommand {
         let config_paths = self.config_paths_with_formats();
         #[cfg(all(unix, not(target_os = "macos")))]
         let watch_config = self.watch;
-        let threads = match self.threads {
-            Some(threads) => {
-                framework::set_workers(threads);
-                threads
-            }
-            None => framework::num_workers(),
-        };
+
+        // set workers, so other component can read this
+        framework::set_workers(self.threads);
+
         let runtime = tokio::runtime::Builder::new_multi_thread()
-            .worker_threads(threads)
+            .thread_name("vertex-worker")
+            .worker_threads(self.threads)
+            .max_blocking_threads(self.max_blocking_threads)
             // default interval of sources is 15s, 30s should reduce some overhead for
             // create/destroy threads.
-            .thread_keep_alive(Duration::from_secs(
-                self.blocking_thread_keepalive
-                    .unwrap_or(DEFAULT_BLOCKING_THREAD_KEEPALIVE),
-            ))
-            .thread_name("vertex-worker")
+            .thread_keep_alive(Duration::from_secs(self.blocking_thread_keepalive))
             .enable_io()
             .enable_time()
             .build()
@@ -164,7 +166,8 @@ impl RootCommand {
 
             info!(
                 message = "Start vertex",
-                threads = threads,
+                threads = self.threads,
+                max_blocking_threads = self.max_blocking_threads,
                 configs = ?config_paths
             );
 
