@@ -195,7 +195,7 @@ pub fn sub_registry(key: impl Into<&'static str>) -> Arc<SubRegistry> {
         .get_or_init(|| Mutex::new(BTreeMap::new()))
         .lock()
         .entry(key)
-        .or_insert_with(Registry::default)
+        .or_default()
         .clone();
 
     Arc::new(SubRegistry { key, registry })

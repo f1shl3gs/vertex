@@ -777,10 +777,7 @@ impl Stats {
                     // Slab stats
                     let slab = match self.slabs.get_mut(subs[0]) {
                         Some(slab) => slab,
-                        None => self
-                            .slabs
-                            .entry(subs[0].to_string())
-                            .or_insert(Default::default()),
+                        None => self.slabs.entry(subs[0].to_string()).or_default(),
                     };
 
                     slab.insert(subs[1].to_string(), v);

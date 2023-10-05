@@ -266,7 +266,7 @@ impl GroupKind {
 }
 
 fn matching_group<T: Default>(values: &mut MetricMap<T>, group: GroupKey) -> &mut T {
-    values.entry(group).or_insert_with(T::default)
+    values.entry(group).or_default()
 }
 
 fn try_f64_to_u32(f: f64) -> Result<u32, Error> {

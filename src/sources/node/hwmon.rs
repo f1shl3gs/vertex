@@ -61,11 +61,12 @@ async fn hwmon_metrics(dir: &str) -> Result<Vec<Metric>, Error> {
 
     let data = {
         let result = collect_sensor_data(dir).await;
-        if result.is_ok() {
-            result.unwrap()
-        } else {
-            let path = format!("{}/device", dir);
-            collect_sensor_data(&path).await?
+        match result {
+            Ok(r) => r,
+            Err(_err) => {
+                let path = format!("{}/device", dir);
+                collect_sensor_data(&path).await?
+            }
         }
     };
 
