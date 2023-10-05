@@ -160,7 +160,7 @@ impl FileSystemConfig {
                 .find(|&flag| flag == "ro")
                 .map_or(0u64, |_| 1u64);
 
-            match statfs(&mount_point).await {
+            match statfs(&mount_point) {
                 Ok(usage) => {
                     stats.push(Stat {
                         device,
@@ -178,13 +178,12 @@ impl FileSystemConfig {
                 }
 
                 Err(err) => {
-                    warn!(
+                    debug!(
                         message = "read mount point usage failed",
                         %err,
                         %mount_point,
                     );
 
-                    // let mount_point = mount_point.clone();
                     stats.push(Stat {
                         device,
                         fs_type,
@@ -206,7 +205,7 @@ impl FileSystemConfig {
     }
 }
 
-async fn statfs(path: &str) -> Result<Usage, std::io::Error> {
+fn statfs(path: &str) -> Result<Usage, std::io::Error> {
     let path =
         CString::new(path).map_err(|_| std::io::Error::from(std::io::ErrorKind::InvalidInput))?;
 
@@ -217,7 +216,6 @@ async fn statfs(path: &str) -> Result<Usage, std::io::Error> {
         let vfs = unsafe { vfs.assume_init() };
         Ok(Usage(vfs))
     } else {
-        // Err(std::error::Error::last_os_error().with_ffi("statvfs"))
         Err(std::io::Error::last_os_error())
     }
 }
