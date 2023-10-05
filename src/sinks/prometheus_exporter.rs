@@ -103,7 +103,7 @@ impl Eq for ExpiringEntry {}
 
 impl PartialOrd<Self> for ExpiringEntry {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        self.series.partial_cmp(&other.series)
+        Some(self.cmp(other))
     }
 }
 

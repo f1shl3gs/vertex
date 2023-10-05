@@ -41,10 +41,7 @@ impl KeyedRateLimiter {
     pub fn check(&mut self, key: &str) -> bool {
         let state = match self.states.get_mut(key) {
             Some(state) => state,
-            None => self
-                .states
-                .entry(key.to_string())
-                .or_insert_with(GcraState::default),
+            None => self.states.entry(key.to_string()).or_default(),
         };
 
         state.check_and_modify(&self.quota, 1).is_ok()

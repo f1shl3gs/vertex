@@ -617,7 +617,7 @@ mod tests {
             .fold(
                 HashMap::default(),
                 |mut acc: HashMap<u8, Vec<u64>>, (key, item)| {
-                    let arr: &mut Vec<u64> = acc.entry(key).or_insert_with(Vec::default);
+                    let arr: &mut Vec<u64> = acc.entry(key).or_default();
                     arr.push(item);
                     acc
                 },

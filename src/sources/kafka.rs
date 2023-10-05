@@ -383,9 +383,10 @@ async fn run(
 
                 if let Err(err) = hc.heartbeat().await {
                     match err {
-                        rskafka::client::error::Error::ServerError { protocol_error, .. }
-                            if protocol_error == ProtocolError::RebalanceInProgress =>
-                        {
+                        rskafka::client::error::Error::ServerError {
+                            protocol_error: ProtocolError::RebalanceInProgress,
+                            ..
+                        } => {
                             info!(message = "rebalancing triggered");
                             break;
                         }
