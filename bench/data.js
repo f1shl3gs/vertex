@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696525943065,
+  "lastUpdate": 1696525993219,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "941703debffa63e1f1d1248b5ac102cad023daf1",
-          "message": "Remove unnecessary `PartialEq` (#1211)",
-          "timestamp": "2023-08-31T23:57:40+08:00",
-          "tree_id": "fb0a96fc53950da1a475e8564b3c196332d38b91",
-          "url": "https://github.com/f1shl3gs/vertex/commit/941703debffa63e1f1d1248b5ac102cad023daf1"
-        },
-        "date": 1693497737307,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.871,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.444,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 28.022,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 44.349,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 60.831,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 52.625,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "33793c10648b5dfeb5c029247288b7214d67ce0b",
+          "message": "bump to rust 1.73.0 (#1326)",
+          "timestamp": "2023-10-06T01:08:18+08:00",
+          "tree_id": "6eb32ce1a6e5084d8b6298321c160f24de44dd52",
+          "url": "https://github.com/f1shl3gs/vertex/commit/33793c10648b5dfeb5c029247288b7214d67ce0b"
+        },
+        "date": 1696525970959,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.564,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 31.267,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 30.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 176.2,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 66.047,
             "unit": "ns/op"
           }
         ]
