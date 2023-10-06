@@ -26,10 +26,10 @@ pub struct RngGenerator;
 impl IdGenerator for RngGenerator {
     /// Generate new `TraceId` using thread local rng
     fn new_trace_id(&self) -> TraceId {
-        CURRENT_RNG.with(|rng| TraceId::from_bytes(rng.borrow_mut().gen::<[u8; 16]>()))
+        CURRENT_RNG.with_borrow_mut(|rng| TraceId::from_bytes(rng.gen::<[u8; 16]>()))
     }
 
     fn new_span_id(&self) -> SpanId {
-        CURRENT_RNG.with(|rng| SpanId::from_bytes(rng.borrow_mut().gen::<[u8; 8]>()))
+        CURRENT_RNG.with_borrow_mut(|rng| SpanId::from_bytes(rng.gen::<[u8; 8]>()))
     }
 }

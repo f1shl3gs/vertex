@@ -147,9 +147,7 @@ impl Context {
     /// Dropping the returned [`ContextGuard`] will reset the current
     /// context to the previous value.
     pub fn attach(self) -> ContextGuard {
-        let previous_cx = CURRENT_CONTEXT
-            .try_with(|current| current.replace(self))
-            .ok();
+        let previous_cx = Some(CURRENT_CONTEXT.replace(self));
 
         ContextGuard {
             previous_cx,
@@ -179,15 +177,13 @@ pub struct ContextGuard {
 impl Drop for ContextGuard {
     fn drop(&mut self) {
         if let Some(previous_cx) = self.previous_cx.take() {
-            let _ = CURRENT_CONTEXT.try_with(|current| current.replace(previous_cx));
+            CURRENT_CONTEXT.replace(previous_cx);
         }
     }
 }
 
 fn get_current<F: FnMut(&Context) -> T, T>(mut f: F) -> T {
-    CURRENT_CONTEXT
-        .try_with(|cx| f(&cx.borrow()))
-        .unwrap_or_else(|_| DEFAULT_CONTEXT.with(|cx| f(cx)))
+    CURRENT_CONTEXT.with_borrow(|cx| f(cx))
 }
 
 /// A reference to the currently active span in this context.
