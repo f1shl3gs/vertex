@@ -5,19 +5,19 @@ thread_local! {
 }
 
 pub fn contains_name(name: &str) -> bool {
-    EVENTS_RECORDED.with(|events| events.borrow().iter().any(|event| event.ends_with(name)))
+    EVENTS_RECORDED.with_borrow(|events| events.iter().any(|event| event.ends_with(name)))
 }
 
 pub fn clear_recorded_events() {
-    EVENTS_RECORDED.with(|events| events.borrow_mut().clear())
+    EVENTS_RECORDED.with_borrow_mut(|events| events.clear())
 }
 
 #[allow(clippy::print_stdout)]
 pub fn debug_print_events() {
-    EVENTS_RECORDED.with(|events| {
-        for event in events.borrow().iter() {
+    EVENTS_RECORDED.with_borrow(|events| {
+        events.iter().for_each(|event| {
             println!("{}", event);
-        }
+        })
     })
 }
 
@@ -33,7 +33,10 @@ pub fn record_internal_event(event: &str) {
     // Remove trailing '{fields}'
     let event = event.strip_prefix('&').unwrap_or(event);
     let event = event.find('{').map_or(event, |par| &event[..par]);
-    EVENTS_RECORDED.with(|events| events.borrow_mut().insert(event.into()));
+
+    EVENTS_RECORDED.with_borrow_mut(|events| {
+        events.insert(event.into());
+    })
 }
 
 #[macro_export]

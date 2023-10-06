@@ -2,7 +2,7 @@ use std::cell::RefCell;
 use std::time::Duration;
 
 thread_local! {
-    pub static TIME: RefCell<Duration> = RefCell::new(Duration::default());
+    static TIME: RefCell<Duration> = RefCell::new(Duration::default());
 }
 
 pub struct MockClock;
@@ -10,14 +10,11 @@ pub struct MockClock;
 impl MockClock {
     /// Advance the internal Instant clock by this 'Duration'
     pub fn advance(time: Duration) {
-        TIME.with(|t| {
-            let t = &mut *t.borrow_mut();
-            *t += time;
-        })
+        TIME.with_borrow_mut(|t| *t += time)
     }
 
     fn get_time() -> Duration {
-        TIME.with(|t| *t.borrow())
+        TIME.with_borrow(|t| *t)
     }
 }
 
@@ -26,7 +23,7 @@ pub struct Instant(Duration);
 
 impl Instant {
     pub fn now() -> Self {
-        Self(TIME.with(|t| *t.borrow()))
+        Self(MockClock::get_time())
     }
 
     pub fn elapsed(&self) -> Duration {
