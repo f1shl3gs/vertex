@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696680384363,
+  "lastUpdate": 1696681175884,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d442f0b404917ea0cadfd09bc2152945d7924205",
-          "message": "chore(deps): bump chrono from 0.4.28 to 0.4.29 (#1233)\n\n* chore(deps): bump chrono from 0.4.28 to 0.4.29\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.28 to 0.4.29.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.28...v0.4.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecate warnings\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-09-06T20:50:55+08:00",
-          "tree_id": "ce444298af95e00cc18dabc0b54a8854ffabfb04",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d442f0b404917ea0cadfd09bc2152945d7924205"
-        },
-        "date": 1694005940943,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1142,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44776.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "8f3817b86964e41adee5abc39de1815c7323318b",
           "message": "chore(deps): bump lru from 0.11.0 to 0.11.1 (#1234)\n\nBumps [lru](https://github.com/jeromefroe/lru-rs) from 0.11.0 to 0.11.1.\r\n- [Changelog](https://github.com/jeromefroe/lru-rs/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/jeromefroe/lru-rs/compare/0.11.0...0.11.1)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: lru\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-06T22:51:21+08:00",
@@ -21502,6 +21468,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Baseline",
             "value": 903,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42586.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37285f661cf4ee47435a40fe0337946f373f3908",
+          "message": "fix vertex name (#1334)",
+          "timestamp": "2023-10-07T20:01:19+08:00",
+          "tree_id": "3dacf44c678fe7f109ac484aebd431157387320e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37285f661cf4ee47435a40fe0337946f373f3908"
+        },
+        "date": 1696681157702,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 946,
             "unit": "s"
           },
           {
