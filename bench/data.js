@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696679125337,
+  "lastUpdate": 1696679857690,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2859b4de038ec0a7d55126b4e25fae2e2e384f5b",
-          "message": "chore(ci): bump actions/checkout from 3 to 4 (#1232)\n\nBumps [actions/checkout](https://github.com/actions/checkout) from 3 to 4.\r\n- [Release notes](https://github.com/actions/checkout/releases)\r\n- [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/actions/checkout/compare/v3...v4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: actions/checkout\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-05T15:05:38+08:00",
-          "tree_id": "ef264db51359e0a882bb44a4fb4a64defc0ecd1e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2859b4de038ec0a7d55126b4e25fae2e2e384f5b"
-        },
-        "date": 1693898760503,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1076,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44792.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "d442f0b404917ea0cadfd09bc2152945d7924205",
           "message": "chore(deps): bump chrono from 0.4.28 to 0.4.29 (#1233)\n\n* chore(deps): bump chrono from 0.4.28 to 0.4.29\r\n\r\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.28 to 0.4.29.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.28...v0.4.29)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* fix deprecate warnings\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-09-06T20:50:55+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42580.8,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f382398c38d08323d28415387952d5d38ea93c17",
+          "message": "update (#1333)",
+          "timestamp": "2023-10-07T19:40:04+08:00",
+          "tree_id": "9600c0a6835e61103f2995234749f15f5c140346",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f382398c38d08323d28415387952d5d38ea93c17"
+        },
+        "date": 1696679837647,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 903,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42586.7,
             "unit": "KiB"
           }
         ]
