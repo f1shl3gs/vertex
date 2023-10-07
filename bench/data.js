@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696680278417,
+  "lastUpdate": 1696680327395,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6810,55 +6810,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d0f21bdd3076e92651c75deea44a3b99f3e70e35",
-          "message": "remove send_all_v2 (#1226)",
-          "timestamp": "2023-09-04T13:11:34+08:00",
-          "tree_id": "3f2f5775acdf02cf239b552412e75a7441f6e07e",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d0f21bdd3076e92651c75deea44a3b99f3e70e35"
-        },
-        "date": 1693804545280,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 24.916,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.158,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 26.206,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 41.53,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 56.259,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 53.927,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37285f661cf4ee47435a40fe0337946f373f3908",
+          "message": "fix vertex name (#1334)",
+          "timestamp": "2023-10-07T20:01:19+08:00",
+          "tree_id": "3dacf44c678fe7f109ac484aebd431157387320e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37285f661cf4ee47435a40fe0337946f373f3908"
+        },
+        "date": 1696680309339,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 24.561,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 26.072,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.786,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 158.49,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.91,
             "unit": "ns/op"
           }
         ]
