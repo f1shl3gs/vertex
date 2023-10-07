@@ -145,7 +145,7 @@ impl Fanout {
     ///
     /// This method can panic if the fanout receives a control message that violates some invariant
     /// about its current state (e.g. remove a non-existent sink, etc). This would imply a bug in
-    /// Vector's config reloading logic.
+    /// Vertex's config reloading logic.
     pub async fn send(&mut self, events: Events) {
         // First, process any available control messages in a non-blocking fashion.
         // If any of our senders were replaced, we additionally wait until they're

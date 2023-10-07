@@ -97,11 +97,11 @@ where
         source: <T as Encodable>::DecodeError,
     },
 
-    /// The record is not compatible with this version of Vector.
+    /// The record is not compatible with this version of Vertex.
     ///
-    /// This can occur when records written to a buffer in previous versions of Vector are read by
-    /// newer versions of Vector where the encoding scheme, or record schema, used in the previous
-    /// version of Vector are no longer able to be decoded in this version of Vector.
+    /// This can occur when records written to a buffer in previous versions of Vertex are read by
+    /// newer versions of Vertex where the encoding scheme, or record schema, used in the previous
+    /// version of Vertex are no longer able to be decoded in this version of Vertex.
     #[error("record version not compatible: {reason}")]
     Incompatible { reason: String },
 
@@ -227,7 +227,7 @@ where
                 // 64-bit. And even further still, the writer fallibly attempts to get a `u64` of the
                 // record size based on the encoding buffer, which gives its length in `usize`, and
                 // so would fail if `usize` was larger than `u64`, meaning we at least will panic if
-                // Vector is running on a 128-bit CPU in the future, storing records that are larger
+                // Vertex is running on a 128-bit CPU in the future, storing records that are larger
                 // than 2^64+1. :)
                 let record_len = u64::from_be_bytes(length)
                     .try_into()
@@ -789,7 +789,7 @@ where
 
     /// Seeks to where this reader previously left off.
     ///
-    /// In cases where Vector has restarted, but the reader hasn't yet finished a file, we would
+    /// In cases where Vertex has restarted, but the reader hasn't yet finished a file, we would
     /// open the correct data file for reading, but our file cursor would be at the very
     /// beginning, essentially pointed at the wrong record.  We read out records here until we
     /// reach a point where we've read up to the record referenced by `get_last_reader_record_id`.
@@ -819,7 +819,7 @@ where
         );
 
         // We may end up in a situation where a data file hasn't yet been deleted but we've moved on
-        // to the next data file, including reading acknowledging records within it.  If Vector
+        // to the next data file, including reading acknowledging records within it. If Vertex
         // is stopped at a point like this, and we restart it and load the buffer, we'll start on
         // the old data file.  That's wasteful to read all over again.
         //
@@ -1070,7 +1070,7 @@ where
         let record_events: u64 = record
             .event_count()
             .try_into()
-            .expect("Vector does not support 128-bit platforms.");
+            .expect("Vertex does not support 128-bit platforms.");
         let record_events = record_events
             .try_into()
             .map_err(|_| ReaderError::EmptyRecord)?;

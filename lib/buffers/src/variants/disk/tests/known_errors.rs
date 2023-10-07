@@ -774,8 +774,8 @@ async fn reader_throws_error_when_record_is_undecodable_via_metadata() {
 
             // Write one more `ControllableRecord` record but with an adjusted metadata value that
             // we'll make sure doesn't correctly convert from `u32` to `T::Metadata`.  This is to
-            // exercise the codepath where the flags don't even seem to be valid at all i.e. bits
-            // are set that aren't even defined on the Vector side.
+            // exercise the code path where the flags don't even seem to be valid at all i.e. bits
+            // are set that aren't even defined on the Vertex side.
             GET_METADATA_VALUE.store(33, Ordering::Relaxed);
             writer
                 .write_record(ControllableRecord(54))

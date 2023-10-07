@@ -189,7 +189,7 @@ impl Checkpointer {
         let mut last = self.last.lock().expect("Data poisoned");
         if last.as_ref() != Some(&current) {
             // Write the new checkpoints to a tmp file and flush it fully to
-            // disk. If vector dies anywhere during this section, the existing
+            // disk. If Vertex dies anywhere during this section, the existing
             // stable file will still be in its current valid state and we'll be
             // able to recover.
             let mut f = io::BufWriter::new(fs::File::create(&self.tmp_file_path)?);

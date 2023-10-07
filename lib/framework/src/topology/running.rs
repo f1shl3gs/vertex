@@ -171,7 +171,7 @@ impl RunningTopology {
         if self.config.global != new_config.global {
             error!(
                 message =
-                "Global options can't be changed while reloading config file; reload aborted. Please restart vector to reload the configuration file."
+                "Global options can't be changed while reloading config file; reload aborted. Please restart Vertex to reload the configuration file."
             );
             return Ok(false);
         }

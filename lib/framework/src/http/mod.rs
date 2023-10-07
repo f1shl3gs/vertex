@@ -377,7 +377,7 @@ mod tests {
             .header("User-Agent", "foo")
             .body(())
             .unwrap();
-        default_request_headers(&mut request, &HeaderValue::from_static("vector"));
+        default_request_headers(&mut request, &HeaderValue::from_static("Vertex"));
         assert_eq!(
             request.headers().get("Accept-Encoding"),
             Some(&HeaderValue::from_static("gzip")),
