@@ -90,10 +90,10 @@ pub trait EventCount {
     fn event_count(&self) -> usize;
 }
 
-/// Vector's basic error type, dynamically dispatched and safe to send across
+/// Vertex's basic error type, dynamically dispatched and safe to send across
 /// threads.
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 
-/// Vector's basic result type, defined in terms of [`Error`] and generic over
+/// Vertex's basic result type, defined in terms of [`Error`] and generic over
 /// `T`.
 pub type Result<T> = std::result::Result<T, Error>;

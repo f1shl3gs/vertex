@@ -30,12 +30,12 @@ pub enum DataDirError {
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq)]
 #[serde(default, deny_unknown_fields)]
 pub struct GlobalOptions {
-    /// The directory used for persisting Vector state data.
+    /// The directory used for persisting Vertex state data.
     ///
-    /// This is the directory where Vector will store any state data, such as disk buffers, file
+    /// This is the directory where Vertex will store any state data, such as disk buffers, file
     /// checkpoints, and more.
     ///
-    /// Vector must have write permissions to this directory.
+    /// Vertex must have write permissions to this directory.
     #[serde(default = "default_data_dir")]
     pub data_dir: Option<PathBuf>,
 
@@ -56,7 +56,7 @@ pub struct GlobalOptions {
 
     /// Controls how acknowledgements are handled for all sinks by default.
     ///
-    /// See [End-to-end Acknowledgements][e2e_acks] for more information on how Vector handles event
+    /// See [End-to-end Acknowledgements][e2e_acks] for more information on how Vertex handles event
     /// acknowledgement.
     ///
     /// [e2e_acks]: https://vector.dev/docs/about/under-the-hood/architecture/end-to-end-acknowledgements/

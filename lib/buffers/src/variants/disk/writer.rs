@@ -96,7 +96,7 @@ where
     /// Specifically, for `Writer`, this can only ever be returned when creating the buffer, during
     /// validation of the last written record.  While it's technically possible that it may be
     /// something else, this error is most likely to occur when the records in a buffer were written
-    /// in a different version of Vector that cannot be decoded in this version of Vector.
+    /// in a different version of Vertex that cannot be decoded in this version of Vertex.
     #[error("failed to validate the last written record: {reason}")]
     FailedToValidate { reason: String },
 
@@ -716,7 +716,7 @@ where
     fn can_write_record(&self, amount: usize) -> bool {
         let total_buffer_size = self.ledger.get_total_buffer_size() + self.unflushed_bytes;
         let potential_write_len =
-            u64::try_from(amount).expect("Vector only supports 64-bit architectures.");
+            u64::try_from(amount).expect("Vertex only supports 64-bit architectures.");
 
         self.can_write() && total_buffer_size + potential_write_len <= self.config.max_buffer_size
     }
@@ -1279,7 +1279,7 @@ where
     ///
     /// Closing the writer signals to the reader that no more records will be written until the
     /// buffer is reopened.  Writers and readers effectively share a "session", so until the writer
-    /// and reader both close, the buffer cannot be reopened by another Vector instance.
+    /// and reader both close, the buffer cannot be reopened by another Vertex instance.
     ///
     /// In turn, the reader is able to know that when the writer is marked as done, and it cannot
     /// read any more data, that nothing else is actually coming, and it can terminate by beginning

@@ -111,7 +111,7 @@ pub enum BuildError {
 pub struct DiskBufferConfig<FS> {
     /// Directory where this buffer will write its files.
     ///
-    /// Must be unique from all other buffers, whether within the same process or other Vector
+    /// Must be unique from all other buffers, whether within the same process or other Vertex
     /// processes on the machine.
     pub(crate) data_dir: PathBuf,
 
@@ -151,7 +151,7 @@ pub struct DiskBufferConfig<FS> {
     /// "hard" flush (aka `fsync`/`fsyncdata`), the flush interval effectively controls the
     /// acceptable window of time for data loss.
     ///
-    /// In the event that data had not yet been durably written to disk, and Vector crashed, the
+    /// In the event that data had not yet been durably written to disk, and Vertex crashed, the
     /// amount of data written since the last flush would be lost.
     pub(crate) flush_interval: Duration,
 
@@ -260,7 +260,7 @@ where
     /// "hard" flush (aka `fsync`/`fsyncdata`), the flush interval effectively controls the
     /// acceptable window of time for data loss.
     ///
-    /// In the event that data had not yet been durably written to disk, and Vector crashed, the
+    /// In the event that data had not yet been durably written to disk, and Vertex crashed, the
     /// amount of data written since the last flush would be lost.
     ///
     /// Defaults to 500ms.

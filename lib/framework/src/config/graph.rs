@@ -296,7 +296,7 @@ impl Graph {
 
     /// From a given root node, get all paths from the root node to leaf nodes
     /// where the leaf node must be a sink. This is useful for determining which
-    /// components are relevant in a Vector unit test.
+    /// components are relevant in a Vertex unit test.
     ///
     /// Caller must check for cycles before calling this function.
     #[cfg(test)]

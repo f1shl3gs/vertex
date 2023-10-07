@@ -64,7 +64,7 @@ struct StreamingConfig {
     #[serde(default)]
     restart_policy: RestartPolicy,
 
-    /// The amount of time, in seconds, that Vector will wait before rerunning a
+    /// The amount of time, in seconds, that Vertex will wait before rerunning a
     /// streaming command that exited.
     #[serde(default = "default_restart_delay", with = "humanize::duration::serde")]
     delay: Duration,

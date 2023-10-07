@@ -37,19 +37,19 @@ pub enum LedgerLoadCreateError {
         err: io::Error,
     },
 
-    /// The ledger is already opened by another Vector process.
+    /// The ledger is already opened by another Vertex process.
     ///
-    /// Advisory locking is used to prevent other Vector processes from concurrently opening the
+    /// Advisory locking is used to prevent other Vertex processes from concurrently opening the
     /// same buffer, but bear in mind that this does not prevent other processes or users from
     /// modifying the ledger file in a way that could cause undefined behavior during buffer operation.
     #[error(
-        "failed to lock buffer.lock; is another Vector process running and using this buffer?"
+        "failed to lock buffer.lock; is another Vertex process running and using this buffer?"
     )]
     LedgerLockAlreadyHeld,
 
     /// The ledger state was unable to be deserialized.
     ///
-    /// This should only occur if the ledger file was modified or truncated out of the Vector
+    /// This should only occur if the ledger file was modified or truncated out of the Vertex
     /// process.  In rare situations, if the ledger state type (`LedgerState`, here in ledger.rs)
     /// was modified, then the layout may now be out-of-line with the structure as it exists on disk.
     ///
@@ -580,7 +580,7 @@ where
         // Create our containing directory if it doesn't already exist.
         fs::create_dir_all(&config.data_dir).await?;
 
-        // Acquire an exclusive lock on our lock file, which prevents another Vector process from
+        // Acquire an exclusive lock on our lock file, which prevents another Vertex process from
         // loading this buffer and clashing with us.  Specifically, though: this does _not_ prevent
         // another process from messing with our ledger files, or any of the data files, etc.
         //

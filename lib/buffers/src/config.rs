@@ -256,7 +256,7 @@ impl BufferType {
 /// subject to configurable behavior when each stage reaches configured limits.  Buffers are
 /// configured for sinks, where backpressure from the sink can be handled by the buffer.  This
 /// allows absorbing temporary load, or potentially adding write-ahead-log behavior to a sink to
-/// increase the durability of a given Vector pipeline.
+/// increase the durability of a given Vertex pipeline.
 ///
 /// While we use the term "buffer topology" here, a buffer topology is referred to by the more
 /// common "buffer" or "buffers" shorthand.  This is related to buffers originally being a single

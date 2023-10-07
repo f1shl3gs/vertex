@@ -238,7 +238,7 @@ impl From<serde_json::Value> for Value {
     }
 }
 
-/// Vector's basic error type, dynamically dispatched and safe to send across
+/// Vertex's basic error type, dynamically dispatched and safe to send across
 /// threads.
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 

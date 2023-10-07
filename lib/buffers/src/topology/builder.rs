@@ -181,7 +181,7 @@ where
     /// values, but cannot be configured to use overflow mode.  If overflow mode is selected, it
     /// will be changed to blocking mode.
     ///
-    /// This is a convenience method for `vector` as it is used for inter-transform channels, and we
+    /// This is a convenience method for `Vertex` as it is used for inter-transform channels, and we
     /// can simplifying needing to require callers to do all the boilerplate to create the builder,
     /// create the stage, installing buffer usage metrics that aren't required, and so on.
     pub async fn standalone_memory(
@@ -216,7 +216,7 @@ where
     /// values, but cannot be configured to use overflow mode.  If overflow mode is selected, it
     /// will be changed to blocking mode.
     ///
-    /// This is a convenience method for `vector` as it is used for inter-transform channels, and we
+    /// This is a convenience method for `Vertex` as it is used for inter-transform channels, and we
     /// can simplifying needing to require callers to do all the boilerplate to create the builder,
     /// create the stage, installing buffer usage metrics that aren't required, and so on.
     #[cfg(test)]

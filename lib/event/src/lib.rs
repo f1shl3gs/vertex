@@ -442,7 +442,7 @@ impl TryInto<serde_json::Value> for Event {
 }
 
 /// TODO: Share this Error type
-/// Vector's basic error type, dynamically dispatched and safe to send across
+/// Vertex's basic error type, dynamically dispatched and safe to send across
 /// threads.
 pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 

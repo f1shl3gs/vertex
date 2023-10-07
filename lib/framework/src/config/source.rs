@@ -74,7 +74,7 @@ pub trait SourceConfig: NamedComponent + Debug + Send + Sync {
 
     /// Whether or not this source can acknowledge the events in emits.
     ///
-    /// Generally, Vector uses acknowledgements to track when an event has finally
+    /// Generally, Vertex uses acknowledgements to track when an event has finally
     /// been processed. either successfully or unsuccessfully. While it is used
     /// internally in some areas, such as within disk buffers for knowing when
     /// a source that a message has been successfully (durably) processed or not.
