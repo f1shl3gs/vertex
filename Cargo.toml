@@ -314,7 +314,7 @@ rand = { version = "0.8.5", default-features = false }
 serde_path_to_error = { version = "0.1.14", default-features = false }
 tempfile = { version = "3.8.0", default-features = false }
 testify = { path = "lib/testify" }
-tokio = { version = "1.32.0", default-features = false, features = ["test-util", "time"] }
+tokio = { version = "1.33.0", default-features = false, features = ["test-util", "time"] }
 
 [target.'cfg(unix)'.dependencies]
 nix = { version = "0.27.1", default-features = false, features = ["net"] }
@@ -351,7 +351,7 @@ async-stream = { version = "0.3.5", optional = true }
 async-trait = { version = "0.1.73" }
 futures = { version = "0.3.28", default-features = false }
 futures-util = { version = "0.3.28", default-features = false }
-tokio = { version = "1.32.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
+tokio = { version = "1.33.0", default-features = false, features = ["time", "net", "signal", "fs", "rt-multi-thread", "io-util", "process"] }
 tokio-stream = { version = "0.1.14", features = ["time", "net", "sync"] }
 tokio-util = { version = "0.7.9", default-features = false, features = ["codec", "time", "net"] }
 
