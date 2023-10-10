@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1696918870134,
+  "lastUpdate": 1696919715869,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "363c73750a1209447f5914d803ac17b62d53b4cb",
-          "message": "chore(deps): bump kube from 0.85.0 to 0.86.0 (#1237)\n\n* chore(deps): bump kube from 0.85.0 to 0.86.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.85.0 to 0.86.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.85.0...0.86.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.20.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
-          "timestamp": "2023-09-09T01:28:13+08:00",
-          "tree_id": "f515d55274a29924110e0e0f1aefee6606a0c8a7",
-          "url": "https://github.com/f1shl3gs/vertex/commit/363c73750a1209447f5914d803ac17b62d53b4cb"
-        },
-        "date": 1694195446012,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1184,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44788.2,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42579,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "37e202f638aa65347589da4f7363a80587c72dcf",
+          "message": "bump regex to 1.10.0 (#1338)",
+          "timestamp": "2023-10-10T14:16:02+08:00",
+          "tree_id": "aab69763bb7785679ca5f7848bf06d794d405b29",
+          "url": "https://github.com/f1shl3gs/vertex/commit/37e202f638aa65347589da4f7363a80587c72dcf"
+        },
+        "date": 1696919696495,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 992,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42593.5,
             "unit": "KiB"
           }
         ]
