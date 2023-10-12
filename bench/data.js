@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697117286342,
+  "lastUpdate": 1697117504528,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -21516,45 +21516,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "79372d4feb5ad1215520bcc6c832d29770bf887a",
-          "message": "Add transform/rewrite (#1231)",
-          "timestamp": "2023-09-04T23:45:13+08:00",
-          "tree_id": "9f03de100875416cb11bb0c976567004cbaec7c0",
-          "url": "https://github.com/f1shl3gs/vertex/commit/79372d4feb5ad1215520bcc6c832d29770bf887a"
-        },
-        "date": 1693844250103,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "haproxy/parse_csv",
-            "value": 47688000,
-            "unit": "ns/op"
-          },
-          {
-            "name": "hwmon_gather",
-            "value": 1743600,
-            "unit": "ns/op"
-          },
-          {
-            "name": "loki/valid_label_name",
-            "value": 28.968,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -25409,6 +25370,45 @@ window.BENCHMARK_DATA = {
           {
             "name": "loki/valid_label_name",
             "value": 29.182,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
+          "message": "remove thrift server support (#1339)",
+          "timestamp": "2023-10-12T21:09:59+08:00",
+          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
+          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
+        },
+        "date": 1697117485826,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "haproxy/parse_csv",
+            "value": 45190000,
+            "unit": "ns/op"
+          },
+          {
+            "name": "hwmon_gather",
+            "value": 1069500,
+            "unit": "ns/op"
+          },
+          {
+            "name": "loki/valid_label_name",
+            "value": 24.484,
             "unit": "ns/op"
           }
         ]
