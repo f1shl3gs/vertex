@@ -9,7 +9,6 @@
 
 extern crate thrift;
 
-use thrift::OrderedFloat;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::{From, TryFrom};
@@ -20,13 +19,13 @@ use std::fmt::{Display, Formatter};
 use std::rc::Rc;
 
 use thrift::{ApplicationError, ApplicationErrorKind, ProtocolError, ProtocolErrorKind, TThriftClient};
+use thrift::OrderedFloat;
 use thrift::protocol::{TFieldIdentifier, TListIdentifier, TMapIdentifier, TMessageIdentifier, TMessageType, TInputProtocol, TOutputProtocol, TSetIdentifier, TStructIdentifier, TType};
 use thrift::protocol::field_id;
 use thrift::protocol::verify_expected_message_type;
 use thrift::protocol::verify_expected_sequence_number;
 use thrift::protocol::verify_expected_service_call;
 use thrift::protocol::verify_required_field_exists;
-use thrift::server::TProcessor;
 
 #[derive(Copy, Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum TagType {
@@ -956,28 +955,6 @@ impl TCollectorProcessFunctions {
         }
       },
     }
-  }
-}
-
-impl <H: CollectorSyncHandler> TProcessor for CollectorSyncProcessor<H> {
-  fn process(&self, i_prot: &mut dyn TInputProtocol, o_prot: &mut dyn TOutputProtocol) -> thrift::Result<()> {
-    let message_ident = i_prot.read_message_begin()?;
-    let res = match &*message_ident.name {
-      "submitBatches" => {
-        self.process_submit_batches(message_ident.sequence_number, i_prot, o_prot)
-      },
-      method => {
-        Err(
-          thrift::Error::Application(
-            ApplicationError::new(
-              ApplicationErrorKind::UnknownMethod,
-              format!("unknown method {}", method)
-            )
-          )
-        )
-      },
-    };
-    thrift::server::handle_process_result(&message_ident, res, o_prot)
   }
 }
 

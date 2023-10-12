@@ -13,5 +13,5 @@ base64 = { version = "0.21.4" }
 event = { path = "../event" }
 prost = { version = "0.12.1", default-features = false }
 prost-types = { version = "0.12.1", default-features = false }
-thrift = { version = "0.17.0", default-features = false, features = ["server"] }
+thrift = { version = "0.17.0", default-features = false }
 tonic = { version = "0.10.2", default-features = false }

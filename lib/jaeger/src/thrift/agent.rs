@@ -25,7 +25,6 @@ use thrift::protocol::verify_expected_message_type;
 use thrift::protocol::verify_expected_sequence_number;
 use thrift::protocol::verify_expected_service_call;
 use thrift::protocol::verify_required_field_exists;
-use thrift::server::TProcessor;
 
 use super::jaeger;
 use super::zipkincore;
@@ -170,31 +169,6 @@ impl TAgentProcessFunctions {
         }
       },
     }
-  }
-}
-
-impl <H: AgentSyncHandler> TProcessor for AgentSyncProcessor<H> {
-  fn process(&self, i_prot: &mut dyn TInputProtocol, o_prot: &mut dyn TOutputProtocol) -> thrift::Result<()> {
-    let message_ident = i_prot.read_message_begin()?;
-    let res = match &*message_ident.name {
-      "emitZipkinBatch" => {
-        self.process_emit_zipkin_batch(message_ident.sequence_number, i_prot, o_prot)
-      },
-      "emitBatch" => {
-        self.process_emit_batch(message_ident.sequence_number, i_prot, o_prot)
-      },
-      method => {
-        Err(
-          thrift::Error::Application(
-            ApplicationError::new(
-              ApplicationErrorKind::UnknownMethod,
-              format!("unknown method {}", method)
-            )
-          )
-        )
-      },
-    };
-    thrift::server::handle_process_result(&message_ident, res, o_prot)
   }
 }
 
