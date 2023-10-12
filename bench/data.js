@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697116572330,
+  "lastUpdate": 1697117286342,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "84e77f3d2e0f9ed69a7709abccdcbc8c39fe568f",
-          "message": "replace pin-project with pin-project-lite (#1238)",
-          "timestamp": "2023-09-09T17:19:21+08:00",
-          "tree_id": "90a2f571ff482721d79a4f860bc735357e8d4bc4",
-          "url": "https://github.com/f1shl3gs/vertex/commit/84e77f3d2e0f9ed69a7709abccdcbc8c39fe568f"
-        },
-        "date": 1694252227362,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 935,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44811.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42593.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "391e5c8bafc58c89fefc551d42e026dad8facc4e",
+          "message": "remove thrift server support (#1339)",
+          "timestamp": "2023-10-12T21:09:59+08:00",
+          "tree_id": "1c3c1c07dba737696535c93f1abe9743fb70df72",
+          "url": "https://github.com/f1shl3gs/vertex/commit/391e5c8bafc58c89fefc551d42e026dad8facc4e"
+        },
+        "date": 1697117266347,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 929,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42593.9,
             "unit": "KiB"
           }
         ]
