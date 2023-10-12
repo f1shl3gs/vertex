@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697123242066,
+  "lastUpdate": 1697124009498,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "9f9835563389dcfc67fc2cd88255ed8119cc293b",
-          "message": "chore(deps): bump base64 from 0.21.3 to 0.21.4 (#1240)\n\nBumps [base64](https://github.com/marshallpierce/rust-base64) from 0.21.3 to 0.21.4.\r\n- [Changelog](https://github.com/marshallpierce/rust-base64/blob/master/RELEASE-NOTES.md)\r\n- [Commits](https://github.com/marshallpierce/rust-base64/compare/v0.21.3...v0.21.4)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: base64\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-10T13:31:03+08:00",
-          "tree_id": "9404fbba90eb6de6e5576fe654298b1e0868f355",
-          "url": "https://github.com/f1shl3gs/vertex/commit/9f9835563389dcfc67fc2cd88255ed8119cc293b"
-        },
-        "date": 1694324981234,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 979,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44781.7,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "bead27baaece7380a7db50e54f58cefad80b1873",
           "message": "chore(deps): bump serde_json from 1.0.105 to 1.0.106 (#1239)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.105 to 1.0.106.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.105...v1.0.106)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-10T13:43:36+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42593.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "cd7fe27b3e89117217e92a232267117f5ed19e8b",
+          "message": "update rskafka (#1340)",
+          "timestamp": "2023-10-12T23:01:29+08:00",
+          "tree_id": "8c1be63107ee57c1f1081117cbe4008dae792cf5",
+          "url": "https://github.com/f1shl3gs/vertex/commit/cd7fe27b3e89117217e92a232267117f5ed19e8b"
+        },
+        "date": 1697123991386,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 956,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42351.5,
             "unit": "KiB"
           }
         ]
