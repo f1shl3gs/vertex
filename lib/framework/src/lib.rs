@@ -53,6 +53,7 @@ pub type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
 /// Vertex's basic result type, defined in terms of [`Error`] and generic over `T`
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Returns the host name of the current system.
 pub fn hostname() -> std::io::Result<String> {
     Ok(::hostname::get()?.to_string_lossy().into())
 }
