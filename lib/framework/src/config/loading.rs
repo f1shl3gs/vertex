@@ -147,7 +147,7 @@ pub fn load(
 
     let mut vars = std::env::vars().collect::<HashMap<_, _>>();
     if !vars.contains_key("HOSTNAME") {
-        if let Ok(hostname) = get_hostname() {
+        if let Ok(hostname) = crate::hostname() {
             vars.insert("HOSTNAME".into(), hostname);
         }
     }
@@ -170,10 +170,6 @@ pub fn load_from_str(content: &str, format: Format) -> Result<Config, Vec<String
         });
 
     Ok(config)
-}
-
-pub fn get_hostname() -> std::io::Result<String> {
-    Ok(hostname::get()?.to_string_lossy().into())
 }
 
 /// (result, warnings)
