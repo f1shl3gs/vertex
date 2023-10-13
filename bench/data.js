@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697206112662,
+  "lastUpdate": 1697206120019,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "58f9c0a677a0316be141a964471633b9bf5ab33b",
-          "message": "chore(deps): bump chrono from 0.4.29 to 0.4.30 (#1236)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.29 to 0.4.30.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.29...v0.4.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-08T02:38:24+08:00",
-          "tree_id": "be322c6a53396b316ff8d6ac3eb58ee1bb28a246",
-          "url": "https://github.com/f1shl3gs/vertex/commit/58f9c0a677a0316be141a964471633b9bf5ab33b"
-        },
-        "date": 1694112162713,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 27.655,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 26.537,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 27.892,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 43.428,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 59.096,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2f4c58735d1b298fb82556b23a8db15c7b52331c",
           "message": "chore(deps): bump bytes from 1.4.0 to 1.5.0 (#1235)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-08T02:57:46+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 61.921,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04635cca44a03fd0f9be3f1b9dda067ffbaefe0f",
+          "message": "bump flate2 to 1.0.28 (#1343)",
+          "timestamp": "2023-10-13T22:03:22+08:00",
+          "tree_id": "b3d16bf2a8f4d4d0687d3e9900c733383ed5e180",
+          "url": "https://github.com/f1shl3gs/vertex/commit/04635cca44a03fd0f9be3f1b9dda067ffbaefe0f"
+        },
+        "date": 1697206097114,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 30.306,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 30.623,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 31.08,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 173.92,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 67.235,
             "unit": "ns/op"
           }
         ]
