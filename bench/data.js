@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697206138923,
+  "lastUpdate": 1697206930986,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "d0a778201d7b46da7eb3583579b1cdfc63a7dd04",
-          "message": "chore(deps): bump syn from 2.0.31 to 2.0.32 (#1241)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.31 to 2.0.32.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.31...2.0.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-11T14:57:33+08:00",
-          "tree_id": "0300c1ec01de33c078d9fbcb8e72a19fef43c3d6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d0a778201d7b46da7eb3583579b1cdfc63a7dd04"
-        },
-        "date": 1694416869078,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1259,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 44782.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42351,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "f8ae71d341a4bef2bd9bd0ac6b243f8cfcd6f1e7",
+          "message": "remove duplicate get_hostname (#1342)",
+          "timestamp": "2023-10-13T22:03:03+08:00",
+          "tree_id": "f8c6661c186b820785b61a1abfd80f45e6297a84",
+          "url": "https://github.com/f1shl3gs/vertex/commit/f8ae71d341a4bef2bd9bd0ac6b243f8cfcd6f1e7"
+        },
+        "date": 1697206912334,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 960,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42356.6,
             "unit": "KiB"
           }
         ]
