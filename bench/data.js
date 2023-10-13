@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697205996102,
+  "lastUpdate": 1697206035074,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "58f9c0a677a0316be141a964471633b9bf5ab33b",
-          "message": "chore(deps): bump chrono from 0.4.29 to 0.4.30 (#1236)\n\nBumps [chrono](https://github.com/chronotope/chrono) from 0.4.29 to 0.4.30.\r\n- [Release notes](https://github.com/chronotope/chrono/releases)\r\n- [Changelog](https://github.com/chronotope/chrono/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/chronotope/chrono/compare/v0.4.29...v0.4.30)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: chrono\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-08T02:38:24+08:00",
-          "tree_id": "be322c6a53396b316ff8d6ac3eb58ee1bb28a246",
-          "url": "https://github.com/f1shl3gs/vertex/commit/58f9c0a677a0316be141a964471633b9bf5ab33b"
-        },
-        "date": 1694112151453,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 764300,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 719010,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "04635cca44a03fd0f9be3f1b9dda067ffbaefe0f",
+          "message": "bump flate2 to 1.0.28 (#1343)",
+          "timestamp": "2023-10-13T22:03:22+08:00",
+          "tree_id": "b3d16bf2a8f4d4d0687d3e9900c733383ed5e180",
+          "url": "https://github.com/f1shl3gs/vertex/commit/04635cca44a03fd0f9be3f1b9dda067ffbaefe0f"
+        },
+        "date": 1697206014061,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 858180,
             "unit": "ns/op"
           }
         ]
