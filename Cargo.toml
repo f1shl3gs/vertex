@@ -396,7 +396,7 @@ chrono = { version = "0.4.31", default-features = false }
 chrono-tz = { version = "0.8.3", default-features = false }
 encoding_rs = { version = "0.8.33", optional = true, features = ["serde"] }
 exitcode = { version = "1.1.2" }
-flate2 = { version = "1.0.27", optional = true }
+flate2 = { version = "1.0.28", optional = true }
 gcra = { git = "https://github.com/f1shl3gs/gcra.git", rev = "6473b6da31cf1bd35e5e63790c9503a02c076f96", optional = true }
 glob = { version = "0.3.1" }
 indexmap = { version = "2.0.2", default-features = false, features = ["serde"] }
