@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697268756762,
+  "lastUpdate": 1697268775967,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "2f4c58735d1b298fb82556b23a8db15c7b52331c",
-          "message": "chore(deps): bump bytes from 1.4.0 to 1.5.0 (#1235)\n\nBumps [bytes](https://github.com/tokio-rs/bytes) from 1.4.0 to 1.5.0.\r\n- [Release notes](https://github.com/tokio-rs/bytes/releases)\r\n- [Changelog](https://github.com/tokio-rs/bytes/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/tokio-rs/bytes/compare/v1.4.0...v1.5.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: bytes\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-08T02:57:46+08:00",
-          "tree_id": "977ea087488313d280dc22a37c1b46ad4d7ca088",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2f4c58735d1b298fb82556b23a8db15c7b52331c"
-        },
-        "date": 1694113355593,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 28.215,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 27.662,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 28.035,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 47.481,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 61.43,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "363c73750a1209447f5914d803ac17b62d53b4cb",
           "message": "chore(deps): bump kube from 0.85.0 to 0.86.0 (#1237)\n\n* chore(deps): bump kube from 0.85.0 to 0.86.0\r\n\r\nBumps [kube](https://github.com/kube-rs/kube) from 0.85.0 to 0.86.0.\r\n- [Release notes](https://github.com/kube-rs/kube/releases)\r\n- [Changelog](https://github.com/kube-rs/kube/blob/main/CHANGELOG.md)\r\n- [Commits](https://github.com/kube-rs/kube/compare/0.85.0...0.86.0)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: kube\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-minor\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\n\r\n* bump k8s-openapi to 0.20.0\r\n\r\n---------\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\r\nCo-authored-by: f1shl3gs <fishlegs.engerman@gmail.com>",
           "timestamp": "2023-09-09T01:28:13+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 67.235,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "1d7f1876a9c79186222a11589f5cd914ff8ad24f",
+          "message": "bump tracing to 0.1.39, tracing-core to 0.1.32 (#1344)",
+          "timestamp": "2023-10-14T15:28:46+08:00",
+          "tree_id": "4037834526cb025374428ce1c42e50e83819c218",
+          "url": "https://github.com/f1shl3gs/vertex/commit/1d7f1876a9c79186222a11589f5cd914ff8ad24f"
+        },
+        "date": 1697268756449,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 23.157,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 22.778,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.303,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 134.75,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 51.405,
             "unit": "ns/op"
           }
         ]
