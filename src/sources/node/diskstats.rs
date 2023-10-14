@@ -13,7 +13,7 @@ use super::Error;
 
 const DISK_SECTOR_SIZE: f64 = 512.0;
 
-const DEVICE_KEY: Key = Key::from_static_str("device");
+const DEVICE_KEY: Key = Key::from_static("device");
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct DiskStatsConfig {

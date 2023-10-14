@@ -5,7 +5,8 @@ use std::collections::{HashMap, VecDeque};
 use measurable::ByteSizeOf;
 use serde::Serialize;
 
-use super::{AnyValue, Key, KeyValue};
+use super::{AnyValue, KeyValue};
+use crate::tags::Key;
 
 /// A hash map with a capped number of attributes that retains
 /// the most recently set entries.
@@ -123,8 +124,8 @@ impl EvictedHashMap {
     }
 
     /// Inserts a key-value pair into the map.
-    pub fn insert_key_value(&mut self, kv: KeyValue) {
-        let KeyValue { key, value } = kv;
+    #[inline]
+    pub fn insert_key_value(&mut self, key: Key, value: AnyValue) {
         self.insert(key, value);
     }
 
@@ -256,7 +257,7 @@ mod tests {
         let mut map = EvictedHashMap::new(max_len, max_len as usize);
 
         for i in 0..=max_len {
-            map.insert_key_value(Key::new(i.to_string()).bool(true));
+            map.insert_key_value(Key::new(i.to_string()), AnyValue::Boolean(true));
         }
 
         assert_eq!(map.dropped_count, 1);

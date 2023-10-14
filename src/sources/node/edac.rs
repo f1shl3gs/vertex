@@ -7,7 +7,7 @@ use event::{tags, Metric};
 
 use super::{read_into, Error};
 
-const CONTROLLER_KEY: Key = Key::from_static_str("controller");
+const CONTROLLER_KEY: Key = Key::from_static("controller");
 
 pub async fn gather(sys_path: &str) -> Result<Vec<Metric>, Error> {
     let pattern = format!("{}/devices/system/edac/mc/mc[0-9]*", sys_path);

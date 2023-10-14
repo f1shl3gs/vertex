@@ -8,7 +8,7 @@ use framework::config::{default_interval, DataType, Output, SourceConfig, Source
 use framework::Source;
 use virt::{Client, Error};
 
-const DOMAIN_KEY: Key = Key::from_static_str("domain");
+const DOMAIN_KEY: Key = Key::from_static("domain");
 
 fn default_sock() -> String {
     "/run/libvirt/libvirt-sock-ro".to_string()
