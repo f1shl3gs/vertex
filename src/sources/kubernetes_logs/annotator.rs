@@ -1,7 +1,5 @@
-use std::borrow::Cow;
-
 use configurable::Configurable;
-use event::LogRecord;
+use event::{tags::Key, LogRecord};
 use k8s_openapi::{
     api::core::v1::{Container, ContainerStatus, Pod, PodSpec, PodStatus},
     apimachinery::pkg::apis::meta::v1::ObjectMeta,
@@ -12,8 +10,6 @@ use super::reflector::Store;
 
 /// The delimiter used in the log path.
 const LOG_PATH_DELIMITER: &str = "_";
-
-pub type Key = Cow<'static, str>;
 
 #[derive(Configurable, Deserialize, Serialize, Debug, Clone)]
 #[serde(deny_unknown_fields, default)]

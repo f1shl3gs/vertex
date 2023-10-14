@@ -17,77 +17,11 @@ use measurable::ByteSizeOf;
 use serde::{Deserialize, Serialize};
 pub use span::*;
 
+pub use super::tags::Key;
 use super::tags::Tags;
 use super::{
     BatchNotifier, EventDataEq, EventFinalizer, EventFinalizers, EventMetadata, Finalizable,
 };
-
-/// Key used for metric `AttributeSet`s and trace `Span` attributes
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, Serialize)]
-pub struct Key(Cow<'static, str>);
-
-impl Key {
-    /// Create a new `key`
-    pub fn new<S: Into<Cow<'static, str>>>(value: S) -> Self {
-        Key(value.into())
-    }
-
-    /// Returns a reference to the underlying key name
-    pub fn as_str(&self) -> &str {
-        self.0.as_ref()
-    }
-
-    /// Create a `KeyValue` pair for `bool` values
-    pub fn bool<T: Into<bool>>(self, value: T) -> KeyValue {
-        KeyValue {
-            key: self,
-            value: AnyValue::Boolean(value.into()),
-        }
-    }
-
-    /// Create a `KeyValue` pair for `i64` values.
-    pub fn i64(self, value: i64) -> KeyValue {
-        KeyValue {
-            key: self,
-            value: AnyValue::Int64(value),
-        }
-    }
-
-    /// Create a `KeyValue` pair for `f64` values.
-    pub fn f64(self, value: f64) -> KeyValue {
-        KeyValue {
-            key: self,
-            value: AnyValue::Float(value),
-        }
-    }
-
-    /// Create a `KeyValue` pair for `String` values
-    pub fn string<T: Into<Cow<'static, str>>>(self, value: T) -> KeyValue {
-        KeyValue {
-            key: self,
-            value: AnyValue::String(value.into()),
-        }
-    }
-}
-
-impl From<&'static str> for Key {
-    /// Convert a `&str` to a `Key`.
-    fn from(key_str: &'static str) -> Self {
-        Key(Cow::from(key_str))
-    }
-}
-
-impl From<String> for Key {
-    fn from(s: String) -> Self {
-        Key(Cow::from(s))
-    }
-}
-
-impl From<Key> for String {
-    fn from(k: Key) -> Self {
-        k.0.into_owned()
-    }
-}
 
 #[derive(Clone, Debug, PartialOrd, PartialEq, Serialize)]
 pub enum AnyValue {

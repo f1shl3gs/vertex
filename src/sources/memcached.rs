@@ -15,8 +15,8 @@ use tokio::net::TcpStream;
 const CLIENT_ERROR_PREFIX: &str = "CLIENT_ERROR";
 const STAT_PREFIX: &str = "STAT";
 
-const SLAB_KEY: Key = Key::from_static_str("slab");
-const INSTANCE_KEY: Key = Key::from_static_str("instance");
+const SLAB_KEY: Key = Key::from_static("slab");
+const INSTANCE_KEY: Key = Key::from_static("instance");
 
 /// Collect metrics from memcached servers.
 #[configurable_component(source, name = "memcached")]

@@ -73,7 +73,7 @@ impl From<Batch> for Trace {
                             Value::from(BASE64_STANDARD.encode(kv.v_binary))
                         };
 
-                        (event::tags::Key::new(kv.key), value)
+                        (Key::new(kv.key), value)
                     })
                     .collect();
 

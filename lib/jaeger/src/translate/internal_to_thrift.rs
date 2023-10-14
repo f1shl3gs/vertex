@@ -164,19 +164,21 @@ fn build_span_tags(
         .collect::<Vec<_>>();
 
     if !user_overrides.span_kind && kind != SpanKind::Internal {
-        tags.push(Key::new(SPAN_KIND).string(kind.to_string()).into())
+        tags.push((Key::new(SPAN_KIND), AnyValue::from(kind.to_string())).into())
     }
 
     if status_code != StatusCode::Unset {
         // Ensure error status is set unless user has already overrided it
         if status_code == StatusCode::Error {
-            tags.push(Key::new(ERROR).bool(true).into());
+            tags.push((Key::new(ERROR), AnyValue::from(true)).into());
         }
 
         if !user_overrides.status_code {
             tags.push(
-                Key::new(OTEL_STATUS_CODE)
-                    .string::<&'static str>(status_code.as_str())
+                (
+                    Key::new(OTEL_STATUS_CODE),
+                    AnyValue::from(status_code.as_str()),
+                )
                     .into(),
             );
         }
@@ -184,8 +186,10 @@ fn build_span_tags(
         // set status message if there is one
         if !status_description.is_empty() && !user_overrides.status_description {
             tags.push(
-                Key::new(OTEL_STATUS_DESCRIPTION)
-                    .string(status_description)
+                (
+                    Key::new(OTEL_STATUS_DESCRIPTION),
+                    AnyValue::from(status_description),
+                )
                     .into(),
             );
         }

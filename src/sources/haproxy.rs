@@ -34,10 +34,10 @@ const CTIME_MS_FIELD: usize = 59;
 const RTIME_MS_FIELD: usize = 60;
 const TTIME_MS_FIELD: usize = 61;
 
-const BACKEND_KEY: Key = Key::from_static_str("backend");
-const FRONTEND_KEY: Key = Key::from_static_str("frontend");
-const INSTANCE_KEY: Key = Key::from_static_str("instance");
-const SERVER_KEY: Key = Key::from_static_str("server");
+const BACKEND_KEY: Key = Key::from_static("backend");
+const FRONTEND_KEY: Key = Key::from_static("frontend");
+const INSTANCE_KEY: Key = Key::from_static("instance");
+const SERVER_KEY: Key = Key::from_static("server");
 
 /// This source scrapes HAProxy stats.
 ///
