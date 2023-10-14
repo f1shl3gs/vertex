@@ -7,9 +7,9 @@ publish = false
 [dependencies]
 event = { path = "../event" }
 once_cell = { version = "1.18.0", default-features = false }
-tracing = { version = "0.1.37", default-features = false }
+tracing = { version = "0.1.39", default-features = false }
 tracing-subscriber = { version = "0.3.17", default-features = false }
-tracing-core = { version = "0.1.31", default-features = false }
+tracing-core = { version = "0.1.32", default-features = false }
 
 [dev-dependencies]
 tokio = { version = "1.33.0", default-features = false }
