@@ -606,7 +606,7 @@ impl Metric {
 
     #[inline]
     pub fn tag_value(&self, name: &str) -> Option<&Value> {
-        self.series.tags.get(&Key::from(name.to_string()))
+        self.series.tags.get(&Key::from(name))
     }
 
     #[inline]
