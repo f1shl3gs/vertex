@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697361116316,
+  "lastUpdate": 1697361208796,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "0bc36a6dbf3994b7ced0d1f6e2f58d63d934579a",
-          "message": "chore(ci): bump docker/login-action from 2 to 3 (#1248)\n\nBumps [docker/login-action](https://github.com/docker/login-action) from 2 to 3.\r\n- [Release notes](https://github.com/docker/login-action/releases)\r\n- [Commits](https://github.com/docker/login-action/compare/v2...v3)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/login-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-13T19:57:01+08:00",
-          "tree_id": "b27935241a9b5674f108b0e22fd411a5b098e027",
-          "url": "https://github.com/f1shl3gs/vertex/commit/0bc36a6dbf3994b7ced0d1f6e2f58d63d934579a"
-        },
-        "date": 1694607332309,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 980,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42583.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "ee231fcb58bbd84225b54ebc7a500d698bdf282c",
           "message": "chore(ci): bump docker/build-push-action from 4 to 5 (#1247)\n\nBumps [docker/build-push-action](https://github.com/docker/build-push-action) from 4 to 5.\r\n- [Release notes](https://github.com/docker/build-push-action/releases)\r\n- [Commits](https://github.com/docker/build-push-action/compare/v4...v5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/build-push-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-13T19:57:10+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42377.1,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "ebc50181f32f6cf4577650671f1bf501206c66fd",
+          "message": "bump async-trait to 0.1.74 (#1348)",
+          "timestamp": "2023-10-15T16:52:14+08:00",
+          "tree_id": "ca46a733516caf2af280df0297b74e3c8f9fc98c",
+          "url": "https://github.com/f1shl3gs/vertex/commit/ebc50181f32f6cf4577650671f1bf501206c66fd"
+        },
+        "date": 1697361185563,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1083,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42381.5,
             "unit": "KiB"
           }
         ]
