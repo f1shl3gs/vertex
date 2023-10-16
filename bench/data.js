@@ -1,37 +1,8 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697444311620,
+  "lastUpdate": 1697470998365,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2482b30f99a13be9f9a8af47b5f7012393542cff",
-          "message": "chore(deps): bump socket2 from 0.5.3 to 0.5.4 (#1243)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.3 to 0.5.4.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-12T08:59:31+08:00",
-          "tree_id": "8f63623e62d1b29157d61217234e566db69d1a67",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2482b30f99a13be9f9a8af47b5f7012393542cff"
-        },
-        "date": 1694480569656,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "prometheus/parse_text",
-            "value": 865430,
-            "unit": "ns/op"
-          }
-        ]
-      },
       {
         "commit": {
           "author": {
@@ -2899,6 +2870,35 @@ window.BENCHMARK_DATA = {
           {
             "name": "prometheus/parse_text",
             "value": 744080,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "d27eb465fd446faec7acfb822027decdf3eab846",
+          "message": "bump regex to 1.10.2",
+          "timestamp": "2023-10-16T23:39:53+08:00",
+          "tree_id": "31f8875a33b79546fdfa8c4719916e1b8929ca4d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d27eb465fd446faec7acfb822027decdf3eab846"
+        },
+        "date": 1697470980306,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "prometheus/parse_text",
+            "value": 736300,
             "unit": "ns/op"
           }
         ]
