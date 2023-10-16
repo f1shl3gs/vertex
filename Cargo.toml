@@ -52,6 +52,7 @@ members = [
     "lib/tracing-internal",
     "lib/tracing-limit",
     "lib/tripwire",
+    "lib/value",
     "lib/virt",
 ]
 
