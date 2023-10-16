@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697472095322,
+  "lastUpdate": 1697472139690,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "b4b4921bc4ed5407c6a8a846e78decfae9107d46",
-          "message": "chore(deps): bump libc from 0.2.147 to 0.2.148 (#1249)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.147 to 0.2.148.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.147...0.2.148)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-13T20:31:45+08:00",
-          "tree_id": "5870df083c595796feff80e0c6042937902b9e74",
-          "url": "https://github.com/f1shl3gs/vertex/commit/b4b4921bc4ed5407c6a8a846e78decfae9107d46"
-        },
-        "date": 1694609630124,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1177,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42592.5,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42380.6,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "distinct": true,
+          "id": "d27eb465fd446faec7acfb822027decdf3eab846",
+          "message": "bump regex to 1.10.2",
+          "timestamp": "2023-10-16T23:39:53+08:00",
+          "tree_id": "31f8875a33b79546fdfa8c4719916e1b8929ca4d",
+          "url": "https://github.com/f1shl3gs/vertex/commit/d27eb465fd446faec7acfb822027decdf3eab846"
+        },
+        "date": 1697472117286,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1157,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42369.9,
             "unit": "KiB"
           }
         ]
