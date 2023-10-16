@@ -564,6 +564,7 @@ dependencies = [
  "humanize",
  "indexmap 2.0.2",
  "inventory",
+ "lookup",
  "regex",
  "serde",
  "serde_json",
@@ -1912,7 +1913,6 @@ dependencies = [
 name = "lookup"
 version = "0.1.0"
 dependencies = [
- "configurable",
  "criterion",
  "serde",
  "serde_json",
