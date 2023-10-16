@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697443015946,
+  "lastUpdate": 1697443048046,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -6820,55 +6820,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "d0a778201d7b46da7eb3583579b1cdfc63a7dd04",
-          "message": "chore(deps): bump syn from 2.0.31 to 2.0.32 (#1241)\n\nBumps [syn](https://github.com/dtolnay/syn) from 2.0.31 to 2.0.32.\r\n- [Release notes](https://github.com/dtolnay/syn/releases)\r\n- [Commits](https://github.com/dtolnay/syn/compare/2.0.31...2.0.32)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: syn\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-11T14:57:33+08:00",
-          "tree_id": "0300c1ec01de33c078d9fbcb8e72a19fef43c3d6",
-          "url": "https://github.com/f1shl3gs/vertex/commit/d0a778201d7b46da7eb3583579b1cdfc63a7dd04"
-        },
-        "date": 1694415724245,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "condition/ordering",
-            "value": 30.141,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/contains",
-            "value": 29.898,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/nested",
-            "value": 30.784,
-            "unit": "ns/op"
-          },
-          {
-            "name": "condition/match",
-            "value": 50.099,
-            "unit": "ns/op"
-          },
-          {
-            "name": "",
-            "value": 66.902,
-            "unit": "ns/op"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "2482b30f99a13be9f9a8af47b5f7012393542cff",
           "message": "chore(deps): bump socket2 from 0.5.3 to 0.5.4 (#1243)\n\nBumps [socket2](https://github.com/rust-lang/socket2) from 0.5.3 to 0.5.4.\r\n- [Release notes](https://github.com/rust-lang/socket2/releases)\r\n- [Changelog](https://github.com/rust-lang/socket2/blob/master/CHANGELOG.md)\r\n- [Commits](https://github.com/rust-lang/socket2/commits)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: socket2\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-12T08:59:31+08:00",
@@ -11703,6 +11654,55 @@ window.BENCHMARK_DATA = {
           {
             "name": "",
             "value": 54.675,
+            "unit": "ns/op"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8baac66a013f73e214b606b701f7a6b3891dd34f",
+          "message": "impl Configurable for OwnedPath (#1351)",
+          "timestamp": "2023-10-16T15:52:23+08:00",
+          "tree_id": "b3eef9ef885486e9b04df7ca9c1dc570475fd37e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8baac66a013f73e214b606b701f7a6b3891dd34f"
+        },
+        "date": 1697443030180,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "condition/ordering",
+            "value": 25.288,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/contains",
+            "value": 25.376,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/nested",
+            "value": 23.757,
+            "unit": "ns/op"
+          },
+          {
+            "name": "condition/match",
+            "value": 144.85,
+            "unit": "ns/op"
+          },
+          {
+            "name": "",
+            "value": 53.61,
             "unit": "ns/op"
           }
         ]
