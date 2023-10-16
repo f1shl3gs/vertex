@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697443055526,
+  "lastUpdate": 1697443867994,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18124,40 +18124,6 @@ window.BENCHMARK_DATA = {
             "username": "web-flow"
           },
           "distinct": true,
-          "id": "ee231fcb58bbd84225b54ebc7a500d698bdf282c",
-          "message": "chore(ci): bump docker/build-push-action from 4 to 5 (#1247)\n\nBumps [docker/build-push-action](https://github.com/docker/build-push-action) from 4 to 5.\r\n- [Release notes](https://github.com/docker/build-push-action/releases)\r\n- [Commits](https://github.com/docker/build-push-action/compare/v4...v5)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: docker/build-push-action\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-major\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-13T19:57:10+08:00",
-          "tree_id": "4a37d84dfcd3c9afc6b465b7edc96a68c0268d18",
-          "url": "https://github.com/f1shl3gs/vertex/commit/ee231fcb58bbd84225b54ebc7a500d698bdf282c"
-        },
-        "date": 1694607532380,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1159,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42583.1,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
           "id": "b4b4921bc4ed5407c6a8a846e78decfae9107d46",
           "message": "chore(deps): bump libc from 0.2.147 to 0.2.148 (#1249)\n\nBumps [libc](https://github.com/rust-lang/libc) from 0.2.147 to 0.2.148.\r\n- [Release notes](https://github.com/rust-lang/libc/releases)\r\n- [Commits](https://github.com/rust-lang/libc/compare/0.2.147...0.2.148)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: libc\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
           "timestamp": "2023-09-13T20:31:45+08:00",
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42381.5,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "8baac66a013f73e214b606b701f7a6b3891dd34f",
+          "message": "impl Configurable for OwnedPath (#1351)",
+          "timestamp": "2023-10-16T15:52:23+08:00",
+          "tree_id": "b3eef9ef885486e9b04df7ca9c1dc570475fd37e",
+          "url": "https://github.com/f1shl3gs/vertex/commit/8baac66a013f73e214b606b701f7a6b3891dd34f"
+        },
+        "date": 1697443849240,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 963,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 42380.6,
             "unit": "KiB"
           }
         ]
