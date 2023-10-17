@@ -1,57 +1,47 @@
 #[cfg(not(feature = "jemalloc"))]
 compile_error!("jemalloc-extension requires feature `jemalloc`");
 
+use std::env::temp_dir;
 use std::net::SocketAddr;
 use std::num::ParseIntError;
+use std::sync::OnceLock;
 use std::time::Duration;
 
+use chrono::Utc;
 use configurable::configurable_component;
 use framework::config::{ExtensionConfig, ExtensionContext};
 use framework::shutdown::ShutdownSignal;
 use framework::Extension;
 use futures::FutureExt;
-use http::Request;
 use hyper::service::{make_service_fn, service_fn};
-use hyper::{Body, Method, Response, Server, StatusCode};
-use tikv_jemalloc_ctl::{stats, Access, AsName};
+use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use tikv_jemalloc_ctl::stats;
+use tokio::sync::Mutex;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
-const OUTPUT: &str = "profile.out";
-const PROF_ACTIVE: &[u8] = b"prof.active\0";
+const PROFILE_ACTIVE: &[u8] = b"prof.active\0";
 const PROF_DUMP: &[u8] = b"prof.dump\0";
-const PROFILE_OUTPUT: &[u8] = b"profile.out\0";
+
+static PROFILE_MUTEX: OnceLock<Mutex<()>> = OnceLock::new();
 
 fn default_listen() -> SocketAddr {
     "0.0.0.0:10911".parse().unwrap()
 }
 
 /// This extension integration `jemalloc-ctl`, you can dump the profiling
-/// data and analyze it with `jeprof`.
+/// data and analyze it with `jeprof`. For example
+///
+/// ```sh
+/// wget http://127.0.0.0:10911/profile
+/// jeprof --show_bytes --svg <path_to_binary> ./profile > ./profile.svg
+/// ```
 #[configurable_component(extension, name = "jemalloc")]
-#[derive(Debug)]
 #[serde(deny_unknown_fields)]
 struct Config {
     #[serde(default = "default_listen")]
     #[configurable(required)]
-    pub listen: SocketAddr,
-}
-
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            listen: default_listen(),
-        }
-    }
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum BuildError {
-    #[error("MALLOC_CONF is not set, {source}")]
-    EnvNotSet { source: std::env::VarError },
-
-    #[error("MALLOC_CONF is set but prof is not enabled")]
-    ProfileNotEnabled,
+    listen: SocketAddr,
 }
 
 #[async_trait::async_trait]
@@ -61,10 +51,10 @@ impl ExtensionConfig for Config {
         match std::env::var("MALLOC_CONF") {
             Ok(value) => {
                 if !value.contains("prof:true") {
-                    return Err(BuildError::ProfileNotEnabled.into());
+                    return Err("MALLOC_CONF is set, but \"prof\" is not enabled".into());
                 }
             }
-            Err(err) => return Err(BuildError::EnvNotSet { source: err }.into()),
+            Err(_err) => return Err("MALLOC_CONF is not set".into()),
         }
 
         Ok(Box::pin(run(self.listen, ctx.shutdown)))
@@ -93,6 +83,8 @@ enum Error {
     Seconds(#[from] ParseIntError),
     #[error("jemalloc ctl error: {0}")]
     Jemalloc(#[from] tikv_jemalloc_ctl::Error),
+    #[error("read profile data failed, {0}")]
+    ReadProfile(#[from] std::io::Error),
 }
 
 async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
@@ -112,7 +104,17 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
             Ok(Response::new(Body::from(body)))
         }
 
-        (&Method::GET, "/profile") => profiling(req).await,
+        (&Method::GET, "/profile") => {
+            let mutex = PROFILE_MUTEX.get_or_init(Default::default);
+            match mutex.try_lock() {
+                Ok(_guard) => profiling(req).await,
+                Err(_err) => {
+                    let mut resp = Response::new(Body::from("Already in Profiling"));
+                    *resp.status_mut() = StatusCode::TOO_MANY_REQUESTS;
+                    Ok(resp)
+                }
+            }
+        }
 
         _ => {
             let mut resp = Response::new(Body::empty());
@@ -134,26 +136,36 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
             .unwrap_or(DEFAULT_PROFILE_SECONDS);
     }
 
-    set_prof_active(true);
+    set_prof_active(true)?;
     info!(message = "Starting jemalloc profile", seconds);
     tokio::time::sleep(Duration::from_secs(seconds)).await;
-    set_prof_active(false);
+    set_prof_active(false)?;
 
-    dump_profile();
-    let data = std::fs::read(OUTPUT).expect("Read dumped profile failed");
-
-    Ok(Response::new(Body::from(data)))
+    dump_profile().map(|data| Response::new(Body::from(data)))
 }
 
-fn set_prof_active(active: bool) {
-    let name = PROF_ACTIVE.name();
-    name.write(active).expect("Should succeed to set profile");
+fn set_prof_active(active: bool) -> Result<(), Error> {
+    unsafe {
+        tikv_jemalloc_ctl::raw::update(PROFILE_ACTIVE, active)?;
+    }
+
+    Ok(())
 }
 
-fn dump_profile() {
-    let name = PROF_DUMP.name();
-    name.write(PROFILE_OUTPUT)
-        .expect("Should succeed to dump profile")
+fn dump_profile() -> Result<Vec<u8>, Error> {
+    // random string is not a good option
+    let filename = format!("vertex_mem_{}.prof", Utc::now().timestamp());
+
+    let path = temp_dir().join(filename);
+    let mut bytes = std::ffi::CString::new(path.to_str().unwrap())
+        .expect("build CString")
+        .into_bytes_with_nul();
+    unsafe {
+        let ptr = bytes.as_mut_ptr() as *mut libc::c_char;
+        tikv_jemalloc_ctl::raw::write(PROF_DUMP, ptr)?;
+    }
+
+    std::fs::read(path).map_err(Error::ReadProfile)
 }
 
 #[cfg(test)]
