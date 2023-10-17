@@ -129,7 +129,8 @@ extensions-jemalloc = [
     "dep:tikv-jemalloc-ctl",
     "dep:tikv-jemalloc-sys",
     "tikv-jemallocator/stats",
-    "tikv-jemallocator/profiling"
+    "tikv-jemallocator/profiling",
+    "tikv-jemallocator/unprefixed_malloc_on_supported_platforms"
 ]
 extensions-pprof = ["dep:pprof", "dep:inferno"]
 extensions-zpages = []

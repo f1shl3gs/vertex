@@ -20,7 +20,8 @@ use tokio::sync::Mutex;
 
 const DEFAULT_PROFILE_SECONDS: u64 = 30;
 
-const PROFILE_ACTIVE: &[u8] = b"prof.active\0";
+// C string should end with a '\0'.
+const PROF_ACTIVE: &[u8] = b"prof.active\0";
 const PROF_DUMP: &[u8] = b"prof.dump\0";
 
 static PROFILE_MUTEX: OnceLock<Mutex<()>> = OnceLock::new();
@@ -29,13 +30,13 @@ fn default_listen() -> SocketAddr {
     "0.0.0.0:10911".parse().unwrap()
 }
 
-/// This extension integration `jemalloc-ctl`, you can dump the profiling
-/// data and analyze it with `jeprof`. For example
+/// This extension integration `jemalloc-ctl`, you can dump the profiling data and
+/// analyze it with `jeprof`. Environment MALLOC_CONF="prof:true" must be set before
+/// you start profiling.
 ///
-/// ```sh
-/// wget http://127.0.0.0:10911/profile
-/// jeprof --show_bytes --svg <path_to_binary> ./profile > ./profile.svg
-/// ```
+/// Once you start Vertex, you can get profile by running
+/// `wget http://127.0.0.0:10911/profile` to get profile data, then you can analyze
+/// it by `jeprof --show_bytes --svg <path_to_binary> ./profile > ./profile.svg`.
 #[configurable_component(extension, name = "jemalloc")]
 #[serde(deny_unknown_fields)]
 struct Config {
@@ -63,10 +64,11 @@ impl ExtensionConfig for Config {
 
 async fn run(addr: SocketAddr, shutdown: ShutdownSignal) -> Result<(), ()> {
     let service = make_service_fn(|_conn| async { Ok::<_, Error>(service_fn(handler)) });
-
     let server = Server::bind(&addr)
         .serve(service)
         .with_graceful_shutdown(shutdown.map(|_| ()));
+
+    info!(message = "start http server", ?addr);
     if let Err(err) = server.await {
         warn!(
             message = "jemalloc profile server running failed",
@@ -125,19 +127,18 @@ async fn handler(req: Request<Body>) -> Result<Response<Body>, Error> {
 }
 
 async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
-    let mut seconds = DEFAULT_PROFILE_SECONDS;
-
-    if let Some(query) = req.uri().query() {
-        seconds = url::form_urlencoded::parse(query.as_ref())
+    let seconds = match req.uri().query() {
+        Some(value) => url::form_urlencoded::parse(value.as_ref())
             .into_iter()
             .find(|(k, _v)| k == "seconds")
             .map(|(_, v)| v.parse().map_err(Error::Seconds))
             .transpose()?
-            .unwrap_or(DEFAULT_PROFILE_SECONDS);
-    }
+            .unwrap_or(DEFAULT_PROFILE_SECONDS),
+        None => DEFAULT_PROFILE_SECONDS,
+    };
 
     set_prof_active(true)?;
-    info!(message = "Starting jemalloc profile", seconds);
+    info!(message = "starting jemalloc profile", seconds);
     tokio::time::sleep(Duration::from_secs(seconds)).await;
     set_prof_active(false)?;
 
@@ -146,7 +147,7 @@ async fn profiling(req: Request<Body>) -> Result<Response<Body>, Error> {
 
 fn set_prof_active(active: bool) -> Result<(), Error> {
     unsafe {
-        tikv_jemalloc_ctl::raw::update(PROFILE_ACTIVE, active)?;
+        tikv_jemalloc_ctl::raw::update(PROF_ACTIVE, active)?;
     }
 
     Ok(())
