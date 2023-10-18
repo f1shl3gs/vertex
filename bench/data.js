@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697639065481,
+  "lastUpdate": 1697639140728,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "fishlegs.engerman@gmail.com",
-            "name": "f1shl3gs",
-            "username": "f1shl3gs"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "f89502aa898ef06d1f268235fd502f09c30a7a3e",
-          "message": "fix vertex version (#1250)",
-          "timestamp": "2023-09-14T00:39:51+08:00",
-          "tree_id": "9c9fe0b15b85f28e20f8ff0b1b9963ad8eb79875",
-          "url": "https://github.com/f1shl3gs/vertex/commit/f89502aa898ef06d1f268235fd502f09c30a7a3e"
-        },
-        "date": 1694624282704,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 960,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42592.6,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "49699333+dependabot[bot]@users.noreply.github.com",
             "name": "dependabot[bot]",
             "username": "dependabot[bot]"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 42369.9,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "fishlegs.engerman@gmail.com",
+            "name": "f1shl3gs",
+            "username": "f1shl3gs"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "83eb234e1cb4d3c1712a6daf93edc9389ba66618",
+          "message": "use jemalloc by default (#1355)\n\n* use jemalloc by default",
+          "timestamp": "2023-10-18T22:04:32+08:00",
+          "tree_id": "c4030b9478744747b384427c3549c7d09af38366",
+          "url": "https://github.com/f1shl3gs/vertex/commit/83eb234e1cb4d3c1712a6daf93edc9389ba66618"
+        },
+        "date": 1697639119481,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1126,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53637.1,
             "unit": "KiB"
           }
         ]
