@@ -57,6 +57,8 @@ members = [
 
 [features]
 default = [
+    "jemalloc",
+
     "extensions",
     "sources",
     "transforms",
@@ -64,6 +66,8 @@ default = [
 ]
 
 target-x86_64-unknown-linux-musl = [
+    "jemalloc",
+
     "extensions",
     "sinks",
     "sources",
@@ -71,6 +75,8 @@ target-x86_64-unknown-linux-musl = [
 ]
 
 target-x86_64-unknown-linux-gnu = [
+    "jemalloc",
+
     "extensions",
     "sinks",
     "sources",
@@ -119,7 +125,12 @@ all-integration-tests = [
 
 extensions-heartbeat = ["dep:uuid", "dep:sysinfo", "parking_lot/serde"]
 extensions-healthcheck = []
-extensions-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
+extensions-jemalloc = [
+    "dep:tikv-jemalloc-ctl",
+    "dep:tikv-jemalloc-sys",
+    "tikv-jemallocator/stats",
+    "tikv-jemallocator/profiling",
+]
 extensions-pprof = ["dep:pprof", "dep:inferno"]
 extensions-zpages = []
 
@@ -127,6 +138,7 @@ extensions-zpages = []
 extensions = [
     "extensions-healthcheck",
     "extensions-heartbeat",
+    "extensions-jemalloc",
     # Musl does not provide "pthread_getname_np" in current release.
     # https://github.com/tikv/pprof-rs/issues/41
     "extensions-pprof",
@@ -274,8 +286,7 @@ tokio-console = ["framework/tokio-console", "tokio/tracing"]
 # Allocator
 # mimalloc is an optional dependecy, and the feature `mimalloc` is created by default. So no
 # need to declare it again.
-jemalloc = ["dep:tikv-jemallocator", "dep:tikv-jemalloc-ctl", "dep:tikv-jemalloc-sys"]
-
+jemalloc = ["dep:tikv-jemallocator"]
 
 # Enables kubernetes dependencies and shared code. Kubernetes-related sources,
 # transforms and sinks should depend on this feature.
@@ -342,7 +353,7 @@ metrics = { path = "lib/metrics" }
 
 # Allocation
 mimalloc = { version = "0.1.39", default-features = false, optional = true }
-tikv-jemallocator = { version = "0.5.4", optional = true, features = ["stats", "profiling", "unprefixed_malloc_on_supported_platforms"] }
+tikv-jemallocator = { version = "0.5.4", optional = true, features = ["unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.5.4", optional = true, features = ["use_std"] }
 tikv-jemalloc-sys = { version = "0.5.4", optional = true, features = ["stats"] }
 
