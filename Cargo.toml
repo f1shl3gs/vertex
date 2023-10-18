@@ -130,7 +130,6 @@ extensions-jemalloc = [
     "dep:tikv-jemalloc-sys",
     "tikv-jemallocator/stats",
     "tikv-jemallocator/profiling",
-    "tikv-jemallocator/unprefixed_malloc_on_supported_platforms"
 ]
 extensions-pprof = ["dep:pprof", "dep:inferno"]
 extensions-zpages = []
@@ -354,7 +353,7 @@ metrics = { path = "lib/metrics" }
 
 # Allocation
 mimalloc = { version = "0.1.39", default-features = false, optional = true }
-tikv-jemallocator = { version = "0.5.4", optional = true }
+tikv-jemallocator = { version = "0.5.4", optional = true, features = ["unprefixed_malloc_on_supported_platforms"] }
 tikv-jemalloc-ctl = { version = "0.5.4", optional = true, features = ["use_std"] }
 tikv-jemalloc-sys = { version = "0.5.4", optional = true, features = ["stats"] }
 
