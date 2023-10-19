@@ -14,7 +14,7 @@ serde_json = { version = "1.0.107", default-features = false }
 # externals
 chrono-tz = { version = "0.8.3", default-features = false }
 encoding_rs = { version = "0.8.33", default-features = false }
-regex = { version = "1.10.1", default-features = false }
+regex = { version = "1.10.2", default-features = false }
 url = { version = "2.4.1", default-features = false }
 value = { path = "../value" }
 
