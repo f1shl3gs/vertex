@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1697730854451,
+  "lastUpdate": 1697731935748,
   "repoUrl": "https://github.com/f1shl3gs/vertex",
   "entries": {
     "prometheus": [
@@ -18114,40 +18114,6 @@ window.BENCHMARK_DATA = {
       {
         "commit": {
           "author": {
-            "email": "49699333+dependabot[bot]@users.noreply.github.com",
-            "name": "dependabot[bot]",
-            "username": "dependabot[bot]"
-          },
-          "committer": {
-            "email": "noreply@github.com",
-            "name": "GitHub",
-            "username": "web-flow"
-          },
-          "distinct": true,
-          "id": "2d261bd1583376575a31c3a5f35291d7a9134462",
-          "message": "chore(deps): bump serde_json from 1.0.106 to 1.0.107 (#1253)\n\nBumps [serde_json](https://github.com/serde-rs/json) from 1.0.106 to 1.0.107.\r\n- [Release notes](https://github.com/serde-rs/json/releases)\r\n- [Commits](https://github.com/serde-rs/json/compare/v1.0.106...v1.0.107)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: serde_json\r\n  dependency-type: direct:production\r\n  update-type: version-update:semver-patch\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
-          "timestamp": "2023-09-14T16:04:05+08:00",
-          "tree_id": "bc53374c907ef569f14f407c69c933bb7c6bbb19",
-          "url": "https://github.com/f1shl3gs/vertex/commit/2d261bd1583376575a31c3a5f35291d7a9134462"
-        },
-        "date": 1694679853731,
-        "tool": "customSmallerIsBetter",
-        "benches": [
-          {
-            "name": "Baseline",
-            "value": 1082,
-            "unit": "s"
-          },
-          {
-            "name": "Binary size",
-            "value": 42573.3,
-            "unit": "KiB"
-          }
-        ]
-      },
-      {
-        "commit": {
-          "author": {
             "email": "fishlegs.engerman@gmail.com",
             "name": "f1shl3gs",
             "username": "f1shl3gs"
@@ -21507,6 +21473,40 @@ window.BENCHMARK_DATA = {
           {
             "name": "Binary size",
             "value": 53634.7,
+            "unit": "KiB"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "49699333+dependabot[bot]@users.noreply.github.com",
+            "name": "dependabot[bot]",
+            "username": "dependabot[bot]"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "7a9070cca80b1f642a7cd70fce0c66f8fd267a76",
+          "message": "chore(deps): bump rustix from 0.38.17 to 0.38.19 (#1358)\n\nBumps [rustix](https://github.com/bytecodealliance/rustix) from 0.38.17 to 0.38.19.\r\n- [Release notes](https://github.com/bytecodealliance/rustix/releases)\r\n- [Commits](https://github.com/bytecodealliance/rustix/compare/v0.38.17...v0.38.19)\r\n\r\n---\r\nupdated-dependencies:\r\n- dependency-name: rustix\r\n  dependency-type: indirect\r\n...\r\n\r\nSigned-off-by: dependabot[bot] <support@github.com>\r\nCo-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>",
+          "timestamp": "2023-10-19T23:48:59+08:00",
+          "tree_id": "8820220c4d6caeb1bcda33c1422310a552caba8a",
+          "url": "https://github.com/f1shl3gs/vertex/commit/7a9070cca80b1f642a7cd70fce0c66f8fd267a76"
+        },
+        "date": 1697731914273,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Baseline",
+            "value": 1232,
+            "unit": "s"
+          },
+          {
+            "name": "Binary size",
+            "value": 53629.6,
             "unit": "KiB"
           }
         ]
