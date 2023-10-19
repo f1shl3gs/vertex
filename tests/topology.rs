@@ -26,7 +26,7 @@ fn into_message(event: Event) -> String {
         .get_field(log_schema().message_key())
         .unwrap()
         .to_string_lossy()
-        .to_string()
+        .into_owned()
 }
 
 fn into_message_stream(events: Events) -> impl futures::Stream<Item = String> {

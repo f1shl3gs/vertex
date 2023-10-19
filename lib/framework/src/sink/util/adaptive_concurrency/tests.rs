@@ -741,7 +741,7 @@ async fn all_tests() {
         })
         .collect::<Vec<_>>();
 
-    entries.sort_unstable_by_key(|entry| entry.0.to_string_lossy().to_string());
+    entries.sort_unstable_by_key(|entry| entry.0.to_string_lossy().into_owned());
 
     time::pause();
 

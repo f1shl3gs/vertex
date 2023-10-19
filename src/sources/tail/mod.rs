@@ -857,7 +857,7 @@ mod tests {
                 log.get_field(log_schema().message_key())
                     .unwrap()
                     .to_string_lossy()
-                    .to_string()
+                    .into_owned()
             })
             .collect()
     }

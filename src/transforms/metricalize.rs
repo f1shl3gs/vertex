@@ -94,8 +94,7 @@ impl MetricConfig {
         let mut attrs = Tags::new();
         for (k, v) in tags {
             let value = match log.get_field(v.as_str()) {
-                // TODO: avoid allocation
-                Some(value) => value.to_string_lossy().to_string(),
+                Some(value) => value.to_string_lossy().into_owned(),
                 None => String::new(),
             };
 
