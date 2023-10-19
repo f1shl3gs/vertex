@@ -431,7 +431,7 @@ rsntp = { version = "3.0.2", default-features = false, features = ["tokio"], opt
 smallvec = { version = "1.11.1", default-features = false, optional = true }
 snap = { version = "1.1.0", default-features = false, optional = true }
 sqlx = { version = "0.7.2", default-features = false, optional = true, features = ["mysql", "runtime-tokio-rustls", "macros"] }
-thiserror = { version = "1.0.49" }
+thiserror = { version = "1.0.50" }
 tonic = { version = "0.10.2", default-features = false, features = ["transport"], optional = true }
 tonic-health = { version = "0.10.2", default-features = false, optional = true }
 typetag = { version = "0.2.13" }
